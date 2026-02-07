@@ -1,6 +1,6 @@
 {
-  "registryVersion": "3.1.0",
-  "updatedAt": "2026-02-07T15:16:00.000Z",
+  "registryVersion": "3.2.0",
+  "updatedAt": "2026-02-07T18:30:00.000Z",
   "description": "HeadyRegistry — Central catalog and control point for the Heady ecosystem",
 
   "components": [
@@ -659,6 +659,106 @@
       "status": "active",
       "criticality": "critical",
       "lastUpdated": "2026-02-06"
+    },
+    {
+      "id": "hcfp-localhost-migration",
+      "name": "HCFP Localhost-to-Domain Migration",
+      "type": "infrastructure",
+      "version": "1.0.0",
+      "sourceOfTruth": ".windsurf/workflows/hcfp-localhost-domain-migration.md",
+      "responsibilities": ["localhostReplacement", "domainMapping", "serviceDiscovery", "dnsConfiguration"],
+      "script": "scripts/migrate-localhost-to-domains.js",
+      "config": "configs/service-discovery.yaml",
+      "serviceDomains": [
+        "manager.dev.local.heady.internal:3300",
+        "app-web.dev.local.heady.internal:3000",
+        "db-postgres.dev.local.heady.internal:5432",
+        "db-redis.dev.local.heady.internal:6379",
+        "tools-mcp.dev.local.heady.internal:3001",
+        "ai-ollama.dev.local.heady.internal:11434",
+        "app-buddy.dev.local.heady.internal:3301",
+        "bridge-browser.dev.local.heady.internal:3302",
+        "io-voice.dev.local.heady.internal:3303",
+        "svc-billing.dev.local.heady.internal:3304",
+        "svc-telemetry.dev.local.heady.internal:3305",
+        "admin-postgres.dev.local.heady.internal:8080",
+        "admin-redis.dev.local.heady.internal:8081",
+        "debug-manager.dev.local.heady.internal:9090"
+      ],
+      "ownership": "core",
+      "status": "active",
+      "criticality": "high",
+      "lastUpdated": "2026-02-07"
+    },
+    {
+      "id": "hcfp-error-recovery",
+      "name": "HCFP Error Recovery & Clean Build Protocol",
+      "type": "ci-cd",
+      "version": "1.0.0",
+      "sourceOfTruth": ".windsurf/workflows/hcfp-error-recovery.md",
+      "responsibilities": ["errorClassification", "transientRetry", "nonRecoverableFailFast", "infrastructureEscalation", "cleanBuildOnEveryChange"],
+      "errorTypes": ["transient:network", "transient:flaky", "non-recoverable:code", "non-recoverable:config", "infrastructure:permission"],
+      "retryPolicy": "exponential-backoff-3x",
+      "ownership": "core",
+      "status": "active",
+      "criticality": "critical",
+      "lastUpdated": "2026-02-07"
+    },
+    {
+      "id": "vscode-extension",
+      "name": "Heady Dev Companion (VS Code)",
+      "type": "ide-extension",
+      "version": "0.1.0",
+      "sourceOfTruth": "distribution/ide/vscode/extension.js",
+      "manifest": "distribution/ide/vscode/package.json",
+      "responsibilities": ["inlineCompletions", "chatSidebar", "codeExplain", "testGeneration", "docGeneration", "agentMode", "voiceInput"],
+      "commands": [
+        "heady.openChat",
+        "heady.explain",
+        "heady.generateTests",
+        "heady.generateDocs",
+        "heady.refactor",
+        "heady.debug",
+        "heady.optimize",
+        "heady.agentMode",
+        "heady.voiceInput",
+        "heady.checkHealth"
+      ],
+      "keybindings": {
+        "heady.openChat": "ctrl+shift+h",
+        "heady.explain": "ctrl+shift+e"
+      },
+      "ownership": "core",
+      "status": "active",
+      "criticality": "high",
+      "lastUpdated": "2026-02-07"
+    },
+    {
+      "id": "pwa-desktop-app",
+      "name": "Heady PWA Desktop Application",
+      "type": "web-app",
+      "version": "1.0.0",
+      "sourceOfTruth": "public/manifest.webmanifest",
+      "setupScript": "scripts/setup-pwa-desktop.ps1",
+      "responsibilities": ["desktopIntegration", "offlineSupport", "shareTarget", "fileHandling", "shortcuts"],
+      "features": [
+        "standalone-display",
+        "offline-caching",
+        "share-target",
+        "file-handlers",
+        "protocol-handlers",
+        "shortcuts"
+      ],
+      "shortcuts": [
+        "chat",
+        "dashboard",
+        "settings"
+      ],
+      "supportedBrowsers": ["chrome", "edge", "firefox"],
+      "ownership": "core",
+      "status": "active",
+      "criticality": "high",
+      "lastUpdated": "2026-02-07"
     }
   ],
 
@@ -707,6 +807,77 @@
       "triggers": ["huggingface", "predict", "ask_oracle"],
       "capabilities": ["textGeneration", "sentimentAnalysis", "inference"],
       "status": "active"
+    }
+  ],
+
+  "tools": [
+    {
+      "id": "localhost-to-domain",
+      "name": "Localhost-to-Domain Migration Tool",
+      "type": "migration",
+      "version": "3.0.0",
+      "sourceOfTruth": "scripts/localhost-to-domain.js",
+      "responsibilities": ["localhostInventory", "domainMigration", "hostsFileGeneration", "serviceDiscoveryIntegration"],
+      "ownership": "infrastructure",
+      "status": "active",
+      "criticality": "high",
+      "lastUpdated": "2026-02-07"
+    },
+    {
+      "id": "hcfp-error-recovery",
+      "name": "HCFP Error Recovery Workflow",
+      "type": "recovery",
+      "version": "3.0.0",
+      "sourceOfTruth": "scripts/hcfp-error-recovery.ps1",
+      "responsibilities": ["errorClassification", "rootCauseAnalysis", "intelligentRetry", "cleanRebuild", "evidencePreservation"],
+      "ownership": "core",
+      "status": "active",
+      "criticality": "critical",
+      "lastUpdated": "2026-02-07"
+    }
+  ],
+
+  "extensions": [
+    {
+      "id": "chrome-extension",
+      "name": "Heady AI Companion (Chrome/Edge)",
+      "type": "browser-extension",
+      "version": "3.0.0",
+      "sourceOfTruth": "extensions/chrome/",
+      "platform": "chrome-edge-firefox",
+      "responsibilities": ["textCapture", "contextMenu", "multiEndpoint", "healthMonitoring", "notifications"],
+      "ownership": "ui",
+      "status": "active",
+      "criticality": "medium",
+      "lastUpdated": "2026-02-07"
+    },
+    {
+      "id": "vscode-extension",
+      "name": "Heady Dev Companion (VS Code)",
+      "type": "ide-extension",
+      "version": "3.0.0",
+      "sourceOfTruth": "extensions/vscode/",
+      "platform": "vscode",
+      "responsibilities": ["statusBar", "selectionCapture", "taskView", "patternView", "endpointSwitching"],
+      "ownership": "developer-tools",
+      "status": "active",
+      "criticality": "medium",
+      "lastUpdated": "2026-02-07"
+    }
+  ],
+
+  "pwa": [
+    {
+      "id": "heady-pwa",
+      "name": "Heady Systems PWA",
+      "type": "progressive-web-app",
+      "version": "3.0.0",
+      "sourceOfTruth": "public/manifest.webmanifest",
+      "responsibilities": ["desktopInstallation", "offlineSupport", "serviceWorker", "pushNotifications", "fileHandlers"],
+      "ownership": "ui",
+      "status": "active",
+      "criticality": "medium",
+      "lastUpdated": "2026-02-07"
     }
   ],
 
@@ -1125,6 +1296,38 @@
       "type": "distribution",
       "status": "current",
       "lastUpdated": "2026-02-06"
+    },
+    {
+      "id": "hcfp-localhost-migration",
+      "path": ".windsurf/workflows/hcfp-localhost-migration.md",
+      "type": "infrastructure",
+      "status": "current",
+      "lastUpdated": "2026-02-07"
+    }
+  ],
+
+  "cicd": [
+    {
+      "id": "hcfp-production-clean-build",
+      "name": "HCFP Production Clean Build",
+      "type": "github-actions",
+      "sourceOfTruth": ".github/workflows/hcfp-production-clean-build.yml",
+      "responsibilities": ["preflightValidation", "cleanBuild", "errorClassification", "securityScan", "integrationTests"],
+      "triggers": ["push:main", "push:production", "pull_request"],
+      "status": "active",
+      "lastUpdated": "2026-02-07"
+    }
+  ],
+
+  "tests": [
+    {
+      "id": "domain-connectivity-tests",
+      "name": "Domain Connectivity Integration Tests",
+      "type": "integration-test",
+      "sourceOfTruth": "tests/integration/domain-connectivity.test.js",
+      "coverage": ["serviceReachability", "dnsResolution", "portConflicts", "securityClassifications", "localhostMigration"],
+      "status": "active",
+      "lastUpdated": "2026-02-07"
     }
   ],
 

@@ -1,0 +1,167 @@
+{
+  "name": "heady-dev-companion",
+  "displayName": "Heady Dev Companion",
+  "description": "Sacred Geometry AI ecosystem integration for VS Code",
+  "version": "3.0.0",
+  "publisher": "heady-systems",
+  "icon": "media/icon.png",
+  "engines": {
+    "vscode": "^1.80.0"
+  },
+  "categories": [
+    "Other",
+    "Programming Languages",
+    "Machine Learning",
+    "Snippets"
+  ],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "heady.openDashboard",
+        "title": "Heady: Open Dashboard",
+        "icon": "$(home)"
+      },
+      {
+        "command": "heady.sendSelection",
+        "title": "Heady: Send Selection",
+        "icon": "$(arrow-right)"
+      },
+      {
+        "command": "heady.checkHealth",
+        "title": "Heady: Check Connection Health",
+        "icon": "$(pulse)"
+      },
+      {
+        "command": "heady.switchEndpoint",
+        "title": "Heady: Switch Endpoint",
+        "icon": "$(settings-gear)"
+      },
+      {
+        "command": "heady.runCleanBuild",
+        "title": "Heady: Run Clean Build",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "heady.viewTasks",
+        "title": "Heady: View Active Tasks",
+        "icon": "$(checklist)"
+      }
+    ],
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "heady-sidebar",
+          "title": "Heady Systems",
+          "icon": "media/logo.svg"
+        }
+      ]
+    },
+    "views": {
+      "heady-sidebar": [
+        {
+          "id": "heady-status",
+          "name": "Connection Status"
+        },
+        {
+          "id": "heady-tasks",
+          "name": "Active Tasks"
+        },
+        {
+          "id": "heady-patterns",
+          "name": "Patterns Detected"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "Heady Systems",
+      "properties": {
+        "heady.endpoint": {
+          "type": "string",
+          "default": "http://manager.dev.local.heady.internal:3300",
+          "enum": [
+            "http://manager.dev.local.heady.internal:3300",
+            "https://cloud-me.heady.io",
+            "https://cloud-sys.heady.io",
+            "https://cloud-conn.heady.io"
+          ],
+          "description": "Active Heady API endpoint"
+        },
+        "heady.autoConnect": {
+          "type": "boolean",
+          "default": true,
+          "description": "Automatically connect to Heady on startup"
+        },
+        "heady.showStatusBar": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show Heady status in status bar"
+        },
+        "heady.enableCodeLens": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable inline code suggestions from Heady patterns"
+        }
+      }
+    },
+    "keybindings": [
+      {
+        "command": "heady.openDashboard",
+        "key": "ctrl+shift+h",
+        "mac": "cmd+shift+h"
+      },
+      {
+        "command": "heady.sendSelection",
+        "key": "ctrl+shift+c",
+        "mac": "cmd+shift+c",
+        "when": "editorHasSelection"
+      }
+    ],
+    "menus": {
+      "editor/context": [
+        {
+          "command": "heady.sendSelection",
+          "when": "editorHasSelection",
+          "group": "heady@1"
+        }
+      ],
+      "view/title": [
+        {
+          "command": "heady.checkHealth",
+          "when": "view == heady-status",
+          "group": "navigation"
+        }
+      ]
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "pretest": "npm run compile && npm run lint",
+    "lint": "eslint src --ext ts",
+    "test": "node ./out/test/runTest.js",
+    "package": "vsce package"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.80.0",
+    "@types/node": "^20.x",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
+    "eslint": "^8.40.0",
+    "typescript": "^5.0.0",
+    "@vscode/test-electron": "^2.3.0",
+    "@vscode/vsce": "^2.19.0"
+  },
+  "dependencies": {
+    "axios": "^1.6.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/HeadySystems/Heady.git"
+  },
+  "license": "MIT"
+}

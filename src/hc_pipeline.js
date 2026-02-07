@@ -9,9 +9,11 @@
 // ║                                                                  ║
 // ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
 // ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
-// ║  FILE: src/hc_pipeline.js                                         ║
-// ║  LAYER: backend/src                                               ║
-// ╚══════════════════════════════════════════════════════════════════╝
+// ╔══════════════════════════════════════════════════════════════════════════════╗
+// ║  🌈 HEADY SYSTEMS — PIPELINE ENGINE                                         ║
+// ║  🚀 Multi-Stage Orchestration • Sacred Geometry • Zero Defect ✨              ║
+// ║  🎨 Phi-Based Design • Checkpoint Protocol • Rainbow Magic 🦄                ║
+// ╚══════════════════════════════════════════════════════════════════════════════╝
 // HEADY_BRAND:END
 
 //

@@ -8,45 +8,83 @@
 const fs = require('fs');
 const path = require('path');
 
-// Hardcoded service discovery mappings (from service-discovery.yaml)
+const yaml = require('js-yaml');
+
+// Load service-discovery.yaml dynamically
+function loadServiceDiscovery() {
+  const discoveryPath = path.join(__dirname, '..', 'configs', 'service-discovery.yaml');
+  if (!fs.existsSync(discoveryPath)) {
+    console.warn('⚠️  service-discovery.yaml not found, using hardcoded mappings');
+    return null;
+  }
+  try {
+    const content = fs.readFileSync(discoveryPath, 'utf8');
+    return yaml.load(content);
+  } catch (err) {
+    console.warn(`⚠️  Failed to load service-discovery.yaml: ${err.message}`);
+    return null;
+  }
+}
+
+const serviceDiscovery = loadServiceDiscovery();
 
 const LOCALHOST_PATTERNS = [
   /localhost:?(\d+)?/g,
   /127\.0\.0\.1:?(\d+)?/g,
   /0\.0\.0\.0:?(\d+)?/g,
   /\[::\]:?(\d+)?/g,
+  /::1:?(\d+)?/g,
 ];
 
-const REPLACEMENTS = {
-  // Manager/Orchestrator
-  'localhost:3300': 'manager.dev.local.heady.internal:3300',
-  '127.0.0.1:3300': 'manager.dev.local.heady.internal:3300',
-  '0.0.0.0:3300': 'manager.dev.local.heady.internal:3300',
+// Build replacements from service-discovery.yaml or use hardcoded fallback
+function buildReplacements() {
+  const replacements = {};
   
-  // PostgreSQL
-  'localhost:5432': 'db-postgres.dev.local.heady.internal:5432',
-  '127.0.0.1:5432': 'db-postgres.dev.local.heady.internal:5432',
+  if (serviceDiscovery && serviceDiscovery.services) {
+    // Build from YAML
+    for (const [serviceName, config] of Object.entries(serviceDiscovery.services)) {
+      const patterns = [
+        `localhost:${config.port}`,
+        `127.0.0.1:${config.port}`,
+        `0.0.0.0:${config.port}`,
+        `::1:${config.port}`,
+      ];
+      
+      const target = `${config.host}:${config.port}`;
+      
+      for (const pattern of patterns) {
+        replacements[pattern] = target;
+      }
+      
+      // Also map just localhost without port for common services
+      if (config.port === 3300) {
+        replacements['localhost'] = config.host;
+        replacements['127.0.0.1'] = config.host;
+      }
+    }
+  } else {
+    // Hardcoded fallback
+    Object.assign(replacements, {
+      'localhost:3300': 'manager.dev.local.heady.internal:3300',
+      '127.0.0.1:3300': 'manager.dev.local.heady.internal:3300',
+      '0.0.0.0:3300': 'manager.dev.local.heady.internal:3300',
+      'localhost:5432': 'db-postgres.dev.local.heady.internal:5432',
+      '127.0.0.1:5432': 'db-postgres.dev.local.heady.internal:5432',
+      'localhost:6379': 'db-redis.dev.local.heady.internal:6379',
+      '127.0.0.1:6379': 'db-redis.dev.local.heady.internal:6379',
+      'localhost:3000': 'app-web.dev.local.heady.internal:3000',
+      '127.0.0.1:3000': 'app-web.dev.local.heady.internal:3000',
+      'localhost:3001': 'tools-mcp.dev.local.heady.internal:3001',
+      'localhost:11434': 'ai-ollama.dev.local.heady.internal:11434',
+      'localhost:3301': 'app-buddy.dev.local.heady.internal:3301',
+      'localhost:3303': 'io-voice.dev.local.heady.internal:3303',
+    });
+  }
   
-  // Redis
-  'localhost:6379': 'db-redis.dev.local.heady.internal:6379',
-  '127.0.0.1:6379': 'db-redis.dev.local.heady.internal:6379',
-  
-  // Web Frontend
-  'localhost:3000': 'app-web.dev.local.heady.internal:3000',
-  '127.0.0.1:3000': 'app-web.dev.local.heady.internal:3000',
-  
-  // MCP Gateway
-  'localhost:3001': 'tools-mcp.dev.local.heady.internal:3001',
-  
-  // Ollama
-  'localhost:11434': 'ai-ollama.dev.local.heady.internal:11434',
-  
-  // Buddy
-  'localhost:3301': 'app-buddy.dev.local.heady.internal:3301',
-  
-  // Voice
-  'localhost:3303': 'io-voice.dev.local.heady.internal:3303',
-};
+  return replacements;
+}
+
+const REPLACEMENTS = buildReplacements();
 
 const EXCLUDED_DIRS = [
   'node_modules',
@@ -63,6 +101,8 @@ const EXCLUDED_FILES = [
   'service-discovery.yaml',
   'localhost-inventory.json',
   'service-discovery.json',
+  'localhost-to-domain.js', // Don't modify this script
+  'heady-registry.json', // Preserve registry
 ];
 
 function shouldProcessFile(filePath) {
@@ -70,11 +110,14 @@ function shouldProcessFile(filePath) {
   const base = path.basename(filePath);
   
   // Only process certain file types
-  const validExts = ['.js', '.ts', '.json', '.yaml', '.yml', '.md', '.html', '.py', '.go'];
+  const validExts = ['.js', '.ts', '.jsx', '.tsx', '.json', '.yaml', '.yml', '.md', '.html', '.py', '.go', '.sh', '.ps1', '.bat'];
   if (!validExts.includes(ext)) return false;
   
   // Skip excluded files
   if (EXCLUDED_FILES.includes(base)) return false;
+  
+  // Skip package-lock.json (too large and auto-generated)
+  if (base === 'package-lock.json') return false;
   
   return true;
 }

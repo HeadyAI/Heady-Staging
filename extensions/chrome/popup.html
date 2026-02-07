@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Heady AI Companion</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      width: 360px;
+      min-height: 480px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: #fff;
+    }
+    
+    .header {
+      padding: 20px;
+      background: rgba(0, 0, 0, 0.2);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .header h1 {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+    
+    .header .subtitle {
+      font-size: 12px;
+      opacity: 0.8;
+    }
+    
+    .status {
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: rgba(255, 255, 255, 0.1);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .status-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #4CAF50;
+      box-shadow: 0 0 10px rgba(76, 175, 80, 0.5);
+    }
+    
+    .status-dot.offline {
+      background: #FF5722;
+      box-shadow: 0 0 10px rgba(255, 87, 34, 0.5);
+    }
+    
+    .content {
+      padding: 20px;
+    }
+    
+    .endpoint-selector {
+      margin-bottom: 20px;
+    }
+    
+    .endpoint-selector label {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 12px;
+      opacity: 0.9;
+    }
+    
+    .endpoint-selector select {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+      font-size: 14px;
+    }
+    
+    .endpoint-selector select option {
+      background: #764ba2;
+      color: #fff;
+    }
+    
+    .quick-actions {
+      display: grid;
+      gap: 12px;
+    }
+    
+    .action-btn {
+      padding: 12px 16px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-align: left;
+    }
+    
+    .action-btn:hover {
+      background: rgba(255, 255, 255, 0.2);
+      transform: translateY(-2px);
+    }
+    
+    .action-btn .icon {
+      margin-right: 8px;
+    }
+    
+    .footer {
+      padding: 16px 20px;
+      text-align: center;
+      font-size: 11px;
+      opacity: 0.7;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>∞ Heady AI Companion</h1>
+    <p class="subtitle">Sacred Geometry Intelligence</p>
+  </div>
+  
+  <div class="status">
+    <div class="status-dot" id="statusDot"></div>
+    <span id="statusText">Checking connection...</span>
+  </div>
+  
+  <div class="content">
+    <div class="endpoint-selector">
+      <label for="endpoint">Active Endpoint:</label>
+      <select id="endpoint">
+        <option value="local">Local Dev (manager.dev.local.heady.internal)</option>
+        <option value="cloud-me">Cloud - HeadyMe</option>
+        <option value="cloud-sys">Cloud - HeadySystems</option>
+        <option value="cloud-conn">Cloud - HeadyConnection</option>
+      </select>
+    </div>
+    
+    <div class="quick-actions">
+      <button class="action-btn" id="openDashboard">
+        <span class="icon">🏠</span>
+        Open Dashboard
+      </button>
+      
+      <button class="action-btn" id="captureTab">
+        <span class="icon">📸</span>
+        Capture Current Tab
+      </button>
+      
+      <button class="action-btn" id="viewTasks">
+        <span class="icon">✅</span>
+        View Active Tasks
+      </button>
+      
+      <button class="action-btn" id="refreshHealth">
+        <span class="icon">🔄</span>
+        Refresh Health Check
+      </button>
+    </div>
+  </div>
+  
+  <div class="footer">
+    Heady Systems v3.0.0 • Sacred Geometry AI
+  </div>
+  
+  <script src="popup.js"></script>
+</body>
+</html>
