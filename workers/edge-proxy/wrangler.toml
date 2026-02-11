@@ -1,0 +1,50 @@
+name = "heady-edge-proxy"
+main = "src/index.ts"
+compatibility_date = "2026-02-11"
+
+# ─── Production Routes ─────────────────────────────────────────────
+# Each product domain routes through this single edge proxy.
+# The worker inspects hostname + path to select the correct origin.
+
+[env.production]
+workers_dev = false
+routes = [
+  { pattern = "api.heady.systems/*", zone_name = "heady.systems" },
+  { pattern = "brain.heady.systems/*", zone_name = "heady.systems" },
+  { pattern = "headysystems.com/api/*", zone_name = "headysystems.com" },
+  { pattern = "headyme.com/api/*", zone_name = "headyme.com" },
+  { pattern = "headyconnection.org/api/*", zone_name = "headyconnection.org" },
+  { pattern = "headyweb.com/api/*", zone_name = "headyweb.com" },
+  { pattern = "headymcp.com/api/*", zone_name = "headymcp.com" },
+]
+
+[vars]
+GATEWAY_VERSION = "1.0.0"
+NODE_ENV = "production"
+ENABLE_METRICS = "true"
+ENABLE_CORS = "true"
+CORS_ORIGINS = "*"
+REQUEST_TIMEOUT = "30000"
+
+[[kv_namespaces]]
+binding = "EDGE_CACHE"
+id = "edge-cache-kv-prod"
+preview_id = "edge-cache-kv-preview"
+
+[[kv_namespaces]]
+binding = "RATE_LIMIT"
+id = "edge-rate-limit-kv-prod"
+preview_id = "edge-rate-limit-kv-preview"
+
+[[analytics_engine_datasets]]
+binding = "EDGE_METRICS"
+
+[observability]
+enabled = true
+head_sampling_rate = 1.0
+
+[build]
+command = "npx tsc"
+
+[limits]
+cpu_ms = 50

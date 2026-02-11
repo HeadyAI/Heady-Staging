@@ -1,0 +1,159 @@
+# HEADY_BRAND:BEGIN
+# ╔══════════════════════════════════════════════════════════════════╗
+# ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
+# ║  ██║  ██║██╔════╝██╔══██╗██╔══██╗╚██╗ ██╔╝                     ║
+# ║  ███████║█████╗  ███████║██║  ██║ ╚████╔╝                      ║
+# ║  ██╔══██║██╔══╝  ██╔══██║██║  ██║  ╚██╔╝                       ║
+# ║  ██║  ██║███████╗██║  ██║██████╔╝   ██║                        ║
+# ║  ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝    ╚═╝                        ║
+# ║                                                                  ║
+# ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
+# ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
+# ║  FILE: configs/iterative-rebuild-directive.yaml                 ║
+# ║  LAYER: config                                                  ║
+# ╚══════════════════════════════════════════════════════════════════╝
+# HEADY_BRAND:END
+# ═══════════════════════════════════════════════════════════════════════
+# HEADY SYSTEMS — Iterative Rebuild Directive
+# ═══════════════════════════════════════════════════════════════════════
+#
+# Standing directive: rebuild the project correctly from core outward
+# using the Iterative Rebuild Protocol. Foundation components first,
+# high-performance MCP/API links next, websites and integrations last.
+#
+# This file is read by HCFullPipeline, HCSysOrchestrator, and
+# system-self-awareness to enforce the correct build order.
+
+version: "1.0.0"
+name: IterativeRebuildDirective
+
+# ─── STANDING MANDATE ──────────────────────────────────────────────
+mandate:
+  statement: >
+    The system MUST rebuild the project correctly from core outward,
+    using the Iterative Rebuild Protocol stages (ARCHIVE, SCAFFOLD,
+    IMPLEMENT, TEST, REVIEW, DOCUMENT, CHECKPOINT, RETRO).
+    Prioritize building a clean, optimized foundation of manager,
+    HCFullPipeline, HeadyBrains, and APIs before defining and wiring
+    websites and integrations.
+    Ensure MCP and HTTP APIs are the first-class interfaces, with
+    Cloudflare Workers as high-performance front doors, and only then
+    attach all Heady Systems websites and integrated services.
+  enforcement: strict
+  skip_allowed: false
+
+# ─── REBUILD PHASES ────────────────────────────────────────────────
+phases:
+
+  phase_1_archive:
+    name: "ARCHIVE"
+    description: "Tag and archive current state before any rebuild"
+    steps:
+      - "Tag current main branches with -pre-production-YYYYMMDD"
+      - "Archive HeadySystemsHeady, HeadyMeHeady, HeadyConnectionHeady"
+      - "Record registry snapshot in deployments/registry.json"
+    gate: "All branches tagged and archived"
+
+  phase_2_scaffold:
+    name: "SCAFFOLD"
+    description: "Reconstruct clean scaffold from registry"
+    steps:
+      - "From heady-registry.json, list all core services"
+      - "Verify source-of-truth files exist on disk for each component"
+      - "Create minimal Docker/Render blueprints"
+      - "Ensure configs/*.yaml are present and valid"
+    gate: "Scaffold matches registry — no orphans, no missing files"
+
+  phase_3_core_services:
+    name: "IMPLEMENT CORE"
+    description: "Build foundation services in correct order"
+    order:
+      - component: heady-manager
+        validation: "/api/health returns 200, /api/pulse returns endpoints list"
+      - component: heady-registry
+        validation: "/api/registry returns valid JSON with components array"
+      - component: hc-pipeline
+        validation: "/api/pipeline/config returns pipeline stages"
+      - component: heady-brain
+        validation: "/api/brain/health returns 200, /api/brain/plan accepts POST"
+      - component: hc-sys-orchestrator
+        validation: "/api/orchestrator/health returns 200"
+      - component: model-router
+        validation: "Reads cloud-layers.yaml, returns provider for test query"
+    gate: "All 6 core components healthy and responding"
+
+  phase_4_mcp_api:
+    name: "IMPLEMENT MCP & API LINKS"
+    description: "Wire high-performance MCP and HTTP APIs"
+    order:
+      - component: mcp-gateway
+        validation: "MCP tools list returns all registered tools"
+      - component: api-routes
+        validation: "All /api/* routes return correct schemas"
+      - component: sdk-clients
+        validation: "JS and Python SDKs connect and authenticate"
+    gate: "MCP gateway live, API routes tested, SDKs authenticate"
+
+  phase_5_edge:
+    name: "IMPLEMENT EDGE ROUTING"
+    description: "Deploy Cloudflare Workers and configure DNS"
+    order:
+      - component: edge-proxy-worker
+        validation: "Worker proxies requests to origin and returns correct response"
+      - component: dns-configuration
+        validation: "api.heady.systems resolves to Cloudflare"
+      - component: ssl-certificates
+        validation: "HTTPS working end-to-end"
+    gate: "Edge URLs live, HTTPS green, latency within targets"
+
+  phase_6_websites:
+    name: "IMPLEMENT WEBSITES & FRONTENDS"
+    description: "Build product-specific UIs that consume the foundation"
+    order:
+      - component: heady-frontend
+        validation: "Dashboard loads, connects to /api/pulse"
+      - component: heady-buddy-desktop
+        validation: "Buddy starts, shows chat interface"
+      - component: browser-extensions
+        validation: "Extension sidebar connects to manager API"
+    gate: "All frontends load and connect to foundation APIs"
+
+  phase_7_integrations:
+    name: "IMPLEMENT INTEGRATIONS"
+    description: "Wire external connectors and partner services"
+    order:
+      - component: slack-connector
+      - component: discord-connector
+      - component: email-agent
+      - component: calendar-agent
+    gate: "Connectors authenticate and respond to test messages"
+
+  phase_8_validate:
+    name: "VALIDATE & CHECKPOINT"
+    description: "Full validation pass and checkpoint sync"
+    steps:
+      - "Run all unit tests"
+      - "Run all integration tests"
+      - "Run domain-connectivity tests"
+      - "Run Checkpoint Protocol (code/config/docs/notebooks/registry sync)"
+      - "Run HeadySync to push to all remotes"
+      - "Update heady-registry.json with final state"
+    gate: "All tests pass, checkpoint clean, registry matches disk"
+
+# ─── STOP CONDITIONS ──────────────────────────────────────────────
+stop_conditions:
+  - condition: "A phase gate fails"
+    action: "Stop, diagnose, fix, re-validate the failed phase before proceeding"
+  - condition: "Critical error in core service"
+    action: "Halt all phases, enter recovery mode per hcfullpipeline.yaml"
+  - condition: "Registry drift detected"
+    action: "Reconcile registry with disk, then re-validate current phase"
+
+# ─── FOUNDATION-FIRST RULE ────────────────────────────────────────
+foundation_first:
+  rule: >
+    No product repo (HeadyMe, HeadyConnection, HeadyWeb, etc.) may be
+    built or deployed until the foundation (phases 1-4) is fully green.
+    Product repos are thin consumers of the foundation API/SDK.
+  enforcement: "HCSysOrchestrator checks phase gates before allowing product builds"
+  exceptions: "None — this rule has no exceptions"

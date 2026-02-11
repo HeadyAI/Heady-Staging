@@ -407,6 +407,49 @@ fileUpdateZones:
     - "Version control and rollback for all managed files"
     - "Audit trail: what changed, when, by which component"
 
+# ─── FOUNDATION REBUILD DIRECTIVE ────────────────────────────────────
+foundationRebuildDirective:
+  description: >
+    Rebuild the project correctly from core outward, using the Iterative
+    Rebuild Protocol. Prioritize a clean, optimized foundation of manager,
+    HCFullPipeline, HeadyBrains, and APIs before defining and wiring
+    websites and integrations. MCP and HTTP APIs are the first-class
+    interfaces, with Cloudflare Workers as high-performance front doors,
+    and only then attach all Heady Systems websites and integrated services.
+  stance: "foundation_first"
+  rebuild_order:
+    1: "Core services (manager, registry, HCFullPipeline, HeadyBrains, orchestrator)"
+    2: "High-performance MCP and HTTP APIs (internal and external)"
+    3: "Edge routing (Cloudflare Workers, tunnels, DNS)"
+    4: "Product websites (HeadySystems, HeadyMe, HeadyConnection, HeadyWeb)"
+    5: "Companion apps (HeadyBuddy desktop/mobile)"
+    6: "Integrations and partner services"
+  foundation_contract:
+    always_functional:
+      - "MCP server at services/mcp-gateway"
+      - "API server via heady-manager.js"
+      - "HCSysOrchestrator with multi-brain routing"
+      - "Health endpoints: /api/health, /api/brain/health"
+      - "Registry: /api/registry"
+      - "Buddy backend: services/buddy-service"
+    shared_packages:
+      - "packages/core-sdk"
+      - "packages/ui-kit"
+      - "packages/agents"
+      - "packages/connectors"
+  multi_brain_architecture:
+    description: >
+      Many brains over one fabric. Keep one shared IO fabric (MCP tools,
+      RAG connectors, model router, voice). Define distinct brains as
+      (workspace x agent-catalog x model-policy x memory) combinations.
+      The orchestrator chooses which brain to invoke per request.
+    config_files:
+      - "configs/cloud-layers.yaml"
+      - "configs/brain-profiles.yaml"
+      - "configs/product-repos.yaml"
+    orchestrator: "services/orchestrator/hc-sys-orchestrator.js"
+    edge_proxy: "workers/edge-proxy/src/index.ts"
+
 # ─── Checkpoint-Rebuild Protocol ──────────────────────────────────────
 checkpointRebuild:
   standingRule: "Every checkpoint triggers a full project rebuild from scratch"
