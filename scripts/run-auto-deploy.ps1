@@ -13,9 +13,10 @@ $CloudEndpoints = @{
     HeadySystems    = 'https://api.headysystems.com'
     HeadyConnection = 'https://api.headyconnection.org'
     Brain           = 'https://brain.headysystems.com'
-    BrainFallback1  = '52.32.178.8'
+    BrainFallback1  = 'https://52.32.178.8'
     BrainFallback2  = 'https://brain-backup.headysystems.com'
-    BrainLocal      = 'http://localhost:8081'
+    BrainEmergency  = 'https://brain-emergency.headysystems.com'
+    BrainDisaster   = 'https://brain-dr.headysystems.com'
 }
 
 $GateScore = 0
@@ -174,12 +175,13 @@ Write-Host '--------------------' -ForegroundColor Yellow
 if ($SkipTrain) {
     Write-Host '  Skipping auto-train (flag set)' -ForegroundColor Gray
 } else {
-    # AGGRESSIVE BRAIN RECOVERY - 100% FUNCTIONALITY REQUIRED
+    # AGGRESSIVE BRAIN RECOVERY - 100% FUNCTIONALITY REQUIRED - CLOUD ONLY
     $brainEndpoints = @(
-        $CloudEndpoints.Brain,
+        "$($CloudEndpoints.Brain)/api/v1/train",
         "https://$($CloudEndpoints.BrainFallback1)/api/v1/train",
-        $CloudEndpoints.BrainFallback2,
-        "$($CloudEndpoints.BrainLocal)/api/v1/train"
+        "$($CloudEndpoints.BrainFallback2)/api/v1/train",
+        "$($CloudEndpoints.BrainEmergency)/api/v1/train",
+        "$($CloudEndpoints.BrainDisaster)/api/v1/train"
     )
     
     $useEndpoint = $null
@@ -200,19 +202,30 @@ if ($SkipTrain) {
     }
     
     if (-not $brainHealthy) {
-        Write-Host '  [EMERGENCY] All brain endpoints down - ATTEMPTING RECOVERY' -ForegroundColor Red
-        # Try to restart local brain service
+        Write-Host '  [EMERGENCY] All cloud brain endpoints down - CRITICAL FAILURE' -ForegroundColor Red
+        Write-Host '  This VIOLATES 100% functionality requirement!' -ForegroundColor Red
+        
+        # Try emergency cloud restart
         try {
-            Write-Host '  Starting local brain service...' -ForegroundColor Yellow
-            Start-Process powershell -ArgumentList '-Command', 'cd c:\Users\erich\Heady; npm run brain:dev' -WindowStyle Hidden
-            Start-Sleep -Seconds 5
-            $null = Invoke-WebRequest -Uri $CloudEndpoints.BrainLocal -Method HEAD -TimeoutSec 3 -UseBasicParsing -ErrorAction Stop
-            $useEndpoint = "$($CloudEndpoints.BrainLocal)/api/v1/train"
+            Write-Host '  Attempting emergency cloud restart...' -ForegroundColor Yellow
+            $body = @{
+                action = 'emergency_restart'
+                reason = 'All endpoints down'
+                priority = 'critical'
+            } | ConvertTo-Json
+            
+            $response = Invoke-RestMethod -Uri 'https://api.headysystems.com/api/brain/control' -Method POST -Body $body -ContentType 'application/json' -TimeoutSec 10 -ErrorAction Stop
+            Write-Host "  [OK] Emergency restart initiated: $($response.requestId)" -ForegroundColor Green
+            
+            # Test primary after restart
+            Start-Sleep -Seconds 10
+            $null = Invoke-WebRequest -Uri $CloudEndpoints.Brain -Method HEAD -TimeoutSec 5 -UseBasicParsing -ErrorAction Stop
+            $useEndpoint = "$($CloudEndpoints.Brain)/api/v1/train"
             $brainHealthy = $true
-            Write-Host '  [OK] Local brain service recovered' -ForegroundColor Green
+            Write-Host '  [OK] Brain service recovered via cloud restart' -ForegroundColor Green
         } catch {
-            Write-Host '  [CRITICAL] BRAIN UNREACHABLE - MANUAL INTERVENTION REQUIRED' -ForegroundColor Red
-            Write-Host '  System will continue but functionality is DEGRADED' -ForegroundColor Red
+            Write-Host '  [CRITICAL] ALL CLOUD BRAIN SERVICES FAILED - 100% FUNCTIONALITY COMPROMISED' -ForegroundColor Red
+            Write-Host '  IMMEDIATE MANUAL INTERVENTION REQUIRED!' -ForegroundColor Red
         }
     }
 

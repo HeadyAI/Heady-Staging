@@ -8,12 +8,13 @@ param(
 
 $ErrorActionPreference = 'Stop'
 
-# Brain endpoints in priority order
+# Brain endpoints in priority order - CLOUD ONLY
 $BrainEndpoints = @(
     @{ Name = 'Primary'; Url = 'https://brain.headysystems.com' },
     @{ Name = 'Fallback1'; Url = 'https://52.32.178.8' },
     @{ Name = 'Fallback2'; Url = 'https://brain-backup.headysystems.com' },
-    @{ Name = 'Local'; Url = 'http://localhost:8081' }
+    @{ Name = 'Emergency'; Url = 'https://brain-emergency.headysystems.com' },
+    @{ Name = 'Disaster'; Url = 'https://brain-dr.headysystems.com' }
 )
 
 function Test-BrainEndpoint {
@@ -33,27 +34,30 @@ function Test-BrainEndpoint {
     }
 }
 
-function Start-LocalBrain {
-    Write-Host "[RECOVERY] Starting local brain service..." -ForegroundColor Yellow
+function Invoke-EmergencyBrainRestart {
+    Write-Host "[RECOVERY] Initiating emergency brain restart via cloud API..." -ForegroundColor Yellow
     
-    # Kill any existing brain processes
-    Get-Process -Name "node" -ErrorAction SilentlyContinue | 
-        Where-Object { $_.MainWindowTitle -like "*brain*" -or $_.CommandLine -like "*brain*" } | 
-        Stop-Process -Force -ErrorAction SilentlyContinue
-    
-    # Start brain service
     try {
-        Set-Location 'C:\Users\erich\Heady'
-        Start-Process powershell -ArgumentList '-NoProfile', '-Command', 'npm run brain:dev' -WindowStyle Hidden
-        Start-Sleep -Seconds 5
+        # Use cloud API to restart brain service
+        $body = @{
+            action = 'emergency_restart'
+            reason = 'All endpoints down'
+            priority = 'critical'
+        } | ConvertTo-Json
         
-        $test = Test-BrainEndpoint -Endpoint @{ Url = 'http://localhost:8081' }
-        if ($test.Healthy) {
-            Write-Host "[RECOVERY] Local brain service started successfully" -ForegroundColor Green
-            return $true
-        }
+        $response = Invoke-RestMethod -Uri 'https://api.headysystems.com/api/brain/control' -Method POST -Body $body -ContentType 'application/json' -TimeoutSec 10
+        
+        Write-Host "[RECOVERY] Emergency restart initiated: $($response.requestId)" -ForegroundColor Green
+        
+        # Wait for restart
+        Start-Sleep -Seconds 10
+        
+        # Test primary endpoint again
+        $test = Test-BrainEndpoint -Endpoint @{ Url = 'https://brain.headysystems.com' }
+        return $test.Healthy
+        
     } catch {
-        Write-Host "[RECOVERY] Failed to start local brain: $($_.Exception.Message)" -ForegroundColor Red
+        Write-Host "[RECOVERY] Emergency restart failed: $($_.Exception.Message)" -ForegroundColor Red
     }
     
     return $false
@@ -78,17 +82,17 @@ function Invoke-BrainRecovery {
     }
     
     if (-not $healthyEndpoint) {
-        Write-Host "[EMERGENCY] ALL BRAIN ENDPOINTS DOWN - INITIATING RECOVERY" -ForegroundColor Red
+        Write-Host '[EMERGENCY] ALL BRAIN ENDPOINTS DOWN - INITIATING CLOUD RECOVERY' -ForegroundColor Red
         
-        # Attempt local recovery
-        if (Start-LocalBrain) {
-            Write-Host "[RECOVERY] Brain functionality RESTORED via local service" -ForegroundColor Green
+        # Attempt cloud emergency restart
+        if (Invoke-EmergencyBrainRestart) {
+            Write-Host '[RECOVERY] Brain functionality RESTORED via cloud restart' -ForegroundColor Green
             
             # Notify monitoring
             try {
                 $body = @{
                     status = 'recovered'
-                    endpoint = 'http://localhost:8081'
+                    endpoint = 'https://brain.headysystems.com'
                     timestamp = (Get-Date).ToString('o')
                 } | ConvertTo-Json
                 
@@ -97,14 +101,14 @@ function Invoke-BrainRecovery {
                 # Notification failed but brain is working
             }
         } else {
-            Write-Host "[CRITICAL] BRAIN RECOVERY FAILED - MANUAL INTERVENTION REQUIRED" -BackgroundColor Red -ForegroundColor White
-            Write-Host "This violates the 100% functionality requirement!" -BackgroundColor Red -ForegroundColor White
+            Write-Host '[CRITICAL] ALL CLOUD BRAIN ENDPOINTS FAILED - CRITICAL FAILURE' -ForegroundColor Red
+            Write-Host 'This VIOLATES 100% functionality requirement!' -ForegroundColor Red
             
             # Send critical alert
             try {
                 $alert = @{
                     severity = 'critical'
-                    message = 'BRAIN SERVICE COMPLETELY UNAVAILABLE'
+                    message = 'ALL CLOUD BRAIN ENDPOINTS FAILED - 100% FUNCTIONALITY COMPROMISED'
                     timestamp = (Get-Date).ToString('o')
                     allEndpointsDown = $true
                 } | ConvertTo-Json
