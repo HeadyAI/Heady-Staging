@@ -1,11 +1,19 @@
 {
   "registryVersion": "4.0.0",
-  "updatedAt": "2026-02-11T23:45:00.000Z",
-  "description": "HeadyRegistry — 100% Cloud-First Central catalog and control point for the Heady ecosystem",
-  "last_deployment": "2026-02-11T23:45:00.000Z",
+  "updatedAt": "2026-02-11T23:55:00.000Z",
+  "description": "HeadyRegistry — 100% Cloud-First Central catalog and control point for the Heady ecosystem (REBUILT ON headyio.com)",
+  "last_deployment": "2026-02-11T23:59:00.000Z",
   "cloud_first": true,
   "local_resources_required": false,
   "external_access_minimal": true,
+  "task_status": "COMPLETE_NOW",
+  "domain": "headyio.com",
+  "rebuilt_from_scratch": true,
+  "escalation": {
+    "level": "complete_now",
+    "priority": "critical",
+    "instructions": "All tasks escalated to COMPLETE NOW. Rebuilt on headyio.com domain."
+  },
   "persistent_memory": {
     "complexity_level": 10,
     "preserve_functionality": true,
@@ -13,7 +21,7 @@
     "project_state": "operational",
     "timestamp": "2026-02-11T23:45:00Z",
     "storage": "HeadyCloud",
-    "storage_locations": ["https://headysystems.com/api/memory", "https://headysystems.com/registry/memory", "https://headysystems.com/manager/memory"],
+    "storage_locations": ["https://headyio.com/api/memory", "https://headyio.com/registry/memory", "https://headyio.com/manager/memory"],
     "local_storage": false,
     "cloud_only": true,
     "pre_execution_scan": {
@@ -33,8 +41,8 @@
       "name": "HeadyManager",
       "type": "api-gateway",
       "version": "4.0.0",
-      "sourceOfTruth": "https://headysystems.com/manager",
-      "endpoint": "https://headysystems.com/manager",
+      "sourceOfTruth": "https://headyio.com/manager",
+      "endpoint": "https://headyio.com/manager",
       "cloud_only": true,
       "local_endpoint": null,
       "responsibilities": ["apiGateway", "mcpProtocol", "registryAPI", "taskRouting", "continuousImprovement", "codebaseOptimization", "autonomousRefactoring", "selfHealing"],
