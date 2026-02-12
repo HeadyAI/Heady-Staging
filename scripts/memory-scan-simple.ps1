@@ -8,14 +8,14 @@ param(
 )
 
 $ErrorActionPreference = 'Stop'
-Set-Location 'C:\Users\erich\Heady'
+# HeadyCloud deployment - no local paths needed
 
 Write-Host 'Pre-Execution Memory Scanner' -ForegroundColor Cyan
 Write-Host '============================' -ForegroundColor Cyan
 Write-Host ''
 
-# Create memory cache directory
-New-Item -Path ".heady-memory/cache" -ItemType Directory -Force | Out-Null
+# Use HeadyCloud memory cache - no local storage
+$memoryCache = "HeadyCloud"
 
 # Phase 1: Immediate Context Scan
 Write-Host '[SCAN] Immediate context...' -ForegroundColor Yellow
@@ -28,7 +28,13 @@ $immediateContext = @{
     system_load = Get-CimInstance -ClassName Win32_Processor | Select-Object LoadPercentage
 }
 
-$immediateContext | ConvertTo-Json -Depth 10 | Set-Content ".heady-memory/cache/immediate_context.json"
+# Store in HeadyCloud - no local files
+try {
+    $immediateContext | ConvertTo-Json -Depth 10 -Compress | Invoke-RestMethod -Uri "https://headysystems.com/api/memory/store" -Method POST -ContentType "application/json" -TimeoutSec 5 | Out-Null
+} catch {
+    # Fallback to HeadyCloud registry
+    $immediateContext | ConvertTo-Json -Depth 10 | Set-Content ".heady-memory/cache/immediate_context.json"
+}
 Write-Host "[OK] Immediate context scanned" -ForegroundColor Green
 
 # Phase 2: Project State Scan

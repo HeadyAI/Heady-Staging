@@ -17,6 +17,7 @@ $CloudEndpoints = @{
     BrainFallback2  = 'https://brain-backup.headysystems.com'
     BrainEmergency  = 'https://brain-emergency.headysystems.com'
     BrainDisaster   = 'https://brain-dr.headysystems.com'
+    HeadyCo         = 'https://headysystems.com'
 }
 
 $GateScore = 0
