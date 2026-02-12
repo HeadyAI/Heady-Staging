@@ -3,7 +3,7 @@ function Test-DNSPropagation {
     try {
         $ips = [System.Net.Dns]::GetHostAddresses($Domain)
         Write-Host "✅ $Domain resolves to:" -ForegroundColor Green
-        $ips | ForEach-Object { Write-Host "  - $($_.IPAddressToString)" }
+        $ips | ForEach-Object { -Parallel { Write-Host "  - $($_.IPAddressToString)" }
         return $true
     } catch {
         Write-Host "❌ $Domain not resolved yet" -ForegroundColor Red

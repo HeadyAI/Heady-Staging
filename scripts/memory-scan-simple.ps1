@@ -43,7 +43,7 @@ Write-Host '[SCAN] Project state...' -ForegroundColor Yellow
 $projectState = @{
     timestamp = (Get-Date).ToString('yyyy-MM-ddTHH:mm:ssZ')
     registry_exists = Test-Path "heady-registry.json"
-    configs_count = (Get-ChildItem "configs" -File -Recurse -ErrorAction SilentlyContinue).Count
+    configs_count = (Get-ChildItem "configs" -File -Recurse -Depth 5 -ErrorAction SilentlyContinue).Count
     scripts_count = (Get-ChildItem "scripts" -File -Filter "*.ps1" -ErrorAction SilentlyContinue).Count
     docker_running = docker ps -q 2>$null
 }

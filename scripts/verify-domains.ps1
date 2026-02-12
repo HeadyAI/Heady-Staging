@@ -12,24 +12,24 @@ Checks all services for compliance with domain governance rules:
 $domainConfig = Get-Content -Path "$PSScriptRoot\..\configs\domain-mappings.yaml" | ConvertFrom-Yaml
 
 # 1. Check for .headysystems.com in user-facing files
-$filesWithRenderRefs = Get-ChildItem -Path "$PSScriptRoot\.." -Recurse -Include *.js,*.ts,*.yaml,*.json,*.md | 
+$filesWithRenderRefs = Get-ChildItem -Path "$PSScriptRoot\.." -Recurse -Depth 5 -Include *.js,*.ts,*.yaml,*.json,*.md | 
     Select-String -Pattern "\.onrender\.com" | 
     Select-Object -ExpandProperty Path
 
 if ($filesWithRenderRefs.Count -gt 0) {
     Write-Host "FAIL: Found $($filesWithRenderRefs.Count) files with .headysystems.com references" -ForegroundColor Red
-    $filesWithRenderRefs | ForEach-Object { Write-Host "  - $_" }
+    $filesWithRenderRefs | ForEach-Object { -Parallel { Write-Host "  - $_" }
     exit 1
 }
 
 # 2. Verify production URLs use HTTPS
-$insecureUrls = Get-ChildItem -Path "$PSScriptRoot\.." -Recurse -Include *.js,*.ts,*.yaml,*.json | 
+$insecureUrls = Get-ChildItem -Path "$PSScriptRoot\.." -Recurse -Depth 5 -Include *.js,*.ts,*.yaml,*.json | 
     Select-String -Pattern "http://(api|app|admin)\." | 
     Select-Object -ExpandProperty Path
 
 if ($insecureUrls.Count -gt 0) {
     Write-Host "FAIL: Found $($insecureUrls.Count) files with insecure HTTP URLs" -ForegroundColor Red
-    $insecureUrls | ForEach-Object { Write-Host "  - $_" }
+    $insecureUrls | ForEach-Object { -Parallel { Write-Host "  - $_" }
     exit 1
 }
 
@@ -44,7 +44,7 @@ foreach ($domain in $domainConfig.production.headysystems.GetEnumerator()) {
 
 if ($missingDns.Count -gt 0) {
     Write-Host "FAIL: Missing DNS records for domains:" -ForegroundColor Red
-    $missingDns | ForEach-Object { Write-Host "  - $_" }
+    $missingDns | ForEach-Object { -Parallel { Write-Host "  - $_" }
     exit 1
 }
 

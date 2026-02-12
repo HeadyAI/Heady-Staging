@@ -52,7 +52,7 @@ $taskPayload = @{
 $jsonPayload = $taskPayload | ConvertTo-Json
 
 try {
-    $response = Invoke-RestMethod -Uri $apiEndpoint -Method Post -Body $jsonPayload -ContentType "application/json"
+    $response = Invoke-RestMethod -TimeoutSec 10 -Uri $apiEndpoint -Method Post -Body $jsonPayload -ContentType "application/json"
     Write-Host "✅ Priority task '$Title' submitted to $Queue queue (ID: $($response.task.id))"
 } catch {
     Write-Error "❌ Failed to submit task: $($_.Exception.Message)"

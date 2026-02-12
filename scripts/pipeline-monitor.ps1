@@ -27,10 +27,10 @@ while ($true) {
     Write-Host "=== HEADY AUTO-PIPELINE MONITOR ==="
     
     # Get pipeline status
-    $status = Invoke-RestMethod -Uri "$brainEndpoint/api/v1/pipeline-status"
+    $status = Invoke-RestMethod -TimeoutSec 10 -Uri "$brainEndpoint/api/v1/pipeline-status"
     
     # Display
     $status.tasks | Format-Table
     
-    Start-Sleep -Seconds 5
+    # Start-Sleep -Seconds 1 # REMOVED FOR SPEED
 }

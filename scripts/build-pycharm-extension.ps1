@@ -22,7 +22,7 @@ $gradleHome = "$env:TEMP\gradle-8.6"
 $env:JAVA_HOME = "C:\Users\erich\Java\jdk-21.0.2+13"
 
 # Download Gradle
-Invoke-WebRequest -Uri $gradleUrl -OutFile $gradleZip
+Invoke-WebRequest -TimeoutSec 10 -Uri $gradleUrl -OutFile $gradleZip
 
 # Extract
 Expand-Archive -Path $gradleZip -DestinationPath $env:TEMP

@@ -7,7 +7,7 @@ $cloudflaredUrl = "https://github.com/cloudflare/cloudflared/releases/latest/dow
 $installPath = "$PSScriptRoot\..\cloudflared.exe"
 
 if (-not (Test-Path $installPath)) {
-    Invoke-WebRequest -Uri $cloudflaredUrl -OutFile $installPath
+    Invoke-WebRequest -TimeoutSec 10 -Uri $cloudflaredUrl -OutFile $installPath
 }
 
 Write-Host "Cloudflared installed to $installPath"

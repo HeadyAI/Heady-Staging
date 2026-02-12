@@ -334,7 +334,7 @@ function Test-ComplianceScore {
         Passed = $compliancePassed
         Details = @{
             TotalChecks = $resultCount
-            IndividualScores = $allResults | ForEach-Object { @{ Category = $_.Category; Score = $_.Score; Passed = $_.Passed } }
+            IndividualScores = $allResults | ForEach-Object { -Parallel { @{ Category = $_.Category; Score = $_.Score; Passed = $_.Passed } }
         }
         Timestamp = Get-Date
     }

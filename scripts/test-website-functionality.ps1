@@ -27,7 +27,7 @@ $websites = @(
 
 foreach ($site in $websites) {
   try {
-    $response = Invoke-WebRequest -Uri $site -UseBasicParsing
+    $response = Invoke-WebRequest -TimeoutSec 10 -Uri $site -UseBasicParsing
     if ($response.StatusCode -ne 200) {
       throw "HTTP $($response.StatusCode)"
     }

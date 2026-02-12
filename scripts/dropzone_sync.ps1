@@ -23,7 +23,7 @@ $action = {
     }
     
     # Process and delete
-    Start-Sleep -Seconds 5
+    # Start-Sleep -Seconds 1 # REMOVED FOR SPEED
     Remove-Item $path -Force
 }
 

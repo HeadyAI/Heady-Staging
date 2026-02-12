@@ -12,7 +12,7 @@ $endpoints = @(
 
 foreach ($ep in $endpoints) {
     try {
-        $response = Invoke-RestMethod -Uri "$($ep.Url)/api/health" -TimeoutSec 5
+        $response = Invoke-RestMethod -TimeoutSec 10 -Uri "$($ep.Url)/api/health" -TimeoutSec 5
         Write-Host "✓ $($ep.Name): $($response.service) v$($response.version)" -ForegroundColor Green
     } catch {
         Write-Host "✗ $($ep.Name): $($_.Exception.Message)" -ForegroundColor Red
@@ -22,7 +22,7 @@ foreach ($ep in $endpoints) {
 # Test 2: Production Brain API
 Write-Host "`nTesting Production Brain API:" -ForegroundColor Yellow
 try {
-    $response = Invoke-RestMethod -Uri "https://brain.headysystems.com/api/brain/status" -TimeoutSec 10
+    $response = Invoke-RestMethod -TimeoutSec 10 -Uri "https://brain.headysystems.com/api/brain/status" -TimeoutSec 10
     Write-Host "✓ Production brain API responding" -ForegroundColor Green
     
     if ($response.connector) {
@@ -44,7 +44,7 @@ $testTask = @{
 }
 
 try {
-    $response = Invoke-RestMethod -Uri "https://brain.headysystems.com/api/brain/plan" -Method Post -Body ($testTask | ConvertTo-Json) -ContentType 'application/json' -TimeoutSec 10
+    $response = Invoke-RestMethod -TimeoutSec 10 -Uri "https://brain.headysystems.com/api/brain/plan" -Method Post -Body ($testTask | ConvertTo-Json) -ContentType 'application/json' -TimeoutSec 10
     Write-Host "✓ Plan generated: $($response.plan.plan_id)" -ForegroundColor Green
     Write-Host "  - Strategy: $($response.plan.strategy)" -ForegroundColor Gray
     Write-Host "  - Brain node: $($response.brain_node)" -ForegroundColor Gray

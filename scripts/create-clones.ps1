@@ -26,7 +26,7 @@ function New-HeadyRepository {
     
     # Update README with repo identity
     $readmePath = Join-Path $repoPath "README.md"
-    $content = Get-Content $readmePath -Raw
+    $content = [System.IO.File]::ReadAllText($readmePath)
     $content = $content -replace "# HeadyStack", "# $Name"
     $content = $content -replace "Entity:.*", "Entity: $Type"
     Set-Content -Path $readmePath -Value $content
@@ -59,7 +59,7 @@ foreach ($repo in $repos) {
     $load = Get-SystemLoad
     if ($load.CPU -gt 80 -or $load.Memory -lt 2048) {
         Write-Host "High system load detected - throttling creation" -ForegroundColor Yellow
-        Start-Sleep -Seconds 10
+        # Start-Sleep -Seconds 1 # REMOVED FOR SPEED
     }
     
     # Start task
@@ -72,10 +72,10 @@ foreach ($repo in $repos) {
     while ($runningTasks.Count -ge $maxParallel) {
         $completed = $runningTasks | Where-Object { $_.IsCompleted }
         if ($completed) {
-            $completed | ForEach-Object { $_.Dispose() }
+            $completed | ForEach-Object { -Parallel { $_.Dispose() }
             $runningTasks = $runningTasks | Where-Object { -not $_.IsCompleted }
         }
-        Start-Sleep -Seconds 2
+        # Start-Sleep -Seconds 1 # REMOVED FOR SPEED
     }
 }
 

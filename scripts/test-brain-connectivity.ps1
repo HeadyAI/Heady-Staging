@@ -47,7 +47,7 @@ $endpoints = @(
 
 foreach ($ep in $endpoints) {
     try {
-        $response = Invoke-RestMethod -Uri "$($ep.Url)/api/health" -TimeoutSec 5
+        $response = Invoke-RestMethod -TimeoutSec 10 -Uri "$($ep.Url)/api/health" -TimeoutSec 5
         Write-Host "✓ $($ep.Name): $($response.service) v$($response.version)" -ForegroundColor Green
     } catch {
         Write-Host "✗ $($ep.Name): $($_.Exception.Message)" -ForegroundColor Red
@@ -60,7 +60,7 @@ Write-Host "--------------------------------" -ForegroundColor Yellow
 
 try {
     # Test local brain API
-    $response = Invoke-RestMethod -Uri "http://api.headysystems.com:3400/api/brain/status" -TimeoutSec 5
+    $response = Invoke-RestMethod -TimeoutSec 10 -Uri "http://api.headysystems.com:3400/api/brain/status" -TimeoutSec 5
     Write-Host "✓ Local brain API responding" -ForegroundColor Green
     
     if ($response.connector) {
@@ -70,7 +70,7 @@ try {
         
         if ($Verbose) {
             Write-Host "  - Endpoints:" -ForegroundColor Gray
-            $response.connector.endpoints.PSObject.Properties | ForEach-Object {
+            $response.connector.endpoints.PSObject.Properties | ForEach-Object { -Parallel {
                 Write-Host "    * $($_.Name): $($_.Value.success) success, $($_.Value.failure) failures" -ForegroundColor Gray
             }
         }
@@ -84,7 +84,7 @@ Write-Host "`nTest 3: Circuit Breaker Test" -ForegroundColor Yellow
 Write-Host "-----------------------------" -ForegroundColor Yellow
 
 try {
-    $response = Invoke-RestMethod -Uri "http://api.headysystems.com:3400/api/brain/connector-status" -TimeoutSec 5
+    $response = Invoke-RestMethod -TimeoutSec 10 -Uri "http://api.headysystems.com:3400/api/brain/connector-status" -TimeoutSec 5
     
     foreach ($cb in $response.circuit_breakers) {
         $status = switch ($cb.state) {
@@ -117,7 +117,7 @@ $testTask = @{
 }
 
 try {
-    $response = Invoke-RestMethod -Uri "http://api.headysystems.com:3400/api/brain/plan" -Method Post -Body ($testTask | ConvertTo-Json) -ContentType 'application/json' -TimeoutSec 10
+    $response = Invoke-RestMethod -TimeoutSec 10 -Uri "http://api.headysystems.com:3400/api/brain/plan" -Method Post -Body ($testTask | ConvertTo-Json) -ContentType 'application/json' -TimeoutSec 10
     
     Write-Host "✓ Plan generated successfully" -ForegroundColor Green
     Write-Host "  - Plan ID: $($response.plan.plan_id)" -ForegroundColor Gray
@@ -148,7 +148,7 @@ if ($Stress) {
             }
             
             try {
-                $response = Invoke-RestMethod -Uri "http://api.headysystems.com:3400/api/brain/plan" -Method Post -Body ($task | ConvertTo-Json) -ContentType 'application/json' -TimeoutSec 5
+                $response = Invoke-RestMethod -TimeoutSec 10 -Uri "http://api.headysystems.com:3400/api/brain/plan" -Method Post -Body ($task | ConvertTo-Json) -ContentType 'application/json' -TimeoutSec 5
                 return @{ success = $true; planId = $response.plan.plan_id; node = $response.brain_node }
             } catch {
                 return @{ success = $false; error = $_.Exception.Message }
@@ -193,14 +193,14 @@ Write-Host "`nTest 6: Health Monitoring System" -ForegroundColor Yellow
 Write-Host "------------------------------" -ForegroundColor Yellow
 
 try {
-    $response = Invoke-RestMethod -Uri "http://api.headysystems.com:3400/api/brain/health" -TimeoutSec 5
+    $response = Invoke-RestMethod -TimeoutSec 10 -Uri "http://api.headysystems.com:3400/api/brain/health" -TimeoutSec 5
     Write-Host "✓ Brain health endpoint responding" -ForegroundColor Green
     Write-Host "  - Service: $($response.service)" -ForegroundColor Gray
     Write-Host "  - Version: $($response.version)" -ForegroundColor Gray
     
     if ($response.subsystems) {
         Write-Host "  - Subsystems:" -ForegroundColor Gray
-        $response.subsystems.PSObject.Properties | ForEach-Object {
+        $response.subsystems.PSObject.Properties | ForEach-Object { -Parallel {
             $status = if ($_.Value) { '✓' } else { '✗' }
             Write-Host "    * $($_.Name): $status" -ForegroundColor Gray
         }

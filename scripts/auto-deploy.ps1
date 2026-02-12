@@ -22,7 +22,7 @@ Automated deployment script for Heady ecosystem with Monte Carlo optimization
 # Import environment variables
 $envFile = Join-Path $PSScriptRoot "..\.env"
 if (Test-Path $envFile) {
-    Get-Content $envFile | ForEach-Object {
+    Get-Content $envFile | ForEach-Object { -Parallel {
         $key, $value = $_.Split('=', 2)
         if ($key -and $value) {
             Set-Item -Path "env:\$key" -Value $value
@@ -43,7 +43,7 @@ $headers = @{
 # 1. Pre-deployment health checks
 function Invoke-HealthChecks {
     $healthUri = "$API_BASE/api/health"
-    $response = Invoke-RestMethod -Uri $healthUri -Headers $headers -Method Get
+    $response = Invoke-RestMethod -TimeoutSec 10 -Uri $healthUri -Headers $headers -Method Get
     if ($response.status -ne "healthy") {
         Write-Error "Pre-deployment health checks failed. Aborting deployment."
         exit 1
@@ -56,7 +56,7 @@ function Get-DeploymentStrategy {
     $body = @{
         taskType = "deployment"
     } | ConvertTo-Json
-    $response = Invoke-RestMethod -Uri $strategyUri -Headers $headers -Method Post -Body $body
+    $response = Invoke-RestMethod -TimeoutSec 10 -Uri $strategyUri -Headers $headers -Method Post -Body $body
     return $response
 }
 
@@ -84,7 +84,7 @@ function Invoke-PostDeployment {
 
     # Run benchmarks
     $benchmarkUri = "$API_BASE/api/benchmark"
-    Invoke-RestMethod -Uri $benchmarkUri -Headers $headers -Method Post
+    Invoke-RestMethod -TimeoutSec 10 -Uri $benchmarkUri -Headers $headers -Method Post
 
     # Update deployment registry
     $deployData = @{
@@ -106,7 +106,7 @@ function Update-MonteCarloModels {
             # ... other metrics
         }
     } | ConvertTo-Json
-    Invoke-RestMethod -Uri $updateUri -Headers $headers -Method Post -Body $body
+    Invoke-RestMethod -TimeoutSec 10 -Uri $updateUri -Headers $headers -Method Post -Body $body
 }
 
 # Main deployment process
@@ -206,16 +206,16 @@ if ($PSBoundParameters.Count -eq 0 -and $args.Count -eq 0) {
 Write-Host "🔍 Scanning project for improvements..." -ForegroundColor Cyan
 
 # Scan all PowerShell files
-$allScripts = Get-ChildItem -Path $projectRoot -Filter *.ps1 -Recurse -Exclude *test*,*build*,*node_modules*
+$allScripts = Get-ChildItem -Path $projectRoot -Filter *.ps1 -Recurse -Depth 5 -Exclude *test*,*build*,*node_modules*
 $totalFiles = $allScripts.Count
 $currentFile = 0
 
-$allScripts | ForEach-Object {
+$allScripts | ForEach-Object { -Parallel {
     $file = $_
     $currentFile++
     Write-Progress -Activity "Scanning files" -Status "$currentFile of $totalFiles" -PercentComplete (($currentFile / $totalFiles) * 100)
     
-    $content = Get-Content $file.FullName -Raw
+    $content = [System.IO.File]::ReadAllText($file.FullName)
     $modified = $false
     
     # Check for unprotected web requests
@@ -261,7 +261,7 @@ $allScripts | ForEach-Object {
     }
     
     # Refresh content if modified
-    if ($modified) { $content = Get-Content $file.FullName -Raw }
+    if ($modified) { $content = [System.IO.File]::ReadAllText($file.FullName) }
     
     # Check for missing circuit breakers in deployment scripts
     if ($file.Name -match 'deploy|rollback|critical' -and $content -notmatch 'Get-CircuitBreaker|Register-PatternEvent.*deployment') {
@@ -280,7 +280,7 @@ $allScripts | ForEach-Object {
         $modified = $true
     }
     
-    if ($modified) { $content = Get-Content $file.FullName -Raw }
+    if ($modified) { $content = [System.IO.File]::ReadAllText($file.FullName) }
     
     # Check for missing performance monitoring
     if ($content -match 'ForEach-Object|Where-Object.*{' -and $content -notmatch '\[System\.Diagnostics\.Stopwatch\]|Measure-Command') {
@@ -299,7 +299,7 @@ $allScripts | ForEach-Object {
         $modified = $true
     }
     
-    if ($modified) { $content = Get-Content $file.FullName -Raw }
+    if ($modified) { $content = [System.IO.File]::ReadAllText($file.FullName) }
     
     # Check for hardcoded credentials
     if ($content -match '(?i)(password|apikey|secret|token|credential)\s*=\s*["\'][^"\']+["\']') {
@@ -329,7 +329,7 @@ $allScripts | ForEach-Object {
         $modified = $true
     }
     
-    if ($modified) { $content = Get-Content $file.FullName -Raw }
+    if ($modified) { $content = [System.IO.File]::ReadAllText($file.FullName) }
     
     # Check for missing timeout configurations
     if ($content -match 'Invoke-(RestMethod|WebRequest)' -and $content -notmatch '-TimeoutSec') {
@@ -342,7 +342,7 @@ $allScripts | ForEach-Object {
         }
         
         $lines = Get-Content $file.FullName
-        $newContent = $lines | ForEach-Object {
+        $newContent = $lines | ForEach-Object { -Parallel {
             if ($_ -match '(Invoke-(?:RestMethod|WebRequest).*)(?=\s*$)' -and $_ -notmatch '-TimeoutSec') {
                 $_ -replace '(Invoke-(?:RestMethod|WebRequest)[^\r\n]*)', '$1 -TimeoutSec 30'
             } else {
@@ -354,7 +354,7 @@ $allScripts | ForEach-Object {
         $modified = $true
     }
     
-    if ($modified) { $content = Get-Content $file.FullName -Raw }
+    if ($modified) { $content = [System.IO.File]::ReadAllText($file.FullName) }
     
     # Check for missing retry logic
     if ($content -match 'Invoke-(RestMethod|WebRequest)' -and $content -notmatch 'Invoke-WithRetry|for\s*\(\$i.*retry|while.*attempt') {
@@ -375,9 +375,9 @@ $allScripts | ForEach-Object {
 
 # Scan for missing parameter validation
 Get-ChildItem -Path "$projectRoot\scripts" -Filter *.ps1 | Where-Object {
-    $content = Get-Content $_.FullName -Raw
+    $content = [System.IO.File]::ReadAllText($_.FullName)
     $content -match 'param\s*\(' -and $content -notmatch '\[ValidateNotNullOrEmpty\]|\[ValidateSet|\[CmdletBinding'
-} | ForEach-Object {
+} | ForEach-Object { -Parallel {
     $scanResults += @{
         File = $_.Name
         Issue = "Parameters lack validation attributes"
@@ -420,7 +420,7 @@ if (Test-Path $gitignorePath) {
 Get-ChildItem -Path "$projectRoot\src" -Filter *.psm1 -ErrorAction SilentlyContinue | Where-Object {
     $manifestPath = $_.FullName -replace '\.psm1$', '.psd1'
     -not (Test-Path $manifestPath)
-} | ForEach-Object {
+} | ForEach-Object { -Parallel {
     $moduleName = $_.BaseName
     $manifestPath = $_.FullName -replace '\.psm1$', '.psd1'
     $scanResults += @{
@@ -478,7 +478,7 @@ if ($scanResults.Count -gt 0) {
             'Medium' { 2 } 
             'Low' { 3 } 
         } 
-    } | ForEach-Object {
+    } | ForEach-Object { -Parallel {
         $color = switch ($_.Name) {
             'Critical' { 'Red' }
             'High' { 'Red' }

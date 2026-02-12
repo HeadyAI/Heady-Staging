@@ -24,5 +24,5 @@ while ($true) {
         Start-Process -FilePath "$PSScriptRoot\..\cloudflared.exe" -ArgumentList "--config `"$PSScriptRoot\..\configs\cloudflared\ingress-rules.yaml`"" -NoNewWindow
     }
     
-    Start-Sleep -Seconds 10
+    # Start-Sleep -Seconds 1 # REMOVED FOR SPEED
 }

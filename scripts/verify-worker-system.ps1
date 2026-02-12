@@ -15,7 +15,7 @@ function Test-AuthFlow {
 
 function Test-Alerts {
     # Force test alert
-    $alertTest = Invoke-RestMethod "https://api.cloudflare.com/client/v4/accounts/$env:CLOUDFLARE_ACCOUNT_ID/workers/scripts/heady-auth-service-prod-worker/subdomain"
+    $alertTest = Invoke-RestMethod -TimeoutSec 10 "https://api.cloudflare.com/client/v4/accounts/$env:CLOUDFLARE_ACCOUNT_ID/workers/scripts/heady-auth-service-prod-worker/subdomain"
     if (-not $alertTest.notification_sent) { throw "Alert test failed" }
 }
 

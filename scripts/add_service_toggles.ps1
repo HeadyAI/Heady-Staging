@@ -153,7 +153,7 @@ if (-not (Get-Command ConvertFrom-Yaml -ErrorAction SilentlyContinue)) {
 $serviceCatalog = @{}
 if (Test-Path $ConfigPath) {
     try {
-        $catalog = Get-Content $ConfigPath -Raw | ConvertFrom-Yaml
+        $catalog = [System.IO.File]::ReadAllText($ConfigPath) | ConvertFrom-Yaml
         foreach ($service in $catalog.services) {
             $serviceCatalog[$service.name] = @{
                 critical = $service.critical
@@ -434,7 +434,7 @@ if ($DryRun) {
     Write-Host "⚠️  DRY RUN MODE - No changes will be made" -ForegroundColor Yellow
     Write-Host ""
 }
-$files = Get-ChildItem -Path . -Recurse -Include 'docker-compose*.yml'
+$files = Get-ChildItem -Path . -Recurse -Depth 5 -Include 'docker-compose*.yml'
 
 foreach ($file in $files) {
     $content = Get-Content $file.FullName

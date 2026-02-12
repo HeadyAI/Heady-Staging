@@ -22,7 +22,7 @@ Write-Host "Pulling latest changes from all repositories"
 git -C "$PSScriptRoot\..\.." pull --all
 
 # Step 2: Build file inventory
-$fileInventory = Get-ChildItem -Path "$PSScriptRoot\..\.." -Recurse -File | 
+$fileInventory = Get-ChildItem -Path "$PSScriptRoot\..\.." -Recurse -Depth 5 -File | 
     Where-Object { $_.FullName -notmatch '\.git|node_modules|venv|__pycache__' } |
     Select-Object FullName, LastWriteTime
 

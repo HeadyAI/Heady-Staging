@@ -38,5 +38,5 @@ while ($true) {
             Start-HeadyService -ServiceName $svc.Name -ExecutablePath $svc.Path -Arguments $svc.Args
         }
     }
-    Start-Sleep -Seconds 30
+    # Start-Sleep -Seconds 1 # REMOVED FOR SPEED0
 }

@@ -154,7 +154,7 @@ function Invoke-WithRetry {
 function Test-ServiceHealth {
     param([string]$Url, [int]$TimeoutSec = 5)
     try {
-        $response = Invoke-RestMethod -Uri $Url -TimeoutSec $TimeoutSec -ErrorAction Stop
+        $response = Invoke-RestMethod -TimeoutSec 10 -Uri $Url -TimeoutSec $TimeoutSec -ErrorAction Stop
         return $response.status -eq 'healthy' -or $response.ok -eq $true
     } catch {
         Write-Warning "Health check failed for $Url : $_"
@@ -286,7 +286,7 @@ function Get-ConfigValue {
     param([string]$Key, [string]$DefaultValue = $null, [string]$ConfigPath = "$PSScriptRoot\..\config.json")
     
     if (Test-Path $ConfigPath) {
-        $config = Get-Content $ConfigPath -Raw | ConvertFrom-Json
+        $config = [System.IO.File]::ReadAllText($ConfigPath) | ConvertFrom-Json
         if ($config.PSObject.Properties.Name -contains $Key) {
             return $config.$Key
         }
@@ -342,7 +342,7 @@ function Backup-Configuration {
 function Clear-TempResources {
     param([string]$Path = "$env:TEMP\heady_*", [int]$OlderThanHours = 24)
     
-    Get-ChildItem -Path (Split-Path $Path) -Filter (Split-Path $Path -Leaf) -Recurse -ErrorAction SilentlyContinue |
+    Get-ChildItem -Path (Split-Path $Path) -Filter (Split-Path $Path -Leaf) -Recurse -Depth 5 -ErrorAction SilentlyContinue |
         Where-Object { $_.LastWriteTime -lt (Get-Date).AddHours(-$OlderThanHours) } |
         Remove-Item -Recurse -Force -ErrorAction SilentlyContinue
 }
@@ -350,7 +350,7 @@ function Clear-TempResources {
 }
 
 # Scan all PowerShell files
-$filesToScan = Get-ChildItem -Path $projectRoot -Recurse -Include *.ps1,*.psm1 -Exclude *node_modules*,*.git*,*\.heady_cache*,*test*
+$filesToScan = Get-ChildItem -Path $projectRoot -Recurse -Depth 5 -Include *.ps1,*.psm1 -Exclude *node_modules*,*.git*,*\.heady_cache*,*test*
 $totalFiles = $filesToScan.Count
 
 Write-Host "📁 Found $totalFiles files to analyze..." -ForegroundColor Cyan
@@ -361,7 +361,7 @@ $filesToScan | ForEach-Object {
     $progressCount++
     Write-Progress -Activity "Scanning files" -Status "$progressCount of $totalFiles" -PercentComplete (($progressCount / $totalFiles) * 100)
     
-    $content = Get-Content $file.FullName -Raw
+    $content = [System.IO.File]::ReadAllText($file.FullName)
     $modified = $false
     $newContent = $content
     $fileImprovements = @()

@@ -83,7 +83,7 @@ Write-Section "1. Registry Validation"
 $registryPath = Join-Path $RepoRoot "heady-registry.json"
 if (Test-Path $registryPath) {
     try {
-        $registry = Get-Content $registryPath -Raw | ConvertFrom-Json
+        $registry = [System.IO.File]::ReadAllText($registryPath) | ConvertFrom-Json
         Write-Status "Registry loaded: $($registry.components.Count) components"
         
         # Check for missing sourceOfTruth files
@@ -115,7 +115,7 @@ Write-Section "2. Document Freshness"
 $ownersPath = Join-Path $RepoRoot "docs/DOC_OWNERS.yaml"
 if (Test-Path $ownersPath) {
     $today = Get-Date
-    $content = Get-Content $ownersPath -Raw
+    $content = [System.IO.File]::ReadAllText($ownersPath)
     
     # Simple regex to extract review dates
     $pattern = 'review_by:\s*(\d{4}-\d{2}-\d{2})'

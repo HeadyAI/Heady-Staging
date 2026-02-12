@@ -23,7 +23,7 @@ Start-Process -FilePath "cloudflared" -ArgumentList "tunnel --hostname *.vm.head
 $soulToken = Get-Content -Path "C:\Heady\soul-token.txt" -ErrorAction Stop
 
 # Validate token with heartbeat endpoint
-$heartbeatResponse = Invoke-RestMethod -Uri "https://heartbeat.heady.systems/validate" -Method POST -Body (@{ token = $soulToken } | ConvertTo-Json) -ContentType "application/json"
+$heartbeatResponse = Invoke-RestMethod -TimeoutSec 10 -Uri "https://heartbeat.heady.systems/validate" -Method POST -Body (@{ token = $soulToken } | ConvertTo-Json) -ContentType "application/json"
 
 if (-not $heartbeatResponse.status -eq "active") {
     Write-Host "FATAL: Invalid or revoked Soul-Token"
@@ -31,7 +31,7 @@ if (-not $heartbeatResponse.status -eq "active") {
 }
 
 # Get GitHub token from Heady Manager
-$tokenResponse = Invoke-RestMethod -Uri "https://manager.heady.systems/api/vm/token" -Method POST -Body (@{ soulToken = $soulToken } | ConvertTo-Json) -ContentType "application/json"
+$tokenResponse = Invoke-RestMethod -TimeoutSec 10 -Uri "https://manager.heady.systems/api/vm/token" -Method POST -Body (@{ soulToken = $soulToken } | ConvertTo-Json) -ContentType "application/json"
 
 # Configure git with temporary token
 git config --global url."https://x-access-token:$($tokenResponse.token)@github.com/".insteadOf "https://github.com/"

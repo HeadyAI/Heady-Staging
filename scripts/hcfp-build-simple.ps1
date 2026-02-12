@@ -23,18 +23,18 @@ Write-Host "Starting simplified HCFullPipeline"
 
 # Phase 1: Archive
 Write-Host "Archiving repositories..."
-Start-Sleep -Seconds 2
+# Start-Sleep -Seconds 1 # REMOVED FOR SPEED
 
 # Phase 2: Create fresh repos
 Write-Host "Creating fresh repositories..."
-Start-Sleep -Seconds 2
+# Start-Sleep -Seconds 1 # REMOVED FOR SPEED
 
 # Phase 3: Scaffold project
 Write-Host "Scaffolding project..."
-Start-Sleep -Seconds 2
+# Start-Sleep -Seconds 1 # REMOVED FOR SPEED
 
 # Phase 4: Push to remotes
 Write-Host "Pushing to remotes..."
-Start-Sleep -Seconds 2
+# Start-Sleep -Seconds 1 # REMOVED FOR SPEED
 
 Write-Host "Simplified HCFullPipeline completed successfully"

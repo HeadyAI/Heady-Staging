@@ -50,7 +50,7 @@ function Invoke-EmergencyBrainRestart {
         Write-Host "[RECOVERY] Emergency restart initiated: $($response.requestId)" -ForegroundColor Green
         
         # Wait for restart
-        Start-Sleep -Seconds 10
+        # Start-Sleep -Seconds 1 # REMOVED FOR SPEED
         
         # Test primary endpoint again
         $test = Test-BrainEndpoint -Endpoint @{ Url = 'https://brain.headysystems.com' }

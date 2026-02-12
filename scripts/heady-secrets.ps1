@@ -97,7 +97,7 @@ switch ($Command) {
     }
     
     # Check for secrets in use across all config files
-    $configFiles = Get-ChildItem -Path "$PSScriptRoot\.." -Recurse -Include "*.json","*.yml","*.yaml","*.env","*.ps1","*.js","*.ts" -ErrorAction SilentlyContinue | 
+    $configFiles = Get-ChildItem -Path "$PSScriptRoot\.." -Recurse -Depth 5 -Include "*.json","*.yml","*.yaml","*.env","*.ps1","*.js","*.ts" -ErrorAction SilentlyContinue | 
         Where-Object { $_.FullName -notmatch '(node_modules|\.git|backups|logs)' }
     
     $auditReport.Statistics.TotalFilesScanned = $configFiles.Count
@@ -224,7 +224,7 @@ switch ($Command) {
     # Capture environment secrets
     Get-ChildItem env: | Where-Object { 
         $_.Name -match '^(HEADY_|CLOUDFLARE_|DATABASE_|HF_|RENDER_|ADMIN_|ENCRYPTION_|API_)' 
-    } | ForEach-Object {
+    } | ForEach-Object { -Parallel {
         $secretManifest.Secrets += @{
             Name = $_.Name
             Source = "Environment"

@@ -40,7 +40,7 @@ $workspaceProcs = Get-Process | Where-Object { $_.ProcessName -match "code|winds
 # Enforce workspace limit
 if ($workspaceProcs.Count -gt $MaxWorkspaces) {
     $oldest = $workspaceProcs | Sort-Object StartTime | Select-Object -First ($workspaceProcs.Count - $MaxWorkspaces)
-    $oldest | ForEach-Object { 
+    $oldest | ForEach-Object { -Parallel { 
         Write-Host "Closing workspace: $($_.ProcessName) (PID: $($_.Id))"
         Stop-Process -Id $_.Id -Force 
     }
@@ -68,4 +68,4 @@ $body = @{
     ram_available_gb = [Math]::Round($ramUsage, 2)
 } | ConvertTo-Json
 
-Invoke-RestMethod -Uri "http://resource-manager.headysystems.comheadyio.com/metrics" -Method Post -Body $body
+Invoke-RestMethod -TimeoutSec 10 -Uri "http://resource-manager.headysystems.comheadyio.com/metrics" -Method Post -Body $body

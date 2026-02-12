@@ -69,7 +69,7 @@ function Send-ErrorAlert {
         } | ConvertTo-Json -Depth 10
         
         try {
-            Invoke-RestMethod -Uri $ErrorAlertWebhook -Method Post -Body $payload -ContentType "application/json"
+            Invoke-RestMethod -TimeoutSec 10 -Uri $ErrorAlertWebhook -Method Post -Body $payload -ContentType "application/json"
         } catch {
             Write-Host "Failed to send alert: $_" -ForegroundColor Yellow
         }
@@ -111,11 +111,11 @@ try {
         $inventory = @()
         
         foreach ($type in $fileTypes) {
-            $files = Get-ChildItem -Path . -Filter $type -Recurse -ErrorAction SilentlyContinue | 
+            $files = Get-ChildItem -Path . -Filter $type -Recurse -Depth 5 -ErrorAction SilentlyContinue | 
                      Where-Object { $_.FullName -notlike "*node_modules*" -and $_.FullName -notlike "*.git*" }
             
             foreach ($file in $files) {
-                $content = Get-Content $file.FullName -Raw -ErrorAction SilentlyContinue
+                $content = [System.IO.File]::ReadAllText($file.FullName) -ErrorAction SilentlyContinue
                 if ($content) {
                     foreach ($pattern in $patterns) {
                         $matches = [regex]::Matches($content, $pattern)
@@ -198,11 +198,11 @@ try {
         $fileTypes = @("*.js", "*.json", "*.yaml", "*.yml", "*.md", "*.ps1", "*.sh", "*.env*")
         
         foreach ($type in $fileTypes) {
-            $files = Get-ChildItem -Path . -Filter $type -Recurse -ErrorAction SilentlyContinue |
+            $files = Get-ChildItem -Path . -Filter $type -Recurse -Depth 5 -ErrorAction SilentlyContinue |
                      Where-Object { $_.FullName -notlike "*node_modules*" -and $_.FullName -notlike "*.git*" }
             
             foreach ($file in $files) {
-                $content = Get-Content $file.FullName -Raw -ErrorAction SilentlyContinue
+                $content = [System.IO.File]::ReadAllText($file.FullName) -ErrorAction SilentlyContinue
                 $original = $content
                 
                 if ($content) {

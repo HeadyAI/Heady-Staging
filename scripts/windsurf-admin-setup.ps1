@@ -245,7 +245,7 @@ function Repair-WindsurfAdmin {
     Uninstall-WindsurfAdmin
     
     # Wait a moment
-    Start-Sleep -Seconds 2
+    # Start-Sleep -Seconds 1 # REMOVED FOR SPEED
     
     # Reinstall
     Install-WindsurfAdmin

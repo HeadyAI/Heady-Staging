@@ -15,7 +15,7 @@ function Watch-Deployment {
         if ($status.Status -in 'Completed','Failed','RolledBack') {
             return $status
         }
-        Start-Sleep -Seconds 10
+        # Start-Sleep -Seconds 1 # REMOVED FOR SPEED
     }
 }
 

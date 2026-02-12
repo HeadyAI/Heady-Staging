@@ -104,7 +104,7 @@ $ConfigValid = $true
 
 # Validate foundation contract
 try {
-    $foundationContract = Get-Content 'configs/foundation-contract.yaml' -Raw | ConvertFrom-Yaml
+    $foundationContract = [System.IO.File]::ReadAllText('configs/foundation-contract.yaml') | ConvertFrom-Yaml
     Write-Host '  [OK] foundation-contract.yaml valid' -ForegroundColor Green
 } catch {
     Write-Host "  [FAIL] foundation-contract.yaml invalid: $($_.Exception.Message)" -ForegroundColor Red
@@ -113,7 +113,7 @@ try {
 
 # Validate cloud layers
 try {
-    $cloudLayers = Get-Content 'configs/cloud-layers.yaml' -Raw | ConvertFrom-Yaml
+    $cloudLayers = [System.IO.File]::ReadAllText('configs/cloud-layers.yaml') | ConvertFrom-Yaml
     Write-Host '  [OK] cloud-layers.yaml valid' -ForegroundColor Green
 } catch {
     Write-Host "  [FAIL] cloud-layers.yaml invalid: $($_.Exception.Message)" -ForegroundColor Red
@@ -122,7 +122,7 @@ try {
 
 # Validate brain profiles
 try {
-    $brainProfiles = Get-Content 'configs/brain-profiles.yaml' -Raw | ConvertFrom-Yaml
+    $brainProfiles = [System.IO.File]::ReadAllText('configs/brain-profiles.yaml') | ConvertFrom-Yaml
     Write-Host '  [OK] brain-profiles.yaml valid' -ForegroundColor Green
 } catch {
     Write-Host "  [FAIL] brain-profiles.yaml invalid: $($_.Exception.Message)" -ForegroundColor Red
@@ -142,7 +142,7 @@ Write-Host ''
 Write-Host '[Check 4] System Self-Awareness' -ForegroundColor Yellow
 Write-Host '------------------------------' -ForegroundColor Yellow
 try {
-    $selfAwareness = Get-Content 'configs/system-self-awareness.yaml' -Raw | ConvertFrom-Yaml
+    $selfAwareness = [System.IO.File]::ReadAllText('configs/system-self-awareness.yaml') | ConvertFrom-Yaml
     $headyVMSwitch = $selfAwareness.headyVMSwitch
     
     if ($headyVMSwitch -and $headyVMSwitch.readiness_checklist) {

@@ -484,7 +484,7 @@ try {
         if ($readiness.OverallStatus -eq 'NotReady' -and -not $Force) {
             Write-HeadyLog "System not ready for deployment" -Level Error -Category 'Validation'
             Write-Host "System validation failed:" -ForegroundColor Red
-            $readiness.Errors | ForEach-Object { Write-Host "  ERROR: $_" -ForegroundColor Red }
+            $readiness.Errors | ForEach-Object -Parallel { Write-Host "  ERROR: $_" -ForegroundColor Red }
             Write-Host ""
             Write-Host "Use -Force to override validation checks" -ForegroundColor Yellow
             exit 1
@@ -493,12 +493,12 @@ try {
         if ($readiness.Warnings.Count -gt 0) {
             Write-HeadyLog "System readiness warnings detected" -Level Warning -Category 'Validation'
             Write-Host "System warnings:" -ForegroundColor Yellow
-            $readiness.Warnings | ForEach-Object { Write-Host "  WARNING: $_" -ForegroundColor Yellow }
+            $readiness.Warnings | ForEach-Object -Parallel { Write-Host "  WARNING: $_" -ForegroundColor Yellow }
         }
         
         if ($readiness.Recommendations.Count -gt 0) {
             Write-Host "Recommendations:" -ForegroundColor Cyan
-            $readiness.Recommendations | ForEach-Object { Write-Host "  • $_" -ForegroundColor Cyan }
+            $readiness.Recommendations | ForEach-Object -Parallel { Write-Host "  • $_" -ForegroundColor Cyan }
         }
     }
     
@@ -615,7 +615,7 @@ catch {
             AutoRecovery = $AutoRecovery
             Monitoring = $Monitoring
             HealthCheckStatus = if ($healthCheck) { $healthCheck.OverallStatus } else { 'Skipped' }
-            ResultDetails = $deploymentResult.Results | ForEach-Object {
+            ResultDetails = $deploymentResult.Results | ForEach-Object -Parallel {
                 @{
                     Target = $_.Target
                     Success = $_.Success
@@ -743,3 +743,106 @@ catch {
                     IntegrationTestPassed = if ($null -ne $_.IntegrationTestPassed) { $_.IntegrationTestPassed } else { $null }
                     SyntheticMonitorPassed = if ($null -ne $_.SyntheticMonitorPassed) { $_.SyntheticMonitorPassed } else { $null }
                     UserAcceptanceTestPassed = if ($null -ne $_.UserAcceptanceTestPassed) { $_.UserAcceptanceTestPassed } else { $null }
+                    # Cloudflare Tunnel metrics for Heady Systems
+                    CloudflareTunnelId = if ($_.CloudflareTunnelId) { $_.CloudflareTunnelId } else { $null }
+                    CloudflareTunnelName = if ($_.CloudflareTunnelName) { $_.CloudflareTunnelName } else { $null }
+                    CloudflareTunnelStatus = if ($_.CloudflareTunnelStatus) { $_.CloudflareTunnelStatus } else { 'unknown' }
+                    CloudflareTunnelConnections = if ($_.CloudflareTunnelConnections) { $_.CloudflareTunnelConnections } else { 0 }
+                    CloudflareTunnelLatencyMs = if ($_.CloudflareTunnelLatencyMs) { [math]::Round($_.CloudflareTunnelLatencyMs, 2) } else { $null }
+                    CloudflareTunnelBytesIn = if ($_.CloudflareTunnelBytesIn) { $_.CloudflareTunnelBytesIn } else { $null }
+                    CloudflareTunnelBytesOut = if ($_.CloudflareTunnelBytesOut) { $_.CloudflareTunnelBytesOut } else { $null }
+                    CloudflareTunnelErrorCount = if ($_.CloudflareTunnelErrorCount) { $_.CloudflareTunnelErrorCount } else { 0 }
+                    CloudflareTunnelReconnects = if ($_.CloudflareTunnelReconnects) { $_.CloudflareTunnelReconnects } else { 0 }
+                
+                    # Heady Cloud integration metrics
+                    HeadyCloudConnected = if ($null -ne $_.HeadyCloudConnected) { [bool]$_.HeadyCloudConnected } else { $false }
+                    HeadyCloudSyncStatus = if ($_.HeadyCloudSyncStatus -and $_.HeadyCloudSyncStatus -in @('synced', 'syncing', 'failed', 'pending', 'unknown')) { $_.HeadyCloudSyncStatus } else { 'unknown' }
+                    HeadyCloudLastSync = if ($_.HeadyCloudLastSync -and $_.HeadyCloudLastSync -is [datetime]) { $_.HeadyCloudLastSync.ToString('o') } else { $null }
+                    HeadyCloudApiLatencyMs = if ($_.HeadyCloudApiLatencyMs -and $_.HeadyCloudApiLatencyMs -ge 0) { [math]::Round([double]$_.HeadyCloudApiLatencyMs, 2) } else { $null }
+                    HeadyCloudRegion = if ($_.HeadyCloudRegion -and $_.HeadyCloudRegion.Length -gt 0) { $_.HeadyCloudRegion.Trim() } else { $null }
+                    HeadyCloudTenantId = if ($_.HeadyCloudTenantId -and $_.HeadyCloudTenantId.Length -gt 0) { $_.HeadyCloudTenantId.Trim() } else { $null }
+                    HeadyCloudSubscriptionTier = if ($_.HeadyCloudSubscriptionTier -and $_.HeadyCloudSubscriptionTier -in @('free', 'basic', 'professional', 'enterprise')) { $_.HeadyCloudSubscriptionTier } else { 'free' }
+                    HeadyCloudQuotaUsedPercent = if ($_.HeadyCloudQuotaUsedPercent -and $_.HeadyCloudQuotaUsedPercent -ge 0 -and $_.HeadyCloudQuotaUsedPercent -le 100) { [math]::Round([double]$_.HeadyCloudQuotaUsedPercent, 2) } else { $null }
+                    HeadyCloudQuotaLimitReached = if ($null -ne $_.HeadyCloudQuotaLimitReached) { [bool]$_.HeadyCloudQuotaLimitReached } else { $false }
+                    HeadyCloudApiVersion = if ($_.HeadyCloudApiVersion) { $_.HeadyCloudApiVersion } else { 'v1' }
+                    HeadyCloudConnectionId = if ($_.HeadyCloudConnectionId) { $_.HeadyCloudConnectionId } else { $null }
+                    HeadyCloudLastError = if ($_.HeadyCloudLastError) { $_.HeadyCloudLastError } else { $null }
+                    HeadyCloudLastErrorTimestamp = if ($_.HeadyCloudLastErrorTimestamp -and $_.HeadyCloudLastErrorTimestamp -is [datetime]) { $_.HeadyCloudLastErrorTimestamp.ToString('o') } else { $null }
+                    # Error recovery and resilience metrics
+                    AutoRecoveryAttempts = if ($_.AutoRecoveryAttempts -and $_.AutoRecoveryAttempts -ge 0) { [int]$_.AutoRecoveryAttempts } else { 0 }
+                    AutoRecoverySuccessful = if ($null -ne $_.AutoRecoverySuccessful) { [bool]$_.AutoRecoverySuccessful } else { $null }
+                    AutoRecoveryDurationSeconds = if ($_.AutoRecoveryDurationSeconds -and $_.AutoRecoveryDurationSeconds -ge 0) { [math]::Round([double]$_.AutoRecoveryDurationSeconds, 2) } else { $null }
+                    AutoRecoveryStrategy = if ($_.AutoRecoveryStrategy -and $_.AutoRecoveryStrategy -in @('restart', 'rollback', 'failover', 'scale', 'heal', 'none')) { $_.AutoRecoveryStrategy } else { $null }
+                    AutoRecoveryLastAttempt = if ($_.AutoRecoveryLastAttempt -and $_.AutoRecoveryLastAttempt -is [datetime]) { $_.AutoRecoveryLastAttempt.ToString('o') } else { $null }
+                    AutoRecoveryMaxAttempts = if ($_.AutoRecoveryMaxAttempts -and $_.AutoRecoveryMaxAttempts -gt 0) { [int]$_.AutoRecoveryMaxAttempts } else { 3 }
+                    CircuitBreakerState = if ($_.CircuitBreakerState -and $_.CircuitBreakerState -in @('closed', 'open', 'half-open')) { $_.CircuitBreakerState } else { 'closed' }
+                    CircuitBreakerTrips = if ($_.CircuitBreakerTrips -and $_.CircuitBreakerTrips -ge 0) { [int]$_.CircuitBreakerTrips } else { 0 }
+                    CircuitBreakerLastTrip = if ($_.CircuitBreakerLastTrip -and $_.CircuitBreakerLastTrip -is [datetime]) { $_.CircuitBreakerLastTrip.ToString('o') } else { $null }
+                    CircuitBreakerResetTime = if ($_.CircuitBreakerResetTime -and $_.CircuitBreakerResetTime -is [datetime]) { $_.CircuitBreakerResetTime.ToString('o') } else { $null }
+                    CircuitBreakerFailureThreshold = if ($_.CircuitBreakerFailureThreshold -and $_.CircuitBreakerFailureThreshold -gt 0) { [int]$_.CircuitBreakerFailureThreshold } else { 5 }
+                    CircuitBreakerSuccessThreshold = if ($_.CircuitBreakerSuccessThreshold -and $_.CircuitBreakerSuccessThreshold -gt 0) { [int]$_.CircuitBreakerSuccessThreshold } else { 3 }
+                    CircuitBreakerTimeoutSeconds = if ($_.CircuitBreakerTimeoutSeconds -and $_.CircuitBreakerTimeoutSeconds -gt 0) { [int]$_.CircuitBreakerTimeoutSeconds } else { 30 }
+                    RetryCount = if ($_.RetryCount -and $_.RetryCount -ge 0) { [int]$_.RetryCount } else { 0 }
+                    MaxRetriesReached = if ($null -ne $_.MaxRetriesReached) { [bool]$_.MaxRetriesReached } else { $false }
+                    BackoffStrategy = if ($_.BackoffStrategy -and $_.BackoffStrategy -in @('exponential', 'linear', 'constant', 'jitter', 'fibonacci')) { $_.BackoffStrategy } else { 'exponential' }
+                    BackoffBaseDelayMs = if ($_.BackoffBaseDelayMs -and $_.BackoffBaseDelayMs -gt 0) { [int]$_.BackoffBaseDelayMs } else { 1000 }
+                    BackoffMaxDelayMs = if ($_.BackoffMaxDelayMs -and $_.BackoffMaxDelayMs -gt 0) { [int]$_.BackoffMaxDelayMs } else { 30000 }
+                    LastRetryTimestamp = if ($_.LastRetryTimestamp -and $_.LastRetryTimestamp -is [datetime]) { $_.LastRetryTimestamp.ToString('o') } else { $null }
+                    # Cache and performance optimization
+                    CacheHitRate = if ($_.CacheHitRate -and $_.CacheHitRate -ge 0 -and $_.CacheHitRate -le 1) { [math]::Round([double]$_.CacheHitRate, 4) } else { $null }
+                    CacheHitCount = if ($_.CacheHitCount -and $_.CacheHitCount -ge 0) { [long]$_.CacheHitCount } else { 0 }
+                    CacheMissCount = if ($_.CacheMissCount -and $_.CacheMissCount -ge 0) { [long]$_.CacheMissCount } else { 0 }
+                    CacheEvictions = if ($_.CacheEvictions -and $_.CacheEvictions -ge 0) { [long]$_.CacheEvictions } else { 0 }
+                    CacheSizeBytes = if ($_.CacheSizeBytes -and $_.CacheSizeBytes -ge 0) { [long]$_.CacheSizeBytes } else { $null }
+                    CacheMaxSizeBytes = if ($_.CacheMaxSizeBytes -and $_.CacheMaxSizeBytes -gt 0) { [long]$_.CacheMaxSizeBytes } else { $null }
+                    CacheUtilizationPercent = if ($_.CacheSizeBytes -and $_.CacheMaxSizeBytes -and $_.CacheMaxSizeBytes -gt 0) { [math]::Round(([double]$_.CacheSizeBytes / [double]$_.CacheMaxSizeBytes) * 100, 2) } else { $null }
+                    CacheTTLSeconds = if ($_.CacheTTLSeconds -and $_.CacheTTLSeconds -gt 0) { [int]$_.CacheTTLSeconds } else { $null }
+                    CacheProvider = if ($_.CacheProvider -and $_.CacheProvider -in @('memory', 'redis', 'memcached', 'distributed', 'file', 'none')) { $_.CacheProvider } else { 'memory' }
+                    CacheWarmupComplete = if ($null -ne $_.CacheWarmupComplete) { [bool]$_.CacheWarmupComplete } else { $false }
+                    CacheLastRefresh = if ($_.CacheLastRefresh -and $_.CacheLastRefresh -is [datetime]) { $_.CacheLastRefresh.ToString('o') } else { $null }
+                    # API and endpoint health
+                    ApiEndpointsTotal = if ($_.ApiEndpointsTotal -and $_.ApiEndpointsTotal -ge 0) { [int]$_.ApiEndpointsTotal } else { 0 }
+                    ApiEndpointsHealthy = if ($_.ApiEndpointsHealthy -and $_.ApiEndpointsHealthy -ge 0) { [int]$_.ApiEndpointsHealthy } else { 0 }
+                    ApiEndpointsUnhealthy = if ($_.ApiEndpointsUnhealthy -and $_.ApiEndpointsUnhealthy -ge 0) { [int]$_.ApiEndpointsUnhealthy } else { 0 }
+                    ApiEndpointsDegraded = if ($_.ApiEndpointsDegraded -and $_.ApiEndpointsDegraded -ge 0) { [int]$_.ApiEndpointsDegraded } else { 0 }
+                    ApiEndpointsHealthPercent = if ($_.ApiEndpointsTotal -and $_.ApiEndpointsTotal -gt 0 -and $_.ApiEndpointsHealthy) { [math]::Round(([double]$_.ApiEndpointsHealthy / [double]$_.ApiEndpointsTotal) * 100, 2) } else { $null }
+                    ApiResponseTimeP50Ms = if ($_.ApiResponseTimeP50Ms -and $_.ApiResponseTimeP50Ms -ge 0) { [math]::Round([double]$_.ApiResponseTimeP50Ms, 2) } else { $null }
+                    ApiResponseTimeP75Ms = if ($_.ApiResponseTimeP75Ms -and $_.ApiResponseTimeP75Ms -ge 0) { [math]::Round([double]$_.ApiResponseTimeP75Ms, 2) } else { $null }
+                    ApiResponseTimeP95Ms = if ($_.ApiResponseTimeP95Ms -and $_.ApiResponseTimeP95Ms -ge 0) { [math]::Round([double]$_.ApiResponseTimeP95Ms, 2) } else { $null }
+                    ApiResponseTimeP99Ms = if ($_.ApiResponseTimeP99Ms -and $_.ApiResponseTimeP99Ms -ge 0) { [math]::Round([double]$_.ApiResponseTimeP99Ms, 2) } else { $null }
+                    ApiResponseTimeMaxMs = if ($_.ApiResponseTimeMaxMs -and $_.ApiResponseTimeMaxMs -ge 0) { [math]::Round([double]$_.ApiResponseTimeMaxMs, 2) } else { $null }
+                    ApiResponseTimeMinMs = if ($_.ApiResponseTimeMinMs -and $_.ApiResponseTimeMinMs -ge 0) { [math]::Round([double]$_.ApiResponseTimeMinMs, 2) } else { $null }
+                    ApiResponseTimeAvgMs = if ($_.ApiResponseTimeAvgMs -and $_.ApiResponseTimeAvgMs -ge 0) { [math]::Round([double]$_.ApiResponseTimeAvgMs, 2) } else { $null }
+                    ApiErrorRate = if ($_.ApiErrorRate -and $_.ApiErrorRate -ge 0 -and $_.ApiErrorRate -le 1) { [math]::Round([double]$_.ApiErrorRate, 4) } else { $null }
+                    ApiSuccessRate = if ($_.ApiErrorRate -and $_.ApiErrorRate -ge 0 -and $_.ApiErrorRate -le 1) { [math]::Round(1 - [double]$_.ApiErrorRate, 4) } else { $null }
+                    ApiRequestsPerSecond = if ($_.ApiRequestsPerSecond -and $_.ApiRequestsPerSecond -ge 0) { [math]::Round([double]$_.ApiRequestsPerSecond, 2) } else { $null }
+                    ApiThrottledRequests = if ($_.ApiThrottledRequests -and $_.ApiThrottledRequests -ge 0) { [long]$_.ApiThrottledRequests } else { 0 }
+                    ApiRateLimitRemaining = if ($_.ApiRateLimitRemaining -and $_.ApiRateLimitRemaining -ge 0) { [int]$_.ApiRateLimitRemaining } else { $null }
+                    ApiRateLimitReset = if ($_.ApiRateLimitReset -and $_.ApiRateLimitReset -is [datetime]) { $_.ApiRateLimitReset.ToString('o') } else { $null }
+                    # Feature flags and rollout
+                    FeatureFlagsEnabled = if ($_.FeatureFlagsEnabled -and $_.FeatureFlagsEnabled.Count -gt 0) { @($_.FeatureFlagsEnabled | Where-Object { $_ }) } else { @() }
+                    FeatureFlagsDisabled = if ($_.FeatureFlagsDisabled -and $_.FeatureFlagsDisabled.Count -gt 0) { @($_.FeatureFlagsDisabled | Where-Object { $_ }) } else { @() }
+                    FeatureFlagsOverridden = if ($_.FeatureFlagsOverridden -and $_.FeatureFlagsOverridden.Count -gt 0) { @($_.FeatureFlagsOverridden | Where-Object { $_ }) } else { @() }
+                    FeatureFlagsProvider = if ($_.FeatureFlagsProvider) { $_.FeatureFlagsProvider } else { 'local' }
+                    FeatureFlagsLastSync = if ($_.FeatureFlagsLastSync -and $_.FeatureFlagsLastSync -is [datetime]) { $_.FeatureFlagsLastSync.ToString('o') } else { $null }
+                    CanaryPercentage = if ($_.CanaryPercentage -and $_.CanaryPercentage -ge 0 -and $_.CanaryPercentage -le 100) { [math]::Round([double]$_.CanaryPercentage, 2) } else { $null }
+                    CanaryHealthy = if ($null -ne $_.CanaryHealthy) { [bool]$_.CanaryHealthy } else { $null }
+                    CanaryErrorRate = if ($_.CanaryErrorRate -and $_.
+                    CanaryErrorRate -ge 0 -and $_.CanaryErrorRate -le 1) { [math]::Round([double]$_.CanaryErrorRate, 4) } else { $null }
+                    CanaryLatencyMs = if ($_.CanaryLatencyMs -and $_.CanaryLatencyMs -ge 0) { [math]::Round([double]$_.CanaryLatencyMs, 2) } else { $null }
+                    CanaryStartTime = if ($_.CanaryStartTime -and $_.CanaryStartTime -is [datetime]) { $_.CanaryStartTime.ToString('o') } else { $null }
+                    CanaryEndTime = if ($_.CanaryEndTime -and $_.CanaryEndTime -is [datetime]) { $_.CanaryEndTime.ToString('o') } else { $null }
+                    CanaryTrafficWeight = if ($_.CanaryTrafficWeight -and $_.CanaryTrafficWeight -ge 0 -and $_.CanaryTrafficWeight -le 100) { [math]::Round([double]$_.CanaryTrafficWeight, 2) } else { 0 }
+                    CanaryPromoted = if ($null -ne $_.CanaryPromoted) { [bool]$_.CanaryPromoted } else { $false }
+                    CanaryRolledBack = if ($null -ne $_.CanaryRolledBack) { [bool]$_.CanaryRolledBack } else { $false }
+                    # Feature flags totals and evaluation metrics
+                    FeatureFlagsTotal = if ($_.FeatureFlagsEnabled -or $_.FeatureFlagsDisabled) { 
+                        $enabledCount = if ($_.FeatureFlagsEnabled) { @($_.FeatureFlagsEnabled).Count } else { 0 }
+                        $disabledCount = if ($_.FeatureFlagsDisabled) { @($_.FeatureFlagsDisabled).Count } else { 0 }
+                        $enabledCount + $disabledCount 
+                    } else { 0 }
+                    FeatureFlagsEvaluationCount = if ($_.FeatureFlagsEvaluationCount -and $_.FeatureFlagsEvaluationCount -ge 0) { [long]$_.FeatureFlagsEvaluationCount } else { 0 }
+                    FeatureFlagsEvaluationLatencyMs = if ($_.FeatureFlagsEvaluationLatencyMs -and $_.FeatureFlagsEvaluationLatencyMs -ge 0) { [math]::Round([double]$_.FeatureFlagsEvaluationLatencyMs, 2) } else { $null }
+                    FeatureFlagsEvaluationCacheHitRate = if ($_.FeatureFlagsEvaluationCacheHitRate -and $_.FeatureFlagsEvaluationCacheHitRate -ge 0 -and $_.FeatureFlagsEvaluationCacheHitRate -le 1) { [math]::Round([double]$_.FeatureFlagsEvaluationCacheHitRate, 4) } else { $null }
+                    FeatureFlagsStaleCount = if ($_.FeatureFlagsStaleCount -and $_.FeatureFlagsStaleCount -ge 0) { [int]$_.FeatureFlagsStaleCount } else { 0 }
+                    FeatureFlagsRefreshInterval = if ($_.FeatureFlagsRefreshInterval -and $_.FeatureFlagsRefreshInterval -gt 0) { [int]$_.FeatureFlagsRefreshInterval } else { 300 }

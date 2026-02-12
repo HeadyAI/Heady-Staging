@@ -33,7 +33,7 @@ if (-not (Test-Path $localIsoPath)) {
 }
 
 # Download and install Ventoy
-Invoke-WebRequest $ventoyUrl -OutFile $downloadPath
+Invoke-WebRequest -TimeoutSec 10 $ventoyUrl -OutFile $downloadPath
 Expand-Archive $downloadPath -DestinationPath $ventoyDir -Force
 if (-not (Test-Path "$ventoyDir\\Ventoy2Disk.exe")) {
     Write-Host "Error: Ventoy2Disk.exe not found at $ventoyDir"
@@ -61,7 +61,7 @@ foreach ($os in $isos.Keys) {
     $isoFile = "${localIsoPath}\\${os}.iso"
     if (-not (Test-Path $isoFile)) {
         Write-Host "Downloading $os ISO..."
-        Invoke-WebRequest $isos[$os] -OutFile $isoFile
+        Invoke-WebRequest -TimeoutSec 10 $isos[$os] -OutFile $isoFile
     }
 }
 

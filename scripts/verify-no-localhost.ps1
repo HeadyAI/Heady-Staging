@@ -14,7 +14,7 @@ $protocol = Get-Content -Path "$PSScriptRoot\..\configs\api.headysystems.com-eli
 $offenders = @()
 
 foreach ($pattern in $protocol.scan_patterns) {
-    $matches = Get-ChildItem -Path "$PSScriptRoot\.." -Recurse -Include *.js,*.ts,*.yaml,*.json,*.md,*.ps1,*.bat,*.conf | 
+    $matches = Get-ChildItem -Path "$PSScriptRoot\.." -Recurse -Depth 5 -Include *.js,*.ts,*.yaml,*.json,*.md,*.ps1,*.bat,*.conf | 
         Select-String -Pattern $pattern | 
         Select-Object -ExpandProperty Path
     
@@ -29,7 +29,7 @@ $offenders = $offenders | Sort-Object -Unique
 # Check for exceptions
 $finalOffenders = @()
 foreach ($file in $offenders) {
-    $content = Get-Content $file -Raw
+    $content = [System.IO.File]::ReadAllText($file)
     $isException = $false
     
     # Check if file matches any exception rules
@@ -48,7 +48,7 @@ foreach ($file in $offenders) {
 # Report results
 if ($finalOffenders.Count -gt 0) {
     Write-Host "FAIL: Found $($finalOffenders.Count) files with api.headysystems.com references" -ForegroundColor Red
-    $finalOffenders | ForEach-Object { Write-Host "  - $_" }
+    $finalOffenders | ForEach-Object { -Parallel { Write-Host "  - $_" }
     exit 1
 }
 

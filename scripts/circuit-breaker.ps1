@@ -141,9 +141,9 @@ Start-Transcript -Path `$logPath -Append
 Write-Host "🔍 Scanning project for improvements..." -ForegroundColor Cyan
 
 # Scan all PowerShell files
-Get-ChildItem -Path $projectRoot -Recurse -Include *.ps1,*.psm1 -Exclude *node_modules*,*.git*,*\.vscode* | ForEach-Object {
+Get-ChildItem -Path $projectRoot -Recurse -Depth 5 -Include *.ps1,*.psm1 -Exclude *node_modules*,*.git*,*\.vscode* | ForEach-Object { -Parallel {
     $file = $_
-    $content = Get-Content $file.FullName -Raw
+    $content = [System.IO.File]::ReadAllText($file.FullName)
     $modified = $false
     $newContent = $content
     
@@ -217,9 +217,9 @@ Get-ChildItem -Path $projectRoot -Recurse -Include *.ps1,*.psm1 -Exclude *node_m
 # Report findings
 if ($scanResults.Count -gt 0) {
     Write-Host "`n📊 Found $($scanResults.Count) improvement opportunities:" -ForegroundColor Yellow
-    $scanResults | Group-Object Severity | ForEach-Object {
+    $scanResults | Group-Object Severity | ForEach-Object { -Parallel {
         Write-Host "`n  $($_.Name) Priority:" -ForegroundColor $(if ($_.Name -eq 'High') { 'Red' } else { 'Yellow' })
-        $_.Group | ForEach-Object {
+        $_.Group | ForEach-Object { -Parallel {
             Write-Host "    📁 $($_.File): $($_.Recommendation)" -ForegroundColor Cyan
         }
     }
@@ -227,10 +227,10 @@ if ($scanResults.Count -gt 0) {
 
 # Add missing error handling to scripts without try-catch
 Get-ChildItem -Path "$projectRoot\scripts" -Filter *.ps1 | Where-Object {
-    $content = Get-Content $_.FullName -Raw
+    $content = [System.IO.File]::ReadAllText($_.FullName)
     $content -notmatch 'try\s*{' -and $content -match 'Import-Module|Invoke-'
-} | ForEach-Object {
-    $content = Get-Content $_.FullName -Raw
+} | ForEach-Object { -Parallel {
+    $content = [System.IO.File]::ReadAllText($_.FullName)
     $wrappedContent = @"
 try {
 $content
@@ -249,7 +249,7 @@ $content
 
 # Log scan results for pattern engine
 Register-PatternEvent -PatternId 'project_scan_completed' -Context @{
-    TotalFiles = (Get-ChildItem -Path $projectRoot -Recurse -Include *.ps1,*.psm1 -Exclude *node_modules*,*.git*).Count
+    TotalFiles = (Get-ChildItem -Path $projectRoot -Recurse -Depth 5 -Include *.ps1,*.psm1 -Exclude *node_modules*,*.git*).Count
     ImprovementsFound = $scanResults.Count
     ImprovementsApplied = $appliedImprovements
     Timestamp = Get-Date
@@ -260,7 +260,7 @@ Write-Host "`n✨ Scan complete: $appliedImprovements improvements applied" -For
 Get-ChildItem -Path "$projectRoot\src" -Filter *.psm1 -ErrorAction SilentlyContinue | Where-Object {
     $manifestPath = $_.FullName -replace '\.psm1$', '.psd1'
     -not (Test-Path $manifestPath)
-} | ForEach-Object {
+} | ForEach-Object { -Parallel {
     $moduleName = $_.BaseName
     $manifestPath = $_.FullName -replace '\.psm1$', '.psd1'
     New-ModuleManifest -Path $manifestPath -RootModule "$moduleName.psm1" -ModuleVersion '1.0.0' -Author 'Heady' -Description "Auto-generated manifest for $moduleName"
@@ -273,7 +273,7 @@ $gitignorePath = Join-Path $projectRoot '.gitignore'
 $tempPatterns = @('*.log', '*.tmp', '.heady_cache/', 'logs/', 'node_modules/', '*.swp', '*~', '.DS_Store', 'Thumbs.db')
 if (Test-Path $gitignorePath) {
     $gitignoreContent = Get-Content $gitignorePath
-    $tempPatterns | Where-Object { $gitignoreContent -notcontains $_ } | ForEach-Object {
+    $tempPatterns | Where-Object { $gitignoreContent -notcontains $_ } | ForEach-Object { -Parallel {
         Add-Content -Path $gitignorePath -Value $_
         Write-Host "  ✅ Added $_ to .gitignore" -ForegroundColor Green
         $appliedImprovements++
@@ -316,12 +316,12 @@ trim_trailing_whitespace = false
 Get-ChildItem -Path "$projectRoot\scripts" -Filter *.ps1 -ErrorAction SilentlyContinue | Where-Object {
     $readmePath = Join-Path (Split-Path $_.FullName) 'README.md'
     if (Test-Path $readmePath) {
-        $readme = Get-Content $readmePath -Raw
+        $readme = [System.IO.File]::ReadAllText($readmePath)
         $readme -notmatch [regex]::Escape($_.Name)
     } else {
         $true
     }
-} | ForEach-Object {
+} | ForEach-Object { -Parallel {
     $scriptName = $_.Name
     $synopsis = (Get-Help $_.FullName -ErrorAction SilentlyContinue).Synopsis
     if ($synopsis -and $synopsis -ne $scriptName) {
@@ -339,10 +339,10 @@ Get-ChildItem -Path "$projectRoot\scripts" -Filter *.ps1 -ErrorAction SilentlyCo
 
 # Add performance counters to long-running scripts
 Get-ChildItem -Path "$projectRoot\scripts" -Filter *.ps1 -ErrorAction SilentlyContinue | Where-Object {
-    $content = Get-Content $_.FullName -Raw
+    $content = [System.IO.File]::ReadAllText($_.FullName)
     $content -match 'while|foreach|for\s*\(' -and $content -notmatch 'Measure-Command|\[System.Diagnostics.Stopwatch\]'
-} | ForEach-Object {
-    $content = Get-Content $_.FullName -Raw
+} | ForEach-Object { -Parallel {
+    $content = [System.IO.File]::ReadAllText($_.FullName)
     $insertPoint = if ($content -match '(?m)^[^#\s]') { $Matches[0].Index } else { 0 }
     $perfWrapper = "`$stopwatch = [System.Diagnostics.Stopwatch]::StartNew()`n"
     $perfEnd = "`nRegister-ShutdownHandler { `$stopwatch.Stop(); Write-Verbose `"Execution time: `$(`$stopwatch.Elapsed.TotalSeconds)s`" }"
@@ -392,9 +392,9 @@ if (-not (Test-Path $psaSettingsPath)) {
 
 # Scan for scripts missing #Requires statements
 Get-ChildItem -Path "$projectRoot\scripts" -Filter *.ps1 -ErrorAction SilentlyContinue | Where-Object {
-    $content = Get-Content $_.FullName -Raw
+    $content = [System.IO.File]::ReadAllText($_.FullName)
     $content -match 'Import-Module|Get-Module' -and $content -notmatch '#Requires -Modules'
-} | ForEach-Object {
+} | ForEach-Object { -Parallel {
     $scanResults += @{
         File = $_.Name
         Issue = 'Missing #Requires statement for module dependencies'
@@ -409,7 +409,7 @@ $backupDir = Join-Path $projectRoot '.config-backups'
 if (-not (Test-Path $backupDir)) {
     New-Item -ItemType Directory -Path $backupDir -Force | Out-Null
 }
-$criticalConfigs | ForEach-Object {
+$criticalConfigs | ForEach-Object { -Parallel {
     $configPath = Join-Path "$projectRoot\configs" $_
     if (Test-Path $configPath) {
         $backupPath = Join-Path $backupDir "$_.$((Get-Date).ToString('yyyyMMdd-HHmmss')).bak"
@@ -444,7 +444,7 @@ $scriptsWithoutTests = Get-ChildItem -Path "$projectRoot\scripts" -Filter *.ps1 
 if ($scriptsWithoutTests) {
     $testsDir = Join-Path $projectRoot 'tests'
     if (-not (Test-Path $testsDir)) { New-Item -ItemType Directory -Path $testsDir -Force | Out-Null }
-    $scriptsWithoutTests | ForEach-Object {
+    $scriptsWithoutTests | ForEach-Object { -Parallel {
         $testTemplate = @"
 Describe '$($_.BaseName)' {
     BeforeAll {
@@ -457,7 +457,7 @@ Describe '$($_.BaseName)' {
     
     It 'Should have valid syntax' {
         `$errors = `$null
-        [System.Management.Automation.PSParser]::Tokenize((Get-Content "`$PSScriptRoot\..\scripts\$($_.Name)" -Raw), [ref]`$errors)
+        [System.Management.Automation.PSParser]::Tokenize(([System.IO.File]::ReadAllText("`$PSScriptRoot\..\scripts\$($_.Name)")), [ref]`$errors)
         `$errors.Count | Should -Be 0
     }
 }
@@ -470,8 +470,8 @@ Describe '$($_.BaseName)' {
 }
 
 # Add security scanning for hardcoded secrets
-Get-ChildItem -Path $projectRoot -Recurse -Include *.ps1,*.psm1,*.yaml,*.yml,*.json -Exclude *node_modules*,*.git* | ForEach-Object {
-    $content = Get-Content $_.FullName -Raw
+Get-ChildItem -Path $projectRoot -Recurse -Depth 5 -Include *.ps1,*.psm1,*.yaml,*.yml,*.json -Exclude *node_modules*,*.git* | ForEach-Object { -Parallel {
+    $content = [System.IO.File]::ReadAllText($_.FullName)
     if ($content -match '(?i)(password|secret|api[_-]?key|token)\s*[:=]\s*["\'][^"\']{8,}["\']') {
         $scanResults += @{
             File = $_.Name
@@ -491,7 +491,7 @@ if (Test-Path (Split-Path $gitHooksDir)) {
 #!/bin/sh
 pwsh -File scripts/validate-dependencies.ps1
 pwsh -Command "Invoke-ScriptAnalyzer -Path scripts -Recurse -Severity Warning"
-pwsh -Command "Invoke-Pester -Path tests -PassThru | Where-Object { `$_.FailedCount -gt 0 } | ForEach-Object { exit 1 }"
+pwsh -Command "Invoke-Pester -Path tests -PassThru | Where-Object { `$_.FailedCount -gt 0 } | ForEach-Object { -Parallel { exit 1 }"
 "@
         Set-Content -Path $preCommitPath -Value $preCommitHook
         Write-Host "  ✅ Created pre-commit validation hook" -ForegroundColor Green
@@ -501,9 +501,9 @@ pwsh -Command "Invoke-Pester -Path tests -PassThru | Where-Object { `$_.FailedCo
 
 # Add resource cleanup handlers
 Get-ChildItem -Path "$projectRoot\scripts" -Filter *.ps1 | Where-Object {
-    $content = Get-Content $_.FullName -Raw
+    $content = [System.IO.File]::ReadAllText($_.FullName)
     $content -match 'New-Item|Start-Process|Invoke-WebRequest' -and $content -notmatch 'finally|Register-EngineEvent'
-} | ForEach-Object {
+} | ForEach-Object { -Parallel {
     $scanResults += @{
         File = $_.Name
         Issue = 'Missing cleanup handler for resources'
@@ -514,9 +514,9 @@ Get-ChildItem -Path "$projectRoot\scripts" -Filter *.ps1 | Where-Object {
 
 # Generate dependency graph
 $dependencyGraph = @{}
-Get-ChildItem -Path "$projectRoot\scripts" -Filter *.ps1 | ForEach-Object {
-    $content = Get-Content $_.FullName -Raw
-    $imports = [regex]::Matches($content, '\. \$PSScriptRoot[/\\]([^\s]+\.ps1)') | ForEach-Object { $_.Groups[1].Value }
+Get-ChildItem -Path "$projectRoot\scripts" -Filter *.ps1 | ForEach-Object { -Parallel {
+    $content = [System.IO.File]::ReadAllText($_.FullName)
+    $imports = [regex]::Matches($content, '\. \$PSScriptRoot[/\\]([^\s]+\.ps1)') | ForEach-Object { -Parallel { $_.Groups[1].Value }
     if ($imports) {
         $dependencyGraph[$_.Name] = $imports
     }
@@ -784,9 +784,9 @@ if (-not (Test-Path $metadataPath)) {
 
 # Scan for TODO/FIXME comments
 $todoResults = @()
-Get-ChildItem -Path $projectRoot -Recurse -Include *.ps1,*.psm1 -Exclude *node_modules*,*.git* | ForEach-Object {
+Get-ChildItem -Path $projectRoot -Recurse -Depth 5 -Include *.ps1,*.psm1 -Exclude *node_modules*,*.git* | ForEach-Object { -Parallel {
     $lineNum = 0
-    Get-Content $_.FullName | ForEach-Object {
+    Get-Content $_.FullName | ForEach-Object { -Parallel {
         $lineNum++
         if ($_ -match '(TODO|FIXME|HACK|XXX):\s*(.+)') {
             $todoResults += @{
@@ -801,9 +801,9 @@ Get-ChildItem -Path $projectRoot -Recurse -Include *.ps1,*.psm1 -Exclude *node_m
 if ($todoResults.Count -gt 0) {
     $todoPath = Join-Path $projectRoot 'TODO.md'
     $todoContent = "# TODO Items`n`n"
-    $todoResults | Group-Object Type | ForEach-Object {
+    $todoResults | Group-Object Type | ForEach-Object { -Parallel {
         $todoContent += "## $($_.Name)`n"
-        $_.Group | ForEach-Object {
+        $_.Group | ForEach-Object { -Parallel {
             $todoContent += "- **$($_.File):$($_.Line)** - $($_.Comment)`n"
         }
         $todoContent += "`n"
@@ -813,8 +813,8 @@ if ($todoResults.Count -gt 0) {
     $appliedImprovements++
 }
 # Scan for missing documentation in functions
-Get-ChildItem -Path "$projectRoot\scripts" -Recurse -Include *.ps1,*.psm1 -Exclude *node_modules*,*.git* | ForEach-Object {
-    $content = Get-Content $_.FullName -Raw
+Get-ChildItem -Path "$projectRoot\scripts" -Recurse -Depth 5 -Include *.ps1,*.psm1 -Exclude *node_modules*,*.git* | ForEach-Object { -Parallel {
+    $content = [System.IO.File]::ReadAllText($_.FullName)
     $functions = [regex]::Matches($content, 'function\s+([^\s{]+)')
     foreach ($func in $functions) {
         $funcName = $func.Groups[1].Value
@@ -832,10 +832,10 @@ Get-ChildItem -Path "$projectRoot\scripts" -Recurse -Include *.ps1,*.psm1 -Exclu
 
 # Add error handling wrapper for all scripts in automation directory
 Get-ChildItem -Path "$projectRoot\scripts" -Filter *.ps1 | Where-Object {
-    $content = Get-Content $_.FullName -Raw
+    $content = [System.IO.File]::ReadAllText($_.FullName)
     $content -notmatch '\$ErrorActionPreference' -and $_.Name -notmatch 'test|build'
-} | ForEach-Object {
-    $content = Get-Content $_.FullName -Raw
+} | ForEach-Object { -Parallel {
+    $content = [System.IO.File]::ReadAllText($_.FullName)
     if ($content -notmatch '^\$ErrorActionPreference') {
         $newContent = "`$ErrorActionPreference = 'Stop'`n`n" + $content
         Set-Content -Path $_.FullName -Value $newContent
@@ -854,7 +854,7 @@ if (-not (Test-Path $moduleLoaderPath)) {
 Centralized module loader for Heady project
 #>
 `$modules = @('powershell-yaml', 'PSScriptAnalyzer', 'Pester')
-`$modules | ForEach-Object {
+`$modules | ForEach-Object { -Parallel {
     if (-not (Get-Module -ListAvailable -Name `$_)) {
         Write-Warning "Installing missing module: `$_"
         Install-Module -Name `$_ -Force -Scope CurrentUser -SkipPublisherCheck
@@ -870,9 +870,9 @@ Write-Verbose "All Heady modules loaded successfully"
 
 # Add performance profiling to resource-intensive scripts
 Get-ChildItem -Path "$projectRoot\scripts" -Filter *.ps1 | Where-Object {
-    $content = Get-Content $_.FullName -Raw
-    $content -match 'Get-ChildItem.*-Recurse|ForEach-Object.*{[\s\S]{100,}' -and $content -notmatch 'Measure-Command'
-} | Select-Object -First 3 | ForEach-Object {
+    $content = [System.IO.File]::ReadAllText($_.FullName)
+    $content -match 'Get-ChildItem.*-Recurse -Depth 5|ForEach-Object.*{[\s\S]{100,}' -and $content -notmatch 'Measure-Command'
+} | Select-Object -First 3 | ForEach-Object { -Parallel {
     $scanResults += @{
         File = $_.Name
         Issue = 'Resource-intensive operation without profiling'

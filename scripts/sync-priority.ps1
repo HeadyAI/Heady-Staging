@@ -48,7 +48,7 @@ $batches | ForEach-Object -Parallel {
         ContentType = "application/json"
     }
     try {
-        $response = Invoke-RestMethod @params
+        $response = Invoke-RestMethod -TimeoutSec 10 @params
         Write-Host "Batch processed: $($response.successCount)/$($batch.Count)"
     } catch {
         Write-Host "Batch failed: $_"

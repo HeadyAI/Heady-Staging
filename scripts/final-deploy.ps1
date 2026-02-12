@@ -17,7 +17,7 @@ if (-not $nginx -or -not $cloudflared) {
 
 # 3. Test connectivity
 try {
-    $response = Invoke-WebRequest -Uri "http://api.headysystems.com:8443/health" \
+    $response = Invoke-WebRequest -TimeoutSec 10 -Uri "http://api.headysystems.com:8443/health" \
         -Certificate (Get-PfxCertificate -FilePath "configs\nginx\ssl\client.pfx") \
         -ErrorAction Stop
     

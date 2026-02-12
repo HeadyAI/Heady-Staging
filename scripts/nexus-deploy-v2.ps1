@@ -32,7 +32,7 @@ param(
 )
 
 # Load configuration
-$config = Get-Content $ConfigPath -Raw | ConvertFrom-Yaml
+$config = [System.IO.File]::ReadAllText($ConfigPath) | ConvertFrom-Yaml
 
 # Initialize deployment tracking
 $results = @{}

@@ -58,8 +58,8 @@ function Start-ComprehensiveDataGathering {
     # F:\ Drive Analysis
     Write-Log "📁 Analyzing F:\ drive structure..." -Level "CYAN"
     try {
-        $fDriveFiles = Get-ChildItem "F:\" -Recurse -File -ErrorAction SilentlyContinue | Measure-Object
-        $fDriveSize = (Get-ChildItem "F:\" -Recurse -File -ErrorAction SilentlyContinue | Measure-Object -Property Length -Sum).Sum / 1GB
+        $fDriveFiles = Get-ChildItem "F:\" -Recurse -Depth 5 -File -ErrorAction SilentlyContinue | Measure-Object
+        $fDriveSize = (Get-ChildItem "F:\" -Recurse -Depth 5 -File -ErrorAction SilentlyContinue | Measure-Object -Property Length -Sum).Sum / 1GB
         Write-Log "📊 F:\ Drive: $($fDriveFiles.Count) files, $([math]::Round($fDriveSize, 2)) GB" -Level "SUCCESS"
     } catch {
         Write-Log "⚠️ F:\ Drive analysis incomplete: $_" -Level "WARNING"
@@ -68,8 +68,8 @@ function Start-ComprehensiveDataGathering {
     # Computer Files Analysis
     Write-Log "💻 Analyzing computer files..." -Level "CYAN"
     try {
-        $computerFiles = Get-ChildItem "C:\Users\erich" -Recurse -File -ErrorAction SilentlyContinue | Measure-Object
-        $computerSize = (Get-ChildItem "C:\Users\erich" -Recurse -File -ErrorAction SilentlyContinue | Measure-Object -Property Length -Sum).Sum / 1GB
+        $computerFiles = Get-ChildItem "C:\Users\erich" -Recurse -Depth 5 -File -ErrorAction SilentlyContinue | Measure-Object
+        $computerSize = (Get-ChildItem "C:\Users\erich" -Recurse -Depth 5 -File -ErrorAction SilentlyContinue | Measure-Object -Property Length -Sum).Sum / 1GB
         Write-Log "📊 Computer: $($computerFiles.Count) files, $([math]::Round($computerSize, 2)) GB" -Level "SUCCESS"
     } catch {
         Write-Log "⚠️ Computer files analysis incomplete: $_" -Level "WARNING"
@@ -78,9 +78,9 @@ function Start-ComprehensiveDataGathering {
     # Media Asset Discovery
     Write-Log "🎨 Discovering media assets..." -Level "CYAN"
     try {
-        $images = Get-ChildItem "C:\Users\erich" -Recurse -File -Include "*.jpg","*.png","*.gif","*.svg","*.jpeg" -ErrorAction SilentlyContinue | Measure-Object
-        $videos = Get-ChildItem "C:\Users\erich" -Recurse -File -Include "*.mp4","*.mov","*.avi" -ErrorAction SilentlyContinue | Measure-Object
-        $audio = Get-ChildItem "C:\Users\erich" -Recurse -File -Include "*.mp3","*.wav" -ErrorAction SilentlyContinue | Measure-Object
+        $images = Get-ChildItem "C:\Users\erich" -Recurse -Depth 5 -File -Include "*.jpg","*.png","*.gif","*.svg","*.jpeg" -ErrorAction SilentlyContinue | Measure-Object
+        $videos = Get-ChildItem "C:\Users\erich" -Recurse -Depth 5 -File -Include "*.mp4","*.mov","*.avi" -ErrorAction SilentlyContinue | Measure-Object
+        $audio = Get-ChildItem "C:\Users\erich" -Recurse -Depth 5 -File -Include "*.mp3","*.wav" -ErrorAction SilentlyContinue | Measure-Object
         Write-Log "🎨 Media: $($images.Count) images, $($videos.Count) videos, $($audio.Count) audio files" -Level "SUCCESS"
     } catch {
         Write-Log "⚠️ Media discovery incomplete: $_" -Level "WARNING"

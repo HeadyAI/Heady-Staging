@@ -22,7 +22,7 @@ Enhanced Heady Cloud connection test with DNS diagnostics
 # Load environment variables
 $envFile = "$PSScriptRoot\..\.env.local"
 if (Test-Path $envFile) {
-    Get-Content $envFile | ForEach-Object {
+    Get-Content $envFile | ForEach-Object { -Parallel {
         if ($_ -match '^([^#=]+)=(.*)') {
             $name = $matches[1].Trim()
             $value = $matches[2].Trim()
@@ -49,7 +49,7 @@ if (-not $cloudEndpoint) {
 }
 
 try {
-    $response = Invoke-RestMethod -Uri $cloudEndpoint -Method GET -ErrorAction Stop
+    $response = Invoke-RestMethod -TimeoutSec 10 -Uri $cloudEndpoint -Method GET -ErrorAction Stop
     Write-Host "API Connection SUCCESS: $($response.status)"
 } catch {
     Write-Host "API Connection FAILED: $_"
@@ -65,7 +65,7 @@ if (-not $apiKey) {
 try {
     # Use the health endpoint with authentication
     $authEndpoint = $env:HEADY_API_ENDPOINT + "/api/v1/users/me"
-    $authResponse = Invoke-RestMethod -Uri $authEndpoint -Headers @{
+    $authResponse = Invoke-RestMethod -TimeoutSec 10 -Uri $authEndpoint -Headers @{
         "Authorization" = "Bearer $apiKey"
     }
     Write-Host "API Key VALID: Service status $($authResponse.status)"

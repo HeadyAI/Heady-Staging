@@ -196,8 +196,8 @@ function Invoke-Recovery {
         "cleanup" {
             Write-Host "   Cleaning up cloud caches and temp data..." -ForegroundColor Gray
             # Cloud-only cleanup - no local filesystem access
-            Invoke-RestMethod -Uri "https://headysystems.com/api/cache/clear" -Method POST | Out-Null
-            Invoke-RestMethod -Uri "https://headysystems.com/api/temp/clear" -Method POST | Out-Null
+            Invoke-RestMethod -TimeoutSec 10 -Uri "https://headysystems.com/api/cache/clear" -Method POST | Out-Null
+            Invoke-RestMethod -TimeoutSec 10 -Uri "https://headysystems.com/api/temp/clear" -Method POST | Out-Null
         }
         
         "reinstall_deps" {
@@ -316,7 +316,7 @@ function Send-Alert {
     Write-Host ""
     
     # Could integrate with Slack, PagerDuty, email here
-    # Invoke-RestMethod -Uri $env:SLACK_WEBHOOK_URL -Method POST -Body $alertData
+    # Invoke-RestMethod -TimeoutSec 10 -Uri $env:SLACK_WEBHOOK_URL -Method POST -Body $alertData
 }
 
 function Log-Recovery {
@@ -346,13 +346,13 @@ function Get-ErrorReport {
     if (Test-Path "$HEADY_LOG_DIR\recoveries.json") {
         $recoveries = Get-Content "$HEADY_LOG_DIR\recoveries.json" | 
             Where-Object { $_ } | 
-            ForEach-Object { $_ | ConvertFrom-Json }
+            ForEach-Object { -Parallel { $_ | ConvertFrom-Json }
     }
     
     if (Test-Path "$HEADY_LOG_DIR\alerts.json") {
         $alerts = Get-Content "$HEADY_LOG_DIR\alerts.json" | 
             Where-Object { $_ } | 
-            ForEach-Object { $_ | ConvertFrom-Json }
+            ForEach-Object { -Parallel { $_ | ConvertFrom-Json }
     }
     
     Write-Host ""
@@ -368,7 +368,7 @@ function Get-ErrorReport {
     if ($alerts.Count -gt 0) {
         Write-Host ""
         Write-Host "Recent Alerts:" -ForegroundColor Yellow
-        $alerts | Select-Object -Last 5 | ForEach-Object {
+        $alerts | Select-Object -Last 5 | ForEach-Object { -Parallel {
             Write-Host "  - $($_.timestamp): $($_.component) - $($_.category) [$($_.severity)]" -ForegroundColor Red
         }
     }
@@ -400,7 +400,7 @@ switch ($Action) {
             exit 1
         }
         
-        $content = Get-Content $ErrorLog -Raw
+        $content = [System.IO.File]::ReadAllText($ErrorLog)
         $category = Classify-Error -LogContent $content
         $strategy = Get-RecoveryStrategy -ErrorCategory $category
         
@@ -417,7 +417,7 @@ switch ($Action) {
             exit 1
         }
         
-        $content = Get-Content $ErrorLog -Raw
+        $content = [System.IO.File]::ReadAllText($ErrorLog)
         $category = Classify-Error -LogContent $content
         $strategy = Get-RecoveryStrategy -ErrorCategory $category
         

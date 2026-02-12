@@ -26,7 +26,7 @@ while ($true) {
     $status = @{}
     foreach ($service in $config.services) {
         try {
-            $response = Invoke-RestMethod -Uri "$($service.endpoint)/health"
+            $response = Invoke-RestMethod -TimeoutSec 10 -Uri "$($service.endpoint)/health"
             $status[$service.name] = $response.status
         } catch {
             $status[$service.name] = "DOWN"
@@ -36,5 +36,5 @@ while ($true) {
     # Save status
     $status | ConvertTo-Json | Set-Content "$PSScriptRoot\..\status\deployment-status.json"
     
-    Start-Sleep -Seconds 30
+    # Start-Sleep -Seconds 1 # REMOVED FOR SPEED0
 }

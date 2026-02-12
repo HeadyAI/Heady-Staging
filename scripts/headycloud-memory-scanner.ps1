@@ -86,14 +86,14 @@ if ($IncludePersonal) {
         if (Test-Path $path) {
             Write-Host "  Scanning: $path" -ForegroundColor Blue
             
-            $files = Get-ChildItem -Path $path -File -Recurse | Where-Object {
-                $ScanConfig.file_patterns | ForEach-Object { 
+            $files = Get-ChildItem -Path $path -File -Recurse -Depth 5 | Where-Object {
+                $ScanConfig.file_patterns | ForEach-Object { -Parallel { 
                     if ($_.Name -like $_) { return $true }
                 }
                 return $false
             } | Where-Object {
                 $exclude = $false
-                $ScanConfig.exclude_patterns | ForEach-Object {
+                $ScanConfig.exclude_patterns | ForEach-Object { -Parallel {
                     if ($_.FullName -like "*$_*") { $exclude = $true; break }
                 }
                 return -not $exclude
@@ -113,10 +113,10 @@ if ($IncludePersonal) {
                 # Extract content for small files
                 if ($file.Length -lt 1MB) {
                     try {
-                        $content = Get-Content $file.FullName -Raw -Encoding UTF8
+                        $content = [System.IO.File]::ReadAllText($file.FullName) -Encoding UTF8
                         if ($content.Length -lt 100KB) {
                             $fileData.content = $content
-                            $fileData.content_hash = [System.Security.Cryptography.SHA256]::Create().ComputeHash([System.Text.Encoding]::UTF8.GetBytes($content)) | ForEach-Object { $_.ToString("x2") } | Join-String -Separator ""
+                            $fileData.content_hash = [System.Security.Cryptography.SHA256]::Create().ComputeHash([System.Text.Encoding]::UTF8.GetBytes($content)) | ForEach-Object { -Parallel { $_.ToString("x2") } | Join-String -Separator ""
                         }
                     } catch {
                         $fileData.content_error = $true
@@ -166,14 +166,14 @@ if ($IncludeProject) {
         if (Test-Path $path) {
             Write-Host "  Scanning: $path" -ForegroundColor Blue
             
-            $files = Get-ChildItem -Path $path -File -Recurse | Where-Object {
-                $ScanConfig.file_patterns | ForEach-Object { 
+            $files = Get-ChildItem -Path $path -File -Recurse -Depth 5 | Where-Object {
+                $ScanConfig.file_patterns | ForEach-Object { -Parallel { 
                     if ($_.Name -like $_) { return $true }
                 }
                 return $false
             } | Where-Object {
                 $exclude = $false
-                $ScanConfig.exclude_patterns | ForEach-Object {
+                $ScanConfig.exclude_patterns | ForEach-Object { -Parallel {
                     if ($_.FullName -like "*$_*") { $exclude = $true; break }
                 }
                 return -not $exclude
@@ -195,10 +195,10 @@ if ($IncludeProject) {
                 # Extract and analyze content
                 if ($file.Length -lt 2MB) {
                     try {
-                        $content = Get-Content $file.FullName -Raw -Encoding UTF8
+                        $content = [System.IO.File]::ReadAllText($file.FullName) -Encoding UTF8
                         if ($content.Length -lt 200KB) {
                             $fileData.content = $content
-                            $fileData.content_hash = [System.Security.Cryptography.SHA256]::Create().ComputeHash([System.Text.Encoding]::UTF8.GetBytes($content)) | ForEach-Object { $_.ToString("x2") } | Join-String -Separator ""
+                            $fileData.content_hash = [System.Security.Cryptography.SHA256]::Create().ComputeHash([System.Text.Encoding]::UTF8.GetBytes($content)) | ForEach-Object { -Parallel { $_.ToString("x2") } | Join-String -Separator ""
                             
                             # Extract patterns and insights
                             $fileData.insights = @{
@@ -271,10 +271,10 @@ if ($IncludeProject -and $ProjectData) {
         if ($file.content) {
             $patterns = @{
                 file = $file.relative_path
-                imports = [regex]::Matches($file.content, '(import|from|require)\s+["''][^"'']+["'']') | ForEach-Object { $_.Value }
-                exports = [regex]::Matches($file.content, '(export|module\.exports)\s+.*') | ForEach-Object { $_.Value }
-                functions = [regex]::Matches($file.content, '(function|def|async\s+function)\s+\w+') | ForEach-Object { $_.Value }
-                classes = [regex]::Matches($file.content, '(class|interface)\s+\w+') | ForEach-Object { $_.Value }
+                imports = [regex]::Matches($file.content, '(import|from|require)\s+["''][^"'']+["'']') | ForEach-Object { -Parallel { $_.Value }
+                exports = [regex]::Matches($file.content, '(export|module\.exports)\s+.*') | ForEach-Object { -Parallel { $_.Value }
+                functions = [regex]::Matches($file.content, '(function|def|async\s+function)\s+\w+') | ForEach-Object { -Parallel { $_.Value }
+                classes = [regex]::Matches($file.content, '(class|interface)\s+\w+') | ForEach-Object { -Parallel { $_.Value }
             }
             $Patterns.code_patterns += $patterns
         }
@@ -289,7 +289,7 @@ if ($IncludeProject -and $ProjectData) {
                 $Patterns.configuration_patterns += @{
                     file = $file.relative_path
                     structure = $config.PSObject.Properties.Name
-                    keys = $config.PSObject.Properties | ForEach-Object { $_.Name }
+                    keys = $config.PSObject.Properties | ForEach-Object { -Parallel { $_.Name }
                 }
             } catch {
                 # YAML or other config format

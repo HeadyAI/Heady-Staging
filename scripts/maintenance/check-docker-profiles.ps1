@@ -42,7 +42,7 @@ $valid   = @()
 foreach ($profile in $requiredProfiles) {
     $path = Join-Path $profileDir "$profile.yml"
     if (Test-Path $path) {
-        $content = Get-Content $path -Raw
+        $content = [System.IO.File]::ReadAllText($path)
         if ($content -match 'services:') {
             $valid += $profile
         } else {
@@ -58,7 +58,7 @@ Write-Host "`n=== Docker Profile Check ===" -ForegroundColor Cyan
 Write-Host "Valid : $($valid.Count) / $($requiredProfiles.Count)" -ForegroundColor Green
 if ($missing.Count -gt 0) {
     Write-Host "Missing/Invalid:" -ForegroundColor Red
-    $missing | ForEach-Object { Write-Host "  - $_" -ForegroundColor Red }
+    $missing | ForEach-Object { -Parallel { Write-Host "  - $_" -ForegroundColor Red }
     exit 1
 }
 Write-Host "All profiles present and valid" -ForegroundColor Green

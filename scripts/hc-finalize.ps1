@@ -59,7 +59,7 @@ function Test-SystemHealth {
     
     # Check Heady Manager health
     try {
-        $health = Invoke-RestMethod -Uri "http://api.headysystems.com:3300/api/health" -TimeoutSec 5
+        $health = Invoke-RestMethod -TimeoutSec 10 -Uri "http://api.headysystems.com:3300/api/health" -TimeoutSec 5
         Write-Host "✅ Heady Manager: $($health.version) - Uptime: $([math]::Round($health.uptime/60,1))min" -ForegroundColor Green
     } catch {
         Write-Host "❌ Heady Manager: Not responding" -ForegroundColor Red
@@ -67,7 +67,7 @@ function Test-SystemHealth {
     
     # Check Ollama
     try {
-        $models = Invoke-RestMethod -Uri "http://api.headysystems.com:11434/api/tags" -TimeoutSec 5
+        $models = Invoke-RestMethod -TimeoutSec 10 -Uri "http://api.headysystems.com:11434/api/tags" -TimeoutSec 5
         Write-Host "✅ Ollama: $($models.models.Count) models available" -ForegroundColor Green
     } catch {
         Write-Host "❌ Ollama: Not responding" -ForegroundColor Red
@@ -367,7 +367,7 @@ Generated: $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')
 ## System Status
 - Docker Containers: $((docker ps --filter "name=heady" --format "{{.Names}}" | Measure-Object).Count) running
 - Heady Manager: v3.0.0
-- Ollama Models: $((Invoke-RestMethod -Uri "http://api.headysystems.com:11434/api/tags" -ErrorAction SilentlyContinue).models.Count) available
+- Ollama Models: $((Invoke-RestMethod -TimeoutSec 10 -Uri "http://api.headysystems.com:11434/api/tags" -ErrorAction SilentlyContinue).models.Count) available
 - PyCharm: Configured and ready
 
 ## Services Running

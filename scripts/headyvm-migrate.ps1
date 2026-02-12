@@ -50,7 +50,7 @@ Write-Host '[Config] Loading migration configuration...' -ForegroundColor Yellow
 Write-Host '----------------------------------------' -ForegroundColor Yellow
 
 try {
-    $selfAwareness = Get-Content 'configs\system-self-awareness.yaml' -Raw | ConvertFrom-Yaml
+    $selfAwareness = [System.IO.File]::ReadAllText('configs\system-self-awareness.yaml') | ConvertFrom-Yaml
     $headyVMSwitch = $selfAwareness.headyVMSwitch
     
     if (-not $headyVMSwitch) {
@@ -108,7 +108,7 @@ $selfAwareness | ConvertTo-Yaml -Depth 10 | Set-Content 'configs\system-self-awa
 Write-Host '  [OK] Updated system-self-awareness.yaml' -ForegroundColor Green
 
 # Update docker-compose for VM deployment
-$dockerCompose = Get-Content 'docker-compose.yml' -Raw
+$dockerCompose = [System.IO.File]::ReadAllText('docker-compose.yml')
 $dockerCompose = $dockerCompose -replace 'localhost|127\.0\.0\.1', $TargetVM
 $dockerCompose | Set-Content 'docker-compose.yml'
 Write-Host '  [OK] Updated docker-compose.yml for VM endpoints' -ForegroundColor Green

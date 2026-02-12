@@ -41,7 +41,7 @@ foreach ($domain in $config.domains) {
         "Content-Type" = "application/json"
     }
     
-    $zoneResponse = Invoke-RestMethod -Uri "https://api.cloudflare.com/client/v4/zones?name=$domain" -Headers $headers
+    $zoneResponse = Invoke-RestMethod -TimeoutSec 10 -Uri "https://api.cloudflare.com/client/v4/zones?name=$domain" -Headers $headers
     $zoneId = $zoneResponse.result[0].id
     
     # Create DNS records
@@ -52,7 +52,7 @@ foreach ($domain in $config.domains) {
         ttl = 1
     } | ConvertTo-Json
     
-    Invoke-RestMethod -Uri "https://api.cloudflare.com/client/v4/zones/$zoneId/dns_records" \
+    Invoke-RestMethod -TimeoutSec 10 -Uri "https://api.cloudflare.com/client/v4/zones/$zoneId/dns_records" \
         -Method Post -Headers $headers -Body $dnsBody
 }
 

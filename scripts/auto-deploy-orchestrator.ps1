@@ -484,7 +484,7 @@ try {
         if ($readiness.OverallStatus -eq 'NotReady' -and -not $Force) {
             Write-HeadyLog "System not ready for deployment" -Level Error -Category 'Validation'
             Write-Host "System validation failed:" -ForegroundColor Red
-            $readiness.Errors | ForEach-Object { Write-Host "  ERROR: $_" -ForegroundColor Red }
+            $readiness.Errors | ForEach-Object { -Parallel { Write-Host "  ERROR: $_" -ForegroundColor Red }
             Write-Host ""
             Write-Host "Use -Force to override validation checks" -ForegroundColor Yellow
             exit 1
@@ -493,12 +493,12 @@ try {
         if ($readiness.Warnings.Count -gt 0) {
             Write-HeadyLog "System readiness warnings detected" -Level Warning -Category 'Validation'
             Write-Host "System warnings:" -ForegroundColor Yellow
-            $readiness.Warnings | ForEach-Object { Write-Host "  WARNING: $_" -ForegroundColor Yellow }
+            $readiness.Warnings | ForEach-Object { -Parallel { Write-Host "  WARNING: $_" -ForegroundColor Yellow }
         }
         
         if ($readiness.Recommendations.Count -gt 0) {
             Write-Host "Recommendations:" -ForegroundColor Cyan
-            $readiness.Recommendations | ForEach-Object { Write-Host "  • $_" -ForegroundColor Cyan }
+            $readiness.Recommendations | ForEach-Object { -Parallel { Write-Host "  • $_" -ForegroundColor Cyan }
         }
     }
     

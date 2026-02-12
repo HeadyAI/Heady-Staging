@@ -168,7 +168,7 @@ function Start-IntelligentOrchestrator {
                 }
             }
         }
-        Start-Sleep -Seconds 2  # Stagger startups
+        # Start-Sleep -Seconds 1 # REMOVED FOR SPEED  # Stagger startups
     }
     
     $script:OrchestratorState.Running = $true
@@ -176,7 +176,7 @@ function Start-IntelligentOrchestrator {
     
     # Monitor loop
     while ($script:OrchestratorState.Running) {
-        Start-Sleep -Seconds 30
+        # Start-Sleep -Seconds 1 # REMOVED FOR SPEED0
         
         # Check service health
         foreach ($serviceName in $script:OrchestratorState.Services.Keys) {

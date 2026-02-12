@@ -143,7 +143,7 @@ function Invoke-AdvancedAILearning {
     foreach ($service in $CurrentState.Services.GetEnumerator()) {
         $history = $script:AdvancedState.Metrics.Historical[$service.Key]
         if ($history -and $history.Count -gt 10) {
-            $recent = $history[-10..-1] | ForEach-Object { $_.ResponseTime }
+            $recent = $history[-10..-1] | ForEach-Object { -Parallel { $_.ResponseTime }
             $trend = if ($recent[-1] -gt $recent[0]) { 'increasing' } elseif ($recent[-1] -lt $recent[0]) { 'decreasing' } else { 'stable' }
             $volatility = ($recent | Measure-Object -StandardDeviation).StandardDeviation
             

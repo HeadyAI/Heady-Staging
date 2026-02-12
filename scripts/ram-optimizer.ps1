@@ -37,7 +37,7 @@ function Optimize-RAM {
     $worktrees = git worktree list | Measure-Object
     if ($worktrees.Count -gt $MAX_WORKTREES) {
         Write-Host "Closing worktrees (current: $($worktrees.Count), max allowed: $MAX_WORKTREES)"
-        git worktree list | Select-Object -Skip $MAX_WORKTREES | ForEach-Object {
+        git worktree list | Select-Object -Skip $MAX_WORKTREES | ForEach-Object { -Parallel {
             $path = ($_ -split ' ')[0]
             git worktree remove $path --force
         }
@@ -56,7 +56,7 @@ function Optimize-RAM {
         Sort-Object WS -Descending |
         Select-Object -First 5
         
-    $highRamProcesses | ForEach-Object {
+    $highRamProcesses | ForEach-Object { -Parallel {
         Write-Host "Stopping high-RAM process: $($_.Name) ($($_.WS / 1MB)MB)"
         Stop-Process $_.Id -Force
     }

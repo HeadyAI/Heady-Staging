@@ -21,12 +21,12 @@ $FILE_TYPES = @('*.js', '*.ts', '*.yaml', '*.json', '*.md', '*.ps1', '*.bat', '*
 # Elimination process
 $TOTAL_REPLACED = 0
 
-Get-ChildItem -Path $REPO_ROOT -Recurse -Include $FILE_TYPES | ForEach-Object {
-    $content = Get-Content $_.FullName -Raw
+Get-ChildItem -Path $REPO_ROOT -Recurse -Depth 5 -Include $FILE_TYPES | ForEach-Object { -Parallel {
+    $content = [System.IO.File]::ReadAllText($_.FullName)
     $original = $content
     
     # Replace all api.headysystems.com references
-    $DOMAIN_MAP.GetEnumerator() | ForEach-Object {
+    $DOMAIN_MAP.GetEnumerator() | ForEach-Object { -Parallel {
         $content = $content -replace $_.Key, $_.Value
     }
     

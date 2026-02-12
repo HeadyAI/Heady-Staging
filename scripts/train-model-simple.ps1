@@ -63,7 +63,7 @@ try {
         ContentType = "application/json"
     }
     
-    $response = Invoke-RestMethod @params
+    $response = Invoke-RestMethod -TimeoutSec 10 @params
     Write-Host "✅ Training started successfully!" -ForegroundColor Green
     Write-Host "Job ID: $($response.jobId)" -ForegroundColor White
     

@@ -3,7 +3,7 @@ Write-Host "Starting FINAL PURGE of all violations..." -ForegroundColor Red
 
 # Get all files with violations
 $allFiles = @()
-$allFiles += Get-ChildItem -Path "c:\Users\erich\Heady" -Recurse -Include "*.yaml","*.yml","*.js","*.ts","*.json","*.jsx","*.tsx","*.md","*.html","*.css","*.conf","*.toml","*.env*","*.ps1","*.sh","*.py" -ErrorAction SilentlyContinue | 
+$allFiles += Get-ChildItem -Path "c:\Users\erich\Heady" -Recurse -Depth 5 -Include "*.yaml","*.yml","*.js","*.ts","*.json","*.jsx","*.tsx","*.md","*.html","*.css","*.conf","*.toml","*.env*","*.ps1","*.sh","*.py" -ErrorAction SilentlyContinue | 
     Where-Object { -not $_.FullName.Contains("node_modules") -and 
                   -not $_.FullName.Contains(".git\") -and 
                   -not $_.FullName.Contains("dist\") -and 
@@ -23,7 +23,7 @@ foreach ($file in $allFiles) {
     Write-Host "[$i/$totalFiles] Checking: $($file.Name)" -ForegroundColor Gray
     
     try {
-        $content = Get-Content $file.FullName -Raw -ErrorAction SilentlyContinue
+        $content = [System.IO.File]::ReadAllText($file.FullName) -ErrorAction SilentlyContinue
         if (-not $content) { continue }
         
         $originalContent = $content

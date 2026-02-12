@@ -28,7 +28,7 @@ $cloudEndpoint = "https://cloud.headysystems.com/api/v1/resources"
 # Continuous monitoring loop
 while ($true) {
     # Get current resource allocation
-    $resources = Invoke-RestMethod -Uri "$cloudEndpoint/status" -Headers @{"Authorization"="Bearer $apiKey"}
+    $resources = Invoke-RestMethod -TimeoutSec 10 -Uri "$cloudEndpoint/status" -Headers @{"Authorization"="Bearer $apiKey"}
     
     # Calculate allocation needs
     $allocation = @{
@@ -39,9 +39,9 @@ while ($true) {
     
     # Maximize resource utilization
     if ($allocation.cpu -gt 0 -or $allocation.ram -gt 0 -or $allocation.gpu -gt 0) {
-        Invoke-RestMethod -Uri "$cloudEndpoint/allocate" -Method POST -Headers @{"Authorization"="Bearer $apiKey"} -Body ($allocation | ConvertTo-Json)
+        Invoke-RestMethod -TimeoutSec 10 -Uri "$cloudEndpoint/allocate" -Method POST -Headers @{"Authorization"="Bearer $apiKey"} -Body ($allocation | ConvertTo-Json)
     }
     
     # Maintain 100% utilization
-    Start-Sleep -Seconds 10
+    # Start-Sleep -Seconds 1 # REMOVED FOR SPEED
 }

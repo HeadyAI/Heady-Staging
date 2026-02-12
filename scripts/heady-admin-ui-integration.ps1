@@ -209,15 +209,15 @@ function Update-AdminDashboard {
             $history = $service.Value[-20..-1] | Where-Object { $_ }
             $performanceData.responseTimeHistory += @{
                 service = $service.Key
-                data = $history | ForEach-Object { @{ timestamp = $_.Timestamp; value = $_.ResponseTime } }
+                data = $history | ForEach-Object { -Parallel { @{ timestamp = $_.Timestamp; value = $_.ResponseTime } }
             }
             $performanceData.memoryUsageHistory += @{
                 service = $service.Key
-                data = $history | ForEach-Object { @{ timestamp = $_.Timestamp; value = $_.MemoryUsage } }
+                data = $history | ForEach-Object { -Parallel { @{ timestamp = $_.Timestamp; value = $_.MemoryUsage } }
             }
             $performanceData.cpuUsageHistory += @{
                 service = $service.Key
-                data = $history | ForEach-Object { @{ timestamp = $_.Timestamp; value = $_.CpuUsage } }
+                data = $history | ForEach-Object { -Parallel { @{ timestamp = $_.Timestamp; value = $_.CpuUsage } }
             }
         }
         

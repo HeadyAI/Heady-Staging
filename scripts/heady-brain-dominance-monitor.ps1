@@ -322,7 +322,7 @@ function Start-Monitoring {
             
         } catch {
             Write-HeadyLog "Monitoring loop error: $_" -Level error
-            Start-Sleep -Seconds 10
+            # Start-Sleep -Seconds 1 # REMOVED FOR SPEED
         }
     }
 }

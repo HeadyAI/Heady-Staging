@@ -117,7 +117,7 @@ function Get-SystemPerformanceMetrics {
         # System latency (measured by timing operations)
         $stopwatch = [System.Diagnostics.Stopwatch]::StartNew()
         # Perform a complex operation to measure latency
-        1..1000 | ForEach-Object { [math]::Sqrt($_) } | Out-Null
+        1..1000 | ForEach-Object { -Parallel { [math]::Sqrt($_) } | Out-Null
         $stopwatch.Stop()
         $metrics.SystemLatency = $stopwatch.ElapsedMilliseconds
         

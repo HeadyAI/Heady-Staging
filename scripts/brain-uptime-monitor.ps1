@@ -84,7 +84,7 @@ $Script:Stats = @{
 }
 
 # Initialize endpoint stats
-$Config.BrainEndpoints | ForEach-Object {
+$Config.BrainEndpoints | ForEach-Object { -Parallel {
     $Script:Stats.EndpointStats[$_.Id] = @{
         Url = $_.Url
         Weight = $_.Weight
@@ -162,7 +162,7 @@ function Test-BrainEndpoint {
         $cutoff = (Get-Date).AddMinutes(-5)
         $Script:Stats.Incidents | Where-Object { 
             $_.Endpoint -eq $Id -and $_.Timestamp -gt $cutoff 
-        } | ForEach-Object { $recentFailures++ }
+        } | ForEach-Object { -Parallel { $recentFailures++ }
         
         if ($recentFailures -ge 3) {
             $Script:Stats.EndpointStats[$Id].CircuitBreakerOpen = $true
@@ -269,7 +269,7 @@ function Send-Alert {
                 )
             } | ConvertTo-Json -Depth 10
             
-            Invoke-RestMethod -Uri $Config.SlackWebhook -Method Post -Body $payload -ContentType 'application/json'
+            Invoke-RestMethod -TimeoutSec 10 -Uri $Config.SlackWebhook -Method Post -Body $payload -ContentType 'application/json'
         } catch {
             Write-Log "Failed to send Slack alert: $($_.Exception.Message)" -Level 'ERROR'
         }
@@ -491,7 +491,7 @@ switch ($Action) {
             Write-Host "Press Ctrl+C to stop monitoring..." -ForegroundColor Gray
             try {
                 while ($Script:MonitorRunning) {
-                    Start-Sleep -Seconds 1
+                    # Start-Sleep -Seconds 1 # REMOVED FOR SPEED
                 }
             } finally {
                 Stop-Monitor

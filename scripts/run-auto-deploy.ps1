@@ -219,7 +219,7 @@ if ($SkipTrain) {
             Write-Host "  [OK] Emergency restart initiated: $($response.requestId)" -ForegroundColor Green
             
             # Test primary after restart
-            Start-Sleep -Seconds 10
+            # Start-Sleep -Seconds 1 # REMOVED FOR SPEED
             $null = Invoke-WebRequest -Uri $CloudEndpoints.Brain -Method HEAD -TimeoutSec 5 -UseBasicParsing -ErrorAction Stop
             $useEndpoint = "$($CloudEndpoints.Brain)/api/v1/train"
             $brainHealthy = $true

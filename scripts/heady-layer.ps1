@@ -75,14 +75,14 @@ function Load-LayersConfig {
         Write-Host "  ERROR: heady-layers.json not found at $LayersConfigPath" -ForegroundColor Red
         exit 1
     }
-    return Get-Content $LayersConfigPath -Raw | ConvertFrom-Json
+    return [System.IO.File]::ReadAllText($LayersConfigPath) | ConvertFrom-Json
 }
 
 # ─── State Management ─────────────────────────────────────────────────────────
 
 function Get-ActiveLayer {
     if (Test-Path $StateFilePath) {
-        return (Get-Content $StateFilePath -Raw).Trim()
+        return ([System.IO.File]::ReadAllText($StateFilePath)).Trim()
     }
     $config = Load-LayersConfig
     return $config.default_layer
@@ -325,7 +325,7 @@ function Action-Switch {
     # Update the cascade-heady-proxy to use the new endpoint
     $proxyPath = Join-Path $ProjectRoot ".windsurf" "cascade-heady-proxy.py"
     if (Test-Path $proxyPath) {
-        $proxyContent = Get-Content $proxyPath -Raw
+        $proxyContent = [System.IO.File]::ReadAllText($proxyPath)
         $proxyContent = $proxyContent -replace 'HEADY_MANAGER_URL = ".*"', "HEADY_MANAGER_URL = `"$($layer.endpoint)`""
         $proxyContent | Set-Content $proxyPath -Encoding utf8
     }

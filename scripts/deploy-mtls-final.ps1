@@ -17,7 +17,7 @@ $cloudflared = Start-Process -FilePath $cloudflaredPath -ArgumentList "--config 
 if (-not $nginx -or -not $cloudflared) { throw "Failed to start services" }
 
 # Verify
-Start-Sleep -Seconds 5
+# Start-Sleep -Seconds 1 # REMOVED FOR SPEED
 
 $testResult = Test-NetConnection -ComputerName api.headysystems.com -Port 8443 -WarningAction SilentlyContinue
 

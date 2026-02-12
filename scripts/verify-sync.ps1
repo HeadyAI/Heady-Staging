@@ -25,7 +25,7 @@ $DEVICES = @("WindowsPC", "OnePlusOpen", "LinuxWorkstation")
 $errors = 0
 foreach ($device in $DEVICES) {
     try {
-        $state = Invoke-RestMethod -Uri "$API_URL?device=$device" -Method Get
+        $state = Invoke-RestMethod -TimeoutSec 10 -Uri "$API_URL?device=$device" -Method Get
         if (-not $state) {
             Write-Warning "No state returned for $device"
             $errors++

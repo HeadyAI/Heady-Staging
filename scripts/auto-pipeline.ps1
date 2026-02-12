@@ -40,7 +40,7 @@ $brainEndpoint = ($config.services | Where-Object { $_.name -eq "HeadyBrain" }).
 while ($true) {
     # Get next task from HeadyBrain
     try {
-        $task = Invoke-RestMethod -Uri "$brainEndpoint/api/v1/next-task" -Method GET
+        $task = Invoke-RestMethod -TimeoutSec 10 -Uri "$brainEndpoint/api/v1/next-task" -Method GET
     } catch {
         # Fallback to local task generator
         . "$PSScriptRoot\local-task-generator.ps1"
@@ -49,7 +49,7 @@ while ($true) {
     }
     
     if (-not $task) {
-        Start-Sleep -Seconds 10
+        # Start-Sleep -Seconds 1 # REMOVED FOR SPEED
         continue
     }
     
@@ -75,14 +75,14 @@ while ($true) {
     }
     
     # Execute task
-    $result = Invoke-RestMethod -Uri "$service/api/v1/execute" -Method POST -Body ($task | ConvertTo-Json)
+    $result = Invoke-RestMethod -TimeoutSec 10 -Uri "$service/api/v1/execute" -Method POST -Body ($task | ConvertTo-Json)
     
     # Report result to HeadyBrain
-    Invoke-RestMethod -Uri "$brainEndpoint/api/v1/task-result" -Method POST -Body ($result | ConvertTo-Json)
+    Invoke-RestMethod -TimeoutSec 10 -Uri "$brainEndpoint/api/v1/task-result" -Method POST -Body ($result | ConvertTo-Json)
     
     # Optimization cycle
     if ((Get-Date).Second % $config.optimization.interval -eq 0) {
-        Invoke-RestMethod -Uri "$brainEndpoint/api/v1/optimize" -Method POST
+        Invoke-RestMethod -TimeoutSec 10 -Uri "$brainEndpoint/api/v1/optimize" -Method POST
     }
 }
     # Circuit breaker for resilience
@@ -118,7 +118,7 @@ while ($true) {
             $testedServices += $service.name
             
             $healthCheckTimer = [System.Diagnostics.Stopwatch]::StartNew()
-            $healthCheck = Invoke-RestMethod -Uri "$($service.endpoint)/health" -Method GET -TimeoutSec 5 -ErrorAction Stop
+            $healthCheck = Invoke-RestMethod -TimeoutSec 10 -Uri "$($service.endpoint)/health" -Method GET -TimeoutSec 5 -ErrorAction Stop
             $healthCheckTimer.Stop()
             
             $healthCheckMetrics.ResponseTimes += $healthCheckTimer.ElapsedMilliseconds

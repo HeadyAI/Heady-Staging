@@ -272,7 +272,7 @@ try {
             
             # Keep orchestrator running
             while ($script:OrchestratorActive) {
-                Start-Sleep -Seconds 60
+                # Start-Sleep -Seconds 1 # REMOVED FOR SPEED0
                 
                 # Check process health
                 foreach ($processName in $script:ActiveProcesses.Keys.Clone()) {

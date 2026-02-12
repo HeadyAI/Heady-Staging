@@ -36,10 +36,10 @@ $body = @{
 } | ConvertTo-Json
 
 try {
-    $tasks = Invoke-RestMethod -Uri "$brainEndpoint/api/v1/generate-tasks" -Method POST -Body $body
+    $tasks = Invoke-RestMethod -TimeoutSec 10 -Uri "$brainEndpoint/api/v1/generate-tasks" -Method POST -Body $body
 } catch {
     Write-Host "Primary brain endpoint failed, using fallback"
-    $tasks = Invoke-RestMethod -Uri "$fallbackEndpoint/api/v1/generate-tasks" -Method POST -Body $body
+    $tasks = Invoke-RestMethod -TimeoutSec 10 -Uri "$fallbackEndpoint/api/v1/generate-tasks" -Method POST -Body $body
 }
 
 # Save tasks

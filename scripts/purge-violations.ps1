@@ -14,7 +14,7 @@ $patterns = @(
 
 $extensions = @("*.yaml", "*.yml", "*.js", "*.ts", "*.json", "*.jsx", "*.tsx", "*.md", "*.html", "*.css", "*.conf", "*.toml", "*.env*", "*.ps1", "*.sh", "*.py")
 
-$files = Get-ChildItem -Path "c:\Users\erich\Heady" -Recurse -Include $extensions -ErrorAction SilentlyContinue | 
+$files = Get-ChildItem -Path "c:\Users\erich\Heady" -Recurse -Depth 5 -Include $extensions -ErrorAction SilentlyContinue | 
     Where-Object { -not $_.FullName.Contains("node_modules") -and 
                   -not $_.FullName.Contains(".git\") -and 
                   -not $_.FullName.Contains("dist\") -and 
@@ -25,7 +25,7 @@ $files = Get-ChildItem -Path "c:\Users\erich\Heady" -Recurse -Include $extension
 $totalChanges = 0
 
 foreach ($file in $files) {
-    $content = Get-Content $file.FullName -Raw -ErrorAction SilentlyContinue
+    $content = [System.IO.File]::ReadAllText($file.FullName) -ErrorAction SilentlyContinue
     if (-not $content) { continue }
     
     $originalContent = $content

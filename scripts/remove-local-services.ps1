@@ -37,7 +37,7 @@ if ($containers) {
 Write-Host "Testing cloud connectivity..." -ForegroundColor Yellow
 $cloudEndpoint = "https://cloud.headysystems.com/health"
 try {
-    $response = Invoke-RestMethod -Uri $cloudEndpoint -Method Get
+    $response = Invoke-RestMethod -TimeoutSec 10 -Uri $cloudEndpoint -Method Get
     if ($response.status -eq "ok") {
         Write-Host "Cloud connection successful!" -ForegroundColor Green
         exit 0

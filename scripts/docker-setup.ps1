@@ -115,7 +115,7 @@ function Clear-HeadyEnvironment {
     Write-Host "Removing Heady volumes..." -ForegroundColor Blue
     $volumes = docker volume ls --filter "name=heady" -q
     if ($volumes) {
-        $volumes | ForEach-Object {
+        $volumes | ForEach-Object { -Parallel {
             docker volume rm $_
         }
     }
@@ -124,7 +124,7 @@ function Clear-HeadyEnvironment {
     Write-Host "Removing Heady networks..." -ForegroundColor Blue
     $networks = docker network ls --filter "name=heady" -q
     if ($networks) {
-        $networks | ForEach-Object {
+        $networks | ForEach-Object { -Parallel {
             docker network rm $_
         }
     }
@@ -134,7 +134,7 @@ function Clear-HeadyEnvironment {
         Write-Host "Removing Heady images..." -ForegroundColor Blue
         $images = docker images --filter "reference=heady*" -q
         if ($images) {
-            $images | ForEach-Object {
+            $images | ForEach-Object { -Parallel {
                 docker rmi $_
             }
         }

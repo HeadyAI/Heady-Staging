@@ -22,7 +22,7 @@ Tests connection to the MCP server
 # Load environment variables
 $envFile = "$PSScriptRoot\..\.env.local"
 if (Test-Path $envFile) {
-    Get-Content $envFile | ForEach-Object {
+    Get-Content $envFile | ForEach-Object { -Parallel {
         if ($_ -match '^([^#=]+)=(.*)') {
             $name = $matches[1].Trim()
             $value = $matches[2].Trim()
@@ -37,7 +37,7 @@ if (-not $mcpEndpoint) {
 }
 
 try {
-    $response = Invoke-RestMethod -Uri "$mcpEndpoint/health" -Method GET -ErrorAction Stop
+    $response = Invoke-RestMethod -TimeoutSec 10 -Uri "$mcpEndpoint/health" -Method GET -ErrorAction Stop
     Write-Host "MCP Server ACTIVE: $($response.status)"
 } catch {
     Write-Host "MCP Server INACTIVE: $_"

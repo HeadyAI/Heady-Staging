@@ -24,7 +24,7 @@ $cleanupTargets = @(
 )
 
 if ($Aggressive) {
-    $cleanupTargets += @("*node*", "*java*", "*chrome*")
+    $cleanupTargets = [System.Collections.ArrayList]@("*node*", "*java*", "*chrome*")
 }
 
 Get-Process | Where-Object {

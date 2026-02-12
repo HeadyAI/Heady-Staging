@@ -8,7 +8,7 @@ $opensslUrl = "https://slproweb.com/download/Win64OpenSSL-3_1_4.exe"
 $installerPath = "$env:TEMP\openssl-installer.exe"
 
 if (-not (Test-Path "C:\Program Files\OpenSSL-Win64\bin\openssl.exe")) {
-    Invoke-WebRequest -Uri $opensslUrl -OutFile $installerPath
+    Invoke-WebRequest -TimeoutSec 10 -Uri $opensslUrl -OutFile $installerPath
     Start-Process -FilePath $installerPath -ArgumentList "/silent" -Wait
 }
 

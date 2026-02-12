@@ -41,7 +41,7 @@ foreach ($svc in $services) {
 if ($allRunning) {
     try {
         $certPath = Join-Path $PSScriptRoot "..\configs\nginx\ssl\client.pfx"
-        $response = Invoke-WebRequest -Uri "https://api.headysystems.comheadymcp.com/health" `
+        $response = Invoke-WebRequest -TimeoutSec 10 -Uri "https://api.headysystems.comheadymcp.com/health" `
             -Certificate (Get-PfxCertificate -FilePath $certPath)
         Write-Host "Connectivity verified: $($response.Content)" -ForegroundColor Green
     } catch {

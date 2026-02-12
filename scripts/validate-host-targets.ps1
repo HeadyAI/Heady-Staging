@@ -40,7 +40,7 @@ $bannedPatterns = @{
 
 $errors = @()
 
-Get-ChildItem -Path $ScanPath -Recurse -File | Where-Object {
+Get-ChildItem -Path $ScanPath -Recurse -Depth 5 -File | Where-Object {
     $include = $true
     foreach ($pattern in $ExcludePatterns) {
         if ($_.Name -like $pattern) {
@@ -49,8 +49,8 @@ Get-ChildItem -Path $ScanPath -Recurse -File | Where-Object {
         }
     }
     $include
-} | ForEach-Object {
-    $content = Get-Content $_.FullName -Raw
+} | ForEach-Object { -Parallel {
+    $content = [System.IO.File]::ReadAllText($_.FullName)
     foreach ($pattern in $bannedPatterns.Keys) {
         if ($content -match $pattern) {
             $errors += [PSCustomObject]@{

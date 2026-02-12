@@ -29,10 +29,10 @@ foreach ($env in $domainConfig.Keys) {
 
 # 2. Verify service naming
 $serviceViolations = @()
-$serviceFiles = Get-ChildItem -Path "$PSScriptRoot\..\src" -Recurse -Include *.js,*.ts
+$serviceFiles = Get-ChildItem -Path "$PSScriptRoot\..\src" -Recurse -Depth 5 -Include *.js,*.ts
 
 foreach ($file in $serviceFiles) {
-    $content = Get-Content $file.FullName -Raw
+    $content = [System.IO.File]::ReadAllText($file.FullName)
     if ($content -match "function (\w+)Service") {
         $serviceName = $matches[1]
         if ($serviceName -notmatch $namingStandards.service_naming.pattern) {
@@ -47,12 +47,12 @@ if ($domainViolations.Count -gt 0 -or $serviceViolations.Count -gt 0) {
     
     if ($domainViolations.Count -gt 0) {
         Write-Host "Domain Violations:"
-        $domainViolations | ForEach-Object { Write-Host "  - $_" }
+        $domainViolations | ForEach-Object { -Parallel { Write-Host "  - $_" }
     }
     
     if ($serviceViolations.Count -gt 0) {
         Write-Host "Service Naming Violations:"
-        $serviceViolations | ForEach-Object { Write-Host "  - $_" }
+        $serviceViolations | ForEach-Object { -Parallel { Write-Host "  - $_" }
     }
     
     exit 1

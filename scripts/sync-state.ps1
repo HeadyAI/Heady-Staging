@@ -31,12 +31,12 @@ foreach ($device in $DEVICES) {
     try {
         $uri = "https://api.heady.systems/api/sync/$device"
         try {
-            $state = Invoke-RestMethod -Uri $uri -Method Get
+            $state = Invoke-RestMethod -TimeoutSec 10 -Uri $uri -Method Get
         }
         catch {
             Write-Warning "DNS failed, falling back to IP address"
             $uri = "https://$ip/api/sync/$device"
-            $state = Invoke-RestMethod -Uri $uri -Method Get
+            $state = Invoke-RestMethod -TimeoutSec 10 -Uri $uri -Method Get
         }
         Write-Host "Fetched state from $device"
         
@@ -47,7 +47,7 @@ foreach ($device in $DEVICES) {
         }
         
         # Send merged state to all devices
-        Invoke-RestMethod -Uri $API_URL -Method Post -Body ($globalState | ConvertTo-Json) `
+        Invoke-RestMethod -TimeoutSec 10 -Uri $API_URL -Method Post -Body ($globalState | ConvertTo-Json) `
             -ContentType "application/json"
     }
     catch {

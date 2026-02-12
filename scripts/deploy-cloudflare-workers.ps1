@@ -36,7 +36,7 @@ function Update-CloudflareConfig {
         ttl = 1
     } | ConvertTo-Json
     
-    Invoke-RestMethod -Uri "https://api.cloudflare.com/client/v4/zones/$($envConfig.zone_id)/dns_records" \
+    Invoke-RestMethod -TimeoutSec 10 -Uri "https://api.cloudflare.com/client/v4/zones/$($envConfig.zone_id)/dns_records" \
         -Method Post -Headers $headers -Body $body
     
     # Add Worker routes
@@ -45,7 +45,7 @@ function Update-CloudflareConfig {
         script = "service-worker"
     } | ConvertTo-Json
     
-    Invoke-RestMethod -Uri "https://api.cloudflare.com/client/v4/zones/$($envConfig.zone_id)/workers/routes" \
+    Invoke-RestMethod -TimeoutSec 10 -Uri "https://api.cloudflare.com/client/v4/zones/$($envConfig.zone_id)/workers/routes" \
         -Method Post -Headers $headers -Body $body
 }
 

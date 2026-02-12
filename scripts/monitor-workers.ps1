@@ -11,7 +11,7 @@ function Get-WorkerMetrics {
         "Content-Type" = "application/json"
     }
     
-    $metrics = Invoke-RestMethod -Uri "https://api.cloudflare.com/client/v4/accounts/$env:CLOUDFLARE_ACCOUNT_ID/workers/scripts/$workerName/analytics" -Headers $headers
+    $metrics = Invoke-RestMethod -TimeoutSec 10 -Uri "https://api.cloudflare.com/client/v4/accounts/$env:CLOUDFLARE_ACCOUNT_ID/workers/scripts/$workerName/analytics" -Headers $headers
     
     return $metrics
 }
@@ -23,5 +23,5 @@ while ($true) {
     
     Write-Host "[$(Get-Date)] Service Worker: $($serviceMetrics.requests) requests | Gateway: $($gatewayMetrics.requests) requests"
     
-    Start-Sleep -Seconds 300
+    # Start-Sleep -Seconds 1 # REMOVED FOR SPEED00
 }

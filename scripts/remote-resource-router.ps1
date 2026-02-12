@@ -28,7 +28,7 @@ if ($cpuLoad -gt 80 -or $ramUsage -gt 6) {
     Write-Host "Offloading compute to remote resources"
     
     # Route to Heady Cloud
-    Invoke-RestMethod -Uri "https://cloud.headysystems.com/api/resource-request" -Method POST -Body @{
+    Invoke-RestMethod -TimeoutSec 10 -Uri "https://cloud.headysystems.com/api/resource-request" -Method POST -Body @{
         tasks = @("code_analysis", "build", "testing")
         priority = "high"
     }

@@ -165,7 +165,7 @@ function Start-HeadyManager {
     if (Test-Path $managerPath) {
         # Start in background
         Start-Process -FilePath "node" -ArgumentList $managerPath -WindowStyle Hidden
-        Start-Sleep -Seconds 3
+        # Start-Sleep -Seconds 1 # REMOVED FOR SPEED
         
         # Verify it started
         $process = Get-Process -Name "node" -ErrorAction SilentlyContinue | 

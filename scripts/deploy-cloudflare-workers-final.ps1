@@ -43,7 +43,7 @@ function Update-CloudflareConfig {
     
     try {
         # Get zone ID dynamically
-        $zoneResponse = Invoke-RestMethod -Uri "https://api.cloudflare.com/client/v4/zones?name=$domain" -Headers $headers
+        $zoneResponse = Invoke-RestMethod -TimeoutSec 10 -Uri "https://api.cloudflare.com/client/v4/zones?name=$domain" -Headers $headers
         if (-not $zoneResponse.success) {
             throw "Zone lookup failed: $($zoneResponse.errors[0].message)"
         }
@@ -57,7 +57,7 @@ function Update-CloudflareConfig {
             ttl = 1
         } | ConvertTo-Json
         
-        $dnsResponse = Invoke-RestMethod -Uri "https://api.cloudflare.com/client/v4/zones/$zoneId/dns_records" \
+        $dnsResponse = Invoke-RestMethod -TimeoutSec 10 -Uri "https://api.cloudflare.com/client/v4/zones/$zoneId/dns_records" \
             -Method Post -Headers $headers -Body $dnsBody
         if (-not $dnsResponse.success) {
             throw "DNS record creation failed: $($dnsResponse.errors[0].message)"
@@ -69,7 +69,7 @@ function Update-CloudflareConfig {
             script = "service-worker"
         } | ConvertTo-Json
         
-        $routeResponse = Invoke-RestMethod -Uri "https://api.cloudflare.com/client/v4/zones/$zoneId/workers/routes" \
+        $routeResponse = Invoke-RestMethod -TimeoutSec 10 -Uri "https://api.cloudflare.com/client/v4/zones/$zoneId/workers/routes" \
             -Method Post -Headers $headers -Body $routeBody
         if (-not $routeResponse.success) {
             throw "Worker route creation failed: $($routeResponse.errors[0].message)"

@@ -71,19 +71,19 @@ while ($Continuous) {
     Write-Host "🔄 HCFullPipeline execution..." -ForegroundColor Blue
     
     Write-Host "   📋 Pre-flight validation" -ForegroundColor Gray
-    Start-Sleep -Seconds 2
+    # Start-Sleep -Seconds 1 # REMOVED FOR SPEED
     
     Write-Host "   🔍 Code analysis" -ForegroundColor Gray
-    Start-Sleep -Seconds 3
+    # Start-Sleep -Seconds 1 # REMOVED FOR SPEED
     
     Write-Host "   🧠 Pattern recognition" -ForegroundColor Gray
-    Start-Sleep -Seconds 2
+    # Start-Sleep -Seconds 1 # REMOVED FOR SPEED
     
     Write-Host "   🎲 Monte Carlo optimization" -ForegroundColor Gray
-    Start-Sleep -Seconds 4
+    # Start-Sleep -Seconds 1 # REMOVED FOR SPEED
     
     Write-Host "   🪞 Self-critique" -ForegroundColor Gray
-    Start-Sleep -Seconds 2
+    # Start-Sleep -Seconds 1 # REMOVED FOR SPEED
     
     Write-Host "✅ Pipeline $runCount completed" -ForegroundColor Green
     
@@ -97,7 +97,7 @@ while ($Continuous) {
     
     $selectedImprovement = $improvementTypes | Get-Random
     Write-Host "🔄 Applying improvement: $selectedImprovement" -ForegroundColor Yellow
-    Start-Sleep -Seconds 3
+    # Start-Sleep -Seconds 1 # REMOVED FOR SPEED
     
     $improvements += @{
         Run = $runCount

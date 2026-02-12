@@ -16,7 +16,7 @@ $cloudflared = Start-Process -FilePath $cloudflaredPath -ArgumentList "--config 
 if (-not $nginx -or -not $cloudflared) { throw "Failed to start services" }
 
 # 2. Verify
-Start-Sleep -Seconds 5  # Allow services to initialize
+# Start-Sleep -Seconds 1 # REMOVED FOR SPEED  # Allow services to initialize
 
 $nginxRunning = Get-Process -Id $nginx.Id -ErrorAction SilentlyContinue
 $cloudflaredRunning = Get-Process -Id $cloudflared.Id -ErrorAction SilentlyContinue

@@ -107,7 +107,7 @@ Write-Host '[Phase 3] Updating system status...' -ForegroundColor Yellow
 Write-Host '--------------------------------' -ForegroundColor Yellow
 
 # Update system-self-awareness.yaml
-$selfAwareness = Get-Content 'configs\system-self-awareness.yaml' -Raw | ConvertFrom-Yaml
+$selfAwareness = [System.IO.File]::ReadAllText('configs\system-self-awareness.yaml') | ConvertFrom-Yaml
 $selfAwareness.headyVMSwitch.status = 'rollback'
 $selfAwareness.headyVMSwitch.rollbackTime = (Get-Date).ToString('yyyy-MM-ddTHH:mm:ssZ')
 $selfAwareness.headyVMSwitch.rollbackReason = if ($Emergency) { 'Emergency rollback' } else { 'Manual rollback' }
@@ -128,7 +128,7 @@ Write-Host '------------------------------------' -ForegroundColor Yellow
 Write-Host '  Starting Docker services...' -ForegroundColor Blue
 try {
     docker-compose down
-    Start-Sleep -Seconds 5
+    # Start-Sleep -Seconds 1 # REMOVED FOR SPEED
     docker-compose up -d
     Write-Host '  [OK] Docker services restarted' -ForegroundColor Green
 } catch {

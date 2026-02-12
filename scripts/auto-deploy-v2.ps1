@@ -33,7 +33,7 @@ function Test-ValidUri {
 # Import environment variables
 $envFile = Join-Path $PSScriptRoot "..\.env"
 if (Test-Path $envFile) {
-    Get-Content $envFile | ForEach-Object {
+    Get-Content $envFile | ForEach-Object { -Parallel {
         $key, $value = $_.Split('=', 2)
         if ($key -and $value) {
             Set-Item -Path "env:\$key" -Value $value
@@ -64,7 +64,7 @@ $headers = @{
 # 1. Pre-deployment health checks
 function Invoke-HealthChecks {
     $healthUri = "$API_BASE/api/health"
-    $response = Invoke-RestMethod -Uri $healthUri -Headers $headers -Method Get
+    $response = Invoke-RestMethod -TimeoutSec 10 -Uri $healthUri -Headers $headers -Method Get
     if ($response.status -ne "healthy") {
         Write-Error "Pre-deployment health checks failed. Aborting deployment."
         exit 1
@@ -77,7 +77,7 @@ function Get-DeploymentStrategy {
     $body = @{
         taskType = "deployment"
     } | ConvertTo-Json
-    $response = Invoke-RestMethod -Uri $strategyUri -Headers $headers -Method Post -Body $body
+    $response = Invoke-RestMethod -TimeoutSec 10 -Uri $strategyUri -Headers $headers -Method Post -Body $body
     return $response
 }
 
@@ -105,7 +105,7 @@ function Invoke-PostDeployment {
 
     # Run benchmarks
     $benchmarkUri = "$API_BASE/api/benchmark"
-    Invoke-RestMethod -Uri $benchmarkUri -Headers $headers -Method Post
+    Invoke-RestMethod -TimeoutSec 10 -Uri $benchmarkUri -Headers $headers -Method Post
 
     # Update deployment registry
     $deployData = @{
@@ -127,7 +127,7 @@ function Update-MonteCarloModels {
             # ... other metrics
         }
     } | ConvertTo-Json
-    Invoke-RestMethod -Uri $updateUri -Headers $headers -Method Post -Body $body
+    Invoke-RestMethod -TimeoutSec 10 -Uri $updateUri -Headers $headers -Method Post -Body $body
 }
 
 # windsurf: auto-run
@@ -271,7 +271,7 @@ try {
     
     # Validate JSON integrity before moving
     try {
-        $validatedData = Get-Content $tempFile -Raw | ConvertFrom-Json -ErrorAction Stop
+        $validatedData = [System.IO.File]::ReadAllText($tempFile) | ConvertFrom-Json -ErrorAction Stop
         if ($validatedData.version -ne $deployData.version) {
             throw "Validated JSON missing required fields"
         }
@@ -308,7 +308,7 @@ try {
     # Cleanup old backups (keep last 30 days)
     Get-ChildItem "$backupDir/*.json" -ErrorAction SilentlyContinue | 
         Where-Object { $_.LastWriteTime -lt (Get-Date).AddDays(-30) } | 
-        ForEach-Object {
+        ForEach-Object { -Parallel {
             try {
                 Remove-Item $_.FullName -Force -ErrorAction Stop
                 Write-Verbose "Cleaned up old backup: $($_.Name)"
@@ -337,7 +337,7 @@ try {
     
     # Verify file was written correctly by re-reading
     try {
-        $verifyData = Get-Content "deployments/latest.json" -Raw | ConvertFrom-Json
+        $verifyData = [System.IO.File]::ReadAllText("deployments/latest.json") | ConvertFrom-Json
         if ($verifyData.version -ne $deployData.version) {
             throw "Post-write verification failed: version mismatch"
         }
@@ -501,7 +501,7 @@ function Invoke-RateLimited {
     'CacheInvalidation' = @'
 function Clear-StaleCache {
     param([string]$CachePath, [int]$MaxAgeHours = 24)
-    Get-ChildItem -Path $CachePath -Recurse -File | 
+    Get-ChildItem -Path $CachePath -Recurse -Depth 5 -File | 
         Where-Object { $_.LastWriteTime -lt (Get-Date).AddHours(-$MaxAgeHours) } |
         Remove-Item -Force -ErrorAction SilentlyContinue
 }
@@ -510,7 +510,7 @@ function Clear-StaleCache {
 function Test-ServiceHealth {
     param([string]$Service)
     try {
-        $response = Invoke-RestMethod -Uri "$API_BASE/health/$Service" -TimeoutSec 5 -ErrorAction Stop
+        $response = Invoke-RestMethod -TimeoutSec 10 -Uri "$API_BASE/health/$Service" -TimeoutSec 5 -ErrorAction Stop
         return $response.status -eq 'healthy'
     } catch {
         Register-PatternEvent -PatternId 'health_check_failed' -Context @{ Service = $Service; Error = $_.Exception.Message }
@@ -521,14 +521,14 @@ function Test-ServiceHealth {
 }
 
 # Scan all PowerShell files
-$filesToScan = Get-ChildItem -Path $projectRoot -Recurse -Include *.ps1,*.psm1 -Exclude *node_modules*,*.git*,*\.heady_cache*
+$filesToScan = Get-ChildItem -Path $projectRoot -Recurse -Depth 5 -Include *.ps1,*.psm1 -Exclude *node_modules*,*.git*,*\.heady_cache*
 $totalFiles = $filesToScan.Count
 
 Write-Host "📁 Found $totalFiles files to analyze..." -ForegroundColor Cyan
 
-$filesToScan | ForEach-Object {
+$filesToScan | ForEach-Object { -Parallel {
     $file = $_
-    $content = Get-Content $file.FullName -Raw
+    $content = [System.IO.File]::ReadAllText($file.FullName)
     $modified = $false
     $newContent = $content
     $fileImprovements = @()
@@ -558,7 +558,7 @@ $filesToScan | ForEach-Object {
     
     # Check for missing retry logic on network operations
     if ($content -match 'Invoke-(RestMethod|WebRequest)' -and $content -notmatch 'Invoke-WithRetry') {
-        if ($modified) { $newContent = Get-Content $file.FullName -Raw }
+        if ($modified) { $newContent = [System.IO.File]::ReadAllText($file.FullName) }
         $retryCode = $beneficialPatterns['RetryLogic']
         $newContent = $retryCode + "`n`n" + $newContent
         $modified = $true
@@ -567,7 +567,7 @@ $filesToScan | ForEach-Object {
     
     # Check for missing structured logging
     if ($file.Name -match 'deploy|start|stop|build' -and $content -notmatch 'Register-PatternEvent.*script_start') {
-        if ($modified) { $newContent = Get-Content $file.FullName -Raw }
+        if ($modified) { $newContent = [System.IO.File]::ReadAllText($file.FullName) }
         $logCode = $beneficialPatterns['Logging']
         $newContent = $logCode + "`n`n" + $newContent
         $modified = $true
@@ -576,7 +576,7 @@ $filesToScan | ForEach-Object {
     
     # Check for missing performance monitoring
     if ($file.Name -match 'deploy|benchmark|test' -and $content -notmatch 'Stopwatch') {
-        if ($modified) { $newContent = Get-Content $file.FullName -Raw }
+        if ($modified) { $newContent = [System.IO.File]::ReadAllText($file.FullName) }
         $perfCode = $beneficialPatterns['PerformanceMonitoring']
         $newContent = $perfCode + "`n`n" + $newContent
         $modified = $true
@@ -595,7 +595,7 @@ $filesToScan | ForEach-Object {
     
     # Check for missing resource cleanup
     if ($content -match 'Start-Job|New-Object.*IDisposable' -and $content -notmatch 'Register-EngineEvent.*Exiting') {
-        if ($modified) { $newContent = Get-Content $file.FullName -Raw }
+        if ($modified) { $newContent = [System.IO.File]::ReadAllText($file.FullName) }
         $cleanupCode = $beneficialPatterns['ResourceCleanup']
         $newContent = $cleanupCode + "`n`n" + $newContent
         $modified = $true
@@ -604,7 +604,7 @@ $filesToScan | ForEach-Object {
     
     # Check for missing input sanitization
     if ($content -match 'param.*\[string\]' -and $content -match 'Invoke-Expression|\$ExecutionContext' -and $content -notmatch 'Sanitize-Input') {
-        if ($modified) { $newContent = Get-Content $file.FullName -Raw }
+        if ($modified) { $newContent = [System.IO.File]::ReadAllText($file.FullName) }
         $sanitizeCode = $beneficialPatterns['InputSanitization']
         $newContent = $sanitizeCode + "`n`n" + $newContent
         $modified = $true
@@ -613,7 +613,7 @@ $filesToScan | ForEach-Object {
     
     # Check for missing rate limiting in loops
     if ($content -match 'foreach.*Invoke-(RestMethod|WebRequest)' -and $content -notmatch 'Start-Sleep|Invoke-RateLimited') {
-        if ($modified) { $newContent = Get-Content $file.FullName -Raw }
+        if ($modified) { $newContent = [System.IO.File]::ReadAllText($file.FullName) }
         $rateCode = $beneficialPatterns['RateLimiting']
         $newContent = $rateCode + "`n`n" + $newContent
         $modified = $true
@@ -622,7 +622,7 @@ $filesToScan | ForEach-Object {
     
     # Check for missing cache cleanup
     if ($content -match '\$.*cache|\.cache' -and $content -notmatch 'Clear-StaleCache') {
-        if ($modified) { $newContent = Get-Content $file.FullName -Raw }
+        if ($modified) { $newContent = [System.IO.File]::ReadAllText($file.FullName) }
         $cacheCode = $beneficialPatterns['CacheInvalidation']
         $newContent = $cacheCode + "`n`n" + $newContent
         $modified = $true
@@ -631,7 +631,7 @@ $filesToScan | ForEach-Object {
     
     # Check for missing health checks
     if ($file.Name -match 'api|service|worker' -and $content -notmatch 'Test-ServiceHealth') {
-        if ($modified) { $newContent = Get-Content $file.FullName -Raw }
+        if ($modified) { $newContent = [System.IO.File]::ReadAllText($file.FullName) }
         $healthCode = $beneficialPatterns['HealthCheck']
         $newContent = $healthCode + "`n`n" + $newContent
         $modified = $true
@@ -724,7 +724,7 @@ if ($scanResults.Count -gt 0) {
             'Medium' { 2 }
             default { 3 }
         }
-    } | ForEach-Object {
+    } | ForEach-Object -Parallel {
         $color = switch ($_.Name) {
             'Critical' { 'Magenta' }
             'High' { 'Red' }
@@ -732,7 +732,7 @@ if ($scanResults.Count -gt 0) {
             default { 'Gray' }
         }
         Write-Host "  [$($_.Name)]: $($_.Group.Count) files" -ForegroundColor $color
-        $_.Group | ForEach-Object { 
+        $_.Group | ForEach-Object -Parallel { 
             Write-Host "    - $($_.File): $($_.Issue)" -ForegroundColor Cyan
             Write-Host "      💡 $($_.Recommendation)" -ForegroundColor DarkGray
         }

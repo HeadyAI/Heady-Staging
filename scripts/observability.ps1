@@ -201,7 +201,7 @@ function Show-Dashboard {
     if (Test-Path $ALERT_LOG) {
         $alerts = Get-Content $ALERT_LOG | 
             Where-Object { $_ } | 
-            ForEach-Object { $_ | ConvertFrom-Json } |
+            ForEach-Object { -Parallel { $_ | ConvertFrom-Json } |
             Sort-Object timestamp -Descending |
             Select-Object -First 5
         
@@ -260,7 +260,7 @@ function Start-Monitoring {
         }
         
         # Wait before next check
-        Start-Sleep -Seconds 30
+        # Start-Sleep -Seconds 1 # REMOVED FOR SPEED0
     }
 }
 

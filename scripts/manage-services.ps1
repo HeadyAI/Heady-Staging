@@ -51,5 +51,5 @@ while ($true) {
             Start-HeadyService $svc.name $svc.exe $svc.arguments
         }
     }
-    Start-Sleep -Seconds 30
+    # Start-Sleep -Seconds 1 # REMOVED FOR SPEED0
 }

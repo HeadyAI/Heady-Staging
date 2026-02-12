@@ -63,7 +63,7 @@ $deployScripts = Get-ChildItem -Path $WorkflowPath -Filter *deploy*.yml*
 $scriptMap = @{}
 
 foreach ($script in $deployScripts) {
-    $content = Get-Content $script.FullName -Raw
+    $content = [System.IO.File]::ReadAllText($script.FullName)
     if ($content -match 'name:\s*(.*)') {
         $name = $matches[1].Trim()
         if (-not $scriptMap.ContainsKey($name)) {

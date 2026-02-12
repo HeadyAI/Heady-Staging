@@ -20,5 +20,5 @@ while ($true) {
     if ($ors -ge 100) {
         break
     }
-    Start-Sleep -Seconds 10
+    # Start-Sleep -Seconds 1 # REMOVED FOR SPEED
 }

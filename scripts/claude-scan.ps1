@@ -34,7 +34,7 @@ if (-not (Test-Path "$PROJECT_ROOT\.heady_cache")) {
 
 # Get all code files in project
 try {
-  $files = Get-ChildItem -Path $PROJECT_ROOT -Recurse -File | 
+  $files = Get-ChildItem -Path $PROJECT_ROOT -Recurse -Depth 5 -File | 
     Where-Object { 
       $_.Extension -in '.js','.py','.ts','.json','.yaml','.md' -and 
       $_.FullName -notlike '*\node_modules\*' -and
@@ -53,7 +53,7 @@ $totalChanges = 0
 foreach ($file in $files) {
   $fileChanges = 0
   $iterations = 0
-  $fileContent = Get-Content $file.FullName -Raw
+  $fileContent = [System.IO.File]::ReadAllText($file.FullName)
   
   do {
     # Call Claude API (placeholder - would use actual API)

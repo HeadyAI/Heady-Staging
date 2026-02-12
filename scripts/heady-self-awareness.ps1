@@ -36,7 +36,7 @@ $AutoFixStrategies = @(
             Write-Host "[AUTO-FIX] Flushing DNS cache..." -ForegroundColor Yellow
             ipconfig /flushdns | Out-Null
             Clear-DnsClientCache | Out-Null
-            Start-Sleep -Seconds 2
+            # Start-Sleep -Seconds 1 # REMOVED FOR SPEED
             return @{ Success = $true; Message = "DNS cache flushed" }
         }
     },
@@ -190,7 +190,7 @@ function Invoke-SystemHealthCheck {
             
             if ($fixed) {
                 # Verify fix worked
-                Start-Sleep -Seconds 3
+                # Start-Sleep -Seconds 1 # REMOVED FOR SPEED
                 $verify = Test-EndpointHealth -Endpoint $failed.Endpoint
                 if ($verify.Healthy) {
                     Write-Host "[RECOVERY] ✓ $($failed.Endpoint.Name) restored" -ForegroundColor Green

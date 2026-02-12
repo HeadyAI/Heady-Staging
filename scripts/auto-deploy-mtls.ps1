@@ -22,5 +22,5 @@ while ($true) {
         Write-Warning "Nginx service down - restarting"
         systemctl restart nginx-mtls
     }
-    Start-Sleep -Seconds 30
+    # Start-Sleep -Seconds 1 # REMOVED FOR SPEED0
 }

@@ -30,10 +30,10 @@ param(
 )
 
 # Load configuration
-$config = Get-Content $ConfigPath -Raw | ConvertFrom-Yaml
+$config = [System.IO.File]::ReadAllText($ConfigPath) | ConvertFrom-Yaml
 
 # Load deployment results
-$results = Get-Content $ResultsPath -Raw | ConvertFrom-Json
+$results = [System.IO.File]::ReadAllText($ResultsPath) | ConvertFrom-Json
 
 # Verify per-target redundancy
 foreach ($target in $config.targets) {

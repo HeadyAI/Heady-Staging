@@ -41,7 +41,7 @@ $services = @(
 
 foreach ($service in $services) {
     try {
-        $response = Invoke-RestMethod -Uri $service -Method Get -ErrorAction Stop
+        $response = Invoke-RestMethod -TimeoutSec 10 -Uri $service -Method Get -ErrorAction Stop
         if ($response.ok -ne $true) {
             throw "Service at $service is not healthy"
         }

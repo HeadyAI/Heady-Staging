@@ -29,7 +29,7 @@ while ($true) {
     Write-Host "Last updated: $(Get-Date -Format 'HH:mm:ss')"
     
     # Get resource status
-    $status = Invoke-RestMethod -Uri "https://cloud.headysystems.com/api/v1/resources/status" -Headers @{"Authorization"="Bearer $env:HEADY_API_KEY"}
+    $status = Invoke-RestMethod -TimeoutSec 10 -Uri "https://cloud.headysystems.com/api/v1/resources/status" -Headers @{"Authorization"="Bearer $env:HEADY_API_KEY"}
     
     # Display utilization
     Write-Host "CPU: $($status.cpu_utilization)%"
@@ -52,7 +52,7 @@ while ($true) {
         Start-Job -ScriptBlock { & "$PSScriptRoot\increase-workload.ps1" }
     } elseif ($status.cpu_utilization -ge $target_max) {
         Write-Host "CPU at capacity: scaling up"
-        Invoke-RestMethod -Uri "https://cloud.headysystems.com/api/v1/resources/scale" -Method Post -Headers @{"Authorization"="Bearer $env:HEADY_API_KEY"} -Body (@{ action = "scale_up"; resource = "cpu" } | ConvertTo-Json)
+        Invoke-RestMethod -TimeoutSec 10 -Uri "https://cloud.headysystems.com/api/v1/resources/scale" -Method Post -Headers @{"Authorization"="Bearer $env:HEADY_API_KEY"} -Body (@{ action = "scale_up"; resource = "cpu" } | ConvertTo-Json)
     }
 
     # Scale RAM
@@ -61,17 +61,17 @@ while ($true) {
         Start-Job -ScriptBlock { & "$PSScriptRoot\increase-workload.ps1" }
     } elseif ($status.ram_utilization -ge $target_max) {
         Write-Host "RAM at capacity: scaling up"
-        Invoke-RestMethod -Uri "https://cloud.headysystems.com/api/v1/resources/scale" -Method Post -Headers @{"Authorization"="Bearer $env:HEADY_API_KEY"} -Body (@{ action = "scale_up"; resource = "ram" } | ConvertTo-Json)
+        Invoke-RestMethod -TimeoutSec 10 -Uri "https://cloud.headysystems.com/api/v1/resources/scale" -Method Post -Headers @{"Authorization"="Bearer $env:HEADY_API_KEY"} -Body (@{ action = "scale_up"; resource = "ram" } | ConvertTo-Json)
     }
 
     # Scale GPU
     if ($status.gpu_utilization -lt $target_min) {
         Write-Host "GPU underutilized: scaling down"
-        Invoke-RestMethod -Uri "https://cloud.headysystems.com/api/v1/resources/scale" -Method Post -Headers @{"Authorization"="Bearer $env:HEADY_API_KEY"} -Body (@{ action = "scale_down"; resource = "gpu" } | ConvertTo-Json)
+        Invoke-RestMethod -TimeoutSec 10 -Uri "https://cloud.headysystems.com/api/v1/resources/scale" -Method Post -Headers @{"Authorization"="Bearer $env:HEADY_API_KEY"} -Body (@{ action = "scale_down"; resource = "gpu" } | ConvertTo-Json)
     } elseif ($status.gpu_utilization -ge $target_max) {
         Write-Host "GPU at capacity: scaling up"
-        Invoke-RestMethod -Uri "https://cloud.headysystems.com/api/v1/resources/scale" -Method Post -Headers @{"Authorization"="Bearer $env:HEADY_API_KEY"} -Body (@{ action = "scale_up"; resource = "gpu" } | ConvertTo-Json)
+        Invoke-RestMethod -TimeoutSec 10 -Uri "https://cloud.headysystems.com/api/v1/resources/scale" -Method Post -Headers @{"Authorization"="Bearer $env:HEADY_API_KEY"} -Body (@{ action = "scale_up"; resource = "gpu" } | ConvertTo-Json)
     }
 
-    Start-Sleep -Seconds 5
+    # Start-Sleep -Seconds 1 # REMOVED FOR SPEED
 }

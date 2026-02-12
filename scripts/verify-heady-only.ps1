@@ -57,14 +57,14 @@ $compliant = $true
 Write-Host "Scanning for external service references..." -ForegroundColor Yellow
 
 foreach ($service in $externalServices) {
-    $matches = Get-ChildItem -Path . -Include *.js,*.ts,*.jsx,*.tsx,*.yaml,*.yml,*.json -Recurse |
+    $matches = Get-ChildItem -Path . -Include *.js,*.ts,*.jsx,*.tsx,*.yaml,*.yml,*.json -Recurse -Depth 5 |
         Select-String -Pattern $service -SimpleMatch |
         Where-Object { $_.Path -notlike "*node_modules*" -and $_.Path -notlike "*.git*" }
     
     if ($matches) {
         $compliant = $false
         Write-Host "✗ Found external service: $service" -ForegroundColor Red
-        $matches | ForEach-Object {
+        $matches | ForEach-Object { -Parallel {
             Write-Host "  - $($_.Path):$($_.LineNumber)" -ForegroundColor Gray
             $issues += @{
                 type = 'external_service'
@@ -86,7 +86,7 @@ $modelConfigs = @(
 
 foreach ($config in $modelConfigs) {
     if (Test-Path $config) {
-        $content = Get-Content $config -Raw
+        $content = [System.IO.File]::ReadAllText($config)
         
         # Check for non-Heady models
         $nonHeadyModels = @('gpt-4', 'gpt-3.5', 'claude', 'gemini', 'ollama', 'vllm', 'gguf')
@@ -151,7 +151,7 @@ Write-Host "`nVerifying BrainConnector configuration..." -ForegroundColor Yellow
 
 $brainConnectorFile = 'src/brain_connector.js'
 if (Test-Path $brainConnectorFile) {
-    $content = Get-Content $brainConnectorFile -Raw
+    $content = [System.IO.File]::ReadAllText($brainConnectorFile)
     
     if ($content -match 'api.headysystems.com:3400') {
         $compliant = $false

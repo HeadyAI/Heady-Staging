@@ -406,7 +406,7 @@ function Start-EnforcementMonitoring {
     while ($script:EnforcementState.Active) {
         try {
             # Simulate monitoring operations (in real implementation, this would hook into actual system calls)
-            Start-Sleep -Seconds 30
+            # Start-Sleep -Seconds 1 # REMOVED FOR SPEED0
             
             # Periodic service compliance check
             if ((Get-Date).Second % 60 -eq 0) {
@@ -415,7 +415,7 @@ function Start-EnforcementMonitoring {
             
         } catch {
             Write-EnforcementLog "Enforcement monitoring error: $($Error[0].Exception.Message)" -Level error
-            Start-Sleep -Seconds 10
+            # Start-Sleep -Seconds 1 # REMOVED FOR SPEED
         }
     }
 }

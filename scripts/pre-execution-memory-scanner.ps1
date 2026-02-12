@@ -98,7 +98,7 @@ function Invoke-AdaptiveMemoryScan {
         $recentHistory = @{
             timestamp = (Get-Date).ToString('yyyy-MM-ddTHH:mm:ssZ')
             last_commits = git log --oneline -10 2>$null
-            recent_files = Get-ChildItem -File -Recurse | Where-Object { $_.LastWriteTime -gt (Get-Date).AddHours(-24) } | Select-Object Name, LastWriteTime, Length
+            recent_files = Get-ChildItem -File -Recurse -Depth 5 | Where-Object { $_.LastWriteTime -gt (Get-Date).AddHours(-24) } | Select-Object Name, LastWriteTime, Length
             recent_errors = Get-EventLog -LogName Application -EntryType Error -After (Get-Date).AddHours(-24) -ErrorAction SilentlyContinue | Select-Object TimeGenerated, Message
             system_events = Get-EventLog -LogName System -EntryType Warning -After (Get-Date).AddHours(-24) -ErrorAction SilentlyContinue | Select-Object TimeGenerated, Message
         }
@@ -113,7 +113,7 @@ function Invoke-AdaptiveMemoryScan {
         $projectState = @{
             timestamp = (Get-Date).ToString('yyyy-MM-ddTHH:mm:ssZ')
             registry = if (Test-Path "heady-registry.json") { Get-Content "heady-registry.json" | ConvertFrom-Json } else { $null }
-            configs = Get-ChildItem "configs" -File -Recurse | Select-Object Name, LastWriteTime
+            configs = Get-ChildItem "configs" -File -Recurse -Depth 5 | Select-Object Name, LastWriteTime
             scripts = Get-ChildItem "scripts" -File -Filter "*.ps1" | Select-Object Name, LastWriteTime
             services = if (Test-Path "docker-compose.yml") { docker-compose ps 2>$null } else { $null }
             dependencies = if (Test-Path "package.json") { Get-Content "package.json" | ConvertFrom-Json } else { $null }
