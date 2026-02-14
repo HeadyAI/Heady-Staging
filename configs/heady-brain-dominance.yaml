@@ -28,6 +28,11 @@ enforcement_level: "absolute"  # absolute, strict, permissive
 # ============================================================================
 heady_brain:
   # Always use HeadyBrain for all decision-making
+  primary_endpoint: "https://headyio.com/api/brain"
+  fallback_endpoints: []
+  cloud_only: true
+  disable_localhost: true
+  enforce_cloud_first: true
   dominance_mode: 
     enabled: true
     priority: "supreme"  # supreme, critical, high, medium, low

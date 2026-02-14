@@ -13,8 +13,14 @@
 # ║  LAYER: root                                                  ║
 # ╚══════════════════════════════════════════════════════════════════╝
 # HEADY_BRAND:END
-# HeadyCloud Optimal Development Environment Configuration
-# 100% Heady Services Integration with Intelligent Orchestration
+# HeadyCloud Configuration - CLOUD ONLY MODE
+cloud_mode:
+  enabled: true
+  primary_target: "https://headyio.com"
+  disable_localhost: true
+  enforce_cloud_first: true
+  fallback_to_cloud: true
+  local_development: false
 
 version: "3.0.0"
 name: HeadyCloud-Optimal-Dev-Env
