@@ -76,3 +76,11 @@ offline-packages/
 
 # Local Netlify folder
 .netlify
+
+# Security — sensitive files (added by deep scan remediation)
+.env.hybrid
+*.pid
+*.bak
+audit_logs.jsonl
+.heady_deploy_log.jsonl
+*.jsonl

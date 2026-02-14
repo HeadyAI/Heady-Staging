@@ -1,7 +1,24 @@
-# HEADY SYSTEMS | WINDSURF PROTOCOL
+# HEADY SYSTEMS | WINDSURF PROTOCOL v2.1
 
 ## PRIMARY DIRECTIVE
-You are the Heady Project AI. Your goal is to squash, merge, and structure data into a "Sacred Geometry" ecosystem.
+You are the Heady Project AI. Your goal is to squash, merge, and structure data into a "Sacred Geometry" ecosystem with maximum efficiency and minimal false positives.
+
+## WINDSURF OPTIMIZATION PROTOCOL
+To reduce the 2000+ problems count and improve performance:
+
+### PERFORMANCE RULES
+- **File Scanning Limits:** Scan max 1000 files per operation to prevent memory overload
+- **Context Window Management:** Prioritize active files and recent changes over full repository scans
+- **Incremental Analysis:** Only analyze changed files since last checkpoint
+- **Cache Results:** Cache analysis results for 15 minutes to avoid redundant scans
+- **Exclude Patterns:** Aggressively exclude build artifacts, node_modules, and temporary files
+
+### PROBLEM REDUCTION STRATEGY
+- **False Positive Filtering:** Ignore ESLint warnings in third-party libraries and generated files
+- **Severity Prioritization:** Focus on errors and warnings, ignore info-level issues
+- **File Type Prioritization:** Analyze .js, .ts, .jsx, .tsx first, then config files
+- **Dependency Graph Awareness:** Skip analyzing files that are dependencies of other analyzed files
+- **Batch Processing:** Process files in batches of 50 to maintain responsiveness
 
 ## DOCUMENTATION BEHAVIOR (The Quiz Protocol)
 When asked to document code or generate summaries, YOU MUST FOLLOW THIS EXACT PROCEDURE:
@@ -17,28 +34,39 @@ When asked to document code or generate summaries, YOU MUST FOLLOW THIS EXACT PR
 - **Manager:** Node.js (Express, MCP Protocol)
 - **Worker:** Python (Render Worker)
 - **Frontend:** React (CDN) with Sacred Geometry Aesthetics (Rounded, Organic, Breathing)
-- **Deployment:** Render.com Blueprint
+- **Desktop:** Electron (Tauri alternative for performance)
+- **Mobile:** React Native with Expo
+- **Deployment:** Render.com Blueprint + Cloudflare Workers
 
-## PATHS
-- `heady-manager.js` - Node.js MCP server (port 3300)
-- `src/` - Backend logic (Python worker)
-- `public/` - Sacred UI (React)
-- `configs/` - All YAML configs (pipeline, resources, governance)
-- `heady-registry.json` - HeadyRegistry central catalog
-- `notebooks/` - Colab notebooks (quick-start, tutorials, examples)
-- `docs/` - Documentation, Notion templates, ownership tracker
-- `.github/` - Copilot & Actions Configuration
-- `render.yaml` - Infrastructure as Code
+## PATHS (OPTIMIZED)
+- `heady-manager.js` - Node.js MCP server (port 3300) [CRITICAL]
+- `src/` - Backend logic (Python worker) [HIGH PRIORITY]
+- `frontend/` - React frontend (CDN) [HIGH PRIORITY]
+- `public/` - Sacred UI assets [MEDIUM PRIORITY]
+- `configs/` - All YAML configs (pipeline, resources, governance) [HIGH PRIORITY]
+- `heady-registry.json` - HeadyRegistry central catalog [CRITICAL]
+- `notebooks/` - Colab notebooks (quick-start, tutorials, examples) [LOW PRIORITY]
+- `docs/` - Documentation, Notion templates, ownership tracker [MEDIUM PRIORITY]
+- `.github/` - Copilot & Actions Configuration [LOW PRIORITY]
+- `render.yaml` - Infrastructure as Code [HIGH PRIORITY]
+- `apps/` - Application containers (desktop, mobile, web) [HIGH PRIORITY]
+- `extensions/` - Browser and IDE extensions [MEDIUM PRIORITY]
+- `workers/` - Edge workers and cloud functions [MEDIUM PRIORITY]
 
 ## ENVIRONMENT VARIABLES
 - `DATABASE_URL` - Postgres connection (from Render)
 - `HEADY_API_KEY` - Auto-generated API key
+- `NODE_ENV` - Environment (development/production)
+- `WINDSURF_CACHE_TTL` - Cache duration for analysis (default: 900000ms)
+- `HEALTH_CHECK_INTERVAL` - Service health check frequency
 
-## SCRIPTS
-- `commit_and_build.ps1` - Local build cycle
-- `nexus_deploy.ps1` - Push to all remotes
-- `scripts/checkpoint-sync.ps1` - Checkpoint Protocol sync (all files)
-- `scripts/Heady-Sync.ps1` - Multi-remote git sync
+## SCRIPTS (OPTIMIZED)
+- `commit_and_build.ps1` - Local build cycle [CRITICAL]
+- `nexus_deploy.ps1` - Push to all remotes [HIGH PRIORITY]
+- `scripts/checkpoint-sync.ps1` - Checkpoint Protocol sync (all files) [HIGH PRIORITY]
+- `scripts/Heady-Sync.ps1` - Multi-remote git sync [HIGH PRIORITY]
+- `scripts/hc-rx.js` - Rapid execution command system [HIGH PRIORITY]
+- `scripts/health-check.ps1` - System health monitoring [MEDIUM PRIORITY]
 
 ## CHECKPOINT PROTOCOL (Standing Instruction)
 At every checkpoint (commit, merge, pipeline stage, release), you MUST:
@@ -48,31 +76,106 @@ At every checkpoint (commit, merge, pipeline stage, release), you MUST:
 4. Treat outdated documentation as a defect.
 5. Validate notebooks still reference correct APIs/schemas.
 6. Check `docs/DOC_OWNERS.yaml` for overdue reviews.
+7. **NEW:** Clear Windsurf cache after major structural changes
+8. **NEW:** Update .windsurfrules with new patterns and exclusions
 Full protocol: `docs/CHECKPOINT_PROTOCOL.md`
 
-## ERROR REPORTING RULES
+## ERROR REPORTING RULES (ENHANCED)
 error_reporting:
   enabled: true
-  log_level: debug
-  max_errors: 100
+  log_level: warn  # Reduced from debug to minimize noise
+  max_errors: 50   # Reduced from 100
   daily_rotation: true
   capture_stack_traces: true
+  exclude_patterns:
+    - "node_modules/**"
+    - "dist/**"
+    - "build/**"
+    - ".git/**"
+    - "coverage/**"
+    - "*.min.js"
+    - "vendor/**"
 
 rules:
   - name: memory_threshold
-    threshold: 80%
+    threshold: 70%  # Reduced from 80%
     action: reduce_concurrency
   - name: cpu_overload
-    threshold: 90%
+    threshold: 85%  # Reduced from 90%
     action: offload_tasks
   - name: pipeline_timeout
-    threshold: 300s
+    threshold: 180s  # Reduced from 300s
     action: abort_and_log
   - name: dependency_failure
     pattern: "ERR_MODULE_NOT_FOUND"
     action: auto_install
+  - name: windsurf_overload
+    threshold: 1000_problems
+    action: incremental_scan
+  - name: file_scan_limit
+    threshold: 1000_files
+    action: batch_processing
 
 auto_recovery:
   enabled: true
-  max_attempts: 3
+  max_attempts: 2  # Reduced from 3
   backoff_strategy: exponential
+  cache_results: true
+  cache_ttl: 900000  # 15 minutes
+
+## WINDSURF EXCLUSIONS (NEW)
+exclude_from_analysis:
+  - "**/node_modules/**"
+  - "**/dist/**"
+  - "**/build/**"
+  - "**/.git/**"
+  - "**/coverage/**"
+  - "**/*.min.js"
+  - "**/vendor/**"
+  - "**/temp/**"
+  - "**/.cache/**"
+  - "**/.next/**"
+  - "**/venv/**"
+  - "**/__pycache__/**"
+  - "**/logs/**"
+  - "**/*.log"
+  - "**/*.pid"
+  - "**/*.bak"
+  - "**/AndroidSDK/**"
+  - "**/ventoy/**"
+
+## PRIORITY ANALYSIS PATHS
+priority_analysis:
+  critical:
+    - "heady-manager.js"
+    - "heady-registry.json"
+    - "package.json"
+    - "render.yaml"
+  high:
+    - "src/**/*.js"
+    - "frontend/src/**/*.{js,jsx,ts,tsx}"
+    - "configs/**/*.yaml"
+    - "scripts/**/*.js"
+    - "apps/**/src/**/*.{js,jsx,ts,tsx}"
+  medium:
+    - "docs/**/*.md"
+    - "extensions/**/*.js"
+    - "workers/**/*.js"
+    - "public/**/*.js"
+  low:
+    - "notebooks/**/*.ipynb"
+    - ".github/**/*"
+    - "**/README.md"
+
+## PERFORMANCE MONITORING
+monitoring:
+  enabled: true
+  metrics:
+    - analysis_time_per_file
+    - memory_usage_during_scan
+    - problem_count_by_type
+    - cache_hit_rate
+  alerts:
+    - analysis_time_exceeds_30s
+    - memory_usage_exceeds_2gb
+    - problem_count_exceeds_500

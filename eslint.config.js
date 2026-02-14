@@ -24,10 +24,7 @@ module.exports = [
       parser: tsParser,
       parserOptions: {
         ecmaVersion: 'latest',
-        sourceType: 'module',
-        ecmaFeatures: {
-          jsx: true
-        }
+        sourceType: 'module'
       }
     },
     plugins: {
@@ -43,9 +40,6 @@ module.exports = [
     languageOptions: {
       ecmaVersion: 'latest',
       sourceType: 'module',
-      ecmaFeatures: {
-        jsx: true
-      },
       globals: {
         console: 'readonly',
         process: 'readonly'
