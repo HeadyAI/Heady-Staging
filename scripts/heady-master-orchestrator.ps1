@@ -397,7 +397,7 @@ function Monitor-MasterServices {
                     }
                 }
             }
-        }
+auto=finish incomplete tasks and auto--deploy        }
     }
     
     # Update master system health
