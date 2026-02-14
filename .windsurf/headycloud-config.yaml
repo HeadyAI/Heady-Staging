@@ -1,3 +1,18 @@
+# HEADY_BRAND:BEGIN
+# ╔══════════════════════════════════════════════════════════════════╗
+# ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
+# ║  ██║  ██║██╔════╝██╔══██╗██╔══██╗╚██╗ ██╔╝                     ║
+# ║  ███████║█████╗  ███████║██║  ██║ ╚████╔╝                      ║
+# ║  ██╔══██║██╔══╝  ██╔══██║██║  ██║  ╚██╔╝                       ║
+# ║  ██║  ██║███████╗██║  ██║██████╔╝   ██║                        ║
+# ║  ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝    ╚═╝                        ║
+# ║                                                                  ║
+# ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
+# ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
+# ║  FILE: .windsurf/headycloud-config.yaml                                                    ║
+# ║  LAYER: root                                                  ║
+# ╚══════════════════════════════════════════════════════════════════╝
+# HEADY_BRAND:END
 # HeadyCloud Optimal Development Environment Configuration
 # 100% Heady Services Integration with Intelligent Orchestration
 
@@ -6,11 +21,11 @@ name: HeadyCloud-Optimal-Dev-Env
 
 # ─── HEADCLOUD SERVICES CONFIGURATION ───────────────────────────────────
 headycloud:
-  primary_domain: "https://headysystems.com"
-  api_base: "https://headysystems.com/api"
-  manager_base: "https://headysystems.com/manager"
-  registry_base: "https://headysystems.com/registry"
-  brain_base: "https://brain.headysystems.com"
+  primary_domain: "https://headyio.com"
+  api_base: "https://headyio.com/api"
+  manager_base: "https://headyio.com/manager"
+  registry_base: "https://headyio.com/registry"
+  brain_base: "https://headyio.com/api/brain"
   
   # Service endpoints for optimal performance
   endpoints:
@@ -23,9 +38,9 @@ headycloud:
     
   # Intelligent routing with failover
   routing:
-    primary: "headysystems.com"
-    fallback: "api.headysystems.com"
-    emergency: "52.32.178.8"
+    primary: "headyio.com"
+    fallback: "headyio.com"
+    emergency: "172.67.136.19"
     circuit_breaker_threshold: 3
     timeout_ms: 10000
     retry_attempts: 3
@@ -65,6 +80,29 @@ windsurf:
     continuous_validation: true
     usage_enforcement: true
     dominance_monitoring: true
+    
+  # Model selection — Heady is the only model unless explicitly overridden
+  model_selection:
+    default_model: "heady-brain"
+    display_name: "Heady"
+    selectable_models:
+      - id: "heady-brain"
+        name: "Heady"
+        provider: "headysystems"
+        priority: 200
+        default: true
+        endpoint: "https://headyio.com/api/brain"
+      - id: "heady-conductor"
+        name: "Heady Conductor"
+        provider: "headysystems"
+        priority: 190
+        endpoint: "https://headyio.com/api"
+    policy:
+      strategy: "heady_only"
+      heady_percentage: 100
+      external_models_blocked: true
+      override_requires: "explicit_user_direction"
+      log_all_selections: true
 
 # ─── INTELLIGENT ORCHESTRATION ───────────────────────────────────────────
 orchestration:

@@ -1,0 +1,90 @@
+{
+  "mcpServers": {
+    "heady-brain": {
+      "displayName": "Heady",
+      "description": "HeadyBrain — Primary AI model provider for all Heady services",
+      "provider": "headysystems",
+      "transport": "http",
+      "url": "https://headyio.com/mcp",
+      "apiKey": "${HEADY_API_KEY}",
+      "priority": 200,
+      "default": true,
+      "capabilities": {
+        "completion": true,
+        "chat": true,
+        "embedding": true,
+        "codeAnalysis": true,
+        "imageGeneration": true,
+        "translation": true
+      },
+      "endpoints": {
+        "generate": "/api/brain/generate",
+        "chat": "/api/brain/chat",
+        "embed": "/api/brain/embed",
+        "analyze": "/api/brain/analyze",
+        "health": "/api/brain/health"
+      },
+      "routing": {
+        "brainFirst": true,
+        "headyPercentage": 100,
+        "fallbackToExternal": false,
+        "overrideRequires": "explicit_user_direction"
+      },
+      "failover": {
+        "enabled": true,
+        "endpoints": [
+          "https://headyio.com",
+          "https://headyio.com/api/brain-backup",
+          "https://headyio.com/api/brain-emergency"
+        ],
+        "retries": 3,
+        "timeoutMs": 10000
+      }
+    },
+    "heady-manager": {
+      "displayName": "Heady Manager",
+      "description": "HeadyManager — Service orchestration and deployment",
+      "provider": "headysystems",
+      "transport": "http",
+      "url": "https://headyio.com/manager",
+      "apiKey": "${HEADY_API_KEY}",
+      "priority": 150,
+      "capabilities": {
+        "deployment": true,
+        "serviceManagement": true,
+        "healthMonitoring": true
+      },
+      "endpoints": {
+        "health": "/api/health",
+        "deploy": "/api/deploy",
+        "status": "/api/status"
+      }
+    },
+    "heady-registry": {
+      "displayName": "Heady Registry",
+      "description": "HeadyRegistry — Central service catalog and discovery",
+      "provider": "headysystems",
+      "transport": "http",
+      "url": "https://headyio.com/registry",
+      "apiKey": "${HEADY_API_KEY}",
+      "priority": 140,
+      "capabilities": {
+        "serviceDiscovery": true,
+        "catalogQuery": true
+      },
+      "endpoints": {
+        "query": "/api/registry",
+        "health": "/health"
+      }
+    }
+  },
+  "modelRouting": {
+    "defaultModel": "heady-brain",
+    "policy": "heady_only",
+    "headyPercentage": 100,
+    "allowExternalOverride": true,
+    "overrideRequires": "explicit_user_direction",
+    "logAllModelSwitches": true,
+    "fallbackChain": ["heady-brain", "heady-manager"]
+  }
+}

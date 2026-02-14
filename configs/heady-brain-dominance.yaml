@@ -37,17 +37,17 @@ heady_brain:
   # Brain service endpoints (primary + failover)
   endpoints:
     primary:
-      url: "https://brain.headysystems.com"
+      url: "https://headyio.com/api/brain"
       priority: 1
       timeout: 5000ms
       retries: 3
     secondary:
-      url: "https://brain-backup.headysystems.com"
+      url: "https://headyio.com/api/brain-backup"
       priority: 2
       timeout: 10000ms
       retries: 5
     tertiary:
-      url: "https://brain-emergency.headysystems.com"
+      url: "https://headyio.com/api/brain-emergency"
       priority: 3
       timeout: 15000ms
       retries: 10
@@ -116,10 +116,10 @@ health_monitoring:
     
   # Health check endpoints
   endpoints:
-    brain_health: "https://brain.headysystems.com/api/brain/health"
-    manager_health: "https://manager.headysystems.com/api/health"
-    conductor_health: "https://conductor.headysystems.com/health"
-    supervisor_health: "https://supervisor.headysystems.com/module-loaded"
+    brain_health: "https://headyio.com/api/brain/health"
+    manager_health: "https://headyio.com/api/health"
+    conductor_health: "https://headyio.com/api/conductor/health"
+    supervisor_health: "https://headyio.com/api/supervisor/module-loaded"
     
   # Health metrics to track
   metrics:
@@ -299,6 +299,30 @@ security:
     require_admin_override: true
     audit_all_overrides: true
     override_expiration: "24h"
+
+# ============================================================================
+# DYNAMIC INTELLIGENT PARALLEL RESOURCE ALLOCATION (DIPRA) INTEGRATION
+# ============================================================================
+dipra_integration:
+  enabled: true
+  config_path: "configs/dynamic-parallel-resource-allocation.yaml"
+  brain_authority: supreme
+  description: >
+    HeadyBrain directs the DIPRA engine for all resource allocation decisions.
+    Ensures 100% functional state across all Heady services at all times.
+  
+  brain_capabilities:
+    - predictive_scaling
+    - pattern_based_preallocation
+    - anomaly_triggered_rebalance
+    - deployment_aware_reservation
+    - workload_priority_override
+  
+  enforcement:
+    all_services_100_percent: true
+    no_silent_degradation: true
+    brain_cannot_disable_dipra: true
+    audit_all_allocation_changes: true
 
 # ============================================================================
 # EMERGENCY OVERRIDES

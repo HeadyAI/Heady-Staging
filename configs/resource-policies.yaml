@@ -150,3 +150,12 @@ resourceManagement:
       description: Suppress proactive resource suggestions
       suppressChips: true
       userFirstEnforcement: strict
+
+# ─── DIPRA INTEGRATION ───────────────────────────────────────────────────
+dipraIntegration:
+  enabled: true
+  configPath: configs/dynamic-parallel-resource-allocation.yaml
+  description: "Dynamic Intelligent Parallel Resource Allocation — brain-directed, 100% functional state"
+  allocationEngine: adaptive_weighted
+  brainDirected: true
+  healthTarget: "100%"

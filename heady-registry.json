@@ -977,6 +977,19 @@
       "lastUpdated": "2026-02-11"
     },
     {
+      "id": "dipra",
+      "name": "DynamicIntelligentParallelResourceAllocation",
+      "type": "configuration",
+      "version": "1.0.0",
+      "sourceOfTruth": "configs/dynamic-parallel-resource-allocation.yaml",
+      "responsibilities": ["dynamicResourceAllocation", "parallelWorkloadDistribution", "brainDirectedScaling", "serviceHealthEnforcement", "queueManagement", "burstProtection", "emergencyRebalance"],
+      "integrations": ["heady-brain-dominance", "resource-management-protocol", "resource-policies", "auto-deploy-config"],
+      "ownership": "core",
+      "status": "active",
+      "criticality": "critical",
+      "lastUpdated": "2026-02-11"
+    },
+    {
       "id": "website-definitions",
       "name": "WebsiteDefinitions",
       "type": "configuration",

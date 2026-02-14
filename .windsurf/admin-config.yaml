@@ -1,11 +1,73 @@
+# HEADY_BRAND:BEGIN
+# ╔══════════════════════════════════════════════════════════════════╗
+# ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
+# ║  ██║  ██║██╔════╝██╔══██╗██╔══██╗╚██╗ ██╔╝                     ║
+# ║  ███████║█████╗  ███████║██║  ██║ ╚████╔╝                      ║
+# ║  ██╔══██║██╔══╝  ██╔══██║██║  ██║  ╚██╔╝                       ║
+# ║  ██║  ██║███████╗██║  ██║██████╔╝   ██║                        ║
+# ║  ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝    ╚═╝                        ║
+# ║                                                                  ║
+# ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
+# ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
+# ║  FILE: .windsurf/admin-config.yaml                                                    ║
+# ║  LAYER: root                                                  ║
+# ╚══════════════════════════════════════════════════════════════════╝
+# HEADY_BRAND:END
 # ╔══════════════════════════════════════════════════════════════════╗
 # ║  HEADING SYSTEMS — Windsurf Optimal Configuration for HeadyVM        ║
 # ║  Version: 3.0.0                                                     ║
 # ║  Target: HeadyVM (Windows Admin Mode)                               ║
 # ╚══════════════════════════════════════════════════════════════════╝
 
-# Model Configuration — Priority Order
+# Model Configuration — Priority Order (Heady-First Policy)
+# HeadyBrain is the default and highest-priority model.
+# All other models serve as fallbacks only when explicitly directed.
 models:
+  heady-brain:
+    class: heady
+    provider: headysystems
+    default_params:
+      temperature: 0.7
+      max_tokens: 16384
+      top_p: 0.95
+      top_k: 40
+      timeout: 120000
+    priority: 200
+    default: true
+    capabilities:
+      - code_generation
+      - analysis
+      - reasoning
+      - multi_modal
+      - code_analysis
+      - embedding
+      - image_generation
+      - translation
+      - orchestration
+    endpoints:
+      primary: "https://headyio.com/api/brain"
+      secondary: "https://headyio.com/api/brain-backup"
+      tertiary: "https://headyio.com/api/brain-emergency"
+    routing:
+      brain_first: true
+      fallback_to_external: false
+      100_percent_heady: true
+
+  heady-conductor:
+    class: heady
+    provider: headysystems
+    default_params:
+      temperature: 0.5
+      max_tokens: 8192
+      timeout: 60000
+    priority: 190
+    capabilities:
+      - code_generation
+      - quick_tasks
+      - code_review
+    endpoints:
+      primary: "https://headyio.com/api"
+
   claude-sonnet-4:
     class: claude
     provider: anthropic
@@ -114,8 +176,16 @@ models:
       - quick_tasks
       - code_generation
 
-# Default Model Selection
-default_model: claude-sonnet-4
+# Default Model Selection — Heady-First Policy
+# HeadyBrain is used 100% of the time unless explicitly overridden.
+default_model: heady-brain
+fallback_model: claude-sonnet-4
+model_selection_policy:
+  strategy: heady_first
+  heady_percentage: 100
+  allow_external_override: true
+  override_requires: "explicit_user_direction"
+  log_all_model_switches: true
 
 # System Configuration
 system:
@@ -156,10 +226,10 @@ system:
   # Security
   allow_network_requests: true
   allowed_domains:
-    - "api.headysystems.com"
+    - "api.headyio.com"
     - "api.headyconnection.org"
-    - "me.headysystems.com"
-    - "brain.headysystems.com"
+    - "me.headyio.com"
+    - "headyio.com"
     - "github.com"
     - "registry.npmjs.org"
     - "pypi.org"
@@ -171,9 +241,9 @@ system:
 # Heady Integration
 heady:
   # API Endpoints
-  manager_url: "https://headysystems.com/manager"
-  brain_url: "https://brain.headysystems.com"
-  mcp_gateway_url: "https://headysystems.com/mcp"
+  manager_url: "https://headyio.com/manager"
+  brain_url: "https://headyio.com/api/brain"
+  mcp_gateway_url: "https://headyio.com/mcp"
   
   # Authentication
   api_key: "${HEADY_API_KEY}"

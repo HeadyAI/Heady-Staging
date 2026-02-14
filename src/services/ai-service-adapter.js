@@ -9,12 +9,13 @@
 // ║                                                                  ║
 // ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
 // ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
-// ║  FILE: src/services/ai-service-adapter.js                                                  ║
-// ║  LAYER: services                                                  ║
+// ║  FILE: src/services/ai-service-adapter.js                                                    ║
+// ║  LAYER: backend/src                                                  ║
 // ╚══════════════════════════════════════════════════════════════════╝
 // HEADY_BRAND:END
 
 const { claude } = require('../hc_claude');
+const { getHeadyBrainService } = require('./heady-brain-service');
 const yaml = require('js-yaml');
 const fs = require('fs').promises;
 const mcPlanScheduler = require('./mc-plan-scheduler'); // Assuming mcPlanScheduler is in the same directory
@@ -47,6 +48,22 @@ class AIServiceAdapter {
 
   _createServiceHandler(serviceName) {
     switch(serviceName) {
+      case 'heady':
+      case 'heady-brain':
+      case 'headybrain':
+        return async (prompt, context, options = {}) => {
+          const brainService = getHeadyBrainService();
+          return await brainService.chatCompletion({
+            messages: [
+              { role: 'system', content: 'You are HeadyBrain, the primary AI service.' },
+              { role: 'user', content: prompt }
+            ],
+            temperature: options.temperature || 0.7,
+            max_tokens: options.max_tokens || 16384,
+            context: { analysis_context: context }
+          });
+        };
+
       case 'claude':
         return async (prompt, context) => {
           return await claude.getCompletion('multi-service-analysis', { 
@@ -56,7 +73,6 @@ class AIServiceAdapter {
           });
         };
         
-      // Placeholders for other services
       case 'codex':
         return async () => { throw new Error('Codex integration not implemented'); };
         

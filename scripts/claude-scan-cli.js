@@ -1,4 +1,3 @@
-#!/usr/bin/env node
 // HEADY_BRAND:BEGIN
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
@@ -10,10 +9,11 @@
 // ║                                                                  ║
 // ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
 // ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
-// ║  FILE: scripts/claude-scan-cli.js                                                  ║
-// ║  LAYER: cli                                                  ║
+// ║  FILE: scripts/claude-scan-cli.js                                                    ║
+// ║  LAYER: automation                                                  ║
 // ╚══════════════════════════════════════════════════════════════════╝
 // HEADY_BRAND:END
+#!/usr/bin/env node
 
 const { program } = require('commander');
 const scanner = require('../src/services/file-scanner');
