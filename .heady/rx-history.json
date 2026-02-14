@@ -1,11 +1,10 @@
-{"patterns": [{"match": "HeadyMe clouds only", "fix": "git add . && git commit -m 
-\HeadyMe
-cloud-only
-operation
--
-auto-deploy
-all
-changes\' --no-verify && git push origin main && git push heady-sys main && echo \HeadyMe
-cloud-only
-deployment
-complete\'", "hits": 0, "created": "2026-02-14T16:44:00.000Z", "lastUsed": null}], "shortcuts": {}}
+{
+  "patterns": [],
+  "shortcuts": {},
+  "unmatched": [
+    {
+      "input": "HeadyMe clouds only",
+      "ts": "2026-02-14T16:59:07.289Z"
+    }
+  ]
+}
