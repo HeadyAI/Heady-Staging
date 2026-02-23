@@ -1195,5 +1195,41 @@
     "fallbackUsed": true,
     "priorityFix": "⚠ VECTOR DB FALLBACK — hash-based pseudo-embedding used instead of 3D vector storage. Fix priority: HIGH.",
     "ts": "2026-02-23T14:55:51.221Z"
+  },
+  {
+    "id": "b8ec9ed8-e07a-440d-9078-6fe2205a161b",
+    "stored": "Stored in vector DB: \"Embedding request: [HeadyBrain Context — 3 relevant memories found]\nEmbedding request: Audit trail completeness and regu...\" (219 chars, type: brain_embed)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-23T15:00:54.976Z"
+  },
+  {
+    "id": "32fe05bf-f4e6-4b87-bdf3-0b8a0368bbb1",
+    "stored": "Hash-based pseudo-embedding (32 dims) — structural match only, NOT semantic: \"[HeadyBrain Context — 3 relevant memories found]\nEmbedding request: Audit trail ...\"",
+    "notStored": "Semantic meaning NOT captured — real nomic-embed-text embedding failed (connect ECONNREFUSED 127.0.0.1:11434). Full text (332 chars) has no 3D vector representation.",
+    "method": "hash-fallback",
+    "fallbackUsed": true,
+    "priorityFix": "⚠ VECTOR DB FALLBACK — hash-based pseudo-embedding used instead of 3D vector storage. Fix priority: HIGH.",
+    "ts": "2026-02-23T15:00:54.980Z"
+  },
+  {
+    "id": "85ba824b-4251-403d-ba1f-e10b1484f760",
+    "stored": "Stored in vector DB: \"Embedding request: [HeadyBrain Context — 3 relevant memories found]\nEmbedding request: Service mesh orchestration and lo...\" (219 chars, type: brain_embed)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-23T15:05:58.789Z"
+  },
+  {
+    "id": "1d57a09f-3207-4c0a-8d45-18c6571906a7",
+    "stored": "Hash-based pseudo-embedding (32 dims) — structural match only, NOT semantic: \"[HeadyBrain Context — 3 relevant memories found]\nEmbedding request: Service mesh...\"",
+    "notStored": "Semantic meaning NOT captured — real nomic-embed-text embedding failed (connect ECONNREFUSED 127.0.0.1:11434). Full text (312 chars) has no 3D vector representation.",
+    "method": "hash-fallback",
+    "fallbackUsed": true,
+    "priorityFix": "⚠ VECTOR DB FALLBACK — hash-based pseudo-embedding used instead of 3D vector storage. Fix priority: HIGH.",
+    "ts": "2026-02-23T15:05:58.791Z"
   }
 ]
