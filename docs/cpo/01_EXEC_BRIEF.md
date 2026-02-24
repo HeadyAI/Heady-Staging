@@ -186,7 +186,7 @@ HeadyMe, HeadySystems, HeadyConnection, HeadyMCP, HeadyIO, HeadyBuddy, HeadyBot,
 | Local Inference | Ollama (Llama 3.1 8B, CodeLlama 13B, Mistral 7B, nomic-embed-text) |
 | Static Sites | Cloudflare Pages (GitHub auto-deploy) |
 | CDN | Cloudflare Pro (WAF, Workers, Polish, Mirage) |
-| Process Manager | PM2 (18 processes, 4GB RAM budget, 64M per site) |
+| Process Manager | PM2 (18 processes, 32GB RAM available, 64M per site) |
 
 ### AI Subscriptions
 

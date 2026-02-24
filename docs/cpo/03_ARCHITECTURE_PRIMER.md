@@ -193,7 +193,7 @@ feature → development (IDE, HeadyBattle interrogation)
 | Layer | Technology | Details |
 |-------|-----------|---------|
 | **Compute** | Bossgame P6 | Ryzen 9 6900HX, 8C/16T, 32GB LPDDR5, 1TB NVMe |
-| **Process Manager** | PM2 | 18 processes, 4GB budget (512M core, 64M per site) |
+| **Process Manager** | PM2 | 18 processes, 32GB available (512M core, 64M per site) |
 | **Gateway** | Express.js | Port 3301, Helmet, CORS, rate-limit, Swagger, WebSocket |
 | **Tunnel** | Cloudflare Tunnel | "heady-nexus" → all custom domains |
 | **PaaS** | Coolify | On Bossgame |
