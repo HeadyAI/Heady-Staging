@@ -3,146 +3,210 @@
   PROPRIETARY AND CONFIDENTIAL.
   Unauthorized copying, modification, or distribution is strictly prohibited.
 -->
-# Heady Manager API Reference
+# Heady AI Platform — API Reference
 
-**Base URL**: `https://manager.headysystems.com` (port 3301 locally)
-
----
-
-## Core
-
-| Method | Endpoint | Auth | Description |
-|--------|----------|------|-------------|
-| GET | `/api/pulse` | None | System health + version |
-| GET | `/api/edge/status` | None | Deep system scan |
-
-## Brain (AI Chat)
-
-| Method | Endpoint | Auth | Description |
-|--------|----------|------|-------------|
-| POST | `/api/brain/chat` | None | Multi-provider parallel race chat |
-| POST | `/api/brain/stream` | None | Server-Sent Events streaming (Claude SDK) |
-| POST | `/api/brain/analyze` | None | Code/text analysis |
-| POST | `/api/brain/embed` | None | Vector embeddings |
-| POST | `/api/brain/complete` | None | Text completion |
-| POST | `/api/brain/refactor` | None | Code refactoring |
-| GET | `/api/brain/claude-usage` | None | Claude credit tracking + model stats |
-| GET | `/api/brain/memory-receipts` | None | Memory audit trail |
-
-### POST /api/brain/chat
-
-```json
-{
-  "message": "Hello!",
-  "model": "heady-brain",
-  "system": "Optional system prompt",
-  "temperature": 0.7,
-  "max_tokens": 4096
-}
-```
-
-**Response**:
-```json
-{
-  "ok": true,
-  "response": "Hi! I'm HeadyBuddy...",
-  "source": "claude-sonnet-4",
-  "race": { "winner": "claude", "time_ms": 1234 },
-  "memory": { "receipt": "abc123" }
-}
-```
-
-### POST /api/brain/stream
-
-Server-Sent Events stream. Send same body as `/chat`.
-
-```
-data: {"type":"text","content":"Hello"}
-data: {"type":"text","content":" world"}
-data: {"type":"done","model":"claude-sonnet-4","input_tokens":12,"output_tokens":8}
-```
-
-## Claude
-
-| Method | Endpoint | Auth | Description |
-|--------|----------|------|-------------|
-| POST | `/api/claude/chat` | Key | Direct Claude chat |
-| POST | `/api/claude/think` | Key | Extended thinking mode |
-| GET | `/api/claude/status` | Key | Claude connection status |
-
-## Auth
-
-| Method | Endpoint | Auth | Description |
-|--------|----------|------|-------------|
-| POST | `/api/auth/manual` | None | Username/password |
-| POST | `/api/auth/device` | None | Device code flow |
-| POST | `/api/auth/warp` | None | Cloudflare WARP |
-| GET | `/api/auth/google` | None | Google OAuth redirect |
-| GET | `/api/auth/google/callback` | None | OAuth callback |
-
-## Battle
-
-| Method | Endpoint | Auth | Description |
-|--------|----------|------|-------------|
-| POST | `/api/battle/session` | Key | Start battle session |
-| POST | `/api/battle/evaluate` | Key | Evaluate code |
-| POST | `/api/battle/arena` | Key | Arena mode |
-| GET | `/api/battle/leaderboard` | None | Node rankings |
-
-## Conductor
-
-| Method | Endpoint | Auth | Description |
-|--------|----------|------|-------------|
-| POST | `/api/conductor/orchestrate` | Key | Multi-agent task |
-| GET | `/api/conductor/status` | Key | Agent status |
-
-## Vector Memory
-
-| Method | Endpoint | Auth | Description |
-|--------|----------|------|-------------|
-| POST | `/api/vector/store` | Key | Store vector |
-| POST | `/api/vector/search` | Key | Semantic search |
-| GET | `/api/vector/stats` | Key | Memory statistics |
-
-## HCFP (Governance)
-
-| Method | Endpoint | Auth | Description |
-|--------|----------|------|-------------|
-| GET | `/api/hcfp/status` | None | Governance engine status |
-| POST | `/api/hcfp/evaluate` | Key | Policy evaluation |
-
----
-
-## Edge Proxy Routes
-
-**Base**: `https://heady-edge-proxy.headysystems.workers.dev`
-
-| Method | Endpoint | Auth | Description |
-|--------|----------|------|-------------|
-| GET | `/v1/health` | None | Edge health |
-| GET | `/v1/determinism` | None | Edge metrics |
-| POST | `/v1/chat` | None | Public chat |
-| POST | `/v1/buddy` | None | Buddy endpoint |
-| POST | `/v1/arena` | Key | Arena mode |
-| POST | `/v1/colab` | Key | Compute orchestration |
-| GET | `/v1/services` | Key | Service groups |
-| POST | `/v1/stream` | Key | Event streaming |
-| POST | `/v1/sandbox` | Key | Code execution |
-| POST | `/v1/forge` | Key | Schema generation |
-| POST | `/v1/create` | Key | Multimodal creative |
-| POST | `/v1/embed` | Key | Embeddings |
-| GET | `/v1/models` | Key | Model catalog |
-| GET | `/v1/lens` | Key | Monitoring SoT |
-| GET | `/v1/memory` | Key | System memory |
-| GET | `/v1/integrations` | Key | Integration patterns |
-
----
+> Last updated: February 2026  
+> Base URL: `https://api.headysystems.com`
 
 ## Authentication
 
-All authenticated endpoints accept:
-- Header: `X-Heady-API-Key: heady_api_key_001`
-- Header: `Authorization: Bearer heady_api_key_001`
-- Query: `?key=heady_api_key_001`
+All API requests require a valid `Authorization` header:
 
-Valid keys: `heady_api_key_001` through `heady_api_key_005`
+```
+Authorization: Bearer <HEADY_BRAIN_KEY>
+```
+
+Enterprise and Pro tier users receive API keys via the HeadyOS Admin UI or the Stripe billing portal.
+
+---
+
+## Conductor API
+
+The HeadyConductor is the federated liquid routing hub for all Heady services.
+
+### `GET /api/conductor/health`
+
+Returns system health and active routing layers.
+
+**Response:**
+
+```json
+{
+  "ok": true,
+  "uptime": 86400000,
+  "totalRoutes": 15420,
+  "layers": {
+    "taskRouter": true,
+    "vectorZone": true,
+    "brainRouter": false,
+    "patternEngine": true
+  },
+  "supervisors": 3
+}
+```
+
+### `GET /api/conductor/status`
+
+Returns full routing telemetry including group hit counters and recent route decisions.
+
+### `GET /api/conductor/route-map`
+
+Returns the complete service group topology — which actions route to which groups, with weights and hit counts.
+
+### `POST /api/conductor/analyze-route`
+
+Test a hypothetical route without executing it.
+
+**Request:**
+
+```json
+{
+  "action": "chat",
+  "payload": { "message": "test query" }
+}
+```
+
+**Response:**
+
+```json
+{
+  "ok": true,
+  "decision": {
+    "routeId": "route-1-m3k8f",
+    "action": "chat",
+    "serviceGroup": "reasoning",
+    "vectorZone": { "zoneId": "z-general", "coordinate": [0, 0, 0] },
+    "pattern": { "strategy": "stream-first", "cache": false, "priority": "high" },
+    "weight": 1.0,
+    "latency": 2
+  }
+}
+```
+
+---
+
+## Brain API
+
+HeadyBrain is the multi-model intelligence layer that routes requests through the Liquid Gateway.
+
+### `POST /api/brain/chat`
+
+Send a message to HeadyBrain. The Liquid Gateway auto-selects the optimal intelligence engine.
+
+**Request:**
+
+```json
+{
+  "message": "Explain quantum key encapsulation",
+  "context": []
+}
+```
+
+### `POST /api/brain/analyze`
+
+Analyze code, text, or data using specialized HeadyBrain reasoning.
+
+**Request:**
+
+```json
+{
+  "content": "function foo() { return bar; }",
+  "type": "code",
+  "language": "javascript"
+}
+```
+
+### `POST /api/brain/embed`
+
+Generate vector embeddings for text using the HeadyBrain embedding service.
+
+**Request:**
+
+```json
+{
+  "text": "Heady AI is an autonomous multi-agent platform",
+  "model": "nomic-embed-text"
+}
+```
+
+### `POST /api/brain/search`
+
+Search the HeadyBrain knowledge vault using hybrid lexical + vector search.
+
+**Request:**
+
+```json
+{
+  "query": "PQC handshake protocol",
+  "topK": 5
+}
+```
+
+---
+
+## Billing API
+
+Stripe-backed subscription management.
+
+### `POST /api/billing/checkout`
+
+Create a Stripe Checkout session for Pro or Enterprise plans.
+
+**Request:**
+
+```json
+{
+  "plan": "pro",
+  "userId": "firebase-uid-123"
+}
+```
+
+### `POST /api/billing/webhook`
+
+Stripe webhook endpoint for subscription lifecycle events. Signature-verified via `STRIPE_WEBHOOK_SECRET`.
+
+---
+
+## Service Groups
+
+The Conductor organizes all AI capabilities into logical service groups:
+
+| Group | Actions | Weight |
+|-------|---------|--------|
+| `reasoning` | chat, complete, analyze, refactor | 1.0 |
+| `coding` | code, refactor_logic, pr_review | 0.95 |
+| `intelligence` | meta, logic, brain | 0.9 |
+| `sims` | simulate, predict, monte_carlo | 0.85 |
+| `embedding` | embed, store | 0.8 |
+| `swarm` | forage, hive, swarm_nudge | 0.8 |
+| `search` | search, query | 0.75 |
+| `battle` | validate, arena | 0.7 |
+| `creative` | generate, remix | 0.6 |
+| `vision` | scan, detect, ocr | 0.5 |
+| `governance` | audit, policy, compliance | 0.4 |
+| `ops` | health, deploy, status | 0.3 |
+
+---
+
+## Rate Limits
+
+| Tier | Requests/min | Penalty |
+|------|-------------|---------|
+| Free | 30 | 10min cooldown |
+| Pro | 120 | 1hr ban on abuse |
+| Enterprise | Unlimited | Custom SLA |
+
+Rate limiting is enforced via Redis sliding-window counters. Internal mesh traffic (`10.x.x.x`) is exempt.
+
+---
+
+## Error Codes
+
+| Code | Meaning |
+|------|---------|
+| `200` | Success |
+| `400` | Bad request (missing required fields) |
+| `401` | Unauthorized (invalid or missing API key) |
+| `403` | Forbidden (subscription tier insufficient) |
+| `429` | Rate limit exceeded |
+| `500` | Internal server error |

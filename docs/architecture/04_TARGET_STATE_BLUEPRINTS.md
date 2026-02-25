@@ -3,245 +3,188 @@
   PROPRIETARY AND CONFIDENTIAL.
   Unauthorized copying, modification, or distribution is strictly prohibited.
 -->
-# Heady System Architecture Blueprints (CPO & Engineering Addendum)
+# Heady System Architecture — Target State Blueprints
 
-> **Context:** This document synthesizes the high-level functional architecture laid out in the `03_ARCHITECTURE_PRIMER.md` with the concrete database schemas, API contracts, and pipeline definitions required for the next phase of Heady's evolution. It serves as the blueprint for moving from the current Node.js/in-memory state towards a hardened, PostgreSQL-backed control plane.
+> Last updated: February 2026
 
-*Note: The current `heady-registry.json` is recognized as stale; these blueprints define the target state for the registry's backend implementation.*
+> **Context:** This document defines the production architecture for Heady AI's backend infrastructure including database schemas, API contracts, and pipeline definitions.
 
 ---
 
-## 🏗️ 1. Control Plane & Orchestration (SPEC-1)
+## 1. HeadyConductor — Federated Liquid Routing (LIVE)
 
-### 1.1 Core Entities (PostgreSQL Schema)
+The HeadyConductor is the single routing brain for all application-level decisions.
 
-The transition to a durable control plane requires moving the registry from a flat JSON file to a relational store to support concurrent updates, audit logging, and drift detection.
+### 1.1 Routing Layers
+
+| Layer | Type | Status |
+|-------|------|--------|
+| Task Router | Dynamic table (19 service groups) | ✅ Active |
+| Vector Zone | 3D spatial octant (DuckDB HNSW) | ✅ Active |
+| Brain Router | HCSys orchestrator dispatch | 🔄 Pending |
+| Pattern Engine | Known optimization paths | ✅ Active |
+
+### 1.2 Service Group Topology
 
 ```sql
--- Core Registry
-CREATE TABLE services (
-  id TEXT PRIMARY KEY,
-  name TEXT NOT NULL,
-  base_url TEXT NOT NULL,
-  health_path TEXT NOT NULL DEFAULT '/api/health',
-  status TEXT NOT NULL DEFAULT 'UNKNOWN',
-  last_healthy_at TIMESTAMPTZ,
-  metadata JSONB NOT NULL DEFAULT '{}'::jsonb,
-  created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
-  updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
-);
-
-CREATE TABLE nodes (
-  id TEXT PRIMARY KEY,
-  name TEXT NOT NULL,
-  runtime TEXT NOT NULL DEFAULT 'node',
-  triggers TEXT[] NOT NULL DEFAULT '{}',
-  enabled BOOLEAN NOT NULL DEFAULT true,
-  metadata JSONB NOT NULL DEFAULT '{}'::jsonb,
-  created_at TIMESTAMPTZ NOT NULL DEFAULT now()
-);
-
--- Pipeline & Execution
-CREATE TABLE workflows (
-  id TEXT PRIMARY KEY,
-  pipeline_id TEXT NOT NULL DEFAULT 'hcfullpipeline',
-  max_concurrent_tasks INT NOT NULL DEFAULT 6,
-  governance JSONB NOT NULL DEFAULT '{}'::jsonb,
-  created_at TIMESTAMPTZ NOT NULL DEFAULT now()
-);
-
-CREATE TABLE pipeline_runs (
-  id UUID PRIMARY KEY,
-  workflow_id TEXT NOT NULL REFERENCES workflows(id),
-  request_id TEXT,
-  seed BIGINT NOT NULL,
-  status TEXT NOT NULL,
-  started_at TIMESTAMPTZ NOT NULL DEFAULT now(),
-  finished_at TIMESTAMPTZ,
-  result JSONB NOT NULL DEFAULT '{}'::jsonb
-);
-
-CREATE TABLE pipeline_stage_runs (
-  id UUID PRIMARY KEY,
-  pipeline_run_id UUID NOT NULL REFERENCES pipeline_runs(id) ON DELETE CASCADE,
-  stage_num INT NOT NULL,
-  stage_name TEXT NOT NULL,
-  status TEXT NOT NULL,
-  started_at TIMESTAMPTZ NOT NULL DEFAULT now(),
-  finished_at TIMESTAMPTZ,
-  metrics JSONB NOT NULL DEFAULT '{}'::jsonb,
-  error TEXT
-);
-CREATE INDEX ON pipeline_stage_runs(pipeline_run_id, stage_num);
+-- HeadyConductor routes actions → service groups
+-- Each group has a weight for load-aware scaling
+reasoning   (1.0)  ← chat, complete, analyze, refactor
+coding      (0.95) ← code, refactor_logic, pr_review
+intelligence(0.9)  ← meta, logic, brain
+sims        (0.85) ← simulate, predict, monte_carlo
+embedding   (0.8)  ← embed, store
+swarm       (0.8)  ← forage, hive, swarm_nudge
+search      (0.75) ← search, query
+battle      (0.7)  ← validate, arena
+creative    (0.6)  ← generate, remix
+vision      (0.5)  ← scan, detect, ocr
+governance  (0.4)  ← audit, policy, compliance
+ops         (0.3)  ← health, deploy, status
 ```
 
-### 1.2 The 9-Stage Pipeline (HCFullPipeline)
+### 1.3 Defense Pipeline
 
-The target state for `HCFullPipeline` defines explicit boundaries for recovery and self-critique.
+Every request passes through 4 layers before touching AI:
 
-1. **Stage 0:** Channel Entry
-2. **Stage 1:** Ingest
-3. **Stage 2:** Plan (Monte Carlo Readiness & Simulation)
-4. **Stage 3:** Execute (Bounded parallelism, maxConcurrentTasks=6)
-5. **Stage 4:** Recover (Compensation hooks + circuit breakers)
-6. **Stage 5:** Self-Critique
-7. **Stage 6:** Optimize
-8. **Stage 7:** Finalize
-9. **Stage 8:** Monitor & Feedback
-
-**Core APIs to Implement:**
-
-* `GET /api/monte-carlo/status`
-* `POST /api/monte-carlo/run`
-* `GET /api/monte-carlo/history`
+1. **Rate Limiter** — Redis sliding-window, 120 req/min (Pro), auto-ban on abuse
+2. **PQC Handshake** — ML-KEM key encapsulation + ML-DSA digital signatures
+3. **mTLS** — Mutual TLS for all mesh communications
+4. **IP Classification** — PUBLIC → INTERNAL → PROPRIETARY → RESTRICTED
 
 ---
 
-## 🛡️ 2. DevSecOps & Supply Chain Hardening (SPEC-2)
+## 2. DuckDB Vector Memory V2 (LIVE)
 
-Immediate remediation is required for historical secret leakage. This defines the target CI/CD posture.
-
-### 2.1 The "Fail-Closed" Deploy Gate
-
-Deploys must automatically halt if any of the following checks fail in the CI pipeline (e.g., GitHub Actions):
-
-1. **Secret Scan:** Diff contains potential credentials (runs `gitleaks` or `detect-secrets`).
-2. **Dependency Audit:** Critical vulnerabilities found in `npm audit` or equivalent.
-3. **SAST:** CodeQL detects high-severity code vulnerabilities.
-4. **Smoke Test:** Target environment `/health` endpoints fail post-deploy.
-
-### 2.2 Target Audit Log Schema
+### 2.1 Schema
 
 ```sql
-CREATE TABLE audit_logs (
-  id UUID PRIMARY KEY,
-  actor TEXT NOT NULL,
-  action TEXT NOT NULL, -- DEPLOY, ROLLBACK, SECRETS_ACCESS, CONFIG_CHANGE
-  target TEXT NOT NULL,
-  status TEXT NOT NULL,
-  details JSONB NOT NULL DEFAULT '{}'::jsonb,
-  timestamp TIMESTAMPTZ NOT NULL DEFAULT now()
+CREATE TABLE conversation_vectors (
+    id VARCHAR PRIMARY KEY,
+    ts BIGINT NOT NULL,
+    role VARCHAR NOT NULL DEFAULT 'user',
+    content TEXT NOT NULL,
+    embedding DOUBLE[],
+    token_count INTEGER DEFAULT 0,
+    session_id VARCHAR,
+    metadata JSON
 );
+
+CREATE INDEX idx_vectors_ts ON conversation_vectors(ts);
+-- HNSW index via VSS extension for approximate nearest neighbor search
 ```
 
+### 2.2 Core APIs
+
+| Method | Description |
+|--------|-------------|
+| `insertVector(content, embedding, metadata)` | Insert conversation turn |
+| `similaritySearch(queryEmbedding, topK)` | Cosine similarity search |
+| `getZoneForQuery(queryText)` | 3D spatial zone classification |
+| `getStats()` | Total vectors, sessions, time range |
+
 ---
 
-## 🧠 3. Knowledge Vault & Memory Plane (SPEC-3)
+## 3. HCFP Auto-Success Pipeline (LIVE)
 
-To move beyond reactive, prompt-based memory, Heady requires a structured Knowledge Vault integrating Notion sync, embedding storage, and memory receipts.
+### 3.1 The 9-Stage Pipeline
 
-### 3.1 Vault Schema (PostgreSQL + Vector)
+| Stage | Name | Responsibility |
+|-------|------|---------------|
+| 0 | Channel Entry | Request ingestion |
+| 1 | Ingest | Payload validation |
+| 2 | Plan | Monte Carlo readiness simulation |
+| 3 | Execute | Bounded parallelism (max 6 concurrent) |
+| 4 | Recover | Compensation hooks + circuit breakers |
+| 5 | Self-Critique | Output quality assessment |
+| 6 | Optimize | Performance tuning |
+| 7 | Finalize | Result packaging |
+| 8 | Monitor | Feedback loop & drift detection |
 
-```sql
-CREATE TABLE documents (
-  id UUID PRIMARY KEY,
-  source TEXT NOT NULL, -- NOTION | REPO | PIPELINE | REGISTRY
-  source_id TEXT NOT NULL,
-  title TEXT,
-  content TEXT NOT NULL,
-  content_hash TEXT NOT NULL,
-  metadata JSONB NOT NULL DEFAULT '{}'::jsonb,
-  created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
-  UNIQUE(source, source_id)
-);
+---
 
-CREATE TABLE embeddings (
-  id UUID PRIMARY KEY,
-  document_id UUID NOT NULL REFERENCES documents(id) ON DELETE CASCADE,
-  provider TEXT NOT NULL, -- LOCAL | CLOUD
-  model TEXT NOT NULL,
-  dims INT NOT NULL,
-  vector JSONB NOT NULL, -- Target: pgvector
-  created_at TIMESTAMPTZ NOT NULL DEFAULT now()
-);
+## 4. Billing & Subscription Architecture (LIVE)
 
-CREATE TABLE memory_receipts (
-  id UUID PRIMARY KEY,
-  operation TEXT NOT NULL, -- INGEST | EMBED | STORE | DROP
-  source TEXT NOT NULL,
-  source_id TEXT,
-  document_id UUID,
-  stored BOOLEAN NOT NULL,
-  reason TEXT,
-  details JSONB NOT NULL DEFAULT '{}'::jsonb,
-  created_at TIMESTAMPTZ NOT NULL DEFAULT now()
-);
+### 4.1 Stripe Integration
+
+```
+User → /api/billing/checkout → Stripe Checkout Session
+Stripe → /api/billing/webhook → AuthMiddleware updates user tier
+User → /api/brain/chat → AuthMiddleware.requireProPlan gates premium access
 ```
 
-**Core APIs to Implement:**
+### 4.2 Tier Enforcement
 
-* `POST /api/knowledge/sync/notion` (Incremental cursors)
-* `GET /api/knowledge/search?q=` (Hybrid lexical + vector search)
-* `GET /api/knowledge/receipts`
+| Tier | Rate Limit | API Access | Price |
+|------|-----------|------------|-------|
+| Free | 30 req/min | Basic chat, search, analyze | $0 |
+| Pro | 120 req/min | All tools, HeadyBuddy sync | $20/mo |
+| Enterprise | Unlimited | Custom routing, PQC API keys | $99/mo |
 
 ---
 
-## 🔌 4. MCP Gateway & Tool Governance (SPEC-4)
+## 5. Edge Infrastructure (Cloudflare)
 
-MCP connectors must be governed. Not all tools should be available in all environments to all nodes.
-
-### 4.1 Governance Schema
-
-```sql
-CREATE TABLE mcp_tools (
-  id TEXT PRIMARY KEY,
-  name TEXT NOT NULL,
-  mapped_endpoint TEXT NOT NULL,
-  risk_level TEXT NOT NULL DEFAULT 'LOW',
-  enabled BOOLEAN NOT NULL DEFAULT true,
-  metadata JSONB NOT NULL DEFAULT '{}'::jsonb
-);
-
-CREATE TABLE tool_policies (
-  id UUID PRIMARY KEY,
-  tool_id TEXT NOT NULL REFERENCES mcp_tools(id),
-  environment TEXT NOT NULL, -- dev | staging | prod
-  requires_approval BOOLEAN NOT NULL DEFAULT false,
-  allowed_roles TEXT[] NOT NULL DEFAULT '{}',
-  rate_limit_per_min INT,
-  constraints JSONB NOT NULL DEFAULT '{}'::jsonb
-);
+```
+┌─ Cloudflare Edge ─────────────────────────────┐
+│  Workers AI    — Sub-50ms lightweight inference │
+│  Vectorize     — Edge-native vector search      │
+│  KV            — Global session cache           │
+│  Tunnels       — Secure ingress to conductor    │
+│  Pages/DNS     — 22 branded domain routing      │
+└────────────────────────────────────────────────┘
+         │
+         ▼
+┌─ Bare Metal Conductor ────────────────────────┐
+│  HeadyConductor — Federated liquid routing     │
+│  Redis          — Rate limiting + caching       │
+│  DuckDB         — Local vector memory           │
+│  Node.js        — Service orchestration         │
+└────────────────────────────────────────────────┘
 ```
 
 ---
 
-## 📱 5. Buddy Universal & Device Sync (SPEC-6)
+## 6. Security Architecture (LIVE)
 
-To achieve the "cross-device continuity" vision, HeadyBuddy requires a secure device registry and consent-aware tracking mechanism.
+### 6.1 Post-Quantum Cryptography
 
-### 5.1 Device & Sync Schema
+| Algorithm | Purpose | Module |
+|-----------|---------|--------|
+| ML-KEM-768 | Key encapsulation | `src/security/pqc.js` |
+| ML-DSA-65 | Digital signatures | `src/security/pqc.js` |
+| Hybrid mode | Classical + PQC fallback | `src/security/handshake.js` |
 
-```sql
-CREATE TABLE consents (
-  id UUID PRIMARY KEY,
-  user_id TEXT,
-  scope TEXT NOT NULL, -- TRACKING | DEVICE_SYNC | VOICE
-  granted BOOLEAN NOT NULL,
-  granted_at TIMESTAMPTZ,
-  revoked_at TIMESTAMPTZ
-);
+### 6.2 Code Protection Pipeline
 
-CREATE TABLE devices (
-  id UUID PRIMARY KEY,
-  user_id TEXT,
-  device_public_key TEXT NOT NULL,
-  device_name TEXT,
-  last_seen_at TIMESTAMPTZ
-);
-
-CREATE TABLE device_sync_blobs (
-  id UUID PRIMARY KEY,
-  user_id TEXT,
-  device_id UUID REFERENCES devices(id),
-  cipher_text TEXT NOT NULL, -- E2E Encrypted payload
-  key_id TEXT,
-  created_at TIMESTAMPTZ NOT NULL DEFAULT now()
-);
+```
+Source → javascript-obfuscator (AST flattening) → bytenode (V8 bytecode .jsc) → dist/
 ```
 
-**Core APIs to Implement:**
+### 6.3 IP Classification Tiers
 
-* `POST /api/tracking` (Requires valid consent scope)
-* `POST /api/device-sync` (Requires E2E encryption)
-* `GET /api/privacy/export`
-* `POST /api/privacy/delete`
+| Tier | Access | Examples |
+|------|--------|---------|
+| PUBLIC | Open source or marketing | Documentation, landing pages |
+| INTERNAL | Heady employees only | Admin tools, internal APIs |
+| PROPRIETARY | Trade secret | Conductor routing logic, PQC implementation |
+| RESTRICTED | Founder-only | Encryption keys, billing secrets |
+
+---
+
+## 7. 22 Branded Properties
+
+| # | Domain | Stack | Status |
+|---|--------|-------|--------|
+| 1 | headysystems.com | Static + CF Pages | ✅ Live |
+| 2 | headyme.com | Static + CF Pages | ✅ Live |
+| 3 | headyio.com | Static + CF Pages | ✅ Live |
+| 4 | headyapi.com | Static + CF Pages | ✅ Live |
+| 5 | headymcp.com | Static + CF Pages | ✅ Live |
+| 6 | headyconnection.org | Static + CF Pages | ✅ Live |
+| 7 | headybuddy.org | Static + CF Pages | ✅ Live |
+| 8 | headyweb.com | Static + CF Pages | ✅ Live |
+| 9 | headyos (Admin UI) | React + Vite | ✅ Live |
+| 10-12 | HF Spaces ×3 | Static HTML | ✅ Live |
+| 13 | Heady Discord | Bot + OAuth | ✅ Live |
+| 14 | 1ime1 | Static + CF Pages | ✅ Live |

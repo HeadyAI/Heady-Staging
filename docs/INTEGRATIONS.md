@@ -3,170 +3,119 @@
   PROPRIETARY AND CONFIDENTIAL.
   Unauthorized copying, modification, or distribution is strictly prohibited.
 -->
-# Heady Integration Ecosystem Map
+# Heady AI Platform — Integrations Guide
 
-> Generated: 2026-02-23 | 4 Colab Pro+ Plans | $600 GCloud Credits
+> Last updated: February 2026
 
-## Active API Providers
+## Core Integrations
 
-| Provider | Status | Key | Credits | Models |
-|----------|--------|-----|---------|--------|
-| **Claude** (Anthropic) | ✅ LIVE | Secondary (headyconnection) | $60 | Opus 4, Sonnet 4, Haiku 4.5 |
-| **Claude** (Anthropic) | ❌ Exhausted | Primary (headysystems) | $0 | — |
-| **Gemini** (Google) | ✅ LIVE | headyconnection Heady project | Free tier | 2.5 Flash, 2.5 Pro, 2.0 Flash |
-| **OpenAI** (ChatGPT Business) | ⚠️ API quota | Service account | Needs top-up | GPT-4o, o1, o3-mini, DALL-E 3 |
-| **GCloud** (Vertex AI) | ✅ $600 | 2 service accounts | $300 × 2 | All Gemini via Vertex |
+### Cloudflare (Edge Infrastructure)
 
-## 4 × Colab Pro+ Plans
+Heady runs an edge proxy on Cloudflare Workers that handles:
 
-| Account | Status | GPU Access | Usage |
-|---------|--------|-----------|-------|
-| <eric@headyconnection.org> | ✅ Active | A100/V100 priority | Model inference, fine-tuning |
-| <headyme@headyconnection.org> | ✅ Active | A100/V100 priority | HeadyBattle arena, batch processing |
-| Account 3 | ✅ Active | A100/V100 priority | Available |
-| Account 4 | ✅ Active | A100/V100 priority | Available |
+- **Workers AI** — Sub-50ms inference for lightweight tasks
+- **Vectorize** — Edge-native vector similarity search
+- **KV** — Global key-value cache for session state
+- **Tunnels** — Secure ingress to the bare-metal conductor
 
-## ChatGPT Business Plan (2 Seats)
+**Configuration:** Managed via `wrangler.toml` and the Cloudflare dashboard.
 
-| Feature | Status | Integration Opportunity |
-|---------|--------|------------------------|
-| **Custom GPTs** | 🔥 **HIGH VALUE** | Publish HeadyBrain, HeadyBattle, HeadyCoder as public GPTs |
-| **Codex CLI** | ✅ Available | Autonomous coding agent for HeadyJules tasks |
-| **Codex Cloud** | ✅ Available | Sandboxed code execution via API |
-| **Connectors** | ✅ Available | Google Drive, GitHub, Slack, Notion, Jira |
-| **GPT Builder** | ✅ Available | Build custom GPTs with Actions pointing to HeadyManager API |
-| **API Platform** | ⚠️ Needs credits | Top up at platform.openai.com/billing |
+### Redis
 
----
+Redis powers two critical subsystems:
 
-## 🎯 Custom GPT Publishing Plan
+- **Rate Limiting** — Sliding-window counters with automatic IP banning (`src/security/rate-limiter.js`)
+- **Predictive Caching** — Pre-emptive asset caching based on HeadyVinci route predictions
 
-### GPT 1: HeadyBrain — Universal AI Assistant
+**Connection:** Set via `REDIS_URL` environment variable.
 
-```yaml
-Name: HeadyBrain
-Description: The intelligent reasoning engine of the Heady ecosystem
-Instructions: |
-  You are HeadyBrain, the core AI reasoning engine of the Heady ecosystem.
-  You have access to the HeadyManager API at manager.headysystems.com.
-  You can perform: AI chat, code analysis, battle evaluation, creative generation,
-  vector memory search, and multi-agent orchestration.
-  Always reference the auto-success engine and HeadyBattle when relevant.
-  Be warm, helpful, and concise.
-Actions:
-  - name: brain_chat
-    endpoint: https://manager.headysystems.com/api/brain/chat
-    method: POST
-    body: { message: string, system?: string }
-  - name: claude_usage
-    endpoint: https://manager.headysystems.com/api/brain/claude-usage
-    method: GET
-  - name: system_status
-    endpoint: https://manager.headysystems.com/api/pulse
-    method: GET
-  - name: services
-    endpoint: https://manager.headysystems.com/api/headybuddy-config/services
-    method: GET
-Capabilities: Web Browsing, Code Interpreter, DALL-E
-Visibility: Public
-```
+### DuckDB (Vector Memory V2)
 
-### GPT 2: HeadyBattle — Code Arena
+Local embedded database for conversation vector storage:
 
-```yaml
-Name: HeadyBattle — Code Arena
-Description: Adversarial AI code evaluation and arena competition
-Instructions: |
-  You are HeadyBattle, the adversarial reasoning engine.
-  You evaluate code quality through competitive AI node battles.
-  7 AI nodes compete: Observer, Builder, Atlas, Conductor, Pythia, Vinci, Patterns.
-  Score code on: correctness, performance, security, readability, architecture.
-  Always provide specific, actionable feedback.
-Actions:
-  - name: battle_arena
-    endpoint: https://manager.headysystems.com/api/battle/arena
-    method: POST
-    body: { task: string, code?: string }
-  - name: battle_evaluate
-    endpoint: https://manager.headysystems.com/api/battle/evaluate
-    method: POST
-    body: { code: string, criteria?: string }
-  - name: battle_leaderboard
-    endpoint: https://manager.headysystems.com/api/battle/leaderboard
-    method: GET
-Visibility: Public
-```
+- HNSW indexing for fast approximate nearest neighbor search
+- `list_cosine_similarity()` for semantic retrieval
+- Automatic session tracking and temporal indexing
 
-### GPT 3: HeadyCoder — Full Stack Generator
+**File:** `src/intelligence/duckdb-memory.js`  
+**Database path:** `~/.headyme/heady-brain-v2.duckdb`
 
-```yaml
-Name: HeadyCoder — Full Stack Generator
-Description: AI-powered code generation with multi-framework support
-Instructions: |
-  You are HeadyCoder, an expert full-stack code generator.
-  You generate production-ready code with best practices.
-  Support: React, Next.js, Express, FastAPI, Python, Node.js, Go.
-  Always include error handling, types, tests, and documentation.
-  Use the HeadyManager API for AI-assisted code review and battle evaluation.
-Actions:
-  - name: generate_code
-    endpoint: https://manager.headysystems.com/api/coder/generate
-    method: POST
-  - name: analyze_code
-    endpoint: https://manager.headysystems.com/api/brain/analyze
-    method: POST
-  - name: battle_evaluate
-    endpoint: https://manager.headysystems.com/api/battle/evaluate
-    method: POST
-Visibility: Public
-```
+### Stripe (Billing)
+
+Subscription management for Pro ($20/mo) and Enterprise ($99/mo) tiers:
+
+- Checkout session creation via `/api/billing/checkout`
+- Webhook signature verification via `/api/billing/webhook`
+- Subscription-gated API access via `AuthMiddleware.requireProPlan`
+
+**Files:** `src/api/payment-gateway.js`, `src/routes/billing-routes.js`
+
+### Firebase
+
+- **Authentication** — Google Sign-In, email/password, anonymous
+- **Firestore** — User profiles, search history, subscription status
+- **Hosting** — Static site deployment for branded properties
+
+### Notion
+
+- **Knowledge Vault Sync** — Bi-directional sync of 11 organized notebook pages
+- HeadyBuddy personal knowledge, system documentation, and learning logs
+
+### GitHub Actions
+
+CI/CD pipelines:
+
+- **Branding Enforcement** — Auto-fails PRs with competitor names in user-facing views
+- **HF Spaces Sync** — Mirrors monorepo updates to 3 Hugging Face Spaces
+- **Obfuscation Pipeline** — V8 Bytecode compilation for production deploys
+
+### Hugging Face
+
+- **3 Spaces** — HeadyBrain demo, HeadySystems platform overview, HeadyConnection topology
+- **Inference API** — Fallback model inference via HF endpoints
 
 ---
 
-## Integration Opportunities
+## MCP Server Integration
 
-### Immediate (this session)
+Heady exposes a local MCP server (`heady-local`) with 40+ tools:
 
-| Integration | Effort | Value | How |
-|-------------|--------|-------|-----|
-| **Publish 3 GPTs** | 30min | 🔥 High | GPT Builder → Actions → HeadyManager API |
-| **GitHub Connector** | 10min | High | ChatGPT Business → Settings → Connected Apps |
-| **Notion Connector** | 10min | High | Already have NOTION_API_KEY configured |
-| **Slack Bot** | 1hr | High | Incoming webhook → HeadyManager /api/brain/chat |
+| Tool Category | Examples |
+|--------------|---------|
+| Chat & Reasoning | `heady_chat`, `heady_claude`, `heady_gemini`, `heady_groq` |
+| Code Generation | `heady_coder`, `heady_codex`, `heady_copilot` |
+| Analysis | `heady_analyze`, `heady_patterns`, `heady_risks` |
+| Operations | `heady_deploy`, `heady_ops`, `heady_maintenance` |
+| Research | `heady_perplexity_research`, `heady_search` |
+| Memory | `heady_embed`, `heady_deep_scan`, `heady_soul` |
 
-### Short-term (this week)
-
-| Integration | Effort | Value | How |
-|-------------|--------|-------|-----|
-| **Gemini Custom Model** | 2hr | High | Fine-tune on Heady docs via Vertex AI ($300 credits) |
-| **MCP Server on npm** | 1hr | High | Publish heady-local MCP server to npm registry |
-| **Colab Notebooks** | 2hr | Med | Pre-built notebooks: HeadyBattle arena, model fine-tuning |
-| **VS Code Extension** | 4hr | High | Wrap HeadyMCP tools as VS Code extension |
-| **Discord Bot** | 1hr | Med | HeadyBuddy chat via Discord interactions API |
-
-### Medium-term (this month)
-
-| Integration | Effort | Value | How |
-|-------------|--------|-------|-----|
-| **Chrome Extension** | 1 day | High | HeadyBuddy sidebar for any webpage |
-| **Raycast Extension** | 4hr | Med | Quick HeadyBrain access from macOS |
-| **Zapier Integration** | 2hr | Med | Connect HeadyManager to 5000+ apps |
-| **Vercel Integration** | 2hr | Med | One-click deploy HeadyBuddy sites |
-| **OpenAI Assistants API** | 4hr | High | Persistent threaded conversations with tools |
+**Configuration:** `~/.config/windsurf-next/mcp_config.json`
 
 ---
 
-## Existing Integrations Already Configured
+## SDK & CLI
 
-| Service | Config | Status |
-|---------|--------|--------|
-| Anthropic Claude SDK | @anthropic-ai/sdk v0.74 | ✅ Dual-org failover |
-| OpenAI SDK | openai package | ✅ Business plan |
-| MCP Protocol | @modelcontextprotocol/sdk v1.0.1 | ✅ 30+ tools |
-| GitHub (Octokit) | @octokit/auth-app v8.2 | ✅ Rep management |
-| PostgreSQL | pg v8.18 | ✅ Data persistence |
-| Swagger/OpenAPI | swagger-ui-express v5.0 | ✅ API docs |
-| Notion | heady-notion.js | ✅ Sync configured |
-| Cloudflare Workers | heady-edge-proxy.js | ✅ 300+ PoPs |
-| Electron | electron 40.2.1 | ✅ Desktop app |
-| Helmet (Security) | helmet v8.1 | ✅ CSP/HSTS |
+### Heady Hive SDK
+
+```bash
+npm install -g heady-hive-sdk
+heady status
+heady chat "Hello Heady"
+heady deploy --target edge
+```
+
+**Package:** `heady-hive-sdk/`  
+**CLI Entry:** `heady-hive-sdk/bin/heady.js`
+
+---
+
+## Security Integrations
+
+| System | Technology | File |
+|--------|-----------|------|
+| Post-Quantum Crypto | ML-KEM + ML-DSA hybrid | `src/security/pqc.js` |
+| Mutual TLS | PQC-signed certificates | `src/security/handshake.js` |
+| Rate Limiting | Redis sliding window | `src/security/rate-limiter.js` |
+| Secret Rotation | 24hr auto-rotation | `src/security/secret-rotation.js` |
+| IP Classification | Trade secret tiering | `src/security/ip-classification.js` |
+| Code Obfuscation | V8 Bytecode + AST | `scripts/bytenode-compiler.js` |

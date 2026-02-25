@@ -3,96 +3,148 @@
   PROPRIETARY AND CONFIDENTIAL.
   Unauthorized copying, modification, or distribution is strictly prohibited.
 -->
-# 🚀 Heady — Quick Start Guide
+# 🚀 Heady AI Platform — Quick Start Guide
+
+> Last updated: February 2026
 
 ## Prerequisites
-- Node.js 18+
-- npm 9+
 
-## 1. Start HeadyManager
+- Node.js 20+
+- npm 10+
+- Redis (for rate limiting and caching)
+- DuckDB (auto-installed via `npm install`)
 
-```bash
-cd ~/Heady
-node heady-manager.js
-# → Listening on :3301 | 99 endpoints | 19 services
-```
-
-Or via systemd (auto-starts on boot):
-```bash
-sudo systemctl start heady-manager
-sudo systemctl status heady-manager
-```
-
-## 2. Verify Health
+## 1. Clone & Install
 
 ```bash
-curl http://api.headysystems.com/api/pulse
-# → { "status": "active", "version": "3.0.0" }
+git clone https://github.com/headysystems/Heady.git
+cd Heady
+npm install
 ```
 
-## 3. Chat with Heady Brain
+## 2. Environment Setup
 
-```bash
-curl -X POST http://api.headysystems.com/api/brain/chat \
-  -H 'Content-Type: application/json' \
-  -d '{"message": "Hello!"}'
-```
-
-The Brain API runs a **parallel race** across all configured providers:
-- Claude (Anthropic SDK with smart model routing)
-- OpenAI (GPT-4o-mini)
-- Google Gemini (2.0 Flash)
-- HuggingFace (Qwen3-235B)
-- Ollama (local llama3.2)
-
-First provider to respond wins.
-
-## 4. Monitor Claude Usage
-
-```bash
-curl http://api.headysystems.com/api/brain/claude-usage
-# → { "totalCost": 0.12, "budgetRemaining": { "total": 89.88 }, ... }
-```
-
-## 5. Key Endpoints
-
-| Endpoint | Description |
-|----------|-------------|
-| `GET /api/pulse` | System health + version |
-| `POST /api/brain/chat` | AI chat (parallel race) |
-| `POST /api/brain/analyze` | Code/text analysis |
-| `POST /api/brain/embed` | Vector embeddings |
-| `POST /api/brain/search` | Knowledge search |
-| `GET /api/brain/claude-usage` | Claude cost tracking |
-| `GET /api/brain/memory-receipts` | Memory audit |
-
-## 6. Environment Variables
-
-Copy `.env.example` and fill in your keys:
 ```bash
 cp .env.example .env
 ```
 
-Required:
-- `CLAUDE_API_KEY` — Anthropic API key (primary)
-- `ANTHROPIC_SECONDARY_KEY` — Anthropic API key (failover)
+Required secrets (managed via PQC-rotated vault):
+
+- `HEADY_BRAIN_KEY` — HeadyBrain API master key
+- `REDIS_URL` — Redis connection string (default: `redis://localhost:6379`)
+- `STRIPE_SECRET_KEY` — Stripe billing integration
 
 Optional:
-- `OPENAI_API_KEY` — OpenAI
-- `GOOGLE_API_KEY` — Google Gemini
-- `HF_TOKEN` — HuggingFace
+
+- `HEADY_MEMORY_DB` — Path to DuckDB vector store (default: `~/.headyme/heady-brain-v2.duckdb`)
 - `ALLOWED_ORIGINS` — CORS whitelist (comma-separated)
 
-## Architecture
+## 3. Start HeadyConductor
+
+```bash
+node src/heady-conductor.js
+```
+
+You should see:
 
 ```
-HeadyManager (:3301) — API Gateway
-├── Brain API — Multi-provider AI chat with parallel race
-│   ├── Claude SDK — Smart routing (haiku → sonnet → opus)
-│   ├── OpenAI/Gemini/HuggingFace — Cloud providers
-│   └── Ollama — Local fallback
-├── Battle API — Adversarial reasoning
-├── Conductor — Multi-agent orchestration
-├── HCFP — Governance engine
-└── Auth — Google OAuth, device, WARP, manual
+🛡️ [Conductor] PQC Quantum-Resistant Hybrid Signatures ACTIVE for all mesh RPCs.
+🛡️ [Conductor] Redis Sliding-Window Rate Limiter Armed.
+  ∞ HeadyConductor: LOADED (federated liquid routing)
+    → Endpoints: /api/conductor/status, /route-map, /health, /analyze-route
+    → Layers: taskRouter, patternEngine
 ```
+
+## 4. Verify Health
+
+```bash
+curl https://api.headysystems.com/api/conductor/health
+```
+
+Response:
+
+```json
+{
+  "ok": true,
+  "uptime": 12345,
+  "totalRoutes": 0,
+  "layers": { "taskRouter": true, "vectorZone": false, "brainRouter": false, "patternEngine": true },
+  "supervisors": 0
+}
+```
+
+## 5. Chat with HeadyBrain
+
+```bash
+curl -X POST https://api.headysystems.com/api/brain/chat \
+  -H 'Content-Type: application/json' \
+  -d '{"message": "Hello Heady!"}'
+```
+
+HeadyBrain uses the **Liquid Gateway** — an intelligent auto-routing layer that selects the optimal intelligence engine for each request:
+
+- **HeadyBrain Core** — Primary reasoning engine
+- **HeadyReasoner** — Deep analytical tasks
+- **HeadyMultimodal** — Vision, audio, and cross-modal inference
+- **HeadyEdge** — Sub-50ms edge-native inference via Cloudflare Workers AI
+
+## 6. Key API Endpoints
+
+| Endpoint | Description |
+|----------|-------------|
+| `GET /api/conductor/health` | System health + layer status |
+| `GET /api/conductor/status` | Full routing telemetry |
+| `GET /api/conductor/route-map` | Service group topology |
+| `POST /api/conductor/analyze-route` | Test a hypothetical route |
+| `POST /api/brain/chat` | AI chat (Liquid Gateway) |
+| `POST /api/brain/analyze` | Code/text analysis |
+| `POST /api/brain/embed` | Vector embeddings |
+| `POST /api/brain/search` | Knowledge search |
+
+## 7. Admin UI
+
+The HeadyOS Admin Canvas provides a premium glassmorphism dashboard for managing the entire fleet:
+
+```bash
+cd sites/headyos-react
+npm install
+npm run dev
+```
+
+Access at `http://localhost:5001` — includes Command Center, Fleet Manager, Package Builder, Security Panel, Billing Config, and Network Topology views.
+
+## Architecture Overview
+
+```
+┌──────────────────────────────────────────────────┐
+│            HeadyBuddy Overlay                    │
+│  (Browser Extension • Chrome Tab • Mobile)       │
+├──────────────────────────────────────────────────┤
+│         Cloudflare Edge Proxy Layer              │
+│  Workers AI  •  Vectorize  •  KV Cache           │
+├──────────────────────────────────────────────────┤
+│         HeadyConductor (Federated Liquid Router)  │
+│  Task Routing • Zone Routing • Pattern Engine     │
+├──────────────────────────────────────────────────┤
+│         HeadyBrain + 20 AI Nodes                 │
+│  Arena Mode • Liquid Gateway • Auto-Success       │
+├──────────────────────────────────────────────────┤
+│         DuckDB Vector Memory V2                  │
+│  HNSW Index • Cosine Similarity • Session Memory  │
+├──────────────────────────────────────────────────┤
+│         Security Layer                           │
+│  PQC (ML-KEM + ML-DSA) • mTLS • Rate Limiter    │
+└──────────────────────────────────────────────────┘
+```
+
+## Live Properties
+
+| Property | URL |
+|----------|-----|
+| HeadySystems | <https://headysystems.com> |
+| HeadyMe | <https://headyme.com> |
+| HeadyIO | <https://headyio.com> |
+| HeadyAPI | <https://headyapi.com> |
+| HeadyMCP | <https://headymcp.com> |
+| HeadyConnection | <https://headyconnection.org> |
+| HeadyBuddy | <https://headybuddy.org> |

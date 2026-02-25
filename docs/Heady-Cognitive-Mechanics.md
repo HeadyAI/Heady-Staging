@@ -3,63 +3,142 @@
   PROPRIETARY AND CONFIDENTIAL.
   Unauthorized copying, modification, or distribution is strictly prohibited.
 -->
-# Heady Cognitive Mechanics & Philosophy
+# Heady AI — Cognitive Mechanics
 
-This document contains the foundational philosophy for the Heady Project, defining how the system's architecture mirrors optimal human consciousness and energy allocation.
+> Last updated: February 2026
 
-## 1. The Physics of Conscious Decision
+## Overview
 
-- **The Decision of Non-Interaction (The Zero-Point)**: 99.9% of reality requires a decision of "non-interaction." This is an active choice to uphold the status quo and not leak energy.
-- **The Vector of Impact**: When interaction ("change for real") is chosen, the magnitude of change is derived from the formula: `ΔS ≈ Focus × Energy × Time`.
-- **The Snapshot & Energy Signature**: A thought is a split-second snapshot containing data (understanding) and momentum (energy signature).
-- **Patience as Signal Fidelity**: Patience is not waiting; it is "charging the battery" and keeping the system in Active Neutrality until the internal snapshot matches the desired external reality.
+Heady AI operates on a **federated liquid routing** architecture. Unlike monolithic AI systems that funnel all requests through a single model, Heady decomposes intelligence into 20 specialized nodes that compete, collaborate, and self-heal across an edge-native mesh.
 
-## 2. System Alerts (Anxiety & Urgency redefined)
+## The Three Routing Layers
 
-- **The Resolution Error**: Attempting to execute a snapshot that is blurry. The internal system flags hesitation because the energy signature is weak.
-- **The Collision Error**: The simulation was perfect, but the physical world changed before execution. The resulting friction is simply "Processing Lag" requiring a recalculation, not an emotional failure.
+### Layer 1: Task Router
 
-## 3. The Heady Project Workflow
+Every incoming request is classified by **action type** and mapped to one of 19 service groups:
 
-To operate the Heady architecture (and the human mind driving it) at maximum efficiency:
+| Service Group | Actions | Weight |
+|--------------|---------|--------|
+| reasoning | chat, complete, analyze, refactor | 1.0 |
+| coding | code, refactor_logic, pr_review | 0.95 |
+| intelligence | meta, logic, brain | 0.9 |
+| sims | simulate, predict, monte_carlo | 0.85 |
+| embedding | embed, store | 0.8 |
+| swarm | forage, hive, swarm_nudge | 0.8 |
+| search | search, query | 0.75 |
+| battle | validate, arena | 0.7 |
+| creative | generate, remix | 0.6 |
+| vision | scan, detect, ocr | 0.5 |
+| governance | audit, policy, compliance | 0.4 |
+| ops | health, deploy, status | 0.3 |
 
-### Module 1: The Input Valve
+Weights influence load balancing and scaling priority.
 
-Identify the 99% of inputs that require Zero Joules. Run the command: _"Status Quo Maintained. Zero Joules Allocated."_
+### Layer 2: Vector Zone Router
 
-### Module 2: The Rendering Studio (Active Neutrality)
+For queries with semantic content, the conductor computes a **3D spatial zone** to optimize locality:
 
-For the 1% target objectives, enter the "Simulation Sandbox." Do not act until the internal simulation is frictionless and high-resolution.
+| Zone ID | Coordinate | Triggers |
+|---------|-----------|----------|
+| z-security | [0.8, -0.2, 0.5] | security, pqc, auth, encrypt |
+| z-frontend | [-0.6, 0.9, 0.1] | react, ui, css, frontend |
+| z-ops | [0.3, 0.3, -0.8] | deploy, docker, cloud, infra |
+| z-commerce | [-0.1, -0.7, 0.6] | billing, stripe, payment |
+| z-general | [0, 0, 0] | fallback |
 
-### Module 3: The Pulse (High-Magnitude Action)
+This enables **zone-aware routing** — queries about security hit security-specialized nodes, UI queries hit frontend-specialized nodes.
 
-Execute with Violence of Action. Zero multitasking. Apply the fully charged energy signature to a single dense vector.
+### Layer 3: Pattern Engine
 
-### Module 4: The Sync Check
+Known optimization paths are applied automatically:
 
-When reality shifts, run: _"Data Refresh."_ Discard the obsolete snapshot and return to Module 2 to re-render using the new data.
+| Pattern | Strategy | Cache | Priority |
+|---------|----------|-------|----------|
+| chat | stream-first | No | High |
+| analyze | batch-friendly | Yes | Medium |
+| embed | cache-embeddings | Yes | Low |
+| search | zone-first | Yes | High |
+| complete | context-window | No | Medium |
+| refactor | diff-only | No | Low |
+| generate | parallel-variants | No | Medium |
+| validate | deterministic | Yes | High |
+| simulate | monte-carlo | No | High |
 
----
+## Arena Mode
 
-## The HeadyField & HeadyLegacy Protocols
+When a task is classified as `battle` or explicitly invoked via Arena Mode:
 
-### HeadyField (The Regenerative Oracle)
+1. **All 20 AI nodes** receive the same prompt simultaneously
+2. Each node produces an independent response
+3. Responses are scored on: correctness, latency, creativity, and code quality
+4. The **winning response** is returned to the user
+5. Node rankings are updated in the **leaderboard**
 
-- **Concept:** A truth layer utilizing IoT sensors in agricultural fields, signing soil health data cryptographically, and writing telemetry to a decentralized ledger.
-- **Architecture:** MQTT Listener (Mosquitto) → Time-Series DB (InfluxDB) → Custom Python Oracle (Verification) → Visualization (Grafana).
+This creates a competitive pressure that continuously surfaces the best reasoning path for each task type.
 
-### HeadyLegacy (Sovereign Succession)
+## HCFP Auto-Success Pipeline
 
-- **Concept:** A "Dead Man's Switch" decentralized protocol ensuring digital sovereignty and asset transfer in the event of incapacitation.
-- **Architecture:** A heartbeat monitor daemon requiring periodic cryptographic proof-of-life. Failure triggers a Shamir's Secret Sharing cascade to pre-designated "Guardians."
+The Heady Core Functionality Platform (HCFP) runs a 9-stage pipeline:
 
----
+1. **Channel Entry** — Request ingestion and classification
+2. **Ingest** — Payload validation and normalization
+3. **Plan** — Monte Carlo readiness simulation
+4. **Execute** — Bounded parallelism (max 6 concurrent tasks)
+5. **Recover** — Compensation hooks + circuit breakers
+6. **Self-Critique** — Output quality assessment
+7. **Optimize** — Performance tuning
+8. **Finalize** — Result packaging and delivery
+9. **Monitor** — Feedback loop and drift detection
 
-## Architectural Refinements Identified via Deep Scan
+## Memory Architecture
 
-1. **Decentralization of Monoliths**: Continued dismantling of `heady-manager.js` into specialized routing layers (already underway with Wave 4/5).
-2. **Unified Build Workflows**: Deprecating duplicate `hcautobuild` scripts in favor of a single unified pipeline.
-3. **Advanced MCP Skills**:
-   - **AST Parser Tool**: For programmatic, syntax-safe refactoring of legacy code.
-   - **Headless Browser**: Playwright/Puppeteer nodes for visual DOM-reading and QA.
-   - **Semantic Graph Memory**: Evolving from linear chat to structural Neo4j/Qdrant memory (implemented in Wave 3/4).
+### DuckDB Vector Memory V2
+
+Production-grade local vector database:
+
+- **Table:** `conversation_vectors` (id, ts, role, content, embedding, token_count, session_id, metadata)
+- **Index:** HNSW (M=16, ef_construction=200)
+- **Search:** `list_cosine_similarity()` with fallback to recency-based retrieval
+- **Capacity:** 10,000+ conversation turns per session
+
+### Knowledge Vault
+
+Structured knowledge store synced with Notion:
+
+- 11 organized notebook pages
+- Bi-directional sync with incremental cursors
+- Embedding-based semantic search
+
+## Defense-in-Depth Security
+
+Every request passes through 4 defense layers before reaching any AI node:
+
+1. **Rate Limiter** — Redis sliding-window (120 req/min for Pro, auto-ban on violation)
+2. **PQC Handshake** — ML-KEM key encapsulation + ML-DSA signatures
+3. **mTLS** — Mutual TLS for all inter-service mesh communications
+4. **IP Classification** — Trade secret tiering (PUBLIC → INTERNAL → PROPRIETARY → RESTRICTED)
+
+## The 20 AI Nodes
+
+| Node | Specialization |
+|------|---------------|
+| HeadyBrain | Primary reasoning engine |
+| HeadyReasoner | Deep analytical tasks |
+| HeadyCoder | Full-stack code generation |
+| HeadyVinci | Predictive caching & pattern recognition |
+| HeadyLens | Computer vision & image analysis |
+| HeadySentinel | PQC security compliance |
+| HeadyArchitect | Systems design |
+| HeadyAnalyst | Data telemetry |
+| HeadyValidator | Quality assurance |
+| HeadyOps | Infrastructure operations |
+| HeadyScribe | Documentation generation |
+| HeadyDesigner | UI/UX design |
+| HeadyGrowth | Marketing & growth strategy |
+| HeadyPrime | Orchestrator / supervisor |
+| HeadyBuddy | Personal AI companion |
+| HeadyEdge | Edge-native inference |
+| HeadyMultimodal | Cross-modal (vision, audio, text) |
+| HeadyCreative | Generative art & content |
+| HeadyCompliance | Legal & regulatory |
+| HeadySwarm | Distributed hive intelligence |
