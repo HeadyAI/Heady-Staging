@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            width: 360px;
+            min-height: 420px;
+            font-family: 'Inter', system-ui, sans-serif;
+            background: #0d0e17;
+            color: #e2e8f0;
+        }
+
+        .header {
+            padding: 16px;
+            background: linear-gradient(135deg, #7C3AED, #EC4899);
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 2px;
+        }
+
+        .header p {
+            font-size: .65rem;
+            color: rgba(255, 255, 255, .7);
+            letter-spacing: .1em;
+            text-transform: uppercase;
+        }
+
+        .status {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 8px;
+            background: rgba(0, 0, 0, .2);
+            font-size: .7rem;
+            color: rgba(255, 255, 255, .6);
+        }
+
+        .dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #57F287;
+            box-shadow: 0 0 6px #57F287;
+        }
+
+        .groups {
+            padding: 8px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 6px;
+        }
+
+        .group {
+            padding: 10px 6px;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, .04);
+            border: 1px solid rgba(255, 255, 255, .06);
+            text-align: center;
+            cursor: pointer;
+            transition: all .2s;
+            font-size: .65rem;
+        }
+
+        .group:hover {
+            background: rgba(124, 58, 237, .15);
+            border-color: rgba(124, 58, 237, .3);
+        }
+
+        .group.active {
+            background: rgba(124, 58, 237, .2);
+            border-color: #7C3AED;
+        }
+
+        .group-icon {
+            font-size: 1.2rem;
+            margin-bottom: 4px;
+        }
+
+        .group-name {
+            font-weight: 600;
+            color: #C084FC;
+        }
+
+        .chat {
+            padding: 8px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .messages {
+            flex: 1;
+            max-height: 200px;
+            overflow-y: auto;
+            padding: 4px;
+            margin-bottom: 8px;
+        }
+
+        .msg {
+            padding: 6px 10px;
+            border-radius: 8px;
+            margin-bottom: 4px;
+            font-size: .78rem;
+            line-height: 1.5;
+            animation: fadeIn .2s;
+        }
+
+        .msg.bot {
+            background: rgba(124, 58, 237, .1);
+            color: #e2e8f0;
+        }
+
+        .msg.user {
+            background: rgba(87, 242, 135, .1);
+            color: #e2e8f0;
+            text-align: right;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(4px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .input-row {
+            display: flex;
+            gap: 6px;
+        }
+
+        .input-row input {
+            flex: 1;
+            background: rgba(255, 255, 255, .06);
+            border: 1px solid rgba(255, 255, 255, .08);
+            border-radius: 8px;
+            padding: 10px;
+            color: #fff;
+            font-size: .82rem;
+            outline: none;
+            font-family: inherit;
+        }
+
+        .input-row input:focus {
+            border-color: rgba(124, 58, 237, .4);
+        }
+
+        .send {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            background: #7C3AED;
+            border: none;
+            color: #fff;
+            cursor: pointer;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .send:hover {
+            background: #6D28D9;
+        }
+
+        .footer {
+            padding: 8px;
+            text-align: center;
+            font-size: .6rem;
+            color: rgba(255, 255, 255, .3);
+            border-top: 1px solid rgba(255, 255, 255, .06);
+        }
+
+        .footer a {
+            color: #C084FC;
+            text-decoration: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <h1>🐝 Heady AI</h1>
+        <p>Intelligence Layer</p>
+    </div>
+    <div class="status"><span class="dot"></span> Connected · 9 service groups</div>
+
+    <div class="groups" id="groups"></div>
+
+    <div class="chat">
+        <div class="messages" id="messages">
+            <div class="msg bot">Hey! Select a service group above or just type anything. I'll route it to the right
+                place.</div>
+        </div>
+        <div class="input-row">
+            <input type="text" id="input" placeholder="Ask Heady anything..." autofocus>
+            <button class="send" id="send">➤</button>
+        </div>
+    </div>
+
+    <div class="footer">
+        <a href="https://headyme.com" target="_blank">headyme.com</a> · <a href="https://headymcp.com"
+            target="_blank">MCP Hub</a> · Ctrl+Shift+H
+    </div>
+
+    <script>
+        const GROUPS = [
+            { id: 'swarm', icon: '🐝', name: 'Swarm', tag: '[SWARM TASK]' },
+            { id: 'code', icon: '⚡', name: 'Code', tag: '[CODE TASK]' },
+            { id: 'battle', icon: '⚔️', name: 'Battle', tag: '[BATTLE]' },
+            { id: 'creative', icon: '🎨', name: 'Creative', tag: '[CREATIVE]' },
+            { id: 'sims', icon: '🎲', name: 'Simulate', tag: '[SIMULATION]' },
+            { id: 'audit', icon: '📋', name: 'Audit', tag: '[AUDIT]' },
+            { id: 'brain', icon: '🧠', name: 'Brain', tag: '[INTELLIGENCE]' },
+            { id: 'lens', icon: '🔍', name: 'Lens', tag: '[VISION]' },
+            { id: 'decompose', icon: '🔀', name: 'Decompose', tag: '[DECOMPOSE]' },
+        ];
+
+        let activeGroup = null;
+        const groupsEl = document.getElementById('groups');
+        const msgsEl = document.getElementById('messages');
+        const inputEl = document.getElementById('input');
+
+        // Render groups
+        GROUPS.forEach(g => {
+            const el = document.createElement('div');
+            el.className = 'group';
+            el.innerHTML = `<div class="group-icon">${g.icon}</div><div class="group-name">${g.name}</div>`;
+            el.onclick = () => {
+                document.querySelectorAll('.group').forEach(e => e.classList.remove('active'));
+                el.classList.add('active');
+                activeGroup = g;
+                inputEl.placeholder = `${g.icon} ${g.name}: describe your task...`;
+                inputEl.focus();
+            };
+            groupsEl.appendChild(el);
+        });
+
+        function addMsg(text, role) {
+            const el = document.createElement('div');
+            el.className = `msg ${role}`;
+            el.textContent = text;
+            msgsEl.appendChild(el);
+            msgsEl.scrollTop = msgsEl.scrollHeight;
+        }
+
+        async function send() {
+            const text = inputEl.value.trim();
+            if (!text) return;
+            inputEl.value = '';
+            addMsg(text, 'user');
+
+            const tag = activeGroup ? `${activeGroup.tag} ` : '';
+            try {
+                chrome.runtime.sendMessage(
+                    { type: 'heady-api', message: tag + text },
+                    (res) => {
+                        if (res?.ok) {
+                            const reply = res.data.response || res.data.text || JSON.stringify(res.data);
+                            addMsg(reply, 'bot');
+                        } else {
+                            addMsg(`⚠️ ${res?.error || 'Connection failed'}`, 'bot');
+                        }
+                    }
+                );
+            } catch (e) {
+                addMsg(`⚠️ ${e.message}`, 'bot');
+            }
+        }
+
+        inputEl.addEventListener('keydown', e => { if (e.key === 'Enter') send(); });
+        document.getElementById('send').addEventListener('click', send);
+
+        // Listen for context menu queries
+        chrome.runtime.onMessage.addListener((msg) => {
+            if (msg.type === 'heady-query') {
+                inputEl.value = msg.message;
+                send();
+            }
+        });
+    </script>
+</body>
+
+</html>

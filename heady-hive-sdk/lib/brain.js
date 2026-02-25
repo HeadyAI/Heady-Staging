@@ -8,14 +8,17 @@ class HeadyBrain {
     async chat(prompt, opts = {}) {
         // Try gateway-direct first if available
         if (this._c.gateway) {
-            return this._c.gateway.chat(prompt, {
-                system: opts.system,
-                priority: opts.priority || "medium",
-                temperature: opts.temperature,
-                maxTokens: opts.maxTokens || 2048,
-            });
+            try {
+                const gwRes = await this._c.gateway.chat(prompt, {
+                    system: opts.system,
+                    priority: opts.priority || "medium",
+                    temperature: opts.temperature,
+                    maxTokens: opts.maxTokens || 2048,
+                });
+                if (gwRes.ok) return gwRes;
+            } catch { /* gateway failed — fall through to Manager */ }
         }
-        // Fallback to HeadyManager HTTP
+        // Fallback to HeadyManager HTTP (always-on backend)
         return this._c.post("/api/brain/chat", {
             message: prompt, model: opts.model || "heady-brain",
             max_tokens: opts.maxTokens || 2048,

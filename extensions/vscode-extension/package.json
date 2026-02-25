@@ -1,0 +1,132 @@
+{
+    "name": "heady-ai",
+    "displayName": "Heady AI — Intelligence Layer",
+    "description": "AI assistant powered by the Heady Intelligence Layer. 9 service groups, 77 nodes. Chat, code, battle-validate, and create from your editor.",
+    "version": "1.0.0",
+    "publisher": "HeadyAI",
+    "icon": "icon.png",
+    "engines": {
+        "vscode": "^1.85.0"
+    },
+    "categories": [
+        "AI",
+        "Machine Learning",
+        "Programming Languages",
+        "Other"
+    ],
+    "keywords": [
+        "ai",
+        "heady",
+        "code assistant",
+        "mcp",
+        "ai chat"
+    ],
+    "activationEvents": [
+        "onStartupFinished"
+    ],
+    "main": "./extension.js",
+    "contributes": {
+        "commands": [
+            {
+                "command": "heady.chat",
+                "title": "Heady: Chat",
+                "category": "Heady"
+            },
+            {
+                "command": "heady.explain",
+                "title": "Heady: Explain Selection",
+                "category": "Heady"
+            },
+            {
+                "command": "heady.refactor",
+                "title": "Heady: Refactor Selection",
+                "category": "Heady"
+            },
+            {
+                "command": "heady.battle",
+                "title": "Heady: Battle-Validate Selection",
+                "category": "Heady"
+            },
+            {
+                "command": "heady.swarm",
+                "title": "Heady: Swarm Task",
+                "category": "Heady"
+            },
+            {
+                "command": "heady.creative",
+                "title": "Heady: Creative Generation",
+                "category": "Heady"
+            },
+            {
+                "command": "heady.audit",
+                "title": "Heady: Security Audit",
+                "category": "Heady"
+            },
+            {
+                "command": "heady.simulate",
+                "title": "Heady: Monte Carlo Simulate",
+                "category": "Heady"
+            }
+        ],
+        "menus": {
+            "editor/context": [
+                {
+                    "command": "heady.explain",
+                    "group": "heady@1",
+                    "when": "editorHasSelection"
+                },
+                {
+                    "command": "heady.refactor",
+                    "group": "heady@2",
+                    "when": "editorHasSelection"
+                },
+                {
+                    "command": "heady.battle",
+                    "group": "heady@3",
+                    "when": "editorHasSelection"
+                }
+            ]
+        },
+        "viewsContainers": {
+            "activitybar": [
+                {
+                    "id": "heady-sidebar",
+                    "title": "Heady AI",
+                    "icon": "icon.svg"
+                }
+            ]
+        },
+        "views": {
+            "heady-sidebar": [
+                {
+                    "id": "heady.chatView",
+                    "name": "Chat",
+                    "type": "webview"
+                }
+            ]
+        },
+        "configuration": {
+            "title": "Heady AI",
+            "properties": {
+                "heady.apiUrl": {
+                    "type": "string",
+                    "default": "http://127.0.0.1:3301",
+                    "description": "HeadyManager API URL"
+                },
+                "heady.apiKey": {
+                    "type": "string",
+                    "default": "",
+                    "description": "Heady API key (optional for local)"
+                }
+            }
+        },
+        "keybindings": [
+            {
+                "command": "heady.chat",
+                "key": "ctrl+shift+h",
+                "mac": "cmd+shift+h"
+            }
+        ]
+    },
+    "dependencies": {}
+}

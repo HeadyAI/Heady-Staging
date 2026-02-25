@@ -1,0 +1,50 @@
+name: heady-mcp-server
+description: >
+  Heady MCP Server — Connect any MCP client to the Heady Intelligence Layer.
+  60+ AI tools across 9 service groups: swarm, code, battle, creative, simulate,
+  audit, brain, lens, and decompose. Supports stdio and SSE transports.
+version: 1.0.0
+author: HeadyAI
+homepage: https://headymcp.com
+repository: https://github.com/HeadyAI/heady-mcp-server
+license: MIT
+tags:
+  - ai
+  - heady
+  - intelligence
+  - code-generation
+  - reasoning
+  - mcp-server
+icon: https://headyme.com/icon-512.png
+
+# How to run
+startCommand:
+  type: stdio
+  configSchema:
+    type: object
+    properties:
+      HEADY_URL:
+        type: string
+        default: http://127.0.0.1:3301
+        description: HeadyManager API URL
+  command: npx
+  args:
+    - -y
+    - heady-mcp-server
+
+# Alternative SSE transport
+transports:
+  - type: sse
+    url: http://localhost:3302/sse
+
+tools:
+  - heady_chat
+  - heady_swarm
+  - heady_code
+  - heady_battle
+  - heady_creative
+  - heady_simulate
+  - heady_audit
+  - heady_brain
+  - heady_analyze
+  - heady_health

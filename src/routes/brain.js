@@ -305,8 +305,11 @@ const CLAUDE_ORGS = [
     },
 ];
 
-// ── Usage Tracker ──
-const USAGE_PATH = path.join(DATA_DIR, "claude-usage.json");
+// ──
+const { budgetService } = require("../policy-service");
+
+// Usage tracking paths
+const USAGE_PATH = path.join(__dirname, "../../data/claude-usage.json");
 let claudeUsage = { totalCost: 0, requests: 0, byModel: {}, byOrg: {}, history: [] };
 try { if (fs.existsSync(USAGE_PATH)) claudeUsage = JSON.parse(fs.readFileSync(USAGE_PATH, "utf8")); } catch { }
 
@@ -326,6 +329,11 @@ function trackClaudeUsage(model, inputTokens, outputTokens, orgName, thinkingTok
     claudeUsage.byOrg[orgName] = (claudeUsage.byOrg[orgName] || 0) + cost;
     claudeUsage.history.push({ model, cost: +cost.toFixed(6), inputTokens, outputTokens, thinkingTokens, org: orgName, ts: new Date().toISOString() });
     if (claudeUsage.history.length > 500) claudeUsage.history = claudeUsage.history.slice(-500);
+
+    // Integrate with BudgetService for unified governance
+    if (budgetService) {
+        budgetService.recordUsage('ORG', orgName, cost, { model, inputTokens, outputTokens }).catch(() => { });
+    }
 
     try { fs.writeFileSync(USAGE_PATH, JSON.stringify(claudeUsage, null, 2)); } catch { }
     return cost;

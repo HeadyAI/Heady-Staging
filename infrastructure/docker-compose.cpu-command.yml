@@ -1,0 +1,99 @@
+version: "3.8"
+
+# ═══════════════════════════════════════════════════════════════
+# HeadySystems CPU Command Center
+# Bossgame Mini PC (Debian) — No GPU Required
+# Role: Routing, Caching, Monitoring, Telemetry
+# ═══════════════════════════════════════════════════════════════
+
+services:
+  # ─── THE BRAIN: LiteLLM Gateway ───
+  # Routes traffic between Colab Pro+ (GPU) and Groq (failover)
+  litellm:
+    image: ghcr.io/berriai/litellm:main-latest
+    container_name: heady-gateway
+    restart: always
+    ports:
+      - "4000:4000"
+    volumes:
+      - ./config.yaml:/app/config.yaml
+      - ./logs:/app/logs
+    command: [ "--config", "/app/config.yaml" ]
+    depends_on:
+      - redis
+    env_file: .env
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:4000/health" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # ─── THE MEMORY: Redis ───
+  # Semantic caching, rate limit tracking, health state
+  redis:
+    image: redis:alpine
+    container_name: heady-redis
+    restart: always
+    command: redis-server --save 60 1 --loglevel warning
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+
+  # ─── THE BRIDGE: Cloudflare Tunnel ───
+  # Zero Trust secure exposure — no open ports
+  tunnel:
+    image: cloudflare/cloudflared:latest
+    container_name: heady-tunnel
+    restart: always
+    command: tunnel run
+    environment:
+      - TUNNEL_TOKEN=${TUNNEL_TOKEN}
+    healthcheck:
+      test: [ "CMD", "curl", "-sf", "https://1.1.1.1" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # ─── STATUS DASHBOARD: Uptime Kuma ───
+  # Visual monitoring for Colab nodes, API endpoints, websites
+  # Access: http://localhost:3001 (or status.headysystems.com via tunnel)
+  uptime-kuma:
+    image: louislam/uptime-kuma:1
+    container_name: heady-status
+    restart: always
+    ports:
+      - "3001:3001"
+    volumes:
+      - uptime_data:/app/data
+
+  # ─── LOG VIEWER: Dozzle ───
+  # Real-time streaming logs — debug routing issues instantly
+  # Access: http://localhost:8080 (or logs.headysystems.com via tunnel)
+  dozzle:
+    image: amir20/dozzle:latest
+    container_name: heady-logs
+    restart: always
+    ports:
+      - "8080:8080"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      DOZZLE_LEVEL: info
+
+  # ─── AUTO-UPDATER: Watchtower ───
+  # Pulls new images hourly, removes old ones
+  watchtower:
+    image: containrrr/watchtower
+    container_name: heady-updater
+    restart: always
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    command: --interval 3600 --cleanup
+
+volumes:
+  redis_data:
+  uptime_data:

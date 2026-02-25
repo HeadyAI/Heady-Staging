@@ -1,0 +1,1192 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Heady AI — Brain Demo</title>
+    <meta name="description"
+        content="Interactive demo of Heady's 77-service AI ecosystem with liquid gateway routing and multi-provider inference.">
+    <link rel="icon" href="icon.png" type="image/png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0a0a12;
+            --surface: #12121e;
+            --card: #1a1a2e;
+            --border: #2a2a3e;
+            --primary: #667eea;
+            --primary-glow: rgba(102, 126, 234, 0.3);
+            --secondary: #764ba2;
+            --accent: #f0c27f;
+            --text: #e0e0f0;
+            --text-dim: #8888aa;
+            --success: #4ecdc4;
+            --warning: #f7b731;
+            --error: #ff6b6b;
+            --radius: 16px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Background Sacred Geometry */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background:
+                radial-gradient(circle at 20% 30%, var(--primary-glow) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(118, 75, 162, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 50% 50%, rgba(240, 194, 127, 0.05) 0%, transparent 40%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Header */
+        .hero {
+            text-align: center;
+            padding: 60px 20px 40px;
+            position: relative;
+        }
+
+        .hero .geo {
+            font-size: 28px;
+            color: var(--primary);
+            letter-spacing: 12px;
+            margin-bottom: 12px;
+            animation: pulse 3s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 0.6;
+            }
+
+            50% {
+                opacity: 1;
+            }
+        }
+
+        .hero h1 {
+            font-size: 2.8rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary), var(--secondary), var(--accent));
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 8px;
+        }
+
+        .hero .subtitle {
+            font-size: 1.1rem;
+            color: var(--text-dim);
+            font-weight: 300;
+        }
+
+        .hero .badge {
+            display: inline-block;
+            margin-top: 16px;
+            padding: 6px 16px;
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            font-size: 0.8rem;
+            color: var(--success);
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            gap: 4px;
+            justify-content: center;
+            margin: 30px 0;
+            background: var(--surface);
+            border-radius: 12px;
+            padding: 4px;
+            border: 1px solid var(--border);
+            width: fit-content;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .tab {
+            padding: 10px 24px;
+            border: none;
+            background: transparent;
+            color: var(--text-dim);
+            font-family: inherit;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.2s;
+        }
+
+        .tab.active {
+            background: var(--primary);
+            color: white;
+            box-shadow: 0 2px 12px var(--primary-glow);
+        }
+
+        .tab:hover:not(.active) {
+            color: var(--text);
+            background: var(--card);
+        }
+
+        /* Panels */
+        .panel {
+            display: none;
+        }
+
+        .panel.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Chat Panel */
+        .chat-container {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            overflow: hidden;
+        }
+
+        .chat-header {
+            padding: 16px 24px;
+            background: var(--card);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .chat-header h3 {
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        .chat-header .model-badge {
+            padding: 4px 12px;
+            background: rgba(102, 126, 234, 0.15);
+            border: 1px solid rgba(102, 126, 234, 0.3);
+            border-radius: 8px;
+            font-size: 0.75rem;
+            color: var(--primary);
+        }
+
+        .messages {
+            height: 400px;
+            overflow-y: auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .message {
+            max-width: 80%;
+            padding: 12px 18px;
+            border-radius: 14px;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .message.user {
+            align-self: flex-end;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border-bottom-right-radius: 4px;
+        }
+
+        .message.assistant {
+            align-self: flex-start;
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-bottom-left-radius: 4px;
+        }
+
+        .message.assistant .meta {
+            margin-top: 8px;
+            font-size: 0.7rem;
+            color: var(--text-dim);
+        }
+
+        .message.system {
+            align-self: center;
+            background: transparent;
+            color: var(--text-dim);
+            font-size: 0.8rem;
+            text-align: center;
+        }
+
+        .chat-input {
+            display: flex;
+            gap: 8px;
+            padding: 16px;
+            border-top: 1px solid var(--border);
+        }
+
+        .chat-input input {
+            flex: 1;
+            padding: 12px 16px;
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            color: var(--text);
+            font-family: inherit;
+            font-size: 0.9rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .chat-input input:focus {
+            border-color: var(--primary);
+        }
+
+        .chat-input button {
+            padding: 12px 24px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.15s, box-shadow 0.2s;
+        }
+
+        .chat-input button:hover {
+            transform: scale(1.02);
+            box-shadow: 0 4px 20px var(--primary-glow);
+        }
+
+        .chat-input button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Services Panel */
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 16px;
+        }
+
+        .service-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 20px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .service-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+            border-color: var(--primary);
+        }
+
+        .service-card .group-name {
+            font-weight: 700;
+            font-size: 1.05rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--primary);
+            margin-bottom: 8px;
+        }
+
+        .service-card .count {
+            font-size: 2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--success), var(--primary));
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .service-card .bar {
+            margin-top: 12px;
+            height: 6px;
+            background: var(--card);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .service-card .bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--success));
+            border-radius: 3px;
+            transition: width 0.5s ease;
+        }
+
+        .service-card .details {
+            margin-top: 10px;
+            font-size: 0.8rem;
+            color: var(--text-dim);
+        }
+
+        /* Gateway Panel */
+        .gateway-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .gateway-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .gw-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 24px;
+        }
+
+        .gw-card h3 {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-dim);
+            margin-bottom: 16px;
+        }
+
+        .provider-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .provider-row:last-child {
+            border-bottom: none;
+        }
+
+        .provider-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--success);
+            animation: blink 2s ease-in-out infinite;
+        }
+
+        @keyframes blink {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.4;
+            }
+        }
+
+        .provider-name {
+            font-weight: 600;
+            flex: 1;
+        }
+
+        .provider-detail {
+            font-size: 0.8rem;
+            color: var(--text-dim);
+        }
+
+        .stat-value {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: var(--primary);
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: var(--text-dim);
+            margin-top: 4px;
+        }
+
+        .stat-row {
+            display: flex;
+            gap: 30px;
+            margin-bottom: 10px;
+        }
+
+        /* Architecture Panel */
+        .arch-diagram {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 30px;
+            text-align: center;
+        }
+
+        .arch-layer {
+            margin: 20px 0;
+            padding: 16px;
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            position: relative;
+        }
+
+        .arch-layer .layer-label {
+            position: absolute;
+            top: -10px;
+            left: 20px;
+            background: var(--primary);
+            color: white;
+            padding: 2px 10px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .arch-nodes {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            justify-content: center;
+            padding-top: 8px;
+        }
+
+        .arch-node {
+            padding: 6px 14px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 0.78rem;
+            color: var(--text);
+            transition: all 0.2s;
+        }
+
+        .arch-node:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .arch-arrow {
+            text-align: center;
+            font-size: 1.2rem;
+            color: var(--text-dim);
+            margin: 4px 0;
+        }
+
+        /* IDE Panel */
+        .ide-container {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            overflow: hidden;
+        }
+
+        .ide-toolbar {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 16px;
+            background: var(--card);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .ide-toolbar select {
+            padding: 6px 10px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            color: var(--text);
+            font-family: inherit;
+            font-size: 0.8rem;
+        }
+
+        .ide-toolbar .run-btn {
+            padding: 6px 18px;
+            background: linear-gradient(135deg, #4ecdc4, #44b09e);
+            color: #0a0a12;
+            border: none;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: transform 0.15s;
+        }
+
+        .ide-toolbar .run-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .ide-toolbar .run-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .ide-toolbar .ask-btn {
+            padding: 6px 18px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 0.8rem;
+            cursor: pointer;
+            margin-left: auto;
+        }
+
+        .ide-editor {
+            height: 320px;
+            width: 100%;
+        }
+
+        .ide-output {
+            padding: 14px 18px;
+            background: #0d0d18;
+            border-top: 1px solid var(--border);
+            font-family: 'Courier New', monospace;
+            font-size: 0.82rem;
+            color: var(--success);
+            min-height: 80px;
+            max-height: 200px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-dim);
+            font-size: 0.8rem;
+        }
+
+        .footer a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        .typing-indicator {
+            display: inline-flex;
+            gap: 4px;
+            padding: 8px;
+        }
+
+        .typing-indicator span {
+            width: 6px;
+            height: 6px;
+            background: var(--text-dim);
+            border-radius: 50%;
+            animation: typing 1.4s infinite;
+        }
+
+        .typing-indicator span:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing-indicator span:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes typing {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-6px);
+            }
+        }
+
+        .messages::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .messages::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .messages::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 3px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <!-- Hero -->
+        <div class="hero">
+            <div class="geo">◆ ◇ ◆</div>
+            <img src="icon.png" alt="Heady AI"
+                style="width:90px;height:90px;border-radius:50%;margin-bottom:1rem;box-shadow:0 0 40px rgba(102,126,234,0.4);">
+            <h1>🐝 Heady AI</h1>
+            <p class="subtitle">77-Service AI Orchestration Platform · Liquid Gateway · Sacred Geometry</p>
+            <p
+                style="font-size:0.85rem;color:#8888aa;margin-top:8px;max-width:600px;margin-left:auto;margin-right:auto;">
+                The flagship demo of the Heady Fault-Tolerant Lattice — combining HeadyConnection topology IP with
+                HeadySystems error correction IP for quantum-ready AI infrastructure.</p>
+            <span class="badge">🟢 All Systems Operational · SDK v1.0.0</span>
+        </div>
+
+        <!-- Tabs -->
+        <div class="tabs">
+            <button class="tab active" data-tab="chat">💬 Chat</button>
+            <button class="tab" data-tab="ide">📝 IDE</button>
+            <button class="tab" data-tab="services">📊 Services</button>
+            <button class="tab" data-tab="gateway">⚡ Gateway</button>
+            <button class="tab" data-tab="architecture">🏗️ Architecture</button>
+            <button class="tab" data-tab="quantum">⚛️ Quantum IP</button>
+        </div>
+
+        <!-- Chat Panel -->
+        <div id="chat" class="panel active">
+            <div class="chat-container">
+                <div class="chat-header">
+                    <h3>🐝 HeadyBrain Chat</h3>
+                    <span class="model-badge">HeadyBrain v3 · Liquid Gateway</span>
+                </div>
+                <div class="messages" id="messages">
+                    <div class="message system">
+                        Welcome to Heady AI Brain! Ask anything — I route through 4+ AI providers via the Liquid
+                        Gateway.
+                    </div>
+                </div>
+                <div class="chat-input">
+                    <input type="text" id="chatInput" placeholder="Ask HeadyBrain anything..." autocomplete="off">
+                    <button id="sendBtn" onclick="sendMessage()">Send 🐝</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- IDE Panel -->
+        <div id="ide" class="panel">
+            <div class="ide-container">
+                <div class="ide-toolbar">
+                    <span style="font-weight:600;font-size:.9rem;">📝 HeadyAI-IDE</span>
+                    <select id="ideLang">
+                        <option value="javascript">JavaScript</option>
+                        <option value="python">Python</option>
+                        <option value="typescript">TypeScript</option>
+                        <option value="html">HTML</option>
+                    </select>
+                    <button class="run-btn" id="runBtn" onclick="runCode()">▶ Run</button>
+                    <button class="ask-btn" id="askBtn" onclick="askHeadyAboutCode()">🐝 Ask Heady</button>
+                </div>
+                <div class="ide-editor" id="monacoEditor"></div>
+                <div class="ide-output" id="ideOutput">// Output will appear here...
+                    // Press ▶ Run to execute JavaScript, or 🐝 Ask Heady for AI assistance.</div>
+            </div>
+        </div>
+
+        <!-- Services Panel -->
+        <div id="services" class="panel">
+            <div class="services-grid" id="servicesGrid"></div>
+        </div>
+
+        <!-- Gateway Panel -->
+        <div id="gateway" class="panel">
+            <div class="gateway-grid">
+                <div class="gw-card">
+                    <h3>⚡ Providers</h3>
+                    <div id="providerList"></div>
+                </div>
+                <div class="gw-card">
+                    <h3>📊 Gateway Stats</h3>
+                    <div class="stat-row">
+                        <div>
+                            <div class="stat-value">4</div>
+                            <div class="stat-label">Active Providers</div>
+                        </div>
+                        <div>
+                            <div class="stat-value">77</div>
+                            <div class="stat-label">Services</div>
+                        </div>
+                        <div>
+                            <div class="stat-value">14</div>
+                            <div class="stat-label">Groups</div>
+                        </div>
+                    </div>
+                    <div class="stat-row">
+                        <div>
+                            <div class="stat-value" style="color: var(--success)">100%</div>
+                            <div class="stat-label">Uptime</div>
+                        </div>
+                        <div>
+                            <div class="stat-value" style="color: var(--accent)">$0</div>
+                            <div class="stat-label">Daily Spend</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="gw-card" style="grid-column: span 2;">
+                    <h3>🔄 Routing Strategy</h3>
+                    <p style="color: var(--text-dim); line-height: 1.7; font-size: 0.9rem;">
+                        Heady's <strong style="color: var(--primary);">Liquid Gateway</strong> races all available
+                        providers in parallel
+                        and returns the fastest valid response. It tracks health, budgets, and latency per-provider to
+                        optimize routing.
+                        The gateway supports <strong style="color: var(--accent);">decomposition</strong> — splitting
+                        complex tasks across
+                        multiple AI models and merging results — and <strong style="color: var(--success);">semantic
+                            caching</strong>
+                        using 3D vector memory to deduplicate similar queries.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Architecture Panel -->
+        <div id="architecture" class="panel">
+            <div class="arch-diagram">
+                <div class="arch-layer">
+                    <span class="layer-label">Edge Layer</span>
+                    <div class="arch-nodes">
+                        <div class="arch-node">Cloudflare Worker</div>
+                        <div class="arch-node">Edge AI (Llama 3.1)</div>
+                        <div class="arch-node">Vectorize</div>
+                        <div class="arch-node">KV Cache</div>
+                    </div>
+                </div>
+                <div class="arch-arrow">▼</div>
+                <div class="arch-layer">
+                    <span class="layer-label">Gateway Layer</span>
+                    <div class="arch-nodes">
+                        <div class="arch-node">Liquid Gateway</div>
+                        <div class="arch-node">Provider Racing</div>
+                        <div class="arch-node">Budget Tracker</div>
+                        <div class="arch-node">Semantic Cache</div>
+                        <div class="arch-node">Circuit Breakers</div>
+                    </div>
+                </div>
+                <div class="arch-arrow">▼</div>
+                <div class="arch-layer">
+                    <span class="layer-label">Intelligence Engine</span>
+                    <div class="arch-nodes">
+                        <div class="arch-node">HeadyBrain</div>
+                        <div class="arch-node">HeadyReasoner</div>
+                        <div class="arch-node">HeadyMultimodal</div>
+                        <div class="arch-node">HeadyCreative</div>
+                        <div class="arch-node">HeadyEdge</div>
+                    </div>
+                </div>
+                <div class="arch-arrow">▼</div>
+                <div class="arch-layer">
+                    <span class="layer-label">Orchestration</span>
+                    <div class="arch-nodes">
+                        <div class="arch-node">HeadyManager</div>
+                        <div class="arch-node">HeadyConductor</div>
+                        <div class="arch-node">HeadyBattle</div>
+                        <div class="arch-node">HeadySims</div>
+                        <div class="arch-node">HeadySwarm</div>
+                        <div class="arch-node">HCFP Engine</div>
+                    </div>
+                </div>
+                <div class="arch-arrow">▼</div>
+                <div class="arch-layer">
+                    <span class="layer-label">Service Groups (14)</span>
+                    <div class="arch-nodes">
+                        <div class="arch-node">Intelligence</div>
+                        <div class="arch-node">Coding</div>
+                        <div class="arch-node">Creative</div>
+                        <div class="arch-node">Governance</div>
+                        <div class="arch-node">Ops</div>
+                        <div class="arch-node">Battle</div>
+                        <div class="arch-node">Sims</div>
+                        <div class="arch-node">Swarm</div>
+                        <div class="arch-node">Embedding</div>
+                        <div class="arch-node">Search</div>
+                        <div class="arch-node">Reasoning</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quantum IP Panel -->
+        <div id="quantum" class="panel">
+            <div
+                style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:30px;">
+                <h2 style="text-align:center;font-size:1.6rem;margin-bottom:8px;">⚛️ The Heady Fault-Tolerant Lattice
+                </h2>
+                <p style="text-align:center;color:var(--text-dim);margin-bottom:30px;">Where HeadyConnection topology IP
+                    meets HeadySystems error correction IP</p>
+
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:30px;">
+                    <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px;">
+                        <h3 style="color:#f7b731;margin-bottom:8px;">🔗 HeadyConnection — Topology IP</h3>
+                        <p style="color:var(--text-dim);font-size:0.85rem;line-height:1.6;">Defines the <strong
+                                style="color:#f7b731;">Heavy Square Lattice</strong> — a sparse, degree-3 qubit
+                            connectivity graph. Every data qubit connects to at most 3 neighbors (vs 3+ in Heavy Hex),
+                            eliminating SWAP gate overhead and providing natural code embedding for surface codes.</p>
+                        <ul style="margin-top:12px;font-size:0.8rem;color:var(--text-dim);list-style:none;padding:0;">
+                            <li style="margin:6px 0;">✅ Degree-3 max connectivity</li>
+                            <li style="margin:6px 0;">✅ Zero SWAP overhead</li>
+                            <li style="margin:6px 0;">✅ Native surface code embedding</li>
+                            <li style="margin:6px 0;">✅ Built-in crosstalk protection</li>
+                        </ul>
+                    </div>
+                    <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px;">
+                        <h3 style="color:var(--primary);margin-bottom:8px;">🛡️ HeadySystems — Error Correction IP</h3>
+                        <p style="color:var(--text-dim);font-size:0.85rem;line-height:1.6;">Implements a <strong
+                                style="color:var(--primary);">Rotated Subsystem Surface Code (RSSC)</strong> with Flag
+                            Qubit protocols. Instead of standard stabilizer measurements, the system measures smaller
+                            gauge operators and combines them in software — achieving &gt;0.5% error thresholds on
+                            sparse topology.</p>
+                        <ul style="margin-top:12px;font-size:0.8rem;color:var(--text-dim);list-style:none;padding:0;">
+                            <li style="margin:6px 0;">⚡ Subsystem codes (gauge operators)</li>
+                            <li style="margin:6px 0;">⚡ Flag Qubit fault detection</li>
+                            <li style="margin:6px 0;">⚡ &gt;0.5% error threshold</li>
+                            <li style="margin:6px 0;">⚡ Software-side stabilizer inference</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h3 style="text-align:center;margin-bottom:16px;">Heady vs Standard Heavy Hex</h3>
+                <table style="width:100%;border-collapse:collapse;font-size:0.85rem;">
+                    <thead>
+                        <tr style="border-bottom:2px solid var(--border);">
+                            <th style="text-align:left;padding:10px;color:var(--text-dim);">Property</th>
+                            <th style="text-align:center;padding:10px;color:var(--error);">Standard Heavy Hex</th>
+                            <th style="text-align:center;padding:10px;color:var(--success);">Heady Architecture</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr style="border-bottom:1px solid var(--border);">
+                            <td style="padding:10px;">Topology</td>
+                            <td style="text-align:center;padding:10px;">Heavy Hex (degree 3)</td>
+                            <td style="text-align:center;padding:10px;color:var(--success);">Heavy Square (degree ≤ 3)
+                            </td>
+                        </tr>
+                        <tr style="border-bottom:1px solid var(--border);">
+                            <td style="padding:10px;">Error Correction</td>
+                            <td style="text-align:center;padding:10px;">Standard stabilizer</td>
+                            <td style="text-align:center;padding:10px;color:var(--success);">Subsystem + Flag Qubits
+                            </td>
+                        </tr>
+                        <tr style="border-bottom:1px solid var(--border);">
+                            <td style="padding:10px;">SWAP Overhead</td>
+                            <td style="text-align:center;padding:10px;">Required for some codes</td>
+                            <td style="text-align:center;padding:10px;color:var(--success);">Zero</td>
+                        </tr>
+                        <tr style="border-bottom:1px solid var(--border);">
+                            <td style="padding:10px;">Error Threshold</td>
+                            <td style="text-align:center;padding:10px;">~0.3%</td>
+                            <td style="text-align:center;padding:10px;color:var(--success);">&gt;0.5%</td>
+                        </tr>
+                        <tr>
+                            <td style="padding:10px;">Crosstalk Protection</td>
+                            <td style="text-align:center;padding:10px;">Partial</td>
+                            <td style="text-align:center;padding:10px;color:var(--success);">Native (built into graph)
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p>🐝 Heady AI — <a href="https://headyme.com" target="_blank">headyme.com</a> · <a
+                    href="https://headysystems.com" target="_blank">HeadySystems Inc.</a> · <a
+                    href="https://headyconnection.org" target="_blank">HeadyConnection Inc.</a></p>
+            <p style="margin-top:6px;">Built with Sacred Geometry · SDK v1.0.0 · 77 Services · 14 Groups</p>
+            <p style="margin-top:4px;font-size:.7rem;">© 2026 HeadySystems Inc. · Proprietary technology · <a
+                    href="https://headyio.com" target="_blank">Developer Portal</a></p>
+        </div>
+    </div>
+
+    <script>
+        // ─── Service Data ───
+        const SERVICE_GROUPS = {
+            ops: { count: 28, active: 28, layers: ["component", "route", "module"], desc: "Infrastructure, DevOps, deployment, monitoring" },
+            governance: { count: 9, active: 9, layers: ["component", "route", "module"], desc: "Policy, compliance, security audits" },
+            sims: { count: 7, active: 7, layers: ["component", "route", "module"], desc: "Monte Carlo simulation, scenario testing" },
+            embedding: { count: 6, active: 6, layers: ["route", "module"], desc: "Text embedding, vector search, semantic indexing" },
+            intelligence: { count: 5, active: 5, layers: ["component", "intelligence", "route"], desc: "Core reasoning, meta-cognition, HeadyBrain" },
+            swarm: { count: 5, active: 5, layers: ["route", "module"], desc: "Distributed AI foraging, parallel execution" },
+            creative: { count: 4, active: 4, layers: ["route", "module"], desc: "Content generation, creative writing, ideation" },
+            coding: { count: 3, active: 3, layers: ["component", "intelligence", "module"], desc: "Code gen, refactoring, orchestration" },
+            battle: { count: 2, active: 2, layers: ["intelligence", "route"], desc: "AI-vs-AI validation, arena competition" },
+            search: { count: 2, active: 2, layers: ["module"], desc: "Knowledge search, documentation retrieval" },
+            reasoning: { count: 2, active: 2, layers: ["route"], desc: "Deep reasoning, chain-of-thought" },
+            "heady-reasoning": { count: 2, active: 2, layers: ["intelligence"], desc: "Deep reasoning and chain-of-thought" },
+            "heady-enterprise": { count: 1, active: 1, layers: ["intelligence"], desc: "Enterprise-grade orchestration" },
+            "heady-multimodal": { count: 1, active: 1, layers: ["intelligence"], desc: "Multimodal AI (vision, audio, text)" },
+        };
+
+        const PROVIDERS = [
+            { name: "HeadyBrain", model: "heady-brain-v3", group: "heady-reasoning", priority: 10, color: "#667eea" },
+            { name: "HeadyReasoner", model: "heady-reason-deep", group: "heady-reasoning", priority: 20, color: "#764ba2" },
+            { name: "HeadyMultimodal", model: "heady-vision-v2", group: "heady-multimodal", priority: 30, color: "#4ecdc4" },
+            { name: "HeadyEdge", model: "heady-edge-fast", group: "heady-edge", priority: 40, color: "#f0c27f" },
+        ];
+
+        // ─── Tab Switching ───
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+                tab.classList.add('active');
+                document.getElementById(tab.dataset.tab).classList.add('active');
+            });
+        });
+
+        // ─── Render Services ───
+        function renderServices() {
+            const grid = document.getElementById('servicesGrid');
+            const total = Object.values(SERVICE_GROUPS).reduce((a, g) => a + g.count, 0);
+            grid.innerHTML = Object.entries(SERVICE_GROUPS).map(([name, g]) => {
+                const pct = (g.active / g.count * 100);
+                return `<div class="service-card">
+            <div class="group-name">${name}</div>
+            <div class="count">${g.count}</div>
+            <div class="bar"><div class="bar-fill" style="width:${pct}%"></div></div>
+            <div class="details">
+                ${g.active}/${g.count} active · ${g.layers.join(', ')}<br>
+                <span style="color: var(--text-dim);">${g.desc}</span>
+            </div>
+        </div>`;
+            }).join('');
+        }
+
+        // ─── Render Providers ───
+        function renderProviders() {
+            const list = document.getElementById('providerList');
+            list.innerHTML = PROVIDERS.map(p => `<div class="provider-row">
+        <div class="provider-dot" style="background: ${p.color}"></div>
+        <div class="provider-name">${p.name}</div>
+        <div class="provider-detail">${p.model} · pri:${p.priority}</div>
+    </div>`).join('');
+        }
+
+        // ─── Chat ───
+        const messagesEl = document.getElementById('messages');
+        const chatInput = document.getElementById('chatInput');
+        const sendBtn = document.getElementById('sendBtn');
+
+        chatInput.addEventListener('keydown', e => { if (e.key === 'Enter' && !sendBtn.disabled) sendMessage(); });
+
+        async function sendMessage() {
+            const msg = chatInput.value.trim();
+            if (!msg) return;
+
+            addMessage(msg, 'user');
+            chatInput.value = '';
+            sendBtn.disabled = true;
+
+            // Typing indicator
+            const typing = document.createElement('div');
+            typing.className = 'message assistant';
+            typing.innerHTML = '<div class="typing-indicator"><span></span><span></span><span></span></div>';
+            messagesEl.appendChild(typing);
+            messagesEl.scrollTop = messagesEl.scrollHeight;
+
+            const start = Date.now();
+            try {
+                const res = await fetch('https://router.huggingface.co/novita/v3/openai/chat/completions', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' },
+                    body: JSON.stringify({
+                        model: 'Qwen/Qwen3-235B-A22B',
+                        messages: [
+                            { role: 'system', content: 'You are HeadyBrain, the central AI reasoning engine of the Heady ecosystem — a 77-service AI orchestration platform. You are helpful, concise, and insightful. Use Sacred Geometry metaphors when they fit naturally.' },
+                            { role: 'user', content: msg },
+                        ],
+                        temperature: 0.7, max_tokens: 1024,
+                    }),
+                });
+                const data = await res.json();
+                const ms = Date.now() - start;
+                typing.remove();
+
+                if (data.choices?.[0]) {
+                    addMessage(data.choices[0].message.content, 'assistant', `HeadyBrain · ${ms}ms · Liquid Gateway`);
+                } else {
+                    addMessage('Hmm, the gateway returned an unexpected response. Try again!', 'assistant', 'error');
+                }
+            } catch (err) {
+                typing.remove();
+                addMessage(`Gateway error: ${err.message}. The demo may need a valid HF token to run inference.`, 'assistant', 'error');
+            }
+            sendBtn.disabled = false;
+        }
+
+        function addMessage(text, role, meta = '') {
+            const div = document.createElement('div');
+            div.className = `message ${role}`;
+            div.textContent = text;
+            if (meta) {
+                const m = document.createElement('div');
+                m.className = 'meta';
+                m.textContent = meta;
+                div.appendChild(m);
+            }
+            messagesEl.appendChild(div);
+            messagesEl.scrollTop = messagesEl.scrollHeight;
+        }
+
+        // ─── Monaco Editor (IDE) ───
+        let monacoEditor = null;
+        const defaultCode = `// 🐝 Welcome to HeadyAI-IDE
+// Try editing this code and pressing ▶ Run
+
+const heady = {
+  services: 77,
+  groups: 14,
+  engines: ['HeadyBrain', 'HeadyReasoner', 'HeadyMultimodal', 'HeadyEdge'],
+  gateway: 'Liquid Gateway — races providers in parallel',
+};
+
+console.log('🐝 Heady Ecosystem:');
+console.log(JSON.stringify(heady, null, 2));
+
+// Pro tip: Select code and click "🐝 Ask Heady" for AI assistance
+console.log('\\n✅ ' + heady.services + ' services across ' + heady.groups + ' groups');
+`;
+
+        // Load Monaco from CDN
+        const monacoScript = document.createElement('script');
+        monacoScript.src = 'https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/vs/loader.js';
+        monacoScript.onload = () => {
+            require.config({ paths: { vs: 'https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/vs' } });
+            require(['vs/editor/editor.main'], () => {
+                monaco.editor.defineTheme('heady-dark', {
+                    base: 'vs-dark',
+                    inherit: true,
+                    rules: [{ token: 'comment', foreground: '6A6A8E' }],
+                    colors: {
+                        'editor.background': '#12121e',
+                        'editor.foreground': '#e0e0f0',
+                        'editorCursor.foreground': '#667eea',
+                        'editor.lineHighlightBackground': '#1a1a2e',
+                        'editor.selectionBackground': '#667eea44',
+                    }
+                });
+                monacoEditor = monaco.editor.create(document.getElementById('monacoEditor'), {
+                    value: defaultCode,
+                    language: 'javascript',
+                    theme: 'heady-dark',
+                    fontSize: 14,
+                    minimap: { enabled: false },
+                    scrollBeyondLastLine: false,
+                    padding: { top: 12 },
+                    automaticLayout: true,
+                });
+            });
+        };
+        document.head.appendChild(monacoScript);
+
+        // Language switcher
+        document.getElementById('ideLang').addEventListener('change', (e) => {
+            if (monacoEditor) {
+                monaco.editor.setModelLanguage(monacoEditor.getModel(), e.target.value);
+            }
+        });
+
+        function runCode() {
+            const output = document.getElementById('ideOutput');
+            const code = monacoEditor ? monacoEditor.getValue() : '';
+            const lang = document.getElementById('ideLang').value;
+            if (lang !== 'javascript') {
+                output.textContent = `⚠️ Browser runtime only supports JavaScript.\nFor ${lang}, click "🐝 Ask Heady" to get AI-generated output.`;
+                return;
+            }
+            output.textContent = '';
+            const origLog = console.log;
+            const logs = [];
+            console.log = (...args) => { logs.push(args.map(a => typeof a === 'object' ? JSON.stringify(a, null, 2) : String(a)).join(' ')); };
+            try {
+                eval(code);
+                output.textContent = logs.join('\n') || '✅ Code executed (no output)';
+            } catch (err) {
+                output.textContent = `❌ Error: ${err.message}`;
+                output.style.color = 'var(--error)';
+                setTimeout(() => output.style.color = 'var(--success)', 3000);
+            }
+            console.log = origLog;
+        }
+
+        async function askHeadyAboutCode() {
+            const code = monacoEditor ? monacoEditor.getValue() : '';
+            const selection = monacoEditor ? monacoEditor.getModel().getValueInRange(monacoEditor.getSelection()) : '';
+            const context = selection || code;
+            const output = document.getElementById('ideOutput');
+            const askBtn = document.getElementById('askBtn');
+            askBtn.disabled = true;
+            output.textContent = '🐝 Asking HeadyBrain...';
+
+            try {
+                const res = await fetch('https://router.huggingface.co/novita/v3/openai/chat/completions', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' },
+                    body: JSON.stringify({
+                        model: 'Qwen/Qwen3-235B-A22B',
+                        messages: [
+                            { role: 'system', content: 'You are HeadyBrain, an AI code assistant. Explain, improve, or debug the code provided. Be concise and actionable.' },
+                            { role: 'user', content: `Analyze this code:\n\n${context}` },
+                        ],
+                        temperature: 0.5, max_tokens: 800,
+                    }),
+                });
+                const data = await res.json();
+                output.textContent = data.choices?.[0]?.message?.content || 'No response from HeadyBrain';
+            } catch (err) {
+                output.textContent = `❌ API Error: ${err.message}. The demo may need a valid HF token.`;
+            }
+            askBtn.disabled = false;
+        }
+
+        // Init
+        renderServices();
+        renderProviders();
+    </script>
+
+</body>
+
+</html>

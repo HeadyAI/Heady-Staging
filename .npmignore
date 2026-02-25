@@ -1,0 +1,73 @@
+# ═══════════════════════════════════════════════════════════════
+# HEADY .NPMIGNORE — IP LOCKDOWN
+# HeadySystems Inc. — Trade Secret Protection
+# Only compiled dist/ output is published. NEVER source.
+# ═══════════════════════════════════════════════════════════════
+
+# ── Source Code (NEVER PUBLISH) ──
+src/
+scripts/
+tests/
+test/
+__tests__/
+*.test.js
+*.spec.js
+
+# ── Security & IP ──
+src/security/
+src/heady-conductor.js
+src/gateway/
+src/hcfp/
+
+# ── Configuration & Secrets ──
+.env
+.env.*
+*.env
+config.yaml
+.npmrc
+.yarnrc
+
+# ── Build & Dev Tools ──
+.git/
+.github/
+.vscode/
+.windsurf/
+.agents/
+.gemini/
+node_modules/
+coverage/
+.nyc_output/
+
+# ── Documentation (internal only) ──
+docs/internal/
+docs/cpo/
+ARCHITECTURE.md
+SECURITY.md
+
+# ── Sites & Demos ──
+sites/
+public/
+frontend/
+heady-hf-space*/
+heady-ide-ui/
+heady-buddy/
+extensions/
+
+# ── Infrastructure ──
+infrastructure/
+docker-compose*.yml
+tunnel-watchdog.sh
+Dockerfile*
+
+# ── Package artifacts ──
+packages/
+*.tgz
+*.tar.gz
+
+# ── Misc ──
+*.log
+*.map
+.DS_Store
+Thumbs.db
+*.swp
+*.swo

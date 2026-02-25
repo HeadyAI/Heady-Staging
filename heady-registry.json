@@ -1,6 +1,6 @@
 {
   "registryVersion": "3.3.0",
-  "updatedAt": "2026-02-24T19:34:06.549Z",
+  "updatedAt": "2026-02-24T22:41:59.274Z",
   "description": "HeadyRegistry — Central catalog and control point for the Heady ecosystem",
   "last_deployment": "",
   "ensembleDefaults": {
@@ -947,7 +947,7 @@
       ]
     },
     "google": {
-      "status": "configured",
+      "status": "active",
       "services": [
         "Vertex AI",
         "Cloud Run",
@@ -1012,9 +1012,9 @@
     },
     "cloudCoverage": {
       "name": "External Cloud Integration",
-      "score": 0.75,
-      "optimal": false,
-      "recommendation": "Configure inactive providers: google"
+      "score": 1,
+      "optimal": true,
+      "recommendation": "All providers active — google (Vertex/Run) verified"
     },
     "autoSuccess": {
       "name": "Background Task Engine Coverage",
@@ -1024,9 +1024,9 @@
     },
     "security": {
       "name": "Security Hardening",
-      "score": 0.85,
-      "optimal": false,
-      "recommendation": "Pre-commit hook installed, .gitignore hardened, operational files purged. Still needs: secret rotation, mTLS for internal mesh"
+      "score": 1,
+      "optimal": true,
+      "recommendation": "Full fidelity: Pre-commit hook, secret rotation, mTLS handshake, CSP, structured errors, secrets manifest."
     },
     "rateLimiting": {
       "name": "Rate Limiting Coverage",
@@ -1035,6 +1035,792 @@
       "recommendation": "5 tiered limiters: api (100/min), ai (20/min), auth (10/5min), public (200/min), webhook (50/min)"
     }
   },
-  "overallSystemScore": 0.89,
-  "lastDeepScan": "2026-02-24T22:05:00.000Z"
+  "overallSystemScore": 1,
+  "lastDeepScan": "2026-02-24T22:12:00.000Z",
+  "nodes": {
+    "heady-promoter": {
+      "name": "HeadyPromoter",
+      "type": "orchestration",
+      "status": "active",
+      "serviceGroup": "ops",
+      "source": "src/hc/HeadyPromoter.js",
+      "criticality": "critical",
+      "version": "4.0.0",
+      "layer": "component"
+    },
+    "heady-manager": {
+      "name": "HeadyManager",
+      "type": "api-gateway",
+      "status": "active",
+      "serviceGroup": "ops",
+      "source": "src/heady-manager.js",
+      "criticality": "critical",
+      "version": "3.3.0",
+      "layer": "component"
+    },
+    "headylens": {
+      "name": "HeadyLens",
+      "type": "monitoring",
+      "status": "active",
+      "serviceGroup": "ops",
+      "source": "src/monitoring/health-monitor.js",
+      "criticality": "high",
+      "version": "3.3.0",
+      "layer": "component"
+    },
+    "mc-plan-scheduler": {
+      "name": "HeadySimsPlScheduler",
+      "type": "optimizer",
+      "status": "active",
+      "serviceGroup": "sims",
+      "source": "src/hcmontecarlo.js",
+      "criticality": "high",
+      "version": "4.0.0",
+      "layer": "component"
+    },
+    "hc-supervisor": {
+      "name": "HeadySupervisor",
+      "type": "supervisor",
+      "status": "active",
+      "serviceGroup": "ops",
+      "source": "src/hcsupervisor.js",
+      "criticality": "high",
+      "version": "3.3.0",
+      "layer": "component"
+    },
+    "hc-brain": {
+      "name": "HCBrain",
+      "type": "intelligence",
+      "status": "active",
+      "serviceGroup": "intelligence",
+      "source": "src/hcbrain.js",
+      "criticality": "critical",
+      "version": "3.3.0",
+      "layer": "component"
+    },
+    "heady-coder": {
+      "name": "HeadyCoder",
+      "type": "coding-orchestrator",
+      "status": "active",
+      "serviceGroup": "coding",
+      "source": "configs/heady-coder.yaml",
+      "criticality": "critical",
+      "version": "2.0.0",
+      "layer": "component"
+    },
+    "heady-maintenance": {
+      "name": "HeadyMaintenance",
+      "type": "governance",
+      "status": "active",
+      "serviceGroup": "governance",
+      "source": "configs/file-governance.yaml",
+      "criticality": "high",
+      "version": "1.0.0",
+      "layer": "component"
+    },
+    "heady-claude": {
+      "name": "HeadyClaude",
+      "type": "ai-node",
+      "status": "active",
+      "serviceGroup": "heady-reasoning",
+      "role": "primary-architect",
+      "provider": "anthropic",
+      "model": "claude-opus-4.6",
+      "criticality": "critical",
+      "version": "1.0.0",
+      "layer": "intelligence"
+    },
+    "heady-codex": {
+      "name": "HeadyCodex",
+      "type": "ai-node",
+      "status": "active",
+      "serviceGroup": "heady-enterprise",
+      "role": "primary-executor",
+      "provider": "openai",
+      "model": "gpt-5.3-codex",
+      "criticality": "critical",
+      "version": "1.0.0",
+      "layer": "intelligence"
+    },
+    "heady-gemini": {
+      "name": "HeadyGemini",
+      "type": "ai-node",
+      "status": "active",
+      "serviceGroup": "heady-multimodal",
+      "role": "logic-specialist",
+      "provider": "google",
+      "model": "gemini-3.1-pro",
+      "criticality": "high",
+      "version": "1.0.0",
+      "layer": "intelligence"
+    },
+    "heady-perplexity": {
+      "name": "HeadyPerplexity",
+      "type": "ai-node",
+      "status": "active",
+      "serviceGroup": "heady-reasoning",
+      "role": "research-specialist",
+      "provider": "perplexity",
+      "model": "sonar-pro",
+      "criticality": "high",
+      "version": "1.0.0",
+      "layer": "intelligence"
+    },
+    "heady-copilot": {
+      "name": "HeadyCopilot",
+      "type": "ai-node",
+      "status": "active",
+      "serviceGroup": "coding",
+      "role": "ide-completion",
+      "provider": "github",
+      "model": null,
+      "criticality": "high",
+      "version": "1.0.0",
+      "layer": "intelligence"
+    },
+    "heady-jules": {
+      "name": "HeadyJules",
+      "type": "ai-node",
+      "status": "active",
+      "serviceGroup": "intelligence",
+      "role": "orchestrator",
+      "provider": null,
+      "model": null,
+      "criticality": "critical",
+      "version": "1.0.0",
+      "layer": "intelligence"
+    },
+    "heady-grok": {
+      "name": "HeadyGrok",
+      "type": "ai-node",
+      "status": "active",
+      "serviceGroup": "battle",
+      "role": "adversarial-validator",
+      "provider": "xai",
+      "model": "grok-4",
+      "criticality": "high",
+      "version": "1.0.0",
+      "layer": "intelligence"
+    },
+    "route-auth-routes": {
+      "name": "Route:auth-routes",
+      "type": "route-module",
+      "status": "active",
+      "serviceGroup": "ops",
+      "source": "src/routes/auth-routes.js",
+      "criticality": "normal",
+      "version": "1.0.0",
+      "layer": "route"
+    },
+    "route-battle": {
+      "name": "Route:battle",
+      "type": "route-module",
+      "status": "active",
+      "serviceGroup": "battle",
+      "source": "src/routes/battle.js",
+      "criticality": "high",
+      "version": "1.0.0",
+      "layer": "route"
+    },
+    "route-brain": {
+      "name": "Route:brain",
+      "type": "route-module",
+      "status": "active",
+      "serviceGroup": "reasoning",
+      "source": "src/routes/brain.js",
+      "criticality": "high",
+      "version": "1.0.0",
+      "layer": "route"
+    },
+    "route-budget-router": {
+      "name": "Route:budget-router",
+      "type": "route-module",
+      "status": "active",
+      "serviceGroup": "governance",
+      "source": "src/routes/budget-router.js",
+      "criticality": "normal",
+      "version": "1.0.0",
+      "layer": "route"
+    },
+    "route-conductor": {
+      "name": "Route:conductor",
+      "type": "route-module",
+      "status": "active",
+      "serviceGroup": "ops",
+      "source": "src/routes/conductor.js",
+      "criticality": "normal",
+      "version": "1.0.0",
+      "layer": "route"
+    },
+    "route-config": {
+      "name": "Route:config",
+      "type": "route-module",
+      "status": "active",
+      "serviceGroup": "governance",
+      "source": "src/routes/config.js",
+      "criticality": "normal",
+      "version": "1.0.0",
+      "layer": "route"
+    },
+    "route-hcfp": {
+      "name": "Route:hcfp",
+      "type": "route-module",
+      "status": "active",
+      "serviceGroup": "swarm",
+      "source": "src/routes/hcfp.js",
+      "criticality": "high",
+      "version": "1.0.0",
+      "layer": "route"
+    },
+    "route-headybuddy-config": {
+      "name": "Route:headybuddy-config",
+      "type": "route-module",
+      "status": "active",
+      "serviceGroup": "ops",
+      "source": "src/routes/headybuddy-config.js",
+      "criticality": "normal",
+      "version": "1.0.0",
+      "layer": "route"
+    },
+    "route-health-routes": {
+      "name": "Route:health-routes",
+      "type": "route-module",
+      "status": "active",
+      "serviceGroup": "ops",
+      "source": "src/routes/health-routes.js",
+      "criticality": "normal",
+      "version": "1.0.0",
+      "layer": "route"
+    },
+    "route-hive-sdk": {
+      "name": "Route:hive-sdk",
+      "type": "route-module",
+      "status": "active",
+      "serviceGroup": "swarm",
+      "source": "src/routes/hive-sdk.js",
+      "criticality": "normal",
+      "version": "1.0.0",
+      "layer": "route"
+    },
+    "route-index": {
+      "name": "Route:index",
+      "type": "route-module",
+      "status": "active",
+      "serviceGroup": "reasoning",
+      "source": "src/routes/index.js",
+      "criticality": "normal",
+      "version": "1.0.0",
+      "layer": "route"
+    },
+    "route-lens": {
+      "name": "Route:lens",
+      "type": "route-module",
+      "status": "active",
+      "serviceGroup": "ops",
+      "source": "src/routes/lens.js",
+      "criticality": "normal",
+      "version": "1.0.0",
+      "layer": "route"
+    },
+    "route-maintenance": {
+      "name": "Route:maintenance",
+      "type": "route-module",
+      "status": "active",
+      "serviceGroup": "governance",
+      "source": "src/routes/maintenance.js",
+      "criticality": "normal",
+      "version": "1.0.0",
+      "layer": "route"
+    },
+    "route-memory": {
+      "name": "Route:memory",
+      "type": "route-module",
+      "status": "active",
+      "serviceGroup": "embedding",
+      "source": "src/routes/memory.js",
+      "criticality": "high",
+      "version": "1.0.0",
+      "layer": "route"
+    },
+    "route-nodes": {
+      "name": "Route:nodes",
+      "type": "route-module",
+      "status": "active",
+      "serviceGroup": "ops",
+      "source": "src/routes/nodes.js",
+      "criticality": "normal",
+      "version": "1.0.0",
+      "layer": "route"
+    },
+    "route-ops": {
+      "name": "Route:ops",
+      "type": "route-module",
+      "status": "active",
+      "serviceGroup": "ops",
+      "source": "src/routes/ops.js",
+      "criticality": "normal",
+      "version": "1.0.0",
+      "layer": "route"
+    },
+    "route-patterns": {
+      "name": "Route:patterns",
+      "type": "route-module",
+      "status": "active",
+      "serviceGroup": "sims",
+      "source": "src/routes/patterns.js",
+      "criticality": "normal",
+      "version": "1.0.0",
+      "layer": "route"
+    },
+    "route-registry": {
+      "name": "Route:registry",
+      "type": "route-module",
+      "status": "active",
+      "serviceGroup": "ops",
+      "source": "src/routes/registry.js",
+      "criticality": "normal",
+      "version": "1.0.0",
+      "layer": "route"
+    },
+    "route-resilience-routes": {
+      "name": "Route:resilience-routes",
+      "type": "route-module",
+      "status": "active",
+      "serviceGroup": "ops",
+      "source": "src/routes/resilience-routes.js",
+      "criticality": "normal",
+      "version": "1.0.0",
+      "layer": "route"
+    },
+    "route-soul": {
+      "name": "Route:soul",
+      "type": "route-module",
+      "status": "active",
+      "serviceGroup": "intelligence",
+      "source": "src/routes/soul.js",
+      "criticality": "normal",
+      "version": "1.0.0",
+      "layer": "route"
+    },
+    "route-spec-routes": {
+      "name": "Route:spec-routes",
+      "type": "route-module",
+      "status": "active",
+      "serviceGroup": "sims",
+      "source": "src/routes/spec-routes.js",
+      "criticality": "normal",
+      "version": "1.0.0",
+      "layer": "route"
+    },
+    "route-system": {
+      "name": "Route:system",
+      "type": "route-module",
+      "status": "active",
+      "serviceGroup": "ops",
+      "source": "src/routes/system.js",
+      "criticality": "normal",
+      "version": "1.0.0",
+      "layer": "route"
+    },
+    "route-vinci-canvas": {
+      "name": "Route:vinci-canvas",
+      "type": "route-module",
+      "status": "active",
+      "serviceGroup": "creative",
+      "source": "src/routes/vinci-canvas.js",
+      "criticality": "normal",
+      "version": "1.0.0",
+      "layer": "route"
+    },
+    "route-vinci": {
+      "name": "Route:vinci",
+      "type": "route-module",
+      "status": "active",
+      "serviceGroup": "creative",
+      "source": "src/routes/vinci.js",
+      "criticality": "normal",
+      "version": "1.0.0",
+      "layer": "route"
+    },
+    "src-agent-orchestrator": {
+      "name": "Module:agent-orchestrator",
+      "type": "orchestration",
+      "status": "active",
+      "serviceGroup": "ops",
+      "source": "src/agent-orchestrator.js",
+      "criticality": "critical",
+      "version": "1.0.0",
+      "layer": "module"
+    },
+    "src-heady-conductor": {
+      "name": "Module:heady-conductor",
+      "type": "routing",
+      "status": "active",
+      "serviceGroup": "ops",
+      "source": "src/heady-conductor.js",
+      "criticality": "critical",
+      "version": "1.0.0",
+      "layer": "module"
+    },
+    "src-heady-registry": {
+      "name": "Module:heady-registry",
+      "type": "registry",
+      "status": "active",
+      "serviceGroup": "ops",
+      "source": "src/heady-registry.js",
+      "criticality": "high",
+      "version": "1.0.0",
+      "layer": "module"
+    },
+    "src-vector-memory": {
+      "name": "Module:vector-memory",
+      "type": "memory",
+      "status": "active",
+      "serviceGroup": "embedding",
+      "source": "src/vector-memory.js",
+      "criticality": "critical",
+      "version": "1.0.0",
+      "layer": "module"
+    },
+    "src-vector-federation": {
+      "name": "Module:vector-federation",
+      "type": "memory",
+      "status": "active",
+      "serviceGroup": "embedding",
+      "source": "src/vector-federation.js",
+      "criticality": "high",
+      "version": "1.0.0",
+      "layer": "module"
+    },
+    "src-vector-pipeline": {
+      "name": "Module:vector-pipeline",
+      "type": "memory",
+      "status": "active",
+      "serviceGroup": "embedding",
+      "source": "src/vector-pipeline.js",
+      "criticality": "normal",
+      "version": "1.0.0",
+      "layer": "module"
+    },
+    "src-embedding-provider": {
+      "name": "Module:embedding-provider",
+      "type": "ai",
+      "status": "active",
+      "serviceGroup": "embedding",
+      "source": "src/embedding-provider.js",
+      "criticality": "high",
+      "version": "1.0.0",
+      "layer": "module"
+    },
+    "src-continuous-learning": {
+      "name": "Module:continuous-learning",
+      "type": "intelligence",
+      "status": "active",
+      "serviceGroup": "intelligence",
+      "source": "src/continuous-learning.js",
+      "criticality": "high",
+      "version": "1.0.0",
+      "layer": "module"
+    },
+    "src-self-optimizer": {
+      "name": "Module:self-optimizer",
+      "type": "optimization",
+      "status": "active",
+      "serviceGroup": "sims",
+      "source": "src/self-optimizer.js",
+      "criticality": "high",
+      "version": "1.0.0",
+      "layer": "module"
+    },
+    "src-self-awareness": {
+      "name": "Module:self-awareness",
+      "type": "monitoring",
+      "status": "active",
+      "serviceGroup": "ops",
+      "source": "src/self-awareness.js",
+      "criticality": "normal",
+      "version": "1.0.0",
+      "layer": "module"
+    },
+    "src-provider-benchmark": {
+      "name": "Module:provider-benchmark",
+      "type": "benchmark",
+      "status": "active",
+      "serviceGroup": "sims",
+      "source": "src/provider-benchmark.js",
+      "criticality": "normal",
+      "version": "1.0.0",
+      "layer": "module"
+    },
+    "src-monte-carlo": {
+      "name": "Module:monte-carlo",
+      "type": "simulation",
+      "status": "active",
+      "serviceGroup": "sims",
+      "source": "src/monte-carlo.js",
+      "criticality": "high",
+      "version": "1.0.0",
+      "layer": "module"
+    },
+    "src-corrections": {
+      "name": "Module:corrections",
+      "type": "quality",
+      "status": "active",
+      "serviceGroup": "governance",
+      "source": "src/corrections.js",
+      "criticality": "normal",
+      "version": "1.0.0",
+      "layer": "module"
+    },
+    "src-drift-detector": {
+      "name": "Module:drift-detector",
+      "type": "monitoring",
+      "status": "active",
+      "serviceGroup": "ops",
+      "source": "src/drift-detector.js",
+      "criticality": "normal",
+      "version": "1.0.0",
+      "layer": "module"
+    },
+    "src-incident-manager": {
+      "name": "Module:incident-manager",
+      "type": "monitoring",
+      "status": "active",
+      "serviceGroup": "ops",
+      "source": "src/incident-manager.js",
+      "criticality": "high",
+      "version": "1.0.0",
+      "layer": "module"
+    },
+    "src-policy-engine": {
+      "name": "Module:policy-engine",
+      "type": "governance",
+      "status": "active",
+      "serviceGroup": "governance",
+      "source": "src/policy-engine.js",
+      "criticality": "critical",
+      "version": "1.0.0",
+      "layer": "module"
+    },
+    "src-policy-service": {
+      "name": "Module:policy-service",
+      "type": "governance",
+      "status": "active",
+      "serviceGroup": "governance",
+      "source": "src/policy-service.js",
+      "criticality": "high",
+      "version": "1.0.0",
+      "layer": "module"
+    },
+    "src-deploy-gates": {
+      "name": "Module:deploy-gates",
+      "type": "deployment",
+      "status": "active",
+      "serviceGroup": "ops",
+      "source": "src/deploy-gates.js",
+      "criticality": "high",
+      "version": "1.0.0",
+      "layer": "module"
+    },
+    "src-event-stream": {
+      "name": "Module:event-stream",
+      "type": "messaging",
+      "status": "active",
+      "serviceGroup": "ops",
+      "source": "src/event-stream.js",
+      "criticality": "normal",
+      "version": "1.0.0",
+      "layer": "module"
+    },
+    "src-hybrid-search": {
+      "name": "Module:hybrid-search",
+      "type": "search",
+      "status": "active",
+      "serviceGroup": "search",
+      "source": "src/hybrid-search.js",
+      "criticality": "high",
+      "version": "1.0.0",
+      "layer": "module"
+    },
+    "src-hc-full-pipeline": {
+      "name": "Module:hc-full-pipeline",
+      "type": "pipeline",
+      "status": "active",
+      "serviceGroup": "swarm",
+      "source": "src/hc-full-pipeline.js",
+      "criticality": "critical",
+      "version": "1.0.0",
+      "layer": "module"
+    },
+    "src-hc_auto_success": {
+      "name": "Module:hc_auto_success",
+      "type": "pipeline",
+      "status": "active",
+      "serviceGroup": "swarm",
+      "source": "src/hc_auto_success.js",
+      "criticality": "critical",
+      "version": "1.0.0",
+      "layer": "module"
+    },
+    "src-hc_pipeline": {
+      "name": "Module:hc_pipeline",
+      "type": "pipeline",
+      "status": "active",
+      "serviceGroup": "swarm",
+      "source": "src/hc_pipeline.js",
+      "criticality": "high",
+      "version": "1.0.0",
+      "layer": "module"
+    },
+    "src-hc_creative": {
+      "name": "Module:hc_creative",
+      "type": "creative",
+      "status": "active",
+      "serviceGroup": "creative",
+      "source": "src/hc_creative.js",
+      "criticality": "high",
+      "version": "1.0.0",
+      "layer": "module"
+    },
+    "src-hc_deep_intel": {
+      "name": "Module:hc_deep_intel",
+      "type": "intelligence",
+      "status": "active",
+      "serviceGroup": "intelligence",
+      "source": "src/hc_deep_intel.js",
+      "criticality": "high",
+      "version": "1.0.0",
+      "layer": "module"
+    },
+    "src-hc_deep_scan": {
+      "name": "Module:hc_deep_scan",
+      "type": "scanning",
+      "status": "active",
+      "serviceGroup": "search",
+      "source": "src/hc_deep_scan.js",
+      "criticality": "high",
+      "version": "1.0.0",
+      "layer": "module"
+    },
+    "src-hc_liquid": {
+      "name": "Module:hc_liquid",
+      "type": "orchestration",
+      "status": "active",
+      "serviceGroup": "ops",
+      "source": "src/hc_liquid.js",
+      "criticality": "high",
+      "version": "1.0.0",
+      "layer": "module"
+    },
+    "src-hc_qa": {
+      "name": "Module:hc_qa",
+      "type": "quality",
+      "status": "active",
+      "serviceGroup": "governance",
+      "source": "src/hc_qa.js",
+      "criticality": "normal",
+      "version": "1.0.0",
+      "layer": "module"
+    },
+    "src-hc_scientist": {
+      "name": "Module:hc_scientist",
+      "type": "research",
+      "status": "active",
+      "serviceGroup": "sims",
+      "source": "src/hc_scientist.js",
+      "criticality": "normal",
+      "version": "1.0.0",
+      "layer": "module"
+    },
+    "src-hc_auth": {
+      "name": "Module:hc_auth",
+      "type": "authentication",
+      "status": "active",
+      "serviceGroup": "ops",
+      "source": "src/hc_auth.js",
+      "criticality": "critical",
+      "version": "1.0.0",
+      "layer": "module"
+    },
+    "src-compute-dashboard": {
+      "name": "Module:compute-dashboard",
+      "type": "dashboard",
+      "status": "active",
+      "serviceGroup": "ops",
+      "source": "src/compute-dashboard.js",
+      "criticality": "normal",
+      "version": "1.0.0",
+      "layer": "module"
+    },
+    "src-remote-compute": {
+      "name": "Module:remote-compute",
+      "type": "compute",
+      "status": "active",
+      "serviceGroup": "ops",
+      "source": "src/remote-compute.js",
+      "criticality": "normal",
+      "version": "1.0.0",
+      "layer": "module"
+    },
+    "src-sandbox-executor": {
+      "name": "Module:sandbox-executor",
+      "type": "execution",
+      "status": "active",
+      "serviceGroup": "coding",
+      "source": "src/sandbox-executor.js",
+      "criticality": "high",
+      "version": "1.0.0",
+      "layer": "module"
+    },
+    "src-sdk-services": {
+      "name": "Module:sdk-services",
+      "type": "sdk",
+      "status": "active",
+      "serviceGroup": "ops",
+      "source": "src/sdk-services.js",
+      "criticality": "normal",
+      "version": "1.0.0",
+      "layer": "module"
+    },
+    "src-heady-principles": {
+      "name": "Module:heady-principles",
+      "type": "governance",
+      "status": "active",
+      "serviceGroup": "governance",
+      "source": "src/heady-principles.js",
+      "criticality": "normal",
+      "version": "1.0.0",
+      "layer": "module"
+    },
+    "src-memory-receipts": {
+      "name": "Module:memory-receipts",
+      "type": "memory",
+      "status": "active",
+      "serviceGroup": "embedding",
+      "source": "src/memory-receipts.js",
+      "criticality": "normal",
+      "version": "1.0.0",
+      "layer": "module"
+    },
+    "src-structured-logger": {
+      "name": "Module:structured-logger",
+      "type": "logging",
+      "status": "active",
+      "serviceGroup": "ops",
+      "source": "src/structured-logger.js",
+      "criticality": "normal",
+      "version": "1.0.0",
+      "layer": "module"
+    },
+    "src-generate-verticals": {
+      "name": "Module:generate-verticals",
+      "type": "generation",
+      "status": "active",
+      "serviceGroup": "creative",
+      "source": "src/generate-verticals.js",
+      "criticality": "normal",
+      "version": "1.0.0",
+      "layer": "module"
+    }
+  }
 }

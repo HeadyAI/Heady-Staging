@@ -1,4 +1,15 @@
 /**
+ * ╔══════════════════════════════════════════════════════════════════════╗
+ * ║  PROPRIETARY AND CONFIDENTIAL — HEADYSYSTEMS INC.                  ║
+ * ║  Copyright © 2024-2026 HeadySystems Inc. All Rights Reserved.      ║
+ * ║                                                                     ║
+ * ║  This file contains trade secrets of HeadySystems Inc.              ║
+ * ║  Unauthorized copying, distribution, or use is strictly prohibited  ║
+ * ║  and may result in civil and criminal penalties.                    ║
+ * ║                                                                     ║
+ * ║  Protected under the Defend Trade Secrets Act (18 U.S.C. § 1836)  ║
+ * ╚══════════════════════════════════════════════════════════════════════╝
+ *
  * HeadyConductor — Federated Liquid Routing Hub
  * ═══════════════════════════════════════════════════════════════
  *
@@ -23,19 +34,43 @@ const EventEmitter = require("events");
 const fs = require("fs");
 const path = require("path");
 
+// ─── Security Layer (PQC + Handshake) ────────────────────────────────
+let headyPQC, Handshake;
+try {
+    headyPQC = require("./security/pqc").headyPQC;
+    Handshake = require("./security/handshake");
+} catch { headyPQC = null; Handshake = null; }
+
 const PHI = 1.6180339887;
 const AUDIT_PATH = path.join(__dirname, "..", "data", "conductor-audit.jsonl");
 
-// ─── Routing Table (absorbed from DynamicRouter) ────────────────────
+// ─── Routing Table (Expanded for 19 Service Groups) ──────────────────
 const ROUTING_TABLE = {
+    // Tier 1: Core Agents
     embed: "embedding", store: "embedding",
     search: "search", query: "search",
     analyze: "reasoning", refactor: "reasoning",
     complete: "reasoning", chat: "reasoning",
     validate: "battle", arena: "battle",
     generate: "creative", remix: "creative",
-    health: "ops", deploy: "ops",
-    status: "ops",
+    health: "ops", deploy: "ops", status: "ops",
+
+    // Tier 2: Extended Logic
+    code: "coding", refactor_logic: "coding", pr_review: "coding",
+    audit: "governance", policy: "governance", compliance: "governance",
+    scan: "vision", detect: "vision", ocr: "vision",
+    simulate: "sims", predict: "sims", monte_carlo: "sims",
+    forage: "swarm", hive: "swarm", swarm_nudge: "swarm",
+    meta: "intelligence", logic: "intelligence", brain: "intelligence",
+
+    // Tier 3: AI Provider Groups (Direct Routing)
+    "heady-reasoning": "heady-reasoning",
+    "heady-multimodal": "heady-multimodal",
+    "heady-enterprise": "heady-enterprise",
+    "heady-open-weights": "heady-open-weights",
+    "heady-cloud-fallback": "heady-cloud-fallback",
+    "heady-local": "heady-local",
+    "heady-edge-native": "heady-edge-native",
 };
 
 // ─── Pattern Optimizations ──────────────────────────────────────────
@@ -48,16 +83,21 @@ const PATTERN_OPTIMIZATIONS = {
     refactor: { strategy: "diff-only", cache: false, priority: "low", note: "return diffs, not full files" },
     generate: { strategy: "parallel-variants", cache: false, priority: "medium", note: "generate N variants in parallel" },
     validate: { strategy: "deterministic", cache: true, priority: "high", note: "reproducible validation" },
+    simulate: { strategy: "monte-carlo", cache: false, priority: "high", note: "UCB1 sampling optimization" },
 };
 
-// ─── Service Group Weights (for load-aware routing) ─────────────────
+// ─── Service Group Weights (Load Management) ────────────────────────
 const GROUP_WEIGHTS = {
-    reasoning: 1.0,    // highest demand
-    embedding: 0.8,
-    search: 0.7,
-    creative: 0.6,
-    battle: 0.4,
-    ops: 0.3,
+    reasoning: 1.0, coding: 0.95, intelligence: 0.9,
+    embedding: 0.8, search: 0.75, swarm: 0.8,
+    creative: 0.6, battle: 0.7, vision: 0.5,
+    sims: 0.85, governance: 0.4, ops: 0.3,
+
+    // Provider groups (lower priority for base scaling)
+    "heady-reasoning": 0.5, "heady-multimodal": 0.5,
+    "heady-enterprise": 0.4, "heady-open-weights": 0.3,
+    "heady-cloud-fallback": 0.2, "heady-local": 0.1,
+    "heady-edge-native": 0.2
 };
 
 class HeadyConductor extends EventEmitter {

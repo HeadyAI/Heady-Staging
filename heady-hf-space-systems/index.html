@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HeadySystems — Platform Operations Intelligence</title>
+    <meta name="description"
+        content="HeadySystems — Self-healing infrastructure, service group monitoring, and AI-driven operations.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap"
+        rel="stylesheet">
+    <link rel="icon" href="icon.png" type="image/png">
+    <style>
+        :root {
+            --g1: #6D28D9;
+            --g2: #7C3AED;
+            --accent: #A78BFA;
+            --accent2: #818CF8;
+            --bg: #030108;
+            --surface: rgba(20, 15, 30, 0.4);
+            --text: #e2e8f0;
+            --text-muted: rgba(255, 255, 255, 0.55);
+            --border: rgba(255, 255, 255, 0.06);
+        }
+
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        #geo-canvas {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .wrap {
+            position: relative;
+            z-index: 10;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Hero */
+        .hero {
+            padding: 70px 0 50px;
+            text-align: center;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 5px 14px;
+            border-radius: 50px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--border);
+            font-size: 0.65rem;
+            color: #fff;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 1.5rem;
+        }
+
+        .hero-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: #4ade80;
+            box-shadow: 0 0 8px #4ade80;
+            animation: pulse 2s ease infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1;
+                transform: scale(1)
+            }
+
+            50% {
+                opacity: .5;
+                transform: scale(.8)
+            }
+        }
+
+        .hero h1 {
+            font-size: clamp(2.2rem, 6vw, 3.8rem);
+            font-weight: 800;
+            background: linear-gradient(135deg, #818CF8, #A78BFA, #C084FC);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.6rem;
+            letter-spacing: -0.02em;
+        }
+
+        .hero-sub {
+            font-size: 0.95rem;
+            color: #fff;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            margin-bottom: 0.8rem;
+        }
+
+        .geo-tag {
+            display: inline-block;
+            padding: 4px 14px;
+            border: 1px solid rgba(167, 139, 250, 0.2);
+            border-radius: 50px;
+            font-size: 0.6rem;
+            color: var(--accent);
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            margin-bottom: 1.5rem;
+        }
+
+        .hero-desc {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            max-width: 560px;
+            margin: 0 auto 2rem;
+            line-height: 1.8;
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            justify-content: center;
+            gap: 4px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .tab {
+            padding: 8px 20px;
+            border: 1px solid var(--border);
+            background: transparent;
+            color: var(--text-muted);
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 0.78rem;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .tab.active {
+            background: var(--accent);
+            color: #000;
+            border-color: var(--accent);
+            font-weight: 600;
+        }
+
+        /* Panels */
+        .panel {
+            display: none;
+            padding-bottom: 60px;
+        }
+
+        .panel.active {
+            display: block;
+        }
+
+        /* Architecture */
+        .layer-stack {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .layer {
+            background: var(--surface);
+            padding: 16px 22px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            transition: all 0.3s;
+        }
+
+        .layer:hover {
+            border-color: rgba(167, 139, 250, 0.3);
+            transform: translateX(3px);
+        }
+
+        .layer-num {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.6rem;
+            color: var(--accent);
+            background: rgba(167, 139, 250, 0.1);
+            padding: 3px 8px;
+            border-radius: 5px;
+        }
+
+        .layer-name {
+            font-weight: 600;
+            color: #fff;
+            flex: 1;
+            font-size: 0.9rem;
+        }
+
+        .layer-desc {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            max-width: 280px;
+            text-align: right;
+        }
+
+        .layer-arrow {
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.65rem;
+            margin: 1px 0;
+        }
+
+        /* Service Groups */
+        .grp-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 16px;
+        }
+
+        .grp-card {
+            background: var(--surface);
+            padding: 22px;
+            border-radius: 14px;
+            border: 1px solid var(--border);
+            transition: all 0.3s;
+        }
+
+        .grp-card:hover {
+            border-color: rgba(167, 139, 250, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .grp-hdr {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .grp-icon {
+            font-size: 1.4rem;
+        }
+
+        .grp-title {
+            font-weight: 700;
+            color: #fff;
+            font-size: 0.95rem;
+        }
+
+        .grp-badge {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.55rem;
+            background: rgba(167, 139, 250, 0.1);
+            color: var(--accent);
+            padding: 2px 7px;
+            border-radius: 4px;
+            margin-left: auto;
+        }
+
+        .grp-desc {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            line-height: 1.7;
+            margin-bottom: 10px;
+        }
+
+        .grp-use {
+            font-size: 0.72rem;
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+
+        .grp-use strong {
+            color: var(--accent);
+        }
+
+        .grp-cmd {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.68rem;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 6px 10px;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            margin-top: 8px;
+            color: var(--accent);
+            overflow-x: auto;
+        }
+
+        /* Ops Console */
+        .ops-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 16px;
+        }
+
+        .ops-card {
+            background: var(--surface);
+            padding: 22px;
+            border-radius: 14px;
+            border: 1px solid var(--border);
+        }
+
+        .ops-card h3 {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            color: var(--accent);
+            margin-bottom: 8px;
+        }
+
+        .ops-card p {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            line-height: 1.7;
+        }
+
+        .ops-card .route {
+            font-size: 0.7rem;
+            color: var(--accent2);
+            margin-top: 6px;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        /* Stats */
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin: 30px 0;
+        }
+
+        .stat {
+            background: var(--surface);
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            text-align: center;
+        }
+
+        .stat-val {
+            font-size: 1.8rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--accent2), var(--accent));
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .stat-lbl {
+            font-size: 0.65rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            margin-top: 2px;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 1.4rem;
+            color: var(--accent);
+            margin-bottom: 6px;
+        }
+
+        .section-sub {
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            margin-bottom: 30px;
+        }
+
+        footer {
+            padding: 40px 0;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.7rem;
+            letter-spacing: 0.5px;
+        }
+
+        footer a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        @media (max-width: 768px) {
+            .stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .grp-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="geo-canvas"></canvas>
+    <div class="wrap">
+        <div class="container">
+            <section class="hero">
+                <div class="hero-badge"><span class="hero-dot"></span> HeadySystems v3.0 · Self-Healing Active</div>
+                <img src="icon.png" alt="HeadySystems"
+                    style="width:90px;height:90px;border-radius:50%;margin-bottom:1.2rem;box-shadow:0 0 30px rgba(167,139,250,0.3);">
+                <h1>HeadySystems™</h1>
+                <p class="hero-sub">Error Correction Protocol · Platform Ops</p>
+                <div class="geo-tag">Metatron's Cube · Sacred Geometry v3 · Subsystem Code IP</div>
+                <p class="hero-desc">
+                    The error correction side of the Heady Fault-Tolerant Lattice. HeadySystems replaces standard
+                    stabilizer measurements with a Rotated Subsystem Surface Code (RSSC) and Flag Qubit protocols —
+                    achieving >0.5% error thresholds. Also powers 14 service groups for self-healing infrastructure.
+                </p>
+            </section>
+
+            <div class="stats">
+                <div class="stat">
+                    <div class="stat-val">14</div>
+                    <div class="stat-lbl">Service Groups</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-val">6</div>
+                    <div class="stat-lbl">Arch. Layers</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-val">4</div>
+                    <div class="stat-lbl">AI Providers</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-val">100%</div>
+                    <div class="stat-lbl">Uptime</div>
+                </div>
+            </div>
+
+            <div class="tabs">
+                <button class="tab active" onclick="showTab('groups')">📊 Service Groups</button>
+                <button class="tab" onclick="showTab('arch')">🏗️ Architecture</button>
+                <button class="tab" onclick="showTab('ops')">⚙️ Ops Console</button>
+                <button class="tab" onclick="showTab('quantum')">⚛️ Quantum IP</button>
+            </div>
+
+            <!-- Service Groups Panel -->
+            <div id="groups" class="panel active">
+                <h2 class="section-title">📊 Service Groups</h2>
+                <p class="section-sub">14 groups — each with a clear purpose and CLI interface</p>
+                <div class="grp-grid">
+                    <div class="grp-card">
+                        <div class="grp-hdr"><span class="grp-icon">⚙️</span><span class="grp-title">Ops</span><span
+                                class="grp-badge">CORE</span></div>
+                        <div class="grp-desc">Deployments, infrastructure monitoring, cleanup, secret rotation, backup
+                            scheduling, and health checks across the entire platform.</div>
+                        <div class="grp-use"><strong>Use for:</strong> Deploying services, rotating keys, health scans,
+                            cleaning caches, scaling.</div>
+                        <div class="grp-cmd">heady ops deploy / heady health / heady maid clean</div>
+                    </div>
+                    <div class="grp-card">
+                        <div class="grp-hdr"><span class="grp-icon">🏛️</span><span
+                                class="grp-title">Governance</span><span class="grp-badge">POLICY</span></div>
+                        <div class="grp-desc">Security and policy enforcement — production domain rules, budget caps,
+                            access control, mTLS certificates, and audit trails.</div>
+                        <div class="grp-use"><strong>Use for:</strong> Spend limits, domain policies, audit logs, API
+                            key scopes, rate limits.</div>
+                        <div class="grp-cmd">heady audit / heady risks scan</div>
+                    </div>
+                    <div class="grp-card">
+                        <div class="grp-hdr"><span class="grp-icon">🧠</span><span
+                                class="grp-title">Intelligence</span><span class="grp-badge">AI CORE</span></div>
+                        <div class="grp-desc">Central AI reasoning. Routes through the Liquid Gateway to the best
+                            intelligence engine with automatic failover, quality scoring, and semantic caching.</div>
+                        <div class="grp-use"><strong>Use for:</strong> Chat, code generation, analysis, summarization —
+                            auto-selects fastest provider.</div>
+                        <div class="grp-cmd">heady chat "..." / heady analyze</div>
+                    </div>
+                    <div class="grp-card">
+                        <div class="grp-hdr"><span class="grp-icon">🐝</span><span class="grp-title">Swarm</span><span
+                                class="grp-badge">DISTRIBUTED</span></div>
+                        <div class="grp-desc">Distributed task execution. Splits complex tasks into subtasks via bee
+                            colony intelligence, assigns to workers, merges with quality scoring.</div>
+                        <div class="grp-use"><strong>Use for:</strong> Large research, multi-file refactoring, bulk
+                            generation, parallel AI execution.</div>
+                        <div class="grp-cmd">heady swarm "refactor auth module"</div>
+                    </div>
+                    <div class="grp-card">
+                        <div class="grp-hdr"><span class="grp-icon">⚔️</span><span class="grp-title">Battle</span><span
+                                class="grp-badge">VALIDATION</span></div>
+                        <div class="grp-desc">AI-vs-AI quality assurance. Multiple models independently review changes.
+                            Results scored, compared — highest quality wins.</div>
+                        <div class="grp-use"><strong>Use for:</strong> Validating critical changes, comparing models,
+                            competitive evaluations.</div>
+                        <div class="grp-cmd">heady battle arena --task "optimize flow"</div>
+                    </div>
+                    <div class="grp-card">
+                        <div class="grp-hdr"><span class="grp-icon">🎲</span><span class="grp-title">Sims</span><span
+                                class="grp-badge">SIMULATION</span></div>
+                        <div class="grp-desc">Monte Carlo and scenario simulation. Probabilistic analysis, stress tests,
+                            what-if scenarios with parallel execution.</div>
+                        <div class="grp-use"><strong>Use for:</strong> Risk modeling, capacity planning, testing
+                            configs, simulating failures.</div>
+                        <div class="grp-cmd">heady simulate "test failover"</div>
+                    </div>
+                    <div class="grp-card">
+                        <div class="grp-hdr"><span class="grp-icon">🧲</span><span
+                                class="grp-title">Embedding</span><span class="grp-badge">VECTOR</span></div>
+                        <div class="grp-desc">Vector embedding generation and 3D memory. Semantic search, deduplication,
+                            and context retrieval across the knowledge base.</div>
+                        <div class="grp-use"><strong>Use for:</strong> Semantic search, finding similar code/docs,
+                            powering RAG pipelines.</div>
+                        <div class="grp-cmd">heady embed "query"</div>
+                    </div>
+                    <div class="grp-card">
+                        <div class="grp-hdr"><span class="grp-icon">💻</span><span class="grp-title">Coding</span><span
+                                class="grp-badge">ENGINEERING</span></div>
+                        <div class="grp-desc">Code generation, refactoring, multi-file scaffolding, inline suggestions,
+                            review, and test generation.</div>
+                        <div class="grp-use"><strong>Use for:</strong> New features, refactoring, boilerplate, project
+                            scaffolding, completions.</div>
+                        <div class="grp-cmd">heady code "build REST API" / heady refactor</div>
+                    </div>
+                    <div class="grp-card">
+                        <div class="grp-hdr"><span class="grp-icon">🎨</span><span
+                                class="grp-title">Creative</span><span class="grp-badge">GENERATION</span></div>
+                        <div class="grp-desc">Creative content — image generation, copywriting, branding, and Sacred
+                            Geometry design system adherence.</div>
+                        <div class="grp-use"><strong>Use for:</strong> Visuals, copy, branded content, UI design.</div>
+                        <div class="grp-cmd">heady lens analyze / heady coder scaffold</div>
+                    </div>
+                    <div class="grp-card">
+                        <div class="grp-hdr"><span class="grp-icon">🔮</span><span
+                                class="grp-title">Reasoning</span><span class="grp-badge">DEEP THINK</span></div>
+                        <div class="grp-desc">Deep reasoning with extended thinking budgets and chain-of-thought for
+                            multi-step problems and architecture decisions.</div>
+                        <div class="grp-use"><strong>Use for:</strong> Complex debugging, system design, long-form
+                            analysis.</div>
+                        <div class="grp-cmd">heady brain --think "design system"</div>
+                    </div>
+                    <div class="grp-card">
+                        <div class="grp-hdr"><span class="grp-icon">🔍</span><span class="grp-title">Search</span><span
+                                class="grp-badge">RETRIEVAL</span></div>
+                        <div class="grp-desc">Knowledge retrieval — real-time web search (Perplexity Sonar), local
+                            knowledge base, and semantic vector search combined.</div>
+                        <div class="grp-use"><strong>Use for:</strong> Research, internal docs, knowledge vault queries,
+                            RAG context.</div>
+                        <div class="grp-cmd">heady search "query" / heady research --deep</div>
+                    </div>
+                    <div class="grp-card">
+                        <div class="grp-hdr"><span class="grp-icon">👁️</span><span
+                                class="grp-title">Multimodal</span><span class="grp-badge">VISION</span></div>
+                        <div class="grp-desc">Vision, image analysis, OCR, visual QA. Processes screenshots, designs,
+                            and visual content alongside text.</div>
+                        <div class="grp-use"><strong>Use for:</strong> Screenshot analysis, UI review, image OCR, visual
+                            code review.</div>
+                        <div class="grp-cmd">heady lens analyze --image "file.png"</div>
+                    </div>
+                    <div class="grp-card">
+                        <div class="grp-hdr"><span class="grp-icon">🏢</span><span
+                                class="grp-title">Enterprise</span><span class="grp-badge">BUSINESS</span></div>
+                        <div class="grp-desc">External integrations — Notion, GitHub, Stripe, webhooks, and
+                            cross-platform data sync.</div>
+                        <div class="grp-use"><strong>Use for:</strong> Notion sync, GitHub tasks, webhook handling,
+                            cross-platform workflows.</div>
+                        <div class="grp-cmd">heady notion sync / heady jules task</div>
+                    </div>
+                    <div class="grp-card">
+                        <div class="grp-hdr"><span class="grp-icon">🧪</span><span class="grp-title">Adv.
+                                Reasoning</span><span class="grp-badge">RESEARCH</span></div>
+                        <div class="grp-desc">Frontier reasoning — Monte Carlo trees, adversarial review, ensemble
+                            voting for maximum accuracy on hard problems.</div>
+                        <div class="grp-use"><strong>Use for:</strong> Security audits, complex design, proofs,
+                            high-confidence tasks.</div>
+                        <div class="grp-cmd">heady battle arena --nodes 7 --task "audit"</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Architecture Panel -->
+            <div id="arch" class="panel">
+                <h2 class="section-title">🏗️ System Architecture</h2>
+                <p class="section-sub">Six-layer stack from edge to persistence</p>
+                <div class="layer-stack">
+                    <div class="layer"><span class="layer-num">L1</span><span class="layer-name">Edge Layer</span><span
+                            class="layer-desc">Cloudflare Workers, KV Cache, Vectorize, Edge AI</span></div>
+                    <div class="layer-arrow">▼</div>
+                    <div class="layer"><span class="layer-num">L2</span><span class="layer-name">Gateway
+                            Layer</span><span class="layer-desc">Liquid Gateway, Provider Racing, Budget Guards</span>
+                    </div>
+                    <div class="layer-arrow">▼</div>
+                    <div class="layer"><span class="layer-num">L3</span><span
+                            class="layer-name">Orchestration</span><span class="layer-desc">Service Conductor, Task
+                            Decomposition, Workflow Engine</span></div>
+                    <div class="layer-arrow">▼</div>
+                    <div class="layer"><span class="layer-num">L4</span><span
+                            class="layer-name">Intelligence</span><span class="layer-desc">Multi-provider AI, Quality
+                            Scoring, Battle Validation</span></div>
+                    <div class="layer-arrow">▼</div>
+                    <div class="layer"><span class="layer-num">L5</span><span class="layer-name">Service
+                            Mesh</span><span class="layer-desc">14 groups, health monitoring, mTLS, auto-scaling</span>
+                    </div>
+                    <div class="layer-arrow">▼</div>
+                    <div class="layer"><span class="layer-num">L6</span><span class="layer-name">Persistence</span><span
+                            class="layer-desc">3D Vector Memory, Knowledge Vault, Embedding Store</span></div>
+                </div>
+            </div>
+
+            <!-- Ops Console Panel -->
+            <div id="ops" class="panel">
+                <h2 class="section-title">⚙️ Ops Console</h2>
+                <p class="section-sub">Quick-reference CLI commands routed to service groups</p>
+                <div class="ops-grid">
+                    <div class="ops-card">
+                        <h3>heady "anything"</h3>
+                        <p>Smart auto-route — sends any natural language query to HeadyBrain via the Liquid Gateway. No
+                            command prefix needed.</p>
+                        <div class="route">→ Intelligence group</div>
+                    </div>
+                    <div class="ops-card">
+                        <h3>heady health</h3>
+                        <p>Runs parallel health checks across all 14 service groups and returns a consolidated status
+                            report with latency per group.</p>
+                        <div class="route">→ Ops group</div>
+                    </div>
+                    <div class="ops-card">
+                        <h3>heady swarm "task"</h3>
+                        <p>Fan-out a complex task to Swarm workers. Multiple AI agents race in parallel. Results merge
+                            with quality scoring.</p>
+                        <div class="route">→ Swarm group</div>
+                    </div>
+                    <div class="ops-card">
+                        <h3>heady battle arena</h3>
+                        <p>Launch Arena Mode — AI models compete on a specific task. Results scored, ranked, and the
+                            best output wins.</p>
+                        <div class="route">→ Battle group</div>
+                    </div>
+                    <div class="ops-card">
+                        <h3>heady code "task"</h3>
+                        <p>Multi-file code generation with HeadyBattle validation. Supports scaffolding, refactoring,
+                            and test generation.</p>
+                        <div class="route">→ Coding group</div>
+                    </div>
+                    <div class="ops-card">
+                        <h3>heady audit "target"</h3>
+                        <p>Security and compliance audit. Checks secrets, domain policies, code placement, and
+                            configuration drift.</p>
+                        <div class="route">→ Governance group</div>
+                    </div>
+                    <div class="ops-card">
+                        <h3>heady simulate "scenario"</h3>
+                        <p>Monte Carlo simulation for architecture decisions, capacity planning, and failure mode
+                            analysis.</p>
+                        <div class="route">→ Sims group</div>
+                    </div>
+                    <div class="ops-card">
+                        <h3>heady hf search "query"</h3>
+                        <p>Search the Heady model registry, run inference via HeadyBrain, or manage Heady HF Spaces.</p>
+                        <div class="route">→ Intelligence group</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quantum Architecture Panel -->
+            <div id="quantum" class="panel">
+                <h2 class="section-title">⚛️ The Heady Fault-Tolerant Lattice</h2>
+                <p class="section-sub">HeadySystems provides the error correction protocol for a superior alternative to
+                    Heavy Hex</p>
+                <div class="grp-grid">
+                    <div class="grp-card">
+                        <div class="grp-hdr"><span class="grp-icon">🔬</span><span class="grp-title">Subsystem Codes
+                                (RSSC)</span><span class="grp-badge">CORE IP</span></div>
+                        <div class="grp-desc">Instead of measuring static stabilizers, HeadySystems measures <strong
+                                style="color:var(--accent)">Gauge Operators</strong> — smaller, weight-2 checks — that
+                            are combined software-side. This allows the code to run on the sparse HeadyConnection graph.
+                        </div>
+                        <div class="grp-use"><strong>Protocol:</strong> Continuously measure X-type and Z-type gauges →
+                            classical controller computes gauge products → infer stabilizer values without high-degree
+                            connections.</div>
+                    </div>
+                    <div class="grp-card">
+                        <div class="grp-hdr"><span class="grp-icon">🚩</span><span class="grp-title">Flag Qubit
+                                Protocols</span><span class="grp-badge">TRUST</span></div>
+                        <div class="grp-desc">Every syndrome extraction circuit includes a "spy" ancilla (the Flag). If
+                            a CNOT fault occurs, the Flag flips — and the decoder dynamically adjusts its weight
+                            calculation, neutralizing the error before it becomes logical.</div>
+                        <div class="grp-use"><strong>Result:</strong> Raises pseudo-threshold to &gt;0.5%, exceeding
+                            standard Heavy Hex's ~0.3% — even with reduced connectivity.</div>
+                    </div>
+                    <div class="grp-card">
+                        <div class="grp-hdr"><span class="grp-icon">📐</span><span class="grp-title">Heavy Square
+                                Topology</span><span class="grp-badge">CONNECTION</span></div>
+                        <div class="grp-desc">HeadyConnection provides the <strong style="color:var(--accent)">Heavy
+                                Square Lattice</strong> — qubits on vertices, ancillas on edges, degree-3 max. Retains
+                            frequency-crowding protection while aligning naturally with surface code X/Z stabilizers.
+                        </div>
+                        <div class="grp-use"><strong>Advantage:</strong> Eliminates SWAP/bridge overhead and idle gaps
+                            that plague standard Heavy Hex embeddings.</div>
+                    </div>
+                    <div class="grp-card">
+                        <div class="grp-hdr"><span class="grp-icon">⚡</span><span class="grp-title">Quantum
+                                Breakeven</span><span class="grp-badge">GOAL</span></div>
+                        <div class="grp-desc">The combined architecture — HeadyConnection topology + HeadySystems error
+                            correction — achieves quantum breakeven with lower overhead than any Heavy Hex
+                            implementation.</div>
+                        <div class="grp-use"><strong>Key metrics:</strong> &gt;0.5% error threshold · Direct code
+                            embedding · Low crosstalk via sparsity · No SWAP overhead.</div>
+                    </div>
+                </div>
+                <div
+                    style="max-width:700px;margin:30px auto 0;background:var(--surface);padding:20px;border-radius:14px;border:1px solid var(--border);">
+                    <h3 style="color:var(--accent);font-size:0.9rem;margin-bottom:12px;">Heady vs. Standard Heavy Hex
+                    </h3>
+                    <table style="width:100%;font-size:0.75rem;border-collapse:collapse;">
+                        <tr style="border-bottom:1px solid var(--border);">
+                            <td style="padding:8px;color:var(--text-muted);">Topology</td>
+                            <td style="padding:8px;color:var(--text-muted);">Heavy Hexagonal</td>
+                            <td style="padding:8px;color:var(--accent);font-weight:600;">HeadyConnection (Heavy Square)
+                            </td>
+                        </tr>
+                        <tr style="border-bottom:1px solid var(--border);">
+                            <td style="padding:8px;color:var(--text-muted);">Code Embedding</td>
+                            <td style="padding:8px;color:var(--text-muted);">Complex (SWAP/Bridge)</td>
+                            <td style="padding:8px;color:var(--accent);font-weight:600;">Direct (Natural alignment)</td>
+                        </tr>
+                        <tr style="border-bottom:1px solid var(--border);">
+                            <td style="padding:8px;color:var(--text-muted);">Error Correction</td>
+                            <td style="padding:8px;color:var(--text-muted);">Standard Surface Code</td>
+                            <td style="padding:8px;color:var(--accent);font-weight:600;">HeadySystems (Subsystem +
+                                Flags)</td>
+                        </tr>
+                        <tr>
+                            <td style="padding:8px;color:var(--text-muted);">Threshold</td>
+                            <td style="padding:8px;color:var(--text-muted);">~0.3%</td>
+                            <td style="padding:8px;color:#4ade80;font-weight:700;">&gt;0.5% ↑</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <footer>
+                <p>⚡ HeadySystems™ — <a href="https://headysystems.com">headysystems.com</a> · <a
+                        href="https://headyapi.com">headyapi.com</a> · <a href="https://headyme.com">headyme.com</a></p>
+                <p style="margin-top:4px;">∞ Metatron's Cube · HCFP Auto-Success Engine ∞</p>
+            </footer>
+        </div>
+    </div>
+
+    <script>
+        // Metatron's Cube background (purple/blue)
+        (function () {
+            const c = document.getElementById('geo-canvas'), ctx = c.getContext('2d');
+            let w, h, cx, cy, stars = [], t = 0;
+            function resize() {
+                w = c.width = innerWidth; h = c.height = innerHeight; cx = w / 2; cy = h / 2; stars = [];
+                for (let i = 0; i < (w * h) / 4500; i++) stars.push({ x: Math.random() * w, y: Math.random() * h, z: Math.random() * 2, s: Math.random() * 1.5, sp: Math.random() * .005 + .002, o: Math.random() * Math.PI * 2 });
+            }
+            function draw() {
+                ctx.fillStyle = '#030108'; ctx.fillRect(0, 0, w, h);
+                stars.forEach(s => {
+                    s.y -= s.z * .12; s.x += s.z * .06; if (s.y < 0) s.y = h; if (s.x > w) s.x = 0;
+                    const b = Math.sin(t * s.sp + s.o) * .5 + .5;
+                    ctx.fillStyle = `rgba(167,139,250,${b * .3})`; ctx.beginPath(); ctx.arc(s.x, s.y, s.s, 0, Math.PI * 2); ctx.fill();
+                });
+                const r = Math.min(w, h) * .32, br = Math.sin(t * .012) * .01 + 1;
+                ctx.save(); ctx.translate(cx, cy); ctx.scale(br, br); ctx.rotate(t * .00008);
+                ctx.strokeStyle = 'rgba(167,139,250,0.06)'; ctx.lineWidth = .4;
+                const nodes = [{ x: 0, y: 0 }];
+                for (let i = 0; i < 6; i++) { const a = (Math.PI / 3) * i; nodes.push({ x: Math.cos(a) * r * .45, y: Math.sin(a) * r * .45 }); }
+                for (let i = 0; i < 6; i++) { const a = (Math.PI / 3) * i + Math.PI / 6; nodes.push({ x: Math.cos(a) * r * .85, y: Math.sin(a) * r * .85 }); }
+                for (let i = 0; i < nodes.length; i++) for (let j = i + 1; j < nodes.length; j++) {
+                    ctx.beginPath(); ctx.moveTo(nodes[i].x, nodes[i].y); ctx.lineTo(nodes[j].x, nodes[j].y); ctx.stroke();
+                }
+                ctx.restore(); t++; requestAnimationFrame(draw);
+            }
+            addEventListener('resize', resize); resize(); draw();
+        })();
+
+        function showTab(id) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            event.target.classList.add('active');
+        }
+    </script>
+</body>
+
+</html>

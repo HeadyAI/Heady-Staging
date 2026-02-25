@@ -84,8 +84,19 @@ class AgentOrchestrator extends EventEmitter {
         // Per-group node counts for liquid scaling
         this.groupCounts = {};
         this.groupLimits = {
+            // Tier 1: Core Agents
             reasoning: 40, embedding: 30, search: 25,
             creative: 25, battle: 15, ops: 15,
+
+            // Tier 2: Extended Logic
+            coding: 40, governance: 15, vision: 20,
+            sims: 40, swarm: 30, intelligence: 35,
+
+            // Tier 3: AI Provider Groups (Direct Orchestration)
+            "heady-reasoning": 25, "heady-multimodal": 20,
+            "heady-enterprise": 20, "heady-open-weights": 15,
+            "heady-cloud-fallback": 10, "heady-local": 10,
+            "heady-edge-native": 15,
         };
 
         // Ensure data dir

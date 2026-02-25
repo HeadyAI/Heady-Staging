@@ -68,17 +68,25 @@ function getSessionCost(sessionId) {
 /**
  * Select the cheapest model meeting the quality threshold.
  * If multiple models tie on cost, prefer lower latency.
+ * If budget is constrained, filter out models exceeding remaining budget.
  */
 function selectOptimalModel(taskType, constraints = {}) {
     const minQuality = constraints.minQuality || TASK_QUALITY_THRESHOLDS[taskType] || 0.70;
     const maxLatency = constraints.maxLatencyMs || Infinity;
     const maxCostPer1k = constraints.maxCostPer1k || Infinity;
     const preferProvider = constraints.preferProvider || null;
+    const remainingBudget = constraints.remainingBudget !== undefined ? constraints.remainingBudget : Infinity;
+    const estimatedTokens = constraints.estimatedTokens || 500;
 
     const candidates = Object.entries(MODEL_COSTS)
         .filter(([, m]) => m.quality >= minQuality)
         .filter(([, m]) => m.latencyMs <= maxLatency)
         .filter(([, m]) => (m.input + m.output) <= maxCostPer1k)
+        .filter(([, m]) => {
+            // Filter by remaining budget
+            const estCost = ((m.input * estimatedTokens / 1000) + (m.output * estimatedTokens / 1000));
+            return estCost <= remainingBudget;
+        })
         .sort((a, b) => {
             const costA = a[1].input + a[1].output;
             const costB = b[1].input + b[1].output;
@@ -92,9 +100,21 @@ function selectOptimalModel(taskType, constraints = {}) {
     }
 
     if (candidates.length === 0) {
-        // Fallback to highest quality available
-        const fallback = Object.entries(MODEL_COSTS).sort((a, b) => b[1].quality - a[1].quality)[0];
-        return { model: fallback[0], ...fallback[1], fallback: true };
+        // Fallback to highest quality available that FITS the budget
+        const affordableFallback = Object.entries(MODEL_COSTS)
+            .filter(([, m]) => {
+                const estCost = ((m.input * estimatedTokens / 1000) + (m.output * estimatedTokens / 1000));
+                return estCost <= remainingBudget;
+            })
+            .sort((a, b) => b[1].quality - a[1].quality)[0];
+
+        if (affordableFallback) {
+            return { model: affordableFallback[0], ...affordableFallback[1], fallback: true, budgetConstrained: true };
+        }
+
+        // Absolute fallback to free local model if nothing else fits
+        const localFallback = Object.entries(MODEL_COSTS).find(([, m]) => m.input === 0);
+        return { model: localFallback[0], ...localFallback[1], fallback: true, budgetConstrained: true, emergency: true };
     }
 
     const selected = candidates[0];
@@ -106,6 +126,7 @@ function selectOptimalModel(taskType, constraints = {}) {
         ...selected[1],
         alternativesConsidered: candidates.length,
         savedPer1kTokens: savedPer1k,
+        budgetConstrained: remainingBudget < mostExpensive[1].input + mostExpensive[1].output
     };
 }
 

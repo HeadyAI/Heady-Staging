@@ -161,6 +161,23 @@ app.use(cors({
   credentials: true,
 }));
 
+// ─── Heady Production Middleware ────────────────────────────────────
+try {
+  const { requestId } = require('./src/middleware/request-id');
+  app.use(requestId());
+  console.log('  ∞ Request ID Tracing: INSTALLED');
+} catch (err) { console.warn(`  ⚠ Request ID middleware not loaded: ${err.message}`); }
+
+try {
+  const { installShutdownHooks, onShutdown } = require('./src/lifecycle/graceful-shutdown');
+  installShutdownHooks();
+  // Register cleanup handlers
+  onShutdown('http-server', () => new Promise((resolve) => {
+    if (typeof server !== 'undefined' && server.close) server.close(resolve);
+    else resolve();
+  }));
+} catch (err) { console.warn(`  ⚠ Graceful shutdown not loaded: ${err.message}`); }
+
 // ─── Hybrid Colab/Edge Caching Engine ───────────────────────────────
 const ColabEdgeCache = {
   lastScanTime: null,
@@ -411,7 +428,37 @@ console.log("  ∞ AgentOrchestrator: LOADED (dynamic spawn + deterministic rout
 
 // ─── HeadyConductor — Federated Liquid Routing ──────────────────────
 const { getConductor } = require("./src/heady-conductor");
+const { SecretRotation } = require("./src/security/secret-rotation");
+const { AutoHeal } = require("./src/resilience/auto-heal");
+const Handshake = require("./src/security/handshake");
+
+// Service Instance
 const conductor = getConductor();
+// The orchestrator constant is already defined above, so we should not re-declare it.
+// Assuming the user intended to use the existing orchestrator instance.
+// const orchestrator = new AgentOrchestrator(); // This line is commented out as orchestrator is already defined.
+const secretRotation = new SecretRotation();
+const autoHeal = new AutoHeal(conductor);
+
+// Auto-Heal Check loop
+setInterval(() => {
+  autoHeal.check();
+}, 60000 * 5); // Check every 5 minutes
+
+// Daily Secret Audit
+setInterval(() => {
+  const report = secretRotation.audit();
+  if (report.expired.length > 0 || report.warning.length > 0) {
+    console.warn(`[SECURITY] Secret Audit: ${report.expired.length} expired, ${report.warning.length} warnings. Score: ${report.score}`);
+  }
+}, 1000 * 60 * 60 * 24);
+
+// Initial Audits & Checks
+const initialAudit = secretRotation.audit();
+console.log(`  ∞ Secret Rotation: INITIALIZED (Score: ${initialAudit.score})`);
+autoHeal.check();
+console.log(`  ∞ Auto-Heal Resilience: ACTIVE`);
+
 conductor.setOrchestrator(orchestrator);
 conductor.setVectorMemory(vectorMemory);
 conductor.registerRoutes(app);
@@ -2020,10 +2067,14 @@ try {
 try {
   const hcfpRouter = require("./src/routes/hcfp");
   app.use("/api/hcfp", hcfpRouter);
-  console.log("  ∞ HeadyHCFP: LOADED (real router) → /api/hcfp/*");
-} catch (err) {
-  console.warn(`  ⚠ HeadyHCFP router not loaded: ${err.message}`);
-}
+  console.log("  ∞ HCFP Router: INSTALLED");
+} catch (err) { console.warn(`  ⚠ HCFP router not loaded: ${err.message}`); }
+
+try {
+  const budgetRouter = require("./src/routes/budget-router");
+  app.use("/api/budget", budgetRouter);
+  console.log("  ∞ Budget Router: INSTALLED");
+} catch (err) { console.warn(`  ⚠ Budget router not loaded: ${err.message}`); }
 
 try {
   const patternsRouter = require("./src/routes/patterns");
@@ -2137,8 +2188,8 @@ const serviceStubs = {
 };
 
 for (const [svc, endpoints] of Object.entries(serviceStubs)) {
-  app.use(`/api/${svc}`, createServiceStub(`heady-${svc}`, endpoints));
-  console.log(`  ∞ Heady${svc.charAt(0).toUpperCase() + svc.slice(1)} stub routes: LOADED → /api/${svc}/*`);
+  app.use(`/api/${svc}`, Handshake.middleware, createServiceStub(`heady-${svc}`, endpoints));
+  console.log(`  ∞ Heady${svc.charAt(0).toUpperCase() + svc.slice(1)} stub routes: PROTECTED (mTLS) → /api/${svc}/*`);
 }
 
 // ─── ChatGPT Business Plan Integration ──────────────────────────────
@@ -3024,15 +3075,12 @@ try {
 
 // (Layer management routes already registered above at /api/layer)
 
-// ─── Error Handler ──────────────────────────────────────────────────
-app.use((err, req, res, next) => {
-  console.error("HeadyManager Error:", err);
-  res.status(500).json({
-    error: "Internal server error",
-    message: process.env.NODE_ENV === "development" ? err.message : "Something went wrong",
-    ts: new Date().toISOString(),
-  });
-});
+// ─── Health Routes (production probes) ─────────────────────────────
+try {
+  const healthRoutes = require('./src/routes/health-routes');
+  app.use('/health', healthRoutes);
+  console.log('  ∞ Health Routes: LOADED — /health/live, /health/ready, /health/full');
+} catch (err) { console.warn(`  ⚠ Health routes not loaded: ${err.message}`); }
 
 // ─── SPA Fallback ───────────────────────────────────────────────────
 app.get("*", (req, res) => {
@@ -3040,6 +3088,19 @@ app.get("*", (req, res) => {
   if (fs.existsSync(indexPath)) return res.sendFile(indexPath);
   res.status(404).json({ error: "Not found" });
 });
+
+// ─── Standardized Error Handler ─────────────────────────────────────
+try {
+  const { errorHandler } = require('./src/middleware/error-handler');
+  app.use(errorHandler);
+  console.log('  ∞ Error Handler: LOADED (standardized AppError responses)');
+} catch (err) {
+  // Fallback error handler if module fails to load
+  app.use((err, req, res, _next) => {
+    console.error('HeadyManager Error:', err);
+    res.status(500).json({ error: 'Internal server error', ts: new Date().toISOString() });
+  });
+}
 
 // Main health endpoint
 app.get("/api/health", (req, res) => {

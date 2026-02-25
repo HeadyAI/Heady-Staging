@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HeadyConnection — AI for Nonprofit Impact</title>
+    <meta name="description"
+        content="HeadyConnection — AI-powered grant writing, impact reporting, and donor engagement for nonprofits with Proof View transparency.">
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --g1: #D97706;
+            --g2: #F59E0B;
+            --accent: #FBBF24;
+            --accent2: #FCD34D;
+            --bg: #080500;
+            --surface: rgba(25, 20, 10, 0.4);
+            --text: #e2e8f0;
+            --text-muted: rgba(255, 255, 255, 0.55);
+            --border: rgba(255, 255, 255, 0.06);
+        }
+
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        #geo-canvas {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .wrap {
+            position: relative;
+            z-index: 10;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .hero {
+            padding: 70px 0 50px;
+            text-align: center;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 5px 14px;
+            border-radius: 50px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--border);
+            font-size: 0.65rem;
+            color: #fff;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 1.5rem;
+        }
+
+        .hero-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: #4ade80;
+            box-shadow: 0 0 8px #4ade80;
+            animation: pulse 2s ease infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1;
+                transform: scale(1)
+            }
+
+            50% {
+                opacity: .5;
+                transform: scale(.8)
+            }
+        }
+
+        .hero h1 {
+            font-size: clamp(2.2rem, 6vw, 3.8rem);
+            font-weight: 800;
+            background: linear-gradient(135deg, #F59E0B, #FBBF24, #FCD34D);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.6rem;
+            letter-spacing: -0.02em;
+        }
+
+        .hero-sub {
+            font-size: 0.95rem;
+            color: #fff;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            margin-bottom: 0.8rem;
+        }
+
+        .geo-tag {
+            display: inline-block;
+            padding: 4px 14px;
+            border: 1px solid rgba(251, 191, 36, 0.2);
+            border-radius: 50px;
+            font-size: 0.6rem;
+            color: var(--accent);
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            margin-bottom: 1.5rem;
+        }
+
+        .hero-desc {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            max-width: 560px;
+            margin: 0 auto 2rem;
+            line-height: 1.8;
+        }
+
+        .tabs {
+            display: flex;
+            justify-content: center;
+            gap: 4px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .tab {
+            padding: 8px 20px;
+            border: 1px solid var(--border);
+            background: transparent;
+            color: var(--text-muted);
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 0.78rem;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .tab.active {
+            background: var(--accent);
+            color: #000;
+            border-color: var(--accent);
+            font-weight: 600;
+        }
+
+        .panel {
+            display: none;
+            padding-bottom: 60px;
+        }
+
+        .panel.active {
+            display: block;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 1.4rem;
+            color: var(--accent);
+            margin-bottom: 6px;
+        }
+
+        .section-sub {
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            margin-bottom: 30px;
+        }
+
+        /* Impact Stats */
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin: 30px 0;
+        }
+
+        .stat {
+            background: var(--surface);
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            text-align: center;
+        }
+
+        .stat-val {
+            font-size: 1.8rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--g2), var(--accent2));
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .stat-lbl {
+            font-size: 0.65rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            margin-top: 2px;
+        }
+
+        /* Feature Cards */
+        .feat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 16px;
+        }
+
+        .feat-card {
+            background: var(--surface);
+            padding: 28px;
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            transition: all 0.3s;
+        }
+
+        .feat-card:hover {
+            border-color: rgba(251, 191, 36, 0.3);
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .feat-icon {
+            font-size: 2rem;
+            margin-bottom: 12px;
+        }
+
+        .feat-card h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 8px;
+        }
+
+        .feat-card p {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            line-height: 1.7;
+        }
+
+        .feat-detail {
+            font-size: 0.72rem;
+            color: var(--text-muted);
+            margin-top: 10px;
+            line-height: 1.6;
+            padding-top: 10px;
+            border-top: 1px solid var(--border);
+        }
+
+        .feat-detail strong {
+            color: var(--accent);
+        }
+
+        /* Proof View */
+        .proof-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            overflow: hidden;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .proof-header {
+            padding: 14px 20px;
+            background: rgba(251, 191, 36, 0.06);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .proof-header span {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .proof-status {
+            font-size: 0.7rem;
+            color: #4ade80;
+            font-weight: 600;
+        }
+
+        .proof-body {
+            padding: 20px;
+            font-size: 0.8rem;
+            line-height: 1.8;
+        }
+
+        .proof-row {
+            display: flex;
+            gap: 12px;
+            padding: 8px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .proof-label {
+            font-weight: 600;
+            color: var(--accent);
+            min-width: 120px;
+            font-size: 0.75rem;
+        }
+
+        .proof-value {
+            color: var(--text-muted);
+            font-size: 0.75rem;
+        }
+
+        /* Workflows */
+        .wf-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 16px;
+        }
+
+        .wf-card {
+            background: var(--surface);
+            padding: 24px;
+            border-radius: 14px;
+            border: 1px solid var(--border);
+        }
+
+        .wf-card h3 {
+            color: var(--accent);
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+        }
+
+        .wf-step {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 8px;
+            align-items: flex-start;
+        }
+
+        .wf-num {
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: rgba(251, 191, 36, 0.15);
+            color: var(--accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.65rem;
+            font-weight: 700;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .wf-text {
+            font-size: 0.76rem;
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+
+        footer {
+            padding: 40px 0;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.7rem;
+            letter-spacing: 0.5px;
+        }
+
+        footer a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        @media (max-width: 768px) {
+            .stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .feat-grid,
+            .wf-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="geo-canvas"></canvas>
+    <div class="wrap">
+        <div class="container">
+            <section class="hero">
+                <div class="hero-badge"><span class="hero-dot"></span> HeadyConnection · Topology IP</div>
+                <img src="icon.png" alt="HeadyConnection"
+                    style="width:90px;height:90px;border-radius:50%;margin-bottom:1.2rem;box-shadow:0 0 30px rgba(251,191,36,0.3);background:#1a1a2e;object-fit:cover;">
+                <h1>HeadyConnection™</h1>
+                <p class="hero-sub">Heavy Square Topology · Nonprofit Impact</p>
+                <div class="geo-tag">Flower of Life · Sacred Geometry v3 · HeadyConnection Graph IP</div>
+                <p class="hero-desc">
+                    The topology side of the Heady Fault-Tolerant Lattice. HeadyConnection defines the Heavy Square
+                    Lattice — a sparse, degree-3 qubit graph that eliminates SWAP overhead. Also empowers nonprofits
+                    with AI-powered grant writing, impact reporting, and Proof View transparency.
+                </p>
+            </section>
+
+            <div class="stats">
+                <div class="stat">
+                    <div class="stat-val">92%</div>
+                    <div class="stat-lbl">Grant Match Rate</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-val">3x</div>
+                    <div class="stat-lbl">Faster Reports</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-val">100%</div>
+                    <div class="stat-lbl">Proof Verified</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-val">0</div>
+                    <div class="stat-lbl">Hallucinations</div>
+                </div>
+            </div>
+
+            <div class="tabs">
+                <button class="tab active" onclick="showTab('features')">✨ Features</button>
+                <button class="tab" onclick="showTab('proof')">✅ Proof View</button>
+                <button class="tab" onclick="showTab('workflows')">🔄 Workflows</button>
+                <button class="tab" onclick="showTab('quantum')">⚛️ Quantum IP</button>
+            </div>
+
+            <!-- Features -->
+            <div id="features" class="panel active">
+                <h2 class="section-title">✨ Platform Features</h2>
+                <p class="section-sub">AI-powered tools designed for nonprofit teams</p>
+                <div class="feat-grid">
+                    <div class="feat-card">
+                        <div class="feat-icon">📝</div>
+                        <h3>AI Grant Writing</h3>
+                        <p>Generate complete grant applications from your program data, organizational history, and
+                            funder requirements. Every claim is fact-checked against your actual metrics.</p>
+                        <div class="feat-detail"><strong>How it works:</strong> Upload your program docs → AI drafts the
+                            proposal → Proof View verifies every data point → You review and submit.</div>
+                    </div>
+                    <div class="feat-card">
+                        <div class="feat-icon">📊</div>
+                        <h3>Impact Reporting</h3>
+                        <p>Auto-generate board-ready impact reports from your raw data. Charts, narratives, and outcome
+                            metrics — all grounded in verified numbers.</p>
+                        <div class="feat-detail"><strong>How it works:</strong> Connect your data sources → AI generates
+                            narratives and charts → Proof View links every claim to source data.</div>
+                    </div>
+                    <div class="feat-card">
+                        <div class="feat-icon">👥</div>
+                        <h3>Volunteer Intelligence</h3>
+                        <p>Match volunteers to opportunities using AI-driven skill analysis, schedule compatibility, and
+                            mission alignment scoring.</p>
+                        <div class="feat-detail"><strong>How it works:</strong> Volunteers submit profiles → AI analyzes
+                            skills and availability → Smart matching suggests optimal placements.</div>
+                    </div>
+                    <div class="feat-card">
+                        <div class="feat-icon">💌</div>
+                        <h3>Donor Engagement</h3>
+                        <p>Personalized donor communications, thank-you letters, and impact updates — each tailored to
+                            the donor's giving history and interests.</p>
+                        <div class="feat-detail"><strong>How it works:</strong> Import donor CRM data → AI crafts
+                            personalized messages → Track engagement metrics automatically.</div>
+                    </div>
+                    <div class="feat-card">
+                        <div class="feat-icon">🔍</div>
+                        <h3>Grant Discovery</h3>
+                        <p>AI scans thousands of funding opportunities and matches them to your organization's mission,
+                            capacity, and eligibility criteria.</p>
+                        <div class="feat-detail"><strong>How it works:</strong> Define your org profile → AI searches
+                            funding databases → Ranked matches with application deadlines and fit scores.</div>
+                    </div>
+                    <div class="feat-card">
+                        <div class="feat-icon">📋</div>
+                        <h3>Compliance Tracking</h3>
+                        <p>Monitor grant requirements, reporting deadlines, and spending compliance. Automated alerts
+                            before deadlines and budget thresholds.</p>
+                        <div class="feat-detail"><strong>How it works:</strong> Log grant awards → AI tracks
+                            requirements → Automated reminders and pre-built report templates.</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Proof View -->
+            <div id="proof" class="panel">
+                <h2 class="section-title">✅ Proof View Transparency</h2>
+                <p class="section-sub">Every AI output comes with a verifiable audit trail — zero hallucination risk</p>
+                <div class="proof-card">
+                    <div class="proof-header">
+                        <span>Proof View — Grant Application Draft</span>
+                        <span class="proof-status">✓ All Claims Verified</span>
+                    </div>
+                    <div class="proof-body">
+                        <div class="proof-row"><span class="proof-label">Claim</span><span class="proof-value">"Served
+                                2,847 families in 2025"</span></div>
+                        <div class="proof-row"><span class="proof-label">Source</span><span class="proof-value">Client
+                                database export — Q1-Q4 2025 intake records</span></div>
+                        <div class="proof-row"><span class="proof-label">Verified</span><span class="proof-value">✓
+                                Count matches 2,847 unique household IDs</span></div>
+                        <div class="proof-row"><span class="proof-label">Confidence</span><span
+                                class="proof-value">99.8% — exact database match</span></div>
+                        <div style="height:16px"></div>
+                        <div class="proof-row"><span class="proof-label">Claim</span><span class="proof-value">"89% of
+                                participants reported improved outcomes"</span></div>
+                        <div class="proof-row"><span class="proof-label">Source</span><span
+                                class="proof-value">Post-program survey responses (n=1,204)</span></div>
+                        <div class="proof-row"><span class="proof-label">Verified</span><span class="proof-value">✓
+                                1,072 of 1,204 respondents (89.03%)</span></div>
+                        <div class="proof-row"><span class="proof-label">Confidence</span><span
+                                class="proof-value">98.5% — survey-based, margin ±2.8%</span></div>
+                        <div style="height:16px"></div>
+                        <div class="proof-row"><span class="proof-label">Claim</span><span class="proof-value">"$1.2M
+                                total program budget"</span></div>
+                        <div class="proof-row"><span class="proof-label">Source</span><span class="proof-value">FY2025
+                                audited financial statements</span></div>
+                        <div class="proof-row"><span class="proof-label">Verified</span><span class="proof-value">✓ Line
+                                item: Program Services = $1,203,412</span></div>
+                        <div class="proof-row"><span class="proof-label">Confidence</span><span class="proof-value">100%
+                                — audited financial data</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Workflows -->
+            <div id="workflows" class="panel">
+                <h2 class="section-title">🔄 Workflows</h2>
+                <p class="section-sub">Step-by-step AI-assisted processes for common nonprofit tasks</p>
+                <div class="wf-grid">
+                    <div class="wf-card">
+                        <h3>📝 Grant Application</h3>
+                        <div class="wf-step"><span class="wf-num">1</span><span class="wf-text">Upload program
+                                documentation, financials, and org profile</span></div>
+                        <div class="wf-step"><span class="wf-num">2</span><span class="wf-text">AI matches your org to
+                                relevant funding opportunities</span></div>
+                        <div class="wf-step"><span class="wf-num">3</span><span class="wf-text">Select a funder → AI
+                                drafts complete application</span></div>
+                        <div class="wf-step"><span class="wf-num">4</span><span class="wf-text">Proof View verifies
+                                every claim against your data</span></div>
+                        <div class="wf-step"><span class="wf-num">5</span><span class="wf-text">Review, edit, and submit
+                                with confidence</span></div>
+                    </div>
+                    <div class="wf-card">
+                        <h3>📊 Impact Report</h3>
+                        <div class="wf-step"><span class="wf-num">1</span><span class="wf-text">Connect data sources
+                                (CRM, surveys, financials)</span></div>
+                        <div class="wf-step"><span class="wf-num">2</span><span class="wf-text">Select reporting period
+                                and audience (board, funder, public)</span></div>
+                        <div class="wf-step"><span class="wf-num">3</span><span class="wf-text">AI generates narrative,
+                                charts, and outcome analysis</span></div>
+                        <div class="wf-step"><span class="wf-num">4</span><span class="wf-text">Proof View audit trail
+                                links every metric to source</span></div>
+                        <div class="wf-step"><span class="wf-num">5</span><span class="wf-text">Export as PDF, share
+                                link, or embed in website</span></div>
+                    </div>
+                    <div class="wf-card">
+                        <h3>💌 Donor Campaign</h3>
+                        <div class="wf-step"><span class="wf-num">1</span><span class="wf-text">Import donor list with
+                                giving history and interests</span></div>
+                        <div class="wf-step"><span class="wf-num">2</span><span class="wf-text">AI segments donors by
+                                engagement level and affinity</span></div>
+                        <div class="wf-step"><span class="wf-num">3</span><span class="wf-text">Personalized messages
+                                drafted for each segment</span></div>
+                        <div class="wf-step"><span class="wf-num">4</span><span class="wf-text">Review and approve
+                                messages in batch</span></div>
+                        <div class="wf-step"><span class="wf-num">5</span><span class="wf-text">Send and track open
+                                rates, responses, and conversions</span></div>
+                    </div>
+                    <div class="wf-card">
+                        <h3>👥 Volunteer Matching</h3>
+                        <div class="wf-step"><span class="wf-num">1</span><span class="wf-text">Post opportunities with
+                                skill requirements and schedule</span></div>
+                        <div class="wf-step"><span class="wf-num">2</span><span class="wf-text">Volunteers submit
+                                profiles with skills and availability</span></div>
+                        <div class="wf-step"><span class="wf-num">3</span><span class="wf-text">AI scores fit based on
+                                skills, schedule, and mission alignment</span></div>
+                        <div class="wf-step"><span class="wf-num">4</span><span class="wf-text">Top matches surfaced
+                                with rationale for each</span></div>
+                        <div class="wf-step"><span class="wf-num">5</span><span class="wf-text">One-click invite,
+                                onboarding, and hour tracking</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quantum IP Panel -->
+            <div id="quantum" class="panel">
+                <h2 class="section-title">⚛️ The HeadyConnection Graph</h2>
+                <p class="section-sub">A Heavy Square topology that makes fault-tolerant quantum computing practical</p>
+                <div class="feat-grid">
+                    <div class="feat-card">
+                        <div class="feat-icon">📐</div>
+                        <h3>Heavy Square Lattice</h3>
+                        <p>Qubits on vertices, ancillas on edges, max degree-3. This sparse connectivity graph retains
+                            frequency-crowding protection while aligning naturally with surface code X and Z
+                            stabilizers.</p>
+                        <div class="feat-detail"><strong>IP designation:</strong> The HeadyConnection Graph. Data qubits
+                            on vertices, ancilla qubits on edges — direct surface code embedding without SWAP
+                            operations.</div>
+                    </div>
+                    <div class="feat-card">
+                        <div class="feat-icon">🔗</div>
+                        <h3>Natural Code Embedding</h3>
+                        <p>Unlike Heavy Hex (which requires complex "bridge" qubits and fold-unfold embeddings),
+                            HeadyConnection aligns with standard logical qubit structures out of the box.</p>
+                        <div class="feat-detail"><strong>Result:</strong> No idle gaps where errors accumulate. Direct
+                            stabilizer mapping eliminates the embedding overhead problem.</div>
+                    </div>
+                    <div class="feat-card">
+                        <div class="feat-icon">🛡️</div>
+                        <h3>Crosstalk Protection</h3>
+                        <p>Sparsity is the key. No qubit has 4 neighbors, preventing frequency crowding — the same
+                            benefit as Heavy Hex but with better geometric properties.</p>
+                        <div class="feat-detail"><strong>Combined with HeadySystems:</strong> Flag Qubit protocols raise
+                            the error threshold to >0.5% (vs ~0.3% for standard Heavy Hex).</div>
+                    </div>
+                    <div class="feat-card">
+                        <div class="feat-icon">⚡</div>
+                        <h3>Path to Scale</h3>
+                        <p>The HeadyConnection topology + HeadySystems error correction provides the cleanest path to
+                            large-scale logical qubits with quantum breakeven at lower overhead.</p>
+                        <div class="feat-detail"><strong>Architecture:</strong> Gauge measurement → classical inference
+                            → flag-based correction → logical qubit preservation.</div>
+                    </div>
+                </div>
+                <div
+                    style="max-width:700px;margin:30px auto 0;background:var(--surface);padding:20px;border-radius:14px;border:1px solid var(--border);">
+                    <h3 style="color:var(--accent);font-size:0.9rem;margin-bottom:12px;">Heady vs. Standard Heavy Hex
+                    </h3>
+                    <table style="width:100%;font-size:0.75rem;border-collapse:collapse;">
+                        <tr style="border-bottom:1px solid var(--border);">
+                            <td style="padding:8px;color:var(--text-muted);">Topology</td>
+                            <td style="padding:8px;color:var(--text-muted);">Heavy Hexagonal</td>
+                            <td style="padding:8px;color:var(--accent);font-weight:600;">HeadyConnection (Heavy Square)
+                            </td>
+                        </tr>
+                        <tr style="border-bottom:1px solid var(--border);">
+                            <td style="padding:8px;color:var(--text-muted);">Code Embedding</td>
+                            <td style="padding:8px;color:var(--text-muted);">Complex (SWAP/Bridge)</td>
+                            <td style="padding:8px;color:var(--accent);font-weight:600;">Direct (Natural alignment)</td>
+                        </tr>
+                        <tr style="border-bottom:1px solid var(--border);">
+                            <td style="padding:8px;color:var(--text-muted);">Error Correction</td>
+                            <td style="padding:8px;color:var(--text-muted);">Standard Surface Code</td>
+                            <td style="padding:8px;color:var(--accent);font-weight:600;">HeadySystems (Subsystem +
+                                Flags)</td>
+                        </tr>
+                        <tr>
+                            <td style="padding:8px;color:var(--text-muted);">Threshold</td>
+                            <td style="padding:8px;color:var(--text-muted);">~0.3%</td>
+                            <td style="padding:8px;color:#4ade80;font-weight:700;">>0.5% ↑</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <footer>
+                <p>🤝 HeadyConnection™ — <a href="https://headyconnection.org">headyconnection.org</a> · <a
+                        href="https://headyme.com">headyme.com</a> · <a href="https://headyapi.com">headyapi.com</a></p>
+                <p style="margin-top:4px;">∞ Flower of Life · AI for Nonprofit Impact ∞</p>
+            </footer>
+        </div>
+    </div>
+
+    <script>
+        // Flower of Life background (gold/amber)
+        (function () {
+            const c = document.getElementById('geo-canvas'), ctx = c.getContext('2d');
+            let w, h, cx, cy, stars = [], t = 0;
+            function resize() {
+                w = c.width = innerWidth; h = c.height = innerHeight; cx = w / 2; cy = h / 2; stars = [];
+                for (let i = 0; i < (w * h) / 4500; i++) stars.push({ x: Math.random() * w, y: Math.random() * h, z: Math.random() * 2, s: Math.random() * 1.5, sp: Math.random() * .005 + .002, o: Math.random() * Math.PI * 2 });
+            }
+            function draw() {
+                ctx.fillStyle = '#080500'; ctx.fillRect(0, 0, w, h);
+                stars.forEach(s => {
+                    s.y -= s.z * .1; s.x += s.z * .05; if (s.y < 0) s.y = h; if (s.x > w) s.x = 0;
+                    const b = Math.sin(t * s.sp + s.o) * .5 + .5;
+                    ctx.fillStyle = `rgba(251,191,36,${b * .25})`; ctx.beginPath(); ctx.arc(s.x, s.y, s.s, 0, Math.PI * 2); ctx.fill();
+                });
+                // Flower of Life
+                const r = Math.min(w, h) * .28, br = Math.sin(t * .01) * .01 + 1;
+                ctx.save(); ctx.translate(cx, cy); ctx.scale(br, br); ctx.rotate(t * .00005);
+                ctx.strokeStyle = 'rgba(251,191,36,0.05)'; ctx.lineWidth = .5;
+                for (let ring = 0; ring < 4; ring++) {
+                    const n = ring === 0 ? 1 : ring * 6, d = ring * r * .24;
+                    for (let i = 0; i < n; i++) {
+                        const a = (Math.PI * 2 / Math.max(n, 1)) * i;
+                        ctx.beginPath(); ctx.arc(Math.cos(a) * d, Math.sin(a) * d, r * .24, 0, Math.PI * 2); ctx.stroke();
+                    }
+                }
+                ctx.restore(); t++; requestAnimationFrame(draw);
+            }
+            addEventListener('resize', resize); resize(); draw();
+        })();
+
+        function showTab(id) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            event.target.classList.add('active');
+        }
+    </script>
+</body>
+
+</html>
