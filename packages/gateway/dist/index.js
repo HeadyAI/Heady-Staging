@@ -19,7 +19,7 @@ const DEFAULT_DOMAINS = {
     'headybuddy.org': 'heady-buddy',
     'headybot.com': 'heady-bot',
     'headyapi.com': 'heady-api',
-    'heady-ai.com': 'heady-ai',
+    'headyai.com': 'heady-ai',
 };
 class HeadyGateway {
     config;

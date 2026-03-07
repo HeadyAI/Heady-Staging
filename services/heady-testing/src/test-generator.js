@@ -51,7 +51,7 @@ class TestGenerator {
         return files;
     }
 
-    async generateTest(filePath) {
+    async generateTest(file Path) {
         const source = fs.readFileSync(filePath, 'utf-8');
         const moduleName = path.basename(filePath, '.js');
         const exports = this.extractExports(source);
