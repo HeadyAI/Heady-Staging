@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 import { Metadata } from "next"
 import { auth } from "@/lib/auth"
 import { redirect } from "next/navigation"

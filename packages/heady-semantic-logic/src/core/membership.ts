@@ -2,7 +2,7 @@
  * Membership Functions for fuzzification
  */
 
-export type MembershipType = 'triangular' | 'gaussian' | 'sigmoid' | 'bell';
+export type MembershipType = 'triangular' | 'trapezoidal' | 'gaussian' | 'sigmoid' | 'bell';
 
 export interface MembershipFunction {
   type: MembershipType;
@@ -18,6 +18,19 @@ export function triangular(left: number, center: number, right: number, label = 
       if (x <= left || x >= right) return 0;
       if (x <= center) return (x - left) / (center - left);
       return (right - x) / (right - center);
+    },
+  };
+}
+
+export function trapezoidal(a: number, b: number, c: number, d: number, label = 'trap'): MembershipFunction {
+  return {
+    type: 'trapezoidal',
+    label,
+    evaluate(x: number): number {
+      if (x <= a || x >= d) return 0;
+      if (x >= b && x <= c) return 1;
+      if (x < b) return (x - a) / (b - a);
+      return (d - x) / (d - c);
     },
   };
 }

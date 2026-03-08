@@ -15,7 +15,7 @@
     "README.md"
   ],
   "scripts": {
-    "build:ignored": "tsc",
+    "build": "tsc",
     "clean": "rm -rf dist",
     "prepublishOnly": "npm run clean && npm run build"
   },

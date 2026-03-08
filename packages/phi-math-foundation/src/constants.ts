@@ -11,3 +11,9 @@ export const CSL_THRESHOLDS = {
   CRITICAL: 0.927,
   DEDUP: 0.972,
 } as const;
+
+// Phi-derived vector space constants
+export const VECTOR_DIMENSIONS = 1597; // FIB[16] — default embedding dimensionality
+export const PROJECTION_DIMENSIONS = 89; // FIB[10] — PCA-like projected space
+export const CSL_THRESHOLD = CSL_THRESHOLDS.MEDIUM; // 0.809 default gate threshold
+export const EMBEDDING_DENSITY_GATE = CSL_THRESHOLDS.LOW; // 0.691 minimum embedding quality

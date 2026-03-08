@@ -14,7 +14,7 @@ export class TaskOrchestrator {
 
   async assignTask(task: Task): Promise<TaskAssignment> {
     const startTime = Date.now();
-    this.logger.info(\`Assigning task \${task.id}\`, { 
+    this.logger.info(`Assigning task ${task.id}`, { 
       type: task.type, 
       priority: task.priority 
     });
@@ -23,7 +23,7 @@ export class TaskOrchestrator {
     const agent = this.selectAgent(task);
 
     if (!agent) {
-      throw new Error(\`No available agent for task type: \${task.type}\`);
+      throw new Error(`No available agent for task type: ${task.type}`);
     }
 
     const assignment: TaskAssignment = {
@@ -35,10 +35,10 @@ export class TaskOrchestrator {
 
     // Store assignment in Redis
     const connection = await this.redis.getConnection();
-    await connection.hset(\`task:\${task.id}\`, 'assignedTo', agent.id);
+    await connection.hset(`task:${task.id}`, 'assignedTo', agent.id);
     await connection.zadd('task:queue', task.priority, task.id);
 
-    this.logger.info(\`Task assigned in \${assignment.latency}ms\`, { 
+    this.logger.info(`Task assigned in ${assignment.latency}ms`, { 
       taskId: task.id, 
       agentId: agent.id 
     });
@@ -65,7 +65,7 @@ export class TaskOrchestrator {
 
   registerAgent(agent: Agent): void {
     this.agents.set(agent.id, agent);
-    this.logger.info(\`Agent registered: \${agent.id}\`, { 
+    this.logger.info(`Agent registered: ${agent.id}`, { 
       type: agent.type, 
       capabilities: agent.capabilities 
     });
@@ -73,6 +73,6 @@ export class TaskOrchestrator {
 
   unregisterAgent(agentId: string): void {
     this.agents.delete(agentId);
-    this.logger.info(\`Agent unregistered: \${agentId}\`);
+    this.logger.info(`Agent unregistered: ${agentId}`);
   }
 }

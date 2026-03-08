@@ -106,6 +106,9 @@ importers:
       commander:
         specifier: ^12.0.0
         version: 12.1.0
+      decimal.js:
+        specifier: ^10.4.3
+        version: 10.6.0
       fast-glob:
         specifier: ^3.3.2
         version: 3.3.3
@@ -473,15 +476,37 @@ importers:
       '@heady-ai/contract-types':
         specifier: workspace:*
         version: link:../../packages/contract-types
+      '@heady-ai/core':
+        specifier: workspace:*
+        version: link:../../packages/core
       '@heady-ai/csl-gate':
         specifier: workspace:*
         version: link:../../packages/csl-gate
       '@heady-ai/observability-client':
         specifier: workspace:*
         version: link:../../packages/observability-client
+      '@heady-ai/redis':
+        specifier: workspace:*
+        version: link:../../packages/redis
       '@heady-ai/service-runtime':
         specifier: workspace:*
         version: link:../../packages/service-runtime
+      '@heady-ai/types':
+        specifier: workspace:*
+        version: link:../../packages/types
+      express:
+        specifier: ^4.18.2
+        version: 4.22.1
+      zod:
+        specifier: ^3.22.4
+        version: 3.25.76
+    devDependencies:
+      '@types/express':
+        specifier: ^4.17.21
+        version: 4.17.25
+      '@types/node':
+        specifier: ^20.11.0
+        version: 20.19.37
 
   services/heady-eval:
     dependencies:

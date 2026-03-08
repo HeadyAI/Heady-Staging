@@ -1,8 +1,8 @@
-import { Router } from 'express';
+import { Router, type Router as RouterType } from 'express';
 import { HeadyLogger, validateRequest } from '@heady-ai/core';
 import { z } from 'zod';
 
-export const chatRouter = Router();
+export const chatRouter: RouterType = Router();
 const logger = new HeadyLogger('heady-brain:chat');
 
 const ChatRequestSchema = z.object({
@@ -25,7 +25,7 @@ chatRouter.post('/', async (req, res, next) => {
 
     // TODO: Implement actual chat logic with LLM
     res.json({
-      response: \`Echo: \${data.message}\`,
+      response: `Echo: ${data.message}`,
       model: data.model || 'gpt-4',
       timestamp: new Date().toISOString()
     });

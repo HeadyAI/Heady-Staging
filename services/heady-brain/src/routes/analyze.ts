@@ -1,8 +1,8 @@
-import { Router } from 'express';
+import { Router, type Router as RouterType } from 'express';
 import { HeadyLogger, validateRequest } from '@heady-ai/core';
 import { z } from 'zod';
 
-export const analyzeRouter = Router();
+export const analyzeRouter: RouterType = Router();
 const logger = new HeadyLogger('heady-brain:analyze');
 
 const AnalyzeRequestSchema = z.object({

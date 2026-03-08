@@ -40,6 +40,6 @@ app.use((err: any, req: express.Request, res: express.Response, next: express.Ne
 const PORT = config.PORT || 3001;
 
 app.listen(PORT, () => {
-  logger.info(\`HeadyBrain listening on port \${PORT}\`);
-  logger.info(\`Environment: \${config.NODE_ENV}\`);
+  logger.info(`HeadyBrain listening on port ${PORT}`);
+  logger.info(`Environment: ${config.NODE_ENV}`);
 });

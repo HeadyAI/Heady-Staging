@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { TaskOrchestrator } from '../orchestrator';
+import { TaskOrchestrator } from '../orchestrator.js';
 import { validateRequest, HeadyLogger } from '@heady-ai/core';
 import { z } from 'zod';
 
@@ -19,7 +19,7 @@ export function tasksRouter(orchestrator: TaskOrchestrator): Router {
       const data = validateRequest(TaskSchema, req.body);
 
       const task = {
-        id: \`task-\${Date.now()}\`,
+        id: `task-${Date.now()}`,
         ...data,
         status: 'pending' as const,
         createdAt: new Date(),

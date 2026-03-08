@@ -78,7 +78,7 @@ class HeadySupervisor {
 }
 
 // ─── HeadyConductor (federated routing) ────────────────────────────
-let { getConductor } = {}; try { { getConductor } = require("./heady-conductor"); } catch(e) { /* graceful */ }
+const { getConductor } = (function(){try{return require("./heady-conductor")}catch(e){return {}}})();
 
 class AgentOrchestrator extends EventEmitter {
     constructor(options = {}) {

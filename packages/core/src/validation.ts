@@ -24,3 +24,10 @@ export const PaginationSchema = z.object({
 });
 
 export type PaginationParams = z.infer<typeof PaginationSchema>;
+
+export function validateUserId(userId: unknown): string {
+  if (typeof userId !== 'string' || userId.length === 0) {
+    throw new ValidationError('Invalid user ID', [{ message: 'userId must be a non-empty string' }]);
+  }
+  return userId;
+}
