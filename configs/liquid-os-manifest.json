@@ -1,0 +1,137 @@
+{
+  "name": "Heady™ Liquid Latent OS",
+  "version": "4.0.0",
+  "phi": 1.6180339887498949,
+  "psi": 0.6180339887498949,
+
+  "edge_layer": {
+    "platform": "cloudflare",
+    "gateway": {
+      "worker": "liquid-gateway-worker",
+      "url": "https://liquid-gateway-worker.emailheadyconnection.workers.dev",
+      "production_routes": [
+        "api.headysystems.com/*",
+        "gateway.headysystems.com/*",
+        "app.headysystems.com/*",
+        "admin.headysystems.com/*",
+        "metrics.headysystems.com/*",
+        "ai.headysystems.com/*"
+      ]
+    },
+    "pages_projects": [
+      { "name": "headysystems", "url": "headysystems.pages.dev", "domain": "headysystems.com" },
+      { "name": "headysystems-com", "url": "headysystems-com.pages.dev" },
+      { "name": "headyme", "url": "headyme.pages.dev", "domain": "headyme.com" },
+      { "name": "headyme-com", "url": "headyme-com.pages.dev" },
+      { "name": "headybuddy", "url": "headybuddy.pages.dev", "domain": "headybuddy.org" },
+      { "name": "headyconnection", "url": "headyconnection.pages.dev", "domain": "headyconnection.org" },
+      { "name": "headyos", "url": "headyos.pages.dev" },
+      { "name": "headyapi", "url": "headyapi.pages.dev" },
+      { "name": "heady-headyweb", "url": "heady-headyweb.pages.dev" },
+      { "name": "heady-1ime1", "url": "heady-1ime1.pages.dev" }
+    ],
+    "dns_zone": "d71262d0faa509f890fd5fea413c39bc",
+    "account_id": "8b1fa38f282c691423c6399247d53323"
+  },
+
+  "compute_layer": {
+    "colab_runtimes": [
+      { "id": "colab-1", "region": "us-east", "gpu": "A100", "subscription": "pro_plus", "vector": [0, 1.618, 0] },
+      { "id": "colab-2", "region": "us-west", "gpu": "A100", "subscription": "pro_plus", "vector": [0, 1.0, 0.618] },
+      { "id": "colab-3", "region": "eu-west", "gpu": "A100", "subscription": "pro_plus", "vector": [0.618, 1.618, 0] }
+    ],
+    "vertex_ai": {
+      "project": "heady-ai",
+      "region": "us-central1",
+      "models": ["gemini-2.5-pro", "gemini-2.5-flash"],
+      "vector": [0.618, 1.0, 0.618]
+    }
+  },
+
+  "origin_layer": {
+    "services": {
+      "manager": { "port": 3300, "url": "https://manager.headysystems.com" },
+      "drupal_cms": { "port": 8080, "url": "https://admin.headysystems.com" },
+      "task_browser": { "port": 3010 },
+      "realtime": { "port": 3301, "protocol": "websocket" }
+    },
+    "databases": {
+      "neon_postgres": {
+        "project": "green-water-91851995",
+        "region": "us-east-2"
+      },
+      "upstash_redis": {
+        "endpoint": "finer-sole-64861.upstash.io",
+        "regions": ["us-east-1", "us-west-1"]
+      }
+    }
+  },
+
+  "cms_layer": {
+    "platform": "drupal-11",
+    "mode": "headless",
+    "modules": ["heady_admin", "heady_control", "heady_cms"],
+    "apis": {
+      "content": "/api/cms/content/{site}",
+      "sites": "/api/cms/sites",
+      "tasks": "/api/cms/tasks",
+      "clipboard": "/api/cms/clipboard/{channel}",
+      "liquid_nodes": "/api/cms/liquid/nodes",
+      "liquid_topology": "/api/cms/liquid/topology"
+    }
+  },
+
+  "auth_layer": {
+    "firebase_project": "heady-ai",
+    "auth_url": "https://gateway.headysystems.com/auth",
+    "verify_url": "https://gateway.headysystems.com/auth/verify",
+    "providers": ["email", "google", "github"]
+  },
+
+  "monitoring": {
+    "sentry": {
+      "org": "headyconnection-inc",
+      "project": "heady-manager",
+      "dsn": "https://1b34e12c988678f066c6948a31d43ff0@o4510998791192576.ingest.us.sentry.io/4510998806069248"
+    }
+  },
+
+  "github": {
+    "org": "HeadyMe",
+    "total_repos": 77,
+    "site_repos": 47,
+    "monorepo": "Heady-pre-production-9f2f0642"
+  },
+
+  "vector_space": {
+    "dimensions": 3,
+    "axes": {
+      "x": "latency_priority",
+      "y": "compute_weight",
+      "z": "cache_affinity"
+    },
+    "tier_vectors": {
+      "core":        { "x": 1.0,   "y": 0.0,   "z": 1.618 },
+      "product":     { "x": 0.618, "y": 0.0,   "z": 1.0 },
+      "integration": { "x": 0.382, "y": 0.618, "z": 0.618 },
+      "internal":    { "x": 0.0,   "y": 0.618, "z": 0.382 },
+      "compute":     { "x": 0.0,   "y": 1.618, "z": 0.0 }
+    }
+  },
+
+  "phi_timing": {
+    "TICK":    1000,
+    "PULSE":   1618,
+    "BEAT":    2618,
+    "BREATH":  4236,
+    "WAVE":    6854,
+    "SURGE":  11090,
+    "FLOW":   17944,
+    "CYCLE":  29034,
+    "TIDE":   46979,
+    "EPOCH":  76013,
+    "ERA":   122992,
+    "SEASON":199005,
+    "HORIZON":321997
+  }
+}

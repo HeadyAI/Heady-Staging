@@ -1,7 +1,26 @@
 name = "liquid-gateway-worker"
 main = "src/index.ts"
 compatibility_date = "2026-03-08"
+account_id = "8b1fa38f282c691423c6399247d53323"
 
 [vars]
-HEADY_ENV = "prod"
+HEADY_ENV = "production"
 WORKER_NAME = "liquid-gateway-worker"
+HEADY_VERSION = "4.0.0"
+BACKEND_ORIGIN = "https://manager.headysystems.com"
+FIREBASE_API_KEY = "AIzaSyBLTu0h9Q09Cr05_3_Zj_3yent5cO3iaHE"
+
+[env.production]
+routes = [
+  { pattern = "api.headysystems.com/*", zone_name = "headysystems.com" },
+  { pattern = "gateway.headysystems.com/*", zone_name = "headysystems.com" },
+  { pattern = "app.headysystems.com/*", zone_name = "headysystems.com" },
+  { pattern = "admin.headysystems.com/*", zone_name = "headysystems.com" },
+  { pattern = "metrics.headysystems.com/*", zone_name = "headysystems.com" },
+  { pattern = "ai.headysystems.com/*", zone_name = "headysystems.com" },
+]
+
+[env.production.vars]
+HEADY_ENV = "production"
+BACKEND_ORIGIN = "https://manager.headysystems.com"
+LOG_LEVEL = "info"

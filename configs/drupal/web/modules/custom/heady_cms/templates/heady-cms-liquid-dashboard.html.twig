@@ -1,0 +1,122 @@
+{#
+ # Heady™ Liquid Latent OS Dashboard
+ # 3D vector space visualization, node topology, Colab runtimes
+ #}
+<div class="heady-liquid-dashboard">
+
+  <div class="liquid-header">
+    <h2>Liquid Latent OS <span class="phi-badge">&phi; = 1.618</span></h2>
+    <div class="liquid-stats">
+      <span class="stat">{{ nodes|length }} nodes</span>
+      <span class="stat">3 Colab runtimes</span>
+      <span class="stat">3D vector routing</span>
+    </div>
+  </div>
+
+  {# ── Node Topology ── #}
+  <div class="topology-grid">
+    <div class="topology-layer" data-layer="edge">
+      <h3>Edge Layer <small>(Cloudflare Workers)</small></h3>
+      <div class="node-cards">
+        {% for node in nodes %}
+          {% if node.platform == 'cloudflare' %}
+            <div class="node-card node-{{ node.status }}" data-node="{{ node.id }}">
+              <div class="node-name">{{ node.name }}</div>
+              <div class="node-type">{{ node.type }}</div>
+              <div class="node-vector">
+                x={{ node.vector.x }} y={{ node.vector.y }} z={{ node.vector.z }}
+              </div>
+              <div class="node-status {{ node.status }}">{{ node.status }}</div>
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="topology-layer" data-layer="compute">
+      <h3>Compute Layer <small>(Colab Pro+ GPU)</small></h3>
+      <div class="node-cards">
+        {% for node in nodes %}
+          {% if node.platform == 'colab' %}
+            <div class="node-card node-{{ node.status }}" data-node="{{ node.id }}">
+              <div class="node-name">{{ node.name }}</div>
+              <div class="node-meta">{{ node.region }} &middot; {{ node.gpu }}</div>
+              <div class="node-vector">
+                x={{ node.vector.x }} y={{ node.vector.y }} z={{ node.vector.z }}
+              </div>
+              <div class="node-status {{ node.status }}">{{ node.status }}</div>
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="topology-layer" data-layer="ai">
+      <h3>AI Layer <small>(Vertex AI)</small></h3>
+      <div class="node-cards">
+        {% for node in nodes %}
+          {% if node.platform == 'vertex' %}
+            <div class="node-card node-{{ node.status }}" data-node="{{ node.id }}">
+              <div class="node-name">{{ node.name }}</div>
+              <div class="node-meta">{{ node.model }} &middot; {{ node.region }}</div>
+              <div class="node-status {{ node.status }}">{{ node.status }}</div>
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="topology-layer" data-layer="origin">
+      <h3>Origin Layer <small>(Local Services)</small></h3>
+      <div class="node-cards">
+        {% for node in nodes %}
+          {% if node.platform == 'local' %}
+            <div class="node-card node-{{ node.status }}" data-node="{{ node.id }}">
+              <div class="node-name">{{ node.name }}</div>
+              <div class="node-type">{{ node.type }} :{{ node.port }}</div>
+              <div class="node-status {{ node.status }}">{{ node.status }}</div>
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+
+  {# ── PHI Timing Reference ── #}
+  <div class="phi-timing-table">
+    <h3>&phi; Timing Tiers</h3>
+    <table>
+      <thead><tr><th>Tier</th><th>ms</th><th>&phi;^n</th></tr></thead>
+      <tbody>
+        {% for name, ms in phi_timing %}
+          <tr>
+            <td>{{ name }}</td>
+            <td>{{ ms }}ms</td>
+            <td>&phi;^{{ loop.index0 }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  {# ── Clipboard Widget ── #}
+  <div class="clipboard-widget" id="clipboard-widget">
+    <h3>Cross-Device Clipboard</h3>
+    <div class="clipboard-channels" id="clipboard-channels">
+      <button class="channel-btn active" data-channel="default">Default</button>
+      <button class="channel-btn" data-channel="code">Code</button>
+      <button class="channel-btn" data-channel="images">Images</button>
+      <button class="channel-btn" data-channel="files">Files</button>
+      <button class="channel-btn" data-channel="links">Links</button>
+    </div>
+    <div class="clipboard-items" id="clipboard-items">
+      <div class="clipboard-empty">No items in clipboard</div>
+    </div>
+    <div class="clipboard-actions">
+      <input type="text" id="clipboard-input" placeholder="Quick copy text...">
+      <button id="clipboard-copy-btn">Copy</button>
+      <button id="clipboard-paste-btn">Paste</button>
+    </div>
+  </div>
+
+</div>

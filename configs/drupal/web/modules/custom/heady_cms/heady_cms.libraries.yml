@@ -1,0 +1,14 @@
+liquid_dashboard:
+  version: 4.0
+  css:
+    theme:
+      css/liquid-dashboard.css: {}
+      css/clipboard-widget.css: {}
+  js:
+    js/liquid-dashboard.js: {}
+    js/clipboard-widget.js: {}
+    js/task-browser.js: {}
+  dependencies:
+    - core/drupal
+    - core/drupalSettings
+    - core/once

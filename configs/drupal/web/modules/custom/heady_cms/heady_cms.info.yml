@@ -1,0 +1,17 @@
+name: 'Heady™ Headless CMS'
+type: module
+description: 'Headless CMS content API powering all 47 Heady sites — JSON:API content delivery, site management, task workflows, and browser automation'
+core_version_requirement: ^11
+package: 'Heady™ Systems'
+
+dependencies:
+  - drupal:jsonapi
+  - drupal:rest
+  - drupal:serialization
+  - drupal:node
+  - drupal:taxonomy
+  - drupal:media
+  - drupal:user
+  - heady_admin:heady_admin
+
+configure: heady_cms.settings

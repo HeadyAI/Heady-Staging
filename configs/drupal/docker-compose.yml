@@ -44,6 +44,20 @@ services:
       - redis_data:/data
     restart: unless-stopped
 
+  task-browser:
+    build:
+      context: ../../services/heady-task-browser
+    ports:
+      - "3010:3010"
+    environment:
+      PORT: 3010
+      DRUPAL_URL: http://drupal
+      UPSTASH_REDIS_REST_URL: ${UPSTASH_REDIS_REST_URL}
+      UPSTASH_REDIS_REST_TOKEN: ${UPSTASH_REDIS_REST_TOKEN}
+    depends_on:
+      - drupal
+    restart: unless-stopped
+
   nginx:
     image: nginx:alpine
     ports:

@@ -73,7 +73,7 @@ const KNOWN_COMMANDS = [
     'init', 'start', 'dev', 'build', 'deploy', 'test',
     'doctor', 'rotate-keys', 'migrate', 'projection',
     'status', 'help', 'validate', 'scaffold',
-    'council', 'battle', 'determinism', 'learn',
+    'council', 'battle', 'determinism', 'learn', 'context',
 ];
 
 // ─── Helpers ──────────────────────────────────────────────────────
@@ -932,6 +932,52 @@ const commands = {
             success(`Build complete: ${result.subtasks.length} subtasks, ${result.groups.length} groups`);
         } catch (err) {
             errorMsg(`Learning build failed: ${err.message}`);
+        }
+    },
+
+
+    async context(...args) {
+        heading('HeadyAutoContext — Workspace Context Scanner');
+        const task = args.join(' ') || flagInput;
+        if (!task) {
+            warn('Usage: heady context "build an API with auth"');
+            info('Shows what workspace context would be injected before AI execution.');
+            return;
+        }
+
+        try {
+            const { HeadyAutoContext } = require(path.join(SRC, 'services', 'heady-auto-context.js'));
+            const autoContext = new HeadyAutoContext({ workspaceRoot: ROOT });
+            const result = await autoContext.enrich(task);
+
+            info('Task: "' + task.slice(0, 80) + '"');
+            console.log('');
+            console.log('  Sources scanned:  ' + result.stats.sourcesScanned);
+            console.log('  Sources included: ' + result.stats.sourcesIncluded);
+            console.log('  Tokens used:      ' + result.stats.tokensUsed + ' / ' + result.stats.tokenBudget);
+            console.log('  Scan time:        ' + result.stats.scanTimeMs + 'ms');
+            console.log('');
+
+            if (result.sources.length > 0) {
+                console.log('  Included sources (by relevance):');
+                for (const s of result.sources) {
+                    const bar = '\u2588'.repeat(Math.round(s.relevance * 10));
+                    console.log('    ' + bar + ' ' + s.relevance.toFixed(2) + ' | ' + s.type.padEnd(12) + ' | ' + (s.path || 'inline') + ' (' + s.tokens + ' tok)');
+                }
+            } else {
+                info('No relevant sources found for this task.');
+            }
+
+            if (result.systemContext) {
+                console.log('');
+                console.log('  Context preview (first 500 chars):');
+                console.log('  ' + result.systemContext.slice(0, 500).replace(/\n/g, '\n  '));
+            }
+
+            console.log('');
+            success('Context scan complete');
+        } catch (err) {
+            errorMsg('Context scan failed: ' + err.message);
         }
     },
 

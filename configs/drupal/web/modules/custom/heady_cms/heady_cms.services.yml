@@ -1,0 +1,38 @@
+services:
+  heady_cms.liquid_node_manager:
+    class: Drupal\heady_cms\Service\LiquidNodeManager
+    arguments:
+      - '@http_client'
+      - '@state'
+      - '@logger.factory'
+      - '@config.factory'
+
+  heady_cms.task_queue:
+    class: Drupal\heady_cms\Service\TaskQueueManager
+    arguments:
+      - '@database'
+      - '@state'
+      - '@logger.factory'
+      - '@event_dispatcher'
+
+  heady_cms.content_delivery:
+    class: Drupal\heady_cms\Service\ContentDeliveryService
+    arguments:
+      - '@entity_type.manager'
+      - '@renderer'
+      - '@config.factory'
+
+  heady_cms.clipboard:
+    class: Drupal\heady_cms\Service\ClipboardService
+    arguments:
+      - '@http_client'
+      - '@state'
+      - '@current_user'
+      - '@logger.factory'
+
+  heady_cms.browser_automation:
+    class: Drupal\heady_cms\Service\BrowserAutomationService
+    arguments:
+      - '@http_client'
+      - '@state'
+      - '@logger.factory'
