@@ -69,15 +69,16 @@
       'use strict';
       const PHI = 1.618; const PSI = 0.618; const PSI2 = PSI * PSI;
 
-      const SWARMS = [
-        'Deploy', 'Battle', 'Research', 'Security', 'Memory',
-        'Creative', 'Trading', 'Health', 'Governance', 'Documentation',
-        'Testing', 'Migration', 'Monitoring', 'Cleanup', 'Onboarding',
-        'Analytics', 'Emergency'
-      ];
+      let swarmData = null;
 
-      function randomBees(min, max) {
-        return min + Math.floor(Math.random() * (max - min));
+      async function fetchSwarm() {
+        try {
+          const res = await fetch('/api/swarm/status');
+          swarmData = await res.json();
+          renderSwarms();
+        } catch (e) {
+          console.error('Failed to fetch swarm status:', e);
+        }
       }
 
       function classifyPressure(ratio) {
@@ -88,20 +89,26 @@
       }
 
       function renderSwarms() {
+        if (!swarmData) return;
         const grid = document.getElementById('swarm-grid');
-        let totalBees = 0;
+        let totalBees = swarmData.totalBees || 0;
 
-        grid.innerHTML = SWARMS.map(name => {
-          const beeCount = randomBees(2, 8);
-          totalBees += beeCount;
-          const utilization = Math.random() * 0.8;
+        // Mock domains since HeadySwarm just groups by dynamic domain names
+        const domains = Object.keys(swarmData.domainCoverage || {});
+        if (domains.length === 0) {
+          domains.push('Default'); // Fallback if no active domains
+        }
+
+        grid.innerHTML = domains.map(name => {
+          const beeCount = swarmData.domainCoverage[name] || 0;
+          const utilization = swarmData.pressure || 0;
           const pressure = classifyPressure(utilization);
-          const idleBees = Math.floor(beeCount * (1 - utilization));
+          const idleBees = Math.max(0, beeCount - Math.ceil(beeCount * utilization));
           const workingBees = beeCount - idleBees;
-          const tasks = Math.floor(Math.random() * 50);
+          const tasks = swarmData.metrics?.tasksQueued || 0;
 
           return '<div class="swarm-card">' +
-            '<div class="swarm-name">' + name + ' Swarm</div>' +
+            '<div class="swarm-name">' + name.charAt(0).toUpperCase() + name.slice(1) + ' Swarm</div>' +
             '<div class="swarm-meta">swarm-' + name.toLowerCase() + '</div>' +
             '<div class="metric"><span class="metric-label">Bees</span><span class="metric-value">' + beeCount + '</span></div>' +
             '<div class="metric"><span class="metric-label">Utilization</span><span class="metric-value">' + (utilization * 100).toFixed(1) + '%</span></div>' +
@@ -116,10 +123,13 @@
         }).join('');
 
         document.getElementById('mesh-status').textContent =
-          SWARMS.length + ' Swarms \u00b7 ' + totalBees + ' Bees \u00b7 NOMINAL';
+          domains.length + ' Swarms \u00b7 ' + totalBees + ' Bees \u00b7 ' + (swarmData.pressureLevel?.label || 'NOMINAL');
       }
 
-      document.addEventListener('DOMContentLoaded', renderSwarms);
+      document.addEventListener('DOMContentLoaded', () => {
+        fetchSwarm();
+        setInterval(fetchSwarm, 5000);
+      });
     })();
   </script>
 </body>
