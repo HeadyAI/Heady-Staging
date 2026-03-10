@@ -30,7 +30,7 @@ const http         = require('http');
 const https        = require('https');
 const { execFile, execFileSync } = require('child_process');
 
-const logger = require('../../utils/logger');
+const logger = require('../../shared/logger.js').createLogger({ service: 'auto-success-engine' });
 
 // ─── Phi Constants ────────────────────────────────────────────────────────────
 /** Golden ratio φ = (1+√5)/2 */
@@ -2449,7 +2449,7 @@ registerCategory('INTELLIGENCE',   INTELLIGENCE);
  * @example
  * const { AutoSuccessEngine } = require('./auto-success-engine');
  * const engine = new AutoSuccessEngine({ enableMonteCarlo: true });
- * engine.on('cycle:complete', (metrics) => console.log(metrics));
+ * engine.on('cycle:complete', (metrics) => logger.info(metrics));
  * await engine.start();
  */
 class AutoSuccessEngine extends EventEmitter {
@@ -2748,7 +2748,7 @@ class AutoSuccessEngine extends EventEmitter {
  * @example
  * // Synchronous creation
  * const engine = createEngine({ verbose: true });
- * engine.on('cycle:complete', (m) => console.log(m.metrics));
+ * engine.on('cycle:complete', (m) => logger.info(m.metrics));
  * await engine.start();
  *
  * @example
