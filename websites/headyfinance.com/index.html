@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HeadyFinance — Financial Intelligence Platform</title>
+  <meta name="description" content="AI-driven financial analytics, portfolio management, and market intelligence. Powered by Sacred Geometry and phi-scaled models.">
+  <meta name="author" content="Eric Haywood / HeadySystems Inc.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./shared/css/heady-design-system.css">
+  <style>
+    .nav-toggle {
+      display: none;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: var(--space-8);
+    }
+    .nav-toggle span {
+      display: block;
+      width: 21px;
+      height: 2px;
+      background: var(--color-cloud);
+      margin: 5px 0;
+      transition: all var(--duration-base) var(--ease-phi);
+    }
+    @media (max-width: 987px) {
+      .nav-toggle { display: block; }
+      .nav-links.nav-open {
+        display: flex;
+        flex-direction: column;
+        position: absolute;
+        top: var(--space-89);
+        left: 0;
+        right: 0;
+        background: rgba(9,9,11,0.95);
+        padding: var(--space-21);
+        border-bottom: 1px solid var(--glass-border);
+      }
+    }
+  </style>
+</head>
+<body>
+  <canvas id="sacred-bg" class="sacred-bg"></canvas>
+  <header class="nav-header">
+    <nav class="nav-inner">
+      <a href="/" class="nav-logo">
+        <svg width="34" height="34" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="HeadyFinance">
+      <path d="M4 28 L4 6" stroke="currentColor" stroke-width="1" opacity="0.382"/>
+      <path d="M4 28 L30 28" stroke="currentColor" stroke-width="1" opacity="0.382"/>
+      <path d="M8 22 L13 16 L18 19 L23 11 L28 8" stroke="#d4a843" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="28" cy="8" r="2.5" fill="#d4a843" opacity="0.618"/>
+    </svg>
+        <span>HeadyFinance</span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="#dashboard">Dashboard</a></li>
+        <li><a href="#portfolio">Portfolio</a></li>
+        <li><a href="#research">Research</a></li>
+        <li><a href="#reports">Reports</a></li>
+        <li><a href="#start" class="btn btn-primary" style="padding: var(--space-8) var(--space-21);">Get Started</a></li>
+      </ul>
+      <button class="nav-toggle" aria-label="Toggle navigation">
+        <span></span><span></span><span></span>
+      </button>
+    </nav>
+  </header>
+  <main>
+    <section class="hero">
+      <div class="hero-content fade-in">
+        <span class="badge badge-gold">Financial Intelligence</span>
+        <h1 class="hero-title">Intelligence<br>Meets Finance</h1>
+        <p class="hero-subtitle">HeadyFinance brings AI-powered analytics, portfolio optimization, and market research to individuals and institutions. Built on the Heady ecosystem.</p>
+        <div style="display:flex;gap:var(--space-21);justify-content:center;flex-wrap:wrap;">
+          <a href="#dashboard" class="btn btn-primary">View Dashboard</a>
+          <a href="#research" class="btn btn-secondary">Market Research</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="dashboard">
+      <div class="container">
+        <span class="section-label fade-in">Dashboard</span>
+        <h2 class="section-title fade-in">Financial Overview</h2>
+        <div class="sacred-grid sacred-grid-4 fade-in">
+          <div class="metric-card">
+            <div class="metric-value" data-prefix="$" data-count="847523">0</div>
+            <div class="metric-label">Portfolio Value</div>
+            <div class="metric-change positive">+8.47% MTD</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-value" data-prefix="$" data-count="23847">0</div>
+            <div class="metric-label">Today P&amp;L</div>
+            <div class="metric-change positive">+2.81%</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-value" data-count="34">0</div>
+            <div class="metric-label">Active Positions</div>
+            <div class="metric-change positive">+3 new</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-value" data-count="89" data-suffix="%">0</div>
+            <div class="metric-label">Win Rate</div>
+            <div class="metric-change positive">Above target</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="portfolio" style="background:var(--gradient-void);">
+      <div class="container">
+        <span class="section-label fade-in">Portfolio Intelligence</span>
+        <h2 class="section-title fade-in">AI-Optimized Allocation</h2>
+        <div class="sacred-grid sacred-grid-3">
+          <div class="feature-card fade-in">
+            <div class="feature-icon feature-icon-gold">&#x1F4CA;</div>
+            <h4 class="feature-title">Phi-Weighted Allocation</h4>
+            <p class="feature-desc">Portfolio weights optimized using golden ratio proportions. Natural balance between growth, stability, and opportunity.</p>
+          </div>
+          <div class="feature-card fade-in">
+            <div class="feature-icon feature-icon-teal">&#x1F6E1;</div>
+            <h4 class="feature-title">Risk Management</h4>
+            <p class="feature-desc">Fibonacci-scaled stop losses, phi-derived position sizing, and Monte Carlo simulation for scenario analysis.</p>
+          </div>
+          <div class="feature-card fade-in">
+            <div class="feature-icon feature-icon-violet">&#x1F4C8;</div>
+            <h4 class="feature-title">Performance Analytics</h4>
+            <p class="feature-desc">Real-time performance tracking with CSL-powered attribution analysis. Understand exactly what drives returns.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="research">
+      <div class="container">
+        <span class="section-label fade-in">Research</span>
+        <h2 class="section-title fade-in">AI-Powered Market Research</h2>
+        <div class="sacred-grid sacred-grid-2 fade-in">
+          <div class="glass-card">
+            <h4 style="margin-bottom:var(--space-13);">Latest Reports</h4>
+            <div style="display:flex;flex-direction:column;gap:var(--space-13);">
+              <a href="#" style="display:flex;justify-content:space-between;padding:var(--space-13);background:var(--color-graphite);border-radius:var(--radius-md);">
+                <span style="color:var(--color-cloud);">Q1 2026 Market Outlook</span>
+                <span style="color:var(--color-fog);font-size:var(--text-xs);">Mar 8</span>
+              </a>
+              <a href="#" style="display:flex;justify-content:space-between;padding:var(--space-13);background:var(--color-graphite);border-radius:var(--radius-md);">
+                <span style="color:var(--color-cloud);">AI Sector Deep Dive</span>
+                <span style="color:var(--color-fog);font-size:var(--text-xs);">Mar 5</span>
+              </a>
+              <a href="#" style="display:flex;justify-content:space-between;padding:var(--space-13);background:var(--color-graphite);border-radius:var(--radius-md);">
+                <span style="color:var(--color-cloud);">Crypto Market Structure</span>
+                <span style="color:var(--color-fog);font-size:var(--text-xs);">Mar 1</span>
+              </a>
+            </div>
+          </div>
+          <div class="glass-card">
+            <h4 style="margin-bottom:var(--space-13);">Sector Performance</h4>
+            <div style="display:flex;flex-direction:column;gap:var(--space-13);">
+              <div>
+                <div style="display:flex;justify-content:space-between;font-size:var(--text-sm);margin-bottom:var(--space-5);">
+                  <span>Technology</span><span style="color:var(--color-heady-emerald);">+12.4%</span>
+                </div>
+                <div style="height:5px;background:var(--color-slate);border-radius:var(--radius-full);overflow:hidden;">
+                  <div style="width:78%;height:100%;background:var(--color-heady-emerald);border-radius:var(--radius-full);"></div>
+                </div>
+              </div>
+              <div>
+                <div style="display:flex;justify-content:space-between;font-size:var(--text-sm);margin-bottom:var(--space-5);">
+                  <span>Healthcare</span><span style="color:var(--color-heady-teal);">+8.7%</span>
+                </div>
+                <div style="height:5px;background:var(--color-slate);border-radius:var(--radius-full);overflow:hidden;">
+                  <div style="width:61%;height:100%;background:var(--color-heady-teal);border-radius:var(--radius-full);"></div>
+                </div>
+              </div>
+              <div>
+                <div style="display:flex;justify-content:space-between;font-size:var(--text-sm);margin-bottom:var(--space-5);">
+                  <span>Energy</span><span style="color:var(--color-phi-gold);">+5.2%</span>
+                </div>
+                <div style="height:5px;background:var(--color-slate);border-radius:var(--radius-full);overflow:hidden;">
+                  <div style="width:43%;height:100%;background:var(--color-phi-gold);border-radius:var(--radius-full);"></div>
+                </div>
+              </div>
+              <div>
+                <div style="display:flex;justify-content:space-between;font-size:var(--text-sm);margin-bottom:var(--space-5);">
+                  <span>Crypto</span><span style="color:var(--color-heady-rose);">-1.3%</span>
+                </div>
+                <div style="height:5px;background:var(--color-slate);border-radius:var(--radius-full);overflow:hidden;">
+                  <div style="width:28%;height:100%;background:var(--color-heady-rose);border-radius:var(--radius-full);"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div class="nav-logo" style="margin-bottom: var(--space-21);">
+            <svg width="34" height="34" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Heady">
+      <circle cx="17" cy="17" r="15" stroke="currentColor" stroke-width="1.5" opacity="0.382"/>
+      <circle cx="17" cy="17" r="9.27" stroke="#d4a843" stroke-width="1.5"/>
+      <circle cx="17" cy="17" r="5.73" fill="#d4a843" opacity="0.618"/>
+      <path d="M17 2 L17 32 M2 17 L32 17" stroke="currentColor" stroke-width="0.5" opacity="0.236"/>
+    </svg>
+            <span>HeadyFinance</span>
+          </div>
+          <p>AI-driven financial intelligence platform.</p>
+        </div>
+      <div class="footer-col">
+        <h5>Platform</h5>
+        <ul>
+          <li><a href="#dashboard">Dashboard</a></li>
+          <li><a href="#portfolio">Portfolio</a></li>
+          <li><a href="#research">Research</a></li>
+          <li><a href="#reports">Reports</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Resources</h5>
+        <ul>
+          <li><a href="#">Documentation</a></li>
+          <li><a href="#">API</a></li>
+          <li><a href="#">Tutorials</a></li>
+          <li><a href="#">Support</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Legal</h5>
+        <ul>
+          <li><a href="#">Terms</a></li>
+          <li><a href="#">Privacy</a></li>
+          <li><a href="#">Disclosures</a></li>
+          <li><a href="#">Compliance</a></li>
+        </ul>
+      </div>
+      </div>
+      <div class="footer-bottom">
+        <span>&copy; 2026 HeadySystems Inc. All rights reserved. 51 Provisional Patents.</span>
+        <a href="https://www.perplexity.ai/computer" target="_blank" rel="noopener noreferrer" style="color: var(--color-fog);">
+          Created with Perplexity Computer
+        </a>
+      </div>
+    </div>
+  </footer>  <script src="./shared/js/heady-core.js"></script>
+</body>
+</html>

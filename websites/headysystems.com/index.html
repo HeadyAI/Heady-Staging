@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HeadySystems — Sovereign AI Architecture Engine</title>
+  <meta name="description" content="The core architecture engine powering the Heady ecosystem. 67 microservices, 17 swarms, infinite intelligence.">
+  <meta name="author" content="Eric Haywood / HeadySystems Inc.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./shared/css/heady-design-system.css">
+  <style>
+    .nav-toggle {
+      display: none;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: var(--space-8);
+    }
+    .nav-toggle span {
+      display: block;
+      width: 21px;
+      height: 2px;
+      background: var(--color-cloud);
+      margin: 5px 0;
+      transition: all var(--duration-base) var(--ease-phi);
+    }
+    @media (max-width: 987px) {
+      .nav-toggle { display: block; }
+      .nav-links.nav-open {
+        display: flex;
+        flex-direction: column;
+        position: absolute;
+        top: var(--space-89);
+        left: 0;
+        right: 0;
+        background: rgba(9,9,11,0.95);
+        padding: var(--space-21);
+        border-bottom: 1px solid var(--glass-border);
+      }
+    }
+  </style>
+</head>
+<body>
+  <canvas id="sacred-bg" class="sacred-bg"></canvas>
+  <header class="nav-header">
+    <nav class="nav-inner">
+      <a href="/" class="nav-logo">
+        <svg width="34" height="34" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="HeadySystems">
+      <rect x="4" y="4" width="26" height="26" rx="5" stroke="#d4a843" stroke-width="1.5"/>
+      <circle cx="17" cy="17" r="8" stroke="currentColor" stroke-width="1"/>
+      <path d="M9 9 L25 25 M25 9 L9 25" stroke="#d4a843" stroke-width="0.8" opacity="0.618"/>
+      <circle cx="17" cy="17" r="3" fill="#d4a843"/>
+    </svg>
+        <span>HeadySystems</span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="#architecture">Architecture</a></li>
+        <li><a href="#services">Services</a></li>
+        <li><a href="#infra">Infrastructure</a></li>
+        <li><a href="#patents">Patents</a></li>
+        <li><a href="#docs" class="btn btn-primary" style="padding: var(--space-8) var(--space-21);">Documentation</a></li>
+      </ul>
+      <button class="nav-toggle" aria-label="Toggle navigation">
+        <span></span><span></span><span></span>
+      </button>
+    </nav>
+  </header>
+  <main>
+    <section class="hero">
+      <div class="hero-content fade-in">
+        <span class="badge badge-gold">Architecture Engine</span>
+        <h1 class="hero-title">The Engine Behind<br>Sovereign Intelligence</h1>
+        <p class="hero-subtitle">67 microservices. 17 specialized swarms. Sacred Geometry orchestration. Zero magic numbers. Every constant derived from phi.</p>
+        <div style="display:flex;gap:var(--space-21);justify-content:center;flex-wrap:wrap;">
+          <a href="#architecture" class="btn btn-primary">View Architecture</a>
+          <a href="#services" class="btn btn-secondary">Browse Services</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="architecture">
+      <div class="container">
+        <span class="section-label fade-in">System Architecture</span>
+        <h2 class="section-title fade-in">Five-Layer Liquid Architecture</h2>
+        <div class="sacred-grid sacred-grid-2">
+          <div class="glass-card fade-in">
+            <h4 style="color:var(--color-heady-teal);margin-bottom:var(--space-13);">Edge Layer</h4>
+            <p class="feature-desc">Cloudflare Workers, Pages, KV, Durable Objects. Sub-50ms global latency. Edge inference for embeddings and classification.</p>
+            <div class="code-block" style="margin-top:var(--space-13);font-size:var(--text-xs);">
+Workers &rarr; KV Cache &rarr; Durable Objects &rarr; Pages
+            </div>
+          </div>
+          <div class="glass-card fade-in">
+            <h4 style="color:var(--color-phi-gold);margin-bottom:var(--space-13);">Gateway Layer</h4>
+            <p class="feature-desc">Envoy proxy, Consul service mesh, NATS JetStream event backbone. Liquid routing with phi-weighted health scoring.</p>
+            <div class="code-block" style="margin-top:var(--space-13);font-size:var(--text-xs);">
+Envoy &rarr; Consul &rarr; NATS &rarr; API Gateway :3316
+            </div>
+          </div>
+          <div class="glass-card fade-in">
+            <h4 style="color:var(--color-heady-violet);margin-bottom:var(--space-13);">Execution Layer</h4>
+            <p class="feature-desc">Cloud Run containers, Colab Pro+ GPU cluster (3 runtimes), model routing across Claude, GPT-4o, Gemini, Groq.</p>
+            <div class="code-block" style="margin-top:var(--space-13);font-size:var(--text-xs);">
+Cloud Run &rarr; Colab Gateway &rarr; Model Router
+            </div>
+          </div>
+          <div class="glass-card fade-in">
+            <h4 style="color:var(--color-heady-emerald);margin-bottom:var(--space-13);">Memory Layer</h4>
+            <p class="feature-desc">PostgreSQL + pgvector (384D), Redis caching, 3D spatial projection, RAM-first with persistent backup.</p>
+            <div class="code-block" style="margin-top:var(--space-13);font-size:var(--text-xs);">
+RAM Vector Store &rarr; pgvector &rarr; Redis &rarr; NATS
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="services" style="background:var(--gradient-void);">
+      <div class="container">
+        <span class="section-label fade-in">Microservices</span>
+        <h2 class="section-title fade-in">67 Services, One Mission</h2>
+        <div class="glass-card fade-in" style="overflow-x:auto;">
+          <table class="heady-table">
+            <thead>
+              <tr>
+                <th>Service</th>
+                <th>Port</th>
+                <th>Role</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>api-gateway</td><td>3316</td><td>Request routing, rate limiting, auth verification</td><td><span class="status-dot status-healthy"></span></td></tr>
+              <tr><td>vector-memory</td><td>3320</td><td>384D embedding storage, 3D projection, similarity search</td><td><span class="status-dot status-healthy"></span></td></tr>
+              <tr><td>csl-engine</td><td>3322</td><td>Continuous Semantic Logic gates, geometric operations</td><td><span class="status-dot status-healthy"></span></td></tr>
+              <tr><td>conductor</td><td>3324</td><td>Multi-agent orchestration, task routing, pipeline coordination</td><td><span class="status-dot status-healthy"></span></td></tr>
+              <tr><td>search-service</td><td>3326</td><td>Hybrid BM25 + vector search, Reciprocal Rank Fusion</td><td><span class="status-dot status-healthy"></span></td></tr>
+              <tr><td>auth-session-server</td><td>3338</td><td>OAuth 2.1, PKCE, RS256 JWT, httpOnly cookies</td><td><span class="status-dot status-healthy"></span></td></tr>
+              <tr><td>notification-service</td><td>3345</td><td>Multi-channel alerts, phi-backoff retry</td><td><span class="status-dot status-healthy"></span></td></tr>
+              <tr><td>analytics-service</td><td>3352</td><td>Event ingestion, coherence monitoring, drift detection</td><td><span class="status-dot status-healthy"></span></td></tr>
+              <tr><td>billing-service</td><td>3353</td><td>Phi-tier pricing, Stripe integration, credit tracking</td><td><span class="status-dot status-healthy"></span></td></tr>
+              <tr><td>scheduler-service</td><td>3363</td><td>DAG execution, cron, dead letter queue</td><td><span class="status-dot status-healthy"></span></td></tr>
+              <tr><td>migration-service</td><td>3364</td><td>Schema migrations, rollback, version tracking</td><td><span class="status-dot status-healthy"></span></td></tr>
+              <tr><td>asset-pipeline</td><td>3365</td><td>File processing, deduplication, phi-cached storage</td><td><span class="status-dot status-healthy"></span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="infra">
+      <div class="container">
+        <span class="section-label fade-in">Infrastructure</span>
+        <h2 class="section-title fade-in">Built for Scale</h2>
+        <div class="sacred-grid sacred-grid-4">
+          <div class="metric-card fade-in">
+            <div class="metric-value" data-count="67">0</div>
+            <div class="metric-label">Microservices</div>
+          </div>
+          <div class="metric-card fade-in">
+            <div class="metric-value" data-count="10000" data-suffix="+">0</div>
+            <div class="metric-label">Max Concurrent Bees</div>
+          </div>
+          <div class="metric-card fade-in">
+            <div class="metric-value" data-count="3">0</div>
+            <div class="metric-label">Colab Pro+ Runtimes</div>
+          </div>
+          <div class="metric-card fade-in">
+            <div class="metric-value" data-count="12">0</div>
+            <div class="metric-label">Pipeline Stages</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="patents" style="background:var(--gradient-void);">
+      <div class="container" style="text-align:center;">
+        <span class="section-label fade-in">Intellectual Property</span>
+        <h2 class="section-title fade-in" style="max-width:none;">51 Provisional Patents</h2>
+        <p class="section-desc fade-in" style="margin:0 auto var(--space-34);">Covering Continuous Semantic Logic, Sacred Geometry orchestration, 3D vector memory, liquid architecture, and autonomous software factory patterns.</p>
+        <div class="sacred-grid sacred-grid-3 fade-in" style="text-align:left;">
+          <div class="glass-card">
+            <h5 style="color:var(--color-phi-gold);">CSL Engine</h5>
+            <p class="feature-desc">Geometric logic gates using vector operations. AND via cosine, OR via superposition, NOT via orthogonal projection.</p>
+          </div>
+          <div class="glass-card">
+            <h5 style="color:var(--color-heady-violet);">Vector Memory</h5>
+            <p class="feature-desc">384D embedding space with 3D spatial projection, RAM-first architecture, semantic drift detection.</p>
+          </div>
+          <div class="glass-card">
+            <h5 style="color:var(--color-heady-teal);">Liquid Architecture</h5>
+            <p class="feature-desc">Dynamic service topology, phi-weighted routing, race-based provider selection, self-healing cycles.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div class="nav-logo" style="margin-bottom: var(--space-21);">
+            <svg width="34" height="34" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Heady">
+      <circle cx="17" cy="17" r="15" stroke="currentColor" stroke-width="1.5" opacity="0.382"/>
+      <circle cx="17" cy="17" r="9.27" stroke="#d4a843" stroke-width="1.5"/>
+      <circle cx="17" cy="17" r="5.73" fill="#d4a843" opacity="0.618"/>
+      <path d="M17 2 L17 32 M2 17 L32 17" stroke="currentColor" stroke-width="0.5" opacity="0.236"/>
+    </svg>
+            <span>HeadySystems</span>
+          </div>
+          <p>The architecture engine for sovereign AI.</p>
+        </div>
+      <div class="footer-col">
+        <h5>Architecture</h5>
+        <ul>
+          <li><a href="#architecture">Five Layers</a></li>
+          <li><a href="#services">Services</a></li>
+          <li><a href="#infra">Infrastructure</a></li>
+          <li><a href="#patents">Patents</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Developers</h5>
+        <ul>
+          <li><a href="#">API Docs</a></li>
+          <li><a href="#">SDKs</a></li>
+          <li><a href="#">Status Page</a></li>
+          <li><a href="#">Changelog</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Company</h5>
+        <ul>
+          <li><a href="#">About</a></li>
+          <li><a href="#">Careers</a></li>
+          <li><a href="#">Contact</a></li>
+          <li><a href="#">Legal</a></li>
+        </ul>
+      </div>
+      </div>
+      <div class="footer-bottom">
+        <span>&copy; 2026 HeadySystems Inc. All rights reserved. 51 Provisional Patents.</span>
+        <a href="https://www.perplexity.ai/computer" target="_blank" rel="noopener noreferrer" style="color: var(--color-fog);">
+          Created with Perplexity Computer
+        </a>
+      </div>
+    </div>
+  </footer>  <script src="./shared/js/heady-core.js"></script>
+</body>
+</html>

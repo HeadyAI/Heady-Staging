@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HeadyConnection — Connect. Learn. Build.</title>
+  <meta name="description" content="The commercial community portal for the Heady ecosystem. Forums, tutorials, developer resources, and collaborative AI building.">
+  <meta name="author" content="Eric Haywood / HeadySystems Inc.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./shared/css/heady-design-system.css">
+  <style>
+    .nav-toggle {
+      display: none;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: var(--space-8);
+    }
+    .nav-toggle span {
+      display: block;
+      width: 21px;
+      height: 2px;
+      background: var(--color-cloud);
+      margin: 5px 0;
+      transition: all var(--duration-base) var(--ease-phi);
+    }
+    @media (max-width: 987px) {
+      .nav-toggle { display: block; }
+      .nav-links.nav-open {
+        display: flex;
+        flex-direction: column;
+        position: absolute;
+        top: var(--space-89);
+        left: 0;
+        right: 0;
+        background: rgba(9,9,11,0.95);
+        padding: var(--space-21);
+        border-bottom: 1px solid var(--glass-border);
+      }
+    }
+  </style>
+</head>
+<body>
+  <canvas id="sacred-bg" class="sacred-bg"></canvas>
+  <header class="nav-header">
+    <nav class="nav-inner">
+      <a href="/" class="nav-logo">
+        <svg width="34" height="34" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="HeadyConnection">
+      <circle cx="10" cy="10" r="4" stroke="#34d399" stroke-width="1.5"/>
+      <circle cx="24" cy="10" r="4" stroke="#34d399" stroke-width="1.5"/>
+      <circle cx="17" cy="24" r="4" stroke="#34d399" stroke-width="1.5"/>
+      <path d="M13 12 L14.5 21 M21 12 L19.5 21 M14 10 L20 10" stroke="#34d399" stroke-width="1" opacity="0.618"/>
+      <circle cx="17" cy="14.5" r="1.5" fill="#34d399" opacity="0.382"/>
+    </svg>
+        <span>HeadyConnect</span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="#community">Community</a></li>
+        <li><a href="#learn">Learn</a></li>
+        <li><a href="#build">Build</a></li>
+        <li><a href="#events">Events</a></li>
+        <li><a href="#join" class="btn btn-primary" style="padding: var(--space-8) var(--space-21);">Join</a></li>
+      </ul>
+      <button class="nav-toggle" aria-label="Toggle navigation">
+        <span></span><span></span><span></span>
+      </button>
+    </nav>
+  </header>
+  <main>
+    <section class="hero">
+      <div class="hero-content fade-in">
+        <span class="badge badge-teal">Community</span>
+        <h1 class="hero-title">Connect. Learn.<br>Build Together.</h1>
+        <p class="hero-subtitle">The global community for Heady developers, researchers, and AI enthusiasts. Share knowledge, collaborate on projects, and shape the future of sovereign AI.</p>
+        <div style="display:flex;gap:var(--space-21);justify-content:center;flex-wrap:wrap;">
+          <a href="#join" class="btn btn-primary">Join Community</a>
+          <a href="#learn" class="btn btn-secondary">Start Learning</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="community">
+      <div class="container">
+        <span class="section-label fade-in">Community Hub</span>
+        <h2 class="section-title fade-in">Where Builders Gather</h2>
+        <div class="sacred-grid sacred-grid-3">
+          <div class="feature-card fade-in">
+            <div class="feature-icon feature-icon-teal">&#x1F4AC;</div>
+            <h4 class="feature-title">Discussion Forums</h4>
+            <p class="feature-desc">Topic-based forums for architecture, deployment, CSL research, Sacred Geometry patterns, and more.</p>
+          </div>
+          <div class="feature-card fade-in">
+            <div class="feature-icon feature-icon-violet">&#x1F4E6;</div>
+            <h4 class="feature-title">Project Showcase</h4>
+            <p class="feature-desc">Share what you've built with Heady. Get feedback, find collaborators, and inspire others.</p>
+          </div>
+          <div class="feature-card fade-in">
+            <div class="feature-icon feature-icon-gold">&#x1F3C6;</div>
+            <h4 class="feature-title">Challenges</h4>
+            <p class="feature-desc">Weekly coding challenges, hackathons, and bounties for extending the Heady ecosystem.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="learn" style="background:var(--gradient-void);">
+      <div class="container">
+        <span class="section-label fade-in">Learning Paths</span>
+        <h2 class="section-title fade-in">Master Sovereign AI</h2>
+        <div class="sacred-grid sacred-grid-2">
+          <div class="glass-card fade-in">
+            <span class="badge badge-gold" style="margin-bottom:var(--space-13);">Beginner</span>
+            <h4>Foundations of Heady</h4>
+            <p class="feature-desc" style="margin:var(--space-8) 0 var(--space-21);">Learn the core concepts: phi-scaled architecture, CSL gates, vector memory, and the 17-swarm model.</p>
+            <a href="#" class="btn btn-ghost" style="padding-left:0;">Start Learning &rarr;</a>
+          </div>
+          <div class="glass-card fade-in">
+            <span class="badge badge-teal" style="margin-bottom:var(--space-13);">Intermediate</span>
+            <h4>Building with HeadyOS</h4>
+            <p class="feature-desc" style="margin:var(--space-8) 0 var(--space-21);">Deploy services, create agents, integrate with the Liquid Gateway, and build on Sacred Geometry.</p>
+            <a href="#" class="btn btn-ghost" style="padding-left:0;">Start Learning &rarr;</a>
+          </div>
+          <div class="glass-card fade-in">
+            <span class="badge badge-violet" style="margin-bottom:var(--space-13);">Advanced</span>
+            <h4>Extending the Platform</h4>
+            <p class="feature-desc" style="margin:var(--space-8) 0 var(--space-21);">Create new swarm types, implement CSL operations, contribute to the core architecture.</p>
+            <a href="#" class="btn btn-ghost" style="padding-left:0;">Start Learning &rarr;</a>
+          </div>
+          <div class="glass-card fade-in">
+            <span class="badge badge-gold" style="background:rgba(251,113,133,0.146);color:var(--color-heady-rose);border-color:rgba(251,113,133,0.236);margin-bottom:var(--space-13);">Expert</span>
+            <h4>Sacred Geometry Research</h4>
+            <p class="feature-desc" style="margin:var(--space-8) 0 var(--space-21);">Contribute to cutting-edge research in geometric AI, phi-continuous scaling, and alive software.</p>
+            <a href="#" class="btn btn-ghost" style="padding-left:0;">Start Learning &rarr;</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="join">
+      <div class="container" style="text-align:center;">
+        <h2 class="section-title fade-in" style="max-width:none;">Join the Community</h2>
+        <p class="section-desc fade-in" style="margin:0 auto var(--space-34);">Free to join. Contribute to the future of sovereign AI.</p>
+        <div class="glass-card fade-in" style="max-width:var(--container-sm);margin:0 auto;">
+          <div style="display:flex;flex-direction:column;gap:var(--space-21);">
+            <div>
+              <label class="form-label">Email Address</label>
+              <input type="email" class="form-input" placeholder="you@example.com">
+            </div>
+            <div>
+              <label class="form-label">Display Name</label>
+              <input type="text" class="form-input" placeholder="Your name">
+            </div>
+            <button class="btn btn-primary" style="width:100%;">Join HeadyConnection</button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div class="nav-logo" style="margin-bottom: var(--space-21);">
+            <svg width="34" height="34" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Heady">
+      <circle cx="17" cy="17" r="15" stroke="currentColor" stroke-width="1.5" opacity="0.382"/>
+      <circle cx="17" cy="17" r="9.27" stroke="#d4a843" stroke-width="1.5"/>
+      <circle cx="17" cy="17" r="5.73" fill="#d4a843" opacity="0.618"/>
+      <path d="M17 2 L17 32 M2 17 L32 17" stroke="currentColor" stroke-width="0.5" opacity="0.236"/>
+    </svg>
+            <span>HeadyConnection</span>
+          </div>
+          <p>The global community for sovereign AI builders.</p>
+        </div>
+      <div class="footer-col">
+        <h5>Community</h5>
+        <ul>
+          <li><a href="#community">Forums</a></li>
+          <li><a href="#">Showcase</a></li>
+          <li><a href="#">Challenges</a></li>
+          <li><a href="#events">Events</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Learn</h5>
+        <ul>
+          <li><a href="#learn">Foundations</a></li>
+          <li><a href="#">Tutorials</a></li>
+          <li><a href="#">Docs</a></li>
+          <li><a href="#">Videos</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>About</h5>
+        <ul>
+          <li><a href="#">Mission</a></li>
+          <li><a href="#">Team</a></li>
+          <li><a href="https://headyconnection.org">Nonprofit</a></li>
+          <li><a href="#">Contact</a></li>
+        </ul>
+      </div>
+      </div>
+      <div class="footer-bottom">
+        <span>&copy; 2026 HeadySystems Inc. All rights reserved. 51 Provisional Patents.</span>
+        <a href="https://www.perplexity.ai/computer" target="_blank" rel="noopener noreferrer" style="color: var(--color-fog);">
+          Created with Perplexity Computer
+        </a>
+      </div>
+    </div>
+  </footer>  <script src="./shared/js/heady-core.js"></script>
+</body>
+</html>

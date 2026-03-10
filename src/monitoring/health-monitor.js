@@ -33,11 +33,11 @@ const sleep = promisify(setTimeout);
 
 // ─── Dependency imports (gracefully optional) ────────────────────────────────
 let express, promClient, pg, redis, axios;
-try { express    = require('express');    } catch {}
-try { promClient = require('prom-client'); } catch {}
-try { pg         = require('pg');          } catch {}
-try { redis      = require('ioredis');     } catch {}
-try { axios      = require('axios');       } catch {}
+try { express = require('express'); } catch { }
+try { promClient = require('prom-client'); } catch { }
+try { pg = require('pg'); } catch { }
+try { redis = require('ioredis'); } catch { }
+try { axios = require('axios'); } catch { }
 
 // =============================================================================
 // Sacred Geometry Weighted Scoring
@@ -49,21 +49,21 @@ const PHI = 1.618033988749895;
 
 const WEIGHTS = {
   // Tier 1 — Foundation (weight: PHI²)
-  database:      Math.pow(PHI, 2),   // 2.618
-  vectorMemory:  Math.pow(PHI, 2),   // 2.618
+  database: Math.pow(PHI, 2),   // 2.618
+  vectorMemory: Math.pow(PHI, 2),   // 2.618
 
   // Tier 2 — Core infrastructure (weight: PHI)
-  redis:         PHI,                // 1.618
-  llmProvider:   PHI,                // 1.618
+  redis: PHI,                // 1.618
+  llmProvider: PHI,                // 1.618
 
   // Tier 3 — System resources (weight: 1)
-  memory:        1.0,
-  cpu:           1.0,
-  diskSpace:     1.0,
+  memory: 1.0,
+  cpu: 1.0,
+  diskSpace: 1.0,
 
   // Tier 4 — Application health (weight: 1/PHI)
   activeConnections: 1 / PHI,        // 0.618
-  queueDepth:        1 / PHI,        // 0.618
+  queueDepth: 1 / PHI,        // 0.618
 };
 
 const TOTAL_WEIGHT = Object.values(WEIGHTS).reduce((a, b) => a + b, 0);
@@ -72,14 +72,14 @@ const TOTAL_WEIGHT = Object.values(WEIGHTS).reduce((a, b) => a + b, 0);
 // Health state thresholds
 // =============================================================================
 const STATE = {
-  HEALTHY:  'healthy',
+  HEALTHY: 'healthy',
   DEGRADED: 'degraded',
   CRITICAL: 'critical',
-  UNKNOWN:  'unknown',
+  UNKNOWN: 'unknown',
 };
 
 const THRESHOLD = {
-  HEALTHY:  80,
+  HEALTHY: 80,
   DEGRADED: 50,
 };
 
@@ -102,31 +102,31 @@ class HealthMonitor extends EventEmitter {
     super();
 
     this.config = {
-      databaseUrl:    opts.databaseUrl    || process.env.DATABASE_URL,
-      redisUrl:       opts.redisUrl       || process.env.REDIS_URL,
-      llmEndpoints:   opts.llmEndpoints   || [],
-      checkInterval:  opts.checkInterval  || 60_000,
+      databaseUrl: opts.databaseUrl || process.env.DATABASE_URL,
+      redisUrl: opts.redisUrl || process.env.REDIS_URL,
+      llmEndpoints: opts.llmEndpoints || [],
+      checkInterval: opts.checkInterval || 60_000,
       thresholds: {
-        memoryPct:         opts.thresholds?.memoryPct         ?? 90,
-        cpuLoad1mPct:      opts.thresholds?.cpuLoad1mPct      ?? 80,
-        diskUsedPct:       opts.thresholds?.diskUsedPct       ?? 85,
-        maxConnections:    opts.thresholds?.maxConnections    ?? 200,
-        maxQueueDepth:     opts.thresholds?.maxQueueDepth     ?? 500,
-        vectorDriftMin:    opts.thresholds?.vectorDriftMin    ?? 0.75,
+        memoryPct: opts.thresholds?.memoryPct ?? 90,
+        cpuLoad1mPct: opts.thresholds?.cpuLoad1mPct ?? 80,
+        diskUsedPct: opts.thresholds?.diskUsedPct ?? 85,
+        maxConnections: opts.thresholds?.maxConnections ?? 200,
+        maxQueueDepth: opts.thresholds?.maxQueueDepth ?? 500,
+        vectorDriftMin: opts.thresholds?.vectorDriftMin ?? 0.75,
         ...opts.thresholds,
       },
       alerts: {
         slackWebhook: opts.alerts?.slackWebhook || process.env.SLACK_WEBHOOK_URL,
-        webhookUrl:   opts.alerts?.webhookUrl   || process.env.HEALTH_WEBHOOK_URL,
+        webhookUrl: opts.alerts?.webhookUrl || process.env.HEALTH_WEBHOOK_URL,
         ...opts.alerts,
       },
     };
 
     // Internal state
-    this._pgPool      = null;
+    this._pgPool = null;
     this._redisClient = null;
-    this._lastCheck   = null;
-    this._checkTimer  = null;
+    this._lastCheck = null;
+    this._checkTimer = null;
     this._healingLock = false;
 
     // Prometheus metrics
@@ -157,7 +157,7 @@ class HealthMonitor extends EventEmitter {
         maxRetriesPerRequest: 1,
         enableOfflineQueue: false,
       });
-      await this._redisClient.connect().catch(() => {});
+      await this._redisClient.connect().catch(() => { });
     }
 
     // Start background check loop
@@ -168,8 +168,8 @@ class HealthMonitor extends EventEmitter {
 
   async destroy() {
     clearInterval(this._checkTimer);
-    await this._pgPool?.end().catch(() => {});
-    await this._redisClient?.quit().catch(() => {});
+    await this._pgPool?.end().catch(() => { });
+    await this._redisClient?.quit().catch(() => { });
   }
 
   // ---------------------------------------------------------------------------
@@ -207,15 +207,15 @@ class HealthMonitor extends EventEmitter {
     ]);
 
     const checks = {
-      database:          this._settle(dbResult),
-      redis:             this._settle(redisResult),
-      vectorMemory:      this._settle(vectorResult),
-      llmProvider:       this._settle(llmResult),
-      memory:            this._settle(memResult),
-      cpu:               this._settle(cpuResult),
-      diskSpace:         this._settle(diskResult),
+      database: this._settle(dbResult),
+      redis: this._settle(redisResult),
+      vectorMemory: this._settle(vectorResult),
+      llmProvider: this._settle(llmResult),
+      memory: this._settle(memResult),
+      cpu: this._settle(cpuResult),
+      diskSpace: this._settle(diskResult),
       activeConnections: this._settle(connResult),
-      queueDepth:        this._settle(queueResult),
+      queueDepth: this._settle(queueResult),
     };
 
     // Compute weighted composite score
@@ -224,12 +224,12 @@ class HealthMonitor extends EventEmitter {
     const duration = Date.now() - startTime;
 
     const result = {
-      status:    state,
-      score:     Math.round(compositeScore),
+      status: state,
+      score: Math.round(compositeScore),
       timestamp: new Date().toISOString(),
-      duration:  duration,
-      uptime:    Math.floor(process.uptime()),
-      version:   process.env.GIT_SHA || 'unknown',
+      duration: duration,
+      uptime: Math.floor(process.uptime()),
+      version: process.env.GIT_SHA || 'unknown',
       checks,
     };
 
@@ -282,18 +282,18 @@ class HealthMonitor extends EventEmitter {
         const latency = Date.now() - start;
         const vectorInstalled = extRes.rows[0]?.installed_version != null;
         const score = latency < 100 ? 100 :
-                      latency < 500 ? 80  :
-                      latency < 1000 ? 60 : 40;
+          latency < 500 ? 80 :
+            latency < 1000 ? 60 : 40;
 
         return {
           score,
           status: 'ok',
           detail: {
-            latencyMs:         latency,
-            dbSizeBytes:       res.rows[0].db_size_bytes,
+            latencyMs: latency,
+            dbSizeBytes: res.rows[0].db_size_bytes,
             activeConnections: res.rows[0].active_connections,
-            pgvector:          vectorInstalled,
-            pgvectorVersion:   extRes.rows[0]?.installed_version,
+            pgvector: vectorInstalled,
+            pgvectorVersion: extRes.rows[0]?.installed_version,
           },
         };
       } finally {
@@ -316,7 +316,7 @@ class HealthMonitor extends EventEmitter {
 
       const info = await this._redisClient.info('memory').catch(() => '');
       const usedMemory = parseInt(info.match(/used_memory:(\d+)/)?.[1] || '0');
-      const maxMemory  = parseInt(info.match(/maxmemory:(\d+)/)?.[1] || '0');
+      const maxMemory = parseInt(info.match(/maxmemory:(\d+)/)?.[1] || '0');
       const memPct = maxMemory > 0 ? (usedMemory / maxMemory) * 100 : 0;
 
       const score = pong === 'PONG'
@@ -363,11 +363,11 @@ class HealthMonitor extends EventEmitter {
         }
 
         return {
-          score:  coherenceScore,
+          score: coherenceScore,
           status: 'ok',
           detail: {
             totalVectors,
-            lastUpdated:    res.rows[0]?.last_updated,
+            lastUpdated: res.rows[0]?.last_updated,
             coherenceScore,
           },
         };
@@ -383,21 +383,21 @@ class HealthMonitor extends EventEmitter {
     if (!axios || this.config.llmEndpoints.length === 0) {
       // Default: check well-known LLM health endpoints
       const endpoints = [
-        { name: 'openai',    url: 'https://status.openai.com/api/v2/status.json' },
+        { name: 'openai', url: 'https://status.openai.com/api/v2/status.json' },
         { name: 'anthropic', url: 'https://status.anthropic.com/api/v2/status.json' },
       ];
 
       const results = await Promise.allSettled(
         endpoints.map(async ({ name, url }) => {
-          const res = await fetch(url, { signal: AbortSignal.timeout(5000) });
+          const res = await fetch(url, { signal: AbortSignal.timeout(4236) }); // φ³ × 1000
           const data = await res.json();
           return { name, indicator: data?.status?.indicator || 'unknown' };
         })
       );
 
       const providers = results.map((r, i) => ({
-        name:      endpoints[i].name,
-        status:    r.status === 'fulfilled' ? r.value.indicator : 'error',
+        name: endpoints[i].name,
+        status: r.status === 'fulfilled' ? r.value.indicator : 'error',
         available: r.status === 'fulfilled' && r.value.indicator === 'none',
       }));
 
@@ -405,7 +405,7 @@ class HealthMonitor extends EventEmitter {
       const anyGood = providers.some(p => p.available);
 
       return {
-        score:  allGood ? 100 : anyGood ? 60 : 20,
+        score: allGood ? 100 : anyGood ? 60 : 20,
         status: allGood ? 'ok' : anyGood ? 'degraded' : 'critical',
         detail: { providers },
       };
@@ -414,12 +414,12 @@ class HealthMonitor extends EventEmitter {
     // Custom endpoints
     const results = await Promise.allSettled(
       this.config.llmEndpoints.map(url =>
-        fetch(url, { signal: AbortSignal.timeout(5000) }).then(r => ({ url, ok: r.ok, status: r.status }))
+        fetch(url, { signal: AbortSignal.timeout(4236) }).then(r => ({ url, ok: r.ok, status: r.status })) // φ³ × 1000
       )
     );
 
     const checks = results.map((r, i) => ({
-      url:       this.config.llmEndpoints[i],
+      url: this.config.llmEndpoints[i],
       available: r.status === 'fulfilled' && r.value.ok,
     }));
 
@@ -430,8 +430,8 @@ class HealthMonitor extends EventEmitter {
 
   async _checkMemory() {
     const totalMem = os.totalmem();
-    const freeMem  = os.freemem();
-    const usedPct  = ((totalMem - freeMem) / totalMem) * 100;
+    const freeMem = os.freemem();
+    const usedPct = ((totalMem - freeMem) / totalMem) * 100;
     const threshold = this.config.thresholds.memoryPct;
 
     const score = usedPct < threshold
@@ -442,22 +442,22 @@ class HealthMonitor extends EventEmitter {
       score,
       status: usedPct < threshold ? 'ok' : 'warning',
       detail: {
-        totalBytes:  totalMem,
-        freeBytes:   freeMem,
-        usedPct:     usedPct.toFixed(1),
+        totalBytes: totalMem,
+        freeBytes: freeMem,
+        usedPct: usedPct.toFixed(1),
         thresholdPct: threshold,
-        heapUsed:    process.memoryUsage().heapUsed,
-        heapTotal:   process.memoryUsage().heapTotal,
-        rss:         process.memoryUsage().rss,
+        heapUsed: process.memoryUsage().heapUsed,
+        heapTotal: process.memoryUsage().heapTotal,
+        rss: process.memoryUsage().rss,
       },
     };
   }
 
   async _checkCpu() {
-    const cpus    = os.cpus();
-    const load    = os.loadavg();
-    const load1m  = load[0];
-    const load5m  = load[1];
+    const cpus = os.cpus();
+    const load = os.loadavg();
+    const load1m = load[0];
+    const load5m = load[1];
     const load15m = load[2];
     const numCpus = cpus.length;
     const load1mPct = (load1m / numCpus) * 100;
@@ -472,8 +472,8 @@ class HealthMonitor extends EventEmitter {
       status: load1mPct < threshold ? 'ok' : 'warning',
       detail: {
         numCpus,
-        loadAvg:    { '1m': load1m.toFixed(2), '5m': load5m.toFixed(2), '15m': load15m.toFixed(2) },
-        load1mPct:  load1mPct.toFixed(1),
+        loadAvg: { '1m': load1m.toFixed(2), '5m': load5m.toFixed(2), '15m': load15m.toFixed(2) },
+        load1mPct: load1mPct.toFixed(1),
         thresholdPct: threshold,
       },
     };
@@ -482,10 +482,10 @@ class HealthMonitor extends EventEmitter {
   async _checkDisk() {
     const { execSync } = require('child_process');
     try {
-      const output = execSync("df -k / | tail -1 | awk '{print $3,$4}'", { timeout: 3000 })
+      const output = execSync("df -k / | tail -1 | awk '{print $3,$4}'", { timeout: 2618 }) // φ² × 1000
         .toString().trim().split(' ');
-      const usedKb  = parseInt(output[0]);
-      const freeKb  = parseInt(output[1]);
+      const usedKb = parseInt(output[0]);
+      const freeKb = parseInt(output[1]);
       const totalKb = usedKb + freeKb;
       const usedPct = (usedKb / totalKb) * 100;
       const threshold = this.config.thresholds.diskUsedPct;
@@ -498,10 +498,10 @@ class HealthMonitor extends EventEmitter {
         score,
         status: usedPct < threshold ? 'ok' : 'warning',
         detail: {
-          totalGb:   (totalKb / 1_048_576).toFixed(2),
-          usedGb:    (usedKb  / 1_048_576).toFixed(2),
-          freeGb:    (freeKb  / 1_048_576).toFixed(2),
-          usedPct:   usedPct.toFixed(1),
+          totalGb: (totalKb / 1_048_576).toFixed(2),
+          usedGb: (usedKb / 1_048_576).toFixed(2),
+          freeGb: (freeKb / 1_048_576).toFixed(2),
+          usedPct: usedPct.toFixed(1),
           thresholdPct: threshold,
         },
       };
@@ -515,10 +515,10 @@ class HealthMonitor extends EventEmitter {
       return { score: 100, status: 'unknown', detail: 'No database configured' };
     }
 
-    const current  = this._pgPool.totalCount;
-    const max      = this.config.thresholds.maxConnections;
-    const usedPct  = (current / max) * 100;
-    const score    = Math.round(Math.max(0, 100 - usedPct));
+    const current = this._pgPool.totalCount;
+    const max = this.config.thresholds.maxConnections;
+    const usedPct = (current / max) * 100;
+    const score = Math.round(Math.max(0, 100 - usedPct));
 
     return {
       score,
@@ -534,14 +534,14 @@ class HealthMonitor extends EventEmitter {
 
     try {
       // Assumes a simple list-based queue pattern; adapt to your queue library
-      const keys  = await this._redisClient.keys('queue:*');
+      const keys = await this._redisClient.keys('queue:*');
       let total = 0;
       for (const key of keys.slice(0, 20)) {
         const len = await this._redisClient.llen(key).catch(() => 0);
         total += len;
       }
 
-      const max   = this.config.thresholds.maxQueueDepth;
+      const max = this.config.thresholds.maxQueueDepth;
       const score = Math.round(Math.max(0, 100 - (total / max) * 100));
 
       return {
@@ -570,7 +570,7 @@ class HealthMonitor extends EventEmitter {
   }
 
   _scoreToState(score) {
-    if (score >= THRESHOLD.HEALTHY)  return STATE.HEALTHY;
+    if (score >= THRESHOLD.HEALTHY) return STATE.HEALTHY;
     if (score >= THRESHOLD.DEGRADED) return STATE.DEGRADED;
     return STATE.CRITICAL;
   }
@@ -597,14 +597,14 @@ class HealthMonitor extends EventEmitter {
         // Force idle connections to be recycled
         this._pgPool._clients
           .filter(c => c._idle)
-          .forEach(c => c.end().catch(() => {}));
+          .forEach(c => c.end().catch(() => { }));
         actions.push('db-pool-recycle');
       }
 
       // Redis healing: reconnect if disconnected
       if (result.checks.redis.score < 30 && this._redisClient) {
         logger.warn('[HealthMonitor] Redis degraded — attempting reconnect');
-        await this._redisClient.connect().catch(() => {});
+        await this._redisClient.connect().catch(() => { });
         actions.push('redis-reconnect');
       }
 
@@ -622,7 +622,7 @@ class HealthMonitor extends EventEmitter {
       if (actions.length > 0) {
         logger.info('[HealthMonitor] Self-healing actions applied:', actions);
         await this._sendAlert({
-          level:   result.status,
+          level: result.status,
           message: `Self-healing triggered. Score: ${result.score}. Actions: ${actions.join(', ')}`,
           result,
         });
@@ -640,9 +640,9 @@ class HealthMonitor extends EventEmitter {
   async _sendAlert({ level, message, result }) {
     const payload = {
       text: `[Heady™ HealthMonitor] ${level.toUpperCase()}: ${message}`,
-      score:     result?.score,
+      score: result?.score,
       timestamp: new Date().toISOString(),
-      version:   result?.version,
+      version: result?.version,
     };
 
     const tasks = [];
@@ -653,7 +653,7 @@ class HealthMonitor extends EventEmitter {
         axios.post(this.config.alerts.slackWebhook, {
           text: payload.text,
           attachments: [{
-            color:  level === 'critical' ? '#d00000' : level === 'degraded' ? '#ff9900' : '#36a64f',
+            color: level === 'critical' ? '#d00000' : level === 'degraded' ? '#ff9900' : '#36a64f',
             fields: [
               { title: 'Score', value: String(payload.score ?? 'N/A'), short: true },
               { title: 'Level', value: level, short: true },
@@ -693,7 +693,7 @@ class HealthMonitor extends EventEmitter {
     this._checkTimer.unref?.();
 
     // Run immediately on start
-    setImmediate(() => this.check().catch(() => {}));
+    setImmediate(() => this.check().catch(() => { }));
   }
 
   // ---------------------------------------------------------------------------
@@ -756,12 +756,12 @@ class HealthMonitor extends EventEmitter {
       const uptime = Math.floor(process.uptime());
       const mem = process.memoryUsage();
       res.json({
-        status:    'ok',
+        status: 'ok',
         uptime,
         timestamp: new Date().toISOString(),
-        version:   process.env.GIT_SHA || 'unknown',
+        version: process.env.GIT_SHA || 'unknown',
         memory: {
-          heapUsedMb:  (mem.heapUsed  / 1_048_576).toFixed(1),
+          heapUsedMb: (mem.heapUsed / 1_048_576).toFixed(1),
           heapTotalMb: (mem.heapTotal / 1_048_576).toFixed(1),
         },
       });
@@ -785,7 +785,7 @@ class HealthMonitor extends EventEmitter {
         if (result.status === STATE.CRITICAL) {
           return res.status(503).json({
             status: 'not-ready',
-            score:  result.score,
+            score: result.score,
             reason: 'health-critical',
           });
         }
@@ -800,8 +800,8 @@ class HealthMonitor extends EventEmitter {
       try {
         const result = await this.check();
         const httpStatus =
-          result.status === STATE.HEALTHY  ? 200 :
-          result.status === STATE.DEGRADED ? 207 : 503;
+          result.status === STATE.HEALTHY ? 200 :
+            result.status === STATE.DEGRADED ? 207 : 503;
         res.status(httpStatus).json(result);
       } catch (err) {
         res.status(500).json({ status: 'error', error: err.message });
@@ -825,7 +825,7 @@ class HealthMonitor extends EventEmitter {
 // Exports
 // =============================================================================
 module.exports = HealthMonitor;
-module.exports.STATE     = STATE;
+module.exports.STATE = STATE;
 module.exports.THRESHOLD = THRESHOLD;
-module.exports.WEIGHTS   = WEIGHTS;
-module.exports.PHI       = PHI;
+module.exports.WEIGHTS = WEIGHTS;
+module.exports.PHI = PHI;

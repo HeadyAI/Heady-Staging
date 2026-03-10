@@ -39,25 +39,25 @@ class HeadyMCPConnector extends EventEmitter {
       description: 'Heady native file storage and collaboration',
       endpoint: '/api/mcp/HeadyDrive'
     });
-    
+
     this.services.set('calendar', {
       name: 'HeadyCalendar',
       description: 'Heady native calendar and scheduling',
       endpoint: '/api/mcp/HeadyCalendar'
     });
-    
+
     this.services.set('email', {
       name: 'HeadyMail',
       description: 'Heady native email communication',
       endpoint: '/api/mcp/HeadyMail'
     });
-    
+
     this.services.set('notes', {
       name: 'HeadyNotes',
       description: 'Heady native note-taking and knowledge management',
       endpoint: '/api/mcp/HeadyNotes'
     });
-    
+
     this.services.set('tasks', {
       name: 'HeadyTasks',
       description: 'Heady native task and project management',
@@ -190,19 +190,19 @@ class HeadyMCPConnector extends EventEmitter {
    */
   async health() {
     const results = new Map();
-    
+
     for (const [serviceId] of this.services) {
       try {
         const response = await this.brainConnector.request(`/api/mcp/${serviceId}/health`, {
           method: 'GET',
-          timeout: 3000
+          timeout: 2618 // φ² × 1000
         });
         results.set(serviceId, { status: 'healthy', response });
       } catch (error) {
         results.set(serviceId, { status: 'unhealthy', error: error.message });
       }
     }
-    
+
     return {
       services: Object.fromEntries(results),
       total: this.services.size,

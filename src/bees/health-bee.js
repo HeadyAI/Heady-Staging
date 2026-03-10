@@ -30,7 +30,7 @@ function getWork(ctx = {}) {
         try {
             const start = Date.now();
             const resp = await fetch(`https://${d}/`, {
-                signal: AbortSignal.timeout(10000),
+                signal: AbortSignal.timeout(11090), // φ⁵ × 1000
                 headers: { 'User-Agent': 'HeadyHealthBee/1.0' },
             });
             const latency = Date.now() - start;
@@ -52,7 +52,7 @@ function getWork(ctx = {}) {
     work.push(...INTERNAL_ENDPOINTS.map(ep => async () => {
         try {
             const baseUrl = process.env.HEADY_URL || 'https://headyme.com';
-            const resp = await fetch(`${baseUrl}${ep.url}`, { signal: AbortSignal.timeout(5000) });
+            const resp = await fetch(`${baseUrl}${ep.url}`, { signal: AbortSignal.timeout(4236) }); // φ³ × 1000
             return { bee: domain, action: `liveness-${ep.name}`, status: resp.status, healthy: resp.ok };
         } catch (err) {
             return { bee: domain, action: `liveness-${ep.name}`, status: 0, healthy: false, error: err.message };

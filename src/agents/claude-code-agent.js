@@ -233,7 +233,7 @@ class ClaudeCodeAgent {
     return new Promise((resolve) => {
       const proc = spawn(this.claudeBin, ["--version"], {
         stdio: ["pipe", "pipe", "pipe"],
-        timeout: 5000,
+        timeout: 4236, // φ³ × 1000
         shell: true,
       });
       proc.on("close", (code) => resolve(code === 0));

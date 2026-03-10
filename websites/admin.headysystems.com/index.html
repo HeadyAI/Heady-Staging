@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Heady Admin — System Administration</title>
+  <meta name="description" content="Administration dashboard for HeadySystems. Manage services, users, billing, deployments, and system health.">
+  <meta name="author" content="Eric Haywood / HeadySystems Inc.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./shared/css/heady-design-system.css">
+  <style>
+    body { display: flex; min-height: 100vh; }
+    .admin-sidebar {
+      width: 233px;
+      min-height: 100vh;
+      background: var(--color-abyss);
+      border-right: 1px solid var(--glass-border);
+      padding: var(--space-21);
+      position: fixed;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      overflow-y: auto;
+      z-index: var(--z-fixed);
+    }
+    .admin-main {
+      flex: 1;
+      margin-left: 233px;
+      padding: var(--space-34);
+      min-height: 100vh;
+    }
+    .sidebar-logo {
+      display: flex;
+      align-items: center;
+      gap: var(--space-8);
+      font-size: var(--text-lg);
+      font-weight: 700;
+      color: var(--color-white);
+      margin-bottom: var(--space-34);
+      padding-bottom: var(--space-21);
+      border-bottom: 1px solid var(--glass-border);
+    }
+    .sidebar-section {
+      margin-bottom: var(--space-21);
+    }
+    .sidebar-section-title {
+      font-size: var(--text-xs);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--color-fog);
+      margin-bottom: var(--space-8);
+      font-weight: 600;
+    }
+    .sidebar-link {
+      display: flex;
+      align-items: center;
+      gap: var(--space-8);
+      padding: var(--space-8) var(--space-13);
+      border-radius: var(--radius-md);
+      color: var(--color-silver);
+      font-size: var(--text-sm);
+      transition: all var(--duration-fast) var(--ease-phi);
+      margin-bottom: var(--space-3);
+    }
+    .sidebar-link:hover, .sidebar-link.active {
+      background: rgba(212,168,67,0.089);
+      color: var(--color-phi-gold);
+    }
+    .admin-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: var(--space-34);
+    }
+    @media (max-width: 987px) {
+      .admin-sidebar { display: none; }
+      .admin-main { margin-left: 0; }
+    }
+  </style>
+  <style>
+    .nav-toggle {
+      display: none;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: var(--space-8);
+    }
+    .nav-toggle span {
+      display: block;
+      width: 21px;
+      height: 2px;
+      background: var(--color-cloud);
+      margin: 5px 0;
+      transition: all var(--duration-base) var(--ease-phi);
+    }
+    @media (max-width: 987px) {
+      .nav-toggle { display: block; }
+      .nav-links.nav-open {
+        display: flex;
+        flex-direction: column;
+        position: absolute;
+        top: var(--space-89);
+        left: 0;
+        right: 0;
+        background: rgba(9,9,11,0.95);
+        padding: var(--space-21);
+        border-bottom: 1px solid var(--glass-border);
+      }
+    }
+  </style>
+</head>
+<body>
+  <canvas id="sacred-bg" class="sacred-bg"></canvas>
+
+  <aside class="admin-sidebar">
+    <div class="sidebar-logo">
+      <svg width="34" height="34" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Heady Admin">
+      <rect x="3" y="3" width="28" height="28" rx="5" stroke="#d4a843" stroke-width="1.5"/>
+      <rect x="3" y="3" width="28" height="8" rx="5" fill="#d4a843" opacity="0.236"/>
+      <rect x="6" y="14" width="10" height="6" rx="2" stroke="currentColor" stroke-width="1" opacity="0.618"/>
+      <rect x="18" y="14" width="10" height="6" rx="2" stroke="currentColor" stroke-width="1" opacity="0.618"/>
+      <rect x="6" y="23" width="22" height="5" rx="2" stroke="currentColor" stroke-width="1" opacity="0.618"/>
+    </svg>
+      <span>Admin</span>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-section-title">Overview</div>
+      <a href="#" class="sidebar-link active">&#x2302; Dashboard</a>
+      <a href="#" class="sidebar-link">&#x26A1; Services</a>
+      <a href="#" class="sidebar-link">&#x2699; Configuration</a>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-section-title">Management</div>
+      <a href="#" class="sidebar-link">&#x1F464; Users</a>
+      <a href="#" class="sidebar-link">&#x1F4B3; Billing</a>
+      <a href="#" class="sidebar-link">&#x1F4CA; Analytics</a>
+      <a href="#" class="sidebar-link">&#x1F514; Notifications</a>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-section-title">Infrastructure</div>
+      <a href="#" class="sidebar-link">&#x1F433; Containers</a>
+      <a href="#" class="sidebar-link">&#x1F5A5; GPU Cluster</a>
+      <a href="#" class="sidebar-link">&#x1F310; Edge Workers</a>
+      <a href="#" class="sidebar-link">&#x1F4BE; Database</a>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-section-title">Security</div>
+      <a href="#" class="sidebar-link">&#x1F512; Access Control</a>
+      <a href="#" class="sidebar-link">&#x1F4DD; Audit Logs</a>
+      <a href="#" class="sidebar-link">&#x1F6E1; Zero Trust</a>
+    </div>
+  </aside>
+
+  <main class="admin-main">
+    <div class="admin-header">
+      <div>
+        <h1 style="font-size:var(--text-2xl);margin-bottom:var(--space-5);">System Dashboard</h1>
+        <p style="color:var(--color-fog);font-size:var(--text-sm);margin:0;">HeadySystems Administration &mdash; Last updated: just now</p>
+      </div>
+      <div style="display:flex;gap:var(--space-13);align-items:center;">
+        <span class="badge badge-teal">All Systems Operational</span>
+        <div style="width:34px;height:34px;border-radius:50%;background:var(--color-graphite);display:flex;align-items:center;justify-content:center;font-size:var(--text-sm);color:var(--color-phi-gold);font-weight:600;">EH</div>
+      </div>
+    </div>
+
+    <!-- Metrics Row -->
+    <div class="sacred-grid sacred-grid-4" style="margin-bottom:var(--space-34);">
+      <div class="metric-card">
+        <div class="metric-value" data-count="67">0</div>
+        <div class="metric-label">Services Running</div>
+        <div class="metric-change positive">All healthy</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-value" data-count="2847">0</div>
+        <div class="metric-label">Active Users</div>
+        <div class="metric-change positive">+12.3% WoW</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-value" data-count="99" data-suffix=".97%">0</div>
+        <div class="metric-label">Uptime</div>
+        <div class="metric-change positive">SLA compliant</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-value" data-count="3">0</div>
+        <div class="metric-label">GPU Runtimes</div>
+        <div class="metric-change positive">Colab Pro+ active</div>
+      </div>
+    </div>
+
+    <!-- Service Health Grid -->
+    <div class="glass-card" style="margin-bottom:var(--space-34);">
+      <h3 style="margin-bottom:var(--space-21);font-size:var(--text-lg);">Service Health Matrix</h3>
+      <div id="health-monitor">
+        <div class="sacred-grid sacred-grid-4" style="gap:var(--space-8);">
+          <div data-service="api-gw" style="display:flex;align-items:center;gap:var(--space-8);padding:var(--space-8) var(--space-13);background:var(--color-graphite);border-radius:var(--radius-md);font-size:var(--text-sm);">
+            <span class="status-dot status-healthy"></span> api-gateway
+          </div>
+          <div data-service="auth" style="display:flex;align-items:center;gap:var(--space-8);padding:var(--space-8) var(--space-13);background:var(--color-graphite);border-radius:var(--radius-md);font-size:var(--text-sm);">
+            <span class="status-dot status-healthy"></span> auth-server
+          </div>
+          <div data-service="vec-mem" style="display:flex;align-items:center;gap:var(--space-8);padding:var(--space-8) var(--space-13);background:var(--color-graphite);border-radius:var(--radius-md);font-size:var(--text-sm);">
+            <span class="status-dot status-healthy"></span> vector-memory
+          </div>
+          <div data-service="csl" style="display:flex;align-items:center;gap:var(--space-8);padding:var(--space-8) var(--space-13);background:var(--color-graphite);border-radius:var(--radius-md);font-size:var(--text-sm);">
+            <span class="status-dot status-healthy"></span> csl-engine
+          </div>
+          <div data-service="conductor" style="display:flex;align-items:center;gap:var(--space-8);padding:var(--space-8) var(--space-13);background:var(--color-graphite);border-radius:var(--radius-md);font-size:var(--text-sm);">
+            <span class="status-dot status-healthy"></span> conductor
+          </div>
+          <div data-service="search" style="display:flex;align-items:center;gap:var(--space-8);padding:var(--space-8) var(--space-13);background:var(--color-graphite);border-radius:var(--radius-md);font-size:var(--text-sm);">
+            <span class="status-dot status-healthy"></span> search
+          </div>
+          <div data-service="billing" style="display:flex;align-items:center;gap:var(--space-8);padding:var(--space-8) var(--space-13);background:var(--color-graphite);border-radius:var(--radius-md);font-size:var(--text-sm);">
+            <span class="status-dot status-healthy"></span> billing
+          </div>
+          <div data-service="analytics" style="display:flex;align-items:center;gap:var(--space-8);padding:var(--space-8) var(--space-13);background:var(--color-graphite);border-radius:var(--radius-md);font-size:var(--text-sm);">
+            <span class="status-dot status-healthy"></span> analytics
+          </div>
+          <div data-service="notif" style="display:flex;align-items:center;gap:var(--space-8);padding:var(--space-8) var(--space-13);background:var(--color-graphite);border-radius:var(--radius-md);font-size:var(--text-sm);">
+            <span class="status-dot status-healthy"></span> notifications
+          </div>
+          <div data-service="scheduler" style="display:flex;align-items:center;gap:var(--space-8);padding:var(--space-8) var(--space-13);background:var(--color-graphite);border-radius:var(--radius-md);font-size:var(--text-sm);">
+            <span class="status-dot status-healthy"></span> scheduler
+          </div>
+          <div data-service="migration" style="display:flex;align-items:center;gap:var(--space-8);padding:var(--space-8) var(--space-13);background:var(--color-graphite);border-radius:var(--radius-md);font-size:var(--text-sm);">
+            <span class="status-dot status-healthy"></span> migration
+          </div>
+          <div data-service="asset" style="display:flex;align-items:center;gap:var(--space-8);padding:var(--space-8) var(--space-13);background:var(--color-graphite);border-radius:var(--radius-md);font-size:var(--text-sm);">
+            <span class="status-dot status-healthy"></span> asset-pipeline
+          </div>
+          <div data-service="postgres" style="display:flex;align-items:center;gap:var(--space-8);padding:var(--space-8) var(--space-13);background:var(--color-graphite);border-radius:var(--radius-md);font-size:var(--text-sm);">
+            <span class="status-dot status-healthy"></span> postgresql
+          </div>
+          <div data-service="redis" style="display:flex;align-items:center;gap:var(--space-8);padding:var(--space-8) var(--space-13);background:var(--color-graphite);border-radius:var(--radius-md);font-size:var(--text-sm);">
+            <span class="status-dot status-healthy"></span> redis
+          </div>
+          <div data-service="nats" style="display:flex;align-items:center;gap:var(--space-8);padding:var(--space-8) var(--space-13);background:var(--color-graphite);border-radius:var(--radius-md);font-size:var(--text-sm);">
+            <span class="status-dot status-healthy"></span> nats
+          </div>
+          <div data-service="envoy" style="display:flex;align-items:center;gap:var(--space-8);padding:var(--space-8) var(--space-13);background:var(--color-graphite);border-radius:var(--radius-md);font-size:var(--text-sm);">
+            <span class="status-dot status-healthy"></span> envoy-proxy
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recent Activity & Quick Actions -->
+    <div class="sacred-grid sacred-grid-phi">
+      <div class="glass-card">
+        <h3 style="margin-bottom:var(--space-21);font-size:var(--text-lg);">Recent Activity</h3>
+        <div style="display:flex;flex-direction:column;gap:var(--space-13);">
+          <div style="display:flex;gap:var(--space-13);padding:var(--space-8) 0;border-bottom:1px solid var(--glass-border);font-size:var(--text-sm);">
+            <span style="color:var(--color-heady-emerald);min-width:55px;">Deploy</span>
+            <span style="color:var(--color-cloud);">auth-session-server v3.2.1 deployed to production</span>
+            <span style="color:var(--color-fog);margin-left:auto;white-space:nowrap;">2m ago</span>
+          </div>
+          <div style="display:flex;gap:var(--space-13);padding:var(--space-8) 0;border-bottom:1px solid var(--glass-border);font-size:var(--text-sm);">
+            <span style="color:var(--color-heady-blue);min-width:55px;">Config</span>
+            <span style="color:var(--color-cloud);">CSL threshold updated to 0.618 across all swarms</span>
+            <span style="color:var(--color-fog);margin-left:auto;white-space:nowrap;">13m ago</span>
+          </div>
+          <div style="display:flex;gap:var(--space-13);padding:var(--space-8) 0;border-bottom:1px solid var(--glass-border);font-size:var(--text-sm);">
+            <span style="color:var(--color-phi-amber);min-width:55px;">Scale</span>
+            <span style="color:var(--color-cloud);">Auto-scaled conductor to 3 replicas</span>
+            <span style="color:var(--color-fog);margin-left:auto;white-space:nowrap;">21m ago</span>
+          </div>
+          <div style="display:flex;gap:var(--space-13);padding:var(--space-8) 0;border-bottom:1px solid var(--glass-border);font-size:var(--text-sm);">
+            <span style="color:var(--color-heady-violet);min-width:55px;">Memory</span>
+            <span style="color:var(--color-cloud);">Vector memory compaction completed, 892 embeddings optimized</span>
+            <span style="color:var(--color-fog);margin-left:auto;white-space:nowrap;">34m ago</span>
+          </div>
+          <div style="display:flex;gap:var(--space-13);padding:var(--space-8) 0;font-size:var(--text-sm);">
+            <span style="color:var(--color-heady-teal);min-width:55px;">Health</span>
+            <span style="color:var(--color-cloud);">Self-healing cycle resolved drift in analytics-service</span>
+            <span style="color:var(--color-fog);margin-left:auto;white-space:nowrap;">55m ago</span>
+          </div>
+        </div>
+      </div>
+      <div class="glass-card">
+        <h3 style="margin-bottom:var(--space-21);font-size:var(--text-lg);">Quick Actions</h3>
+        <div style="display:flex;flex-direction:column;gap:var(--space-8);">
+          <button class="btn btn-secondary" style="width:100%;justify-content:flex-start;">&#x1F504; Force Health Check</button>
+          <button class="btn btn-secondary" style="width:100%;justify-content:flex-start;">&#x1F680; Deploy Service</button>
+          <button class="btn btn-secondary" style="width:100%;justify-content:flex-start;">&#x1F464; Manage Users</button>
+          <button class="btn btn-secondary" style="width:100%;justify-content:flex-start;">&#x1F4CA; View Analytics</button>
+          <button class="btn btn-secondary" style="width:100%;justify-content:flex-start;">&#x1F512; Security Audit</button>
+          <button class="btn btn-secondary" style="width:100%;justify-content:flex-start;">&#x1F4BE; Database Backup</button>
+        </div>
+      </div>
+    </div>
+
+    <div style="text-align:center;margin-top:var(--space-55);padding-top:var(--space-21);border-top:1px solid var(--glass-border);">
+      <p style="font-size:var(--text-xs);color:var(--color-fog);margin:0;">
+        &copy; 2026 HeadySystems Inc. &mdash; Admin Dashboard v3.0.0 &mdash;
+        <a href="https://www.perplexity.ai/computer" target="_blank" rel="noopener noreferrer" style="color:var(--color-fog);">Created with Perplexity Computer</a>
+      </p>
+    </div>
+  </main>
+  <script src="./shared/js/heady-core.js"></script>
+</body>
+</html>

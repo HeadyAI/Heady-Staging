@@ -100,7 +100,7 @@ class HeadyServiceConnector {
         for (const [key, svc] of Object.entries(this.services)) {
             const start = Date.now();
             try {
-                const response = await this._fetch(`${svc.url}${svc.healthPath}`, { timeout: 5000 });
+                const response = await this._fetch(`${svc.url}${svc.healthPath}`, { timeout: 4236 }); // φ³ × 1000
                 const data = await response.json();
                 const latencyMs = Date.now() - start;
                 results.push({

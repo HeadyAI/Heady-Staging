@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HeadyMe — Sovereign AI Command Center</title>
+  <meta name="description" content="Your personal AI command center. Orchestrate intelligence, manage vector memory, and deploy autonomous agents across the Heady ecosystem.">
+  <meta name="author" content="Eric Haywood / HeadySystems Inc.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./shared/css/heady-design-system.css">
+  <style>
+    .nav-toggle {
+      display: none;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: var(--space-8);
+    }
+    .nav-toggle span {
+      display: block;
+      width: 21px;
+      height: 2px;
+      background: var(--color-cloud);
+      margin: 5px 0;
+      transition: all var(--duration-base) var(--ease-phi);
+    }
+    @media (max-width: 987px) {
+      .nav-toggle { display: block; }
+      .nav-links.nav-open {
+        display: flex;
+        flex-direction: column;
+        position: absolute;
+        top: var(--space-89);
+        left: 0;
+        right: 0;
+        background: rgba(9,9,11,0.95);
+        padding: var(--space-21);
+        border-bottom: 1px solid var(--glass-border);
+      }
+    }
+  </style>
+</head>
+<body>
+  <canvas id="sacred-bg" class="sacred-bg"></canvas>
+  <header class="nav-header">
+    <nav class="nav-inner">
+      <a href="/" class="nav-logo">
+        <svg width="34" height="34" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Heady">
+      <circle cx="17" cy="17" r="15" stroke="currentColor" stroke-width="1.5" opacity="0.382"/>
+      <circle cx="17" cy="17" r="9.27" stroke="#d4a843" stroke-width="1.5"/>
+      <circle cx="17" cy="17" r="5.73" fill="#d4a843" opacity="0.618"/>
+      <path d="M17 2 L17 32 M2 17 L32 17" stroke="currentColor" stroke-width="0.5" opacity="0.236"/>
+    </svg>
+        <span>HeadyMe</span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="#dashboard">Dashboard</a></li>
+        <li><a href="#agents">Agents</a></li>
+        <li><a href="#memory">Memory</a></li>
+        <li><a href="#deploy">Deploy</a></li>
+        <li><a href="https://docs.headysystems.com">Docs</a></li>
+        <li><a href="#dashboard" class="btn btn-primary" style="padding: var(--space-8) var(--space-21);">Launch</a></li>
+      </ul>
+      <button class="nav-toggle" aria-label="Toggle navigation">
+        <span></span><span></span><span></span>
+      </button>
+    </nav>
+  </header>
+  <main>
+    <section class="hero">
+      <div class="hero-content fade-in">
+        <span class="badge badge-gold">Sovereign AI Platform</span>
+        <h1 class="hero-title">Your Intelligence,<br>Your Control</h1>
+        <p class="hero-subtitle">HeadyMe is your personal AI command center. Orchestrate 17 swarms, manage 384-dimensional vector memory, and deploy autonomous agents — all from one unified interface.</p>
+        <div style="display: flex; gap: var(--space-21); justify-content: center; flex-wrap: wrap;">
+          <a href="#dashboard" class="btn btn-primary">Open Dashboard</a>
+          <a href="#features" class="btn btn-secondary">Explore Features</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="dashboard">
+      <div class="container">
+        <div class="stats-bar fade-in">
+          <div class="stat-item">
+            <div class="stat-value" data-count="17">0</div>
+            <div class="stat-label">Active Swarms</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-value" data-count="384" data-suffix="D">0</div>
+            <div class="stat-label">Vector Dimensions</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-value" data-count="67">0</div>
+            <div class="stat-label">Services Online</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-value" data-count="51">0</div>
+            <div class="stat-label">Provisional Patents</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="features">
+      <div class="container">
+        <span class="section-label fade-in">Core Capabilities</span>
+        <h2 class="section-title fade-in">Everything You Need to Command Intelligence</h2>
+        <p class="section-desc fade-in">Built on Sacred Geometry principles with phi-scaled architecture. Every constant derived from the golden ratio.</p>
+
+        <div class="sacred-grid sacred-grid-3">
+          <div class="feature-card fade-in">
+            <div class="feature-icon feature-icon-gold">&#x2726;</div>
+            <h4 class="feature-title">17-Swarm Orchestration</h4>
+            <p class="feature-desc">Coordinate specialized agent swarms across research, coding, deployment, security, and creative domains simultaneously.</p>
+          </div>
+          <div class="feature-card fade-in">
+            <div class="feature-icon feature-icon-violet">&#x29C8;</div>
+            <h4 class="feature-title">3D Vector Memory</h4>
+            <p class="feature-desc">384-dimensional embeddings projected into navigable 3D space. Explore your knowledge graphically with semantic clustering.</p>
+          </div>
+          <div class="feature-card fade-in">
+            <div class="feature-icon feature-icon-teal">&#x2B21;</div>
+            <h4 class="feature-title">CSL Logic Engine</h4>
+            <p class="feature-desc">Continuous Semantic Logic gates using geometric vector operations. AND via cosine, OR via superposition, NOT via orthogonal projection.</p>
+          </div>
+          <div class="feature-card fade-in">
+            <div class="feature-icon feature-icon-blue">&#x2B22;</div>
+            <h4 class="feature-title">Liquid Gateway</h4>
+            <p class="feature-desc">Race multiple AI providers simultaneously. Fastest response wins. Automatic failover with phi-exponential backoff.</p>
+          </div>
+          <div class="feature-card fade-in">
+            <div class="feature-icon feature-icon-emerald">&#x2B23;</div>
+            <h4 class="feature-title">Auto-Success Engine</h4>
+            <p class="feature-desc">Self-improving pipeline that continuously discovers, builds, and optimizes. Zero human intervention required for routine operations.</p>
+          </div>
+          <div class="feature-card fade-in">
+            <div class="feature-icon feature-icon-rose">&#x2756;</div>
+            <h4 class="feature-title">Sacred Geometry UI</h4>
+            <p class="feature-desc">Every spacing value is Fibonacci. Every proportion follows phi. Zero magic numbers in the entire codebase.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="agents" style="background: var(--gradient-void);">
+      <div class="container">
+        <span class="section-label fade-in">Agent Architecture</span>
+        <h2 class="section-title fade-in">The Heady Ecosystem</h2>
+        <div class="sacred-grid sacred-grid-phi fade-in">
+          <div>
+            <p class="section-desc">Nine interconnected platforms forming a complete sovereign AI operating system. Each domain serves a specialized function while sharing the same vector memory backbone.</p>
+            <div class="code-block" style="margin-top: var(--space-34);">
+<span style="color:var(--color-phi-gold);">const</span> ecosystem = {
+  command:   <span style="color:var(--color-heady-teal);">'headyme.com'</span>,
+  engine:    <span style="color:var(--color-heady-teal);">'headysystems.com'</span>,
+  intel:     <span style="color:var(--color-heady-teal);">'heady-ai.com'</span>,
+  os:        <span style="color:var(--color-heady-teal);">'headyos.com'</span>,
+  nonprofit: <span style="color:var(--color-heady-teal);">'headyconnection.org'</span>,
+  community: <span style="color:var(--color-heady-teal);">'headyconnection.com'</span>,
+  exchange:  <span style="color:var(--color-heady-teal);">'headyex.com'</span>,
+  finance:   <span style="color:var(--color-heady-teal);">'headyfinance.com'</span>,
+  admin:     <span style="color:var(--color-heady-teal);">'admin.headysystems.com'</span>
+};
+            </div>
+          </div>
+          <div class="glass-card">
+            <h4 style="margin-bottom: var(--space-21);">Service Health</h4>
+            <div id="health-monitor" style="display:flex;flex-direction:column;gap:var(--space-13);">
+              <div data-service="api-gateway" style="display:flex;align-items:center;justify-content:space-between;padding:var(--space-8) 0;border-bottom:1px solid var(--glass-border);">
+                <span style="font-size:var(--text-sm);">API Gateway :3316</span>
+                <span class="status-dot status-healthy"></span>
+              </div>
+              <div data-service="auth-server" style="display:flex;align-items:center;justify-content:space-between;padding:var(--space-8) 0;border-bottom:1px solid var(--glass-border);">
+                <span style="font-size:var(--text-sm);">Auth Server :3338</span>
+                <span class="status-dot status-healthy"></span>
+              </div>
+              <div data-service="vector-memory" style="display:flex;align-items:center;justify-content:space-between;padding:var(--space-8) 0;border-bottom:1px solid var(--glass-border);">
+                <span style="font-size:var(--text-sm);">Vector Memory :3320</span>
+                <span class="status-dot status-healthy"></span>
+              </div>
+              <div data-service="csl-engine" style="display:flex;align-items:center;justify-content:space-between;padding:var(--space-8) 0;border-bottom:1px solid var(--glass-border);">
+                <span style="font-size:var(--text-sm);">CSL Engine :3322</span>
+                <span class="status-dot status-healthy"></span>
+              </div>
+              <div data-service="conductor" style="display:flex;align-items:center;justify-content:space-between;padding:var(--space-8) 0;border-bottom:1px solid var(--glass-border);">
+                <span style="font-size:var(--text-sm);">Conductor :3324</span>
+                <span class="status-dot status-healthy"></span>
+              </div>
+              <div data-service="search" style="display:flex;align-items:center;justify-content:space-between;padding:var(--space-8) 0;border-bottom:1px solid var(--glass-border);">
+                <span style="font-size:var(--text-sm);">Search Service :3326</span>
+                <span class="status-dot status-healthy"></span>
+              </div>
+              <div data-service="billing" style="display:flex;align-items:center;justify-content:space-between;padding:var(--space-8) 0;">
+                <span style="font-size:var(--text-sm);">Billing Service :3353</span>
+                <span class="status-dot status-healthy"></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="memory">
+      <div class="container">
+        <span class="section-label fade-in">Vector Memory</span>
+        <h2 class="section-title fade-in">Explore Your Knowledge in 3D Space</h2>
+        <div class="glass-card fade-in" style="min-height: 377px; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden;">
+          <canvas id="vector-viz" style="position:absolute;inset:0;width:100%;height:100%;"></canvas>
+          <div style="position:relative;z-index:2;text-align:center;">
+            <div class="stat-value" style="font-size:var(--text-4xl);">384D</div>
+            <p style="color:var(--color-fog);margin:var(--space-8) 0 0;">Vector dimensions projected to 3D navigable space</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="deploy" style="background: var(--gradient-void);">
+      <div class="container" style="text-align:center;">
+        <span class="section-label fade-in">Get Started</span>
+        <h2 class="section-title fade-in" style="max-width:none;">Deploy Your Sovereign AI Today</h2>
+        <p class="section-desc fade-in" style="margin:0 auto var(--space-55);">No vendor lock-in. Your data stays yours. Your models, your rules, your intelligence.</p>
+        <div style="display:flex;gap:var(--space-21);justify-content:center;flex-wrap:wrap;" class="fade-in">
+          <a href="#" class="btn btn-primary">Start Free</a>
+          <a href="https://docs.headysystems.com" class="btn btn-secondary">Read Documentation</a>
+        </div>
+      </div>
+    </section>
+  </main>
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div class="nav-logo" style="margin-bottom: var(--space-21);">
+            <svg width="34" height="34" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Heady">
+      <circle cx="17" cy="17" r="15" stroke="currentColor" stroke-width="1.5" opacity="0.382"/>
+      <circle cx="17" cy="17" r="9.27" stroke="#d4a843" stroke-width="1.5"/>
+      <circle cx="17" cy="17" r="5.73" fill="#d4a843" opacity="0.618"/>
+      <path d="M17 2 L17 32 M2 17 L32 17" stroke="currentColor" stroke-width="0.5" opacity="0.236"/>
+    </svg>
+            <span>HeadyMe</span>
+          </div>
+          <p>Your sovereign AI command center. Built on Sacred Geometry.</p>
+        </div>
+      <div class="footer-col">
+        <h5>Platform</h5>
+        <ul>
+          <li><a href="#dashboard">Dashboard</a></li>
+          <li><a href="#agents">Agents</a></li>
+          <li><a href="#memory">Memory</a></li>
+          <li><a href="#deploy">Deploy</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Ecosystem</h5>
+        <ul>
+          <li><a href="https://headysystems.com">HeadySystems</a></li>
+          <li><a href="https://heady-ai.com">HeadyAI</a></li>
+          <li><a href="https://headyos.com">HeadyOS</a></li>
+          <li><a href="https://headyconnection.org">HeadyConnection</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Resources</h5>
+        <ul>
+          <li><a href="#">Documentation</a></li>
+          <li><a href="#">API Reference</a></li>
+          <li><a href="#">Status</a></li>
+          <li><a href="#">Blog</a></li>
+        </ul>
+      </div>
+      </div>
+      <div class="footer-bottom">
+        <span>&copy; 2026 HeadySystems Inc. All rights reserved. 51 Provisional Patents.</span>
+        <a href="https://www.perplexity.ai/computer" target="_blank" rel="noopener noreferrer" style="color: var(--color-fog);">
+          Created with Perplexity Computer
+        </a>
+      </div>
+    </div>
+  </footer>  <script>
+    (function() {
+      const canvas = document.getElementById('vector-viz');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      const points = [];
+      const PHI = 1.618033988749895;
+      const count = 89;
+
+      function resize() {
+        canvas.width = canvas.offsetWidth;
+        canvas.height = canvas.offsetHeight;
+      }
+      resize();
+      window.addEventListener('resize', resize);
+
+      for (let i = 0; i < count; i++) {
+        const angle = i * PHI * Math.PI * 2;
+        const r = Math.sqrt(i) * 13;
+        points.push({
+          x: Math.cos(angle) * r,
+          y: Math.sin(angle) * r,
+          z: (Math.random() - 0.5) * 144,
+          hue: (i / count) * 60 + 30
+        });
+      }
+
+      let t = 0;
+      function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        const cx = canvas.width / 2;
+        const cy = canvas.height / 2;
+        t += 0.003;
+
+        const sorted = points.map((p, i) => {
+          const cos = Math.cos(t);
+          const sin = Math.sin(t);
+          const rx = p.x * cos - p.z * sin;
+          const rz = p.x * sin + p.z * cos;
+          const scale = 300 / (300 + rz);
+          return { sx: cx + rx * scale, sy: cy + p.y * scale, scale, hue: p.hue, idx: i };
+        }).sort((a, b) => a.scale - b.scale);
+
+        for (let i = 0; i < sorted.length; i++) {
+          const p = sorted[i];
+          const r = Math.max(1, p.scale * 3);
+          ctx.beginPath();
+          ctx.arc(p.sx, p.sy, r, 0, Math.PI * 2);
+          ctx.fillStyle = 'hsla(' + p.hue + ', 70%, 60%, ' + (p.scale * 0.618) + ')';
+          ctx.fill();
+        }
+        requestAnimationFrame(draw);
+      }
+      draw();
+    })();
+  </script>
+  <script src="./shared/js/heady-core.js"></script>
+</body>
+</html>

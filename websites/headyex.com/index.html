@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HeadyEx — AI-Powered Trading Intelligence</title>
+  <meta name="description" content="Sovereign trading intelligence powered by Sacred Geometry. Signal detection, pattern recognition, and execution — all through the Heady ecosystem.">
+  <meta name="author" content="Eric Haywood / HeadySystems Inc.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./shared/css/heady-design-system.css">
+  <style>
+    .nav-toggle {
+      display: none;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: var(--space-8);
+    }
+    .nav-toggle span {
+      display: block;
+      width: 21px;
+      height: 2px;
+      background: var(--color-cloud);
+      margin: 5px 0;
+      transition: all var(--duration-base) var(--ease-phi);
+    }
+    @media (max-width: 987px) {
+      .nav-toggle { display: block; }
+      .nav-links.nav-open {
+        display: flex;
+        flex-direction: column;
+        position: absolute;
+        top: var(--space-89);
+        left: 0;
+        right: 0;
+        background: rgba(9,9,11,0.95);
+        padding: var(--space-21);
+        border-bottom: 1px solid var(--glass-border);
+      }
+    }
+  </style>
+</head>
+<body>
+  <canvas id="sacred-bg" class="sacred-bg"></canvas>
+  <header class="nav-header">
+    <nav class="nav-inner">
+      <a href="/" class="nav-logo">
+        <svg width="34" height="34" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="HeadyEx">
+      <rect x="3" y="8" width="28" height="18" rx="3" stroke="#d4a843" stroke-width="1.5"/>
+      <path d="M8 17 L14 12 L14 15 L26 15" stroke="#38bdf8" stroke-width="1.5"/>
+      <path d="M26 19 L20 24 L20 21 L8 21" stroke="#d4a843" stroke-width="1.5"/>
+    </svg>
+        <span>HeadyEx</span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="#markets">Markets</a></li>
+        <li><a href="#signals">Signals</a></li>
+        <li><a href="#analytics">Analytics</a></li>
+        <li><a href="#api">API</a></li>
+        <li><a href="#launch" class="btn btn-primary" style="padding: var(--space-8) var(--space-21);">Launch</a></li>
+      </ul>
+      <button class="nav-toggle" aria-label="Toggle navigation">
+        <span></span><span></span><span></span>
+      </button>
+    </nav>
+  </header>
+  <main>
+    <section class="hero">
+      <div class="hero-content fade-in">
+        <span class="badge badge-gold">Trading Intelligence</span>
+        <h1 class="hero-title">Trade with<br>Sacred Geometry</h1>
+        <p class="hero-subtitle">HeadyEx applies CSL pattern recognition, phi-harmonic analysis, and multi-model intelligence to financial markets. Your signals, your execution, your sovereignty.</p>
+        <a href="#markets" class="btn btn-primary">View Markets</a>
+      </div>
+    </section>
+
+    <section class="section" id="markets">
+      <div class="container">
+        <span class="section-label fade-in">Live Markets</span>
+        <h2 class="section-title fade-in">Market Overview</h2>
+        <div class="glass-card fade-in" style="overflow-x:auto;">
+          <table class="heady-table">
+            <thead>
+              <tr><th>Asset</th><th>Price</th><th>24h Change</th><th>CSL Signal</th><th>Confidence</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td style="font-weight:600;">BTC/USD</td><td>$67,842.13</td>
+                <td style="color:var(--color-heady-emerald);">+2.34%</td>
+                <td><span class="badge badge-teal">Accumulate</span></td>
+                <td>0.847</td>
+              </tr>
+              <tr>
+                <td style="font-weight:600;">ETH/USD</td><td>$3,891.47</td>
+                <td style="color:var(--color-heady-emerald);">+1.89%</td>
+                <td><span class="badge badge-gold">Hold</span></td>
+                <td>0.723</td>
+              </tr>
+              <tr>
+                <td style="font-weight:600;">SOL/USD</td><td>$187.23</td>
+                <td style="color:var(--color-heady-rose);">-0.67%</td>
+                <td><span class="badge badge-violet">Analyze</span></td>
+                <td>0.618</td>
+              </tr>
+              <tr>
+                <td style="font-weight:600;">AAPL</td><td>$198.45</td>
+                <td style="color:var(--color-heady-emerald);">+0.92%</td>
+                <td><span class="badge badge-teal">Accumulate</span></td>
+                <td>0.891</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="signals" style="background:var(--gradient-void);">
+      <div class="container">
+        <span class="section-label fade-in">Signal Detection</span>
+        <h2 class="section-title fade-in">CSL-Powered Pattern Recognition</h2>
+        <div class="sacred-grid sacred-grid-3">
+          <div class="feature-card fade-in">
+            <div class="feature-icon feature-icon-gold">&#x1F4C8;</div>
+            <h4 class="feature-title">Phi-Harmonic Analysis</h4>
+            <p class="feature-desc">Fibonacci retracement levels, golden ratio support/resistance, and phi-cycle timing for entry and exit signals.</p>
+          </div>
+          <div class="feature-card fade-in">
+            <div class="feature-icon feature-icon-teal">&#x1F9E0;</div>
+            <h4 class="feature-title">Multi-Model Consensus</h4>
+            <p class="feature-desc">Signals validated across multiple AI models. CSL cosine gates measure agreement. Only high-confidence signals surface.</p>
+          </div>
+          <div class="feature-card fade-in">
+            <div class="feature-icon feature-icon-violet">&#x26A1;</div>
+            <h4 class="feature-title">Real-Time Execution</h4>
+            <p class="feature-desc">Sub-second signal detection to execution pipeline. Phi-scaled position sizing and risk management built in.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="analytics">
+      <div class="container">
+        <div class="stats-bar fade-in">
+          <div class="stat-item">
+            <div class="stat-value" data-count="89" data-suffix="%">0</div>
+            <div class="stat-label">Signal Accuracy</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-value" data-count="144" data-suffix="ms">0</div>
+            <div class="stat-label">Avg Latency</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-value" data-prefix="$" data-count="2400000">0</div>
+            <div class="stat-label">Volume Processed</div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div class="nav-logo" style="margin-bottom: var(--space-21);">
+            <svg width="34" height="34" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Heady">
+      <circle cx="17" cy="17" r="15" stroke="currentColor" stroke-width="1.5" opacity="0.382"/>
+      <circle cx="17" cy="17" r="9.27" stroke="#d4a843" stroke-width="1.5"/>
+      <circle cx="17" cy="17" r="5.73" fill="#d4a843" opacity="0.618"/>
+      <path d="M17 2 L17 32 M2 17 L32 17" stroke="currentColor" stroke-width="0.5" opacity="0.236"/>
+    </svg>
+            <span>HeadyEx</span>
+          </div>
+          <p>AI-powered trading intelligence with Sacred Geometry.</p>
+        </div>
+      <div class="footer-col">
+        <h5>Trading</h5>
+        <ul>
+          <li><a href="#markets">Markets</a></li>
+          <li><a href="#signals">Signals</a></li>
+          <li><a href="#analytics">Analytics</a></li>
+          <li><a href="#api">API</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Resources</h5>
+        <ul>
+          <li><a href="#">Documentation</a></li>
+          <li><a href="#">Tutorials</a></li>
+          <li><a href="#">Status</a></li>
+          <li><a href="#">Changelog</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Legal</h5>
+        <ul>
+          <li><a href="#">Terms</a></li>
+          <li><a href="#">Privacy</a></li>
+          <li><a href="#">Risk Disclosure</a></li>
+          <li><a href="#">Compliance</a></li>
+        </ul>
+      </div>
+      </div>
+      <div class="footer-bottom">
+        <span>&copy; 2026 HeadySystems Inc. All rights reserved. 51 Provisional Patents.</span>
+        <a href="https://www.perplexity.ai/computer" target="_blank" rel="noopener noreferrer" style="color: var(--color-fog);">
+          Created with Perplexity Computer
+        </a>
+      </div>
+    </div>
+  </footer>  <script src="./shared/js/heady-core.js"></script>
+</body>
+</html>

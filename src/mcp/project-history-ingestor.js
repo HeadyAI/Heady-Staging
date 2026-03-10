@@ -49,7 +49,7 @@ class ProjectHistoryIngestor {
         try {
             const log = execSync(
                 'git log --format="%H|%an|%ad|%s" --date=short -n 257',
-                { cwd: PROJECT_ROOT, encoding: 'utf8', timeout: 5000 }
+                { cwd: PROJECT_ROOT, encoding: 'utf8', timeout: 4236 } // φ³ × 1000
             );
             const commits = log.trim().split('\n').filter(Boolean);
 
@@ -100,7 +100,7 @@ class ProjectHistoryIngestor {
             try {
                 const files = execSync(
                     `find ${fullDir} -maxdepth 2 -type f -name "*.js" -o -name "*.json" -o -name "*.md" | head -30`,
-                    { encoding: 'utf8', timeout: 3000 }
+                    { encoding: 'utf8', timeout: 2618 } // φ² × 1000
                 ).trim().split('\n').filter(Boolean);
 
                 const fileNames = files.map(f => path.basename(f)).join(', ');
@@ -130,7 +130,7 @@ class ProjectHistoryIngestor {
             try {
                 const files = execSync(
                     `find ${PROJECT_ROOT} -maxdepth 3 -path "${PROJECT_ROOT}/${pattern}" -type f 2>/dev/null | head -10`,
-                    { encoding: 'utf8', timeout: 3000 }
+                    { encoding: 'utf8', timeout: 2618 } // φ² × 1000
                 ).trim().split('\n').filter(Boolean);
 
                 for (const file of files) {
@@ -181,7 +181,7 @@ class ProjectHistoryIngestor {
         try {
             const branches = execSync(
                 'git branch --format="%(refname:short)" | head -20',
-                { cwd: PROJECT_ROOT, encoding: 'utf8', timeout: 3000 }
+                { cwd: PROJECT_ROOT, encoding: 'utf8', timeout: 2618 } // φ² × 1000
             ).trim().split('\n').filter(Boolean);
 
             this.learner.learn(

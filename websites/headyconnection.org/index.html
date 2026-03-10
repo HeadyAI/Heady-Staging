@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HeadyConnection — Technology for Community Empowerment</title>
+  <meta name="description" content="A 501(c)(3) nonprofit leveraging AI and technology to empower underserved communities through education, workforce development, and digital equity.">
+  <meta name="author" content="Eric Haywood / HeadySystems Inc.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./shared/css/heady-design-system.css">
+  <style>
+    .nav-toggle {
+      display: none;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: var(--space-8);
+    }
+    .nav-toggle span {
+      display: block;
+      width: 21px;
+      height: 2px;
+      background: var(--color-cloud);
+      margin: 5px 0;
+      transition: all var(--duration-base) var(--ease-phi);
+    }
+    @media (max-width: 987px) {
+      .nav-toggle { display: block; }
+      .nav-links.nav-open {
+        display: flex;
+        flex-direction: column;
+        position: absolute;
+        top: var(--space-89);
+        left: 0;
+        right: 0;
+        background: rgba(9,9,11,0.95);
+        padding: var(--space-21);
+        border-bottom: 1px solid var(--glass-border);
+      }
+    }
+  </style>
+</head>
+<body>
+  <canvas id="sacred-bg" class="sacred-bg"></canvas>
+  <header class="nav-header">
+    <nav class="nav-inner">
+      <a href="/" class="nav-logo">
+        <svg width="34" height="34" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="HeadyConnection">
+      <circle cx="10" cy="10" r="4" stroke="#34d399" stroke-width="1.5"/>
+      <circle cx="24" cy="10" r="4" stroke="#34d399" stroke-width="1.5"/>
+      <circle cx="17" cy="24" r="4" stroke="#34d399" stroke-width="1.5"/>
+      <path d="M13 12 L14.5 21 M21 12 L19.5 21 M14 10 L20 10" stroke="#34d399" stroke-width="1" opacity="0.618"/>
+      <circle cx="17" cy="14.5" r="1.5" fill="#34d399" opacity="0.382"/>
+    </svg>
+        <span>HeadyConnection</span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="#mission">Mission</a></li>
+        <li><a href="#programs">Programs</a></li>
+        <li><a href="#impact">Impact</a></li>
+        <li><a href="#involved">Get Involved</a></li>
+        <li><a href="#donate" class="btn btn-primary" style="padding: var(--space-8) var(--space-21);">Donate</a></li>
+      </ul>
+      <button class="nav-toggle" aria-label="Toggle navigation">
+        <span></span><span></span><span></span>
+      </button>
+    </nav>
+  </header>
+  <main>
+    <section class="hero">
+      <div class="hero-content fade-in">
+        <span class="badge badge-teal" style="background:rgba(52,211,153,0.146);color:var(--color-heady-emerald);border-color:rgba(52,211,153,0.236);">501(c)(3) Nonprofit</span>
+        <h1 class="hero-title" style="background:linear-gradient(135deg, #34d399 0%, #2dd4bf 61.8%, #38bdf8 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">Technology for<br>Community Empowerment</h1>
+        <p class="hero-subtitle">HeadyConnection bridges the digital divide through AI-powered education, workforce development, and community technology programs.</p>
+        <div style="display:flex;gap:var(--space-21);justify-content:center;flex-wrap:wrap;">
+          <a href="#programs" class="btn btn-primary" style="background:linear-gradient(135deg, #34d399, #2dd4bf);">Our Programs</a>
+          <a href="#donate" class="btn btn-secondary">Support Our Mission</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="mission">
+      <div class="container">
+        <span class="section-label fade-in" style="color:var(--color-heady-emerald);">Our Mission</span>
+        <h2 class="section-title fade-in">Empowering Communities Through Technology</h2>
+        <div class="sacred-grid sacred-grid-phi fade-in">
+          <div>
+            <p style="font-size:var(--text-lg);color:var(--color-silver);margin-bottom:var(--space-21);">HeadyConnection exists to ensure that advanced AI and technology tools are accessible to everyone, regardless of socioeconomic background.</p>
+            <p style="color:var(--color-fog);">Founded by Eric Haywood, HeadyConnection operates at the intersection of technology and social impact. We believe that the AI revolution should lift all communities, not just those with existing privilege.</p>
+          </div>
+          <div class="glass-card">
+            <h4 style="color:var(--color-heady-emerald);margin-bottom:var(--space-21);">Core Values</h4>
+            <div style="display:flex;flex-direction:column;gap:var(--space-13);">
+              <div style="display:flex;align-items:flex-start;gap:var(--space-13);">
+                <span style="color:var(--color-heady-emerald);font-size:var(--text-xl);">&#x2726;</span>
+                <div><strong style="color:var(--color-cloud);">Equity</strong><p class="feature-desc" style="margin:var(--space-3) 0 0;">Technology access is a right, not a privilege</p></div>
+              </div>
+              <div style="display:flex;align-items:flex-start;gap:var(--space-13);">
+                <span style="color:var(--color-heady-teal);font-size:var(--text-xl);">&#x2726;</span>
+                <div><strong style="color:var(--color-cloud);">Education</strong><p class="feature-desc" style="margin:var(--space-3) 0 0;">Knowledge is the ultimate equalizer</p></div>
+              </div>
+              <div style="display:flex;align-items:flex-start;gap:var(--space-13);">
+                <span style="color:var(--color-heady-blue);font-size:var(--text-xl);">&#x2726;</span>
+                <div><strong style="color:var(--color-cloud);">Community</strong><p class="feature-desc" style="margin:var(--space-3) 0 0;">We build together, we grow together</p></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="programs" style="background:var(--gradient-void);">
+      <div class="container">
+        <span class="section-label fade-in" style="color:var(--color-heady-emerald);">Programs</span>
+        <h2 class="section-title fade-in">How We Make a Difference</h2>
+        <div class="sacred-grid sacred-grid-3">
+          <div class="feature-card fade-in">
+            <div class="feature-icon feature-icon-emerald">&#x1F4BB;</div>
+            <h4 class="feature-title">Digital Literacy</h4>
+            <p class="feature-desc">Free technology education programs teaching AI fundamentals, coding, and digital skills to underserved communities.</p>
+          </div>
+          <div class="feature-card fade-in">
+            <div class="feature-icon feature-icon-teal">&#x1F3AF;</div>
+            <h4 class="feature-title">Workforce Development</h4>
+            <p class="feature-desc">Job training and placement programs focused on AI, cloud computing, and software development careers.</p>
+          </div>
+          <div class="feature-card fade-in">
+            <div class="feature-icon feature-icon-blue">&#x1F310;</div>
+            <h4 class="feature-title">Community Tech Hubs</h4>
+            <p class="feature-desc">Physical and virtual spaces equipped with technology resources, mentorship, and collaborative learning environments.</p>
+          </div>
+          <div class="feature-card fade-in">
+            <div class="feature-icon feature-icon-violet">&#x1F52C;</div>
+            <h4 class="feature-title">AI Research Access</h4>
+            <p class="feature-desc">Providing underrepresented researchers access to GPU compute, datasets, and mentorship in AI research.</p>
+          </div>
+          <div class="feature-card fade-in">
+            <div class="feature-icon feature-icon-gold">&#x1F91D;</div>
+            <h4 class="feature-title">Partner Network</h4>
+            <p class="feature-desc">Connecting communities with technology companies, foundations, and government agencies for sustained impact.</p>
+          </div>
+          <div class="feature-card fade-in">
+            <div class="feature-icon feature-icon-rose">&#x2764;</div>
+            <h4 class="feature-title">Youth Programs</h4>
+            <p class="feature-desc">After-school and summer programs introducing young people to technology, creativity, and entrepreneurship.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="impact">
+      <div class="container">
+        <div class="stats-bar fade-in">
+          <div class="stat-item">
+            <div class="stat-value" style="color:var(--color-heady-emerald);" data-count="5000" data-suffix="+">0</div>
+            <div class="stat-label">Lives Impacted</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-value" style="color:var(--color-heady-teal);" data-count="34">0</div>
+            <div class="stat-label">Community Programs</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-value" style="color:var(--color-heady-blue);" data-count="89" data-suffix="%">0</div>
+            <div class="stat-label">Job Placement Rate</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-value" style="color:var(--color-heady-violet);" data-count="13">0</div>
+            <div class="stat-label">Partner Organizations</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="donate" style="background:var(--gradient-void);">
+      <div class="container" style="text-align:center;">
+        <span class="section-label fade-in" style="color:var(--color-heady-emerald);">Support Our Mission</span>
+        <h2 class="section-title fade-in" style="max-width:none;">Every Contribution Matters</h2>
+        <p class="section-desc fade-in" style="margin:0 auto var(--space-55);">Your donation directly funds technology education, workforce development, and community empowerment programs.</p>
+        <div style="display:flex;gap:var(--space-21);justify-content:center;flex-wrap:wrap;" class="fade-in">
+          <a href="#" class="btn btn-primary" style="background:linear-gradient(135deg, #34d399, #2dd4bf);">Donate Now</a>
+          <a href="#" class="btn btn-secondary">Volunteer</a>
+          <a href="#" class="btn btn-ghost">Partner With Us</a>
+        </div>
+      </div>
+    </section>
+  </main>
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div class="nav-logo" style="margin-bottom: var(--space-21);">
+            <svg width="34" height="34" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Heady">
+      <circle cx="17" cy="17" r="15" stroke="currentColor" stroke-width="1.5" opacity="0.382"/>
+      <circle cx="17" cy="17" r="9.27" stroke="#d4a843" stroke-width="1.5"/>
+      <circle cx="17" cy="17" r="5.73" fill="#d4a843" opacity="0.618"/>
+      <path d="M17 2 L17 32 M2 17 L32 17" stroke="currentColor" stroke-width="0.5" opacity="0.236"/>
+    </svg>
+            <span>HeadyConnection</span>
+          </div>
+          <p>501(c)(3) nonprofit. Technology for community empowerment.</p>
+        </div>
+      <div class="footer-col">
+        <h5>Programs</h5>
+        <ul>
+          <li><a href="#">Digital Literacy</a></li>
+          <li><a href="#">Workforce Dev</a></li>
+          <li><a href="#">Tech Hubs</a></li>
+          <li><a href="#">Youth Programs</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Get Involved</h5>
+        <ul>
+          <li><a href="#donate">Donate</a></li>
+          <li><a href="#">Volunteer</a></li>
+          <li><a href="#">Partner</a></li>
+          <li><a href="#">Events</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Organization</h5>
+        <ul>
+          <li><a href="#mission">About</a></li>
+          <li><a href="#impact">Impact Report</a></li>
+          <li><a href="#">Board</a></li>
+          <li><a href="#">Contact</a></li>
+        </ul>
+      </div>
+      </div>
+      <div class="footer-bottom">
+        <span>&copy; 2026 HeadySystems Inc. All rights reserved. 51 Provisional Patents.</span>
+        <a href="https://www.perplexity.ai/computer" target="_blank" rel="noopener noreferrer" style="color: var(--color-fog);">
+          Created with Perplexity Computer
+        </a>
+      </div>
+    </div>
+  </footer>  <script src="./shared/js/heady-core.js"></script>
+</body>
+</html>

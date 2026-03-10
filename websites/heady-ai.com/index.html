@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HeadyAI — Intelligence Routing Hub</title>
+  <meta name="description" content="Route intelligence across providers. Race models. Fastest response wins. Sovereign AI routing with zero vendor lock-in.">
+  <meta name="author" content="Eric Haywood / HeadySystems Inc.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./shared/css/heady-design-system.css">
+  <style>
+    .nav-toggle {
+      display: none;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: var(--space-8);
+    }
+    .nav-toggle span {
+      display: block;
+      width: 21px;
+      height: 2px;
+      background: var(--color-cloud);
+      margin: 5px 0;
+      transition: all var(--duration-base) var(--ease-phi);
+    }
+    @media (max-width: 987px) {
+      .nav-toggle { display: block; }
+      .nav-links.nav-open {
+        display: flex;
+        flex-direction: column;
+        position: absolute;
+        top: var(--space-89);
+        left: 0;
+        right: 0;
+        background: rgba(9,9,11,0.95);
+        padding: var(--space-21);
+        border-bottom: 1px solid var(--glass-border);
+      }
+    }
+  </style>
+</head>
+<body>
+  <canvas id="sacred-bg" class="sacred-bg"></canvas>
+  <header class="nav-header">
+    <nav class="nav-inner">
+      <a href="/" class="nav-logo">
+        <svg width="34" height="34" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="HeadyAI">
+      <path d="M17 2 L30 10 L30 24 L17 32 L4 24 L4 10 Z" stroke="#d4a843" stroke-width="1.5"/>
+      <circle cx="17" cy="17" r="6" stroke="currentColor" stroke-width="1" opacity="0.618"/>
+      <circle cx="17" cy="17" r="2.5" fill="#2dd4bf"/>
+      <path d="M17 5 L17 11 M17 23 L17 29 M5 11.5 L10.2 14.5 M23.8 14.5 L29 11.5 M5 22.5 L10.2 19.5 M23.8 19.5 L29 22.5" stroke="#d4a843" stroke-width="0.8" opacity="0.382"/>
+    </svg>
+        <span>HeadyAI</span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="#routing">Routing</a></li>
+        <li><a href="#providers">Providers</a></li>
+        <li><a href="#benchmark">Benchmark</a></li>
+        <li><a href="#byok">BYOK</a></li>
+        <li><a href="#try" class="btn btn-primary" style="padding: var(--space-8) var(--space-21);">Try Now</a></li>
+      </ul>
+      <button class="nav-toggle" aria-label="Toggle navigation">
+        <span></span><span></span><span></span>
+      </button>
+    </nav>
+  </header>
+  <main>
+    <section class="hero">
+      <div class="hero-content fade-in">
+        <span class="badge badge-teal">Intelligence Hub</span>
+        <h1 class="hero-title">Route Intelligence.<br>Race Providers.<br>Fastest Wins.</h1>
+        <p class="hero-subtitle">HeadyAI routes your queries across Claude, GPT-4o, Gemini, Groq, and more. Automatic failover. Phi-exponential backoff. Bring your own keys.</p>
+        <a href="#routing" class="btn btn-primary">Explore Routing</a>
+      </div>
+    </section>
+
+    <section class="section" id="routing">
+      <div class="container">
+        <span class="section-label fade-in">Liquid Routing</span>
+        <h2 class="section-title fade-in">Intelligent Model Selection</h2>
+        <div class="sacred-grid sacred-grid-3">
+          <div class="feature-card fade-in">
+            <div class="feature-icon feature-icon-gold">&#x26A1;</div>
+            <h4 class="feature-title">Race Mode</h4>
+            <p class="feature-desc">Send queries to multiple providers simultaneously. First quality response wins. Latency-optimized by default.</p>
+          </div>
+          <div class="feature-card fade-in">
+            <div class="feature-icon feature-icon-teal">&#x2694;</div>
+            <h4 class="feature-title">Task-Aware Routing</h4>
+            <p class="feature-desc">CSL gates classify intent and route to the optimal model. Code tasks to Claude, creative to GPT-4o, fast queries to Groq.</p>
+          </div>
+          <div class="feature-card fade-in">
+            <div class="feature-icon feature-icon-violet">&#x2728;</div>
+            <h4 class="feature-title">Phi-Backoff Recovery</h4>
+            <p class="feature-desc">When a provider fails, backoff follows the golden ratio sequence. 1s, 1.618s, 2.618s, 4.236s — mathematically optimal retry.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="providers" style="background:var(--gradient-void);">
+      <div class="container">
+        <span class="section-label fade-in">Supported Providers</span>
+        <h2 class="section-title fade-in">Connected to Every Major Model</h2>
+        <div class="sacred-grid sacred-grid-4">
+          <div class="glass-card fade-in" style="text-align:center;"><h4 style="margin-bottom:var(--space-5);">Claude</h4><p class="feature-desc" style="margin:0;">Anthropic</p></div>
+          <div class="glass-card fade-in" style="text-align:center;"><h4 style="margin-bottom:var(--space-5);">GPT-4o</h4><p class="feature-desc" style="margin:0;">OpenAI</p></div>
+          <div class="glass-card fade-in" style="text-align:center;"><h4 style="margin-bottom:var(--space-5);">Gemini</h4><p class="feature-desc" style="margin:0;">Google</p></div>
+          <div class="glass-card fade-in" style="text-align:center;"><h4 style="margin-bottom:var(--space-5);">Groq</h4><p class="feature-desc" style="margin:0;">Ultra-Fast</p></div>
+          <div class="glass-card fade-in" style="text-align:center;"><h4 style="margin-bottom:var(--space-5);">Perplexity</h4><p class="feature-desc" style="margin:0;">Sonar</p></div>
+          <div class="glass-card fade-in" style="text-align:center;"><h4 style="margin-bottom:var(--space-5);">Cohere</h4><p class="feature-desc" style="margin:0;">Embed</p></div>
+          <div class="glass-card fade-in" style="text-align:center;"><h4 style="margin-bottom:var(--space-5);">Voyage</h4><p class="feature-desc" style="margin:0;">Vectors</p></div>
+          <div class="glass-card fade-in" style="text-align:center;"><h4 style="margin-bottom:var(--space-5);">Ollama</h4><p class="feature-desc" style="margin:0;">Local</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="byok">
+      <div class="container" style="text-align:center;">
+        <span class="section-label fade-in">Bring Your Own Keys</span>
+        <h2 class="section-title fade-in" style="max-width:none;">Your Keys. Your Models. Your Data.</h2>
+        <p class="section-desc fade-in" style="margin:0 auto var(--space-55);">HeadyAI supports BYOK for every provider. Use platform credits or plug in your own API keys. Zero vendor lock-in.</p>
+        <div class="sacred-grid sacred-grid-3 fade-in" style="text-align:left;">
+          <div class="glass-card">
+            <h5 style="color:var(--color-phi-gold);">Platform Keys</h5>
+            <p class="feature-desc">Use Heady credits to access all providers through our unified gateway. Simple usage-based pricing.</p>
+          </div>
+          <div class="glass-card">
+            <h5 style="color:var(--color-heady-teal);">Your Own Keys</h5>
+            <p class="feature-desc">Bring your Anthropic, OpenAI, or Google API keys. Routes directly to the provider with zero markup.</p>
+          </div>
+          <div class="glass-card">
+            <h5 style="color:var(--color-heady-violet);">Hybrid Mode</h5>
+            <p class="feature-desc">Mix platform and personal keys. Use your keys for high-volume tasks, platform keys for everything else.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div class="nav-logo" style="margin-bottom: var(--space-21);">
+            <svg width="34" height="34" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Heady">
+      <circle cx="17" cy="17" r="15" stroke="currentColor" stroke-width="1.5" opacity="0.382"/>
+      <circle cx="17" cy="17" r="9.27" stroke="#d4a843" stroke-width="1.5"/>
+      <circle cx="17" cy="17" r="5.73" fill="#d4a843" opacity="0.618"/>
+      <path d="M17 2 L17 32 M2 17 L32 17" stroke="currentColor" stroke-width="0.5" opacity="0.236"/>
+    </svg>
+            <span>HeadyAI</span>
+          </div>
+          <p>Intelligent routing for sovereign AI.</p>
+        </div>
+      <div class="footer-col">
+        <h5>Product</h5>
+        <ul>
+          <li><a href="#routing">Routing</a></li>
+          <li><a href="#providers">Providers</a></li>
+          <li><a href="#byok">BYOK</a></li>
+          <li><a href="#">Pricing</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Developers</h5>
+        <ul>
+          <li><a href="#">API Docs</a></li>
+          <li><a href="#">SDKs</a></li>
+          <li><a href="#">Examples</a></li>
+          <li><a href="#">Status</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Company</h5>
+        <ul>
+          <li><a href="#">About</a></li>
+          <li><a href="#">Blog</a></li>
+          <li><a href="#">Contact</a></li>
+          <li><a href="#">Legal</a></li>
+        </ul>
+      </div>
+      </div>
+      <div class="footer-bottom">
+        <span>&copy; 2026 HeadySystems Inc. All rights reserved. 51 Provisional Patents.</span>
+        <a href="https://www.perplexity.ai/computer" target="_blank" rel="noopener noreferrer" style="color: var(--color-fog);">
+          Created with Perplexity Computer
+        </a>
+      </div>
+    </div>
+  </footer>  <script src="./shared/js/heady-core.js"></script>
+</body>
+</html>

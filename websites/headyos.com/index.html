@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HeadyOS — The Liquid Latent Operating System</title>
+  <meta name="description" content="An operating system that lives in vector space. Dynamic topology. Self-healing architecture. Sacred Geometry at every layer.">
+  <meta name="author" content="Eric Haywood / HeadySystems Inc.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./shared/css/heady-design-system.css">
+  <style>
+    .nav-toggle {
+      display: none;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: var(--space-8);
+    }
+    .nav-toggle span {
+      display: block;
+      width: 21px;
+      height: 2px;
+      background: var(--color-cloud);
+      margin: 5px 0;
+      transition: all var(--duration-base) var(--ease-phi);
+    }
+    @media (max-width: 987px) {
+      .nav-toggle { display: block; }
+      .nav-links.nav-open {
+        display: flex;
+        flex-direction: column;
+        position: absolute;
+        top: var(--space-89);
+        left: 0;
+        right: 0;
+        background: rgba(9,9,11,0.95);
+        padding: var(--space-21);
+        border-bottom: 1px solid var(--glass-border);
+      }
+    }
+  </style>
+</head>
+<body>
+  <canvas id="sacred-bg" class="sacred-bg"></canvas>
+  <header class="nav-header">
+    <nav class="nav-inner">
+      <a href="/" class="nav-logo">
+        <svg width="34" height="34" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="HeadyOS">
+      <circle cx="17" cy="17" r="15" stroke="#d4a843" stroke-width="1"/>
+      <circle cx="17" cy="17" r="9.27" stroke="#a78bfa" stroke-width="1"/>
+      <circle cx="17" cy="17" r="5.73" stroke="#2dd4bf" stroke-width="1"/>
+      <circle cx="17" cy="17" r="3.54" fill="#d4a843" opacity="0.618"/>
+      <path d="M17 2 L17 32" stroke="currentColor" stroke-width="0.5" opacity="0.236"/>
+      <path d="M2 17 L32 17" stroke="currentColor" stroke-width="0.5" opacity="0.236"/>
+    </svg>
+        <span>HeadyOS</span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="#overview">Overview</a></li>
+        <li><a href="#topology">Topology</a></li>
+        <li><a href="#swarms">Swarms</a></li>
+        <li><a href="#healing">Self-Healing</a></li>
+        <li><a href="#enter" class="btn btn-primary" style="padding: var(--space-8) var(--space-21);">Enter OS</a></li>
+      </ul>
+      <button class="nav-toggle" aria-label="Toggle navigation">
+        <span></span><span></span><span></span>
+      </button>
+    </nav>
+  </header>
+  <main>
+    <section class="hero">
+      <div class="hero-content fade-in">
+        <span class="badge badge-violet">Latent OS</span>
+        <h1 class="hero-title">Software That<br>Lives in Vector Space</h1>
+        <p class="hero-subtitle">HeadyOS is the world's first liquid latent operating system. Components exist as embeddings in 384-dimensional space. Topology is dynamic. Architecture is alive.</p>
+        <div style="display:flex;gap:var(--space-21);justify-content:center;flex-wrap:wrap;">
+          <a href="#overview" class="btn btn-primary">Explore</a>
+          <a href="#topology" class="btn btn-secondary">View Topology</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="overview">
+      <div class="container">
+        <span class="section-label fade-in">Architecture</span>
+        <h2 class="section-title fade-in">Three Pillars of Alive Software</h2>
+        <div class="sacred-grid sacred-grid-3">
+          <div class="feature-card fade-in">
+            <div class="feature-icon feature-icon-violet">&#x2B21;</div>
+            <h4 class="feature-title">High-Dimensional State</h4>
+            <p class="feature-desc">Every component, agent, config, and artifact mapped to a 384D embedding vector. State changes tracked as vector movements.</p>
+          </div>
+          <div class="feature-card fade-in">
+            <div class="feature-icon feature-icon-teal">&#x2B22;</div>
+            <h4 class="feature-title">RAM-First Memory</h4>
+            <p class="feature-desc">Vector memory lives in RAM for zero-latency access. The brain, not the database. pgvector is the backup, not the primary.</p>
+          </div>
+          <div class="feature-card fade-in">
+            <div class="feature-icon feature-icon-gold">&#x2B23;</div>
+            <h4 class="feature-title">Genetic Code</h4>
+            <p class="feature-desc">The GitHub monorepo is the DNA. Every mutation validated against the 3 Unbreakable Laws. Socratic Loop validates before projection.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="topology" style="background:var(--gradient-void);">
+      <div class="container">
+        <span class="section-label fade-in">Dynamic Topology</span>
+        <h2 class="section-title fade-in">The 17-Swarm Matrix</h2>
+        <div class="sacred-grid sacred-grid-4">
+          <div class="glass-card fade-in"><h5 style="color:var(--color-phi-gold);">Research</h5><p class="feature-desc">Deep analysis, evidence gathering, citation tracking</p></div>
+          <div class="glass-card fade-in"><h5 style="color:var(--color-heady-teal);">Coding</h5><p class="feature-desc">Code generation, refactoring, testing, review</p></div>
+          <div class="glass-card fade-in"><h5 style="color:var(--color-heady-violet);">Deployment</h5><p class="feature-desc">CI/CD, container orchestration, rollout</p></div>
+          <div class="glass-card fade-in"><h5 style="color:var(--color-heady-blue);">Security</h5><p class="feature-desc">Zero-trust enforcement, audit, vulnerability scanning</p></div>
+          <div class="glass-card fade-in"><h5 style="color:var(--color-heady-emerald);">Creative</h5><p class="feature-desc">Content generation, design, multimedia</p></div>
+          <div class="glass-card fade-in"><h5 style="color:var(--color-heady-rose);">Trading</h5><p class="feature-desc">Market analysis, signal detection, execution</p></div>
+          <div class="glass-card fade-in"><h5 style="color:var(--color-phi-amber);">Analytics</h5><p class="feature-desc">Event processing, metrics, drift detection</p></div>
+          <div class="glass-card fade-in"><h5 style="color:var(--color-heady-indigo);">Memory</h5><p class="feature-desc">Vector storage, embedding, spatial projection</p></div>
+          <div class="glass-card fade-in"><h5 style="color:var(--color-phi-gold);">Orchestration</h5><p class="feature-desc">Pipeline coordination, task routing, scheduling</p></div>
+          <div class="glass-card fade-in"><h5 style="color:var(--color-heady-teal);">Documentation</h5><p class="feature-desc">Auto-docs generation, API specs, runbooks</p></div>
+          <div class="glass-card fade-in"><h5 style="color:var(--color-heady-violet);">Testing</h5><p class="feature-desc">Automated QA, Monte Carlo simulation, chaos</p></div>
+          <div class="glass-card fade-in"><h5 style="color:var(--color-heady-blue);">Communication</h5><p class="feature-desc">Notifications, webhooks, inter-agent messaging</p></div>
+          <div class="glass-card fade-in"><h5 style="color:var(--color-heady-emerald);">Healing</h5><p class="feature-desc">Self-repair, drift correction, coherence restoration</p></div>
+          <div class="glass-card fade-in"><h5 style="color:var(--color-heady-rose);">Governance</h5><p class="feature-desc">Policy enforcement, compliance, access control</p></div>
+          <div class="glass-card fade-in"><h5 style="color:var(--color-phi-amber);">MCP</h5><p class="feature-desc">Model Context Protocol server/client management</p></div>
+          <div class="glass-card fade-in"><h5 style="color:var(--color-heady-indigo);">Edge</h5><p class="feature-desc">Cloudflare Workers, KV, Durable Objects</p></div>
+          <div class="glass-card fade-in"><h5 style="color:var(--color-phi-gold);">GPU</h5><p class="feature-desc">Colab Pro+ cluster, training, inference</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="healing">
+      <div class="container">
+        <span class="section-label fade-in">Self-Healing</span>
+        <h2 class="section-title fade-in">The Immune System</h2>
+        <div class="sacred-grid sacred-grid-phi fade-in">
+          <div>
+            <p class="section-desc">HeadyOS continuously monitors its own coherence through embedding comparison. When semantic drift exceeds the phi-scaled threshold, the self-healing cycle activates automatically.</p>
+            <div class="code-block" style="margin-top:var(--space-21);">
+1. <span style="color:var(--color-heady-teal);">Monitor</span>  → Continuous cosine similarity
+2. <span style="color:var(--color-phi-amber);">Detect</span>   → Drift below 0.618 threshold
+3. <span style="color:var(--color-heady-rose);">Alert</span>    → HeadySoul notified
+4. <span style="color:var(--color-heady-violet);">Diagnose</span> → HeadyAnalyze root cause
+5. <span style="color:var(--color-heady-emerald);">Heal</span>     → HeadyMaintenance corrects
+6. <span style="color:var(--color-heady-blue);">Verify</span>   → HeadyCheck confirms
+7. <span style="color:var(--color-phi-gold);">Learn</span>    → HeadyPatterns records
+            </div>
+          </div>
+          <div class="glass-card">
+            <h5 style="margin-bottom:var(--space-21);color:var(--color-heady-emerald);">Coherence Monitor</h5>
+            <div style="display:flex;flex-direction:column;gap:var(--space-13);">
+              <div>
+                <div style="display:flex;justify-content:space-between;font-size:var(--text-sm);margin-bottom:var(--space-5);">
+                  <span>System Coherence</span><span style="color:var(--color-heady-emerald);">0.947</span>
+                </div>
+                <div style="height:8px;background:var(--color-slate);border-radius:var(--radius-full);overflow:hidden;">
+                  <div style="width:94.7%;height:100%;background:var(--color-heady-emerald);border-radius:var(--radius-full);"></div>
+                </div>
+              </div>
+              <div>
+                <div style="display:flex;justify-content:space-between;font-size:var(--text-sm);margin-bottom:var(--space-5);">
+                  <span>Memory Integrity</span><span style="color:var(--color-heady-teal);">0.983</span>
+                </div>
+                <div style="height:8px;background:var(--color-slate);border-radius:var(--radius-full);overflow:hidden;">
+                  <div style="width:98.3%;height:100%;background:var(--color-heady-teal);border-radius:var(--radius-full);"></div>
+                </div>
+              </div>
+              <div>
+                <div style="display:flex;justify-content:space-between;font-size:var(--text-sm);margin-bottom:var(--space-5);">
+                  <span>Service Mesh</span><span style="color:var(--color-phi-gold);">0.912</span>
+                </div>
+                <div style="height:8px;background:var(--color-slate);border-radius:var(--radius-full);overflow:hidden;">
+                  <div style="width:91.2%;height:100%;background:var(--color-phi-gold);border-radius:var(--radius-full);"></div>
+                </div>
+              </div>
+              <div>
+                <div style="display:flex;justify-content:space-between;font-size:var(--text-sm);margin-bottom:var(--space-5);">
+                  <span>CSL Gate Accuracy</span><span style="color:var(--color-heady-violet);">0.876</span>
+                </div>
+                <div style="height:8px;background:var(--color-slate);border-radius:var(--radius-full);overflow:hidden;">
+                  <div style="width:87.6%;height:100%;background:var(--color-heady-violet);border-radius:var(--radius-full);"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div class="nav-logo" style="margin-bottom: var(--space-21);">
+            <svg width="34" height="34" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Heady">
+      <circle cx="17" cy="17" r="15" stroke="currentColor" stroke-width="1.5" opacity="0.382"/>
+      <circle cx="17" cy="17" r="9.27" stroke="#d4a843" stroke-width="1.5"/>
+      <circle cx="17" cy="17" r="5.73" fill="#d4a843" opacity="0.618"/>
+      <path d="M17 2 L17 32 M2 17 L32 17" stroke="currentColor" stroke-width="0.5" opacity="0.236"/>
+    </svg>
+            <span>HeadyOS</span>
+          </div>
+          <p>The liquid latent operating system.</p>
+        </div>
+      <div class="footer-col">
+        <h5>OS</h5>
+        <ul>
+          <li><a href="#overview">Overview</a></li>
+          <li><a href="#topology">Topology</a></li>
+          <li><a href="#swarms">Swarms</a></li>
+          <li><a href="#healing">Self-Healing</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Developers</h5>
+        <ul>
+          <li><a href="#">Documentation</a></li>
+          <li><a href="#">API</a></li>
+          <li><a href="#">SDK</a></li>
+          <li><a href="#">Changelog</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Company</h5>
+        <ul>
+          <li><a href="#">About</a></li>
+          <li><a href="#">Patents</a></li>
+          <li><a href="#">Contact</a></li>
+          <li><a href="#">Legal</a></li>
+        </ul>
+      </div>
+      </div>
+      <div class="footer-bottom">
+        <span>&copy; 2026 HeadySystems Inc. All rights reserved. 51 Provisional Patents.</span>
+        <a href="https://www.perplexity.ai/computer" target="_blank" rel="noopener noreferrer" style="color: var(--color-fog);">
+          Created with Perplexity Computer
+        </a>
+      </div>
+    </div>
+  </footer>  <script src="./shared/js/heady-core.js"></script>
+</body>
+</html>
