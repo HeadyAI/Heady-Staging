@@ -16,9 +16,15 @@
 
 import express from 'express';
 import crypto from 'crypto';
+<<<<<<< HEAD
 import { createRequire } from 'node:module';
 const require = createRequire(import.meta.url);
 const { createLogger } = require('../../packages/structured-logger');
+=======
+import { createLogger } from '../../packages/structured-logger.js';
+import { createRequire } from 'node:module';
+const require = createRequire(import.meta.url);
+>>>>>>> ff90ed86a9ef62b7f4c0a1859df317b5a404ae63
 const router = express.Router();
 const log = createLogger('auth', 'authentication');
 
@@ -109,6 +115,7 @@ try {
       CREATE INDEX IF NOT EXISTS idx_sessions_user_id ON heady_sessions(user_id);
       CREATE INDEX IF NOT EXISTS idx_sessions_expires ON heady_sessions(expires_at);
       CREATE INDEX IF NOT EXISTS idx_users_email ON heady_users(email);
+<<<<<<< HEAD
     `).then(() => {
       log.info('Auth tables ready');
       // Seed admin after tables exist
@@ -122,6 +129,10 @@ try {
         createUser(adminUser).catch(err => log.error('Admin seed failed', { error: err.message }));
       }
     }).catch(err => log.error('Auth table creation failed', { error: err.message }));
+=======
+    `).then(() => log.info('Auth tables ready'))
+      .catch(err => log.error('Auth table creation failed', { error: err.message }));
+>>>>>>> ff90ed86a9ef62b7f4c0a1859df317b5a404ae63
   }
 } catch (err) {
   log.warn('pg not available, using in-memory auth storage', { error: err.message });
@@ -234,6 +245,20 @@ async function updateUserPreferences(userId, preferences) {
   if (user) user.preferences = preferences;
 }
 
+<<<<<<< HEAD
+=======
+// Seed admin user from env (password from env, NOT hardcoded)
+if (process.env.HEADY_ADMIN_EMAIL && process.env.HEADY_ADMIN_PASSWORD) {
+  const adminUser = {
+    id: 'admin-owner-1',
+    email: process.env.HEADY_ADMIN_EMAIL,
+    passwordHash: hashPassword(process.env.HEADY_ADMIN_PASSWORD),
+    name: process.env.HEADY_ADMIN_NAME || 'Admin',
+  };
+  createUser(adminUser).catch(err => log.error('Admin seed failed', { error: err.message }));
+}
+
+>>>>>>> ff90ed86a9ef62b7f4c0a1859df317b5a404ae63
 // Periodic session cleanup
 setInterval(async () => {
   const now = Date.now();
