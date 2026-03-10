@@ -12,10 +12,12 @@
 const EventEmitter = require('events');
 const crypto = require('crypto');
 const {
-  PHI, PSI, PSI_SQ, fib, phiBackoffWithJitter,
-  CSL_THRESHOLDS, TIMING, EMBEDDING_DIM,
+  PHI, PSI, fib, phiBackoffWithJitter,
+  CSL_THRESHOLDS, VECTOR,
   cslAND, getPressureLevel, phiFusionScore,
 } = require('../../shared/phi-math');
+const PSI_SQ = PSI * PSI;             // ≈ 0.146 (not exported by phi-math)
+const EMBEDDING_DIM = VECTOR ? VECTOR.DIMS : 384;
 const { createLogger } = require('../../shared/logger');
 
 const logger = createLogger('liquid-node');
@@ -202,13 +204,23 @@ class LiquidNode extends EventEmitter {
   }
 
   scoreForTask(taskEmbedding) {
-    const capabilityScore = 1.0;
+    // Compute real cosine similarity between node capabilities and task embedding
+    let capabilityScore = 1.0;
+    if (taskEmbedding && taskEmbedding.length === this.capabilities.length) {
+      let dot = 0, magA = 0, magB = 0;
+      for (let i = 0; i < this.capabilities.length; i++) {
+        const a = this.capabilities[i], b = taskEmbedding[i] || 0;
+        dot += a * b; magA += a * a; magB += b * b;
+      }
+      const denom = Math.sqrt(magA) * Math.sqrt(magB);
+      capabilityScore = denom > 0 ? dot / denom : 0;
+    }
     const loadPenalty = this.load * PSI_SQ;
     const coherenceBonus = this.coherenceScore * (1 - PSI);
-    return (a => a[0])(
-      [capabilityScore, 1 - loadPenalty, coherenceBonus],
-      [PSI, 1 - PSI - PSI_SQ, PSI_SQ]
-    );
+    // Phi-weighted composite: capability×PSI + availability×(1-PSI-PSI²) + coherence×PSI²
+    const weights = [PSI, 1 - PSI - PSI_SQ, PSI_SQ];
+    const values = [capabilityScore, 1 - loadPenalty, coherenceBonus];
+    return values.reduce((sum, v, i) => sum + v * weights[i], 0);
   }
 
   async executeTask(task) {
@@ -280,7 +292,14 @@ class LiquidNode extends EventEmitter {
   }
 
   _updateCoherence() {
-    const similarity = 1.0;
+    // Compute cosine similarity between current capabilities and original design embedding
+    let dot = 0, magA = 0, magB = 0;
+    for (let i = 0; i < this.capabilities.length; i++) {
+      const a = this.capabilities[i], b = this.designEmbedding[i];
+      dot += a * b; magA += a * a; magB += b * b;
+    }
+    const denom = Math.sqrt(magA) * Math.sqrt(magB);
+    const similarity = denom > 0 ? dot / denom : 0;
     this.coherenceScore = similarity;
 
     if (similarity < CSL_THRESHOLDS.MEDIUM) {
@@ -294,9 +313,10 @@ class LiquidNode extends EventEmitter {
   }
 
   _checkPoolMigration() {
-    const performanceScore = (a => a[0])(
-      [1 - this.errorRate, 1 - this.load, this.coherenceScore],
-    );
+    // Phi-weighted performance: reliability×PSI + availability×(1-PSI-PSI²) + coherence×PSI²
+    const factors = [1 - this.errorRate, 1 - this.load, this.coherenceScore];
+    const weights = [PSI, 1 - PSI - PSI_SQ, PSI_SQ];
+    const performanceScore = factors.reduce((sum, v, i) => sum + v * weights[i], 0);
 
     const currentPool = this.pool;
     if (performanceScore >= PROMOTE_THRESHOLD && this.pool !== POOL_TYPES.HOT) {

@@ -13,7 +13,7 @@ const EventEmitter = require('events');
 const crypto = require('crypto');
 const {
   PHI, PSI, PSI_SQ, fib, phiBackoffWithJitter, phiFusionScore,
-  CSL_THRESHOLDS, TIMING, BACKOFF_SEQUENCE,
+  CSL_THRESHOLDS, PHI_TIMING,
   cslAND, getPressureLevel,
 } = require('../../shared/phi-math');
 const { createLogger } = require('../../shared/logger');
@@ -24,10 +24,11 @@ const MAX_CONCURRENCY = fib(8);    // 21 parallel tasks
 const DLQ_CAPACITY = fib(13);      // 233 dead letter queue
 const MAX_RETRIES = fib(5);        // 5 retry attempts
 
+// Pool timeouts: Fibonacci-scaled. Hot=fib(9)s=34s, Warm=fib(13)s=233s, Cold=fib(17)s=1597s
 const POOL_TIMEOUTS = Object.freeze({
-  HOT:  TIMING.HOT_TIMEOUT_MS,    // 34s
-  WARM: TIMING.WARM_TIMEOUT_MS,   // 233s
-  COLD: TIMING.COLD_TIMEOUT_MS,   // 1597s
+  HOT:  fib(9) * 1000,    // 34,000ms
+  WARM: fib(13) * 1000,   // 233,000ms
+  COLD: fib(17) * 1000,   // 1,597,000ms
 });
 
 class TaskDAG {
@@ -216,7 +217,7 @@ class LiquidTaskExecutor extends EventEmitter {
         }
       } else {
         // Wait for active tasks to complete
-        await new Promise(resolve => setTimeout(resolve, TIMING.COOL_DOWN_MS));
+        await new Promise(resolve => setTimeout(resolve, PHI_TIMING.PHI_2)); // ~2618ms cool-down
       }
 
       this.emit('progress', {

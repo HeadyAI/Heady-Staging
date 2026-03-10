@@ -1,9 +1,7 @@
-import pino from 'pino';
-const logger = pino();
 /**
  * @fileoverview Heady™ Council — Multi-Model Council for Critical Decisions
  * @module orchestration/heady-council
- * @version 2.0.0
+ * @version 2.0.1
  * @author HeadySystems Inc.
  *
  * Implements Directive 9 (Multi-Model Council — Competitive AI Routing).
@@ -32,7 +30,7 @@ const logger = pino();
 
 'use strict';
 
-import {
+const {
   PHI,
   PSI,
   fib,
@@ -40,14 +38,30 @@ import {
   phiFusionWeights,
   phiBackoff,
   cosineSimilarity,
-  placeholderVector,
   CSL_THRESHOLDS,
   cslGate,
-  VECTOR_DIMENSIONS,
+  VECTOR: VECTOR_CONFIG,
   normalize,
-  dot,
-  magnitude,
-} from '../shared/phi-math.js';
+} = require('../../shared/phi-math.js');
+
+const VECTOR_DIMENSIONS = VECTOR_CONFIG ? VECTOR_CONFIG.DIMS : 384;
+
+// ─── Shims for functions not exported by phi-math ────────────────────────────
+
+/** Generate a deterministic pseudo-random vector from a seed string. */
+function placeholderVector(seed, dims = VECTOR_DIMENSIONS) {
+  const vec = new Array(dims);
+  let h = 0;
+  for (let i = 0; i < seed.length; i++) h = ((h << 5) - h + seed.charCodeAt(i)) | 0;
+  for (let i = 0; i < dims; i++) {
+    h = ((h * 1103515245 + 12345) & 0x7fffffff);
+    vec[i] = (h / 0x7fffffff) * 2 - 1;
+  }
+  return normalize(vec);
+}
+
+const logger = { info() {}, warn() {}, error() {}, debug() {} };
+try { const pino = require('pino'); Object.assign(logger, pino()); } catch (_) { /* pino optional */ }
 
 // ─── Scoring Constants ────────────────────────────────────────────────────────
 
@@ -217,7 +231,7 @@ const COUNCIL_MEMBERS = Object.fromEntries(
  * @property {string[]} contributingIds   — all members who contributed
  */
 
-export class HeadyCouncil {
+class HeadyCouncil {
   /**
    * @param {Object} [opts] — options
    * @param {Object} [opts.budgetTracker] — optional budget-tracker service reference
@@ -931,9 +945,10 @@ export class HeadyCouncil {
   }
 }
 
-// ─── Named Exports ────────────────────────────────────────────────────────────
+// ─── Exports (CommonJS) ──────────────────────────────────────────────────────
 
-export {
+module.exports = {
+  HeadyCouncil,
   COUNCIL_MEMBERS,
   SCORE_WEIGHTS,
   MIN_MEMBERS,
@@ -942,5 +957,3 @@ export {
   AGREEMENT_THRESHOLD,
   DISAGREEMENT_THRESHOLD,
 };
-
-export default HeadyCouncil;
