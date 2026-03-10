@@ -11,14 +11,10 @@
 
 import { EventEmitter } from 'events';
 import { randomUUID } from 'crypto';
-import {
-  PHI, PSI, fib,
-  CSL_THRESHOLDS,
-  EVICTION_WEIGHTS,
-  phiBackoff,
-  cslGate,
-} from '@heady/phi-math-foundation';
-import { createLogger } from '@heady/structured-logger';
+import phiMath from '@heady/phi-math-foundation';
+const { PHI, PSI, fib, CSL_THRESHOLDS, EVICTION_WEIGHTS, phiBackoff, cslGate } = phiMath.default || phiMath;
+import structuredLogger from '@heady/structured-logger';
+const { createLogger } = structuredLogger.default || structuredLogger;
 
 const logger = createLogger('bee-lifecycle');
 

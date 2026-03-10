@@ -14,17 +14,19 @@
  * @module core/liquid-nodes/colab-runtime
  */
 
+import phiMath from '@heady/phi-math-foundation';
 import { EventEmitter } from 'events';
 import { randomUUID } from 'crypto';
-import {
+const {
   PHI, PSI, fib,
   CSL_THRESHOLDS,
   phiBackoff,
   phiFusionWeights,
   classifyPressure,
   PRESSURE_LEVELS,
-} from '@heady/phi-math-foundation';
-import { createLogger } from '@heady/structured-logger';
+} = phiMath;
+import structuredLogger from '@heady/structured-logger';
+const { createLogger } = structuredLogger.default || structuredLogger;
 
 const logger = createLogger('colab-runtime');
 
@@ -480,13 +482,19 @@ class ColabRuntimeManager extends EventEmitter {
    * In production, this sends the operation to the actual Colab notebook.
    * @private
    */
+
   async _runLatentOp(runtime, op, params) {
     if (this._notebookExecutor) {
       return this._notebookExecutor(runtime, op, params);
     }
 
+    // Simulate computationally heavy latent space operation with phi-scaled backoff/delay
+    // Math.random() is forbidden, use phiBackoff which derives mathematically
+    await new Promise(resolve => setTimeout(resolve, phiBackoff(2)));
+
     // Structured operation routing
     switch (op) {
+
       case LATENT_OPS.EMBED:
         return {
           op: 'embed',

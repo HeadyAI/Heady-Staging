@@ -14,16 +14,12 @@
  * @module core/swarm-engine/swarm-manager
  */
 
+import phiMath from '@heady/phi-math-foundation';
 import { EventEmitter } from 'events';
 import { randomUUID } from 'crypto';
-import {
-  PHI, PSI, fib,
-  CSL_THRESHOLDS,
-  PRESSURE_LEVELS,
-  classifyPressure,
-  phiFusionWeights,
-} from '@heady/phi-math-foundation';
-import { createLogger } from '@heady/structured-logger';
+const { PHI, PSI, fib, CSL_THRESHOLDS, PRESSURE_LEVELS, classifyPressure, phiFusionWeights } = phiMath.default || phiMath;
+import structuredLogger from '@heady/structured-logger';
+const { createLogger } = structuredLogger.default || structuredLogger;
 import { HeadyBee, BEE_STATE, domainToVector, cosine } from './bee-lifecycle.js';
 
 const logger = createLogger('swarm-manager');

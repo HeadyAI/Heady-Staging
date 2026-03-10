@@ -8,6 +8,7 @@
  * @module core/liquid-nodes/health-monitor
  */
 
+import phiMath from '@heady/phi-math-foundation';
 import { EventEmitter } from 'events';
 import {
   PHI, PSI, fib,
@@ -15,8 +16,10 @@ import {
   phiBackoff,
   classifyPressure,
   phiFusionWeights,
-} from '@heady/phi-math-foundation';
-import { createLogger } from '@heady/structured-logger';
+
+} = phiMath.default || phiMath;
+import structuredLogger from '@heady/structured-logger';
+const { createLogger } = structuredLogger.default || structuredLogger;
 import { NODE_STATUS, PLATFORM } from './node-registry.js';
 
 const logger = createLogger('health-monitor');

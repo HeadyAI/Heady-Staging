@@ -14,10 +14,10 @@
  * @module core/liquid-nodes/topology
  */
 
-import {
-  PHI, PSI, fib,
-} from '@heady/phi-math-foundation';
-import { createLogger } from '@heady/structured-logger';
+import phiMath from '@heady/phi-math-foundation';
+const { PHI, PSI, fib, } = phiMath.default || phiMath;
+import structuredLogger from '@heady/structured-logger';
+const { createLogger } = structuredLogger.default || structuredLogger;
 import { PLATFORM } from './node-registry.js';
 import { computeDistance } from './vector-router.js';
 

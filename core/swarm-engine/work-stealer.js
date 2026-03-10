@@ -9,12 +9,15 @@
  * @module core/swarm-engine/work-stealer
  */
 
+import phiMath from '@heady/phi-math-foundation';
 import { EventEmitter } from 'events';
 import {
   PHI, PSI, fib,
   CSL_THRESHOLDS,
-} from '@heady/phi-math-foundation';
-import { createLogger } from '@heady/structured-logger';
+
+} = phiMath.default || phiMath;
+import structuredLogger from '@heady/structured-logger';
+const { createLogger } = structuredLogger.default || structuredLogger;
 import { cosine } from './bee-lifecycle.js';
 
 const logger = createLogger('work-stealer');

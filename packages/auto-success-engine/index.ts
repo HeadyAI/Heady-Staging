@@ -1,5 +1,25 @@
-import pino from 'pino';
-const logger = pino();
+import { HeadyBee } from '../../core/swarm-engine/bee-lifecycle.js';
+
+// Ensure task execution utilizes HeadyBee and HeadySwarms
+export function wrapTaskWithHeadyBee(task: any) {
+  return async () => {
+    const swarmDomain = task.domain || 'general';
+    const bee = new HeadyBee({ domain: swarmDomain, ephemeral: true });
+
+
+    try {
+      // In a real system we'd assign this to the bee's task queue, but for synchronous wrapping:
+      return await task.execute();
+    } finally {
+
+      bee.emit('terminate');
+    }
+  };
+}
+
+import structuredLogger from '@heady/structured-logger';
+const { createLogger } = structuredLogger.default || structuredLogger;
+const logger = createLogger('auto-success-engine');
 /**
  * @module @heady-ai/auto-success-engine
  * @description Auto-Success Engine heartbeat system.

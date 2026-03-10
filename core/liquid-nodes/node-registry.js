@@ -12,12 +12,13 @@
 
 import { EventEmitter } from 'events';
 import { randomUUID } from 'crypto';
-import {
-  PHI, PSI, fib,
+import phiMath from '@heady/phi-math-foundation';
+const {  PHI, PSI, fib,
   CSL_THRESHOLDS,
   classifyPressure,
-} from '@heady/phi-math-foundation';
-import { createLogger } from '@heady/structured-logger';
+} = phiMath.default || phiMath;
+import structuredLogger from '@heady/structured-logger';
+const { createLogger } = structuredLogger.default || structuredLogger;
 
 const logger = createLogger('liquid-node-registry');
 

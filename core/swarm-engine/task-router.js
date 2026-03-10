@@ -9,14 +9,17 @@
  * @module core/swarm-engine/task-router
  */
 
+import phiMath from '@heady/phi-math-foundation';
 import { EventEmitter } from 'events';
 import {
   PHI, PSI, fib,
   CSL_THRESHOLDS,
   cslGate,
   phiFusionWeights,
-} from '@heady/phi-math-foundation';
-import { createLogger } from '@heady/structured-logger';
+
+} = phiMath.default || phiMath;
+import structuredLogger from '@heady/structured-logger';
+const { createLogger } = structuredLogger.default || structuredLogger;
 import { cosine } from './bee-lifecycle.js';
 
 const logger = createLogger('task-router');
