@@ -1,7 +1,12 @@
 # START HERE — Heady Systems Master Build Guide
 
 > **For Windsurf/Cascade:** Point to this file for full project context and build instructions.
-> **Version:** 3.0.0 | **Updated:** 2026-02-14
+> **Version:** 5.0.0 | **Updated:** 2026-03-10
+
+> [!TIP]
+> **📚 Looking for the full documentation?** See the [Documentation Hub](docs/README.md) for a complete index of all guides, API references, runbooks, ADRs, and debug guides.
+>
+> **Quick links:** [Quickstart Guides](docs/README.md#-quickstart-guides) · [Architecture](docs/README.md#️-architecture) · [API Reference](docs/README.md#-api-reference) · [Runbooks](docs/README.md#-operations--runbooks) · [Security](docs/README.md#-security)
 
 ---
 
@@ -73,6 +78,7 @@ git add -A && git commit -m "security: remove hardcoded secrets and update .giti
 ```
 
 **Manual steps required:**
+
 - Rotate PostgreSQL password (`heady_secret` is exposed)
 - Rotate PgAdmin password (`heady_admin`)
 - Rotate Grafana password (`heady_grafana`)
@@ -139,6 +145,7 @@ npm start
 ```
 
 **Key features to implement:**
+
 - Always-on-top transparent Electron window
 - Screen capture analysis (Claude Vision API)
 - RobotJS for UI automation (clicks, typing)
@@ -241,6 +248,7 @@ npm start
 ```
 
 This uses Electron (which IS Chromium) with:
+
 - Custom chrome UI (tabs, address bar, navigation)
 - HeadyBuddy floating overlay built-in
 - Ad blocking via electron-ad-blocker
@@ -317,18 +325,21 @@ Built-in patterns handle: port conflicts, missing modules, lint errors, git lock
 Full findings in `DEEP_SCAN_REPORT.md`. Summary:
 
 ### Critical (Fix Today)
+
 - Hardcoded secrets in docker-compose files
 - Missing .gitignore entries for sensitive files
 - CORS wildcard fallback
 - Admin token timing attack vulnerability
 
 ### Architecture (This Week)
+
 - Break `heady-manager.js` (76KB) into route modules
 - Remove duplicate YAML parser (`yamljs`)
 - Move `electron` to devDependencies
 - Separate Python and JavaScript in `src/`
 
 ### 30-Day Roadmap
+
 - Week 1: Security remediation + credential rotation
 - Week 2: Break up God classes into modules
 - Week 3: Expand CLI + consolidate scripts
