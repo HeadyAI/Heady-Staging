@@ -1,3 +1,5 @@
+const pino = require('pino');
+const logger = pino();
 // HEADY_BRAND:BEGIN
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
@@ -36,7 +38,7 @@ module.exports = (secretsManager) => {
         return res.status(403).json({ error: 'Invalid or revoked Soul-Token' });
       }
     } catch (error) {
-      console.error('Heartbeat validation failed:', error);
+      logger.error('Heartbeat validation failed:', error);
       return res.status(500).json({ error: 'Internal server error' });
     }
     
@@ -60,7 +62,7 @@ module.exports = (secretsManager) => {
       const { token } = await auth({ type: 'installation' });
       res.json({ token });
     } catch (error) {
-      console.error('GitHub token creation failed:', error);
+      logger.error('GitHub token creation failed:', error);
       res.status(500).json({ error: 'Failed to create GitHub token' });
     }
   });

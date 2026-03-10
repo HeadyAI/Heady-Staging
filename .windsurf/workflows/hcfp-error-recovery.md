@@ -42,6 +42,11 @@ This workflow ensures that **every change triggers a full clean build** with **s
 
 ### 1. Pre-flight Checks (Always Run)
 ```bash
+<<<<<<< HEAD
+=======
+# Check for forbidden internal.headyio.com references
+grep -r "http://internal.headyio.com\|internal.headyio.com" --include="*.js" --include="*.json" --include="*.yaml"
+>>>>>>> staging/chore/formatting-fixes-2566957660382340048
 # Check for forbidden localhost references
 grep -r "http://localhost\|127.0.0.1" --include="*.js" --include="*.json" --include="*.yaml"
 
@@ -167,6 +172,10 @@ exit 1
 # Run clean build locally
 npm run clean-build
 
+<<<<<<< HEAD
+=======
+# Verify no internal.headyio.com references
+>>>>>>> staging/chore/formatting-fixes-2566957660382340048
 # Verify no localhost references
 npm run check:domains
 
@@ -201,6 +210,10 @@ npm run format
 
 ### Dashboard
 ```
+<<<<<<< HEAD
+=======
+Build Status Dashboard (http://internal.headyio.com:3300/api/build-status)
+>>>>>>> staging/chore/formatting-fixes-2566957660382340048
 Build Status Dashboard (http://localhost:3300/api/build-status)
 ├── Last 24 hours: 47 builds, 44 passed (93.6%)
 ├── Error breakdown:

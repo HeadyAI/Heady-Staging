@@ -1,4 +1,9 @@
+<<<<<<< HEAD
 const { logger } = require('./utils/logger');
+=======
+const pino = require('pino');
+const logger = pino();
+>>>>>>> staging/chore/formatting-fixes-2566957660382340048
 // HEADY_BRAND:BEGIN
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
@@ -144,7 +149,11 @@ class BrainConnector extends EventEmitter {
       this.pool.connections.push(connection);
       this.pool.available.push(connection);
     }
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> staging/chore/formatting-fixes-2566957660382340048
     logger.info(`[BrainConnector] Initialized connection pool with ${this.pool.size} connections`);
   }
 
@@ -460,7 +469,11 @@ class BrainConnector extends EventEmitter {
       request.reject(new Error('BrainConnector shutting down'));
     });
     this.requestQueue = [];
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> staging/chore/formatting-fixes-2566957660382340048
     logger.info('[BrainConnector] Shutdown complete');
   }
 }

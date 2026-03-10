@@ -1,3 +1,5 @@
+import pino from 'pino';
+const logger = pino();
 /**
  * developer-portal.js — Heady Developer Portal Service
  *
@@ -175,7 +177,7 @@ const SDK_DOCS = {
   javascript: {
     name: 'JavaScript / Node.js',
     installCmd: 'npm install @heady/sdk',
-    quickstart: `import Heady from '@heady/sdk';\n\nconst heady = new Heady({ apiKey: 'hdy_your_key_here' });\nconst result = await heady.memory.search('system architecture');\nconsole.log(result.matches);`,
+    quickstart: `import Heady from '@heady/sdk';\n\nconst heady = new Heady({ apiKey: 'hdy_your_key_here' });\nconst result = await heady.memory.search('system architecture');\nlogger.info(result.matches);`,
     docs: 'https://developers.headysystems.com/docs/js',
   },
   python: {

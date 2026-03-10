@@ -1,3 +1,5 @@
+const pino = require('pino');
+const logger = pino();
 // HEADY_BRAND:BEGIN
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
@@ -18,8 +20,8 @@
 // Placeholder for automated system maintenance
 
 const HeadyMaid = {
-  clean: () => console.info('Cleaning system...'),
-  optimize: () => console.info('Optimizing performance...'),
+  clean: () => logger.info('Cleaning system...'),
+  optimize: () => logger.info('Optimizing performance...'),
 };
 
 module.exports = HeadyMaid;

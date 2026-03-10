@@ -14,6 +14,6 @@ ENV NODE_ENV=production PORT=3331
 EXPOSE 3331
 USER node
 HEALTHCHECK --interval=7s --timeout=4s --retries=3 \
-  CMD wget -qO- http://localhost:3331/healthz || exit 1
+  CMD wget -qO- http://127.0.0.1:3331/healthz || exit 1
 ENTRYPOINT ["/sbin/tini", "--"]
 CMD ["node", "index.js"]

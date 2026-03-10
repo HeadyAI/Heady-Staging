@@ -9,6 +9,10 @@
 // ║                                                                  ║
 // ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
 // ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
+<<<<<<< HEAD
+=======
+// ║  FILE: scripts/legacy-internal.headyio.com-to-domain.js                                                    ║
+>>>>>>> staging/chore/formatting-fixes-2566957660382340048
 // ║  FILE: scripts/legacy-localhost-to-domain.js                                                    ║
 // ║  LAYER: automation                                                  ║
 // ╚══════════════════════════════════════════════════════════════════╝

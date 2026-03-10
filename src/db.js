@@ -1,4 +1,9 @@
+<<<<<<< HEAD
 const { logger } = require('./utils/logger');
+=======
+const pino = require('pino');
+const logger = pino();
+>>>>>>> staging/chore/formatting-fixes-2566957660382340048
 // HEADY_BRAND:BEGIN
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║

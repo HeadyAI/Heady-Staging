@@ -6,6 +6,10 @@ auto_execution_mode: 3
 # Heady Complete Infrastructure Pipeline (HCIP)
 
 This workflow systematically sets up the entire Heady infrastructure:
+<<<<<<< HEAD
+=======
+1. Replaces internal.headyio.com with service domains
+>>>>>>> staging/chore/formatting-fixes-2566957660382340048
 1. Replaces localhost with service domains
 2. Configures clean-build CI/CD with error alerting
 3. Provisions all devices with extensions
@@ -24,6 +28,10 @@ This workflow systematically sets up the entire Heady infrastructure:
 .\scripts\hc-infrastructure-setup.ps1 -Mode full-setup
 
 # Or step by step
+<<<<<<< HEAD
+=======
+.\scripts\hc-infrastructure-setup.ps1 -Mode inventory    # Find internal.headyio.com refs
+>>>>>>> staging/chore/formatting-fixes-2566957660382340048
 .\scripts\hc-infrastructure-setup.ps1 -Mode inventory    # Find localhost refs
 .\scripts\hc-infrastructure-setup.ps1 -Mode migrate     # Replace with domains
 .\scripts\hc-infrastructure-setup.ps1 -Mode provision # Install everything
@@ -34,6 +42,10 @@ This workflow systematically sets up the entire Heady infrastructure:
 
 ### 1. Inventory Mode
 
+<<<<<<< HEAD
+=======
+Scans entire codebase for localhost/internal.headyio.com references and creates a migration plan.
+>>>>>>> staging/chore/formatting-fixes-2566957660382340048
 Scans entire codebase for localhost/127.0.0.1 references and creates a migration plan.
 
 ```powershell
@@ -41,6 +53,10 @@ Scans entire codebase for localhost/127.0.0.1 references and creates a migration
 ```
 
 **Output:**
+<<<<<<< HEAD
+=======
+- CSV file with all internal.headyio.com references
+>>>>>>> staging/chore/formatting-fixes-2566957660382340048
 - CSV file with all localhost references
 - Suggested domain replacements
 - Service-to-port mapping
@@ -64,6 +80,21 @@ Replaces localhost references with proper service domains and updates hosts file
 
 **DNS Entries Created:**
 ```
+<<<<<<< HEAD
+=======
+internal.headyio.com manager.heady.local
+internal.headyio.com worker.heady.local
+internal.headyio.com dashboard.heady.local
+internal.headyio.com www.heady.local
+internal.headyio.com api.heady.local
+internal.headyio.com cache.heady.local
+internal.headyio.com db.heady.local
+internal.headyio.com metrics.heady.local
+internal.headyio.com grafana.heady.local
+internal.headyio.com imagination.heady.local
+internal.headyio.com traces.heady.local
+internal.headyio.com alerts.heady.local
+>>>>>>> staging/chore/formatting-fixes-2566957660382340048
 127.0.0.1 manager.heady.local
 127.0.0.1 worker.heady.local
 127.0.0.1 dashboard.heady.local
@@ -151,6 +182,10 @@ Runs all modes in sequence for complete setup.
 
 | Service | Old URL | New Domain | Port |
 |---------|---------|------------|------|
+<<<<<<< HEAD
+=======
+| Heady Manager | internal.headyio.com:3300 | manager.heady.local | 3300 |
+>>>>>>> staging/chore/formatting-fixes-2566957660382340048
 | Heady Manager | localhost:3300 | manager.heady.local | 3300 |
 | Python Worker | localhost:5000 | worker.heady.local | 5000 |
 | Web Dashboard | localhost:3000 | dashboard.heady.local | 3000 |
@@ -177,6 +212,10 @@ on:
 ```
 
 **Jobs:**
+<<<<<<< HEAD
+=======
+1. **Pre-flight:** Checks for internal.headyio.com references
+>>>>>>> staging/chore/formatting-fixes-2566957660382340048
 1. **Pre-flight:** Checks for localhost references
 2. **Build Manager:** Clean Node.js build
 3. **Build Frontend:** React app build
@@ -227,6 +266,10 @@ For development, use the script:
 **Linux (Ansible):**
 ```bash
 # Run device provisioning playbook
+<<<<<<< HEAD
+=======
+ansible-playbook -i inventory/internal.headyio.com device-provision.yml
+>>>>>>> staging/chore/formatting-fixes-2566957660382340048
 ansible-playbook -i inventory/localhost device-provision.yml
 ```
 
@@ -317,6 +360,10 @@ sudo systemd-resolve --flush-caches
 ### Build Fails
 
 ```powershell
+<<<<<<< HEAD
+=======
+# Check for internal.headyio.com references still present
+>>>>>>> staging/chore/formatting-fixes-2566957660382340048
 # Check for localhost references still present
 .\scripts\hc-infrastructure-setup.ps1 -Mode inventory
 
@@ -348,6 +395,10 @@ npm cache clean --force
 # 1. Run clean build to verify health
 .\scripts\hc-infrastructure-setup.ps1 -Mode clean-build
 
+<<<<<<< HEAD
+=======
+# 2. Check for drift in internal.headyio.com references
+>>>>>>> staging/chore/formatting-fixes-2566957660382340048
 # 2. Check for drift in localhost references
 .\scripts\hc-infrastructure-setup.ps1 -Mode inventory
 
@@ -367,6 +418,10 @@ npm outdated
 
 ### Local Development
 
+<<<<<<< HEAD
+=======
+- All services run on internal.headyio.com (via hosts file mapping)
+>>>>>>> staging/chore/formatting-fixes-2566957660382340048
 - All services run on localhost (via hosts file mapping)
 - Use `heady.local` domains for consistency with production
 - Hot reload enabled for manager/frontend

@@ -1,4 +1,5 @@
-const { logger } = require('./utils/logger');
+const pino = require('pino');
+const logger = pino();
 // HEADY_BRAND:BEGIN
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║

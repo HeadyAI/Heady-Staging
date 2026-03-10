@@ -205,6 +205,11 @@ HCAUTOBUILD_FUNCTIONALITY_THRESHOLD=95
     "pass_rate": 100
   },
   "services": {
+<<<<<<< HEAD
+=======
+    "api": "http://internal.headyio.com:3300",
+    "frontend": "http://internal.headyio.com:3000"
+>>>>>>> staging/chore/formatting-fixes-2566957660382340048
     "api": "http://localhost:3300",
     "frontend": "http://localhost:3000"
   }

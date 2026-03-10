@@ -1,3 +1,5 @@
+const pino = require('pino');
+const logger = pino();
 // HEADY_BRAND:BEGIN
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
@@ -45,7 +47,7 @@ class FileScanner {
           results.push(analysis);
         }
       } catch (err) {
-        console.error(`Error scanning ${file}:`, err);
+        logger.error(`Error scanning ${file}:`, err);
       }
     }
     

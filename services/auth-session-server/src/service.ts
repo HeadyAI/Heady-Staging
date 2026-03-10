@@ -14,7 +14,7 @@ import {
 } from './types.js';
 
 // ═══════════════════════════════════════════════════════
-// Logger (structured JSON only — NO console.log)
+// Logger (structured JSON only — NO logger.info)
 // ═══════════════════════════════════════════════════════
 
 interface LogEntry {

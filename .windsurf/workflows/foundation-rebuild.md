@@ -53,6 +53,22 @@ npm install
 // turbo
 5. Validate heady-manager starts and /api/health responds:
 ```powershell
+<<<<<<< HEAD
+=======
+node -e "const http=require('http');const r=http.get('http://internal.headyio.com:3301/api/health',res=>{let d='';res.on('data',c=>d+=c);res.on('end',()=>{console.log('Health:',d);process.exit(res.statusCode===200?0:1)})});r.on('error',e=>{console.error('Manager not running:',e.message);process.exit(1)})"
+```
+6. Validate /api/registry returns valid data:
+```powershell
+node -e "const http=require('http');http.get('http://internal.headyio.com:3301/api/registry',res=>{let d='';res.on('data',c=>d+=c);res.on('end',()=>{const j=JSON.parse(d);console.log('Components:',j.components?.length||0);process.exit(j.components?0:1)})})"
+```
+7. Validate /api/orchestrator/health responds:
+```powershell
+node -e "const http=require('http');http.get('http://internal.headyio.com:3301/api/orchestrator/health',res=>{let d='';res.on('data',c=>d+=c);res.on('end',()=>{console.log('Orchestrator:',d);process.exit(res.statusCode===200?0:1)})})"
+```
+8. Validate /api/brain/health responds:
+```powershell
+node -e "const http=require('http');http.get('http://internal.headyio.com:3301/api/brain/health',res=>{let d='';res.on('data',c=>d+=c);res.on('end',()=>{console.log('Brain:',d);process.exit(res.statusCode===200?0:1)})})"
+>>>>>>> staging/chore/formatting-fixes-2566957660382340048
 node -e "const http=require('http');const r=http.get('http://localhost:3301/api/health',res=>{let d='';res.on('data',c=>d+=c);res.on('end',()=>{console.log('Health:',d);process.exit(res.statusCode===200?0:1)})});r.on('error',e=>{console.error('Manager not running:',e.message);process.exit(1)})"
 ```
 6. Validate /api/registry returns valid data:

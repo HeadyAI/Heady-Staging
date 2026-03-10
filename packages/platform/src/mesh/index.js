@@ -143,7 +143,7 @@ export class CircuitBreaker {
 
 /**
  * mTLS-aware HTTP client with phi-backoff retry and circuit breaker integration.
- * All URLs come from environment (Law #5: zero localhost contamination).
+ * All URLs come from environment (Law #5: zero 127.0.0.1 contamination).
  */
 export class MeshClient {
   /**

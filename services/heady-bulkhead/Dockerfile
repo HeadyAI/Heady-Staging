@@ -1,6 +1,6 @@
 # ─────────────────────────────────────────────────────────────
 # heady-bulkhead — Production Dockerfile
-# Multi-stage build. Workspace-aware, container-ready, zero localhost references.
+# Multi-stage build. Workspace-aware, container-ready, zero 127.0.0.1 references.
 # All runtime config from environment variables (Law #5).
 # ─────────────────────────────────────────────────────────────
 

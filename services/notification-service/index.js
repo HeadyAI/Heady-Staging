@@ -1,3 +1,5 @@
+const pino = require('pino');
+const logger = pino();
 // notification-service/index.js
 const express = require('express');
 const { WebSocketServer, OPEN } = require('ws');
@@ -31,7 +33,7 @@ const wss = new WebSocketServer({ noServer: true });
 server.on('upgrade', (request, socket, head) => {
     const origin = request.headers.origin;
     if (origin && !whitelist.includes(origin)) {
-        console.warn(`Blocked WebSocket connection from unauthorized origin: ${origin}`);
+        logger.warn(`Blocked WebSocket connection from unauthorized origin: ${origin}`);
         socket.write('HTTP/1.1 401 Unauthorized\r\n\r\n');
         socket.destroy();
         return;
@@ -72,18 +74,18 @@ wss.on('connection', (ws) => {
             broadcastWithBackoff(parsed.data, 0, [ws]);
 
         } catch (err) {
-            console.error('Message processing error:', err);
+            logger.error('Message processing error:', err);
         }
     });
 
     ws.on('close', () => {
-        console.log('Client disconnected');
+        logger.info('Client disconnected');
     });
 });
 
 const sendToClientWithBackoff = (client, message, attempt) => {
     if (attempt >= FIB[4]) {
-        console.warn('Max broadcast attempts reached for client');
+        logger.warn('Max broadcast attempts reached for client');
         return;
     }
     
@@ -128,5 +130,5 @@ app.get('/api/health', (req, res) => res.status(200).json({ status: 'OK' }));
 
 const PORT = process.env.PORT || 3398;
 server.listen(PORT, () => {
-    console.log(`[notification-service] Listening on port ${PORT}`);
+    logger.info(`[notification-service] Listening on port ${PORT}`);
 });

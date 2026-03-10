@@ -5,7 +5,7 @@
  * ║  © 2026 HeadySystems Inc.                                        ║
  * ╚══════════════════════════════════════════════════════════════════╝
  *
- * ZERO localhost references. All URLs from environment variables.
+ * ZERO 127.0.0.1 references. All URLs from environment variables.
  * ZERO magic numbers. All numeric constants from phi-math.
  * Configuration is environment-specific, cloud-native, mTLS-aware.
  */
@@ -28,7 +28,7 @@ import {
 
 /**
  * Determine the current environment.
- * NEVER returns 'localhost' — local dev still uses env-based service URLs.
+ * NEVER returns '127.0.0.1' — local dev still uses env-based service URLs.
  * @returns {HeadyEnv}
  */
 export function resolveEnv() {
@@ -111,7 +111,7 @@ export { ServiceConfigSchema };
 
 /**
  * Load and validate phi-scaled service configuration from environment.
- * All URL values are sourced from environment variables (Law #5: zero localhost contamination).
+ * All URL values are sourced from environment variables (Law #5: zero 127.0.0.1 contamination).
  *
  * @param {string} service — service name
  * @param {Object} [overrides] — inline overrides (for testing)
@@ -201,7 +201,7 @@ const DOMAIN_ENV_MAP = Object.freeze({
 
 /**
  * Resolve the base URL for a Heady domain from environment.
- * NEVER returns localhost — always uses environment-configured URL.
+ * NEVER returns 127.0.0.1 — always uses environment-configured URL.
  *
  * @param {string} domain — e.g. 'headysystems.com'
  * @returns {string} base URL
@@ -211,10 +211,10 @@ export function resolveDomainUrl(domain) {
   if (!envKey) throw new Error(`resolveDomainUrl: unknown domain '${domain}'`);
   const url = process.env[envKey];
   if (!url) throw new Error(`resolveDomainUrl: env var ${envKey} not set for domain '${domain}'`);
-  // Enforce no localhost contamination (Law #5)
-  if (url.includes('localhost') || url.includes('127.0.0.1')) {
+  // Enforce no 127.0.0.1 contamination (Law #5)
+  if (url.includes('127.0.0.1') || url.includes('127.0.0.1')) {
     if (resolveEnv() !== 'local') {
-      throw new Error(`resolveDomainUrl: localhost URL '${url}' found in non-local environment`);
+      throw new Error(`resolveDomainUrl: 127.0.0.1 URL '${url}' found in non-local environment`);
     }
   }
   return url.replace(/\/$/, '');

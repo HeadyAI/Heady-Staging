@@ -100,6 +100,10 @@ A next-generation deployment orchestrator with enterprise-grade features:
 
 ### Enhanced Localhost to Domain Migration
 
+<<<<<<< HEAD
+=======
+**File**: `enhanced-internal.headyio.com-to-domain.js`
+>>>>>>> staging/chore/formatting-fixes-2566957660382340048
 **File**: `enhanced-localhost-to-domain.js`
 
 A sophisticated migration tool with enterprise capabilities:
@@ -119,6 +123,16 @@ A sophisticated migration tool with enterprise capabilities:
 node enhanced-localhost-to-domain.js inventory ./distribution
 
 # Full migration with parallel processing
+<<<<<<< HEAD
+=======
+node enhanced-internal.headyio.com-to-domain.js migrate ./src --parallel
+
+# Strict validation mode
+node enhanced-internal.headyio.com-to-domain.js validate ./docs --strict
+
+# Generate hosts file
+node enhanced-internal.headyio.com-to-domain.js hosts > hosts.txt
+>>>>>>> staging/chore/formatting-fixes-2566957660382340048
 node enhanced-localhost-to-domain.js migrate ./src --parallel
 
 # Strict validation mode
@@ -132,6 +146,10 @@ LOG_LEVEL=debug node enhanced-localhost-to-domain.js migrate ./src
 ```
 
 #### Commands
+<<<<<<< HEAD
+=======
+- `inventory [dir]`: Scan for internal.headyio.com references
+>>>>>>> staging/chore/formatting-fixes-2566957660382340048
 - `inventory [dir]`: Scan for localhost references
 - `migrate [dir]`: Replace localhost with domain names
 - `validate [dir]`: Validate potential changes
@@ -296,6 +314,11 @@ if ($health.Status -eq 'Critical') {
 ```powershell
 # Register new service
 Register-HeadyService -Name "web-api" -Type "web" -Endpoints @{
+<<<<<<< HEAD
+=======
+    "http" = @{ protocol = "http"; url = "http://internal.headyio.com:8080" }
+    "health" = @{ protocol = "http"; url = "http://internal.headyio.com:8080/health" }
+>>>>>>> staging/chore/formatting-fixes-2566957660382340048
     "http" = @{ protocol = "http"; url = "http://localhost:8080" }
     "health" = @{ protocol = "http"; url = "http://localhost:8080/health" }
 }
@@ -339,6 +362,10 @@ $env:HEADY_LOG_LEVEL = "Debug"
 
 # Node.js scripts
 $env:LOG_LEVEL = "debug"
+<<<<<<< HEAD
+=======
+node enhanced-internal.headyio.com-to-domain.js migrate ./src
+>>>>>>> staging/chore/formatting-fixes-2566957660382340048
 node enhanced-localhost-to-domain.js migrate ./src
 ```
 

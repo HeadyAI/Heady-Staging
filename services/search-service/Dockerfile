@@ -11,5 +11,5 @@ COPY --from=builder /app ./
 USER heady
 EXPOSE 8089
 HEALTHCHECK --interval=21s --timeout=5s --retries=3 \
-  CMD wget -qO- http://localhost:8089/healthz || exit 1
+  CMD wget -qO- http://127.0.0.1:8089/healthz || exit 1
 CMD ["node", "src/index.js"]

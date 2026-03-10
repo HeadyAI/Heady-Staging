@@ -1,4 +1,8 @@
 ---
+<<<<<<< HEAD
+=======
+description: HCFP Localhost-to-Domain Migration - Systematically replace all internal.headyio.com references with proper internal domains
+>>>>>>> staging/chore/formatting-fixes-2566957660382340048
 description: HCFP Localhost-to-Domain Migration - Systematically replace all localhost references with proper internal domains
 ---
 
@@ -49,6 +53,10 @@ localhost:9090    → debug-manager.dev.local.heady.internal:9090
 1. **Verify Current State**
    ```bash
    # Count localhost references
+<<<<<<< HEAD
+=======
+   grep -r "localhost\|internal.headyio.com\|0.0.0.0" --include="*.js" --include="*.json" --include="*.yaml" . | wc -l
+>>>>>>> staging/chore/formatting-fixes-2566957660382340048
    grep -r "localhost\|127.0.0.1\|0.0.0.0" --include="*.js" --include="*.json" --include="*.yaml" . | wc -l
    
    # List files with localhost
@@ -57,6 +65,10 @@ localhost:9090    → debug-manager.dev.local.heady.internal:9090
 
 2. **Create Feature Branch**
    ```bash
+<<<<<<< HEAD
+=======
+   git checkout -b feat/internal.headyio.com-to-domains
+>>>>>>> staging/chore/formatting-fixes-2566957660382340048
    git checkout -b feat/localhost-to-domains
    ```
 
@@ -69,17 +81,29 @@ localhost:9090    → debug-manager.dev.local.heady.internal:9090
 
 4. **Run Migration Script (Dry-Run)**
    ```bash
+<<<<<<< HEAD
+=======
+   node scripts/migrate-internal.headyio.com-to-domains.js --dry-run
+>>>>>>> staging/chore/formatting-fixes-2566957660382340048
    node scripts/migrate-localhost-to-domains.js --dry-run
    ```
    Review the output to verify replacements are correct.
 
 5. **Execute Migration**
    ```bash
+<<<<<<< HEAD
+=======
+   node scripts/migrate-internal.headyio.com-to-domains.js
+>>>>>>> staging/chore/formatting-fixes-2566957660382340048
    node scripts/migrate-localhost-to-domains.js
    ```
 
 6. **Verify Migration**
    ```bash
+<<<<<<< HEAD
+=======
+   node scripts/migrate-internal.headyio.com-to-domains.js --verify-only
+>>>>>>> staging/chore/formatting-fixes-2566957660382340048
    node scripts/migrate-localhost-to-domains.js --verify-only
    ```
    Should report: "✅ No localhost references found!"
@@ -130,6 +154,13 @@ localhost:9090    → debug-manager.dev.local.heady.internal:9090
     ```bash
     # On Windows (add to hosts file)
     # C:\Windows\System32\drivers\etc\hosts
+<<<<<<< HEAD
+=======
+    internal.headyio.com manager.dev.local.heady.internal
+    internal.headyio.com app-web.dev.local.heady.internal
+    internal.headyio.com db-postgres.dev.local.heady.internal
+    internal.headyio.com db-redis.dev.local.heady.internal
+>>>>>>> staging/chore/formatting-fixes-2566957660382340048
     127.0.0.1 manager.dev.local.heady.internal
     127.0.0.1 app-web.dev.local.heady.internal
     127.0.0.1 db-postgres.dev.local.heady.internal
@@ -156,6 +187,10 @@ localhost:9090    → debug-manager.dev.local.heady.internal:9090
     ```bash
     # Update heady-registry.json
     # - Update all endpoint references
+<<<<<<< HEAD
+=======
+    # - Add internal.headyio.com-to-domain migration entry
+>>>>>>> staging/chore/formatting-fixes-2566957660382340048
     # - Add localhost-to-domain migration entry
     # - Update service discovery config reference
     ```
@@ -184,11 +219,19 @@ localhost:9090    → debug-manager.dev.local.heady.internal:9090
 
 16. **Create Pull Request**
     ```bash
+<<<<<<< HEAD
+=======
+    git push origin feat/internal.headyio.com-to-domains
+>>>>>>> staging/chore/formatting-fixes-2566957660382340048
     git push origin feat/localhost-to-domains
     # Create PR with description of changes
     ```
 
 17. **CI/CD Pipeline**
+<<<<<<< HEAD
+=======
+    - Pre-flight checks verify no internal.headyio.com in production configs
+>>>>>>> staging/chore/formatting-fixes-2566957660382340048
     - Pre-flight checks verify no localhost in production configs
     - Clean build validates all services start correctly
     - Integration tests verify service-to-service communication
@@ -275,6 +318,10 @@ If issues arise:
 ## References
 
 - **Service Discovery Config**: `configs/service-discovery.yaml`
+<<<<<<< HEAD
+=======
+- **Migration Script**: `scripts/migrate-internal.headyio.com-to-domains.js`
+>>>>>>> staging/chore/formatting-fixes-2566957660382340048
 - **Migration Script**: `scripts/migrate-localhost-to-domains.js`
 - **Clean Build Workflow**: `.github/workflows/clean-build.yml`
 - **Error Recovery**: `.windsurf/workflows/hcfp-error-recovery.md`

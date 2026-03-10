@@ -1,3 +1,5 @@
+const pino = require('pino');
+const logger = pino();
 // HEADY_BRAND:BEGIN
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
@@ -60,7 +62,7 @@ class ImprovementScheduler extends EventEmitter {
 
   async runCycle() {
     if (!this.pipeline || !this.patternEngine || !this.selfCritiqueEngine) {
-      console.warn('[ImprovementScheduler] Dependencies not available, skipping cycle');
+      logger.warn('[ImprovementScheduler] Dependencies not available, skipping cycle');
       return;
     }
     
@@ -85,7 +87,7 @@ class ImprovementScheduler extends EventEmitter {
       
       this.emit('cycle_complete', { improvements: prioritized.length });
     } catch (error) {
-      console.warn(`[ImprovementScheduler] Cycle error: ${error.message}`);
+      logger.warn(`[ImprovementScheduler] Cycle error: ${error.message}`);
       this.emit('cycle_error', error);
     }
   }

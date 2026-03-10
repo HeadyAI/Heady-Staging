@@ -1,4 +1,5 @@
-const { logger } = require('./utils/logger');
+const pino = require('pino');
+const logger = pino();
 // HEADY_BRAND:BEGIN
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
@@ -37,18 +38,18 @@ const RESOURCE_TYPES = [
 ];
 
 const SEVERITY = { INFO: "INFO", WARN_SOFT: "WARN_SOFT", WARN_HARD: "WARN_HARD", CRITICAL: "CRITICAL" };
-const TREND = { RISING: "RISING", FALLING: "FALLING", STABLE: "STABLE", UNKNOWN: "UNKNOWN" };
+const TREND    = { RISING: "RISING", FALLING: "FALLING", STABLE: "STABLE", UNKNOWN: "UNKNOWN" };
 
 // ─── DEFAULT THRESHOLDS ────────────────────────────────────────────────────
 
 const DEFAULT_THRESHOLDS = {
-  CPU: { softPercent: 75, hardPercent: 90, windowSec: 30 },
-  RAM: { softPercent: 70, hardPercent: 85, windowSec: 15 },
-  DISK: { softPercent: 80, hardPercent: 92, windowSec: 60 },
+  CPU:         { softPercent: 75, hardPercent: 90, windowSec: 30 },
+  RAM:         { softPercent: 70, hardPercent: 85, windowSec: 15 },
+  DISK:        { softPercent: 80, hardPercent: 92, windowSec: 60 },
   GPU_COMPUTE: { softPercent: 75, hardPercent: 90, windowSec: 15 },
-  GPU_VRAM: { softPercent: 70, hardPercent: 85, windowSec: 10 },
-  NETWORK: { softPercent: 70, hardPercent: 90, windowSec: 30 },
-  LOCAL_DB: { softPercent: 75, hardPercent: 90, windowSec: 60 },
+  GPU_VRAM:    { softPercent: 70, hardPercent: 85, windowSec: 10 },
+  NETWORK:     { softPercent: 70, hardPercent: 90, windowSec: 30 },
+  LOCAL_DB:    { softPercent: 75, hardPercent: 90, windowSec: 60 },
 };
 
 // ─── RESOURCE USAGE EVENT ──────────────────────────────────────────────────
@@ -128,7 +129,7 @@ function collectDisk() {
       // PowerShell fallback (wmic is deprecated on modern Windows)
       const out = execSync(
         'powershell -NoProfile -Command "Get-PSDrive C | Select-Object Used,Free | ConvertTo-Json"',
-        { timeout: 6854, encoding: "utf-8" } // φ⁴ × 1000
+        { timeout: 8000, encoding: "utf-8" }
       );
       const info = JSON.parse(out.trim());
       const used = info.Used || 0;
@@ -143,7 +144,7 @@ function collectDisk() {
         };
       }
     } else {
-      const out = execSync("df -k / | tail -1", { timeout: 4236, encoding: "utf-8" }); // φ³ × 1000
+      const out = execSync("df -k / | tail -1", { timeout: 5000, encoding: "utf-8" });
       const parts = out.trim().split(/\s+/);
       const total = parseInt(parts[1], 10) * 1024;
       const used = parseInt(parts[2], 10) * 1024;
@@ -164,7 +165,7 @@ function collectGPU() {
   try {
     const out = execSync(
       "nvidia-smi --query-gpu=utilization.gpu,memory.used,memory.total --format=csv,noheader,nounits",
-      { timeout: 4236, encoding: "utf-8" } // φ³ × 1000
+      { timeout: 5000, encoding: "utf-8" }
     );
     const parts = out.trim().split(",").map(s => parseFloat(s.trim()));
     return {
@@ -218,7 +219,7 @@ function detectTopContributors() {
     if (process.platform === "win32") {
       const out = execSync(
         'powershell -NoProfile -Command "Get-Process | Sort-Object CPU -Descending | Select-Object -First 5 Id,ProcessName,CPU,WorkingSet64 | ConvertTo-Json"',
-        { timeout: 6854, encoding: "utf-8" } // φ⁴ × 1000
+        { timeout: 8000, encoding: "utf-8" }
       );
       const procs = JSON.parse(out);
       const arr = Array.isArray(procs) ? procs : [procs];
@@ -342,10 +343,10 @@ class HCResourceManager extends EventEmitter {
   }
 
   _poll() {
-    const cpu = collectCPU();
-    const ram = collectRAM();
+    const cpu  = collectCPU();
+    const ram  = collectRAM();
     const disk = collectDisk();
-    const gpu = collectGPU();
+    const gpu  = collectGPU();
 
     this.latestSnapshot = { cpu, ram, disk, gpu };
 

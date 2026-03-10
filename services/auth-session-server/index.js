@@ -1,3 +1,5 @@
+const pino = require('pino');
+const logger = pino();
 // auth-session-server/index.js
 const express = require('express');
 const cookieParser = require('cookie-parser');
@@ -69,7 +71,7 @@ app.post('/api/session', async (req, res) => {
 
         res.status(200).json({ status: 'success' });
     } catch (error) {
-        console.error('Session creation failed:', error);
+        logger.error('Session creation failed:', error);
         res.status(401).json({ error: 'UNAUTHORIZED', code: 'HEADY-AUTH-002' });
     }
 });
@@ -100,5 +102,5 @@ app.get('/api/health', (req, res) => res.status(200).json({ status: 'OK' }));
 
 const PORT = process.env.PORT || 3397;
 app.listen(PORT, () => {
-    console.log(`[auth-session-server] Running on port ${PORT}`);
+    logger.info(`[auth-session-server] Running on port ${PORT}`);
 });

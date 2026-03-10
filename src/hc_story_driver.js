@@ -1,3 +1,5 @@
+const pino = require('pino');
+const logger = pino();
 // HEADY_BRAND:BEGIN
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
@@ -112,7 +114,7 @@ class HCStoryDriver extends EventEmitter {
       if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
       fs.writeFileSync(this.storePath, JSON.stringify(this.stories, null, 2), "utf8");
     } catch (err) {
-      console.error("StoryDriver: Failed to save stories:", err.message);
+      logger.error("StoryDriver: Failed to save stories:", err.message);
     }
   }
 

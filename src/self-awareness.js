@@ -1,3 +1,5 @@
+const pino = require('pino');
+const logger = pino();
 // HEADY_BRAND:BEGIN
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
@@ -20,7 +22,7 @@ let fixBrandingViolations = null;
 try {
   ({ validateBranding } = require('../scripts/validate-branding'));
 } catch (e) {
-  console.warn(`  ⚠ validate-branding not available: ${e.message}`);
+  logger.warn(`  ⚠ validate-branding not available: ${e.message}`);
 }
 
 try {
@@ -31,7 +33,7 @@ try {
 
 function startBrandingMonitor() {
   if (!validateBranding) {
-    console.warn('  ⚠ Branding monitor skipped: validateBranding not loaded');
+    logger.warn('  ⚠ Branding monitor skipped: validateBranding not loaded');
     return;
   }
 
@@ -39,13 +41,13 @@ function startBrandingMonitor() {
     try {
       const violations = await validateBranding();
       if (Array.isArray(violations) && violations.length > 0) {
-        console.warn(`[BrandingMonitor] ${violations.length} branding violations found`);
+        logger.warn(`[BrandingMonitor] ${violations.length} branding violations found`);
         if (process.env.AUTO_FIX_BRANDING === 'true' && fixBrandingViolations) {
           fixBrandingViolations();
         }
       }
     } catch (error) {
-      console.warn(`[BrandingMonitor] Error: ${error.message}`);
+      logger.warn(`[BrandingMonitor] Error: ${error.message}`);
     }
   }, 60 * 60 * 1000); // Hourly
 }

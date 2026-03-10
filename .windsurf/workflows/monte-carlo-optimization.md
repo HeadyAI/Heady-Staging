@@ -10,65 +10,109 @@ Speed is a first-class objective. Latency is a defect. Patterns must continuousl
 ## 1. Check Current Speed Status
 // turbo
 ```powershell
+<<<<<<< HEAD
+=======
+Invoke-RestMethod -Uri "http://internal.headyio.com:3300/api/monte-carlo/status" | ConvertTo-Json -Depth 5
+>>>>>>> staging/chore/formatting-fixes-2566957660382340048
 Invoke-RestMethod -Uri "http://localhost:3300/api/monte-carlo/status" | ConvertTo-Json -Depth 5
 ```
 
 ## 2. Check Pattern Engine Summary
 // turbo
 ```powershell
+<<<<<<< HEAD
+=======
+Invoke-RestMethod -Uri "http://internal.headyio.com:3300/api/patterns/summary" | ConvertTo-Json -Depth 5
+>>>>>>> staging/chore/formatting-fixes-2566957660382340048
 Invoke-RestMethod -Uri "http://localhost:3300/api/patterns/summary" | ConvertTo-Json -Depth 5
 ```
 
 ## 3. Generate a Monte Carlo Plan for a Task
 ```powershell
 $body = @{ taskType = "code_generation"; taskMeta = @{ complex = $false }; constraints = @{} } | ConvertTo-Json
+<<<<<<< HEAD
+=======
+Invoke-RestMethod -Uri "http://internal.headyio.com:3300/api/monte-carlo/plan" -Method POST -Body $body -ContentType "application/json" | ConvertTo-Json -Depth 5
+>>>>>>> staging/chore/formatting-fixes-2566957660382340048
 Invoke-RestMethod -Uri "http://localhost:3300/api/monte-carlo/plan" -Method POST -Body $body -ContentType "application/json" | ConvertTo-Json -Depth 5
 ```
 
 ## 4. Record Execution Result (Feedback Loop)
 ```powershell
 $body = @{ taskType = "code_generation"; strategyId = "fast_parallel"; actualLatencyMs = 1200; success = $true; qualityScore = 90 } | ConvertTo-Json
+<<<<<<< HEAD
+=======
+Invoke-RestMethod -Uri "http://internal.headyio.com:3300/api/monte-carlo/result" -Method POST -Body $body -ContentType "application/json" | ConvertTo-Json -Depth 5
+>>>>>>> staging/chore/formatting-fixes-2566957660382340048
 Invoke-RestMethod -Uri "http://localhost:3300/api/monte-carlo/result" -Method POST -Body $body -ContentType "application/json" | ConvertTo-Json -Depth 5
 ```
 
 ## 5. View Metrics (Per Task Type or Global)
 // turbo
 ```powershell
+<<<<<<< HEAD
+=======
+Invoke-RestMethod -Uri "http://internal.headyio.com:3300/api/monte-carlo/metrics" | ConvertTo-Json -Depth 5
+>>>>>>> staging/chore/formatting-fixes-2566957660382340048
 Invoke-RestMethod -Uri "http://localhost:3300/api/monte-carlo/metrics" | ConvertTo-Json -Depth 5
 ```
 
 ## 6. Check for Drift Alerts
 // turbo
 ```powershell
+<<<<<<< HEAD
+=======
+Invoke-RestMethod -Uri "http://internal.headyio.com:3300/api/monte-carlo/drift" | ConvertTo-Json -Depth 5
+>>>>>>> staging/chore/formatting-fixes-2566957660382340048
 Invoke-RestMethod -Uri "http://localhost:3300/api/monte-carlo/drift" | ConvertTo-Json -Depth 5
 ```
 
 ## 7. Surface Recent Patterns
 // turbo
 ```powershell
+<<<<<<< HEAD
+=======
+Invoke-RestMethod -Uri "http://internal.headyio.com:3300/api/patterns/recent?limit=10" | ConvertTo-Json -Depth 5
+>>>>>>> staging/chore/formatting-fixes-2566957660382340048
 Invoke-RestMethod -Uri "http://localhost:3300/api/patterns/recent?limit=10" | ConvertTo-Json -Depth 5
 ```
 
 ## 8. Check Bottleneck Patterns
 // turbo
 ```powershell
+<<<<<<< HEAD
+=======
+Invoke-RestMethod -Uri "http://internal.headyio.com:3300/api/patterns/bottlenecks" | ConvertTo-Json -Depth 5
+>>>>>>> staging/chore/formatting-fixes-2566957660382340048
 Invoke-RestMethod -Uri "http://localhost:3300/api/patterns/bottlenecks" | ConvertTo-Json -Depth 5
 ```
 
 ## 9. Trigger Full MC Simulation Cycle
 ```powershell
+<<<<<<< HEAD
+=======
+Invoke-RestMethod -Uri "http://internal.headyio.com:3300/api/monte-carlo/simulate" -Method POST | ConvertTo-Json -Depth 5
+>>>>>>> staging/chore/formatting-fixes-2566957660382340048
 Invoke-RestMethod -Uri "http://localhost:3300/api/monte-carlo/simulate" -Method POST | ConvertTo-Json -Depth 5
 ```
 
 ## 10. Promote a Pattern ("Notice This")
 ```powershell
 $body = @{ category = "performance"; name = "latency:code_generation"; reason = "Consistently slow" } | ConvertTo-Json
+<<<<<<< HEAD
+=======
+Invoke-RestMethod -Uri "http://internal.headyio.com:3300/api/patterns/promote" -Method POST -Body $body -ContentType "application/json" | ConvertTo-Json -Depth 5
+>>>>>>> staging/chore/formatting-fixes-2566957660382340048
 Invoke-RestMethod -Uri "http://localhost:3300/api/patterns/promote" -Method POST -Body $body -ContentType "application/json" | ConvertTo-Json -Depth 5
 ```
 
 ## 11. View Improvement Tasks
 // turbo
 ```powershell
+<<<<<<< HEAD
+=======
+Invoke-RestMethod -Uri "http://internal.headyio.com:3300/api/patterns/improvements" | ConvertTo-Json -Depth 5
+>>>>>>> staging/chore/formatting-fixes-2566957660382340048
 Invoke-RestMethod -Uri "http://localhost:3300/api/patterns/improvements" | ConvertTo-Json -Depth 5
 ```
 
@@ -76,12 +120,20 @@ Invoke-RestMethod -Uri "http://localhost:3300/api/patterns/improvements" | Conve
 ```powershell
 # Options: "off" (balanced), "on" (speed priority), "max" (absolute fastest)
 $body = @{ mode = "on" } | ConvertTo-Json
+<<<<<<< HEAD
+=======
+Invoke-RestMethod -Uri "http://internal.headyio.com:3300/api/monte-carlo/speed-mode" -Method POST -Body $body -ContentType "application/json" | ConvertTo-Json -Depth 5
+>>>>>>> staging/chore/formatting-fixes-2566957660382340048
 Invoke-RestMethod -Uri "http://localhost:3300/api/monte-carlo/speed-mode" -Method POST -Body $body -ContentType "application/json" | ConvertTo-Json -Depth 5
 ```
 
 ## 13. Check Current Speed Mode
 // turbo
 ```powershell
+<<<<<<< HEAD
+=======
+Invoke-RestMethod -Uri "http://internal.headyio.com:3300/api/monte-carlo/speed-mode" | ConvertTo-Json -Depth 5
+>>>>>>> staging/chore/formatting-fixes-2566957660382340048
 Invoke-RestMethod -Uri "http://localhost:3300/api/monte-carlo/speed-mode" | ConvertTo-Json -Depth 5
 ```
 

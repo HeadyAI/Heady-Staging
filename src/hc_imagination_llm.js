@@ -1,3 +1,5 @@
+const pino = require('pino');
+const logger = pino();
 // HEADY_BRAND:BEGIN
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
@@ -66,7 +68,7 @@ class ImaginationLLMIntegration {
       const response = await this.callLLM(prompt);
       return this.parseConceptResponse(response);
     } catch (err) {
-      console.error('[Imagination-LLM] Generation failed:', err);
+      logger.error('[Imagination-LLM] Generation failed:', err);
       return null;
     }
   }
@@ -97,7 +99,7 @@ class ImaginationLLMIntegration {
       const response = await this.callLLM(prompt);
       return this.parseEvaluationResponse(response);
     } catch (err) {
-      console.error('[Imagination-LLM] Evaluation failed:', err);
+      logger.error('[Imagination-LLM] Evaluation failed:', err);
       return null;
     }
   }
@@ -135,7 +137,7 @@ Return JSON with:
       const response = await this.callLLM(prompt);
       return this.parseRefinementResponse(response);
     } catch (err) {
-      console.error('[Imagination-LLM] Refinement failed:', err);
+      logger.error('[Imagination-LLM] Refinement failed:', err);
       return null;
     }
   }
@@ -184,7 +186,7 @@ Return JSON with claims array. Each claim needs: number, type (independent/depen
       const response = await this.callLLM(prompt);
       return this.parseClaimsResponse(response);
     } catch (err) {
-      console.error('[Imagination-LLM] Claims drafting failed:', err);
+      logger.error('[Imagination-LLM] Claims drafting failed:', err);
       return null;
     }
   }
@@ -238,7 +240,7 @@ Return JSON with:
       const response = await this.callLLM(prompt);
       return this.parseSafetyResponse(response);
     } catch (err) {
-      console.error('[Imagination-LLM] Safety check failed:', err);
+      logger.error('[Imagination-LLM] Safety check failed:', err);
       return null;
     }
   }
@@ -290,7 +292,7 @@ Return JSON array with: title, source_type, similarity_score, overlap_descriptio
       const response = await this.callLLM(prompt);
       return JSON.parse(response);
     } catch (err) {
-      console.error('[Imagination-LLM] Prior art search failed:', err);
+      logger.error('[Imagination-LLM] Prior art search failed:', err);
       return null;
     }
   }

@@ -5,6 +5,10 @@ description: HCFP Localhost-to-Domain Migration & Multi-Channel Extensions
 # HCFP Localhost-to-Domain Migration Workflow
 
 ## Overview
+<<<<<<< HEAD
+=======
+Systematic migration from internal.headyio.com references to proper internal domain architecture with clean build CI/CD and multi-channel extensions.
+>>>>>>> staging/chore/formatting-fixes-2566957660382340048
 Systematic migration from localhost references to proper internal domain architecture with clean build CI/CD and multi-channel extensions.
 
 ## Prerequisites
@@ -15,6 +19,11 @@ Systematic migration from localhost references to proper internal domain archite
 ## Phase 1: Inventory & Analysis
 
 ```powershell
+<<<<<<< HEAD
+=======
+# Scan for all internal.headyio.com references
+node scripts/internal.headyio.com-to-domain.js inventory ./
+>>>>>>> staging/chore/formatting-fixes-2566957660382340048
 # Scan for all localhost references
 node scripts/localhost-to-domain.js inventory ./
 
@@ -27,12 +36,21 @@ node scripts/localhost-to-domain.js inventory ./
 ### Step 1: Dry Run
 ```powershell
 # Test migration without making changes
+<<<<<<< HEAD
+=======
+node scripts/internal.headyio.com-to-domain.js migrate ./ --dry-run
+>>>>>>> staging/chore/formatting-fixes-2566957660382340048
 node scripts/localhost-to-domain.js migrate ./ --dry-run
 ```
 
 ### Step 2: Execute Migration
 // turbo
 ```powershell
+<<<<<<< HEAD
+=======
+# Migrate internal.headyio.com to domains
+node scripts/internal.headyio.com-to-domain.js migrate ./
+>>>>>>> staging/chore/formatting-fixes-2566957660382340048
 # Migrate localhost to domains
 node scripts/localhost-to-domain.js migrate ./
 
@@ -43,6 +61,10 @@ git diff
 ### Step 3: Update Hosts File
 ```powershell
 # Generate hosts file entries
+<<<<<<< HEAD
+=======
+node scripts/internal.headyio.com-to-domain.js hosts > heady-hosts.txt
+>>>>>>> staging/chore/formatting-fixes-2566957660382340048
 node scripts/localhost-to-domain.js hosts > heady-hosts.txt
 
 # Add to Windows hosts file (requires admin)
@@ -57,6 +79,10 @@ Manual step: Open Notepad as Administrator, append `heady-hosts.txt` content to 
 Located at `.github/workflows/hcfp-production-clean-build.yml`
 
 Features:
+<<<<<<< HEAD
+=======
+- ✅ Pre-flight validation (no internal.headyio.com in production configs)
+>>>>>>> staging/chore/formatting-fixes-2566957660382340048
 - ✅ Pre-flight validation (no localhost in production configs)
 - ✅ Clean builds from scratch (no cache artifacts)
 - ✅ Error classification (RECOVERABLE vs NON-RECOVERABLE)
@@ -175,6 +201,10 @@ RCA Process:
 npm test -- tests/integration/domain-connectivity.test.js
 
 # Verify all services
+<<<<<<< HEAD
+=======
+node scripts/internal.headyio.com-to-domain.js inventory ./
+>>>>>>> staging/chore/formatting-fixes-2566957660382340048
 node scripts/localhost-to-domain.js inventory ./
 ```
 
@@ -202,6 +232,10 @@ Per Checkpoint Protocol:
 ## Phase 10: Registry Update
 
 heady-registry.json entries added:
+<<<<<<< HEAD
+=======
+- `internal.headyio.com-to-domain` migration tool
+>>>>>>> staging/chore/formatting-fixes-2566957660382340048
 - `localhost-to-domain` migration tool
 - `hcfp-production-clean-build` workflow
 - `heady-pwa` (manifest + service worker)

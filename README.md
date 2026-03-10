@@ -1,18 +1,82 @@
+<<<<<<< HEAD
 # 🧠 Heady — Latent OS & Autonomous AI Platform
+=======
+<!-- HEADY_BRAND:BEGIN
+<!-- ╔══════════════════════════════════════════════════════════════════╗
+<!-- ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
+<!-- ║  ██║  ██║██╔════╝██╔══██╗██╔══██╗╚██╗ ██╔╝                     ║
+<!-- ║  ███████║█████╗  ███████║██║  ██║ ╚████╔╝                      ║
+<!-- ║  ██╔══██║██╔══╝  ██╔══██║██║  ██║  ╚██╔╝                       ║
+<!-- ║  ██║  ██║███████╗██║  ██║██████╔╝   ██║                        ║
+<!-- ║  ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝    ╚═╝                        ║
+<!-- ║                                                                  ║
+<!-- ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
+<!-- ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
+<!-- ║  FILE: README.md                                                    ║
+<!-- ║  LAYER: root                                                  ║
+<!-- ╚══════════════════════════════════════════════════════════════════╝
+<!-- HEADY_BRAND:END
+-->
+# Heady Systems
+>>>>>>> staging/chore/formatting-fixes-2566957660382340048
 
 [![Node](https://img.shields.io/badge/node-20%2B-green.svg)]()
 [![License](https://img.shields.io/badge/license-Proprietary-blue.svg)]()
 [![MCP](https://img.shields.io/badge/MCP-compatible-purple.svg)]()
 
+<<<<<<< HEAD
 > **Heady** is a personal AI platform that functions as a fully autonomous digital company.
 > It orchestrates **20+ specialized AI agents** across reasoning, coding, research,
 > creative, operations, and personal-assistant domains — running 24/7 on self-healing infrastructure.
+=======
+## 🚀 System Status: 100% FULLY FUNCTIONAL
+>>>>>>> staging/chore/formatting-fixes-2566957660382340048
 
 **HeadySystems Inc.** (C-Corp) builds the platform. Revenue directly funds
 **HeadyConnection Inc.** (Nonprofit), which brings AI tools to underserved communities.
 
 ---
 
+<<<<<<< HEAD
+=======
+### 🎯 Quick Start (Cloud-First)
+
+```bash
+# Clone and auto-deploy
+git clone https://github.com/HeadySystems/Heady.git
+cd Heady
+./scripts/run-auto-deploy.ps1 -ForceProduction
+```
+
+**All services automatically deploy to HeadyCloud** - no local setup required.
+
+### 🧠 Intelligent Features
+
+- **100% HeadyBrain Dominance**: All operations routed through HeadyBrain
+- **Persistent Memory System**: Deep data scanning with pre-execution optimization
+- **Adaptive Complexity**: Intelligent orchestration based on task requirements
+- **Monte Carlo Optimization**: Real-time performance optimization
+- **Pattern Recognition**: Self-learning system with continuous improvement
+
+## Quickstart Guides
+
+Get started with Heady applications:
+
+- [HeadyBuddy](docs/quickstarts/HEADYBUDDY.md) - Android companion
+- [HeadyIDE](docs/quickstarts/HEADYIDE.md) - Desktop AI assistant
+- [HeadyBrowser](docs/quickstarts/HEADYBROWSER.md) - Web extension
+- [HeadyServices](docs/quickstarts/HEADYSERVICES.md) - Backend system
+- [Heady API](docs/quickstarts/HEADY_API_QUICKSTART.md) - Service interaction
+- [HeadyMCP](docs/quickstarts/HEADYMCP.md) - Manager Control Plane
+
+## Guides and References
+
+Deeper integration and API documentation:
+
+- [Service Integration](docs/guides/SERVICE_INTEGRATION.md) - How Heady services connect
+- [HeadyManager API](docs/api/HEADYMANAGER_API.md) - Service endpoints reference
+
+>>>>>>> staging/chore/formatting-fixes-2566957660382340048
 ## Quick Start
 
 ```bash
@@ -23,6 +87,7 @@ node heady-manager.js           # Starts on port 3301
 bash scripts/smoke-test.sh      # Verifies all systems
 ```
 
+<<<<<<< HEAD
 📖 **Full walkthrough:** [ONBOARDING.md](./ONBOARDING.md)
 
 ---
@@ -38,6 +103,25 @@ User Request → AI Gateway (auth + rate limit)
     → Arena Mode (competing solutions)
     → HeadyVinci (learns from outcome)
     → Response
+=======
+## Architecture
+
+```
+heady-manager.js          # Node.js MCP Server & API Gateway (port 3300)
+├── src/                  # Core pipeline engine & agents
+├── backend/              # Python worker & MCP servers
+├── frontend/             # React UI (Vite + TailwindCSS)
+├── HeadyAcademy/         # AI Nodes & Tools (JULES, OBSERVER, BUILDER, ATLAS, PYTHIA)
+├── configs/              # YAML configuration (pipeline, resources, governance)
+├── scripts/              # Automation (Sync, Build, Deploy, Checkpoint)
+├── notebooks/            # Colab notebooks (quick-start, tutorials, examples)
+├── docs/                 # Documentation & Notion templates
+└── heady-registry.json   # HeadyRegistry — central catalog of the ecosystem
+├── HeadyAcademy/         # AI Nodes & Tools
+├── configs/              # YAML configuration
+├── scripts/              # Automation (Sync, Build, Deploy)
+└── workers/              # Edge workers
+>>>>>>> staging/chore/formatting-fixes-2566957660382340048
 ```
 
 ### Liquid Architecture
@@ -67,6 +151,7 @@ govern code, services, and the organization itself.
 
 | Layer | Technology |
 |---|---|
+<<<<<<< HEAD
 | Runtime | Node.js 20 (Express) |
 | Frontend | React + Vite |
 | Local AI | Ollama |
@@ -77,6 +162,22 @@ govern code, services, and the organization itself.
 | CI/CD | GitHub Actions |
 | Memory | File-based + vector embeddings |
 | Monitoring | Prometheus metrics, Winston logging |
+=======
+| `GET /api/health` | Health check |
+| `GET /api/pulse` | System pulse with layer info |
+| `GET /api/system/status` | Full system status |
+| `POST /api/pipeline/run` | Trigger pipeline run |
+| `GET /api/pipeline/state` | Current pipeline state |
+| `GET /api/nodes` | List all AI nodes |
+| `GET /api/registry` | Full HeadyRegistry catalog |
+| `GET /api/registry/component/:id` | Lookup a specific component |
+| `GET /api/registry/environments` | List all environments |
+| `GET /api/registry/docs` | List registered documents |
+| `GET /api/registry/notebooks` | List registered notebooks |
+| `GET /api/registry/patterns` | List architecture patterns |
+| `GET /api/registry/workflows` | List workflows |
+| `GET /api/registry/ai-nodes` | List AI nodes from registry |
+>>>>>>> staging/chore/formatting-fixes-2566957660382340048
 
 ---
 
@@ -145,7 +246,15 @@ Heady exposes a full MCP-compatible tool gateway for IDE integration:
 
 Compatible with: **Windsurf**, **Cursor**, **VS Code + MCP extension**
 
+<<<<<<< HEAD
 ---
+=======
+- `requirements.txt` - Python dependencies
+- `NOTEBOOK_TEMPLATE.md` - Template for new notebooks
+- `COLAB_WORKFLOW.md` - Google Colab workflow guide
+- `.env.example` - Environment variables template
+| `POST /api/system/production` | Activate production mode |
+>>>>>>> staging/chore/formatting-fixes-2566957660382340048
 
 ## Contributing
 
@@ -153,4 +262,9 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md). See [SECURITY.md](./SECURITY.md) for v
 
 ## License
 
+<<<<<<< HEAD
 Copyright © 2024-2026 HeadySystems Inc. & HeadyConnection Inc. All rights reserved.
+=======
+Proprietary - Heady Systems
+
+>>>>>>> staging/chore/formatting-fixes-2566957660382340048
