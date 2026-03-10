@@ -1,12 +1,12 @@
 // ─── HEADY CORS WHITELIST ────────────────────────────────────────────
 const HEADY_ALLOWED_ORIGINS = new Set([
-    'https://headyme.com', 'https://headysystems.com', 'https://headyconnection.org',
-    'https://headyconnection.com', 'https://headybuddy.org', 'https://headymcp.com',
-    'https://headyapi.com', 'https://headyio.com', 'https://headyos.com',
-    'https://headyweb.com', 'https://headybot.com', 'https://headycloud.com',
-    'https://headybee.co', 'https://heady-ai.com', 'https://headyex.com',
-    'https://headyfinance.com', 'https://admin.headysystems.com',
-    'https://auth.headysystems.com', 'https://api.headysystems.com',
+  'https://headyme.com', 'https://headysystems.com', 'https://headyconnection.org',
+  'https://headyconnection.com', 'https://headybuddy.org', 'https://headymcp.com',
+  'https://headyapi.com', 'https://headyio.com', 'https://headyos.com',
+  'https://headyweb.com', 'https://headybot.com', 'https://headycloud.com',
+  'https://headybee.co', 'https://heady-ai.com', 'https://headyex.com',
+  'https://headyfinance.com', 'https://admin.headysystems.com',
+  'https://auth.headysystems.com', 'https://api.headysystems.com',
 ]);
 const _isHeadyOrigin = (o) => !o ? false : HEADY_ALLOWED_ORIGINS.has(o) || /\.run\.app$/.test(o) || (process.env.NODE_ENV !== 'production' && /^https?:\/\/(localhost|127\.0\.0\.1):/.test(o));
 
@@ -494,7 +494,7 @@ function renderSite(site, host) {
       <h1><span class="gradient">${site.tagline}</span></h1>
       <p>${site.subtitle}</p>
       <div class="hero-actions">
-        <button class="btn-primary" onclick="openAuth()">Get Started</button>
+        <a class="btn-primary" href="/onboarding" style="text-decoration:none">Get Started</a>
         <button class="btn-secondary" onclick="window.open('https://headyio.com','_blank')">Documentation</button>
       </div>
     </section>
@@ -601,11 +601,22 @@ function renderSite(site, host) {
     function closeAuth() { document.getElementById('authOverlay').classList.remove('active'); }
 
     function oauthLogin(provider) {
-      fetch('/api/signup', {
-        method:'POST', headers:{'Content-Type':'application/json'},
-        body: JSON.stringify({email:provider+'@heady.oauth', password:'oauth-'+Date.now(), displayName:provider+' User', provider})
-      }).then(r=>r.json()).then(d=>{ if(!d.error) showSuccess(d,provider); else alert(d.error); })
-      .catch(()=>showSuccess({user:{displayName:provider+' User',apiKey:'HY-demo-'+provider,tier:'spark'},token:'demo'},provider));
+      // Try real OAuth redirect first, then fall back to demo signup
+      const authUrl = '/api/auth/' + provider + '?redirect=' + encodeURIComponent(window.location.href);
+      fetch(authUrl, { method: 'GET', redirect: 'manual' }).then(r => {
+        if (r.type === 'opaqueredirect' || r.status === 302 || r.status === 301) {
+          window.location.href = authUrl; // Real OAuth flow available
+        } else {
+          // Auth route not configured — fall back to demo signup
+          return fetch('/api/signup', {
+            method:'POST', headers:{'Content-Type':'application/json'},
+            body: JSON.stringify({email:provider+'@heady.oauth', password:'oauth-'+Date.now(), displayName:provider+' User', provider})
+          }).then(r2=>r2.json()).then(d=>{ if(!d.error) showSuccess(d,provider); else alert(d.error); });
+        }
+      }).catch(()=>{
+        // No auth backend — demo mode
+        showSuccess({user:{displayName:provider+' User',apiKey:'HY-demo-'+provider,tier:'spark'},token:'demo'},provider);
+      });
     }
 
     function showKeyInput(provider,name,prefix) {
@@ -672,13 +683,27 @@ function renderSite(site, host) {
       if(!msg)return;
       input.value='';
       addBuddyMsg('user',msg);
-      fetch('/api/chat',{
-        method:'POST',headers:{'Content-Type':'application/json'},
-        body:JSON.stringify({message:msg,session:currentSession,site:SITE_BRAND,host:SITE_HOST})
-      }).then(r=>r.json()).then(d=>{
-        addBuddyMsg('bot',d.response||d.error||'I\\'ll get back to you on that.');
+      // Try AI gateway first (Liquid Gateway routing), fall back to local /api/chat
+      const payload = JSON.stringify({message:msg,session:currentSession,site:SITE_BRAND,host:SITE_HOST,model:'auto'});
+      const headers = {'Content-Type':'application/json'};
+      if(currentSession) headers['Authorization'] = 'Bearer '+currentSession;
+      fetch('/api/ai/chat',{
+        method:'POST', headers, body:payload
+      }).then(r=>{
+        if(!r.ok) throw new Error('AI gateway unavailable');
+        return r.json();
+      }).then(d=>{
+        addBuddyMsg('bot',d.response||d.choices?.[0]?.message?.content||d.error||'Thinking...');
       }).catch(()=>{
-        addBuddyMsg('bot','I\\'m here on '+SITE_BRAND+'. Currently in local mode — full cloud chat coming soon!');
+        // Fallback to local chat endpoint
+        fetch('/api/chat',{
+          method:'POST',headers:{'Content-Type':'application/json'},
+          body:JSON.stringify({message:msg,session:currentSession,site:SITE_BRAND,host:SITE_HOST})
+        }).then(r=>r.json()).then(d=>{
+          addBuddyMsg('bot',d.response||d.error||'I\\'ll get back to you on that.');
+        }).catch(()=>{
+          addBuddyMsg('bot','I\\'m here on '+SITE_BRAND+'. Currently in local mode — full cloud chat coming soon!');
+        });
       });
     }
 

@@ -73,10 +73,12 @@ const PROVIDER_DISPATCH = {
 
 function httpsPost(hostname, path, body, headers) {
   return new Promise((resolve, reject) => {
-    const req = https.request({ hostname, path, method: 'POST', headers: {
-      ...headers,
-      'Content-Length': Buffer.byteLength(body),
-    }}, (res) => {
+    const req = https.request({
+      hostname, path, method: 'POST', headers: {
+        ...headers,
+        'Content-Length': Buffer.byteLength(body),
+      }
+    }, (res) => {
       let data = '';
       res.on('data', chunk => data += chunk);
       res.on('end', () => {
@@ -137,6 +139,53 @@ function setupGateway(app) {
       });
     } catch (err) {
       logger.error(`[AIGateway] Provider error: ${err.message}`);
+      next(err);
+    }
+  });
+
+  // ── HeadyBuddy Chat — simplified endpoint for chat widget ──
+  app.post('/api/ai/chat', async (req, res, next) => {
+    try {
+      const { message, session, site, host, model } = req.body;
+      if (!message) {
+        return res.status(400).json({ error: 'message is required' });
+      }
+
+      // System prompt for HeadyBuddy
+      const systemPrompt = `You are HeadyBuddy, the AI companion for ${site || 'Heady'}. You are helpful, concise, and knowledgeable about everything in the Heady™ ecosystem. Keep responses brief (1-3 sentences) unless asked for detail. Be warm and personal.`;
+      const fullPrompt = `${systemPrompt}\n\nUser: ${message}\n\nHeadyBuddy:`;
+
+      // Auto-select provider: prefer Groq (fast), then OpenAI, then Anthropic
+      const providerOrder = ['groq', 'openai', 'anthropic'];
+      let result = null;
+      let usedProvider = null;
+
+      for (const providerId of providerOrder) {
+        const dispatch = PROVIDER_DISPATCH[providerId];
+        if (!dispatch) continue;
+        try {
+          result = await dispatch(fullPrompt, { maxTokens: 256, model: model === 'auto' ? undefined : model });
+          usedProvider = providerId;
+          break;
+        } catch (err) {
+          logger.warn(`[AIGateway] Chat: ${providerId} unavailable (${err.message})`);
+          continue;
+        }
+      }
+
+      if (!result) {
+        return res.status(503).json({ error: 'No AI provider available. Check API keys.', response: `I'm running in local mode on ${site || 'Heady'}. Connect an AI provider key to enable full cloud chat.` });
+      }
+
+      res.json({
+        response: result.result,
+        provider: usedProvider,
+        model: result.model,
+        tokens: result.tokens,
+        site,
+      });
+    } catch (err) {
+      logger.error(`[AIGateway] Chat error: ${err.message}`);
       next(err);
     }
   });
