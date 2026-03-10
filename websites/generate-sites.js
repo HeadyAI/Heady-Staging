@@ -519,7 +519,7 @@ const generateHtml = (site) => `<!DOCTYPE html>
 <body>
     <nav>
         <a href="https://${site.domain}" class="nav-brand">
-            <img src="/hc-logo.png" alt="Heady Logo" class="logo-img" onerror="this.style.display='none'">
+            <div class="logo-icon">H</div>
             Heady<span>${site.title.replace('Heady', '')}</span>
         </a>
         <div class="nav-links">
@@ -579,7 +579,7 @@ const generateHtml = (site) => `<!DOCTYPE html>
                         <div class="section-label">Overview</div>
                         <h2>Introduction to ${site.title}</h2>
                         <p>Welcome to the official documentation for <strong>${site.title}</strong>. This platform serves as the ${site.desc.toLowerCase()}. It is a core component of the broader Heady ecosystem, built on principles of sacred geometry, organic systems, and breathing interfaces.</p>
-                        
+
                         <p>Our infrastructure is designed to provide unparalleled performance, security, and scalability. By deeply integrating with the Heady Model Context Protocol (MCP) and the HCFullPipeline, ${site.title} ensures seamless operation across all layers of the stack.</p>
 
                         <div class="card-grid">
@@ -602,7 +602,7 @@ const generateHtml = (site) => `<!DOCTYPE html>
                         <div class="section-label">Architecture</div>
                         <h2>System Architecture</h2>
                         <p>${site.title} utilizes a microservices-based architecture deployed across multiple global regions. The system is conceptually divided into several key layers:</p>
-                        
+
                         <ul>
                             <li><strong>Edge Layer:</strong> Handles global routing, DDoS protection, and TLS termination via Cloudflare.</li>
                             <li><strong>Gateway Layer:</strong> API Gateway that validates requests, enforces rate limits, and performs JWT verification.</li>
@@ -625,7 +625,7 @@ const topology = {
                         <div class="section-label">Integration</div>
                         <h2>API Reference</h2>
                         <p>Interact with ${site.title} programmatically using our REST and MCP APIs. All endpoints require authentication via a standard Bearer token.</p>
-                        
+
                         <h3>Authentication</h3>
                         <p>Include your API key in the Authorization header of your requests:</p>
                         <pre><code>curl -H "Authorization: Bearer hdy_your_api_key" https://api.${site.domain}/v1/status</code></pre>

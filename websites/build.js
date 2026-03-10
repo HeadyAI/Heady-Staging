@@ -17,4 +17,4 @@
 const { execSync } = require('child_process');
 
 // Build each site
-execSync('npx eleventy --config=eleventy-config.js', { stdio: 'inherit' });
+execSync('npx @11ty/eleventy --config=eleventy-config.js', { stdio: 'inherit' });
