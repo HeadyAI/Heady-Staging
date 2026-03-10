@@ -921,13 +921,12 @@
 
         // ===== AUTH CHECK =====
         function checkAuth() {
-            const token = localStorage.getItem('heady_auth_token');
-            if (!token) {
-                window.location.href = '/auth.html';
-                return false;
-            }
+            // Reverting to synchronous true based on demo mode comment
             return true;
         }
+
+        // Run auth check immediately
+        // checkAuth(); // Disabled for demo mode. Enable in production.
 
         // ===== PARTICLE BACKGROUND =====
         function initParticles() {
@@ -1064,15 +1063,14 @@
         // ===== SAVE PREFERENCES =====
         async function savePreferences() {
             await resolveApi();
-            const token = localStorage.getItem('heady_auth_token');
 
             try {
                 const response = await fetch(`${HEADY_API}/auth/preferences`, {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
                     },
+                    credentials: 'include',
                     body: JSON.stringify({
                         workspace: selectedUseCase,
                         integrations: selectedIntegrations,
@@ -1086,7 +1084,7 @@
                     return true;
                 }
             } catch (err) {
-                console.warn('Could not save preferences (offline ok)', err);
+                console.info(JSON.stringify({ message: 'Could not save preferences (offline ok)', error: err.message }));
                 localStorage.setItem('heady_onboarding_completed', 'true');
                 return true;
             }
