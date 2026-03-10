@@ -2,7 +2,7 @@
 
 **Version**: 3.2.0 Orion Patch  
 **Updated**: 2026-03-10  
-**Founder**: Eric Haywood (eric-head / headyme)
+**Founder**: Eric Haywood (eric-head / headyme)  
 **Organization**: HeadyMe (GitHub: HeadyMe)  
 **Cloud**: Google Cloud Run (gen-lang-client-0920560496, us-central1)  
 **Edge**: Cloudflare Workers + DNS proxy (11 zones)  
