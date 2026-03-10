@@ -1,0 +1,27 @@
+{
+  "name": "@heady/bee",
+  "version": "1.0.0",
+  "description": "HeadyBee — Concurrent-equals swarm task orchestration with φ-scaled timing",
+  "main": "index.js",
+  "license": "MIT",
+  "keywords": [
+    "heady",
+    "bee",
+    "swarm",
+    "orchestration",
+    "concurrent",
+    "phi",
+    "golden-ratio",
+    "task-distribution"
+  ],
+  "author": "Heady Systems",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/HeadySystems/heady-monorepo.git",
+    "directory": "packages/heady-bee"
+  },
+  "dependencies": {
+    "@heady/phi-math": "^1.0.0",
+    "@heady/structured-logger": "^1.0.0"
+  }
+}

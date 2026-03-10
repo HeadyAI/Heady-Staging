@@ -27,6 +27,8 @@
  */
 
 const crypto = require("crypto");
+const ColorfulLogger = require("./hc_colorful_logger");
+const log = new ColorfulLogger({ level: "info" });
 
 // ─── Random Utilities ───────────────────────────────────────────────
 function secureRandom() {
@@ -641,10 +643,10 @@ class MonteCarloGlobal {
   startAutoRun() {
     if (this.autoRunInterval) return;
     this.autoRunInterval = setInterval(() => {
-      try { this.runFullCycle("auto"); } catch (_) { /* non-fatal */ }
+      try { this.runFullCycle("auto"); } catch (err) { log.warning("Auto-refresh cycle failed", { error: err.message }); }
     }, this.backgroundCycleMs);
     // Immediate first run
-    try { this.runFullCycle("boot"); } catch (_) {}
+    try { this.runFullCycle("boot"); } catch (err) { log.warning("Boot cycle failed", { error: err.message }); }
   }
 
   stopAutoRun() {
@@ -668,17 +670,17 @@ class MonteCarloGlobal {
       if (stages && stages.length > 0) {
         results.pipeline = fastPipelineSim(stages);
       }
-    } catch (_) {}
+    } catch (err) { log.warning("Pipeline simulation failed", { error: err.message, trigger }); }
 
     // Deployment risk
     try {
       results.deployment = fastDeploymentSim(this._getDeploymentProfile());
-    } catch (_) {}
+    } catch (err) { log.warning("Deployment risk simulation failed", { error: err.message, trigger }); }
 
     // Readiness confidence
     try {
       results.readiness = fastReadinessSim(this._getHealthSignals());
-    } catch (_) {}
+    } catch (err) { log.warning("Readiness simulation failed", { error: err.message, trigger }); }
 
     // Node performance
     try {
@@ -686,7 +688,7 @@ class MonteCarloGlobal {
       if (profiles.length > 0) {
         results.nodes = fastNodeSim(profiles, load);
       }
-    } catch (_) {}
+    } catch (err) { log.warning("Node simulation failed", { error: err.message, trigger }); }
 
     // Composite score
     const scores = [];
@@ -793,7 +795,7 @@ class MonteCarloGlobal {
       if (stages && stages.length > 0) {
         this.lastResults.pipeline = fastPipelineSim(stages);
       }
-    } catch (_) {}
+    } catch (err) { log.warning("Pipeline re-simulation on stage end failed", { stageId, error: err.message }); }
   }
 
   /**
@@ -805,7 +807,7 @@ class MonteCarloGlobal {
     try {
       const signals = this._getHealthSignals();
       this.lastResults.readiness = fastReadinessSim(signals);
-    } catch (_) {}
+    } catch (err) { log.warning("Readiness simulation on checkpoint failed", { stageId, error: err.message }); }
     return this.enrich(checkpointData || {});
   }
 
@@ -833,7 +835,7 @@ class MonteCarloGlobal {
     try {
       const signals = this._getHealthSignals();
       this.lastResults.readiness = fastReadinessSim(signals);
-    } catch (_) {}
+    } catch (err) { log.warning("Readiness simulation on health check failed", { error: err.message }); }
   }
 
   /**
@@ -844,7 +846,7 @@ class MonteCarloGlobal {
     // Refresh deployment risk based on new error rates
     try {
       this.lastResults.deployment = fastDeploymentSim(this._getDeploymentProfile());
-    } catch (_) {}
+    } catch (err) { log.warning("Deployment risk re-simulation on brain tune failed", { error: err.message }); }
   }
 
   /**
@@ -892,7 +894,7 @@ class MonteCarloGlobal {
           dependsOn: s.dependsOn || [],
         }));
       }
-    } catch (_) {}
+    } catch (err) { log.warning("Failed to retrieve pipeline stages", { error: err.message }); }
     return [];
   }
 
@@ -934,7 +936,7 @@ class MonteCarloGlobal {
           if (total > 0) base.nodeAvailability = healthy / total;
         }
       }
-    } catch (_) {}
+    } catch (err) { log.warning("Failed to enrich health signals", { error: err.message }); }
     return base;
   }
 
@@ -954,7 +956,7 @@ class MonteCarloGlobal {
           });
         }
       }
-    } catch (_) {}
+    } catch (err) { log.warning("Failed to retrieve node profiles", { error: err.message }); }
     return { profiles, load };
   }
 
@@ -1045,7 +1047,7 @@ function loadMCConfig() {
     if (fs.existsSync(MC_CONFIG_PATH)) {
       return yaml.load(fs.readFileSync(MC_CONFIG_PATH, "utf8"));
     }
-  } catch (_) {}
+  } catch (err) { log.warning("Failed to load MC config", { path: MC_CONFIG_PATH, error: err.message }); }
   return null;
 }
 
@@ -1054,7 +1056,7 @@ function loadSamples() {
     if (fs.existsSync(MC_SAMPLES_PATH)) {
       return JSON.parse(fs.readFileSync(MC_SAMPLES_PATH, "utf8"));
     }
-  } catch (_) {}
+  } catch (err) { log.warning("Failed to load MC samples", { path: MC_SAMPLES_PATH, error: err.message }); }
   return {};
 }
 
@@ -1063,7 +1065,7 @@ function saveSamples(data) {
     const dir = path.dirname(MC_SAMPLES_PATH);
     if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
     fs.writeFileSync(MC_SAMPLES_PATH, JSON.stringify(data, null, 2), "utf8");
-  } catch (_) {}
+  } catch (err) { log.warning("Failed to save MC samples", { path: MC_SAMPLES_PATH, error: err.message }); }
 }
 
 // ─── PLAN STRATEGIES ─────────────────────────────────────────────────

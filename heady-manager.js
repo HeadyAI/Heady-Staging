@@ -211,25 +211,145 @@ app.use(helmet({
   hsts: { maxAge: 31536000, includeSubDomains: true },
 }));
 app.use(compression());
-app.use(express.json({ limit: "5mb" }));
+
+// Request body size limits
+app.use(express.json({ limit: "1mb" }));
+app.use(express.urlencoded({ limit: "1mb", extended: true }));
+
+// Analytics-specific endpoint with tighter limit
+app.use("/api/analytics", express.json({ limit: "256kb" }));
 
 // Security: remove X-Powered-By
 app.disable('x-powered-by');
 
-// Additional security headers
+// Additional security headers and request ID generation
 app.use((req, res, next) => {
   res.setHeader('X-Content-Type-Options', 'nosniff');
   res.setHeader('X-Frame-Options', 'DENY');
   res.setHeader('Permissions-Policy', 'camera=(), microphone=(), geolocation=()');
+
+  // Generate or use provided request ID
+  const crypto = require('crypto');
+  const requestId = req.get('X-Request-ID') || crypto.randomUUID();
+  req.id = requestId;
+  res.setHeader('X-Request-ID', requestId);
+
   next();
 });
 
-app.use(cors({
-  origin: process.env.ALLOWED_ORIGINS ? process.env.ALLOWED_ORIGINS.split(",") : "*",
-  credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-API-Key'],
-}));
+// Manual CORS middleware configuration
+const allowedOrigins = [
+  // Heady Systems domains
+  'https://headysystems.com',
+  'https://www.headysystems.com',
+  'https://admin.headysystems.com',
+  'https://auth.headysystems.com',
+
+  // Heady alternative domains
+  'https://headyme.com',
+  'https://www.headyme.com',
+  'https://heady-ai.com',
+  'https://www.heady-ai.com',
+  'https://headyos.com',
+  'https://www.headyos.com',
+  'https://headyconnection.org',
+  'https://www.headyconnection.org',
+  'https://headyconnection.com',
+  'https://www.headyconnection.com',
+  'https://headyex.com',
+  'https://www.headyex.com',
+  'https://headyfinance.com',
+  'https://www.headyfinance.com',
+
+  // Render.com deployment domains
+  'https://heady-manager.onrender.com',
+  'https://heady-testing.onrender.com',
+  'https://heady-production.onrender.com',
+
+  // Development localhost (ports 3000-3400)
+  'http://localhost:3000',
+  'http://localhost:3001',
+  'http://localhost:3002',
+  'http://localhost:3003',
+  'http://localhost:3100',
+  'http://localhost:3200',
+  'http://localhost:3300',
+  'http://localhost:3301',
+  'http://localhost:3400',
+];
+
+app.use((req, res, next) => {
+  const origin = req.get('origin');
+
+  // Check if origin is in whitelist or matches *.onrender.com pattern
+  const isAllowed = allowedOrigins.includes(origin) ||
+    (origin && origin.endsWith('.onrender.com'));
+
+  if (isAllowed) {
+    res.setHeader('Access-Control-Allow-Origin', origin);
+    res.setHeader('Access-Control-Allow-Credentials', 'true');
+  }
+
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Request-ID, X-Heady-Domain');
+  res.setHeader('Access-Control-Expose-Headers', 'X-Request-ID, X-Heady-Trace');
+  res.setHeader('Access-Control-Max-Age', '86400');
+
+  // Handle preflight requests
+  if (req.method === 'OPTIONS') {
+    res.sendStatus(204);
+  } else {
+    next();
+  }
+});
+
+// Input sanitization middleware (XSS prevention and field length limits)
+app.use((req, res, next) => {
+  const MAX_STRING_LENGTH = 10000;
+  const HTML_TAG_REGEX = /<[^>]*>/g;
+
+  /**
+   * Recursively sanitize an object by stripping HTML tags and enforcing length limits
+   */
+  const sanitizeObject = (obj) => {
+    if (obj === null || obj === undefined) {
+      return obj;
+    }
+
+    if (typeof obj === 'string') {
+      // Strip HTML tags
+      let sanitized = obj.replace(HTML_TAG_REGEX, '');
+      // Enforce max length
+      if (sanitized.length > MAX_STRING_LENGTH) {
+        sanitized = sanitized.substring(0, MAX_STRING_LENGTH);
+      }
+      return sanitized;
+    }
+
+    if (Array.isArray(obj)) {
+      return obj.map(item => sanitizeObject(item));
+    }
+
+    if (typeof obj === 'object') {
+      const sanitized = {};
+      for (const key in obj) {
+        if (obj.hasOwnProperty(key)) {
+          sanitized[key] = sanitizeObject(obj[key]);
+        }
+      }
+      return sanitized;
+    }
+
+    return obj;
+  };
+
+  // Sanitize request body if present
+  if (req.body && typeof req.body === 'object') {
+    req.body = sanitizeObject(req.body);
+  }
+
+  next();
+});
 
 // Rate limiting — stricter for auth endpoints
 app.use("/api/auth/login", rateLimit({
@@ -2179,6 +2299,15 @@ try {
   log.info("Analytics Service: LOADED");
 } catch (err) {
   log.warn("Analytics routes not loaded", { errorMessage: err.message });
+}
+
+// ─── HeadyBee Swarm Orchestration ────────────────────────────────
+try {
+  const { router: swarmRouter } = require('./src/routes/swarm-routes');
+  app.use('/api/swarm', swarmRouter);
+  log.info("HeadyBee Swarm Service: LOADED");
+} catch (err) {
+  log.warn("Swarm routes not loaded", { errorMessage: err.message });
 }
 
 // ─── Liquid Nodes System ───────────────────────────────────────────

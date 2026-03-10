@@ -36,6 +36,8 @@ const fs = require("fs");
 const path = require("path");
 const yaml = require("js-yaml");
 const EventEmitter = require("events");
+const ColorfulLogger = require("./hc_colorful_logger");
+const log = new ColorfulLogger({ level: "info" });
 
 // ─── CONFIG LOADING ────────────────────────────────────────────────
 
@@ -47,7 +49,8 @@ const CRITIQUE_STORE_PATH = path.join(__dirname, "..", ".heady_cache", "critique
 function loadYamlConfig(filePath) {
   try {
     return yaml.load(fs.readFileSync(filePath, "utf8")) || {};
-  } catch (_) {
+  } catch (err) {
+    log.warning("Failed to load YAML config", { path: filePath, error: err.message });
     return {};
   }
 }
@@ -55,7 +58,8 @@ function loadYamlConfig(filePath) {
 function loadCritiqueStore() {
   try {
     return JSON.parse(fs.readFileSync(CRITIQUE_STORE_PATH, "utf8"));
-  } catch (_) {
+  } catch (err) {
+    log.warning("Failed to load critique store", { path: CRITIQUE_STORE_PATH, error: err.message });
     return { critiques: [], improvements: [], diagnostics: [], connectionHealth: {} };
   }
 }
@@ -65,7 +69,7 @@ function saveCritiqueStore(data) {
     const dir = path.dirname(CRITIQUE_STORE_PATH);
     if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
     fs.writeFileSync(CRITIQUE_STORE_PATH, JSON.stringify(data, null, 2), "utf8");
-  } catch (_) {}
+  } catch (err) { log.warning("Failed to save critique store", { path: CRITIQUE_STORE_PATH, error: err.message }); }
 }
 
 // ═══════════════════════════════════════════════════════════════════════

@@ -17,6 +17,8 @@
 const { execSync } = require('child_process');
 const path = require('path');
 const fs = require('fs');
+const ColorfulLogger = require('./hc_colorful_logger');
+const log = new ColorfulLogger({ level: 'info' });
 
 console.log('\n🔨 Heady AutoBuild - Sacred Geometry Build System with Codemap Optimization\n');
 
@@ -43,7 +45,8 @@ function discoverWorktrees() {
         children = fs.readdirSync(nsPath, { withFileTypes: true })
           .filter(d => d.isDirectory())
           .map(d => path.join(nsPath, d.name));
-      } catch {
+      } catch (err) {
+        log.warning("Failed to read namespace directory", { path: nsPath, error: err.message });
         children = [];
       }
 
@@ -59,7 +62,8 @@ function discoverWorktrees() {
   return [...new Set(roots.filter(p => {
     try {
       return fs.existsSync(p) && fs.statSync(p).isDirectory();
-    } catch {
+    } catch (err) {
+      log.warning("Failed to stat directory", { path: p, error: err.message });
       return false;
     }
   }))];

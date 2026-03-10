@@ -30,6 +30,8 @@ const fs = require("fs");
 const path = require("path");
 const crypto = require("crypto");
 const { EventEmitter } = require("events");
+const ColorfulLogger = require("./hc_colorful_logger");
+const log = new ColorfulLogger({ level: "info" });
 
 const DIAGNOSTICS_LOG = path.join(process.cwd(), "logs", "diagnostics.jsonl");
 const OPTIMIZATION_LOG = path.join(process.cwd(), "logs", "self-optimization.jsonl");
@@ -49,7 +51,8 @@ function loadMetrics() {
     } else {
       _metricsCache = { entries: [], baselines: {} };
     }
-  } catch (_) {
+  } catch (err) {
+    log.warning("Failed to load metrics store", { path: METRICS_STORE, error: err.message });
     _metricsCache = { entries: [], baselines: {} };
   }
   return _metricsCache;
@@ -60,7 +63,7 @@ function saveMetrics() {
     const dir = path.dirname(METRICS_STORE);
     if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
     fs.writeFileSync(METRICS_STORE, JSON.stringify(_metricsCache, null, 2), "utf8");
-  } catch (_) { /* non-fatal */ }
+  } catch (err) { log.warning("Failed to save metrics store", { path: METRICS_STORE, error: err.message }); }
 }
 
 // ─── TIME-TO-COMPLETE TRACKER ───────────────────────────────────────────────
@@ -464,7 +467,7 @@ function persistDiagnosticReport(report) {
     const dir = path.dirname(DIAGNOSTICS_LOG);
     if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
     fs.appendFileSync(DIAGNOSTICS_LOG, JSON.stringify(report) + "\n");
-  } catch (_) { /* non-fatal */ }
+  } catch (err) { log.warning("Failed to persist diagnostic report", { path: DIAGNOSTICS_LOG, error: err.message }); }
 }
 
 // ─── AUTO-TUNE SUGGESTIONS ─────────────────────────────────────────────────

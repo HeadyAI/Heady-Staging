@@ -35,6 +35,8 @@ const fs = require("fs");
 const fsp = fs.promises;
 const path = require("path");
 const crypto = require("crypto");
+const ColorfulLogger = require("./hc_colorful_logger");
+const log = new ColorfulLogger({ level: "info" });
 
 const PATTERN_STORE_PATH = path.join(__dirname, "..", ".heady_cache", "pattern_store.json");
 const MAX_PATTERNS = 500;
@@ -76,7 +78,7 @@ function loadPatternStore() {
     if (fs.existsSync(PATTERN_STORE_PATH)) {
       return JSON.parse(fs.readFileSync(PATTERN_STORE_PATH, "utf8"));
     }
-  } catch (_) {}
+  } catch (err) { log.warning("Failed to load pattern store", { path: PATTERN_STORE_PATH, error: err.message }); }
   return { patterns: {}, metadata: { created: new Date().toISOString(), version: "1.0.0" } };
 }
 
@@ -85,7 +87,7 @@ async function savePatternStoreAsync(store) {
     const dir = path.dirname(PATTERN_STORE_PATH);
     await fsp.mkdir(dir, { recursive: true });
     await fsp.writeFile(PATTERN_STORE_PATH, JSON.stringify(store, null, 2), "utf8");
-  } catch (_) {}
+  } catch (err) { log.warning("Failed to save pattern store async", { path: PATTERN_STORE_PATH, error: err.message }); }
 }
 
 // Legacy sync version for shutdown hooks
@@ -94,7 +96,7 @@ function savePatternStore(store) {
     const dir = path.dirname(PATTERN_STORE_PATH);
     if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
     fs.writeFileSync(PATTERN_STORE_PATH, JSON.stringify(store, null, 2), "utf8");
-  } catch (_) {}
+  } catch (err) { log.warning("Failed to save pattern store sync", { path: PATTERN_STORE_PATH, error: err.message }); }
 }
 
 // ─── STATISTICS HELPERS ──────────────────────────────────────────────

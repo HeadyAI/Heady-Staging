@@ -27,6 +27,8 @@
 const crypto = require('crypto');
 const fs = require('fs').promises;
 const path = require('path');
+const ColorfulLogger = require('./hc_colorful_logger');
+const log = new ColorfulLogger({ level: 'info' });
 
 // ============================================================================
 // DATA STRUCTURES
@@ -202,7 +204,7 @@ class ImaginationEngine {
     try {
       await fs.mkdir(cacheDir, { recursive: true });
     } catch (e) {
-      // Directory may already exist
+      log.warning("Failed to create imagination cache directory", { path: cacheDir, error: e.message });
     }
     
     // Load persisted state
@@ -225,7 +227,7 @@ class ImaginationEngine {
         this.primitives.set(p.id, p);
       }
     } catch (e) {
-      // No existing primitives
+      log.warning("Failed to load primitives", { path: this.config.primitivesPath, error: e.message });
     }
   }
 
@@ -244,7 +246,7 @@ class ImaginationEngine {
         this.concepts.set(c.id, c);
       }
     } catch (e) {
-      // No existing concepts
+      log.warning("Failed to load concepts", { path: this.config.conceptsPath, error: e.message });
     }
   }
 
@@ -263,7 +265,7 @@ class ImaginationEngine {
         this.experiments.set(e.id, e);
       }
     } catch (e) {
-      // No existing experiments
+      log.warning("Failed to load experiments", { path: this.config.experimentsPath, error: e.message });
     }
   }
 
@@ -281,7 +283,7 @@ class ImaginationEngine {
         this.ipPackages.set(p.id, p);
       }
     } catch (e) {
-      // No existing IP packages
+      log.warning("Failed to load IP packages", { path: this.config.ipPackagesPath, error: e.message });
     }
   }
 
