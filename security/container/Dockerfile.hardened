@@ -1,0 +1,22 @@
+# Heady Hardened Base Dockerfile — Sacred Genesis v4.0.0
+# Security-hardened container base for all Heady services
+# Author: Eric Haywood, HeadySystems Inc.
+
+FROM node:20-alpine AS builder
+WORKDIR /app
+COPY package.json package-lock.json ./
+RUN npm ci --production --ignore-scripts && npm cache clean --force
+COPY . .
+RUN rm -rf test/ tests/ *.test.js .eslintrc* .prettierrc* tsconfig.json jest.config.* .nyc_output/ coverage/
+
+FROM node:20-alpine AS production
+RUN addgroup -g 1001 -S heady && adduser -S heady -u 1001 -G heady
+RUN apk update && apk upgrade --no-cache && apk add --no-cache dumb-init && rm -rf /var/cache/apk/*
+WORKDIR /app
+COPY --from=builder --chown=heady:heady /app /app
+RUN rm -rf /usr/local/lib/node_modules/npm && rm -rf /tmp/* /var/tmp/*
+USER heady
+HEALTHCHECK --interval=34s --timeout=8s --start-period=13s --retries=5 CMD wget --no-verbose --tries=1 --spider http://localhost:${PORT}/healthz || exit 1
+LABEL maintainer="Eric Haywood <eric@headyconnection.org>" org.opencontainers.image.title="Heady Service" org.opencontainers.image.vendor="HeadySystems Inc." org.opencontainers.image.version="4.0.0" security.hardened="true" security.non-root="true"
+ENTRYPOINT ["dumb-init", "--"]
+CMD ["node", "index.js"]
