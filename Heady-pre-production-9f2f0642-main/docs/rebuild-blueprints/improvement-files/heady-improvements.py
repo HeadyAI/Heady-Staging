@@ -110,7 +110,7 @@ def build_pdf():
     story.append(HRFlowable(width="60%", thickness=2, color=MUTED_TEAL))
     story.append(Spacer(1, 12))
     story.append(Paragraph(f"Generated: {datetime.now().strftime('%B %d, %Y')}", subtitle_style))
-    story.append(Paragraph("Prepared for: Eric Head — HeadySystems Inc. / HeadyConnection Inc.", subtitle_style))
+    story.append(Paragraph("Prepared for: Eric Haywood — HeadySystems Inc. / HeadyConnection Inc.", subtitle_style))
     story.append(Spacer(1, 24))
 
     # Summary box
