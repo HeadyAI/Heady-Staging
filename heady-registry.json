@@ -1,5 +1,4 @@
 {
-<<<<<<< HEAD
   "registryVersion": "4.0.0",
   "updatedAt": "2026-02-11T23:55:00.000Z",
   "description": "HeadyRegistry — 100% Cloud-First Central catalog and control point for the Heady ecosystem (REBUILT ON headyio.com)",
@@ -2052,15 +2051,6 @@
     }
   ],
 
-=======
-  "registryVersion": "3.2.0",
-  "updatedAt": "2026-02-14T00:44:21.760Z",
-  "description": "HeadyRegistry — Central catalog and control point for the Heady ecosystem",
-  "last_deployment": "",
-
-  "components": [
-  ],
->>>>>>> a3d7d06c432bf92df85e53f8d0cf1e6c8622ccea
   "repos": [
     {
       "id": "heady-sys",
@@ -2107,7 +2097,6 @@
       }
     }
   ],
-<<<<<<< HEAD
   "verticals": [
     {
       "id": "mcp",
@@ -2153,16 +2142,3 @@
 }
 
 
-=======
-  "patterns": [
-    {
-      "id": "multi-sot-protocol",
-      "name": "Multi Source-of-Truth Protocol",
-      "type": "operational",
-      "description": "Sandbox as change origin, controlled promotion to Systems/Me/Connection sources of truth with registry-driven sync and hard gates.",
-      "sourceOfTruth": "docs/ITERATIVE_REBUILD_PROTOCOL.md",
-      "status": "active"
-    }
-  ]
-}
->>>>>>> a3d7d06c432bf92df85e53f8d0cf1e6c8622ccea

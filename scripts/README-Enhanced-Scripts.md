@@ -100,11 +100,7 @@ A next-generation deployment orchestrator with enterprise-grade features:
 
 ### Enhanced Localhost to Domain Migration
 
-<<<<<<< HEAD
 **File**: `enhanced-internal.headyio.com-to-domain.js`
-=======
-**File**: `enhanced-localhost-to-domain.js`
->>>>>>> a3d7d06c432bf92df85e53f8d0cf1e6c8622ccea
 
 A sophisticated migration tool with enterprise capabilities:
 
@@ -123,7 +119,6 @@ A sophisticated migration tool with enterprise capabilities:
 node enhanced-localhost-to-domain.js inventory ./distribution
 
 # Full migration with parallel processing
-<<<<<<< HEAD
 node enhanced-internal.headyio.com-to-domain.js migrate ./src --parallel
 
 # Strict validation mode
@@ -131,26 +126,13 @@ node enhanced-internal.headyio.com-to-domain.js validate ./docs --strict
 
 # Generate hosts file
 node enhanced-internal.headyio.com-to-domain.js hosts > hosts.txt
-=======
-node enhanced-localhost-to-domain.js migrate ./src --parallel
-
-# Strict validation mode
-node enhanced-localhost-to-domain.js validate ./docs --strict
-
-# Generate hosts file
-node enhanced-localhost-to-domain.js hosts > hosts.txt
->>>>>>> a3d7d06c432bf92df85e53f8d0cf1e6c8622ccea
 
 # Debug mode with detailed logging
 LOG_LEVEL=debug node enhanced-localhost-to-domain.js migrate ./src
 ```
 
 #### Commands
-<<<<<<< HEAD
 - `inventory [dir]`: Scan for internal.headyio.com references
-=======
-- `inventory [dir]`: Scan for localhost references
->>>>>>> a3d7d06c432bf92df85e53f8d0cf1e6c8622ccea
 - `migrate [dir]`: Replace localhost with domain names
 - `validate [dir]`: Validate potential changes
 - `rollback`: Rollback from backups
@@ -314,13 +296,8 @@ if ($health.Status -eq 'Critical') {
 ```powershell
 # Register new service
 Register-HeadyService -Name "web-api" -Type "web" -Endpoints @{
-<<<<<<< HEAD
     "http" = @{ protocol = "http"; url = "http://internal.headyio.com:8080" }
     "health" = @{ protocol = "http"; url = "http://internal.headyio.com:8080/health" }
-=======
-    "http" = @{ protocol = "http"; url = "http://localhost:8080" }
-    "health" = @{ protocol = "http"; url = "http://localhost:8080/health" }
->>>>>>> a3d7d06c432bf92df85e53f8d0cf1e6c8622ccea
 }
 
 # Monitor service health
@@ -362,11 +339,7 @@ $env:HEADY_LOG_LEVEL = "Debug"
 
 # Node.js scripts
 $env:LOG_LEVEL = "debug"
-<<<<<<< HEAD
 node enhanced-internal.headyio.com-to-domain.js migrate ./src
-=======
-node enhanced-localhost-to-domain.js migrate ./src
->>>>>>> a3d7d06c432bf92df85e53f8d0cf1e6c8622ccea
 ```
 
 ### Log Analysis

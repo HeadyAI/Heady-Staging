@@ -1,3 +1,4 @@
+const logger = require('../utils/logger.js');
 /* ╔══════════════════════════════════════════════════════════════════╗
    ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
    ║  ██║  ██║██╔════╝██╔══██╗██╔══██╗╚██╗ ██╔╝                     ║
@@ -69,13 +70,19 @@ function generateToken() {
 }
 
 /**
- * Extract Bearer token from Authorization header.
+ * Extract Bearer token from Authorization header or cookie.
  */
-function extractToken(authHeader) {
-  if (!authHeader || !authHeader.startsWith('Bearer ')) {
-    return null;
+function extractToken(req) {
+  const authHeader = req.headers.authorization;
+  if (authHeader && authHeader.startsWith('Bearer ')) {
+    return authHeader.substring(7);
   }
-  return authHeader.substring(7);
+
+  if (req.cookies && req.cookies.__heady_session) {
+    return req.cookies.__heady_session;
+  }
+
+  return null;
 }
 
 // ═════════════════════════════════════════════════════════════════════════════
@@ -87,7 +94,7 @@ function extractToken(authHeader) {
  * Returns 401 if token is invalid or missing.
  */
 function requireAuth(req, res, next) {
-  const token = extractToken(req.headers.authorization);
+  const token = extractToken(req);
 
   if (!token) {
     return res.status(401).json({
@@ -177,6 +184,13 @@ router.post('/login', (req, res) => {
         createdAt: new Date(),
       });
 
+      res.cookie('__heady_session', token, {
+        httpOnly: true,
+        secure: true,
+        sameSite: 'strict',
+        maxAge: 8 * 60 * 60 * 1000 // 8 hours
+      });
+
       return res.status(200).json({
         token,
         user: adminUser,
@@ -224,6 +238,13 @@ router.post('/login', (req, res) => {
       createdAt: new Date(),
     });
 
+    res.cookie('__heady_session', token, {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'strict',
+      maxAge: 8 * 60 * 60 * 1000 // 8 hours
+    });
+
     return res.status(200).json({
       token,
       user: {
@@ -233,7 +254,7 @@ router.post('/login', (req, res) => {
       },
     });
   } catch (error) {
-    console.error('Login error:', error);
+    logger.error('Login error:', error);
     return res.status(500).json({
       error: 'server_error',
       message: error.message,
@@ -303,6 +324,13 @@ router.post('/register', (req, res) => {
       createdAt: new Date(),
     });
 
+    res.cookie('__heady_session', token, {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'strict',
+      maxAge: 8 * 60 * 60 * 1000 // 8 hours
+    });
+
     return res.status(201).json({
       token,
       user: {
@@ -312,7 +340,7 @@ router.post('/register', (req, res) => {
       },
     });
   } catch (error) {
-    console.error('Registration error:', error);
+    logger.error('Registration error:', error);
     return res.status(500).json({
       error: 'server_error',
       message: error.message,
@@ -340,7 +368,7 @@ router.post('/logout', requireAuth, (req, res) => {
       message: 'Logged out successfully',
     });
   } catch (error) {
-    console.error('Logout error:', error);
+    logger.error('Logout error:', error);
     return res.status(500).json({
       error: 'server_error',
       message: error.message,
@@ -365,7 +393,7 @@ router.get('/me', requireAuth, (req, res) => {
       user: req.user,
     });
   } catch (error) {
-    console.error('GET /me error:', error);
+    logger.error('GET /me error:', error);
     return res.status(500).json({
       error: 'server_error',
       message: error.message,
@@ -387,7 +415,7 @@ router.get('/me', requireAuth, (req, res) => {
  */
 router.get('/validate', (req, res) => {
   try {
-    let token = extractToken(req.headers.authorization);
+    let token = extractToken(req);
     if (!token) {
       token = req.query.token;
     }
@@ -421,7 +449,7 @@ router.get('/validate', (req, res) => {
       },
     });
   } catch (error) {
-    console.error('Validate error:', error);
+    logger.error('Validate error:', error);
     return res.status(500).json({
       error: 'server_error',
       message: error.message,

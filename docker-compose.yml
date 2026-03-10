@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # HEADY_BRAND:BEGIN
 # ╔══════════════════════════════════════════════════════════════════╗
 # ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
@@ -14,14 +13,10 @@
 # ║  LAYER: root                                                  ║
 # ╚══════════════════════════════════════════════════════════════════╝
 # HEADY_BRAND:END
-=======
-version: '3.8'
->>>>>>> a3d7d06c432bf92df85e53f8d0cf1e6c8622ccea
 
 services:
   heady-manager:
     build: .
-<<<<<<< HEAD
     environment:
       - NODE_ENV=production
       - DATABASE_URL=postgresql://user:pass@cloud-postgres.heady.io:5432/heady_sys
@@ -34,26 +29,10 @@ services:
       - HEADY_TARGET=CloudOnly
     healthcheck:
       # NOTE: api.headysystems.com is required here — healthcheck runs inside the container
-=======
-    container_name: heady-manager
-    ports:
-      - "3300:3300"
-    environment:
-      - NODE_ENV=production
-      - PORT=3300
-      - HEADY_TARGET=Docker
-      - HEADY_VERSION=3.0.0
-    volumes:
-      - heady-data:/app/.heady-memory
-    networks:
-      - heady-net
-    healthcheck:
->>>>>>> a3d7d06c432bf92df85e53f8d0cf1e6c8622ccea
       test: ["CMD", "wget", "-qO-", "http://api.headysystems.com:3300/api/health"]
       interval: 30s
       timeout: 10s
       retries: 3
-<<<<<<< HEAD
       start_period: 40s
     hostname: heady-manager
     networks:
@@ -135,41 +114,3 @@ volumes:
   heady-downloads:
     driver: local
 
-=======
-    restart: unless-stopped
-
-  heady-redis:
-    image: redis:7-alpine
-    container_name: heady-redis
-    ports:
-      - "6379:6379"
-    volumes:
-      - heady-redis:/data
-    networks:
-      - heady-net
-    restart: unless-stopped
-
-  heady-postgres:
-    image: postgres:16-alpine
-    container_name: heady-postgres
-    environment:
-      - POSTGRES_DB=heady
-      - POSTGRES_USER=heady
-      - POSTGRES_PASSWORD=heady_secret
-    ports:
-      - "5432:5432"
-    volumes:
-      - heady-postgres:/var/lib/postgresql/data
-    networks:
-      - heady-net
-    restart: unless-stopped
-
-volumes:
-  heady-data:
-  heady-redis:
-  heady-postgres:
-
-networks:
-  heady-net:
-    driver: bridge
->>>>>>> a3d7d06c432bf92df85e53f8d0cf1e6c8622ccea

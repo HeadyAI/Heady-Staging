@@ -387,16 +387,12 @@ try {
     throw
 }
 
-<<<<<<< HEAD
 }
 
 } catch {
     Write-Error "Auto-deploy failed: $_"
     exit 1
 }
-=======
-Write-Host "Validating script syntax..."
->>>>>>> a3d7d06c432bf92df85e53f8d0cf1e6c8622ccea
 $errors = Invoke-ScriptAnalyzer -Path $PSCommandPath -Severity Error
 if ($errors) {
     Write-Error "Script contains syntax errors:" 
@@ -557,139 +553,6 @@ $filesToScan | ForEach-Object { -Parallel {
         $fileImprovements += 'ErrorHandling'
     }
     
-<<<<<<< HEAD
-=======
-    # Check for missing circuit breakers in critical operations
-    if ($file.Name -match 'deploy|critical|rollback|sync' -and $content -notmatch 'Get-CircuitBreaker') {
-        $circuitCode = $beneficialPatterns['CircuitBreaker'] -f $file.BaseName, $file.BaseName
-        $newContent = $circuitCode + "`n`n" + $newContent
-        $modified = $true
-        $fileImprovements += 'CircuitBreaker'
-    }
-    
-    # Check for missing retry logic on network operations
-    if ($content -match 'Invoke-(RestMethod|WebRequest)' -and $content -notmatch 'Invoke-WithRetry') {
-        if ($modified) { $newContent = [System.IO.File]::ReadAllText($file.FullName) }
-        $retryCode = $beneficialPatterns['RetryLogic']
-        $newContent = $retryCode + "`n`n" + $newContent
-        $modified = $true
-        $fileImprovements += 'RetryLogic'
-    }
-    
-    # Check for missing structured logging
-    if ($file.Name -match 'deploy|start|stop|build' -and $content -notmatch 'Register-PatternEvent.*script_start') {
-        if ($modified) { $newContent = [System.IO.File]::ReadAllText($file.FullName) }
-        $logCode = $beneficialPatterns['Logging']
-        $newContent = $logCode + "`n`n" + $newContent
-        $modified = $true
-        $fileImprovements += 'Logging'
-    }
-    
-    # Check for missing performance monitoring
-    if ($file.Name -match 'deploy|benchmark|test' -and $content -notmatch 'Stopwatch') {
-        if ($modified) { $newContent = [System.IO.File]::ReadAllText($file.FullName) }
-        $perfCode = $beneficialPatterns['PerformanceMonitoring']
-        $newContent = $perfCode + "`n`n" + $newContent
-        $modified = $true
-        $fileImprovements += 'PerformanceMonitoring'
-    }
-    
-    # Check for missing parameter validation
-    if ($content -match 'param\s*\(' -and $content -notmatch '\[CmdletBinding\(\)\]') {
-        $scanResults += @{
-            File = $file.Name
-            Issue = "Missing CmdletBinding for advanced parameter validation"
-            Severity = 'Medium'
-            Recommendation = 'Add [CmdletBinding()] attribute'
-        }
-    }
-    
-    # Check for missing resource cleanup
-    if ($content -match 'Start-Job|New-Object.*IDisposable' -and $content -notmatch 'Register-EngineEvent.*Exiting') {
-        if ($modified) { $newContent = [System.IO.File]::ReadAllText($file.FullName) }
-        $cleanupCode = $beneficialPatterns['ResourceCleanup']
-        $newContent = $cleanupCode + "`n`n" + $newContent
-        $modified = $true
-        $fileImprovements += 'ResourceCleanup'
-    }
-    
-    # Check for missing input sanitization
-    if ($content -match 'param.*\[string\]' -and $content -match 'Invoke-Expression|\$ExecutionContext' -and $content -notmatch 'Sanitize-Input') {
-        if ($modified) { $newContent = [System.IO.File]::ReadAllText($file.FullName) }
-        $sanitizeCode = $beneficialPatterns['InputSanitization']
-        $newContent = $sanitizeCode + "`n`n" + $newContent
-        $modified = $true
-        $fileImprovements += 'InputSanitization'
-    }
-    
-    # Check for missing rate limiting in loops
-    if ($content -match 'foreach.*Invoke-(RestMethod|WebRequest)' -and $content -notmatch 'Start-Sleep|Invoke-RateLimited') {
-        if ($modified) { $newContent = [System.IO.File]::ReadAllText($file.FullName) }
-        $rateCode = $beneficialPatterns['RateLimiting']
-        $newContent = $rateCode + "`n`n" + $newContent
-        $modified = $true
-        $fileImprovements += 'RateLimiting'
-    }
-    
-    # Check for missing cache cleanup
-    if ($content -match '\$.*cache|\.cache' -and $content -notmatch 'Clear-StaleCache') {
-        if ($modified) { $newContent = [System.IO.File]::ReadAllText($file.FullName) }
-        $cacheCode = $beneficialPatterns['CacheInvalidation']
-        $newContent = $cacheCode + "`n`n" + $newContent
-        $modified = $true
-        $fileImprovements += 'CacheInvalidation'
-    }
-    
-    # Check for missing health checks
-    if ($file.Name -match 'api|service|worker' -and $content -notmatch 'Test-ServiceHealth') {
-        if ($modified) { $newContent = [System.IO.File]::ReadAllText($file.FullName) }
-        $healthCode = $beneficialPatterns['HealthCheck']
-        $newContent = $healthCode + "`n`n" + $newContent
-        $modified = $true
-        $fileImprovements += 'HealthCheck'
-    }
-    
-    # Check for hardcoded credentials or API keys
-    if ($content -match 'password\s*=\s*"[^"]+"') {
-        $scanResults += @{
-            File = $file.Name
-            Issue = "Potential hardcoded credentials detected"
-            Severity = 'Critical'
-            Recommendation = 'Move credentials to secure configuration'
-        }
-    }
-    
-    # Check for missing input validation on user-provided parameters
-    if ($content -match 'param.*\[string\]\$\w+' -and $content -notmatch 'ValidateNotNullOrEmpty|ValidatePattern') {
-        $scanResults += @{
-            File = $file.Name
-            Issue = "Missing input validation on string parameters"
-            Severity = 'Medium'
-            Recommendation = 'Add validation attributes'
-        }
-    }
-    
-    # Check for SQL injection vulnerabilities
-    if ($content -match 'Invoke-Sqlcmd.*\$' -and $content -notmatch 'SqlParameter') {
-        $scanResults += @{
-            File = $file.Name
-            Issue = "Potential SQL injection vulnerability"
-            Severity = 'Critical'
-            Recommendation = 'Use parameterized queries'
-        }
-    }
-    
-    # Check for missing timeout configurations
-    if ($content -match 'Invoke-(RestMethod|WebRequest)' -and $content -notmatch '-TimeoutSec') {
-        $scanResults += @{
-            File = $file.Name
-            Issue = "Missing timeout configuration on web requests"
-            Severity = 'Medium'
-            Recommendation = 'Add -TimeoutSec parameter'
-        }
-    }
-    
->>>>>>> a3d7d06c432bf92df85e53f8d0cf1e6c8622ccea
     # Check for potentially dangerous expressions
     if ($content -match 'Invoke-Expression|iex|&\s*\$') {
         $scanResults += @{
@@ -701,7 +564,6 @@ $filesToScan | ForEach-Object { -Parallel {
         }
     }
     
-<<<<<<< HEAD
     # Write improvements if any were made
     if ($modified) {
         $backupPath = "$($file.FullName).backup"
@@ -760,8 +622,6 @@ Register-PatternEvent -PatternId 'beneficial_scan_completed' -Context @{
     CriticalIssues = ($scanResults | Where-Object { $_.Severity -eq 'Critical' }).Count
 }
     
-=======
->>>>>>> a3d7d06c432bf92df85e53f8d0cf1e6c8622ccea
     # Apply modifications if any were made
     if ($modified) {
         try {
@@ -821,16 +681,3 @@ Register-PatternEvent -PatternId 'beneficial_scan_completed' -Context @{
     CriticalIssues = ($scanResults | Where-Object { $_.Severity -eq 'Critical' }).Count
 }
 
-<<<<<<< HEAD
-=======
-# Check for potentially dangerous expressions
-if ($content -match 'Invoke-Expression|iex|&\s*\$') {
-    $scanResults += @{
-        File = $file.Name
-        Issue = "Potentially dangerous expression detected"
-        Severity = "High"
-        Line = $_.LineNumber
-        Code = $_.Line
-    }
-}
->>>>>>> a3d7d06c432bf92df85e53f8d0cf1e6c8622ccea

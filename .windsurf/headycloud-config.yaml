@@ -13,19 +13,8 @@
 # ║  LAYER: root                                                  ║
 # ╚══════════════════════════════════════════════════════════════════╝
 # HEADY_BRAND:END
-<<<<<<< HEAD
 # HeadyCloud Optimal Development Environment Configuration
 # 100% Heady Services Integration with Intelligent Orchestration
-=======
-# HeadyCloud Configuration - CLOUD ONLY MODE
-cloud_mode:
-  enabled: true
-  primary_target: "https://headyio.com"
-  disable_localhost: true
-  enforce_cloud_first: true
-  fallback_to_cloud: true
-  local_development: false
->>>>>>> a3d7d06c432bf92df85e53f8d0cf1e6c8622ccea
 
 version: "3.0.0"
 name: HeadyCloud-Optimal-Dev-Env
@@ -47,7 +36,6 @@ headycloud:
     registry_query: "/api/registry"
     pattern_store: "/api/patterns"
     
-<<<<<<< HEAD
   # HeadyVM Migration Ready Configuration
   headyvm:
     migration_ready: true
@@ -59,11 +47,6 @@ headycloud:
   # Intelligent routing with failover
   routing:
     primary: "headysystems.com"
-=======
-  # Intelligent routing with failover
-  routing:
-    primary: "headyio.com"
->>>>>>> a3d7d06c432bf92df85e53f8d0cf1e6c8622ccea
     fallback: "headyio.com"
     emergency: "172.67.136.19"
     circuit_breaker_threshold: 3
@@ -97,11 +80,7 @@ windsurf:
     gpu_acceleration: true
     cache_size_mb: 1024
     
-<<<<<<< HEAD
   # Heady services integration — 100% Heady Only
-=======
-  # Heady services integration
->>>>>>> a3d7d06c432bf92df85e53f8d0cf1e6c8622ccea
   heady_services:
     brain_first_policy: true
     100_percent_compliance: true
@@ -109,15 +88,10 @@ windsurf:
     continuous_validation: true
     usage_enforcement: true
     dominance_monitoring: true
-<<<<<<< HEAD
     external_models_blocked: true  # ENFORCED
     override_capability: false  # DISABLED
     
   # Model selection — Heady is the ONLY model (100% enforcement)
-=======
-    
-  # Model selection — Heady is the only model unless explicitly overridden
->>>>>>> a3d7d06c432bf92df85e53f8d0cf1e6c8622ccea
   model_selection:
     default_model: "heady-brain"
     display_name: "Heady"
@@ -127,16 +101,11 @@ windsurf:
         provider: "headysystems"
         priority: 200
         default: true
-<<<<<<< HEAD
         endpoint: "https://headysystems.com/api/brain"
-=======
-        endpoint: "https://headyio.com/api/brain"
->>>>>>> a3d7d06c432bf92df85e53f8d0cf1e6c8622ccea
       - id: "heady-conductor"
         name: "Heady Conductor"
         provider: "headysystems"
         priority: 190
-<<<<<<< HEAD
         endpoint: "https://headysystems.com/api"
     policy:
       strategy: "heady_only"
@@ -145,15 +114,6 @@ windsurf:
       override_requires: "admin_only"  # RESTRICTED
       log_all_selections: true
       external_override_disabled: true  # NEW
-=======
-        endpoint: "https://headyio.com/api"
-    policy:
-      strategy: "heady_only"
-      heady_percentage: 100
-      external_models_blocked: true
-      override_requires: "explicit_user_direction"
-      log_all_selections: true
->>>>>>> a3d7d06c432bf92df85e53f8d0cf1e6c8622ccea
 
 # ─── INTELLIGENT ORCHESTRATION ───────────────────────────────────────────
 orchestration:

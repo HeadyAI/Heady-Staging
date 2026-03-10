@@ -1,3 +1,4 @@
+const logger = require('./src/utils/logger.js');
 // HEADY_BRAND:BEGIN
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
@@ -81,11 +82,11 @@ function preloadPersistentMemory() {
     if (fs.existsSync(memoryPath)) {
       const memoryData = JSON.parse(fs.readFileSync(memoryPath, 'utf8'));
       global.persistentMemory = memoryData;
-      console.log('🧠 Persistent memory preloaded - Zero-second access enabled');
+      logger.info('🧠 Persistent memory preloaded - Zero-second access enabled');
       return true;
     }
   } catch (error) {
-    console.warn('⚠ Failed to preload persistent memory:', error.message);
+    logger.warn('⚠ Failed to preload persistent memory:', error.message);
   }
   return false;
 }
@@ -121,23 +122,23 @@ function enforceHeadyConnectivity() {
   const criticalServices = Object.entries(remoteConfig.services)
     .filter(([_, config]) => config.critical);
 
-  console.log(`🔒 ENFORCING 100% HEADY CONNECTIVITY: ${criticalServices.length} critical services`);
+  logger.info(`🔒 ENFORCING 100% HEADY CONNECTIVITY: ${criticalServices.length} critical services`);
 
   criticalServices.forEach(([name, config]) => {
     const status = checkRemoteService(name);
     if (!status.ok) {
-      console.error(`❌ CRITICAL: ${name} service unavailable - ${status.error?.message || 'Unknown error'}`);
+      logger.error(`❌ CRITICAL: ${name} service unavailable - ${status.error?.message || 'Unknown error'}`);
     } else {
-      console.log(`✅ CONNECTED: ${name} -> ${status.endpoint || 'local'}`);
+      logger.info(`✅ CONNECTED: ${name} -> ${status.endpoint || 'local'}`);
     }
   });
 }
 
 // Modify remote calls to respect config
 if (remoteConfig.critical_only) {
-  console.log('⚠️  Running in local-first mode (non-critical remote calls disabled)');
+  logger.info('⚠️  Running in local-first mode (non-critical remote calls disabled)');
 } else {
-  console.log('🌐 Full Heady cloud connectivity enabled');
+  logger.info('🌐 Full Heady cloud connectivity enabled');
   enforceHeadyConnectivity();
 }
 
@@ -145,9 +146,9 @@ if (remoteConfig.critical_only) {
 let imaginationRoutes = null;
 try {
   imaginationRoutes = require("./src/routes/imagination-routes");
-  console.log("  ∞ Imagination Engine: ROUTES LOADED");
+  logger.info("  ∞ Imagination Engine: ROUTES LOADED");
 } catch (err) {
-  console.warn(`  ⚠ Imagination routes not loaded: ${err.message}`);
+  logger.warn(`  ⚠ Imagination routes not loaded: ${err.message}`);
 }
 
 // ─── Secrets & Cloudflare Management ──────────────────────────────
@@ -178,17 +179,31 @@ try {
     secretsManager.register({ ...s, source: "env" });
   }
   secretsManager.restoreState();
-  console.log("  \u221e Secrets Manager: LOADED (" + secretsManager.getAll().length + " secrets tracked)");
-  console.log("  \u221e Cloudflare Manager: LOADED (token " + (cfManager.isTokenValid() ? "valid" : "needs refresh") + ")");
+  logger.info("  \u221e Secrets Manager: LOADED (" + secretsManager.getAll().length + " secrets tracked)");
+  logger.info("  \u221e Cloudflare Manager: LOADED (token " + (cfManager.isTokenValid() ? "valid" : "needs refresh") + ")");
 } catch (err) {
-  console.warn(`  \u26a0 Secrets/Cloudflare not loaded: ${err.message}`);
+  logger.warn(`  \u26a0 Secrets/Cloudflare not loaded: ${err.message}`);
 }
 
 const PORT = 3301;
 const app = express();
 
 // ─── Middleware ─────────────────────────────────────────────────────
-app.use(helmet({ contentSecurityPolicy: false, crossOriginEmbedderPolicy: false }));
+app.use(helmet({
+  contentSecurityPolicy: {
+    useDefaults: true,
+    directives: {
+      "default-src": ["'self'"],
+      "script-src": ["'self'", "https://headysystems.com"],
+      "style-src": ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
+      "font-src": ["'self'", "https://fonts.gstatic.com"],
+      "img-src": ["'self'", "data:", "https://headysystems.com"],
+      "connect-src": ["'self'", "https://api.headysystems.com"],
+      "frame-ancestors": ["'self'", "https://headysystems.com"],
+    },
+  },
+  crossOriginEmbedderPolicy: false,
+}));
 app.use(compression());
 app.use(express.json({ limit: "5mb" }));
 app.use(cors({
@@ -227,9 +242,9 @@ if (imaginationRoutes) {
 let claudeRoutes = null;
 try {
   claudeRoutes = require("./src/routes/claude-routes");
-  console.log("  ∞ Claude Service: ROUTES LOADED");
+  logger.info("  ∞ Claude Service: ROUTES LOADED");
 } catch (err) {
-  console.warn(`  ⚠ Claude routes not loaded: ${err.message}`);
+  logger.warn(`  ⚠ Claude routes not loaded: ${err.message}`);
 }
 
 // ─── Claude Routes ────────────────────────────────────────────
@@ -242,9 +257,9 @@ let vmTokenRoutes = null;
 try {
   const createVmTokenRoutes = require("./src/routes/vm-token-routes");
   vmTokenRoutes = createVmTokenRoutes(secretsManager);
-  console.log("  ∞ VM Token Routes: LOADED");
+  logger.info("  ∞ VM Token Routes: LOADED");
 } catch (err) {
-  console.warn(`  ⚠ VM Token routes not loaded: ${err.message}`);
+  logger.warn(`  ⚠ VM Token routes not loaded: ${err.message}`);
 }
 
 if (vmTokenRoutes) {
@@ -292,7 +307,7 @@ app.post('/api/vm/revoke', async (req, res) => {
     
     res.json({ success: true });
   } catch (error) {
-    console.error('Revocation failed:', error);
+    logger.error('Revocation failed:', error);
     res.status(500).json({ error: 'Failed to revoke token' });
   }
 });
@@ -684,10 +699,10 @@ let pipelineError = null;
 try {
   const pipelineMod = require("./src/hc_pipeline");
   pipeline = pipelineMod.pipeline;
-  console.log("  ∞ Pipeline engine: LOADED");
+  logger.info("  ∞ Pipeline engine: LOADED");
 } catch (err) {
   pipelineError = err.message;
-  console.warn(`  ⚠ Pipeline engine not loaded: ${err.message}`);
+  logger.warn(`  ⚠ Pipeline engine not loaded: ${err.message}`);
 }
 
 /**
@@ -968,17 +983,17 @@ try {
 
   resourceManager.on("resource_event", (event) => {
     if (event.severity === "WARN_HARD" || event.severity === "CRITICAL") {
-      console.warn(`  ⚠ Resource ${event.severity}: ${event.resourceType} at ${event.currentUsagePercent}%`);
+      logger.warn(`  ⚠ Resource ${event.severity}: ${event.resourceType} at ${event.currentUsagePercent}%`);
     }
   });
 
   resourceManager.on("escalation_required", (data) => {
-    console.warn(`  ⚠ ESCALATION: ${data.event.resourceType} at ${data.event.currentUsagePercent}% — user prompt required`);
+    logger.warn(`  ⚠ ESCALATION: ${data.event.resourceType} at ${data.event.currentUsagePercent}% — user prompt required`);
   });
 
-  console.log("  ∞ Resource Manager: LOADED (polling every 5s)");
+  logger.info("  ∞ Resource Manager: LOADED (polling every 5s)");
 } catch (err) {
-  console.warn(`  ⚠ Resource Manager not loaded: ${err.message}`);
+  logger.warn(`  ⚠ Resource Manager not loaded: ${err.message}`);
 
   // Fallback inline resource health endpoint - User-Directed Mode
   app.get("/api/resources/health", (req, res) => {
@@ -1026,9 +1041,9 @@ try {
     });
   }
 
-  console.log("  ∞ Task Scheduler: LOADED");
+  logger.info("  ∞ Task Scheduler: LOADED");
 } catch (err) {
-  console.warn(`  ⚠ Task Scheduler not loaded: ${err.message}`);
+  logger.warn(`  ⚠ Task Scheduler not loaded: ${err.message}`);
 }
 
 // ─── Resource Diagnostics ────────────────────────────────────────────
@@ -1040,9 +1055,9 @@ try {
     taskScheduler,
   });
   registerDiagnosticRoutes(app, resourceDiagnostics);
-  console.log("  ∞ Resource Diagnostics: LOADED");
+  logger.info("  ∞ Resource Diagnostics: LOADED");
 } catch (err) {
-  console.warn(`  ⚠ Resource Diagnostics not loaded: ${err.message}`);
+  logger.warn(`  ⚠ Resource Diagnostics not loaded: ${err.message}`);
 }
 
 // ─── Monte Carlo Plan Scheduler ──────────────────────────────────────
@@ -1056,7 +1071,7 @@ try {
 
   // Wire MC plan scheduler drift alerts into pattern engine (loaded below)
   mcPlanScheduler.on("drift:detected", (alert) => {
-    console.warn(`  ⚠ MC Drift: ${alert.taskType}/${alert.strategyId} at ${alert.medianMs}ms (target ${alert.targetMs}ms)`);
+    logger.warn(`  ⚠ MC Drift: ${alert.taskType}/${alert.strategyId} at ${alert.medianMs}ms (target ${alert.targetMs}ms)`);
   });
 
   // Bind MC global to pipeline if available
@@ -1072,18 +1087,18 @@ try {
   // Monte Carlo - SUSPENDED by default (user-directed mode)
   if (mcPlanScheduler && !suspendedProcesses.has('monte-carlo')) {
     mcPlanScheduler.setSpeedMode("on");
-    console.log("  ∞ Monte Carlo Plan Scheduler: LOADED (user-directed mode)");
+    logger.info("  ∞ Monte Carlo Plan Scheduler: LOADED (user-directed mode)");
   } else {
-    console.log("  ∞ Monte Carlo Plan Scheduler: SUSPENDED (user-directed mode)");
+    logger.info("  ∞ Monte Carlo Plan Scheduler: SUSPENDED (user-directed mode)");
   }
 
   if (mcGlobal && !suspendedProcesses.has('monte-carlo')) {
-    console.log("  ∞ Monte Carlo Global: AUTO-RUN started (60s cycles)");
+    logger.info("  ∞ Monte Carlo Global: AUTO-RUN started (60s cycles)");
   } else {
-    console.log("  ∞ Monte Carlo Global: SUSPENDED (user-directed mode)");
+    logger.info("  ∞ Monte Carlo Global: SUSPENDED (user-directed mode)");
   }
 } catch (err) {
-  console.warn(`  ⚠ Monte Carlo not loaded: ${err.message}`);
+  logger.warn(`  ⚠ Monte Carlo not loaded: ${err.message}`);
 }
 
 // ─── Pattern Recognition Engine ──────────────────────────────────────
@@ -1139,9 +1154,9 @@ try {
   // Start continuous pattern analysis
   patternEngine.start();
 
-  console.log("  ∞ Pattern Engine: LOADED (30s analysis cycles)");
+  logger.info("  ∞ Pattern Engine: LOADED (30s analysis cycles)");
 } catch (err) {
-  console.warn(`  ⚠ Pattern Engine not loaded: ${err.message}`);
+  logger.warn(`  ⚠ Pattern Engine not loaded: ${err.message}`);
 }
 
 // ─── Story Driver ────────────────────────────────────────────────────
@@ -1193,9 +1208,9 @@ try {
     });
   }
 
-  console.log("  ∞ Story Driver: LOADED");
+  logger.info("  ∞ Story Driver: LOADED");
 } catch (err) {
-  console.warn(`  ⚠ Story Driver not loaded: ${err.message}`);
+  logger.warn(`  ⚠ Story Driver not loaded: ${err.message}`);
 }
 
 // ─── Self-Critique & Optimization Engine ─────────────────────────────
@@ -1228,10 +1243,10 @@ try {
     });
   }
 
-  console.log("  ∞ Self-Critique Engine: LOADED");
-  console.log("    → Endpoints: /api/self/*, /api/pricing/*");
+  logger.info("  ∞ Self-Critique Engine: LOADED");
+  logger.info("    → Endpoints: /api/self/*, /api/pricing/*");
 } catch (err) {
-  console.warn(`  ⚠ Self-Critique Engine not loaded: ${err.message}`);
+  logger.warn(`  ⚠ Self-Critique Engine not loaded: ${err.message}`);
 }
 
 // ─── Auto-Task Conversion Hook ──────────────────────────────────────
@@ -1244,7 +1259,7 @@ function setupAutoTaskConversion() {
         : 'medium';
       const taskId = `rec-${Date.now()}`;
       const text = typeof recommendation === 'string' ? recommendation : (recommendation.text || 'auto-task');
-      console.log(`[AutoTask] Task ${taskId}: ${text} (${priority})`);
+      logger.info(`[AutoTask] Task ${taskId}: ${text} (${priority})`);
 
       if (storyDriver) {
         storyDriver.ingestSystemEvent({
@@ -1254,7 +1269,7 @@ function setupAutoTaskConversion() {
         });
       }
     } catch (err) {
-      console.warn(`[AutoTask] Failed: ${err.message}`);
+      logger.warn(`[AutoTask] Failed: ${err.message}`);
     }
   });
 }
@@ -1270,9 +1285,9 @@ try {
     patternEngine: patternEngine || null,
     selfCritique: selfCritiqueEngine || null,
   });
-  console.log("  ∞ Pipeline bound to MC + Patterns + Self-Critique");
+  logger.info("  ∞ Pipeline bound to MC + Patterns + Self-Critique");
 } catch (err) {
-  console.warn(`  ⚠ Pipeline bind failed: ${err.message}`);
+  logger.warn(`  ⚠ Pipeline bind failed: ${err.message}`);
 }
 
 // ─── Continuous Improvement Scheduler ─────────────────────────────────
@@ -1291,9 +1306,9 @@ try {
   // Start the scheduler
   improvementScheduler.start();
   
-  console.log("  ∞ Improvement Scheduler: LOADED (15m cycles)");
+  logger.info("  ∞ Improvement Scheduler: LOADED (15m cycles)");
 } catch (err) {
-  console.warn(`  ⚠ Improvement Scheduler not loaded: ${err.message}`);
+  logger.warn(`  ⚠ Improvement Scheduler not loaded: ${err.message}`);
 }
 
 // ─── HCSysOrchestrator — Multi-Brain Task Router ────────────────────
@@ -1301,10 +1316,10 @@ let orchestratorRoutes = null;
 try {
   orchestratorRoutes = require("./services/orchestrator/hc_sys_orchestrator");
   app.use("/api/orchestrator", orchestratorRoutes);
-  console.log("  ∞ HCSysOrchestrator: LOADED");
-  console.log("    → Endpoints: /api/orchestrator/health, /route, /brains, /layers, /contract, /rebuild-status");
+  logger.info("  ∞ HCSysOrchestrator: LOADED");
+  logger.info("    → Endpoints: /api/orchestrator/health, /route, /brains, /layers, /contract, /rebuild-status");
 } catch (err) {
-  console.warn(`  ⚠ HCSysOrchestrator not loaded: ${err.message}`);
+  logger.warn(`  ⚠ HCSysOrchestrator not loaded: ${err.message}`);
 }
 
 // ─── HeadyBrain API — Per-Layer Intelligence ────────────────────────
@@ -1312,8 +1327,8 @@ let brainApiRoutes = null;
 try {
   brainApiRoutes = require("./services/orchestrator/brain_api");
   app.use("/api/brain", brainApiRoutes);
-  console.log("  ∞ HeadyBrain API: LOADED");
-  console.log("    → Endpoints: /api/brain/health, /plan, /feedback, /status");
+  logger.info("  ∞ HeadyBrain API: LOADED");
+  logger.info("    → Endpoints: /api/brain/health, /plan, /feedback, /status");
   
   // Initialize BrainConnector for 100% uptime
   const { getBrainConnector } = require("./src/brain_connector");
@@ -1324,23 +1339,23 @@ try {
   
   // Monitor brain connector events
   brainConnector.on('circuitBreakerOpen', (data) => {
-    console.warn(`  ⚠ Brain circuit breaker OPEN: ${data.endpointId} (${data.failures} failures)`);
+    logger.warn(`  ⚠ Brain circuit breaker OPEN: ${data.endpointId} (${data.failures} failures)`);
   });
   
   brainConnector.on('allEndpointsFailed', (data) => {
-    console.error(`  🚨 ALL BRAIN ENDPOINTS FAILED! Using fallback mode.`);
+    logger.error(`  🚨 ALL BRAIN ENDPOINTS FAILED! Using fallback mode.`);
   });
   
   brainConnector.on('healthCheck', (results) => {
     const healthy = Array.from(results.entries()).filter(([_, r]) => r.status === 'healthy').length;
     if (healthy < results.size) {
-      console.warn(`  ⚠ Brain health check: ${healthy}/${results.size} endpoints healthy`);
+      logger.warn(`  ⚠ Brain health check: ${healthy}/${results.size} endpoints healthy`);
     }
   });
   
-  console.log("  ∞ BrainConnector: ACTIVE (100% uptime guarantee)");
+  logger.info("  ∞ BrainConnector: ACTIVE (100% uptime guarantee)");
 } catch (err) {
-  console.warn(`  ⚠ HeadyBrain API not loaded: ${err.message}`);
+  logger.warn(`  ⚠ HeadyBrain API not loaded: ${err.message}`);
 }
 
 // ─── HeadyBuddy API ─────────────────────────────────────────────────
@@ -1624,7 +1639,7 @@ app.post("/api/buddy/pipeline/continuous", (req, res) => {
 
     // Checkpoint validation logged (async — avoids blocking the event loop)
     if (fs.existsSync(path.join(__dirname, 'scripts', 'checkpoint-validation.ps1'))) {
-      console.log(`[Pipeline] Checkpoint validation available (cycle ${continuousPipeline.cycleCount})`);
+      logger.info(`[Pipeline] Checkpoint validation available (cycle ${continuousPipeline.cycleCount})`);
     }
   };
 
@@ -1738,7 +1753,7 @@ try {
     registerCloudflareRoutes(app, cfManager);
   }
 } catch (err) {
-  console.warn(`  ⚠ Secrets/Cloudflare routes not registered: ${err.message}`);
+  logger.warn(`  ⚠ Secrets/Cloudflare routes not registered: ${err.message}`);
 }
 
 // ─── Layer Management ─────────────────────────────────────────────────
@@ -1820,9 +1835,9 @@ const alohaState = {
   deOptChecks: 0,
 };
 
-if (alohaProtocol) console.log("  \u221e Aloha Protocol: LOADED (always-on)");
-if (deOptProtocol) console.log("  \u221e De-Optimization Protocol: LOADED (simplicity > speed)");
-if (stabilityFirst) console.log("  \u221e Stability First: LOADED (the canoe must not sink)");
+if (alohaProtocol) logger.info("  \u221e Aloha Protocol: LOADED (always-on)");
+if (deOptProtocol) logger.info("  \u221e De-Optimization Protocol: LOADED (simplicity > speed)");
+if (stabilityFirst) logger.info("  \u221e Stability First: LOADED (the canoe must not sink)");
 
 /**
  * @swagger
@@ -1984,7 +1999,7 @@ app.post("/api/aloha/crash-report", (req, res) => {
   }
 
   // Crash threshold — 3+ crashes in 1 hour triggers emergency stability
-  console.warn(`[ALOHA CRASH REPORT] ${report.id}: ${report.description} (${report.severity})`);
+  logger.warn(`[ALOHA CRASH REPORT] ${report.id}: ${report.description} (${report.severity})`);
   const recentCrashes = alohaState.crashReports.filter(r =>
     new Date(r.ts) > new Date(Date.now() - 3600000)
   );
@@ -1993,7 +2008,7 @@ app.post("/api/aloha/crash-report", (req, res) => {
   if (recentCrashes.length >= 3) {
     alohaState.mode = "emergency_stability";
     emergencyActivated = true;
-    console.error("[ALOHA] Emergency stability mode activated - multiple crashes detected");
+    logger.error("[ALOHA] Emergency stability mode activated - multiple crashes detected");
 
     if (resourceManager && !resourceManager.safeMode) {
       try { resourceManager.enterSafeMode("aloha_crash_threshold"); } catch (e) { /* safe */ }
@@ -2103,17 +2118,17 @@ app.use('/api/access-points', (req, res) => {
 try {
   const headybuddyConfigRouter = require('./services/core-api/routes/headybuddy-config');
   app.use('/api/headybuddy-config', headybuddyConfigRouter);
-  console.log("  ∞ HeadyBuddy Config Routes: LOADED");
+  logger.info("  ∞ HeadyBuddy Config Routes: LOADED");
 } catch (err) {
-  console.warn(`  ⚠ HeadyBuddy Config routes not loaded: ${err.message}`);
+  logger.warn(`  ⚠ HeadyBuddy Config routes not loaded: ${err.message}`);
 }
 
 try {
   const { router: authRouter } = require('./src/routes/auth-routes');
   app.use('/api/auth', authRouter);
-  console.log("  ∞ Auth Routes: LOADED");
+  logger.info("  ∞ Auth Routes: LOADED");
 } catch (err) {
-  console.warn(`  \u26a0 Auth routes not loaded: ${err.message}`);
+  logger.warn(`  \u26a0 Auth routes not loaded: ${err.message}`);
 }
 
 // (Layer management routes already registered above at /api/layer)
@@ -2154,7 +2169,7 @@ app.get('/api/vault/status', (req, res) => {
 
 // ─── Error Handler ──────────────────────────────────────────────────
 app.use((err, req, res, next) => {
-  console.error("HeadyManager Error:", err);
+  logger.error("HeadyManager Error:", err);
   res.status(500).json({
     error: "Internal server error",
     message: process.env.NODE_ENV === "development" ? err.message : "Something went wrong",
@@ -2174,16 +2189,16 @@ app.use((req, res) => {
 
 // ─── Start ──────────────────────────────────────────────────────────
 app.listen(PORT, '0.0.0.0', () => {
-  console.log(`\n  ∞ Heady Manager v3.0.0 listening on port ${PORT}`);
-  console.log(`  ∞ Health: https://headysystems.com/api/health (port ${PORT})`);
-  console.log(`  ∞ Environment: ${process.env.NODE_ENV || "development"}\n`);
+  logger.info(`\n  ∞ Heady Manager v3.0.0 listening on port ${PORT}`);
+  logger.info(`  ∞ Health: https://headysystems.com/api/health (port ${PORT})`);
+  logger.info(`  ∞ Environment: ${process.env.NODE_ENV || "development"}\n`);
 });
 
 try {
   const { startBrandingMonitor } = require('./src/self-awareness');
   startBrandingMonitor();
-  console.log("  \u221e Branding Monitor: STARTED");
+  logger.info("  \u221e Branding Monitor: STARTED");
 } catch (err) {
-  console.warn(`  \u26a0 Branding Monitor not loaded: ${err.message}`);
+  logger.warn(`  \u26a0 Branding Monitor not loaded: ${err.message}`);
 }
 

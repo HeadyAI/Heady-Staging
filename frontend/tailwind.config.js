@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 // HEADY_BRAND:BEGIN
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
@@ -14,8 +13,6 @@
 // ║  LAYER: ui/frontend                                                  ║
 // ╚══════════════════════════════════════════════════════════════════╝
 // HEADY_BRAND:END
-=======
->>>>>>> a3d7d06c432bf92df85e53f8d0cf1e6c8622ccea
 /** @type {import('tailwindcss').Config} */
 export default {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
