@@ -6,7 +6,7 @@
 ## Identity
 
 - **Name:** HeadySystems Inc.
-- **Founder:** Eric Head (eric-head / headyme)
+- **Founder:** Eric Haywood (eric-haywood / headyme)
 - **Package:** `heady-systems` v3.2.3
 - **Monorepo:** `/home/headyme/Heady/`
 - **Architecture:** Continuous Latent Architecture (CLA) with Sacred Geometry (φ = 1.618)
@@ -89,7 +89,7 @@
 - **Cloud:** Google Cloud Run, Cloudflare Workers, Cloudflare Pages
 - **AI Providers:** Groq (free), Gemini (credits), Claude (quality), OpenAI, HuggingFace
 - **Math Foundation:** Sacred Geometry — φ (1.618), Fibonacci sequences, CSL gates
-- **IP:** 60+ provisional patents filed with USPTO
+- **IP:** 51 provisional patents filed with USPTO
 
 ## Sacred Rules
 
@@ -114,6 +114,7 @@ curl -X PUT "https://api.cloudflare.com/client/v4/accounts/8b1fa38f282c691423c63
 ```
 
 ## Current State (auto-updated by context-scan.sh)
+
 - **Scanned:** 2026-03-08T04:57:38Z
 - **Package:** heady-systems v3.2.3
 - **Branch:** main
@@ -123,6 +124,6 @@ curl -X PUT "https://api.cloudflare.com/client/v4/accounts/8b1fa38f282c691423c63
 - **Services:** api-gateway.js,discord-bot,heady-brain,heady-buddy,heady-cache,heady-chain,heady-conductor,heady-embed,heady-eval,heady-federation,heady-guard,heady-health,heady-hive,heady-infer,heady-mcp,heady-midi,heady-onboarding,heady-orchestration,heady-pilot-onboarding,heady-projection,heady-security,heady-testing,heady-ui,heady-vector,heady-web
 - **Sites:** admin-portal,heady-ai,headycloud,headyconnection-com,headyconnection-org,headyex,headyfinance,headyme,headyos,headystore,headysystems,headyweb
 - **Cloud Run services:**
-  - heady-ide: https://heady-ide-bf4q4zywhq-ue.a.run.app
-  - heady-onboarding: https://heady-onboarding-bf4q4zywhq-ue.a.run.app
-  - headyweb-ide: https://headyweb-ide-bf4q4zywhq-ue.a.run.app
+  - heady-ide: <https://heady-ide-bf4q4zywhq-ue.a.run.app>
+  - heady-onboarding: <https://heady-onboarding-bf4q4zywhq-ue.a.run.app>
+  - headyweb-ide: <https://headyweb-ide-bf4q4zywhq-ue.a.run.app>

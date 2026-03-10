@@ -1,7 +1,7 @@
 # Heady™Systems v3.2.2 — Key Management Procedures
 
 **Version:** 3.2.2  
-**Owner:** Eric Headington (eric@headyconnection.org)  
+**Owner:** Eric Haywood (eric@headyconnection.org)  
 **Last Updated:** 2026-03-07  
 **Classification:** CONFIDENTIAL — Security Team + Ops Only  
 

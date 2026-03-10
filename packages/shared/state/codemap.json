@@ -1,0 +1,102 @@
+{
+  "version": "1.0",
+  "generated_at": "2026-01-31T22:23:00Z",
+  "project": "HeadySystems",
+  "codemap": {
+    "core_services": {
+      "orchestrator": {
+        "path": "HeadySystems/src/api.js",
+        "port": 3000,
+        "status": "ACTIVE",
+        "dependencies": ["express", "cors"],
+        "endpoints": 25,
+        "lines": 1401,
+        "issues": ["no_rate_limiting", "no_helmet", "no_input_sanitization", "child_process_usage"]
+      },
+      "architect": {
+        "path": "HeadySystems/src/architect.js",
+        "status": "STUB",
+        "issues": ["placeholder_output_only"]
+      },
+      "optimizer": {
+        "path": "HeadySystems/src/optimizer.js",
+        "status": "STUB",
+        "issues": ["simulated_analysis"]
+      },
+      "conductor": {
+        "path": "HeadySystems/src/conductor.js",
+        "status": "STUB",
+        "issues": ["no_real_docker_spawning"]
+      },
+      "governance": {
+        "path": "HeadySystems/src/governance.js",
+        "status": "ACTIVE",
+        "lines": 44,
+        "issues": ["event_limit_100"]
+      }
+    },
+    "mcp_services": {
+      "secret_gateway": {"path": "HeadySystems/services/secret_gateway", "status": "ACTIVE"},
+      "google_mcp": {"path": "HeadySystems/services/google_mcp", "status": "ACTIVE"},
+      "perplexity_mcp": {"path": "HeadySystems/services/perplexity_mcp", "status": "ACTIVE"},
+      "jules_mcp": {"path": "HeadySystems/services/jules_mcp", "status": "ACTIVE"},
+      "huggingface_gateway": {"path": "HeadySystems/services/huggingface_gateway", "status": "ACTIVE"},
+      "memory_mcp": {"path": "HeadySystems/services/memory_mcp", "status": "ACTIVE"},
+      "ai_router": {"path": "HeadySystems/services/ai_router", "status": "ACTIVE"},
+      "cli_service": {"path": "HeadySystems/services/cli_service", "status": "ACTIVE"},
+      "colab_gateway": {"path": "HeadySystems/services/colab_gateway", "status": "ACTIVE"},
+      "silicon_bridge": {"path": "HeadySystems/services/silicon_bridge", "status": "ACTIVE"},
+      "model_gateway": {"path": "HeadySystems/services/model_gateway", "status": "ACTIVE"}
+    },
+    "infrastructure": {
+      "docker_compose": {"path": "docker-compose.yml", "services": 8},
+      "cloudflare_workers": {
+        "supervisor_worker": "HeadySystems/cloudflare/supervisor-worker",
+        "node_swarm_worker": "HeadySystems/cloudflare/node_swarm_worker"
+      },
+      "github_workflows": {
+        "heady_orchestrator": ".github/workflows/heady-orchestrator.yml",
+        "supervisor_enforce": ".github/workflows/supervisor-enforce.yml"
+      }
+    },
+    "safety_protocols": {
+      "path": "HeadySystems/core/safety_protocols.py",
+      "features": ["zero_start_rule", "glass_box_mandate", "fail_safe_shutdown"],
+      "status": "ACTIVE"
+    },
+    "state_management": {
+      "task_queue": "shared/state/task_queue.json",
+      "lens_stream": "shared/state/lens_stream.json",
+      "vinci_state": "shared/state/vinci_state.json",
+      "refiner_state": "shared/state/refiner_state.json",
+      "connections": "shared/state/connections.json",
+      "questions": "shared/state/questions.json"
+    }
+  },
+  "security_audit": {
+    "critical": [
+      {"issue": "NO_RATE_LIMITING", "file": "src/api.js", "risk": "HIGH", "description": "API endpoints have no rate limiting - vulnerable to DoS"},
+      {"issue": "NO_HELMET", "file": "src/api.js", "risk": "HIGH", "description": "Missing helmet middleware for HTTP security headers"},
+      {"issue": "HARDCODED_ADMIN_TOKEN", "file": "shared/config/hive_config.json", "risk": "CRITICAL", "description": "Admin token 'heady-master-key-123' is hardcoded"},
+      {"issue": "WEAK_SIGNATURE_VALIDATION", "file": "core/safety_protocols.py", "risk": "MEDIUM", "description": "Orchestrator signature validation is simplified"}
+    ],
+    "moderate": [
+      {"issue": "NO_INPUT_SANITIZATION", "file": "src/api.js", "risk": "MEDIUM", "description": "User input not sanitized before processing"},
+      {"issue": "CHILD_PROCESS_USAGE", "file": "src/api.js", "risk": "MEDIUM", "description": "Direct spawn/execSync usage needs input validation"},
+      {"issue": "FILE_LOCK_TIMEOUT", "file": "src/state_store.js", "risk": "LOW", "description": "30s stale lock timeout may cause issues"}
+    ]
+  },
+  "performance_issues": [
+    {"issue": "VINCI_POLL_INTERVAL", "value": "1500ms", "recommendation": "Make configurable, consider event-driven"},
+    {"issue": "SYNC_FILE_OPERATIONS", "file": "src/state_store.js", "recommendation": "Consider async alternatives for high-throughput"},
+    {"issue": "JSON_PARSE_ON_EVERY_REQUEST", "recommendation": "Add in-memory caching layer"},
+    {"issue": "EVENT_LIMIT_100", "file": "src/governance.js", "recommendation": "Increase or make configurable"}
+  ],
+  "functionality_gaps": [
+    {"gap": "STUB_ARCHITECT", "description": "Architect only writes placeholder drafts"},
+    {"gap": "STUB_OPTIMIZER", "description": "Optimizer simulates analysis only"},
+    {"gap": "STUB_CONDUCTOR", "description": "Conductor doesn't spawn real Docker workers"},
+    {"gap": "NO_REAL_CODE_GENERATION", "description": "Build pipeline produces placeholder code"},
+    {"gap": "MISSING_TESTS", "description": "No automated test suite for core services"}
+  ]
+}

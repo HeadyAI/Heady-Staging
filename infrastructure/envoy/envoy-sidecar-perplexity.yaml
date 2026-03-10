@@ -1,0 +1,115 @@
+# Envoy Sidecar Proxy Configuration — Heady™ Service Mesh
+# Applied to ALL 50 services for mTLS, φ-scaled timeouts, circuit breaking, and retries
+# NO priority-based routing. CSL domain-match ONLY.
+# © 2024-2026 HeadySystems Inc. All Rights Reserved.
+
+admin:
+  address:
+    socket_address:
+      address: 127.0.0.1
+      port_value: 9901
+
+static_resources:
+  listeners:
+    - name: ingress_listener
+      address:
+        socket_address:
+          address: 0.0.0.0
+          port_value: 8080
+      filter_chains:
+        - filters:
+            - name: envoy.filters.network.http_connection_manager
+              typed_config:
+                "@type": type.googleapis.com/envoy.extensions.filters.network.http_connection_manager.v3.HttpConnectionManager
+                stat_prefix: ingress_http
+                codec_type: AUTO
+                # φ-scaled request timeout: PHI³ × 1000ms ≈ 4236ms
+                request_timeout: 4.236s
+                # φ-scaled idle timeout: PHI⁵ × 1000ms ≈ 11090ms
+                idle_timeout: 11.09s
+                route_config:
+                  name: local_route
+                  virtual_hosts:
+                    - name: local_service
+                      domains: ["*"]
+                      routes:
+                        - match:
+                            prefix: "/"
+                          route:
+                            cluster: local_service
+                            # φ-scaled route timeout
+                            timeout: 6.854s  # PHI⁴ × 1000ms
+                            retry_policy:
+                              retry_on: "5xx,connect-failure,refused-stream"
+                              num_retries: 3  # Fibonacci: 3
+                              per_try_timeout: 2.618s  # PHI² × 1000ms
+                              retry_back_off:
+                                base_interval: 0.618s  # PSI
+                                max_interval: 2.618s   # PHI²
+                http_filters:
+                  - name: envoy.filters.http.health_check
+                    typed_config:
+                      "@type": type.googleapis.com/envoy.extensions.filters.http.health_check.v3.HealthCheck
+                      pass_through_mode: false
+                      headers:
+                        - name: ":path"
+                          exact_match: "/healthz"
+                  - name: envoy.filters.http.router
+                    typed_config:
+                      "@type": type.googleapis.com/envoy.extensions.filters.http.router.v3.Router
+          transport_socket:
+            name: envoy.transport_sockets.tls
+            typed_config:
+              "@type": type.googleapis.com/envoy.extensions.transport_sockets.tls.v3.DownstreamTlsContext
+              common_tls_context:
+                tls_certificates:
+                  - certificate_chain:
+                      filename: /etc/envoy/certs/service.crt
+                    private_key:
+                      filename: /etc/envoy/certs/service.key
+                validation_context:
+                  trusted_ca:
+                    filename: /etc/envoy/certs/ca.crt
+              require_client_certificate: true  # mTLS enforced
+
+  clusters:
+    - name: local_service
+      connect_timeout: 1.618s  # PHI × 1s
+      type: STATIC
+      lb_policy: ROUND_ROBIN  # Equal distribution — no priority weighting
+      load_assignment:
+        cluster_name: local_service
+        endpoints:
+          - lb_endpoints:
+              - endpoint:
+                  address:
+                    socket_address:
+                      address: 127.0.0.1
+                      port_value: ${SERVICE_PORT}
+      circuit_breakers:
+        thresholds:
+          # ALL services get identical circuit breaker settings — no tiers
+          - max_connections: 89        # Fibonacci
+            max_pending_requests: 55   # Fibonacci
+            max_requests: 144          # Fibonacci
+            max_retries: 8             # Fibonacci
+      outlier_detection:
+        consecutive_5xx: 5             # Fibonacci
+        interval: 8s                   # Fibonacci
+        base_ejection_time: 13s        # Fibonacci
+        max_ejection_percent: 38       # ≈ PSI² × 100
+
+    # OpenTelemetry collector cluster
+    - name: otel_collector
+      connect_timeout: 1.618s
+      type: STRICT_DNS
+      lb_policy: ROUND_ROBIN
+      load_assignment:
+        cluster_name: otel_collector
+        endpoints:
+          - lb_endpoints:
+              - endpoint:
+                  address:
+                    socket_address:
+                      address: otel-collector
+                      port_value: 4317

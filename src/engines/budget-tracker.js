@@ -14,6 +14,7 @@
  */
 
 'use strict';
+const logger = require('../../shared/logger')('budget-tracker');
 
 const EventEmitter = require('events');
 const phiMath = require('../../shared/phi-math.js');
@@ -422,7 +423,7 @@ class BudgetTracker extends EventEmitter {
     }
     this._expireHeadySoulOverrides();
     if (this._verbose) {
-      console.log('[BudgetTracker] Daily counters reset at', new Date(this._dailyResetAt).toISOString());
+      logger.info('[BudgetTracker] Daily counters reset at', new Date(this._dailyResetAt).toISOString());
     }
   }
 
@@ -436,7 +437,7 @@ class BudgetTracker extends EventEmitter {
     this._monthlyResetAt = Date.now();
     this._monthlySpend = 0;
     if (this._verbose) {
-      console.log('[BudgetTracker] Monthly counter reset at', new Date(this._monthlyResetAt).toISOString());
+      logger.info('[BudgetTracker] Monthly counter reset at', new Date(this._monthlyResetAt).toISOString());
     }
   }
 
@@ -539,7 +540,7 @@ class BudgetTracker extends EventEmitter {
     this._headySoulOverrides[key] = { active: true, expiresAt };
 
     if (this._verbose) {
-      console.log(`[BudgetTracker] HeadySoul override activated for '${key}', expires at ${new Date(expiresAt).toISOString()}`);
+      logger.info(`[BudgetTracker] HeadySoul override activated for '${key}', expires at ${new Date(expiresAt).toISOString()}`);
     }
 
     return { activated: true, expiresAt, ttlMs: HEADY_SOUL_OVERRIDE_TTL_MS };
@@ -695,12 +696,12 @@ class BudgetTracker extends EventEmitter {
 
     switch (level) {
       case 'warning':
-        if (this._verbose) console.warn(`[BudgetTracker] budgetWarning: ${key} at ${(util * 100).toFixed(1)}%`);
+        if (this._verbose) logger.warn(`[BudgetTracker] budgetWarning: ${key} at ${(util * 100).toFixed(1)}%`);
         this.emit('budgetWarning', payload);
         break;
 
       case 'caution': {
-        if (this._verbose) console.warn(`[BudgetTracker] budgetCritical (caution): ${key} at ${(util * 100).toFixed(1)}%`);
+        if (this._verbose) logger.warn(`[BudgetTracker] budgetCritical (caution): ${key} at ${(util * 100).toFixed(1)}%`);
         this.emit('budgetCritical', payload);
         // Also fire autoDowngrade if shouldDowngrade
         const alt = this.getCheapestAvailable();
@@ -709,12 +710,12 @@ class BudgetTracker extends EventEmitter {
       }
 
       case 'critical':
-        if (this._verbose) console.warn(`[BudgetTracker] budgetCritical: ${key} at ${(util * 100).toFixed(1)}%`);
+        if (this._verbose) logger.warn(`[BudgetTracker] budgetCritical: ${key} at ${(util * 100).toFixed(1)}%`);
         this.emit('budgetCritical', payload);
         break;
 
       case 'exceeded':
-        if (this._verbose) console.error(`[BudgetTracker] budgetExceeded: ${key} at ${(util * 100).toFixed(1)}%`);
+        if (this._verbose) logger.error(`[BudgetTracker] budgetExceeded: ${key} at ${(util * 100).toFixed(1)}%`);
         this.emit('budgetExceeded', payload);
         break;
 

@@ -27,7 +27,7 @@ The use of Fibonacci timers ensures escalation windows grow proportionally (each
 - **Definition:** Complete platform outage OR SLO exceeded beyond error budget
 - **Response time:** Immediate (< fib(2)=1 minute acknowledgment)
 - **Impact:** All users affected, revenue impact confirmed
-- **Owner:** CEO/Founder (Eric Headington)
+- **Owner:** CEO/Founder (Eric Haywood)
 - **Examples:**
   - All 9 domains returning 5xx
   - Redis fully down > fib(8)=21s
@@ -92,7 +92,7 @@ The use of Fibonacci timers ensures escalation windows grow proportionally (each
 - **Escalation trigger:** Not resolved after fib(8)=21 min
 - **Contact:** Phone + personal cell
 - **Authority:** Unlimited — can authorize emergency spending, vendor escalation, customer credits
-- **Contact:** Eric Headington, eric@headyconnection.org
+- **Contact:** Eric Haywood, eric@headyconnection.org
 
 ---
 

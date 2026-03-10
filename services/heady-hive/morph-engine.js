@@ -9,6 +9,7 @@
  */
 
 'use strict';
+const logger = require('../../shared/logger')('morph-engine');
 
 const EventEmitter = require('events');
 
@@ -33,7 +34,7 @@ class MorphEngine extends EventEmitter {
             throw new Error(`Unknown role: ${targetRole}. Available: ${Array.from(this.roleCatalog.keys()).join(', ')}`);
         }
 
-        console.log(`[Morph] ${before} → ${targetRole}`);
+        logger.info(`[Morph] ${before} → ${targetRole}`);
 
         // Phase 1: Graceful drain of current role
         if (!options.force) {
@@ -53,7 +54,7 @@ class MorphEngine extends EventEmitter {
                 const service = await this._loadService(serviceDef);
                 this.activeServices.set(serviceDef.name, service);
             } catch (err) {
-                console.error(`[Morph] Failed to load ${serviceDef.name}: ${err.message}`);
+                logger.error(`[Morph] Failed to load ${serviceDef.name}: ${err.message}`);
             }
         }
 
@@ -69,7 +70,7 @@ class MorphEngine extends EventEmitter {
         });
 
         this.emit('morphed', { from: before, to: targetRole, duration });
-        console.log(`[Morph] Complete: ${targetRole} in ${duration}ms`);
+        logger.info(`[Morph] Complete: ${targetRole} in ${duration}ms`);
 
         return { from: before, to: targetRole, duration, services: Array.from(this.activeServices.keys()) };
     }
@@ -173,20 +174,20 @@ if (require.main === module) {
     const engine = new MorphEngine({ initialRole: 'idle' });
 
     (async () => {
-        console.log('═══ MorphEngine — Hot Role Swapping ═══\n');
-        console.log('Initial:', engine.status());
+        logger.info('═══ MorphEngine — Hot Role Swapping ═══\n');
+        logger.info('Initial:', engine.status());
 
         await engine.morph('manager');
-        console.log('After morph:', engine.status());
+        logger.info('After morph:', engine.status());
 
         await engine.morph('worker');
-        console.log('After morph:', engine.status());
+        logger.info('After morph:', engine.status());
 
         await engine.morph('mcp');
-        console.log('After morph:', engine.status());
+        logger.info('After morph:', engine.status());
 
-        console.log(`\nHistory: ${engine.morphHistory.length} morphs`);
-        console.log('✅ MorphEngine operational');
+        logger.info(`\nHistory: ${engine.morphHistory.length} morphs`);
+        logger.info('✅ MorphEngine operational');
     })();
 }
 

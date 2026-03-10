@@ -1,0 +1,83 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: heady-soul
+  labels:
+    app: heady-soul
+    heady.io/domain: orchestration
+    heady.io/autocontext: "true"
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: heady-soul
+  template:
+    metadata:
+      labels:
+        app: heady-soul
+        heady.io/domain: orchestration
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "8102"
+    spec:
+      terminationGracePeriodSeconds: 34
+      containers:
+      - name: heady-soul
+        image: gcr.io/gen-lang-client-0920560496/heady-soul:latest
+        ports:
+        - containerPort: 8102
+          name: http
+        envFrom:
+        - configMapRef:
+            name: heady-global-config
+        - secretRef:
+            name: heady-secrets
+        env:
+        - name: SERVICE_NAME
+          value: "heady-soul"
+        - name: PORT
+          value: "8102"
+        - name: AUTOCONTEXT_URL
+          value: "http://heady-auto-context:8907"
+        - name: CONSUL_URL
+          value: "http://consul:8500"
+        - name: OTEL_ENDPOINT
+          value: "http://otel-collector:4318"
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "128Mi"
+          limits:
+            cpu: "500m"
+            memory: "512Mi"
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8102
+          initialDelaySeconds: 13
+          periodSeconds: 21
+          timeoutSeconds: 8
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8102
+          initialDelaySeconds: 8
+          periodSeconds: 13
+          timeoutSeconds: 5
+          failureThreshold: 2
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: heady-soul
+  labels:
+    app: heady-soul
+    heady.io/domain: orchestration
+spec:
+  selector:
+    app: heady-soul
+  ports:
+  - name: http
+    port: 8102
+    targetPort: 8102

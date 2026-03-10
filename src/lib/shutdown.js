@@ -4,6 +4,7 @@
  * @module src/lib/shutdown
  */
 'use strict';
+const logger = require('../../shared/logger')('shutdown');
 
 const SHUTDOWN_TIMEOUT_MS = parseInt(process.env.SHUTDOWN_TIMEOUT_MS || '15000', 10);
 
@@ -27,36 +28,36 @@ class ShutdownManager {
         process.on('SIGTERM', handler);
         process.on('SIGINT', handler);
         process.on('uncaughtException', (err) => {
-            console.error('[SHUTDOWN] Uncaught exception:', err.message);
+            logger.error('[SHUTDOWN] Uncaught exception:', err.message);
             this._shutdown('uncaughtException');
         });
         process.on('unhandledRejection', (reason) => {
-            console.error('[SHUTDOWN] Unhandled rejection:', reason);
+            logger.error('[SHUTDOWN] Unhandled rejection:', reason);
         });
     }
 
     async _shutdown(signal) {
         if (this._shuttingDown) return;
         this._shuttingDown = true;
-        console.log(`[SHUTDOWN] Received ${signal}, starting graceful shutdown (${this._hooks.length} hooks, ${SHUTDOWN_TIMEOUT_MS}ms timeout)...`);
+        logger.info(`[SHUTDOWN] Received ${signal}, starting graceful shutdown (${this._hooks.length} hooks, ${SHUTDOWN_TIMEOUT_MS}ms timeout)...`);
 
         const timeout = setTimeout(() => {
-            console.error('[SHUTDOWN] Timeout exceeded, forcing exit');
+            logger.error('[SHUTDOWN] Timeout exceeded, forcing exit');
             process.exit(1);
         }, SHUTDOWN_TIMEOUT_MS);
         timeout.unref();
 
         for (const hook of this._hooks) {
             try {
-                console.log(`[SHUTDOWN] Running: ${hook.name}`);
+                logger.info(`[SHUTDOWN] Running: ${hook.name}`);
                 await Promise.resolve(hook.fn());
-                console.log(`[SHUTDOWN] Done: ${hook.name}`);
+                logger.info(`[SHUTDOWN] Done: ${hook.name}`);
             } catch (err) {
-                console.error(`[SHUTDOWN] Error in ${hook.name}:`, err.message);
+                logger.error(`[SHUTDOWN] Error in ${hook.name}:`, err.message);
             }
         }
 
-        console.log('[SHUTDOWN] All hooks complete, exiting');
+        logger.info('[SHUTDOWN] All hooks complete, exiting');
         clearTimeout(timeout);
         process.exit(0);
     }

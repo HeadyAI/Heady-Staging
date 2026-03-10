@@ -6,7 +6,7 @@
 ## Identity
 
 - **Name:** HeadySystems Inc.
-- **Founder:** Eric Head (eric-head / headyme)
+- **Founder:** Eric Haywood (eric-haywood / headyme)
 - **Package:** `heady-systems` v3.2.3
 - **Monorepo:** `/home/headyme/Heady/`
 - **Architecture:** Continuous Latent Architecture (CLA) with Sacred Geometry (φ = 1.618)

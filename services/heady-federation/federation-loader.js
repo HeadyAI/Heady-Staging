@@ -9,6 +9,7 @@
  */
 
 'use strict';
+const logger = require('../../shared/logger')('federation-loader');
 
 /**
  * Registry of available remote micro-frontends
@@ -100,7 +101,7 @@ class FederationLoader {
             })
             .catch(err => {
                 this.loading.delete(remoteId);
-                console.error(`Failed to load remote ${remoteId}:`, err);
+                logger.error(`Failed to load remote ${remoteId}:`, err);
                 throw err;
             });
 
@@ -174,23 +175,23 @@ class FederationLoader {
 if (require.main === module) {
     const loader = new FederationLoader();
 
-    console.log('═══ Module Federation JIT Loader ═══\n');
+    logger.info('═══ Module Federation JIT Loader ═══\n');
 
-    console.log('Registered remotes:');
+    logger.info('Registered remotes:');
     loader.status().forEach(r => {
-        console.log(`  ${r.id}: ${r.name} (${r.loaded ? '✅ loaded' : '⏳ pending'})`);
+        logger.info(`  ${r.id}: ${r.name} (${r.loaded ? '✅ loaded' : '⏳ pending'})`);
     });
 
-    console.log('\nWebpack config:');
-    console.log(JSON.stringify(loader.generateWebpackConfig(), null, 2));
+    logger.info('\nWebpack config:');
+    logger.info(JSON.stringify(loader.generateWebpackConfig(), null, 2));
 
-    console.log('\nLazy wrappers:');
+    logger.info('\nLazy wrappers:');
     const wrappers = loader.generateLazyWrappers();
     Object.values(wrappers).forEach(w => {
-        console.log(`  ${w.id}: ${w.lazyCode}`);
+        logger.info(`  ${w.id}: ${w.lazyCode}`);
     });
 
-    console.log('\n✅ Module Federation loader operational');
+    logger.info('\n✅ Module Federation loader operational');
 }
 
 module.exports = { FederationLoader, REMOTE_REGISTRY };

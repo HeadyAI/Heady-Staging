@@ -1,3 +1,4 @@
+const logger = require('../../shared/logger')('scaffold-cli');
 /* © 2026-2026 HeadySystems Inc. All Rights Reserved. PROPRIETARY AND CONFIDENTIAL. */
 
 /**
@@ -26,10 +27,10 @@ const c = {
   gold:   '\x1b[33m',
 };
 
-const log  = (msg)       => console.log(`${c.blue}▶${c.reset}  ${msg}`);
-const ok   = (msg)       => console.log(`${c.green}✔${c.reset}  ${msg}`);
-const warn = (msg)       => console.log(`${c.yellow}⚠${c.reset}  ${msg}`);
-const err  = (msg, exit) => { console.error(`${c.red}✖${c.reset}  ${msg}`); if (exit) process.exit(1); };
+const log  = (msg)       => logger.info(`${c.blue}▶${c.reset}  ${msg}`);
+const ok   = (msg)       => logger.info(`${c.green}✔${c.reset}  ${msg}`);
+const warn = (msg)       => logger.info(`${c.yellow}⚠${c.reset}  ${msg}`);
+const err  = (msg, exit) => { logger.error(`${c.red}✖${c.reset}  ${msg}`); if (exit) process.exit(1); };
 
 // ── Arg parsing ───────────────────────────────────────────────────────────────
 const args = process.argv.slice(2);
@@ -112,7 +113,7 @@ app.get('/health', (_req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log(\`[${name}] Listening on port \${PORT} (φ = \${PHI})\`);
+  logger.info(\`[${name}] Listening on port \${PORT} (φ = \${PHI})\`);
 });
 
 export default app;
@@ -211,10 +212,10 @@ if (type === 'app') {
 }
 
 // ── Create files ──────────────────────────────────────────────────────────────
-console.log('');
-console.log(`${c.bold}${c.gold}  Heady™ Scaffold CLI${c.reset}`);
-console.log(`${c.dim}  Creating ${type}: ${c.reset}${c.cyan}${scopedName}${c.reset}`);
-console.log('');
+logger.info('');
+logger.info(`${c.bold}${c.gold}  Heady™ Scaffold CLI${c.reset}`);
+logger.info(`${c.dim}  Creating ${type}: ${c.reset}${c.cyan}${scopedName}${c.reset}`);
+logger.info('');
 
 await mkdir(srcDir, { recursive: true });
 
@@ -224,12 +225,12 @@ for (const file of files) {
   ok(`Created ${c.cyan}${rel}${c.reset}`);
 }
 
-console.log('');
+logger.info('');
 log(`Done! ${c.bold}${scopedName}${c.reset} scaffolded at ${c.dim}${baseDir}${c.reset}`);
-console.log('');
+logger.info('');
 log(`Next steps:`);
-console.log(`   ${c.dim}cd ${type === 'package' ? 'packages' : 'apps'}/${name} && npm install${c.reset}`);
+logger.info(`   ${c.dim}cd ${type === 'package' ? 'packages' : 'apps'}/${name} && npm install${c.reset}`);
 if (type === 'app') {
-  console.log(`   ${c.dim}npm run dev${c.reset}`);
+  logger.info(`   ${c.dim}npm run dev${c.reset}`);
 }
-console.log('');
+logger.info('');

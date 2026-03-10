@@ -9,6 +9,7 @@
  */
 
 'use strict';
+const logger = require('../../shared/logger')('pdca-loop');
 
 class PDCALoop {
     constructor(options = {}) {
@@ -119,24 +120,24 @@ class PDCALoop {
      * Run full PDCA cycle for an incident
      */
     async runCycle(incident) {
-        console.log(`[PDCA] Starting cycle for: ${incident.type}`);
+        logger.info(`[PDCA] Starting cycle for: ${incident.type}`);
 
         // PLAN
         const diagnosis = this.plan(incident);
-        console.log(`  [PLAN] Severity: ${diagnosis.severity}, Root cause: ${diagnosis.rootCause}`);
+        logger.info(`  [PLAN] Severity: ${diagnosis.severity}, Root cause: ${diagnosis.rootCause}`);
 
         // DO
         const results = await this.execute(diagnosis.id);
         const successCount = results.filter(r => r.status === 'success').length;
-        console.log(`  [DO] Executed ${successCount}/${results.length} steps`);
+        logger.info(`  [DO] Executed ${successCount}/${results.length} steps`);
 
         // CHECK
         const verification = await this.check(diagnosis.id);
-        console.log(`  [CHECK] Healthy: ${verification.serviceHealthy}, All passed: ${verification.allStepsSucceeded}`);
+        logger.info(`  [CHECK] Healthy: ${verification.serviceHealthy}, All passed: ${verification.allStepsSucceeded}`);
 
         // ACT
         const outcome = this.act(diagnosis.id);
-        console.log(`  [ACT] Outcome: ${outcome.action}`);
+        logger.info(`  [ACT] Outcome: ${outcome.action}`);
 
         return outcome;
     }
@@ -204,8 +205,8 @@ class PDCALoop {
 if (require.main === module) {
     const pdca = new PDCALoop();
     pdca.runCycle({ type: 'service_down', service: 'headyme.com', details: 'HTTP 503' })
-        .then(r => console.log('\n✅ PDCA cycle complete:', r.action))
-        .catch(e => console.error('❌ PDCA failed:', e));
+        .then(r => logger.info('\n✅ PDCA cycle complete:', r.action))
+        .catch(e => logger.error('❌ PDCA failed:', e));
 }
 
 module.exports = { PDCALoop };

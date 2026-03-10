@@ -1,0 +1,24 @@
+{
+    "name": "@heady/migration-service",
+    "version": "4.0.0",
+    "private": true,
+    "description": "Heady™ Database Migration Runner — pgvector schema versioning with rollback",
+    "main": "index.js",
+    "scripts": {
+        "dev": "node --watch index.js",
+        "start": "node index.js",
+        "test": "node --test __tests__/migration-service.test.js",
+        "lint": "eslint ."
+    },
+    "dependencies": {
+        "express": "^4.21.0",
+        "pg": "^8.13.0",
+        "pino": "^9.6.0"
+    },
+    "devDependencies": {
+        "pino-pretty": "^13.0.0"
+    },
+    "engines": {
+        "node": ">=20.0.0"
+    }
+}

@@ -9,6 +9,7 @@
  */
 
 'use strict';
+const logger = require('../../shared/logger')('k8s-operator');
 
 /**
  * HeadyApp CRD Schema
@@ -108,7 +109,7 @@ class HeadyOperator {
         const { metadata, spec } = resource;
         const name = metadata.name;
 
-        console.log(`[Operator] Reconciling: ${name} (role=${spec.role}, replicas=${spec.replicas || 1})`);
+        logger.info(`[Operator] Reconciling: ${name} (role=${spec.role}, replicas=${spec.replicas || 1})`);
 
         const current = this.managedApps.get(name);
         const desired = {
@@ -126,7 +127,7 @@ class HeadyOperator {
             // Update existing deployment
             await this._updateDeployment(name, current, desired);
         } else {
-            console.log(`[Operator] ${name}: No changes needed`);
+            logger.info(`[Operator] ${name}: No changes needed`);
         }
 
         // Update managed state
@@ -176,12 +177,12 @@ spec:
     }
 
     async _createDeployment(name, desired) {
-        console.log(`[Operator] Creating deployment: ${name}`);
+        logger.info(`[Operator] Creating deployment: ${name}`);
         // In production: kubectl apply
     }
 
     async _updateDeployment(name, current, desired) {
-        console.log(`[Operator] Updating deployment: ${name}`);
+        logger.info(`[Operator] Updating deployment: ${name}`);
         // In production: kubectl apply --strategic-merge-patch
     }
 
@@ -206,7 +207,7 @@ spec:
 if (require.main === module) {
     const operator = new HeadyOperator();
 
-    console.log('═══ Heady K8s Operator ═══\n');
+    logger.info('═══ Heady K8s Operator ═══\n');
 
     // Demo: reconcile sample apps
     const apps = [
@@ -216,10 +217,10 @@ if (require.main === module) {
     ];
 
     Promise.all(apps.map(a => operator.reconcile(a))).then(() => {
-        console.log('\nYAML Example:');
-        console.log(operator.generateYAML({ name: 'heady-manager', role: 'manager', replicas: 2 }));
-        console.log('Status:', operator.status());
-        console.log('✅ K8s Operator operational');
+        logger.info('\nYAML Example:');
+        logger.info(operator.generateYAML({ name: 'heady-manager', role: 'manager', replicas: 2 }));
+        logger.info('Status:', operator.status());
+        logger.info('✅ K8s Operator operational');
     });
 }
 

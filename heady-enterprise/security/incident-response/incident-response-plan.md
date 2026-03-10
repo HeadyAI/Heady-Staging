@@ -1,7 +1,7 @@
 # Heady™Systems v3.2.2 — Security Incident Response Plan
 
 **Version:** 3.2.2  
-**Owner:** Eric Headington, CEO (eric@headyconnection.org)  
+**Owner:** Eric Haywood, CEO (eric@headyconnection.org)  
 **Last Reviewed:** 2026-03-07  
 **Classification:** CONFIDENTIAL — Incident Response Team Only  
 **Testing:** This plan is exercised quarterly via tabletop exercises.  
@@ -34,9 +34,9 @@ This plan governs HeadySystems' response to security incidents affecting any com
 
 | Role | Responsibilities | Default Assignee |
 |---|---|---|
-| **Incident Commander (IC)** | Overall coordination, decisions, communication sign-off, escalation authority | Eric Headington (P1/P2); On-call Engineer (P3/P4) |
+| **Incident Commander (IC)** | Overall coordination, decisions, communication sign-off, escalation authority | Eric Haywood (P1/P2); On-call Engineer (P3/P4) |
 | **Technical Lead (TL)** | Root cause analysis, containment implementation, system recovery | Lead Platform Engineer |
-| **Communications Lead (CL)** | Status page updates, customer communication, press/media | Eric Headington |
+| **Communications Lead (CL)** | Status page updates, customer communication, press/media | Eric Haywood |
 | **Legal/Compliance** | Regulatory notification requirements, preservation obligations | External counsel |
 | **Security Analyst** | Forensics, evidence preservation, threat hunting | Security team |
 
@@ -264,7 +264,7 @@ Minimum update cadence: every fib(7)=13 minutes for P1, fib(8)=21 minutes for P2
 - **Review cadence:** Quarterly (every fib(9)=34 weeks)
 - **Update trigger:** After any P1/P2 incident; after major architecture changes
 - **Tabletop exercises:** Quarterly; scenarios rotate through all 6 chaos scenarios from `chaos/chaos-scenarios.py`
-- **Owner:** Eric Headington with Security Lead
+- **Owner:** Eric Haywood with Security Lead
 
 ---
 

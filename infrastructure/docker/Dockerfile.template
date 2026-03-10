@@ -1,0 +1,42 @@
+# Heady™ Multi-Stage Dockerfile Template
+# Minimal images for Cloud Run cold start optimization
+# © 2026 HeadySystems Inc.
+
+# Stage 1: Dependencies
+FROM node:20-slim AS deps
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci --omit=dev && npm cache clean --force
+
+# Stage 2: Build (if TypeScript or build step needed)
+FROM node:20-slim AS builder
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci
+COPY . .
+RUN npm run build 2>/dev/null || echo "No build step"
+
+# Stage 3: Production
+FROM node:20-slim AS production
+WORKDIR /app
+
+# Security: non-root user
+RUN groupadd -r heady && useradd -r -g heady -s /bin/false heady
+
+# Copy production deps and built code
+COPY --from=deps /app/node_modules ./node_modules
+COPY --from=builder /app/dist ./dist 2>/dev/null || true
+COPY --from=builder /app/index.js ./index.js 2>/dev/null || true
+COPY --from=builder /app/src ./src 2>/dev/null || true
+COPY --from=builder /app/package.json ./package.json
+
+# Health check with Fibonacci interval (13s)
+HEALTHCHECK --interval=13s --timeout=5s --start-period=8s --retries=3 \
+    CMD node -e "const http = require('http'); http.get('http://localhost:' + (process.env.SERVICE_PORT || 3000) + '/health', r => process.exit(r.statusCode === 200 ? 0 : 1)).on('error', () => process.exit(1))"
+
+# Switch to non-root
+USER heady
+
+EXPOSE ${SERVICE_PORT:-3000}
+
+CMD ["node", "index.js"]

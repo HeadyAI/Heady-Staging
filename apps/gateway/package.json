@@ -1,5 +1,5 @@
 {
-  "name": "@heady-ai/gateway",
+  "name": "@heady-ai/gateway-app",
   "version": "1.0.0",
   "type": "module",
   "main": "src/index.mjs",
@@ -8,7 +8,7 @@
     "start": "node src/index.mjs"
   },
   "dependencies": {
-    "@heady-ai/mcp": "workspace:*",
+    "@heady-ai/mcp-server": "workspace:*",
     "@heady-ai/shared": "workspace:*",
     "@heady-ai/vector-memory": "workspace:*",
     "cors": "^2.8.5",

@@ -1,3 +1,4 @@
+const logger = require('../shared/logger')('rate-limiter-advanced');
 /**
  * Advanced Rate Limiter — Production Implementation
  * @module security-middleware/rate-limiter-advanced
@@ -187,7 +188,7 @@ class RedisSlidingWindowStore {
       );
     } catch (err) {
       // Redis error — fall back to conservative estimate
-      console.error('[RATE-LIMITER] Redis error, applying conservative limit:', err.message);
+      logger.error('[RATE-LIMITER] Redis error, applying conservative limit:', err.message);
       throw err;
     }
 
@@ -332,7 +333,7 @@ class AdvancedRateLimiter {
       } catch (err) {
         // Redis failure — degrade gracefully
         this._fallbackMode = true;
-        console.error('[RATE-LIMITER] Store error:', err.message);
+        logger.error('[RATE-LIMITER] Store error:', err.message);
         return this._fallbackResponse(tier, limit);
       }
     }
@@ -423,7 +424,7 @@ class AdvancedRateLimiter {
     const tier = this._tiers[info.tier];
     if (tier?.webhookOnBreach && this._webhookUrl) {
       await this._sendWebhook(info).catch(err =>
-        console.error('[RATE-LIMITER] Webhook error:', err.message)
+        logger.error('[RATE-LIMITER] Webhook error:', err.message)
       );
     }
   }
@@ -496,7 +497,7 @@ function rateLimiterMiddleware(limiter, opts = {}) {
     try {
       result = await limiter.check(identity);
     } catch (err) {
-      console.error('[RATE-LIMITER] Middleware error:', err.message);
+      logger.error('[RATE-LIMITER] Middleware error:', err.message);
       if (skipOnError) return next();
       return res.status(503).json({ error: 'Rate limiter unavailable', code: 'RATE_LIMITER_ERROR' });
     }
@@ -578,7 +579,7 @@ const { limiter, middleware } = createRateLimiter({
     return tenant?.tier || 'free';
   },
   onBreach: async (info) => {
-    console.warn('[RATE LIMIT BREACH]', info);
+    logger.warn('[RATE LIMIT BREACH]', info);
     await auditLogger.log({
       action:   'RATE_LIMIT_EXCEEDED',
       actor:    info.tenantId || info.ip,

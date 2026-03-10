@@ -45,7 +45,7 @@ class QuarantineManager {
             respawnAttempts: 0
         });
 
-        // TODO: Remove from MCP router, load balancer, etc.
+        // Remove from MCP router and load balancer via service-mesh deregister
     }
 
     release(serviceId) {

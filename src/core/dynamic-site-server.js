@@ -1,3 +1,4 @@
+const logger = require('../../shared/logger').createLogger({ service: 'dynamic-site-server' });
 /*
  * © 2026 Heady™Systems Inc..
  * PROPRIETARY AND CONFIDENTIAL.
@@ -19,7 +20,7 @@
 const http = require('http');
 const crypto = require('crypto');
 
-const PORT = process.env.SITE_PORT || 3850;
+const PORT = process.env.PORT || process.env.SITE_PORT || 8080;
 const PHI = 1.6180339887;
 
 // ── Site Registry ───────────────────────────────────────────────
@@ -186,6 +187,66 @@ const SITES = {
       { icon: '🔬', name: 'Backtest', desc: '16-asset historical simulation' },
       { icon: '🔔', name: 'Signals', desc: 'Real-time entry/exit alerts' },
       { icon: '💼', name: 'Portfolio', desc: 'Risk-optimized allocation' },
+    ],
+    showAuth: true,
+  },
+  'headyos.com': {
+    brand: 'HeadyOS',
+    tagline: 'The Sovereign Operating System',
+    subtitle: 'Latent-space OS with cognitive pipelines, φ-scaled vector memory, and self-healing mesh.',
+    color: '#0ea5e9',
+    accent: '#38bdf8',
+    icon: 'Ω',
+    heroServices: [
+      { icon: '💻', name: 'Latent OS', desc: 'Always-on cognitive substrate' },
+      { icon: '🧬', name: 'CSL Engine', desc: 'Continuous Semantic Logic gates' },
+      { icon: '🐝', name: 'Bee Swarm', desc: '30+ specialized worker agents' },
+      { icon: '📐', name: 'Sacred Geometry', desc: 'φ-scaled architecture' },
+    ],
+    showAuth: false,
+  },
+  'headyex.com': {
+    brand: 'HeadyExchange',
+    tagline: 'Intelligence Marketplace',
+    subtitle: 'Trade AI models, prompts, and datasets in a sovereign marketplace with HeadyCoin.',
+    color: '#eab308',
+    accent: '#facc15',
+    icon: '⚡',
+    heroServices: [
+      { icon: '🪙', name: 'HeadyCoin', desc: 'Utility token for AI services' },
+      { icon: '🏪', name: 'Marketplace', desc: 'Models, prompts, and data' },
+      { icon: '📊', name: 'Trading', desc: 'Real-time order book' },
+      { icon: '🔒', name: 'Escrow', desc: 'Trustless smart contracts' },
+    ],
+    showAuth: true,
+  },
+  'headyfinance.com': {
+    brand: 'HeadyFinance',
+    tagline: 'AI-Powered Finance',
+    subtitle: 'Portfolio analytics, risk modeling, and market intelligence powered by Sacred Geometry.',
+    color: '#059669',
+    accent: '#34d399',
+    icon: '💰',
+    heroServices: [
+      { icon: '📈', name: 'Analytics', desc: 'Real-time portfolio tracking' },
+      { icon: '⚠️', name: 'Risk Engine', desc: 'Monte Carlo risk assessment' },
+      { icon: '🎯', name: 'Signals', desc: 'AI-curated trading signals' },
+      { icon: '📋', name: 'Reports', desc: 'Automated financial reports' },
+    ],
+    showAuth: true,
+  },
+  'headyconnection.com': {
+    brand: 'HeadyConnect',
+    tagline: 'Unified Identity',
+    subtitle: 'Cross-platform identity federation and secure authentication for the Heady ecosystem.',
+    color: '#7c3aed',
+    accent: '#a78bfa',
+    icon: '🔗',
+    heroServices: [
+      { icon: '🆔', name: 'Identity', desc: 'Unified cross-domain auth' },
+      { icon: '🔑', name: 'SSO', desc: 'Single sign-on federation' },
+      { icon: '🛡️', name: 'WebAuthn', desc: 'Passwordless authentication' },
+      { icon: '📱', name: 'Device Trust', desc: 'Multi-device verification' },
     ],
     showAuth: true,
   },
@@ -517,7 +578,7 @@ function renderSite(site, host) {
       if (window.huggingface && window.huggingface.variables) {
         const userId = window.huggingface.variables.SPACE_CREATOR_USER_ID;
         if (userId) {
-          console.log('[HeadyBuddy] HF User detected:', userId);
+          logger.info('[HeadyBuddy] HF User detected:', userId);
           addBuddyMsg('bot', 'I see you\\'re signed into Hugging Face (User: ' + userId.slice(0,8) + '...). I\\'ve linked your identity.');
         }
       }
@@ -624,7 +685,7 @@ const server = http.createServer((req, res) => {
   const host = req.headers.host || 'headyme.com';
   const site = resolveSite(host);
 
-  res.setHeader('Access-Control-Allow-Origin', '*');
+  // CORS handled by securityHeaders middleware
   res.setHeader('Access-Control-Allow-Methods', 'GET,POST,OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type,Authorization');
   if (req.method === 'OPTIONS') { res.writeHead(204); res.end(); return; }
@@ -741,16 +802,71 @@ const server = http.createServer((req, res) => {
   res.end(renderSite(site, host));
 });
 
-server.listen(PORT, () => {
-  console.log(`\n  ⚡ Heady Dynamic Sites — http://localhost:${PORT}`);
-  console.log(`     ${Object.keys(SITES).length} domains registered`);
-  console.log(`     ${AUTH_PROVIDERS.oauth.length + AUTH_PROVIDERS.apikey.length} auth providers`);
-  console.log(`     HeadyBuddy widget: embedded\n`);
-  console.log('  Domains:');
-  for (const [domain, site] of Object.entries(SITES)) {
-    console.log(`    ${site.icon} ${domain} → ${site.brand}`);
+// ── Health Probes (Cloud Run requirement) ─────────────────────
+// Inject before default page rendering
+const originalHandler = server.listeners('request')[0];
+server.removeAllListeners('request');
+server.on('request', (req, res) => {
+  const url = (req.url || '/').split('?')[0];
+
+  // Liveness probe — lightweight, just confirms the process is alive
+  if (url === '/health/live' || url === '/healthz') {
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    return res.end(JSON.stringify({
+      status: 'alive',
+      uptime: process.uptime(),
+      timestamp: new Date().toISOString(),
+    }));
   }
-  console.log('');
+
+  // Readiness probe — confirms the server can serve domains
+  if (url === '/health/ready') {
+    const domainCount = Object.keys(SITES).length;
+    const ready = domainCount > 0;
+    res.writeHead(ready ? 200 : 503, { 'Content-Type': 'application/json' });
+    return res.end(JSON.stringify({
+      status: ready ? 'ready' : 'not_ready',
+      domains: domainCount,
+      authProviders: AUTH_PROVIDERS.oauth.length + AUTH_PROVIDERS.apikey.length,
+      uptime: process.uptime(),
+      timestamp: new Date().toISOString(),
+    }));
+  }
+
+  // Delegate to original handler
+  originalHandler(req, res);
+});
+
+server.listen(PORT, () => {
+  logger.info(`\n  ⚡ Heady Dynamic Sites — http://localhost:${PORT}`);
+  logger.info(`     ${Object.keys(SITES).length} domains registered`);
+  logger.info(`     ${AUTH_PROVIDERS.oauth.length + AUTH_PROVIDERS.apikey.length} auth providers`);
+  logger.info(`     HeadyBuddy widget: embedded`);
+  logger.info(`     Health probes: /health/live, /health/ready\n`);
+  logger.info('  Domains:');
+  for (const [domain, site] of Object.entries(SITES)) {
+    logger.info(`    ${site.icon} ${domain} → ${site.brand}`);
+  }
+  logger.info('');
+});
+
+// ── Graceful Shutdown (Cloud Run sends SIGTERM) ───────────────
+process.on('SIGTERM', () => {
+  logger.info('[DynamicSiteServer] SIGTERM received — shutting down gracefully');
+  server.close(() => {
+    logger.info('[DynamicSiteServer] Server closed, exiting');
+    process.exit(0);
+  });
+  // Force exit after 10s if graceful close stalls
+  setTimeout(() => {
+    logger.warn('[DynamicSiteServer] Forced exit after 10s timeout');
+    process.exit(1);
+  }, 10000).unref();
+});
+
+process.on('SIGINT', () => {
+  logger.info('[DynamicSiteServer] SIGINT received — shutting down');
+  server.close(() => process.exit(0));
 });
 
 module.exports = { SITES, AUTH_PROVIDERS, server, resolveSite };

@@ -1,0 +1,56 @@
+{
+    "$schema": "https://heady.ai/schemas/mcp-ide-config.v1.json",
+    "name": "heady-ide-mcp",
+    "version": "1.0.0",
+    "description": "HeadyAI-IDE MCP configuration for IDE-integrated AI assistance",
+    "mcpServers": {
+        "heady-mcp": {
+            "url": "https://headyai.com/mcp",
+            "transport": "sse",
+            "auth": {
+                "type": "bearer",
+                "token": "${HEADY_MCP_TOKEN}"
+            },
+            "tools": [
+                "heady_search",
+                "heady_store",
+                "heady_health",
+                "heady_pipeline_run",
+                "heady_bee_list",
+                "heady_analyze"
+            ]
+        },
+        "heady-memory": {
+            "url": "https://headyai.com/api/memory/mcp",
+            "transport": "sse",
+            "auth": {
+                "type": "bearer",
+                "token": "${HEADY_MCP_TOKEN}"
+            },
+            "tools": [
+                "memory_search",
+                "memory_store",
+                "memory_delete"
+            ]
+        }
+    },
+    "settings": {
+        "defaultModel": "claude-sonnet-4-20250514",
+        "fallbackModel": "gemini-2.0-flash",
+        "contextWindowTokens": 200000,
+        "phiThreshold": 0.618,
+        "autoSuggest": true,
+        "cslGating": true
+    },
+    "domains": [
+        "heady.ai",
+        "headyai.com",
+        "headyme.com",
+        "headysystems.com",
+        "headyos.com",
+        "headybattle.com",
+        "headyarena.com",
+        "headyconnection.com",
+        "headyenterprises.com"
+    ]
+}

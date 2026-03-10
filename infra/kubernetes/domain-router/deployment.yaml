@@ -1,0 +1,83 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: domain-router
+  labels:
+    app: domain-router
+    heady.io/domain: routing
+    heady.io/autocontext: "true"
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: domain-router
+  template:
+    metadata:
+      labels:
+        app: domain-router
+        heady.io/domain: routing
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "8703"
+    spec:
+      terminationGracePeriodSeconds: 34
+      containers:
+      - name: domain-router
+        image: gcr.io/gen-lang-client-0920560496/domain-router:latest
+        ports:
+        - containerPort: 8703
+          name: http
+        envFrom:
+        - configMapRef:
+            name: heady-global-config
+        - secretRef:
+            name: heady-secrets
+        env:
+        - name: SERVICE_NAME
+          value: "domain-router"
+        - name: PORT
+          value: "8703"
+        - name: AUTOCONTEXT_URL
+          value: "http://heady-auto-context:8907"
+        - name: CONSUL_URL
+          value: "http://consul:8500"
+        - name: OTEL_ENDPOINT
+          value: "http://otel-collector:4318"
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "128Mi"
+          limits:
+            cpu: "500m"
+            memory: "512Mi"
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8703
+          initialDelaySeconds: 13
+          periodSeconds: 21
+          timeoutSeconds: 8
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8703
+          initialDelaySeconds: 8
+          periodSeconds: 13
+          timeoutSeconds: 5
+          failureThreshold: 2
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: domain-router
+  labels:
+    app: domain-router
+    heady.io/domain: routing
+spec:
+  selector:
+    app: domain-router
+  ports:
+  - name: http
+    port: 8703
+    targetPort: 8703

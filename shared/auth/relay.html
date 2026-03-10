@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Heady Auth Relay</title>
+    <!-- This page is hosted at auth.headysystems.com/relay.html -->
+    <!-- It runs as a hidden iframe in all 9 Heady sites for cross-domain auth -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+</head>
+
+<body>
+    <script>
+        'use strict';
+
+        const FIREBASE_CONFIG = {
+            apiKey: "AIzaSyDg0NQgbHXTJGSp6_8IlP4YcnJfWV4RNTU",
+            authDomain: "gen-lang-client-0920560496.firebaseapp.com",
+            projectId: "gen-lang-client-0920560496",
+            storageBucket: "gen-lang-client-0920560496.firebasestorage.app",
+            messagingSenderId: "920560496",
+            appId: "1:920560496:web:heady-auth-relay"
+        };
+
+        const ALLOWED_ORIGINS = [
+            'https://headyme.com', 'https://headysystems.com', 'https://heady-ai.com',
+            'https://headyos.com', 'https://headyconnection.org', 'https://headyconnection.com',
+            'https://headyex.com', 'https://headyfinance.com', 'https://admin.headysystems.com',
+            'https://auth.headysystems.com',
+        ];
+
+        firebase.initializeApp(FIREBASE_CONFIG);
+        firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL);
+
+        let currentUser = null;
+
+        // Listen for auth state changes
+        firebase.auth().onAuthStateChanged(async (user) => {
+            if (user) {
+                currentUser = {
+                    uid: user.uid,
+                    email: user.email,
+                    displayName: user.displayName || user.email?.split('@')[0] || 'User',
+                    photoURL: user.photoURL,
+                    provider: user.providerData[0]?.providerId || 'anonymous',
+                };
+                // Set httpOnly cookie via server-side endpoint
+                try {
+                    const idToken = await user.getIdToken();
+                    await fetch('https://auth.headysystems.com/api/session', {
+                        method: 'POST',
+                        credentials: 'include',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ idToken }),
+                    });
+                } catch (e) {
+                    console.warn('[HeadyRelay] Session cookie set failed:', e.message);
+                }
+                // Broadcast to all parent frames
+                broadcastToParent({ type: 'heady:auth:signed-in', user: currentUser, authenticated: true });
+            } else {
+                currentUser = null;
+                // Clear httpOnly cookie
+                try {
+                    await fetch('https://auth.headysystems.com/api/session', {
+                        method: 'DELETE',
+                        credentials: 'include',
+                    });
+                } catch (e) { /* best effort */ }
+                broadcastToParent({ type: 'heady:auth:signed-out', user: null, authenticated: false });
+            }
+        });
+
+        // Handle messages from parent frames (the 9 sites)
+        window.addEventListener('message', (event) => {
+            if (!ALLOWED_ORIGINS.includes(event.origin)) return;
+
+            const { type } = event.data || {};
+
+            if (type === 'heady:auth:status-request') {
+                event.source.postMessage({
+                    type: 'heady:auth:status-response',
+                    user: currentUser,
+                    authenticated: !!currentUser,
+                }, event.origin);
+            }
+
+            if (type === 'heady:auth:sign-out') {
+                firebase.auth().signOut();
+            }
+        });
+
+        function broadcastToParent(message) {
+            if (window.parent && window.parent !== window) {
+                // Send to parent — it knows its own origin
+                window.parent.postMessage(message, '*');
+            }
+        }
+    </script>
+</body>
+
+</html>

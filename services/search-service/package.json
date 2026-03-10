@@ -1,0 +1,24 @@
+{
+    "name": "@heady/search-service",
+    "version": "4.0.0",
+    "private": true,
+    "description": "Heady™ Hybrid Search — BM25 + pgvector cosine + Reciprocal Rank Fusion",
+    "main": "index.js",
+    "scripts": {
+        "dev": "node --watch index.js",
+        "start": "node index.js",
+        "test": "node --test __tests__/search-service.test.js",
+        "lint": "eslint ."
+    },
+    "dependencies": {
+        "express": "^4.21.0",
+        "pg": "^8.13.0",
+        "pino": "^9.6.0"
+    },
+    "devDependencies": {
+        "pino-pretty": "^13.0.0"
+    },
+    "engines": {
+        "node": ">=20.0.0"
+    }
+}

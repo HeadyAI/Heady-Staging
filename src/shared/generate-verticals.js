@@ -382,7 +382,7 @@ async function sendHeadyChat(){var input=document.getElementById('heady-chat-inp
   // Check URL for Google OAuth callback token
   const params = new URLSearchParams(window.location.search);
   if(params.get('auth_token')) {
-    localStorage.setItem(TK, params.get('auth_token'));
+    setCookie('__Host-heady_auth_token', params.get('auth_token'), 30);
     window.history.replaceState({}, '', window.location.pathname);
   }
 
@@ -415,7 +415,7 @@ async function sendHeadyChat(){var input=document.getElementById('heady-chat-inp
       if(r.ok) {
         const d = await r.json();
         tok = d.token;
-        localStorage.setItem(TK, tok);
+        setCookie('__Host-heady_auth_token', tok, 30);
         updateUI({ valid: true, tier: d.tier, method: d.method, warp: d.warp });
         logger.logSystem('🔐', d.warp ? 'WARP 365d' : d.method + ' ' + (d.sessionDays||90) + 'd', '| device:', deviceId.slice(0,8));
       }
@@ -454,7 +454,7 @@ async function sendHeadyChat(){var input=document.getElementById('heady-chat-inp
       const d = await r.json();
       if(d.success) {
         tok = d.token;
-        localStorage.setItem(TK, tok);
+        setCookie('__Host-heady_auth_token', tok, 30);
         updateUI({ valid: true, tier: d.tier, userId: d.userId });
         document.getElementById('login-modal').classList.remove('open');
       } else {

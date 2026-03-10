@@ -28,7 +28,7 @@ const ROLE_HIERARCHY = {
 
 const SESSION_TTL_MS = 8 * 60 * 60 * 1000;   // 8 h
 const REFRESH_TTL_MS = 30 * 24 * 60 * 60 * 1000; // 30 days
-const ACCESS_TTL_S   = 60 * 60;               // 1 h (JWT exp)
+const ACCESS_TTL_S = 60 * 60;               // 1 h (JWT exp)
 const API_KEY_PREFIX = 'hdy_';
 
 // ─── AuthManager ─────────────────────────────────────────────────────────────
@@ -42,7 +42,7 @@ class AuthManager {
    */
   constructor(opts = {}) {
     this._jwt = opts.jwt || new HeadyJWT({ secret: opts.jwtSecret || process.env.JWT_SECRET || 'heady-default-secret-change-in-prod' });
-    this._kv  = opts.kv  || new HeadyKV({ namespace: 'auth' });
+    this._kv = opts.kv || new HeadyKV({ namespace: 'auth' });
 
     this.sessionTtlMs = opts.sessionTtlMs ?? SESSION_TTL_MS;
 
@@ -188,8 +188,8 @@ class AuthManager {
    */
   async createApiKey(userId, opts = {}) {
     const rawKey = API_KEY_PREFIX + _randomId(40);
-    const keyId  = _randomId(16);
-    const hash   = _hashSecret(rawKey);
+    const keyId = _randomId(16);
+    const hash = _hashSecret(rawKey);
 
     const record = {
       userId,
@@ -220,7 +220,7 @@ class AuthManager {
       return { valid: false, error: 'Invalid API key format' };
     }
 
-    const hash  = _hashSecret(apiKey);
+    const hash = _hashSecret(apiKey);
     const keyId = await this._kv.get(`apikeyhash:${hash}`);
     if (!keyId) return { valid: false, error: 'API key not found' };
 
@@ -327,17 +327,80 @@ class AuthManager {
     if (!storedState) throw new Error('Invalid or expired OAuth2 state');
     await this._kv.del(`oauth2state:${state}`);
 
-    // TODO: exchange code with provider token endpoint
-    // Stub: create a user session from code (replace with real OIDC exchange)
-    const stubUser = {
-      id: `oauth2:${_hashSecret(code).slice(0, 16)}`,
-      email: `oauth2-user@${storedState.provider}.example`,
-      role: ROLES.USER,
-      meta: { provider: storedState.provider, oauthCode: '[redacted]' },
+    // Provider-specific OIDC/OAuth2 token endpoint registry
+    const providerConfigs = {
+      google: {
+        tokenEndpoint: 'https://oauth2.googleapis.com/token',
+        userinfoEndpoint: 'https://www.googleapis.com/oauth2/v3/userinfo',
+      },
+      github: {
+        tokenEndpoint: 'https://github.com/login/oauth/access_token',
+        userinfoEndpoint: 'https://api.github.com/user',
+      },
+      generic: {
+        tokenEndpoint: process.env.OAUTH2_TOKEN_ENDPOINT || 'https://auth.example.com/oauth2/token',
+        userinfoEndpoint: process.env.OAUTH2_USERINFO_ENDPOINT || 'https://auth.example.com/oauth2/userinfo',
+      },
     };
 
-    logger.info('[AuthManager] OAuth2 callback handled (stub)', { provider: storedState.provider });
-    return this.createToken(stubUser);
+    const providerKey = storedState.provider || 'generic';
+    const providerCfg = providerConfigs[providerKey] || providerConfigs.generic;
+    const clientId = process.env[`OAUTH2_${providerKey.toUpperCase()}_CLIENT_ID`] || process.env.OAUTH2_CLIENT_ID || 'heady';
+    const clientSecret = process.env[`OAUTH2_${providerKey.toUpperCase()}_CLIENT_SECRET`] || process.env.OAUTH2_CLIENT_SECRET || '';
+
+    // Exchange authorization code for tokens
+    const tokenBody = new URLSearchParams({
+      grant_type: 'authorization_code',
+      code,
+      redirect_uri: storedState.redirectUri || '',
+      client_id: clientId,
+      client_secret: clientSecret,
+    });
+
+    const tokenResp = await fetch(providerCfg.tokenEndpoint, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Accept': 'application/json',
+      },
+      body: tokenBody.toString(),
+    });
+
+    if (!tokenResp.ok) {
+      const errText = await tokenResp.text().catch(() => 'unknown error');
+      throw new Error(`OAuth2 token exchange failed (${tokenResp.status}): ${errText}`);
+    }
+
+    const tokenData = await tokenResp.json();
+
+    // Fetch user profile from userinfo endpoint
+    const userinfoResp = await fetch(providerCfg.userinfoEndpoint, {
+      headers: {
+        'Authorization': `Bearer ${tokenData.access_token}`,
+        'Accept': 'application/json',
+      },
+    });
+
+    let profile = {};
+    if (userinfoResp.ok) {
+      profile = await userinfoResp.json();
+    }
+
+    // Normalize user across providers
+    const user = {
+      id: `oauth2:${providerKey}:${profile.sub || profile.id || _hashSecret(code).slice(0, 16)}`,
+      email: profile.email || `oauth2-user@${providerKey}.example`,
+      role: ROLES.USER,
+      meta: {
+        provider: providerKey,
+        name: profile.name || profile.login || null,
+        avatar: profile.picture || profile.avatar_url || null,
+        oauthScopes: tokenData.scope || null,
+      },
+    };
+
+    logger.info('[AuthManager] OAuth2 callback handled', { provider: providerKey, userId: user.id });
+    return this.createToken(user);
   }
 
   // ─── Session Query ───────────────────────────────────────────────────────────

@@ -20,6 +20,7 @@
  */
 
 'use strict';
+const logger = require('../shared/logger')('battle-script');
 
 const { execSync } = require('child_process');
 const fs = require('fs');
@@ -36,7 +37,7 @@ function run(cmd, opts = {}) {
         return execSync(cmd, { cwd: ROOT, encoding: 'utf8', stdio: 'pipe', ...opts }).trim();
     } catch (err) {
         if (opts.allowFail) return err.stderr || err.message;
-        console.error(`  ❌ ${cmd}\n     ${err.message}`);
+        logger.error(`  ❌ ${cmd}\n     ${err.message}`);
         return null;
     }
 }
@@ -45,7 +46,7 @@ function run(cmd, opts = {}) {
 
 if (args.includes('--status')) {
     const status = arena.getStatus();
-    console.log(JSON.stringify(status, null, 2));
+    logger.info(JSON.stringify(status, null, 2));
     process.exit(0);
 }
 
@@ -53,67 +54,67 @@ if (args.includes('--blueprint')) {
     const bp = arena.generateBlueprint();
     const outPath = path.join(ROOT, 'configs', 'battle-blueprint.json');
     fs.writeFileSync(outPath, JSON.stringify(bp, null, 2));
-    console.log(`Blueprint exported to: ${outPath}`);
-    console.log(`Modules: ${Object.keys(bp.coreModules).length}`);
-    console.log(`Patterns: ${bp.patterns.length}`);
-    console.log(`Dependencies: ${bp.dependencies.production.length}`);
+    logger.info(`Blueprint exported to: ${outPath}`);
+    logger.info(`Modules: ${Object.keys(bp.coreModules).length}`);
+    logger.info(`Patterns: ${bp.patterns.length}`);
+    logger.info(`Dependencies: ${bp.dependencies.production.length}`);
     process.exit(0);
 }
 
 if (args.includes('--repos')) {
     const repos = arena.getRepoManifest();
-    console.log('\n══ Battle Arena — Repo Manifest ══\n');
+    logger.info('\n══ Battle Arena — Repo Manifest ══\n');
     repos.forEach((r, i) => {
-        console.log(`  ${i + 1}. ${r.repoName}`);
-        console.log(`     Model:    ${r.model}`);
-        console.log(`     Provider: ${r.provider}`);
-        console.log(`     Private:  ${r.isPrivate}`);
-        console.log('');
+        logger.info(`  ${i + 1}. ${r.repoName}`);
+        logger.info(`     Model:    ${r.model}`);
+        logger.info(`     Provider: ${r.provider}`);
+        logger.info(`     Private:  ${r.isPrivate}`);
+        logger.info('');
     });
-    console.log(`Total repos: ${repos.length}`);
+    logger.info(`Total repos: ${repos.length}`);
     process.exit(0);
 }
 
 // ── Main Battle Dispatch ───────────────────────────────────────
 async function main() {
-    console.log('');
-    console.log('═══════════════════════════════════════════════════════════════');
-    console.log('  ⚔️  HEADY BATTLE ARENA — 10-Model Full Project Rebuild');
-    console.log('═══════════════════════════════════════════════════════════════');
-    console.log('');
+    logger.info('');
+    logger.info('═══════════════════════════════════════════════════════════════');
+    logger.info('  ⚔️  HEADY BATTLE ARENA — 10-Model Full Project Rebuild');
+    logger.info('═══════════════════════════════════════════════════════════════');
+    logger.info('');
 
     // Start battle session
     const state = arena.startBattle();
-    console.log(`  Session: ${state.sessionId}`);
-    console.log(`  Contenders: ${state.contenders.length}`);
-    console.log('');
+    logger.info(`  Session: ${state.sessionId}`);
+    logger.info(`  Contenders: ${state.contenders.length}`);
+    logger.info('');
 
     // Export blueprint
     const bp = state.blueprint;
     const bpPath = path.join(ROOT, 'configs', 'battle-blueprint.json');
     fs.mkdirSync(path.dirname(bpPath), { recursive: true });
     fs.writeFileSync(bpPath, JSON.stringify(bp, null, 2));
-    console.log(`  📋 Blueprint exported (${Object.keys(bp.coreModules).length} modules, ${bp.patterns.length} patterns)`);
-    console.log('');
+    logger.info(`  📋 Blueprint exported (${Object.keys(bp.coreModules).length} modules, ${bp.patterns.length} patterns)`);
+    logger.info('');
 
     // List contenders
-    console.log('  ── Contenders ──────────────────────────────────────');
+    logger.info('  ── Contenders ──────────────────────────────────────');
     const contenders = arena.CONTENDERS;
     contenders.forEach((c, i) => {
         const icon = c.status === 'JUDGE' ? '👨‍⚖️' : '🤖';
-        console.log(`  ${icon} ${i + 1}. ${c.name.padEnd(16)} ${c.model.padEnd(30)} ${c.strength.slice(0, 50)}`);
+        logger.info(`  ${icon} ${i + 1}. ${c.name.padEnd(16)} ${c.model.padEnd(30)} ${c.strength.slice(0, 50)}`);
     });
-    console.log('');
+    logger.info('');
 
     // Create repos via GitHub CLI (if available)
     const ghAvailable = run('gh --version', { allowFail: true });
     const useGH = ghAvailable && !ghAvailable.includes('not found');
 
     if (useGH) {
-        console.log('  ── Creating GitHub Repos ────────────────────────────');
+        logger.info('  ── Creating GitHub Repos ────────────────────────────');
         const repos = arena.getRepoManifest();
         for (const repo of repos) {
-            console.log(`  📦 Creating HeadyMe/${repo.repoName}...`);
+            logger.info(`  📦 Creating HeadyMe/${repo.repoName}...`);
             run(`gh repo create HeadyMe/${repo.repoName} --private --description "${repo.description}" 2>/dev/null`, { allowFail: true });
 
             // Seed repo with context-optimized README
@@ -136,17 +137,17 @@ async function main() {
             }
             arena.markDispatched(contenders.find(c => c.repoName === repo.repoName)?.id);
         }
-        console.log('');
+        logger.info('');
     } else {
-        console.log('  ⚠️  GitHub CLI (gh) not available — repos need manual creation');
-        console.log('     Install: https://cli.github.com/');
-        console.log('     Or create repos manually from the manifest:');
-        console.log(`     Run: npm run battle -- --repos`);
-        console.log('');
+        logger.info('  ⚠️  GitHub CLI (gh) not available — repos need manual creation');
+        logger.info('     Install: https://cli.github.com/');
+        logger.info('     Or create repos manually from the manifest:');
+        logger.info(`     Run: npm run battle -- --repos`);
+        logger.info('');
     }
 
     // Export per-model context packages
-    console.log('  ── Model Context Packages ──────────────────────────');
+    logger.info('  ── Model Context Packages ──────────────────────────');
     const ctxDir = path.join(ROOT, 'configs', 'battle-contexts');
     fs.mkdirSync(ctxDir, { recursive: true });
     for (const c of contenders) {
@@ -154,37 +155,37 @@ async function main() {
         if (ctx) {
             const ctxFile = path.join(ctxDir, `${c.id}-context.json`);
             fs.writeFileSync(ctxFile, JSON.stringify(ctx, null, 2));
-            console.log(`  📄 ${c.name.padEnd(16)} → ${c.id}-context.json`);
+            logger.info(`  📄 ${c.name.padEnd(16)} → ${c.id}-context.json`);
         }
     }
-    console.log('');
+    logger.info('');
 
     // Summary
-    console.log('═══════════════════════════════════════════════════════════════');
-    console.log('  ⚔️  BATTLE ARENA READY');
-    console.log('');
-    console.log('  Next steps:');
-    console.log('     1. Create repos:  gh repo create HeadyMe/<repo-name> --private');
-    console.log('     2. Dispatch each model with its context from configs/battle-contexts/');
-    console.log('     3. For Jules:  Open GitHub Issues with the blueprint as the task');
-    console.log('     4. For Codex:  Use OpenAI Codex API with the context package');
-    console.log('     5. For Claude: Use HeadyJules think mode with full blueprint');
-    console.log('     6. For GPT-5.4: Use HeadyCompute with latest model');
-    console.log('     7. For Gemini: Use HeadyPythia with full context window');
-    console.log('     8. For Groq:  Use HeadyFast for rapid iteration');
-    console.log('     9. For Perplexity: Use HeadyResearch for best-practice sourcing');
-    console.log('    10. For HF:    Use HuggingFace Inference API with open models');
-    console.log('');
-    console.log('  Monitor: npm run battle -- --status');
-    console.log('  APIs:    GET /api/battle/status');
-    console.log('           GET /api/battle/contenders');
-    console.log('           GET /api/battle/blueprint');
-    console.log('           GET /api/battle/context/:id');
-    console.log('═══════════════════════════════════════════════════════════════');
-    console.log('');
+    logger.info('═══════════════════════════════════════════════════════════════');
+    logger.info('  ⚔️  BATTLE ARENA READY');
+    logger.info('');
+    logger.info('  Next steps:');
+    logger.info('     1. Create repos:  gh repo create HeadyMe/<repo-name> --private');
+    logger.info('     2. Dispatch each model with its context from configs/battle-contexts/');
+    logger.info('     3. For Jules:  Open GitHub Issues with the blueprint as the task');
+    logger.info('     4. For Codex:  Use OpenAI Codex API with the context package');
+    logger.info('     5. For Claude: Use HeadyJules think mode with full blueprint');
+    logger.info('     6. For GPT-5.4: Use HeadyCompute with latest model');
+    logger.info('     7. For Gemini: Use HeadyPythia with full context window');
+    logger.info('     8. For Groq:  Use HeadyFast for rapid iteration');
+    logger.info('     9. For Perplexity: Use HeadyResearch for best-practice sourcing');
+    logger.info('    10. For HF:    Use HuggingFace Inference API with open models');
+    logger.info('');
+    logger.info('  Monitor: npm run battle -- --status');
+    logger.info('  APIs:    GET /api/battle/status');
+    logger.info('           GET /api/battle/contenders');
+    logger.info('           GET /api/battle/blueprint');
+    logger.info('           GET /api/battle/context/:id');
+    logger.info('═══════════════════════════════════════════════════════════════');
+    logger.info('');
 }
 
 main().catch(err => {
-    console.error('Battle dispatch failed:', err.message);
+    logger.error('Battle dispatch failed:', err.message);
     process.exit(1);
 });

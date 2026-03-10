@@ -1,0 +1,160 @@
+# Declarative manifest describing a single Heady Node deployment.
+# Values are safe defaults derived from repository documentation. Update per node.
+node_name: "Sovereign-Node-Alpha"
+owner_did: "did:key:zExampleOwner"
+sovereign_color_theme:
+  primary: "#101820"
+  accent: "#6CF0C2"
+  text: "#F5F7FA"
+
+identity_provider: "did"
+ai_model_preference: "hybrid"
+storage_vector_dimensions: 1536
+
+identity:
+  auth_mode: "did-key"  # did-key | did-web | bearer-dev
+  fallback_bearer_token: "${HEADY_AUTH_TOKEN}"  # optional dev override
+  passkey_vault_reference: "op://Private/Heady/auth_token"
+  allow_bearer_fallback: true
+  nonce_ttl_seconds: 60
+  replay_cache_size: 10000
+  allowed_dids:
+    - "did:key:zExampleOwner"
+    - "did:key:zCitizen"
+  roles:
+    "did:key:zExampleOwner": "governor"
+    "did:key:zCitizen": "citizen"
+  default_role: "citizen"
+  admin_roles:
+    - "governor"
+
+intelligence:
+  enabled_modules:
+    - gemini
+    - jules
+    - perplexity
+    - memory
+  concurrency_limit: 3
+  concurrency_limits:
+    gemini: 2
+    jules: 1
+    perplexity: 1
+  prompt_profile: "node_master"
+  model_preferences:
+    gemini: "gemini-2.0-flash"
+    jules: "jules-v1"
+    perplexity: "sonar-large"
+    huggingface: "meta-llama/Meta-Llama-3-8B-Instruct"
+  routing_policy_file: "./config/routing_policy.yaml"
+  role_overrides:
+    governor:
+      enabled_modules:
+        - gemini
+        - jules
+        - perplexity
+        - memory
+      intent_bias:
+        research: true
+        code: true
+        general: true
+    citizen:
+      enabled_modules:
+        - gemini
+        - jules
+        - perplexity
+        - memory
+      intent_bias:
+        research: true
+        code: true
+        general: true
+
+infrastructure:
+  tunnel:
+    provider: "cloudflare"
+    token_env: "TUNNEL_TOKEN"
+  cms:
+    enabled: true
+    image: "drupal:11-php8.3-apache"
+  repo_api:
+    image: "headysystems/repo-api:latest"
+    migration_volume: "migration_data"
+  data_paths:
+    notebooks: "./apps/repo-api/src/data"
+    ready_for_drupal: "./apps/repo-api/src/ready_for_drupal"
+
+storage:
+  memory:
+    backend: "json"
+    path: "./services/memory_mcp/brain.json"
+    encrypt_at_rest: false
+    encryption_key_ref: "op://Private/Heady/memory_key"
+  vector_store:
+    enabled: false
+    provider: "qdrant"
+    dimensions: 1536
+    collection: "heady_memory"
+    endpoint: "http://localhost:6333"
+    embedder:
+      provider: "openai"
+      model: "text-embedding-3-small"
+      api_key_registry_key: "openai"
+
+value_exchange:
+  enabled: false
+  ledger_backend: "sqlite"
+  ledger_path: "./infrastructure/value/ledger.sqlite"
+  token_symbol: "HEADY"
+  treasury_adapter: "multisig"
+
+integration:
+  mcp_enabled: true
+  services:
+    google_mcp: true
+    jules_mcp: true
+    perplexity_mcp: true
+    memory_mcp: true
+    secret_gateway: true
+    model_gateway: true
+
+privacy:
+  zero_trust: true
+  zk_proof_adapter: "none"
+
+resilience:
+  backups_enabled: true
+  backup_path: "./infrastructure/backups"
+  export_enabled: true
+
+hardware:
+  enabled: false
+  device_identity_enabled: false
+
+content:
+  license_default: "CC-BY-SA-4.0"
+  drupal_migration_enabled: true
+
+customization:
+  features:
+    allow_user_theme_overrides: true
+    allow_module_toggle: true
+    enable_admin_api: true
+  default_modules:
+    - cms
+    - repo_api
+    - memory_gateway
+
+secrets:
+  providers:
+    - name: "1password"
+      handler: "OnePasswordHandler"
+      registry_file: "config/secrets_registry.json"
+
+telemetry:
+  audit_log_path: "./infrastructure/logs/sovereign_audit.log"
+  emit_identity_events: true
+
+governance:
+  dao_endpoint: "https://dao.heady.local"
+  treasury_adapter: "multisig"
+  voting_token: "HEADY"
+  proposal_quorum_percent: 15

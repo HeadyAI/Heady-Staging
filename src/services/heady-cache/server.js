@@ -1,4 +1,5 @@
 'use strict';
+const logger = require('../../shared/logger')('server');
 
 /**
  * HeadyCache Express Server Entry Point
@@ -36,7 +37,7 @@ const app = express();
 
 // Security & middleware
 app.use(helmet());
-app.use(cors());
+app.use(require('../../shared/security-headers').securityHeaders());
 app.use(compression());
 app.use(express.json({ limit: '10mb' }));
 
@@ -46,7 +47,7 @@ app.use((req, res, next) => {
   res.on('finish', () => {
     const duration = Date.now() - start;
     if (process.env.NODE_ENV !== 'test') {
-      console.log(
+      logger.info(
         JSON.stringify({
           ts: new Date().toISOString(),
           method: req.method,
@@ -81,7 +82,7 @@ app.use((req, res) => {
 
 // Error handler
 app.use((err, req, res, next) => { // eslint-disable-line no-unused-vars
-  console.error('[heady-cache] unhandled error:', err);
+  logger.error('[heady-cache] unhandled error:', err);
   res.status(500).json({ error: err.message || 'Internal server error' });
 });
 
@@ -92,10 +93,10 @@ app.use((err, req, res, next) => { // eslint-disable-line no-unused-vars
 async function start() {
   try {
     await cache.init();
-    console.log(`[heady-cache] cache initialized (backend=${config.backend})`);
+    logger.info(`[heady-cache] cache initialized (backend=${config.backend})`);
 
     const server = app.listen(config.port, '0.0.0.0', () => {
-      console.log(
+      logger.info(
         JSON.stringify({
           ts: new Date().toISOString(),
           service: 'heady-cache',
@@ -115,14 +116,14 @@ async function start() {
     // ---------------------------------------------------------------------------
 
     const shutdown = async (signal) => {
-      console.log(`[heady-cache] received ${signal}, shutting down...`);
+      logger.info(`[heady-cache] received ${signal}, shutting down...`);
       server.close(async () => {
         try {
           await cache.close();
-          console.log('[heady-cache] shutdown complete');
+          logger.info('[heady-cache] shutdown complete');
           process.exit(0);
         } catch (err) {
-          console.error('[heady-cache] shutdown error:', err);
+          logger.error('[heady-cache] shutdown error:', err);
           process.exit(1);
         }
       });
@@ -134,17 +135,17 @@ async function start() {
     process.on('SIGINT', () => shutdown('SIGINT'));
 
     process.on('unhandledRejection', (reason) => {
-      console.error('[heady-cache] unhandledRejection:', reason);
+      logger.error('[heady-cache] unhandledRejection:', reason);
     });
 
     process.on('uncaughtException', (err) => {
-      console.error('[heady-cache] uncaughtException:', err);
+      logger.error('[heady-cache] uncaughtException:', err);
       process.exit(1);
     });
 
     return server;
   } catch (err) {
-    console.error('[heady-cache] startup error:', err);
+    logger.error('[heady-cache] startup error:', err);
     process.exit(1);
   }
 }

@@ -1,0 +1,42 @@
+# Drupal Content Type: Case Study
+# Generated for Heady™ Platform — HeadyAutoContext vector-indexed
+# All content auto-synced to pgvector via webhook + polling fallback
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+    - text
+    - field
+    - heady_cms
+id: case_study
+label: 'Case Study'
+description: 'Enterprise case studies with problem, solution, and results.'
+help: ''
+new_revision: true
+preview_mode: 1
+display_submitted: true
+
+# Field: field_company
+# field_type: text_long
+
+# Field: field_industry
+# field_type: text_long
+
+# Field: field_challenge
+# field_type: text_long
+
+# Field: field_solution
+# field_type: text_long
+
+# Field: field_results
+# field_type: text_long
+
+# Field: field_metrics
+# field_type: text_long
+
+# Field: field_testimonial_ref
+# field_type: text_long
+
+# Field: field_vector_embedding
+# field_type: text_long

@@ -338,7 +338,7 @@ Date: _______________________
 **On behalf of Data Processor (HeadySystems Inc.):**
 
 Signature: _______________________  
-Name: Eric Headington  
+Name: Eric Haywood  
 Title: Chief Executive Officer  
 Date: _______________________  
 Email: eric@headyconnection.org

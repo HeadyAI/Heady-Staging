@@ -1,0 +1,42 @@
+# Drupal Content Type: Product Catalog
+# Generated for Heady™ Platform — HeadyAutoContext vector-indexed
+# All content auto-synced to pgvector via webhook + polling fallback
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+    - text
+    - field
+    - heady_cms
+id: product_catalog
+label: 'Product Catalog'
+description: 'Service and product catalog entries for HeadyEX marketplace.'
+help: ''
+new_revision: true
+preview_mode: 1
+display_submitted: true
+
+# Field: field_product_name
+# field_type: text_long
+
+# Field: field_category
+# field_type: entity_reference
+
+# Field: field_description
+# field_type: text_long
+
+# Field: field_pricing
+# field_type: text_long
+
+# Field: field_features
+# field_type: text_long
+
+# Field: field_screenshots
+# field_type: text_long
+
+# Field: field_api_endpoint
+# field_type: text_long
+
+# Field: field_vector_embedding
+# field_type: text_long

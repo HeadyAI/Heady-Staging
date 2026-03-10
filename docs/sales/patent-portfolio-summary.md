@@ -1,7 +1,7 @@
 # Heady™OS Patent Portfolio Summary
 
 **Holder**: HeadySystems Inc. (DBA Heady™)  
-**Inventor**: Eric Headington  
+**Inventor**: Eric Haywood  
 **Total Provisionals**: 51+ USPTO provisional patent applications  
 **Filing Status**: Active provisional applications (12-month conversion window)  
 **φ Reference**: 1.618033988749895  

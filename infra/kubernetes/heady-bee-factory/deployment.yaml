@@ -1,0 +1,83 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: heady-bee-factory
+  labels:
+    app: heady-bee-factory
+    heady.io/domain: bee
+    heady.io/autocontext: "true"
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: heady-bee-factory
+  template:
+    metadata:
+      labels:
+        app: heady-bee-factory
+        heady.io/domain: bee
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "8200"
+    spec:
+      terminationGracePeriodSeconds: 34
+      containers:
+      - name: heady-bee-factory
+        image: gcr.io/gen-lang-client-0920560496/heady-bee-factory:latest
+        ports:
+        - containerPort: 8200
+          name: http
+        envFrom:
+        - configMapRef:
+            name: heady-global-config
+        - secretRef:
+            name: heady-secrets
+        env:
+        - name: SERVICE_NAME
+          value: "heady-bee-factory"
+        - name: PORT
+          value: "8200"
+        - name: AUTOCONTEXT_URL
+          value: "http://heady-auto-context:8907"
+        - name: CONSUL_URL
+          value: "http://consul:8500"
+        - name: OTEL_ENDPOINT
+          value: "http://otel-collector:4318"
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "128Mi"
+          limits:
+            cpu: "500m"
+            memory: "512Mi"
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8200
+          initialDelaySeconds: 13
+          periodSeconds: 21
+          timeoutSeconds: 8
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8200
+          initialDelaySeconds: 8
+          periodSeconds: 13
+          timeoutSeconds: 5
+          failureThreshold: 2
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: heady-bee-factory
+  labels:
+    app: heady-bee-factory
+    heady.io/domain: bee
+spec:
+  selector:
+    app: heady-bee-factory
+  ports:
+  - name: http
+    port: 8200
+    targetPort: 8200

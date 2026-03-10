@@ -2,7 +2,7 @@
 
 **Status:** Accepted  
 **Date:** 2026-03-07  
-**Authors:** Eric Headington, Platform Engineering  
+**Authors:** Eric Haywood, Platform Engineering  
 **φ-revision:** 1.618  
 
 ---

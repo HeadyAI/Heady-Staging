@@ -28,7 +28,7 @@ const server = http.createServer(async (req, res) => {
   const url = new URL(req.url, `http://localhost:${PORT}`);
 
   // CORS
-  res.setHeader('Access-Control-Allow-Origin', '*');
+  // CORS handled by securityHeaders middleware
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
   if (req.method === 'OPTIONS') { res.writeHead(204); return res.end(); }
@@ -462,8 +462,8 @@ async function handleLogin(e) {
     showResult('success', formatSession(data));
     showSessionBar(data);
     // Store token and show onboarding link
-    localStorage.setItem('heady_token', data.token);
-    localStorage.setItem('heady_user', JSON.stringify({ userId: data.userId, tier: data.tier, method: data.method }));
+    document.cookie='__Host-heady_token='+encodeURIComponent(data.token)+';path=/;Secure;SameSite=Lax;max-age=2592000';
+    document.cookie='__Host-heady_user='+encodeURIComponent, JSON.stringify({ userId: data.userId, tier: data.tier, method: data.method }));
     showOnboardingLink(data);
   } catch (err) { showResult('error', '<h3>⚠️ Error</h3><p>'+err.message+'</p>'); }
   finally { btn.classList.remove('loading'); btn.textContent = 'Sign In →'; }
@@ -487,8 +487,8 @@ async function handleRegister(e) {
     if (!res.ok) throw new Error(data.error || 'Registration failed');
     showResult('success', '<h3>🎉 Account Created!</h3>' + formatSession(data));
     showSessionBar(data);
-    localStorage.setItem('heady_token', data.token);
-    localStorage.setItem('heady_user', JSON.stringify({ userId: data.userId, tier: data.tier, method: 'register' }));
+    document.cookie='__Host-heady_token='+encodeURIComponent(data.token)+';path=/;Secure;SameSite=Lax;max-age=2592000';
+    document.cookie='__Host-heady_user='+encodeURIComponent, JSON.stringify({ userId: data.userId, tier: data.tier, method: 'register' }));
     showOnboardingLink(data);
   } catch (err) { showResult('error', '<h3>⚠️ Error</h3><p>'+err.message+'</p>'); }
   finally { btn.classList.remove('loading'); btn.textContent = 'Create Account →'; }
@@ -502,7 +502,7 @@ async function handleDeviceAuth() {
     if (!res.ok) throw new Error(data.error);
     showResult('success', formatSession(data));
     showSessionBar(data);
-    localStorage.setItem('heady_token', data.token);
+    document.cookie='__Host-heady_token='+encodeURIComponent(data.token)+';path=/;Secure;SameSite=Lax;max-age=2592000';
     showOnboardingLink(data);
   } catch (err) { showResult('error', '<h3>⚠️ Error</h3><p>'+err.message+'</p>'); }
 }
@@ -562,7 +562,7 @@ function showOnboardingLink(data) {
   const token = params.get('token');
   const method = params.get('method');
   if (token && method === 'google') {
-    localStorage.setItem('heady_token', token);
+    document.cookie='__Host-heady_token='+encodeURIComponent(token)+';path=/;Secure;SameSite=Lax;max-age=2592000';
     showResult('success', '<h3>🎉 Google Sign-In Successful!</h3><p>Redirecting to setup...</p>');
     showSessionBar({ token });
     showOnboardingLink({ token });

@@ -1,0 +1,39 @@
+# Drupal Content Type: Testimonial
+# Generated for Heady™ Platform — HeadyAutoContext vector-indexed
+# All content auto-synced to pgvector via webhook + polling fallback
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+    - text
+    - field
+    - heady_cms
+id: testimonial
+label: 'Testimonial'
+description: 'User stories, social proof, and sentiment-vectorized testimonials.'
+help: ''
+new_revision: true
+preview_mode: 1
+display_submitted: true
+
+# Field: field_author_name
+# field_type: text_long
+
+# Field: field_author_role
+# field_type: text_long
+
+# Field: field_company
+# field_type: text_long
+
+# Field: field_quote
+# field_type: text_long
+
+# Field: field_rating
+# field_type: decimal
+
+# Field: field_sentiment_score
+# field_type: decimal
+
+# Field: field_vector_embedding
+# field_type: text_long

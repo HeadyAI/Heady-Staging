@@ -1,0 +1,42 @@
+# Drupal Content Type: Investor Update
+# Generated for Heady™ Platform — HeadyAutoContext vector-indexed
+# All content auto-synced to pgvector via webhook + polling fallback
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+    - text
+    - field
+    - heady_cms
+id: investor_update
+label: 'Investor Update'
+description: 'Quarterly updates, financial reports, and investor communications. HeadyFinance.'
+help: ''
+new_revision: true
+preview_mode: 1
+display_submitted: true
+
+# Field: field_quarter
+# field_type: text_long
+
+# Field: field_year
+# field_type: text_long
+
+# Field: field_summary
+# field_type: text_long
+
+# Field: field_financials
+# field_type: text_long
+
+# Field: field_milestones
+# field_type: text_long
+
+# Field: field_outlook
+# field_type: text_long
+
+# Field: field_attachments
+# field_type: text_long
+
+# Field: field_vector_embedding
+# field_type: text_long

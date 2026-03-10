@@ -1,4 +1,5 @@
 'use strict';
+const logger = require('../../shared/logger')(require('path').basename('services/heady-vector/index.js', '.js'));
 
 /**
  * HeadyVector — Main Service Entry Point
@@ -34,7 +35,7 @@ class HeadyVector {
     });
 
     this.pool.on('error', (err) => {
-      console.error('[heady-vector] Pool error:', err.message);
+      logger.error('[heady-vector] Pool error:', err.message);
     });
 
     // Sub-systems (initialized in start())
@@ -61,14 +62,14 @@ class HeadyVector {
    * @returns {Promise<void>}
    */
   async start() {
-    console.log(`[heady-vector] Starting service v${this.config.version}...`);
+    logger.info(`[heady-vector] Starting service v${this.config.version}...`);
     this._metrics.startTime = new Date();
 
     // Run migrations
     this.migrations = new MigrationRunner(this.pool);
     const { applied } = await this.migrations.runAll();
     if (applied.length > 0) {
-      console.log(`[heady-vector] Applied ${applied.length} migration(s): ${applied.join(', ')}`);
+      logger.info(`[heady-vector] Applied ${applied.length} migration(s): ${applied.join(', ')}`);
     }
 
     // Initialize subsystems
@@ -79,7 +80,7 @@ class HeadyVector {
     this.health = new HealthChecker(this.pool, this.indexes);
 
     this._ready = true;
-    console.log(`[heady-vector] Ready on port ${this.config.port}`);
+    logger.info(`[heady-vector] Ready on port ${this.config.port}`);
   }
 
   /**
@@ -89,7 +90,7 @@ class HeadyVector {
   async stop() {
     this._ready = false;
     await this.pool.end();
-    console.log('[heady-vector] Stopped');
+    logger.info('[heady-vector] Stopped');
   }
 
   /**

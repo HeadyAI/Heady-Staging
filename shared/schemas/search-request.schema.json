@@ -1,0 +1,45 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "Heady Search Request",
+    "description": "Schema for hybrid search (BM25 + vector) API",
+    "type": "object",
+    "properties": {
+        "query": {
+            "type": "string",
+            "maxLength": 987,
+            "description": "Full-text search query (Fibonacci max length)"
+        },
+        "embedding": {
+            "type": "array",
+            "items": {
+                "type": "number"
+            },
+            "minItems": 384,
+            "maxItems": 384,
+            "description": "384-dimensional query embedding for vector similarity"
+        },
+        "limit": {
+            "type": "integer",
+            "default": 21,
+            "minimum": 1,
+            "maximum": 89,
+            "description": "Max results (default Fibonacci 21, max Fibonacci 89)"
+        },
+        "contentType": {
+            "type": "string",
+            "description": "Filter results by content type"
+        }
+    },
+    "anyOf": [
+        {
+            "required": [
+                "query"
+            ]
+        },
+        {
+            "required": [
+                "embedding"
+            ]
+        }
+    ]
+}

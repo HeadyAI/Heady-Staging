@@ -7,7 +7,7 @@
 ## 1. Identity & Organization
 
 - **Company:** HeadySystems Inc.
-- **Founder / CEO:** Eric Haywood (eric-head / headyme)
+- **Founder / CEO:** Eric Haywood (eric-haywood / headyme)
 - **GitHub Org:** <https://github.com/HeadyMe> (32 repositories)
 - **Main Repo:** `HeadyMe/Heady-pre-production-9f2f0642` (public, JavaScript, 21 open issues)
 - **Package Name:** `heady-systems` v3.2.3

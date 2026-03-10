@@ -244,7 +244,7 @@ function _normalizeClassification(result) {
 
 function _corsResponse(response) {
   const headers = new Headers(response.headers);
-  headers.set('Access-Control-Allow-Origin', '*');
+  // CORS handled per-domain by edge router
   headers.set('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
   headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization');
   return new Response(response.body, { status: response.status, headers });

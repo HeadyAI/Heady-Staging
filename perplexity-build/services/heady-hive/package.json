@@ -1,0 +1,29 @@
+{
+  "name": "heady-hive",
+  "version": "3.2.3",
+  "type": "module",
+  "description": "Bee coordination hub \u2014 swarm management, lifecycle tracking",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "PORT=3321 node --watch index.js",
+    "health": "curl -s http://localhost:3321/health | jq ."
+  },
+  "dependencies": {
+    "express": "^4.21.0",
+    "@opentelemetry/api": "^1.9.0",
+    "@opentelemetry/sdk-node": "^0.52.0",
+    "@opentelemetry/exporter-trace-otlp-grpc": "^0.52.0",
+    "@opentelemetry/instrumentation-express": "^0.41.0"
+  },
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "heady": {
+    "domain": "agents",
+    "port": 3321,
+    "architecture": "concurrent-equals",
+    "phiScaled": true,
+    "autoContext": "mandatory"
+  }
+}

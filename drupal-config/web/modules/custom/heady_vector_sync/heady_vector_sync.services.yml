@@ -1,0 +1,4 @@
+services:
+  heady_vector_sync.indexer:
+    class: Drupal\heady_vector_sync\Service\VectorIndexer
+    arguments: ['@http_client', '@config.factory', '@logger.factory', '@entity_type.manager']

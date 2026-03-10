@@ -1,0 +1,29 @@
+{
+  "name": "heady-soul",
+  "version": "3.2.3",
+  "type": "module",
+  "description": "Orchestration core \u2014 HeadySoul awareness and values layer",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "PORT=3312 node --watch index.js",
+    "health": "curl -s http://localhost:3312/health | jq ."
+  },
+  "dependencies": {
+    "express": "^4.21.0",
+    "@opentelemetry/api": "^1.9.0",
+    "@opentelemetry/sdk-node": "^0.52.0",
+    "@opentelemetry/exporter-trace-otlp-grpc": "^0.52.0",
+    "@opentelemetry/instrumentation-express": "^0.41.0"
+  },
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "heady": {
+    "domain": "orchestration",
+    "port": 3312,
+    "architecture": "concurrent-equals",
+    "phiScaled": true,
+    "autoContext": "mandatory"
+  }
+}

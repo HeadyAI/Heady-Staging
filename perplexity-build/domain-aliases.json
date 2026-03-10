@@ -1,0 +1,29 @@
+{
+  "_meta": {
+    "description": "Domain alias mapping for Heady™ ecosystem routing",
+    "note": "ALL domains route through Cloudflare → Cloud Run. Zero localhost."
+  },
+  "aliases": {
+    "www.headyme.com": "headyme.com",
+    "www.headysystems.com": "headysystems.com",
+    "www.heady-ai.com": "heady-ai.com",
+    "www.headyos.com": "headyos.com",
+    "www.headyconnection.org": "headyconnection.org",
+    "www.headyconnection.com": "headyconnection.com",
+    "www.headyex.com": "headyex.com",
+    "www.headyfinance.com": "headyfinance.com",
+    "headyai.com": "heady-ai.com",
+    "headybee.co": "headyex.com",
+    "headybuddy.org": "headyme.com",
+    "headybuddy.com": "headyme.com",
+    "headyapi.com": "headysystems.com",
+    "headymcp.com": "headysystems.com",
+    "heady.io": "headysystems.com",
+    "headybot.com": "headyme.com",
+    "headycloud.com": "headysystems.com",
+    "headylens.ai": "heady-ai.com",
+    "headyarena.io": "heady-ai.com",
+    "headyvinci.com": "heady-ai.com",
+    "headysoul.ai": "headyos.com"
+  }
+}

@@ -1,0 +1,74 @@
+{
+  "version": "1.0",
+  "trust_first_architecture": true,
+  "security": {
+    "zero_start_rule": {
+      "enabled": true,
+      "default_state": "provisioning",
+      "handshake_timeout_seconds": 300,
+      "orchestrator_verification": true
+    },
+    "glass_box_mandate": {
+      "enabled": true,
+      "lens_stream_path": "./shared/state/lens_stream.json",
+      "emit_all_writes": true,
+      "fail_safe_on_stream_unreachable": true
+    },
+    "default_permissions": "deny_all",
+    "require_authentication": true,
+    "audit_all_operations": true
+  },
+  "governance": {
+    "dependency_resolution": "governance_first",
+    "critical_path_enforcement": true,
+    "corporate_domain_separation": true
+  },
+  "storage": {
+    "intelligent_tiering": true,
+    "hot_storage": {
+      "backend": "redis",
+      "fallback_memory": true,
+      "ttl_default": 86400
+    },
+    "warm_storage": {
+      "backend": "json_files",
+      "path": "./shared/state",
+      "retention_days": 7
+    },
+    "cold_storage": {
+      "backend": "postgresql",
+      "path": "./infrastructure/system_audit_logs.db",
+      "archive_path": "./infrastructure/archives",
+      "retention_years": 7
+    }
+  },
+  "monitoring": {
+    "real_time_telemetry": true,
+    "lens_stream_events": true,
+    "health_check_interval": 30,
+    "alert_on_anomaly": true
+  },
+  "corporate_domains": {
+    "heady_systems": {
+      "role": "engine",
+      "services": [
+        "gateway",
+        "orchestrator",
+        "sentinel",
+        "architect",
+        "archivist"
+      ],
+      "security_level": "high"
+    },
+    "heady_connection": {
+      "role": "bridge",
+      "services": [
+        "lens",
+        "admin_ui",
+        "trust_indicators"
+      ],
+      "security_level": "high",
+      "human_in_the_loop": true
+    }
+  }
+}

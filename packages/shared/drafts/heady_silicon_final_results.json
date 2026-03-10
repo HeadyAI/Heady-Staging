@@ -1,0 +1,23 @@
+{
+  "topology": {
+    "nodes_processed": 1000,
+    "similarity_matrix_shape": [
+      1000,
+      1000
+    ],
+    "sample_similarity": 0.9055876731872559
+  },
+  "sanity": {
+    "total_nodes": 1000,
+    "corrupted_count": 0,
+    "corrupted_indices": [],
+    "compute_time": 0.05605149269104004,
+    "drift_threshold_hours": 24.0
+  },
+  "sorting": {
+    "nodes_sorted": 1000,
+    "cpu_time": 0.03816699981689453,
+    "gpu_time": 0.00011801719665527344,
+    "speedup": 323.4020202020202
+  }
+}

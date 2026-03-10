@@ -79,7 +79,7 @@ class MCPTransport extends EventEmitter {
     res.setHeader('Cache-Control', 'no-cache, no-transform');
     res.setHeader('Connection', 'keep-alive');
     res.setHeader('X-Accel-Buffering', 'no'); // Disable nginx buffering
-    res.setHeader('Access-Control-Allow-Origin', '*');
+    // CORS handled by securityHeaders middleware
     res.flushHeaders();
 
     const client = { id: clientId, res, connectedAt: new Date(), eventCount: 0 };

@@ -1,0 +1,16 @@
+/* Heady Chrome Extension - Content Styles */
+
+#heady-notification {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+
+#heady-capture-btn {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  user-select: none;
+}
+
+/* Prevent conflicts with page styles */
+#heady-notification *,
+#heady-capture-btn * {
+  all: revert;
+}

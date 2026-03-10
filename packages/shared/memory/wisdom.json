@@ -1,0 +1,18 @@
+[
+  {
+    "pattern_id": "wisdom_bootstrap",
+    "trigger": "build system",
+    "strategy": "Use jules for coding tasks, perplexity for research, gemini for architecture decisions. Always run verify_full_stack.py after completion.",
+    "success_count": 5,
+    "last_used": "2026-01-30T21:00:00",
+    "created_at": "2026-01-30T20:00:00"
+  },
+  {
+    "pattern_id": "wisdom_prompt_refactor",
+    "trigger": "create prompt",
+    "strategy": "Store prompts in data/prompts/*.yaml with name, version, variables, and content fields. Use PromptService for dynamic loading.",
+    "success_count": 3,
+    "last_used": "2026-01-30T21:40:00",
+    "created_at": "2026-01-30T21:00:00"
+  }
+]

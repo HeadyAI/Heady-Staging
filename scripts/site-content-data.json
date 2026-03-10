@@ -1,0 +1,1321 @@
+{
+    "designTokens": {
+        "phi": 1.6180339887,
+        "fonts": "Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800",
+        "monoFont": "JetBrains+Mono:wght@400;500"
+    },
+    "sites": {
+        "headysystems": {
+            "domain": "headysystems.com",
+            "title": "HeadySystems™",
+            "tagline": "The Intelligence Infrastructure Company",
+            "description": "Enterprise-grade AI orchestration platform. 60+ patents. Sacred Geometry architecture. Continuous Semantic Logic.",
+            "accent": "#00d4aa",
+            "accentAlt": "#f5c842",
+            "category": "core",
+            "heroStats": [
+                {
+                    "value": "60+",
+                    "label": "Patents Filed"
+                },
+                {
+                    "value": "21",
+                    "label": "Microservices"
+                },
+                {
+                    "value": "17",
+                    "label": "AI Swarms"
+                },
+                {
+                    "value": "99.97%",
+                    "label": "Uptime SLA"
+                }
+            ],
+            "features": [
+                {
+                    "icon": "🧬",
+                    "title": "Continuous Semantic Logic",
+                    "desc": "Replace boolean gates with geometric confidence scoring. Every decision is a vector operation in continuous space."
+                },
+                {
+                    "icon": "◆",
+                    "title": "Sacred Geometry Math",
+                    "desc": "All system constants derive from φ (1.618). No magic numbers — spacing, timeouts, pool sizes, thresholds are all Fibonacci-scaled."
+                },
+                {
+                    "icon": "🐝",
+                    "title": "Bee Swarm Architecture",
+                    "desc": "6,765 concurrent worker bees across 24 domains. Self-healing, auto-scaling, Fibonacci-stepped pool sizing."
+                },
+                {
+                    "icon": "🧠",
+                    "title": "21-Stage Pipeline",
+                    "desc": "HCFullPipeline: from intake to receipt. Monte Carlo risk simulation, arena competition, metacognitive self-awareness."
+                },
+                {
+                    "icon": "🔒",
+                    "title": "Zero-Trust Security",
+                    "desc": "Post-quantum cryptography ready. mTLS everywhere. WebAuthn passwordless auth. Model output armor."
+                },
+                {
+                    "icon": "⚡",
+                    "title": "Edge-First Deployment",
+                    "desc": "Cloudflare Workers for sub-200ms inference. Cloud Run for heavy compute. Automatic failover across providers."
+                }
+            ],
+            "cta": {
+                "primary": "Request Demo",
+                "primaryHref": "https://headyio.com/docs/quickstart",
+                "secondary": "View Architecture",
+                "secondaryHref": "https://headyio.com/docs/deploy"
+            }
+        },
+        "headyio": {
+            "domain": "headyio.com",
+            "title": "Heady I/O",
+            "tagline": "Developer Platform & SDK",
+            "description": "Build with Heady. SDK, APIs, MCP tools, vector memory, and multi-model AI gateway. Ship faster with Sacred Geometry.",
+            "accent": "#6366f1",
+            "accentAlt": "#22d3ee",
+            "category": "developer",
+            "heroStats": [
+                {
+                    "value": "31",
+                    "label": "MCP Tools"
+                },
+                {
+                    "value": "384D",
+                    "label": "Vector Memory"
+                },
+                {
+                    "value": "5",
+                    "label": "AI Providers"
+                },
+                {
+                    "value": "<1s",
+                    "label": "Avg Latency"
+                }
+            ],
+            "features": [
+                {
+                    "icon": "📦",
+                    "title": "SDK & CLI",
+                    "desc": "npm install @heady-ai/sdk — TypeScript-first, tree-shakeable. Chat, memory, embeddings, battle-validate in one package."
+                },
+                {
+                    "icon": "🔌",
+                    "title": "MCP Protocol",
+                    "desc": "31 tools over Streamable HTTP + SSE. Works with VS Code, Cursor, Windsurf, and any MCP-compatible IDE."
+                },
+                {
+                    "icon": "🧮",
+                    "title": "Vector Memory API",
+                    "desc": "384-dimensional embeddings with 3D octree projection. Namespace isolation, pgvector backend, Cloudflare Vectorize edge."
+                },
+                {
+                    "icon": "🔑",
+                    "title": "Auth & Keys",
+                    "desc": "JWT + OAuth2 PKCE + API Keys. 25+ OAuth providers. Cross-domain session management built in."
+                },
+                {
+                    "icon": "🏎️",
+                    "title": "Multi-Model Gateway",
+                    "desc": "Race 4+ providers (Claude, GPT, Gemini, Groq) simultaneously. Auto-failover. Best answer wins."
+                },
+                {
+                    "icon": "📊",
+                    "title": "Observability",
+                    "desc": "OpenTelemetry traces, structured logging, correlation IDs, health matrices. Prometheus + Grafana ready."
+                }
+            ],
+            "cta": {
+                "primary": "Get API Key",
+                "primaryHref": "https://heady-onboarding-bf4q4zywhq-ue.a.run.app",
+                "secondary": "Read Docs",
+                "secondaryHref": "https://headyio.com/docs"
+            }
+        },
+        "headyapi": {
+            "domain": "headyapi.com",
+            "title": "HeadyAPI™",
+            "tagline": "Liquid Intelligence Gateway",
+            "description": "Unified AI gateway that races providers, caches responses, and auto-fails-over. One endpoint, every model.",
+            "accent": "#f59e0b",
+            "accentAlt": "#ef4444",
+            "category": "product",
+            "heroStats": [
+                {
+                    "value": "4+",
+                    "label": "AI Providers"
+                },
+                {
+                    "value": "<200ms",
+                    "label": "Edge Latency"
+                },
+                {
+                    "value": "100K+",
+                    "label": "Req/Day Capacity"
+                },
+                {
+                    "value": "3x",
+                    "label": "Cost Reduction"
+                }
+            ],
+            "features": [
+                {
+                    "icon": "🏁",
+                    "title": "Provider Racing",
+                    "desc": "Send your prompt to multiple models simultaneously. First quality response wins. Determinism-proven answers."
+                },
+                {
+                    "icon": "💾",
+                    "title": "Semantic Cache",
+                    "desc": "Proven answers are cached and recalled by similarity. Cache hits are instant — zero model calls."
+                },
+                {
+                    "icon": "🔄",
+                    "title": "Auto-Failover",
+                    "desc": "If OpenAI is down, Gemini takes over. If Gemini is slow, Groq responds. Zero downtime, always."
+                },
+                {
+                    "icon": "🔑",
+                    "title": "BYOK Support",
+                    "desc": "Bring your own API keys for any provider. Use your existing contracts and billing."
+                },
+                {
+                    "icon": "📈",
+                    "title": "Usage Analytics",
+                    "desc": "Per-model cost tracking, latency histograms, cache hit rates, and provider reliability scores."
+                },
+                {
+                    "icon": "🛡️",
+                    "title": "Model Armor",
+                    "desc": "Output filtering, prompt injection detection, PII scrubbing, and compliance enforcement built in."
+                }
+            ],
+            "cta": {
+                "primary": "Start Free",
+                "primaryHref": "https://heady-onboarding-bf4q4zywhq-ue.a.run.app",
+                "secondary": "API Reference",
+                "secondaryHref": "https://headyio.com/docs"
+            }
+        },
+        "headymcp": {
+            "domain": "headymcp.com",
+            "title": "HeadyMCP™",
+            "tagline": "Edge-Native MCP Server",
+            "description": "Model Context Protocol hub. 31 tools, Streamable HTTP transport, Durable Objects for session state. Runs at Cloudflare edge.",
+            "accent": "#8b5cf6",
+            "accentAlt": "#06b6d4",
+            "category": "developer",
+            "heroStats": [
+                {
+                    "value": "31",
+                    "label": "MCP Tools"
+                },
+                {
+                    "value": "<50ms",
+                    "label": "Tool Latency"
+                },
+                {
+                    "value": "SSE+HTTP",
+                    "label": "Transports"
+                },
+                {
+                    "value": "∞",
+                    "label": "Sessions via DO"
+                }
+            ],
+            "features": [
+                {
+                    "icon": "🛠️",
+                    "title": "31 Production Tools",
+                    "desc": "Memory store/search, embeddings, chat, analyze, refactor, battle-validate, deploy, health — all via MCP protocol."
+                },
+                {
+                    "icon": "🌐",
+                    "title": "Edge-Native",
+                    "desc": "Runs on Cloudflare Workers. Your tools execute at the edge — no round-trip to origin. Sub-50ms tool calls."
+                },
+                {
+                    "icon": "💠",
+                    "title": "Durable Sessions",
+                    "desc": "Cloudflare Durable Objects maintain MCP session state. WebSocket hibernation for efficient long-lived connections."
+                },
+                {
+                    "icon": "🔗",
+                    "title": "IDE Integration",
+                    "desc": "Works with VS Code, Cursor, Windsurf, JetBrains, and any MCP-compatible client out of the box."
+                },
+                {
+                    "icon": "📡",
+                    "title": "SSE Transport",
+                    "desc": "Server-Sent Events for streaming tool results. Real-time progress updates for long-running operations."
+                },
+                {
+                    "icon": "🔐",
+                    "title": "Zero-Trust Sandbox",
+                    "desc": "Every tool execution is sandboxed. RBAC per tool. Audit logging. Rate limiting. CSL confidence gates."
+                }
+            ],
+            "cta": {
+                "primary": "Connect IDE",
+                "primaryHref": "https://headymcp.com/connect",
+                "secondary": "Tool Catalog",
+                "secondaryHref": "https://headyio.com/docs/mcp"
+            }
+        },
+        "headyos": {
+            "domain": "headyos.com",
+            "title": "HeadyOS™",
+            "tagline": "The Latent Operating System",
+            "description": "Not software. A living system. 6-layer kernel, cognitive archetypes, autonomous agents, and self-healing infrastructure.",
+            "accent": "#10b981",
+            "accentAlt": "#f59e0b",
+            "category": "platform",
+            "heroStats": [
+                {
+                    "value": "6",
+                    "label": "Kernel Layers"
+                },
+                {
+                    "value": "7",
+                    "label": "Archetypes"
+                },
+                {
+                    "value": "17",
+                    "label": "Swarm Domains"
+                },
+                {
+                    "value": "φ⁷",
+                    "label": "Heartbeat (ms)"
+                }
+            ],
+            "features": [
+                {
+                    "icon": "🦉",
+                    "title": "7 Cognitive Archetypes",
+                    "desc": "Owl (wisdom), Eagle (omniscience), Dolphin (creativity), Rabbit (multiplication), Ant (task), Elephant (memory), Beaver (build)."
+                },
+                {
+                    "icon": "🔄",
+                    "title": "Self-Healing Loop",
+                    "desc": "Circuit breakers, exponential backoff, watchdogs, quarantine-and-respawn. The system heals itself."
+                },
+                {
+                    "icon": "🧬",
+                    "title": "Socratic Validation",
+                    "desc": "4-check reasoning loop with 5 iteration max. Every decision is questioned before execution."
+                },
+                {
+                    "icon": "📐",
+                    "title": "φ-Scaled Everything",
+                    "desc": "Timeouts, pool sizes, thresholds, heartbeats — all derived from golden ratio. Zero magic numbers."
+                },
+                {
+                    "icon": "🏗️",
+                    "title": "Liquid Architecture",
+                    "desc": "Services flow like water. Deploy to edge, cloud, or local. Projection-based deployment — not copy-paste."
+                },
+                {
+                    "icon": "🎯",
+                    "title": "Auto-Success Engine",
+                    "desc": "φ⁷ heartbeat (29,034ms). 13 categories. Continuous improvement without human intervention."
+                }
+            ],
+            "cta": {
+                "primary": "Explore OS",
+                "primaryHref": "https://headyio.com/docs/quickstart",
+                "secondary": "Architecture Guide",
+                "secondaryHref": "https://headyio.com/docs/deploy"
+            }
+        },
+        "headybuddy": {
+            "domain": "headybuddy.org",
+            "title": "HeadyBuddy™",
+            "tagline": "Your AI Companion",
+            "description": "Memory-aware AI assistant that knows you. Cross-device sync, long-term recall, anticipatory suggestions. Always learning.",
+            "accent": "#ec4899",
+            "accentAlt": "#8b5cf6",
+            "category": "consumer",
+            "heroStats": [
+                {
+                    "value": "∞",
+                    "label": "Memory Depth"
+                },
+                {
+                    "value": "5+",
+                    "label": "Device Sync"
+                },
+                {
+                    "value": "3s",
+                    "label": "Response Time"
+                },
+                {
+                    "value": "24/7",
+                    "label": "Always On"
+                }
+            ],
+            "features": [
+                {
+                    "icon": "🧠",
+                    "title": "Persistent Memory",
+                    "desc": "HeadyBuddy remembers your preferences, past conversations, project context, and goals. Cross-session continuity."
+                },
+                {
+                    "icon": "📱",
+                    "title": "Cross-Device Sync",
+                    "desc": "Start on desktop, continue on phone. WebSocket event relay keeps all devices in perfect sync."
+                },
+                {
+                    "icon": "🔮",
+                    "title": "Anticipatory Help",
+                    "desc": "Predicts what you need before you ask. Proactive suggestions based on your patterns and history."
+                },
+                {
+                    "icon": "🎨",
+                    "title": "Custom Workspaces",
+                    "desc": "Create themed workspaces for different projects. Context-switch instantly between work, personal, and creative."
+                },
+                {
+                    "icon": "🔒",
+                    "title": "Privacy-First",
+                    "desc": "Your data stays yours. End-to-end encryption. Local-first storage with optional cloud sync."
+                },
+                {
+                    "icon": "💬",
+                    "title": "Natural Conversation",
+                    "desc": "Not a chatbot — a companion. Understands context, tone, and intent. Responds with personality."
+                }
+            ],
+            "cta": {
+                "primary": "Get HeadyBuddy",
+                "primaryHref": "https://heady-onboarding-bf4q4zywhq-ue.a.run.app",
+                "secondary": "Learn More",
+                "secondaryHref": "https://headyio.com/docs"
+            }
+        },
+        "headycloud": {
+            "domain": "headycloud.com",
+            "title": "HeadyCloud™",
+            "tagline": "Sovereign AI Infrastructure",
+            "description": "Your AI, your cloud, your rules. Multi-region deployment, BYOK model access, and zero-trust compute.",
+            "accent": "#3b82f6",
+            "accentAlt": "#10b981",
+            "category": "infrastructure",
+            "heroStats": [
+                {
+                    "value": "Multi",
+                    "label": "Region Deploy"
+                },
+                {
+                    "value": "BYOK",
+                    "label": "Model Access"
+                },
+                {
+                    "value": "0",
+                    "label": "Vendor Lock-in"
+                },
+                {
+                    "value": "SOC 2",
+                    "label": "Compliance"
+                }
+            ],
+            "features": [
+                {
+                    "icon": "☁️",
+                    "title": "Multi-Cloud Native",
+                    "desc": "Deploy to GCP, AWS, Cloudflare, or on-prem. Mix and match. No vendor lock-in ever."
+                },
+                {
+                    "icon": "🔑",
+                    "title": "Bring Your Own Keys",
+                    "desc": "Use your own API keys for any AI provider. Your contracts, your billing, your data."
+                },
+                {
+                    "icon": "🏰",
+                    "title": "Data Sovereignty",
+                    "desc": "Choose where your data lives. EU, US, APAC — compliance with GDPR, HIPAA, SOC 2."
+                },
+                {
+                    "icon": "📊",
+                    "title": "Cost Dashboard",
+                    "desc": "Real-time spending across all providers and services. Budget alerts. Usage forecasting."
+                },
+                {
+                    "icon": "🔄",
+                    "title": "Auto-Scaling",
+                    "desc": "Scale from zero to thousands of requests. Pay only for what you use. Fibonacci-stepped pool sizing."
+                },
+                {
+                    "icon": "🛡️",
+                    "title": "Zero-Trust Compute",
+                    "desc": "mTLS between all services. PQC-ready encryption. IP classification and geo-guarding."
+                }
+            ],
+            "cta": {
+                "primary": "Deploy Now",
+                "primaryHref": "https://heady-onboarding-bf4q4zywhq-ue.a.run.app",
+                "secondary": "Pricing",
+                "secondaryHref": "#pricing"
+            }
+        },
+        "heady-ai": {
+            "domain": "heady-ai.com",
+            "title": "Heady AI™",
+            "tagline": "Intelligence Without Boundaries",
+            "description": "The unified AI experience. Chat, create, code, research, and automate — powered by 20 competing AI nodes.",
+            "accent": "#a855f7",
+            "accentAlt": "#22d3ee",
+            "category": "consumer",
+            "heroStats": [
+                {
+                    "value": "20",
+                    "label": "AI Nodes"
+                },
+                {
+                    "value": "5",
+                    "label": "Model Tiers"
+                },
+                {
+                    "value": "Arena",
+                    "label": "Battle Mode"
+                },
+                {
+                    "value": "Free",
+                    "label": "Starter Tier"
+                }
+            ],
+            "features": [
+                {
+                    "icon": "⚔️",
+                    "title": "Battle Arena Mode",
+                    "desc": "Pit 20 AI nodes against each other. Best answer wins through competitive evaluation. Tournament-proven results."
+                },
+                {
+                    "icon": "💬",
+                    "title": "Heady Chat",
+                    "desc": "Context-aware conversation with persistent memory. Switches models automatically for best response."
+                },
+                {
+                    "icon": "💻",
+                    "title": "Heady Coder",
+                    "desc": "Multi-model code generation. Explain, refactor, battle-validate, and ship — all from natural language."
+                },
+                {
+                    "icon": "🔍",
+                    "title": "Heady Research",
+                    "desc": "Deep web research with citations via Perplexity Sonar Pro. Real-time intelligence with source verification."
+                },
+                {
+                    "icon": "🎵",
+                    "title": "Heady Creative",
+                    "desc": "MIDI composition, image generation, content creation — AI-powered creative tools for every medium."
+                },
+                {
+                    "icon": "🤖",
+                    "title": "Heady Automate",
+                    "desc": "Define workflows in natural language. HeadyBee swarm executes them autonomously with progress tracking."
+                }
+            ],
+            "cta": {
+                "primary": "Try Free",
+                "primaryHref": "https://heady-onboarding-bf4q4zywhq-ue.a.run.app",
+                "secondary": "See Models",
+                "secondaryHref": "#models"
+            }
+        },
+        "headybot": {
+            "domain": "headybot.com",
+            "title": "HeadyBot™",
+            "tagline": "Autonomous Agent Orchestration",
+            "description": "Deploy intelligent agents that work around the clock. Task decomposition, swarm coordination, and self-improving execution.",
+            "accent": "#14b8a6",
+            "accentAlt": "#f59e0b",
+            "category": "product",
+            "heroStats": [
+                {
+                    "value": "6,765",
+                    "label": "Max Bees"
+                },
+                {
+                    "value": "24",
+                    "label": "Domains"
+                },
+                {
+                    "value": "Auto",
+                    "label": "Self-Heal"
+                },
+                {
+                    "value": "DAG",
+                    "label": "Task Graphs"
+                }
+            ],
+            "features": [
+                {
+                    "icon": "🐝",
+                    "title": "Bee Swarm Engine",
+                    "desc": "Fibonacci-scaled worker pools. 24-domain autonomous bees. Auto-discovery, lifecycle management, health monitoring."
+                },
+                {
+                    "icon": "🔀",
+                    "title": "Task Decomposition",
+                    "desc": "Complex tasks are broken into DAG subtask graphs. Topological sort with cycle detection. Parallel execution."
+                },
+                {
+                    "icon": "🏆",
+                    "title": "Competitive Evaluation",
+                    "desc": "Multiple agents propose solutions. Arena mode scores and ranks. Best solution is selected automatically."
+                },
+                {
+                    "icon": "📈",
+                    "title": "Continuous Learning",
+                    "desc": "Agents learn from every execution. Pattern recognition, mistake analysis, and optimization ops built in."
+                },
+                {
+                    "icon": "🔗",
+                    "title": "A2A Protocol",
+                    "desc": "Agent-to-agent communication protocol. Handoffs, shared context, dependency resolution across agent boundaries."
+                },
+                {
+                    "icon": "📊",
+                    "title": "Swarm Dashboard",
+                    "desc": "Real-time visualization of all active bees, task progress, resource usage, and swarm health metrics."
+                }
+            ],
+            "cta": {
+                "primary": "Deploy Agents",
+                "primaryHref": "https://heady-onboarding-bf4q4zywhq-ue.a.run.app",
+                "secondary": "Documentation",
+                "secondaryHref": "https://headyio.com/docs/bees"
+            }
+        },
+        "headyconnection-org": {
+            "domain": "headyconnection.org",
+            "title": "HeadyConnection™",
+            "tagline": "AI for Good · 501(c)(3) Nonprofit",
+            "description": "Bridging the AI divide. Open-source tools, community programs, and grants for underserved communities.",
+            "accent": "#f97316",
+            "accentAlt": "#06b6d4",
+            "category": "nonprofit",
+            "heroStats": [
+                {
+                    "value": "Open",
+                    "label": "Source Tools"
+                },
+                {
+                    "value": "Free",
+                    "label": "Community Tier"
+                },
+                {
+                    "value": "501c3",
+                    "label": "Tax Exempt"
+                },
+                {
+                    "value": "∀",
+                    "label": "For Everyone"
+                }
+            ],
+            "features": [
+                {
+                    "icon": "🤝",
+                    "title": "Community Programs",
+                    "desc": "Free AI literacy workshops, coding bootcamps, and mentorship programs for underserved communities."
+                },
+                {
+                    "icon": "💡",
+                    "title": "Open Source",
+                    "desc": "Core Heady tools available under open-source licenses. Contribute, fork, and build on top of our work."
+                },
+                {
+                    "icon": "🎓",
+                    "title": "Education Grants",
+                    "desc": "Funding for schools, universities, and nonprofits to integrate AI into their curricula and operations."
+                },
+                {
+                    "icon": "🌍",
+                    "title": "Global Access",
+                    "desc": "Heady AI available in 40+ languages. Regional deployments for low-latency access worldwide."
+                },
+                {
+                    "icon": "🏥",
+                    "title": "Healthcare AI",
+                    "desc": "Free AI tools for healthcare workers in underserved areas. Medical research assistance and diagnostics support."
+                },
+                {
+                    "icon": "🌱",
+                    "title": "Sustainability",
+                    "desc": "Carbon-neutral compute. Green cloud partnerships. Environmental impact tracking for all AI operations."
+                }
+            ],
+            "cta": {
+                "primary": "Get Involved",
+                "primaryHref": "mailto:eric@headyconnection.org",
+                "secondary": "Apply for Grant",
+                "secondaryHref": "mailto:eric@headyconnection.org"
+            }
+        },
+        "headyfinance": {
+            "domain": "headyfinance.com",
+            "title": "HeadyFinance™",
+            "tagline": "AI-Powered Trading Intelligence",
+            "description": "Quantitative analysis, risk modeling, portfolio optimization, and real-time market intelligence — powered by Sacred Geometry.",
+            "accent": "#22c55e",
+            "accentAlt": "#f59e0b",
+            "category": "vertical",
+            "heroStats": [
+                {
+                    "value": "φ",
+                    "label": "Scaled Models"
+                },
+                {
+                    "value": "Real-Time",
+                    "label": "Market Data"
+                },
+                {
+                    "value": "Monte Carlo",
+                    "label": "Risk Engine"
+                },
+                {
+                    "value": "24/7",
+                    "label": "Monitoring"
+                }
+            ],
+            "features": [
+                {
+                    "icon": "📊",
+                    "title": "Portfolio Optimization",
+                    "desc": "φ-weighted asset allocation. Fibonacci retracement analysis. Golden ratio position sizing."
+                },
+                {
+                    "icon": "⚠️",
+                    "title": "Risk Management",
+                    "desc": "Monte Carlo simulations with 1000+ scenarios. Real-time VaR calculations. Drawdown protection."
+                },
+                {
+                    "icon": "📈",
+                    "title": "Signal Analysis",
+                    "desc": "Multi-timeframe trend detection. Sentiment analysis from news and social media. Pattern recognition."
+                },
+                {
+                    "icon": "🤖",
+                    "title": "Automated Trading",
+                    "desc": "Define strategies in natural language. Backtest against historical data. Paper trade before going live."
+                },
+                {
+                    "icon": "🔔",
+                    "title": "Smart Alerts",
+                    "desc": "Price targets, volume spikes, unusual options activity, macro events — all pushed to your devices in real-time."
+                },
+                {
+                    "icon": "📑",
+                    "title": "Compliance",
+                    "desc": "Audit trails for every trade decision. Regulatory reporting. Tax-loss harvesting optimization."
+                }
+            ],
+            "cta": {
+                "primary": "Start Trading",
+                "primaryHref": "https://heady-onboarding-bf4q4zywhq-ue.a.run.app",
+                "secondary": "View Strategies",
+                "secondaryHref": "#strategies"
+            }
+        },
+        "headymusic": {
+            "domain": "headymusic.com",
+            "title": "HeadyMusic™",
+            "tagline": "AI-Powered Music Production",
+            "description": "Cloud-native DAW sync, MIDI composition, and Sacred Geometry sound design. Create music with AI at the speed of thought.",
+            "accent": "#ec4899",
+            "accentAlt": "#a855f7",
+            "category": "vertical",
+            "heroStats": [
+                {
+                    "value": "MIDI",
+                    "label": "Protocol"
+                },
+                {
+                    "value": "DAW",
+                    "label": "Sync"
+                },
+                {
+                    "value": "φ",
+                    "label": "Harmonics"
+                },
+                {
+                    "value": "Real-Time",
+                    "label": "Collaboration"
+                }
+            ],
+            "features": [
+                {
+                    "icon": "🎹",
+                    "title": "AI Composition",
+                    "desc": "Generate melodies, harmonies, and chord progressions using Sacred Geometry intervals and φ-scaled rhythms."
+                },
+                {
+                    "icon": "🎛️",
+                    "title": "DAW Integration",
+                    "desc": "Ableton Remote Script included. Real-time MIDI control from Heady to your DAW. Sub-millisecond sync."
+                },
+                {
+                    "icon": "🎵",
+                    "title": "Sound Design",
+                    "desc": "AI-generated sounds based on Fibonacci frequency ratios. Organic, breathing sound textures."
+                },
+                {
+                    "icon": "🤝",
+                    "title": "Collaboration",
+                    "desc": "Real-time multi-user sessions. Cross-device MIDI relay. Share projects and stems instantly."
+                },
+                {
+                    "icon": "📦",
+                    "title": "Sample Packs",
+                    "desc": "Curated AI-generated sample packs. Royalty-free. Updated monthly with fresh sounds."
+                },
+                {
+                    "icon": "🎤",
+                    "title": "Vocal Processing",
+                    "desc": "AI vocal tuning, harmonization, and style transfer. Turn any voice into a production-ready track."
+                }
+            ],
+            "cta": {
+                "primary": "Make Music",
+                "primaryHref": "https://heady-onboarding-bf4q4zywhq-ue.a.run.app",
+                "secondary": "Hear Demos",
+                "secondaryHref": "#demos"
+            }
+        },
+        "headystore": {
+            "domain": "headystore.com",
+            "title": "HeadyStore™",
+            "tagline": "AI Marketplace & Extensions",
+            "description": "Discover and install AI tools, extensions, themes, bee templates, and integrations built by the Heady community.",
+            "accent": "#f59e0b",
+            "accentAlt": "#ef4444",
+            "category": "marketplace",
+            "heroStats": [
+                {
+                    "value": "100+",
+                    "label": "Extensions"
+                },
+                {
+                    "value": "80+",
+                    "label": "Bee Templates"
+                },
+                {
+                    "value": "Free",
+                    "label": "Core Tools"
+                },
+                {
+                    "value": "Open",
+                    "label": "Marketplace"
+                }
+            ],
+            "features": [
+                {
+                    "icon": "🧩",
+                    "title": "Extensions",
+                    "desc": "VS Code, Chrome, Firefox, JetBrains, and CLI extensions. Install with one click."
+                },
+                {
+                    "icon": "🐝",
+                    "title": "Bee Templates",
+                    "desc": "Pre-built autonomous worker templates for every domain. Deploy in seconds, customize to your needs."
+                },
+                {
+                    "icon": "🎨",
+                    "title": "Themes",
+                    "desc": "Sacred Geometry themes for HeadyBuddy, HeadyIDE, and all Heady surfaces. Dark, light, neon."
+                },
+                {
+                    "icon": "🔌",
+                    "title": "Integrations",
+                    "desc": "Connect Heady to Slack, Discord, GitHub, Jira, Notion, Linear, and 50+ other tools."
+                },
+                {
+                    "icon": "📊",
+                    "title": "Dashboards",
+                    "desc": "Pre-built monitoring dashboards for Grafana, Datadog, and the Heady observability kernel."
+                },
+                {
+                    "icon": "🏗️",
+                    "title": "Site Templates",
+                    "desc": "Launch your website on Heady infrastructure. Premium templates with Sacred Geometry design built in."
+                }
+            ],
+            "cta": {
+                "primary": "Browse Store",
+                "primaryHref": "https://heady-onboarding-bf4q4zywhq-ue.a.run.app",
+                "secondary": "Submit Extension",
+                "secondaryHref": "mailto:eric@headyconnection.org"
+            }
+        },
+        "headyex": {
+            "domain": "headyex.com",
+            "title": "HeadyExchange™",
+            "tagline": "AI Compute Exchange",
+            "description": "Buy, sell, and trade AI compute credits. Decentralized marketplace for GPU time, model access, and inference capacity.",
+            "accent": "#06b6d4",
+            "accentAlt": "#f59e0b",
+            "category": "vertical",
+            "heroStats": [
+                {
+                    "value": "P2P",
+                    "label": "Compute Trading"
+                },
+                {
+                    "value": "GPU",
+                    "label": "Credits"
+                },
+                {
+                    "value": "Instant",
+                    "label": "Settlement"
+                },
+                {
+                    "value": "Fair",
+                    "label": "Pricing"
+                }
+            ],
+            "features": [
+                {
+                    "icon": "💱",
+                    "title": "Compute Credits",
+                    "desc": "HeadyCoin-denominated compute credits. Trade GPU hours, inference capacity, and storage allocation."
+                },
+                {
+                    "icon": "📊",
+                    "title": "Market Dashboard",
+                    "desc": "Real-time pricing for compute across providers. Historical trends, volume, and arbitrage opportunities."
+                },
+                {
+                    "icon": "🔄",
+                    "title": "Instant Settlement",
+                    "desc": "Merkle-tree verified transactions. Instant settlement. No intermediaries. Full audit trail."
+                },
+                {
+                    "icon": "🏦",
+                    "title": "Staking",
+                    "desc": "Stake HeadyCoin to earn yield. Provide liquidity to the compute pool. Earn from every transaction."
+                },
+                {
+                    "icon": "📈",
+                    "title": "Portfolio",
+                    "desc": "Track your compute holdings, usage, and returns. Rebalance across providers automatically."
+                },
+                {
+                    "icon": "🛡️",
+                    "title": "Escrow Protection",
+                    "desc": "Smart contract escrow for all trades. Dispute resolution. Reputation scoring for sellers."
+                }
+            ],
+            "cta": {
+                "primary": "Start Trading",
+                "primaryHref": "https://heady-onboarding-bf4q4zywhq-ue.a.run.app",
+                "secondary": "View Markets",
+                "secondaryHref": "#markets"
+            }
+        },
+        "headyconnection-com": {
+            "domain": "headyconnection.com",
+            "title": "HeadyConnection™",
+            "tagline": "Connect. Build. Grow.",
+            "description": "The community hub for Heady builders. Forums, events, meetups, and networking for AI developers and entrepreneurs.",
+            "accent": "#f97316",
+            "accentAlt": "#8b5cf6",
+            "category": "community",
+            "heroStats": [
+                {
+                    "value": "Global",
+                    "label": "Community"
+                },
+                {
+                    "value": "Weekly",
+                    "label": "Events"
+                },
+                {
+                    "value": "Open",
+                    "label": "Forums"
+                },
+                {
+                    "value": "Free",
+                    "label": "Membership"
+                }
+            ],
+            "features": [
+                {
+                    "icon": "💬",
+                    "title": "Community Forums",
+                    "desc": "Ask questions, share projects, and learn from other Heady builders. Expert community support."
+                },
+                {
+                    "icon": "🎤",
+                    "title": "Events & Meetups",
+                    "desc": "Weekly online events, monthly hackathons, and in-person meetups in major cities worldwide."
+                },
+                {
+                    "icon": "🏆",
+                    "title": "Challenges",
+                    "desc": "Monthly AI challenges with prizes. Build something amazing using Heady and get recognized."
+                },
+                {
+                    "icon": "📚",
+                    "title": "Learning Paths",
+                    "desc": "Structured courses from beginner to expert. Video tutorials, hands-on labs, and certification."
+                },
+                {
+                    "icon": "🤝",
+                    "title": "Mentorship",
+                    "desc": "Get paired with experienced Heady developers. 1-on-1 guidance for your AI projects."
+                },
+                {
+                    "icon": "💼",
+                    "title": "Job Board",
+                    "desc": "AI job opportunities from companies building with Heady. Post your resume, find your next role."
+                }
+            ],
+            "cta": {
+                "primary": "Join Community",
+                "primaryHref": "https://heady-onboarding-bf4q4zywhq-ue.a.run.app",
+                "secondary": "View Events",
+                "secondaryHref": "#events"
+            }
+        },
+        "headyweb": {
+            "domain": "headyweb.com",
+            "title": "HeadyWeb™",
+            "tagline": "AI-Powered Web Builder",
+            "description": "Build and deploy websites with AI. Sacred Geometry design system, micro-frontend architecture, edge deployment.",
+            "accent": "#06b6d4",
+            "accentAlt": "#a855f7",
+            "category": "product",
+            "heroStats": [
+                {
+                    "value": "60+",
+                    "label": "Site Templates"
+                },
+                {
+                    "value": "Edge",
+                    "label": "Deploy Target"
+                },
+                {
+                    "value": "AI",
+                    "label": "Design System"
+                },
+                {
+                    "value": "0",
+                    "label": "Code Required"
+                }
+            ],
+            "features": [
+                {
+                    "icon": "🎨",
+                    "title": "AI Design System",
+                    "desc": "Sacred Geometry-based responsive design. φ-scaled spacing, golden ratio typography, organic animations."
+                },
+                {
+                    "icon": "⚡",
+                    "title": "Edge Deployment",
+                    "desc": "Sites deploy to Cloudflare edge network. Sub-100ms load times worldwide. Automatic SSL."
+                },
+                {
+                    "icon": "🧩",
+                    "title": "Micro-Frontends",
+                    "desc": "Module Federation architecture. Mix and match components from different frameworks."
+                },
+                {
+                    "icon": "🤖",
+                    "title": "AI Content",
+                    "desc": "Generate pages, copy, images, and layouts from natural language descriptions."
+                },
+                {
+                    "icon": "📱",
+                    "title": "Responsive",
+                    "desc": "Every template is mobile-first. Responsive breakpoints at Fibonacci intervals."
+                },
+                {
+                    "icon": "🔍",
+                    "title": "SEO Built-In",
+                    "desc": "Auto-generated meta tags, structured data, sitemap, and semantic HTML. Score 95+ on Lighthouse."
+                }
+            ],
+            "cta": {
+                "primary": "Build Website",
+                "primaryHref": "https://heady-onboarding-bf4q4zywhq-ue.a.run.app",
+                "secondary": "View Templates",
+                "secondaryHref": "#templates"
+            }
+        }
+    },
+    "stubSites": [
+        {
+            "slug": "headyadvisor",
+            "title": "HeadyAdvisor™",
+            "tagline": "AI Advisory Intelligence",
+            "accent": "#6366f1"
+        },
+        {
+            "slug": "headyagent",
+            "title": "HeadyAgent™",
+            "tagline": "Autonomous AI Agents",
+            "accent": "#14b8a6"
+        },
+        {
+            "slug": "headyaid",
+            "title": "HeadyAid™",
+            "tagline": "AI-Powered Assistance",
+            "accent": "#f97316"
+        },
+        {
+            "slug": "headyarchive",
+            "title": "HeadyArchive™",
+            "tagline": "Intelligent Document Storage",
+            "accent": "#8b5cf6"
+        },
+        {
+            "slug": "headyassist",
+            "title": "HeadyAssist™",
+            "tagline": "Smart Help Desk",
+            "accent": "#ec4899"
+        },
+        {
+            "slug": "headyassure",
+            "title": "HeadyAssure™",
+            "tagline": "AI Quality Assurance",
+            "accent": "#22c55e"
+        },
+        {
+            "slug": "headybare",
+            "title": "HeadyBare™",
+            "tagline": "Minimal AI Framework",
+            "accent": "#06b6d4"
+        },
+        {
+            "slug": "headybet",
+            "title": "HeadyBet™",
+            "tagline": "Predictive Analytics",
+            "accent": "#f59e0b"
+        },
+        {
+            "slug": "headybio",
+            "title": "HeadyBio™",
+            "tagline": "AI for Life Sciences",
+            "accent": "#10b981"
+        },
+        {
+            "slug": "headycheck",
+            "title": "HeadyCheck™",
+            "tagline": "AI Verification Engine",
+            "accent": "#3b82f6"
+        },
+        {
+            "slug": "headycore",
+            "title": "HeadyCore™",
+            "tagline": "Foundation Runtime",
+            "accent": "#a855f7"
+        },
+        {
+            "slug": "headycorrections",
+            "title": "HeadyCorrections™",
+            "tagline": "AI Error Resolution",
+            "accent": "#ef4444"
+        },
+        {
+            "slug": "headycreator",
+            "title": "HeadyCreator™",
+            "tagline": "AI Content Studio",
+            "accent": "#ec4899"
+        },
+        {
+            "slug": "headycrypt",
+            "title": "HeadyCrypt™",
+            "tagline": "Cryptographic AI Security",
+            "accent": "#14b8a6"
+        },
+        {
+            "slug": "headydb",
+            "title": "HeadyDB™",
+            "tagline": "AI-Native Database",
+            "accent": "#6366f1"
+        },
+        {
+            "slug": "headyfed",
+            "title": "HeadyFed™",
+            "tagline": "Federated Intelligence",
+            "accent": "#f97316"
+        },
+        {
+            "slug": "headyfield",
+            "title": "HeadyField™",
+            "tagline": "Field Operations AI",
+            "accent": "#22c55e"
+        },
+        {
+            "slug": "headygov",
+            "title": "HeadyGov™",
+            "tagline": "Government AI Solutions",
+            "accent": "#3b82f6"
+        },
+        {
+            "slug": "headyhome",
+            "title": "HeadyHome™",
+            "tagline": "Smart Home Intelligence",
+            "accent": "#10b981"
+        },
+        {
+            "slug": "headyio",
+            "title": "HeadyIO™",
+            "tagline": "Developer Platform",
+            "accent": "#6366f1"
+        },
+        {
+            "slug": "headykey",
+            "title": "HeadyKey™",
+            "tagline": "Identity & Access",
+            "accent": "#8b5cf6"
+        },
+        {
+            "slug": "headykiosk",
+            "title": "HeadyKiosk™",
+            "tagline": "Interactive AI Displays",
+            "accent": "#f59e0b"
+        },
+        {
+            "slug": "headylegal",
+            "title": "HeadyLegal™",
+            "tagline": "AI Legal Intelligence",
+            "accent": "#14b8a6"
+        },
+        {
+            "slug": "headylibrary",
+            "title": "HeadyLibrary™",
+            "tagline": "Knowledge Repository",
+            "accent": "#a855f7"
+        },
+        {
+            "slug": "headymanufacturing",
+            "title": "HeadyMfg™",
+            "tagline": "Smart Manufacturing",
+            "accent": "#22c55e"
+        },
+        {
+            "slug": "headymd",
+            "title": "HeadyMD™",
+            "tagline": "AI Healthcare",
+            "accent": "#ef4444"
+        },
+        {
+            "slug": "headymx",
+            "title": "HeadyMX™",
+            "tagline": "Message Exchange",
+            "accent": "#06b6d4"
+        },
+        {
+            "slug": "headyplus",
+            "title": "HeadyPlus™",
+            "tagline": "Premium AI Features",
+            "accent": "#f59e0b"
+        },
+        {
+            "slug": "headyrx",
+            "title": "HeadyRx™",
+            "tagline": "Prescription Intelligence",
+            "accent": "#10b981"
+        },
+        {
+            "slug": "headysafe",
+            "title": "HeadySafe™",
+            "tagline": "AI Safety & Alignment",
+            "accent": "#3b82f6"
+        },
+        {
+            "slug": "headysecure",
+            "title": "HeadySecure™",
+            "tagline": "Cybersecurity AI",
+            "accent": "#ef4444"
+        },
+        {
+            "slug": "headysense",
+            "title": "HeadySense™",
+            "tagline": "Sensory AI Processing",
+            "accent": "#8b5cf6"
+        },
+        {
+            "slug": "headyship",
+            "title": "HeadyShip™",
+            "tagline": "Logistics Intelligence",
+            "accent": "#f97316"
+        },
+        {
+            "slug": "headystate",
+            "title": "HeadyState™",
+            "tagline": "State Management Engine",
+            "accent": "#14b8a6"
+        },
+        {
+            "slug": "headystudio",
+            "title": "HeadyStudio™",
+            "tagline": "Creative AI Workspace",
+            "accent": "#ec4899"
+        },
+        {
+            "slug": "headytube",
+            "title": "HeadyTube™",
+            "tagline": "AI Video Platform",
+            "accent": "#ef4444"
+        },
+        {
+            "slug": "headytxt",
+            "title": "HeadyTXT™",
+            "tagline": "AI Text Processing",
+            "accent": "#6366f1"
+        },
+        {
+            "slug": "headyu",
+            "title": "HeadyU™",
+            "tagline": "AI Education Platform",
+            "accent": "#f59e0b"
+        },
+        {
+            "slug": "headyusa",
+            "title": "HeadyUSA™",
+            "tagline": "US Operations Center",
+            "accent": "#3b82f6"
+        },
+        {
+            "slug": "headyvault",
+            "title": "HeadyVault™",
+            "tagline": "Secure Data Storage",
+            "accent": "#8b5cf6"
+        },
+        {
+            "slug": "openmindsplace",
+            "title": "Open Minds Place",
+            "tagline": "Community Innovation Hub",
+            "accent": "#10b981"
+        },
+        {
+            "slug": "openmindstop",
+            "title": "Open Minds Top",
+            "tagline": "AI Thought Leadership",
+            "accent": "#06b6d4"
+        },
+        {
+            "slug": "1ime1",
+            "title": "1ime1",
+            "tagline": "Experimental AI Lab",
+            "accent": "#a855f7"
+        },
+        {
+            "slug": "1imi1",
+            "title": "1imi1",
+            "tagline": "Experimental AI Lab",
+            "accent": "#14b8a6"
+        },
+        {
+            "slug": "admin-portal",
+            "title": "Heady Admin™",
+            "tagline": "System Administration",
+            "accent": "#6366f1"
+        }
+    ]
+}

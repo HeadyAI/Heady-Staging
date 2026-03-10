@@ -1,0 +1,45 @@
+# Drupal Content Type: Agent Listing
+# Generated for Heady™ Platform — HeadyAutoContext vector-indexed
+# All content auto-synced to pgvector via webhook + polling fallback
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+    - text
+    - field
+    - heady_cms
+id: agent_listing
+label: 'Agent Listing'
+description: 'HeadyEX marketplace agent and bee template listings.'
+help: ''
+new_revision: true
+preview_mode: 1
+display_submitted: true
+
+# Field: field_agent_name
+# field_type: text_long
+
+# Field: field_agent_type
+# field_type: entity_reference
+
+# Field: field_description
+# field_type: text_long
+
+# Field: field_capabilities
+# field_type: text_long
+
+# Field: field_deployment_count
+# field_type: decimal
+
+# Field: field_rating
+# field_type: decimal
+
+# Field: field_creator
+# field_type: text_long
+
+# Field: field_price
+# field_type: text_long
+
+# Field: field_vector_embedding
+# field_type: text_long

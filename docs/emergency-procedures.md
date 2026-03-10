@@ -21,7 +21,7 @@
 ## Emergency Contact Chain
 
 1. On-call engineer (PagerDuty rotation)
-2. Eric Headington (eric@headyconnection.org)
+2. Eric Haywood (eric@headyconnection.org)
 3. Platform Engineering team Slack: #heady-incidents
 
 ---

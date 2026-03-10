@@ -2,7 +2,7 @@
 
 **Version:** 3.2.2  
 **Extends:** `docs/threat-model.md` (existing STRIDE baseline)  
-**Owner:** Eric Headington (eric@headyconnection.org)  
+**Owner:** Eric Haywood (eric@headyconnection.org)  
 **Last Updated:** 2026-03-07  
 **Classification:** CONFIDENTIAL — Security Team  
 

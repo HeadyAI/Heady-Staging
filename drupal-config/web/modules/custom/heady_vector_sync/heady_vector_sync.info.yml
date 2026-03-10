@@ -1,0 +1,9 @@
+name: 'Heady Vector Sync'
+type: module
+description: 'Syncs Drupal content to HeadyAutoContext vector memory via webhooks with polling fallback.'
+core_version_requirement: ^10
+package: Heady
+dependencies:
+  - drupal:node
+  - drupal:jsonapi
+  - heady_cms:heady_cms

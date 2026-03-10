@@ -1,0 +1,250 @@
+{
+  "version": "2.0",
+  "description": "Heady Systems Build Dependency Graph - Multi-Scenario Support",
+  "scenarios": {
+    "blockchain_dlt": {
+      "description": "Scenario A: Blockchain/DLT Network - Validators, peers, consensus",
+      "constraint": "Consensus engines and cryptographic primitives must be frozen before node start",
+      "build_order": [
+        {
+          "tier": 1,
+          "name": "heady-crypto",
+          "alias": "primitives",
+          "dependencies": [],
+          "description": "Hashing algorithms, key signatures, serialization definitions",
+          "maps_to": ["core/identity.py", "core/nonce.py", "services/secret_gateway"]
+        },
+        {
+          "tier": 2,
+          "name": "heady-ledger",
+          "alias": "state",
+          "dependencies": ["heady-crypto"],
+          "description": "Merkle tree and state machine logic",
+          "maps_to": ["core/storage_strategy.py", "infrastructure/db_data"]
+        },
+        {
+          "tier": 3,
+          "name": "heady-consensus",
+          "alias": "engine",
+          "dependencies": ["heady-crypto", "heady-ledger"],
+          "description": "BFT/Raft logic, Genesis Address Book configuration",
+          "config_required": ["genesis.json", "bootstrap.properties"],
+          "maps_to": ["core/dependency_graph.py", "core/conductor.py"]
+        },
+        {
+          "tier": 4,
+          "name": "heady-node",
+          "alias": "validator",
+          "dependencies": ["heady-consensus", "heady-ledger"],
+          "description": "Main server executable - DO NOT START without genesis.json",
+          "maps_to": ["apps/orchestrator", "services/model_gateway"]
+        },
+        {
+          "tier": 5,
+          "name": "heady-api",
+          "alias": "interface",
+          "dependencies": ["heady-node"],
+          "description": "REST/GraphQL gateway - reads validator output",
+          "maps_to": ["apps/gateway", "HeadyConnection/apps/lens"]
+        }
+      ]
+    },
+    "microservices_mesh": {
+      "description": "Scenario B: Microservices Mesh - Kubernetes/Docker service containers",
+      "constraint": "Shared libraries are the failure point - heady-core must be linked correctly",
+      "build_order": [
+        {
+          "tier": 1,
+          "name": "heady-contracts",
+          "alias": "api_specs",
+          "dependencies": [],
+          "description": "OpenAPI/Swagger or Proto files - service contracts",
+          "maps_to": ["config/hive_config.json", "config/domain_policies.json"]
+        },
+        {
+          "tier": 2,
+          "name": "heady-core",
+          "alias": "chassis",
+          "dependencies": ["heady-contracts"],
+          "description": "Logger (JSON), DB Connection - npm link or private registry",
+          "maps_to": ["core/", "packages/"]
+        },
+        {
+          "tier": 3,
+          "name": "heady-registry",
+          "alias": "discovery",
+          "dependencies": ["heady-core"],
+          "description": "Service discovery - deploy before workers",
+          "config_required": ["HEARTBEAT_INTERVAL"],
+          "default_config": { "HEARTBEAT_INTERVAL": "5s" },
+          "maps_to": ["services/", "core/router.py"]
+        },
+        {
+          "tier": 4,
+          "name": "heady-worker-node",
+          "alias": "logic",
+          "dependencies": ["heady-core", "heady-registry"],
+          "description": "Business logic services",
+          "maps_to": ["apps/orchestrator", "apps/architect", "services/model_gateway"]
+        },
+        {
+          "tier": 5,
+          "name": "heady-gateway",
+          "alias": "front_door",
+          "dependencies": ["heady-worker-node", "heady-registry"],
+          "description": "API Gateway - aggregates routes from registered nodes",
+          "maps_to": ["apps/gateway", "HeadyConnection/apps/admin_ui"]
+        }
+      ]
+    },
+    "edge_iot": {
+      "description": "Scenario C: Edge/IoT System - Physical devices and autonomous agents",
+      "constraint": "Hardware abstraction must be built before runtime agents",
+      "build_order": [
+        {
+          "tier": 1,
+          "name": "heady-msgs",
+          "alias": "message_types",
+          "dependencies": [],
+          "description": "Message types (ROS msgs or binary structs)",
+          "maps_to": ["shared/state/", "config/"]
+        },
+        {
+          "tier": 2,
+          "name": "heady-hal",
+          "alias": "hardware_abstraction",
+          "dependencies": ["heady-msgs"],
+          "description": "Drivers for sensors/actuators",
+          "maps_to": ["services/silicon_bridge", "integrations/"]
+        },
+        {
+          "tier": 3,
+          "name": "heady-runtime",
+          "alias": "device_agent",
+          "dependencies": ["heady-hal", "heady-msgs"],
+          "description": "Agent running on device",
+          "maps_to": ["cloudflare/node_swarm_worker", "apps/orchestrator"]
+        },
+        {
+          "tier": 4,
+          "name": "heady-fleet-manager",
+          "alias": "cloud_controller",
+          "dependencies": ["heady-runtime"],
+          "description": "Cloud server controlling nodes - build last",
+          "maps_to": ["HeadyConnection/apps/admin_ui", "apps/gateway"]
+        }
+      ]
+    }
+  },
+  "universal_config_strategy": {
+    "description": "Optimal configuration hierarchy to avoid hardcoding",
+    "environment_variables": {
+      "secrets": {
+        "DB_PASSWORD": { "source": "docker_secrets", "required": true },
+        "NODE_PRIVATE_KEY": { "source": "docker_secrets", "required": false },
+        "TUNNEL_TOKEN": { "source": "env_file", "required": true }
+      },
+      "discovery": {
+        "REGISTRY_URL": { "default": "http://governance:8000", "required": true },
+        "SEED_PEER_IP": { "default": "127.0.0.1", "required": false },
+        "HEARTBEAT_INTERVAL": { "default": "5s", "required": false }
+      }
+    },
+    "multi_stage_docker": {
+      "enabled": true,
+      "optimization": "Copy built artifacts from heady-common build stage",
+      "expected_improvement": "60%+ build time reduction"
+    },
+    "health_checks": {
+      "wait_for_dependencies": true,
+      "script": "wait-for-it.sh",
+      "strategy": "Ensure Database and Registry are up before Worker binds to port"
+    }
+  },
+  "heady_project_graph": {
+    "description": "Actual HeadySystems dependency mapping for topological sort",
+    "nodes": {
+      "heady-governance": {
+        "dependencies": [],
+        "tier": 0,
+        "critical_path": true,
+        "container": "heady_governance",
+        "health_endpoint": "/health/config"
+      },
+      "heady-storage": {
+        "dependencies": ["heady-governance"],
+        "tier": 1,
+        "critical_path": true,
+        "container": "heady_storage",
+        "health_endpoint": "/health/storage"
+      },
+      "heady-database": {
+        "dependencies": ["heady-governance"],
+        "tier": 1,
+        "critical_path": false,
+        "container": "heady_db",
+        "health_endpoint": null
+      },
+      "heady-security": {
+        "dependencies": ["heady-governance", "heady-storage"],
+        "tier": 2,
+        "critical_path": true,
+        "container": "heady_security",
+        "health_endpoint": "/health/auth"
+      },
+      "heady-orchestrator": {
+        "dependencies": ["heady-database", "heady-security", "heady-storage"],
+        "tier": 3,
+        "critical_path": true,
+        "container": "heady_orchestrator",
+        "health_endpoint": "/health/orchestrator"
+      },
+      "heady-tunnel": {
+        "dependencies": ["heady-security"],
+        "tier": 3,
+        "critical_path": false,
+        "container": "heady_tunnel",
+        "health_endpoint": null
+      },
+      "heady-model-gateway": {
+        "dependencies": ["heady-orchestrator", "heady-security"],
+        "tier": 4,
+        "critical_path": false,
+        "container": "heady_model_gateway",
+        "health_endpoint": "/health/models"
+      },
+      "heady-huggingface": {
+        "dependencies": ["heady-model-gateway"],
+        "tier": 5,
+        "critical_path": false,
+        "container": "heady_huggingface",
+        "health_endpoint": "/health"
+      },
+      "heady-ai-router": {
+        "dependencies": ["heady-model-gateway", "heady-security"],
+        "tier": 5,
+        "critical_path": false,
+        "container": "heady_ai_router",
+        "health_endpoint": "/health",
+        "description": "Unified multi-provider AI routing (Jules, Perplexity, Gemini)",
+        "capabilities": ["research", "reasoning", "analysis", "incident-reports"]
+      },
+      "heady-lens": {
+        "dependencies": ["heady-orchestrator"],
+        "tier": 4,
+        "critical_path": false,
+        "container": "heady_lens",
+        "domain": "HeadyConnection",
+        "health_endpoint": "/health/lens"
+      },
+      "heady-admin-ui": {
+        "dependencies": ["heady-lens"],
+        "tier": 5,
+        "critical_path": false,
+        "container": "heady_admin",
+        "domain": "HeadyConnection",
+        "health_endpoint": "/health/admin"
+      }
+    }
+  }
+}

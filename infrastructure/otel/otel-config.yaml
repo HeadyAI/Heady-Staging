@@ -1,0 +1,36 @@
+# OpenTelemetry Collector Configuration — Heady™ Platform
+# Aggregates traces from all 50 services with W3C Trace Context propagation
+receivers:
+  otlp:
+    protocols:
+      grpc:
+        endpoint: 0.0.0.0:4317
+      http:
+        endpoint: 0.0.0.0:4318
+
+processors:
+  batch:
+    timeout: 5s               # Fibonacci
+    send_batch_size: 512
+    send_batch_max_size: 1024
+  memory_limiter:
+    check_interval: 5s        # Fibonacci
+    limit_mib: 512
+
+exporters:
+  logging:
+    loglevel: info
+  # In production, export to Jaeger, Grafana Tempo, or Cloud Trace
+  # otlp/jaeger:
+  #   endpoint: jaeger:4317
+
+service:
+  pipelines:
+    traces:
+      receivers: [otlp]
+      processors: [memory_limiter, batch]
+      exporters: [logging]
+    metrics:
+      receivers: [otlp]
+      processors: [memory_limiter, batch]
+      exporters: [logging]

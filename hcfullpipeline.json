@@ -1,11 +1,12 @@
 {
   "_meta": {
     "name": "HCFullPipeline",
-    "version": "4.0.0",
-    "description": "Heady™ AI Platform 21-Stage (fib(8)) Cognitive Pipeline — φ-scaled throughout, zero magic numbers",
+    "version": "4.1.0",
+    "description": "Heady™ AI Platform 21-Stage (fib(8)) Cognitive Pipeline — φ-scaled throughout, zero magic numbers. v4.1: inbox-extracted tasks (multi-model routing, citation/grounding, RAGAS eval, hallucination monitoring, mTLS, hybrid search)",
     "copyright": "© 2026-2026 HeadySystems Inc. All Rights Reserved.",
-    "updatedAt": "2026-03-08T00:00:00Z",
-    "audit": "All constants φ-derived per FIXED-VALUE-AUDIT and phi-math-foundation"
+    "updatedAt": "2026-03-09T18:13:00Z",
+    "audit": "All constants φ-derived per FIXED-VALUE-AUDIT and phi-math-foundation",
+    "v4.1_source": "Tasks extracted from Heady/in/ inbox: ai-accuracy-research-report.docx, ai-agent-effectiveness-report.docx, heady-system-build.zip, heady_bounded_security_pass.zip"
   },
   "pipeline": {
     "id": "hcfullpipeline",
@@ -18,7 +19,11 @@
       "maxRetries": 3,
       "maxRetries_source": "fib(4)",
       "backoffStrategy": "phi_exponential",
-      "backoffMs": [1618, 2618, 4236],
+      "backoffMs": [
+        1618,
+        2618,
+        4236
+      ],
       "backoffMs_source": "φ¹×1000, φ²×1000, φ³×1000 (replaces 1000/2000/4000)",
       "maxBackoffMs": 11090,
       "maxBackoffMs_source": "φ⁵ × 1000 (replaces arbitrary 10000)"
@@ -29,9 +34,17 @@
     "description": "When enabled, pipeline executes all stages autonomously without human checkpoints",
     "envOverride": "PIPELINE_FULL_AUTO",
     "requiresGovernancePass": true,
-    "maxBudgetUSD": 5.00,
-    "allowedScopes": ["read", "analyze", "generate"],
-    "prohibitedScopes": ["deploy", "delete", "external_write"],
+    "maxBudgetUSD": 5.0,
+    "allowedScopes": [
+      "read",
+      "analyze",
+      "generate"
+    ],
+    "prohibitedScopes": [
+      "deploy",
+      "delete",
+      "external_write"
+    ],
     "confirmationBypass": false
   },
   "stages": [
@@ -50,7 +63,10 @@
           "node": "HeadyMemory",
           "action": "scan",
           "failFast": true,
-          "params": { "scope": "full", "timeout": 5000 }
+          "params": {
+            "scope": "full",
+            "timeout": 5000
+          }
         },
         {
           "id": "resolve_channel",
@@ -86,21 +102,50 @@
           "name": "Scan codebase state and config drift",
           "node": "HeadyDeepScan",
           "action": "scan",
-          "params": { "scope": "full", "driftThreshold": 0.618 }
+          "params": {
+            "scope": "full",
+            "driftThreshold": 0.618
+          }
         },
         {
           "id": "scan_services",
           "name": "Scan all service health and attack surface",
           "node": "HeadyHealth",
           "action": "matrix",
-          "params": { "includeAttackSurface": true }
+          "params": {
+            "includeAttackSurface": true
+          }
         },
         {
           "id": "scan_dependencies",
           "name": "Scan dependency freshness and vulnerabilities",
           "node": "HeadyGuard",
           "action": "auditDeps",
-          "params": { "freshnessWindowDays": 13, "freshnessWindowDays_source": "fib(7)" }
+          "params": {
+            "freshnessWindowDays": 13,
+            "freshnessWindowDays_source": "fib(7)"
+          }
+        },
+        {
+          "id": "verify_mtls",
+          "name": "Verify mTLS certificates and connection security",
+          "node": "HeadyGuard",
+          "action": "verifyMTLS",
+          "source": "heady_bounded_security_pass.zip → src/security/mtls.js",
+          "params": {
+            "checkExpiry": true,
+            "minKeyBits": 2048
+          }
+        },
+        {
+          "id": "health_monitor_baseline",
+          "name": "Establish health monitoring baseline",
+          "node": "HeadyHealth",
+          "action": "baseline",
+          "source": "heady_bounded_security_pass.zip → src/monitoring/health-monitor.js",
+          "params": {
+            "captureMetrics": true
+          }
         },
         {
           "id": "build_env_map",
@@ -131,7 +176,10 @@
           "name": "Classify intent via CSL Resonance Gate",
           "node": "HeadySoul",
           "action": "analyze",
-          "params": { "depth": "shallow", "cslThreshold": 0.618 }
+          "params": {
+            "depth": "shallow",
+            "cslThreshold": 0.618
+          }
         },
         {
           "id": "governance_pre",
@@ -139,7 +187,9 @@
           "node": "HeadyGovernance",
           "action": "validate",
           "failFast": true,
-          "params": { "phase": "pre" }
+          "params": {
+            "phase": "pre"
+          }
         }
       ]
     },
@@ -153,25 +203,54 @@
       "parallel": true,
       "steps": [
         {
-          "id": "vector_search",
-          "name": "Semantic memory search",
+          "id": "hybrid_search",
+          "name": "Hybrid semantic + keyword search (BM25 + vector)",
           "node": "HeadyMemory",
-          "action": "search",
-          "params": { "limit": 13, "limit_source": "fib(7)", "minScore": 0.618 }
+          "action": "hybridSearch",
+          "source": "ai-accuracy-research-report.docx → Rec #3: Advanced RAG",
+          "params": {
+            "limit": 13,
+            "limit_source": "fib(7)",
+            "minScore": 0.618,
+            "bm25Weight": 0.382,
+            "vectorWeight": 0.618,
+            "rerankerEnabled": true
+          }
+        },
+        {
+          "id": "source_quality_scoring",
+          "name": "Score source reliability, recency, authority",
+          "node": "HeadyMemory",
+          "action": "scoreSourceQuality",
+          "source": "ai-accuracy-research-report.docx → Rec #5: Citation & Grounding",
+          "params": {
+            "dimensions": [
+              "authority",
+              "recency",
+              "consistency",
+              "domain_relevance"
+            ],
+            "minQuality": 0.382
+          }
         },
         {
           "id": "pattern_lookup",
           "name": "Pattern recognition lookup",
           "node": "HeadyVinci",
           "action": "recognize",
-          "params": { "mode": "fast" }
+          "params": {
+            "mode": "fast"
+          }
         },
         {
           "id": "story_context",
           "name": "Retrieve narrative context",
           "node": "HeadyAutobiographer",
           "action": "getStory",
-          "params": { "limit": 21, "limit_source": "fib(8)" }
+          "params": {
+            "limit": 21,
+            "limit_source": "fib(8)"
+          }
         }
       ]
     },
@@ -189,7 +268,55 @@
           "name": "Compute risk score and priority",
           "node": "HeadyBrains",
           "action": "triage",
-          "params": { "levels": ["LOW", "MEDIUM", "HIGH", "CRITICAL"] }
+          "params": {
+            "levels": [
+              "LOW",
+              "MEDIUM",
+              "HIGH",
+              "CRITICAL"
+            ]
+          }
+        },
+        {
+          "id": "multi_model_route",
+          "name": "Route to optimal model tier (fast/balanced/max)",
+          "node": "HeadyConductor",
+          "action": "routeModel",
+          "source": "ai-accuracy-research-report.docx → Rec #1: Multi-Model Orchestration",
+          "params": {
+            "tiers": [
+              {
+                "id": "fast",
+                "models": [
+                  "gemini-flash",
+                  "claude-haiku"
+                ],
+                "maxTokens": 4000,
+                "costCap": 0.01
+              },
+              {
+                "id": "balanced",
+                "models": [
+                  "gemini-pro",
+                  "claude-sonnet"
+                ],
+                "maxTokens": 16000,
+                "costCap": 0.1
+              },
+              {
+                "id": "max",
+                "models": [
+                  "gemini-ultra",
+                  "claude-opus",
+                  "gpt-4o"
+                ],
+                "maxTokens": 32000,
+                "costCap": 1.0
+              }
+            ],
+            "routingStrategy": "complexity_and_cost",
+            "fallbackTier": "balanced"
+          }
         },
         {
           "id": "assign_swarm",
@@ -213,14 +340,20 @@
           "name": "Decompose into subtask DAG via Rabbit layer",
           "node": "HeadyBrains",
           "action": "decompose",
-          "params": { "maxDepth": 5, "maxDepth_source": "fib(5)" }
+          "params": {
+            "maxDepth": 5,
+            "maxDepth_source": "fib(5)"
+          }
         },
         {
           "id": "plan_execution",
           "name": "Generate execution plan",
           "node": "HeadyBrains",
           "action": "plan",
-          "params": { "maxSteps": 13, "maxSteps_source": "fib(7)" }
+          "params": {
+            "maxSteps": 13,
+            "maxSteps_source": "fib(7)"
+          }
         }
       ]
     },
@@ -239,14 +372,20 @@
           "name": "Generate candidate solutions",
           "node": "HeadyBrains",
           "action": "generateCandidates",
-          "params": { "maxCandidates": 5, "maxCandidates_source": "fib(5)" }
+          "params": {
+            "maxCandidates": 5,
+            "maxCandidates_source": "fib(5)"
+          }
         },
         {
           "id": "execute_trials",
           "name": "Execute trials in sandbox",
           "node": "HeadyBee",
           "action": "sandboxExecute",
-          "params": { "isolation": "docker", "autoRollback": true }
+          "params": {
+            "isolation": "docker",
+            "autoRollback": true
+          }
         },
         {
           "id": "score_trials",
@@ -254,8 +393,19 @@
           "node": "HeadyArena",
           "action": "scoreCandidates",
           "params": {
-            "criteria": ["correctness", "performance", "safety", "elegance"],
-            "weights": { "correctness": 0.34, "performance": 0.21, "safety": 0.21, "elegance": 0.13, "resource_efficiency": 0.11 }
+            "criteria": [
+              "correctness",
+              "performance",
+              "safety",
+              "elegance"
+            ],
+            "weights": {
+              "correctness": 0.34,
+              "performance": 0.21,
+              "safety": 0.21,
+              "elegance": 0.13,
+              "resource_efficiency": 0.11
+            }
           }
         },
         {
@@ -263,7 +413,9 @@
           "name": "Record trial learnings to vector memory",
           "node": "HeadyMemory",
           "action": "store",
-          "params": { "namespace": "trial_learnings" }
+          "params": {
+            "namespace": "trial_learnings"
+          }
         }
       ]
     },
@@ -280,7 +432,9 @@
           "name": "Execute primary task with Soul",
           "node": "HeadySoul",
           "action": "execute",
-          "params": { "maxTokens": 16000 }
+          "params": {
+            "maxTokens": 16000
+          }
         },
         {
           "id": "bee_spawn_if_needed",
@@ -288,7 +442,10 @@
           "node": "HeadyBee",
           "action": "spawn",
           "conditional": "plan.parallelSubtasks.length > 0",
-          "params": { "maxBees": 8, "maxBees_source": "fib(6)" }
+          "params": {
+            "maxBees": 8,
+            "maxBees_source": "fib(6)"
+          }
         }
       ]
     },
@@ -307,7 +464,11 @@
           "name": "Monte Carlo confidence estimation (1K+ scenarios)",
           "node": "HeadyConductor",
           "action": "monteCarlo",
-          "params": { "iterations": 987, "iterations_source": "fib(16)", "passThreshold": 0.80 }
+          "params": {
+            "iterations": 987,
+            "iterations_source": "fib(16)",
+            "passThreshold": 0.8
+          }
         }
       ]
     },
@@ -328,7 +489,12 @@
           "action": "battle",
           "params": {
             "rounds": 3,
-            "criteria": ["accuracy", "quality", "efficiency", "safety"],
+            "criteria": [
+              "accuracy",
+              "quality",
+              "efficiency",
+              "safety"
+            ],
             "winnerMargin": 0.05
           }
         }
@@ -349,7 +515,13 @@
           "node": "HeadyArena",
           "action": "judgeComposite",
           "params": {
-            "weights": { "correctness": 0.34, "safety": 0.21, "performance": 0.21, "quality": 0.13, "elegance": 0.11 },
+            "weights": {
+              "correctness": 0.34,
+              "safety": 0.21,
+              "performance": 0.21,
+              "quality": 0.13,
+              "elegance": 0.11
+            },
             "passThreshold": 0.618,
             "passThreshold_source": "1/φ (CSL default gate)"
           }
@@ -370,7 +542,9 @@
           "name": "Request explicit approval from Eric",
           "node": "HeadyBuddy",
           "action": "requestApproval",
-          "params": { "requiredApprover": "eric" }
+          "params": {
+            "requiredApprover": "eric"
+          }
         }
       ]
     },
@@ -387,7 +561,9 @@
           "name": "HeadyBuddy assesses state confidence (min 20%)",
           "node": "HeadyBuddy",
           "action": "assessConfidence",
-          "params": { "minConfidence": 0.20 }
+          "params": {
+            "minConfidence": 0.2
+          }
         },
         {
           "id": "execute_final",
@@ -417,6 +593,45 @@
           "name": "Validate all assertions pass",
           "node": "HeadyAssure",
           "action": "certify"
+        },
+        {
+          "id": "citation_verification",
+          "name": "Verify all claims traceable to source documents",
+          "node": "HeadyAssure",
+          "action": "verifyCitations",
+          "source": "ai-accuracy-research-report.docx → Rec #5: Citation & Grounding",
+          "params": {
+            "requireSourceChunk": true,
+            "requireTimestamp": true,
+            "minTraceability": 0.8
+          }
+        },
+        {
+          "id": "hallucination_check",
+          "name": "Self-RAG hallucination risk scoring",
+          "node": "HeadyArena",
+          "action": "detectHallucination",
+          "source": "ai-accuracy-research-report.docx → Rec #7: Continuous Evaluation",
+          "params": {
+            "method": "self_rag_support_scoring",
+            "maxRiskScore": 0.2,
+            "flagForReview": true
+          }
+        },
+        {
+          "id": "llm_as_judge",
+          "name": "LLM-as-judge faithfulness evaluation",
+          "node": "HeadyArena",
+          "action": "judgeFaithfulness",
+          "source": "ai-accuracy-research-report.docx → Rec #5: LLM-as-judge",
+          "params": {
+            "separateModel": true,
+            "groundingScale": [
+              0,
+              1
+            ],
+            "minFaithfulness": 0.618
+          }
         }
       ]
     },
@@ -434,21 +649,84 @@
           "name": "Assess confidence calibration accuracy",
           "node": "HeadySoul",
           "action": "introspect",
-          "params": { "window": 21, "window_source": "fib(8)", "accuracyThreshold": 0.618 }
+          "params": {
+            "window": 21,
+            "window_source": "fib(8)",
+            "accuracyThreshold": 0.618
+          }
         },
         {
           "id": "detect_blind_spots",
           "name": "Identify cognitive blind spots and biases",
           "node": "HeadyVinci",
           "action": "detectBiases",
-          "params": { "methods": ["confirmation", "anchoring", "availability", "survivorship"] }
+          "params": {
+            "methods": [
+              "confirmation",
+              "anchoring",
+              "availability",
+              "survivorship"
+            ]
+          }
         },
         {
           "id": "measure_predictions",
           "name": "Measure prediction accuracy vs actuals",
           "node": "HeadyConductor",
           "action": "measurePredictions",
-          "params": { "lookbackRuns": 21, "lookbackRuns_source": "fib(8)" }
+          "params": {
+            "lookbackRuns": 21,
+            "lookbackRuns_source": "fib(8)"
+          }
+        },
+        {
+          "id": "ragas_evaluation",
+          "name": "RAGAS framework: retrieval accuracy + context grounding",
+          "node": "HeadyArena",
+          "action": "ragasEvaluate",
+          "source": "ai-accuracy-research-report.docx → Rec #7: RAGAS integration",
+          "params": {
+            "metrics": [
+              "faithfulness",
+              "answer_relevancy",
+              "context_precision",
+              "context_recall"
+            ],
+            "alertOnDrop": true,
+            "dropThreshold": 0.05
+          }
+        },
+        {
+          "id": "hallucination_rate_tracking",
+          "name": "Track hallucination rates by model, task type, domain",
+          "node": "HeadyHealth",
+          "action": "trackHallucinationRates",
+          "source": "ai-accuracy-research-report.docx → Rec #7: Hallucination monitoring",
+          "params": {
+            "dimensions": [
+              "model",
+              "task_type",
+              "knowledge_domain"
+            ],
+            "windowRuns": 89,
+            "windowRuns_source": "fib(11)"
+          }
+        },
+        {
+          "id": "benchmark_regression",
+          "name": "Run benchmark regression tests (SWE-bench, SimpleQA, custom)",
+          "node": "HeadyCheck",
+          "action": "benchmarkRegression",
+          "source": "ai-accuracy-research-report.docx → Rec #7: Benchmark regression testing",
+          "params": {
+            "suites": [
+              "swe_bench_subset",
+              "simple_qa",
+              "domain_specific"
+            ],
+            "rotateTestSets": true,
+            "failOnRegression": true
+          }
         }
       ]
     },
@@ -466,7 +744,9 @@
           "name": "Review own run — bottlenecks, weaknesses, gaps",
           "node": "HeadyBrains",
           "action": "selfCritique",
-          "params": { "useAwarenessReport": true }
+          "params": {
+            "useAwarenessReport": true
+          }
         }
       ]
     },
@@ -484,28 +764,39 @@
           "name": "Catalog current and historical failures",
           "node": "HeadyMemory",
           "action": "search",
-          "params": { "namespace": "failures", "limit": 89, "limit_source": "fib(11)" }
+          "params": {
+            "namespace": "failures",
+            "limit": 89,
+            "limit_source": "fib(11)"
+          }
         },
         {
           "id": "root_cause",
           "name": "Perform root cause analysis (5-whys + fishbone)",
           "node": "HeadyBrains",
           "action": "rootCause",
-          "params": { "method": "five_whys_plus_fishbone" }
+          "params": {
+            "method": "five_whys_plus_fishbone"
+          }
         },
         {
           "id": "generate_guards",
           "name": "Generate prevention rules and anti-regression guards",
           "node": "HeadyGuard",
           "action": "generatePreventionRules",
-          "params": { "format": "csl_gate" }
+          "params": {
+            "format": "csl_gate"
+          }
         },
         {
           "id": "immunize",
           "name": "Inject guards into pipeline and update wisdom.json",
           "node": "HeadyVinci",
           "action": "immunize",
-          "params": { "updateWisdom": true, "updateRecon": true }
+          "params": {
+            "updateWisdom": true,
+            "updateRecon": true
+          }
         }
       ]
     },
@@ -523,21 +814,34 @@
           "name": "Profile service latency p50/p95/p99",
           "node": "HeadyHealth",
           "action": "profile",
-          "params": { "windowMinutes": 55, "windowMinutes_source": "fib(10)" }
+          "params": {
+            "windowMinutes": 55,
+            "windowMinutes_source": "fib(10)"
+          }
         },
         {
           "id": "detect_waste",
           "name": "Detect dead code, unused services, cost waste",
           "node": "HeadyDeepScan",
           "action": "detectWaste",
-          "params": { "methods": ["ast_reachability", "traffic_analysis", "cost_per_request"] }
+          "params": {
+            "methods": [
+              "ast_reachability",
+              "traffic_analysis",
+              "cost_per_request"
+            ]
+          }
         },
         {
           "id": "rank_optimizations",
           "name": "Rank optimization opportunities by CSL impact score",
           "node": "HeadyConductor",
           "action": "rankOptimizations",
-          "params": { "costWeight": 0.382, "perfWeight": 0.382, "reliabilityWeight": 0.236 }
+          "params": {
+            "costWeight": 0.382,
+            "perfWeight": 0.382,
+            "reliabilityWeight": 0.236
+          }
         }
       ]
     },
@@ -555,21 +859,34 @@
           "name": "Search for new tools, research, and patterns",
           "node": "HeadyPerplexity",
           "action": "search",
-          "params": { "categories": ["npm", "arxiv", "github", "security"], "maxResults": 8, "maxResults_source": "fib(6)" }
+          "params": {
+            "categories": [
+              "npm",
+              "arxiv",
+              "github",
+              "security"
+            ],
+            "maxResults": 8,
+            "maxResults_source": "fib(6)"
+          }
         },
         {
           "id": "evaluate_discoveries",
           "name": "CSL-score relevance and applicability",
           "node": "HeadySoul",
           "action": "evaluate",
-          "params": { "threshold": 0.618 }
+          "params": {
+            "threshold": 0.618
+          }
         },
         {
           "id": "absorb_findings",
           "name": "Embed high-value findings into knowledge",
           "node": "HeadyMemory",
           "action": "store",
-          "params": { "namespace": "discoveries" }
+          "params": {
+            "namespace": "discoveries"
+          }
         }
       ]
     },
@@ -588,28 +905,45 @@
           "name": "Generate controlled parameter mutations",
           "node": "HeadyBrains",
           "action": "mutate",
-          "params": { "rate": 0.0618, "populationSize": 8, "maxMagnitude": 0.13 }
+          "params": {
+            "rate": 0.0618,
+            "populationSize": 8,
+            "maxMagnitude": 0.13
+          }
         },
         {
           "id": "simulate_mutations",
           "name": "Simulate mutations via HeadySims",
           "node": "HeadyConductor",
           "action": "monteCarlo",
-          "params": { "iterations": 500, "compareToBaseline": true }
+          "params": {
+            "iterations": 500,
+            "compareToBaseline": true
+          }
         },
         {
           "id": "promote_winners",
           "name": "Promote beneficial mutations to config",
           "node": "HeadyGovernance",
           "action": "promoteIfBeneficial",
-          "params": { "rollbackThreshold": 0.05, "approvalThreshold": 0.08 }
+          "params": {
+            "rollbackThreshold": 0.05,
+            "approvalThreshold": 0.08
+          }
         },
         {
           "id": "record_evolution",
           "name": "Record evolution history",
           "node": "HeadyAutobiographer",
           "action": "record",
-          "params": { "events": ["mutation_generated", "mutation_tested", "mutation_promoted", "mutation_discarded"] }
+          "params": {
+            "events": [
+              "mutation_generated",
+              "mutation_tested",
+              "mutation_promoted",
+              "mutation_discarded"
+            ]
+          }
         }
       ]
     },
@@ -627,21 +961,27 @@
           "name": "Embed and store result in vector memory",
           "node": "HeadyMemory",
           "action": "store",
-          "params": { "namespace": "pipeline_results" }
+          "params": {
+            "namespace": "pipeline_results"
+          }
         },
         {
           "id": "vinci_learn",
           "name": "Update Vinci pattern model",
           "node": "HeadyVinci",
           "action": "learn",
-          "params": { "updateBaseline": true }
+          "params": {
+            "updateBaseline": true
+          }
         },
         {
           "id": "governance_post",
           "name": "Post-execution governance audit",
           "node": "HeadyGovernance",
           "action": "audit",
-          "params": { "phase": "post" }
+          "params": {
+            "phase": "post"
+          }
         },
         {
           "id": "drift_check",
@@ -654,14 +994,22 @@
           "name": "Log execution to autobiographer",
           "node": "HeadyAutobiographer",
           "action": "record",
-          "params": { "events": ["pipeline_run", "decision_made", "learning_captured"] }
+          "params": {
+            "events": [
+              "pipeline_run",
+              "decision_made",
+              "learning_captured"
+            ]
+          }
         },
         {
           "id": "emit_receipt",
           "name": "Emit trust receipt signed with Ed25519",
           "node": "HeadyGovernance",
           "action": "emitReceipt",
-          "params": { "signAlgorithm": "Ed25519" }
+          "params": {
+            "signAlgorithm": "Ed25519"
+          }
         }
       ]
     }
@@ -669,7 +1017,15 @@
   "pipelineVariants": {
     "fast_path": {
       "description": "For LOW risk, pre-approved patterns",
-      "stages": [0, 1, 2, 7, 12, 13, 20]
+      "stages": [
+        0,
+        1,
+        2,
+        7,
+        12,
+        13,
+        20
+      ]
     },
     "full_path": {
       "description": "All 21 stages for HIGH/CRITICAL or novel patterns",
@@ -677,11 +1033,29 @@
     },
     "arena_path": {
       "description": "Competitive evaluation without execution",
-      "stages": [0, 1, 2, 3, 4, 8, 9, 10, 20]
+      "stages": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        8,
+        9,
+        10,
+        20
+      ]
     },
     "learning_path": {
       "description": "Continuous improvement without task execution",
-      "stages": [0, 1, 16, 17, 18, 19, 20]
+      "stages": [
+        0,
+        1,
+        16,
+        17,
+        18,
+        19,
+        20
+      ]
     }
   },
   "pools": {
@@ -739,9 +1113,9 @@
     },
     "cost_usd": {
       "description": "Max cost per pipeline run in USD",
-      "default": 1.00,
-      "max": 10.00,
-      "fullAutoMax": 5.00,
+      "default": 1.0,
+      "max": 10.0,
+      "fullAutoMax": 5.0,
       "trackingEnabled": true
     }
   },
@@ -776,15 +1150,38 @@
     "onGovernanceDeny": "halt_immediately",
     "onBudgetExceeded": "halt_and_alert",
     "retryBackoff": "phi_exponential",
-    "retryBackoffMs": [1618, 2618, 4236],
-    "alertChannels": ["story_driver", "log", "webhook"],
+    "retryBackoffMs": [
+      1618,
+      2618,
+      4236
+    ],
+    "alertChannels": [
+      "story_driver",
+      "log",
+      "webhook"
+    ],
     "webhookUrl": "${ALERT_WEBHOOK_URL}"
   },
   "hooks": {
-    "onPipelineStart": ["story_driver.record", "budget.checkpoint"],
-    "onStageStart": ["budget.checkpoint"],
-    "onStageComplete": ["story_driver.record"],
-    "onPipelineComplete": ["story_driver.record", "budget.finalize", "coherence.update"],
-    "onPipelineError": ["story_driver.record", "budget.finalize", "alert.send"]
+    "onPipelineStart": [
+      "story_driver.record",
+      "budget.checkpoint"
+    ],
+    "onStageStart": [
+      "budget.checkpoint"
+    ],
+    "onStageComplete": [
+      "story_driver.record"
+    ],
+    "onPipelineComplete": [
+      "story_driver.record",
+      "budget.finalize",
+      "coherence.update"
+    ],
+    "onPipelineError": [
+      "story_driver.record",
+      "budget.finalize",
+      "alert.send"
+    ]
   }
 }

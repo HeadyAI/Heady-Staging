@@ -11,6 +11,7 @@
  */
 
 'use strict';
+const logger = require('../../../shared/logger')('vector-federation');
 
 // ── Constants ─────────────────────────────────────────────────────────────────
 
@@ -114,7 +115,7 @@ class VectorFederation {
 
     // Replicate to peers asynchronously (fire-and-forget)
     this._replicateToPeers('push', record).catch((err) => {
-      console.warn(`[VectorFederation] Push replication failed for ${entry.id}:`, err.message);
+      logger.warn(`[VectorFederation] Push replication failed for ${entry.id}:`, err.message);
     });
 
     return record;
@@ -300,7 +301,7 @@ class VectorFederation {
     if (this._gossipTimer) return;
     this._gossipTimer = setInterval(() => {
       this._gossipCycle().catch((err) => {
-        console.warn('[VectorFederation] Gossip cycle error:', err.message);
+        logger.warn('[VectorFederation] Gossip cycle error:', err.message);
       });
     }, this.gossipIntervalMs);
   }
@@ -513,7 +514,7 @@ class VectorFederation {
       await this.pullFromPeer(target.id);
       this._logReplication('gossip-pull', `from ${target.id}`);
     } catch (err) {
-      console.warn(`[VectorFederation] Gossip pull failed from ${target.id}:`, err.message);
+      logger.warn(`[VectorFederation] Gossip pull failed from ${target.id}:`, err.message);
     }
   }
 

@@ -1,0 +1,21 @@
+{
+  "domain": "heady_systems",
+  "role": "engine",
+  "policies": {
+    "container_startup": {
+      "default_state": "provisioning",
+      "require_orchestrator_handshake": true,
+      "max_startup_time_seconds": 300
+    },
+    "data_handling": {
+      "encrypt_at_rest": true,
+      "encrypt_in_transit": true,
+      "audit_all_writes": true
+    },
+    "ai_operations": {
+      "require_human_oversight": true,
+      "log_all_inferences": true,
+      "model_validation_required": true
+    }
+  }
+}

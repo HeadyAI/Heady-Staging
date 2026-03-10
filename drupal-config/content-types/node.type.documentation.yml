@@ -1,0 +1,36 @@
+# Drupal Content Type: Documentation
+# Generated for Heady™ Platform — HeadyAutoContext vector-indexed
+# All content auto-synced to pgvector via webhook + polling fallback
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+    - text
+    - field
+    - heady_cms
+id: documentation
+label: 'Documentation'
+description: 'Technical docs, guides, tutorials, and API references.'
+help: ''
+new_revision: true
+preview_mode: 1
+display_submitted: true
+
+# Field: field_body
+# field_type: text_long
+
+# Field: field_doc_category
+# field_type: entity_reference
+
+# Field: field_version
+# field_type: text_long
+
+# Field: field_code_examples
+# field_type: text_long
+
+# Field: field_related_services
+# field_type: text_long
+
+# Field: field_vector_embedding
+# field_type: text_long

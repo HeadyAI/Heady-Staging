@@ -1,0 +1,117 @@
+<?php
+
+/**
+ * @file
+ * Install, update, and uninstall functions for the heady_content module.
+ * Defines ALL 13 content types for Heady™ Drupal CMS.
+ * ALL content MUST be indexed into HeadyAutoContext vector memory.
+ * © 2024-2026 HeadySystems Inc. 51 Provisional Patents.
+ */
+
+use Drupal\node\Entity\NodeType;
+use Drupal\taxonomy\Entity\Vocabulary;
+
+/**
+ * Implements hook_install().
+ */
+function heady_content_install() {
+  $content_types = [
+    // ─── Original 8 Content Types ────────────────────────────────────────
+    'article' => [
+      'name' => 'Article',
+      'description' => 'Blog posts, news, announcements — auto-indexed into HeadyAutoContext vector memory',
+    ],
+    'documentation' => [
+      'name' => 'Documentation',
+      'description' => 'Technical docs, guides, tutorials — high CSL relevance for search and chat enrichment',
+    ],
+    'case_study' => [
+      'name' => 'Case Study',
+      'description' => 'Enterprise case studies — indexed for prospect context enrichment',
+    ],
+    'patent' => [
+      'name' => 'Patent',
+      'description' => 'Patent descriptions and claims — 51 provisional patents vectorized for IP analysis',
+    ],
+    'event' => [
+      'name' => 'Event',
+      'description' => 'Community events, meetups, hackathons — HeadyConnection.org program content',
+    ],
+    'grant_program' => [
+      'name' => 'Grant Program',
+      'description' => 'Non-profit grant programs — HeadyConnection.org 501(c)(3) community initiatives',
+    ],
+    'agent_listing' => [
+      'name' => 'Agent Listing',
+      'description' => 'HeadyEX marketplace agent listings — vectorized for discovery and matching',
+    ],
+    'investor_update' => [
+      'name' => 'Investor Update',
+      'description' => 'Quarterly updates, financial reports — authenticated access only',
+    ],
+
+    // ─── 5 NEW Content Types (Model Council Addition) ────────────────────
+    'testimonial' => [
+      'name' => 'Testimonial',
+      'description' => 'User stories and social proof — vector-embeds sentiment for trust signals',
+    ],
+    'faq' => [
+      'name' => 'FAQ',
+      'description' => 'Knowledge base Q&A for all sites — high CSL relevance for HeadyBuddy chat and search',
+    ],
+    'product_catalog' => [
+      'name' => 'Product Catalog',
+      'description' => 'Service/product catalog entries for HeadyEX — vectorized for marketplace discovery',
+    ],
+    'news_release' => [
+      'name' => 'News Release',
+      'description' => 'Press releases and media announcements — indexed for media intelligence',
+    ],
+    'media_asset' => [
+      'name' => 'Media Asset',
+      'description' => 'Images/videos with descriptions — vectorizes multimedia metadata for visual search',
+    ],
+  ];
+
+  foreach ($content_types as $machine_name => $type_info) {
+    if (!NodeType::load($machine_name)) {
+      $node_type = NodeType::create([
+        'type' => $machine_name,
+        'name' => $type_info['name'],
+        'description' => $type_info['description'],
+        'display_submitted' => TRUE,
+        'new_revision' => TRUE,
+      ]);
+      $node_type->save();
+      \Drupal::logger('heady_content')->notice('Created content type: @name', ['@name' => $type_info['name']]);
+    }
+  }
+
+  // Create taxonomy vocabulary for site assignment
+  if (!Vocabulary::load('heady_sites')) {
+    Vocabulary::create([
+      'vid' => 'heady_sites',
+      'name' => 'Heady Sites',
+      'description' => 'All 9 Heady sites for content assignment',
+    ])->save();
+  }
+
+  \Drupal::logger('heady_content')->notice('Heady Content: 13 content types installed. ALL content auto-indexes into HeadyAutoContext.');
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function heady_content_uninstall() {
+  $types = [
+    'article', 'documentation', 'case_study', 'patent', 'event',
+    'grant_program', 'agent_listing', 'investor_update',
+    'testimonial', 'faq', 'product_catalog', 'news_release', 'media_asset',
+  ];
+  foreach ($types as $type) {
+    $node_type = NodeType::load($type);
+    if ($node_type) {
+      $node_type->delete();
+    }
+  }
+}

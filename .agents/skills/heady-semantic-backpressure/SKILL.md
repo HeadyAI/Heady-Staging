@@ -8,7 +8,7 @@ description: >
   Keywords: backpressure, throttling, SRE, load shedding, circuit breaker, semantic dedup, deduplication,
   priority scoring, queue management, overload, agent overload, Heady backpressure, swarm pressure.
 metadata:
-  author: eric-head
+  author: eric-haywood
   version: '2.0'
 ---
 

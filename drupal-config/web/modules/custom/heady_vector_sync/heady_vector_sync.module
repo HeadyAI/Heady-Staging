@@ -1,0 +1,49 @@
+<?php
+/**
+ * @file
+ * Heady Vector Sync — Syncs Drupal content to HeadyAutoContext vector memory.
+ * Uses hook_entity_update/insert/delete with φ-scaled polling fallback.
+ * All content indexed into 384-dim vector space for semantic search.
+ * © 2024-2026 HeadySystems Inc. All Rights Reserved.
+ */
+
+use Drupal\Core\Entity\EntityInterface;
+
+/**
+ * Implements hook_entity_insert().
+ * Fires instantly on new content — queues for vector embedding.
+ */
+function heady_vector_sync_entity_insert(EntityInterface $entity) {
+  if ($entity->getEntityTypeId() === 'node') {
+    \Drupal::service('heady_vector_sync.indexer')->queueForIndexing($entity, 'insert');
+  }
+}
+
+/**
+ * Implements hook_entity_update().
+ * Fires instantly on content update — re-embeds in vector memory.
+ */
+function heady_vector_sync_entity_update(EntityInterface $entity) {
+  if ($entity->getEntityTypeId() === 'node') {
+    \Drupal::service('heady_vector_sync.indexer')->queueForIndexing($entity, 'update');
+  }
+}
+
+/**
+ * Implements hook_entity_delete().
+ * Removes vector embedding when content is deleted.
+ */
+function heady_vector_sync_entity_delete(EntityInterface $entity) {
+  if ($entity->getEntityTypeId() === 'node') {
+    \Drupal::service('heady_vector_sync.indexer')->queueForIndexing($entity, 'delete');
+  }
+}
+
+/**
+ * Implements hook_cron().
+ * φ-scaled polling fallback: re-indexes modified content every 5-15 min.
+ * Catches anything the real-time hooks might miss.
+ */
+function heady_vector_sync_cron() {
+  \Drupal::service('heady_vector_sync.indexer')->runPollingFallback();
+}

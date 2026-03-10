@@ -1,0 +1,42 @@
+# Drupal Content Type: Grant Program
+# Generated for Heady™ Platform — HeadyAutoContext vector-indexed
+# All content auto-synced to pgvector via webhook + polling fallback
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+    - text
+    - field
+    - heady_cms
+id: grant_program
+label: 'Grant Program'
+description: 'Non-profit grant programs for AI literacy and digital equity. HeadyConnection 501(c)(3).'
+help: ''
+new_revision: true
+preview_mode: 1
+display_submitted: true
+
+# Field: field_program_name
+# field_type: text_long
+
+# Field: field_description
+# field_type: text_long
+
+# Field: field_eligibility
+# field_type: text_long
+
+# Field: field_amount
+# field_type: decimal
+
+# Field: field_deadline
+# field_type: text_long
+
+# Field: field_application_url
+# field_type: link
+
+# Field: field_impact_metrics
+# field_type: text_long
+
+# Field: field_vector_embedding
+# field_type: text_long

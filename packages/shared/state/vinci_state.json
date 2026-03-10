@@ -1,0 +1,272 @@
+{
+  "metadata": {
+    "version": "1.0",
+    "created_at": "2026-01-31T22:25:58.518Z"
+  },
+  "tasks": {
+    "1769898358487": {
+      "task_id": "1769898358487",
+      "instruction": "PERFORMANCE: Make Vinci poll interval configurable via environment variable VINCI_POLL_MS (default 1500). Consider implementing event-driven variation generation using EventEmitter pattern instead of setInterval polling. Add backoff logic when no active Vinci tasks exist to reduce CPU usage.",
+      "created_at": "2026-01-31T22:25:58.518Z",
+      "updated_at": "2026-02-01T07:22:02.313Z",
+      "enabled": true,
+      "mode": "CONSTANT",
+      "rate_ms": 10000,
+      "max_variations": 25,
+      "next_generate_at": "2026-02-01T07:22:12.313Z",
+      "generated_total": 3063,
+      "variations": [
+        {
+          "id": "1769930270064-26bf00c4b306-3038",
+          "timestamp": "2026-02-01T07:17:50.064Z",
+          "lens": "Testing",
+          "mode": "RISKS",
+          "tags": [
+            "testing"
+          ],
+          "text": "(Testing) Risks for: PERFORMANCE: Make Vinci poll interval configurable via environment variable VINCI_POLL_MS (default 1500). Consider implementing event-driven variation generation using EventEmitter pattern instead of setInterval polling. Add backoff logic when no active Vinci tasks exist to reduce CPU usage. | Shared-state races; unbounded output; unclear triggers; mitigations: separate state, caps, throttles, explicit enable flags."
+        },
+        {
+          "id": "1769930280576-26bf00c4b306-3039",
+          "timestamp": "2026-02-01T07:18:00.576Z",
+          "lens": "Wildcard",
+          "mode": "ACCEPTANCE",
+          "tags": [
+            "wildcard"
+          ],
+          "text": "(Wildcard) Acceptance for: PERFORMANCE: Make Vinci poll interval configurable via environment variable VINCI_POLL_MS (default 1500). Consider implementing event-driven variation generation using EventEmitter pattern instead of setInterval polling. Add backoff logic when no active Vinci tasks exist to reduce CPU usage. | Produces distinct variations; retrievable via API; emits lens events; bounded storage; compatible with existing task pipeline."
+        },
+        {
+          "id": "1769930291085-26bf00c4b306-3040",
+          "timestamp": "2026-02-01T07:18:11.085Z",
+          "lens": "Minimalist",
+          "mode": "REWRITE",
+          "tags": [
+            "minimal"
+          ],
+          "text": "(Minimalist) PERFORMANCE: Make Vinci poll interval configurable via environment variable VINCI_POLL_MS (default 1500). Consider implementing event-driven variation generation using EventEmitter pattern instead of setInterval polling. Add backoff logic when no active Vinci tasks exist to reduce CPU usage. | Focus: smallest change that works."
+        },
+        {
+          "id": "1769930301596-26bf00c4b306-3041",
+          "timestamp": "2026-02-01T07:18:21.596Z",
+          "lens": "Systems",
+          "mode": "PLAN",
+          "tags": [
+            "architecture"
+          ],
+          "text": "(Systems) Plan for: PERFORMANCE: Make Vinci poll interval configurable via environment variable VINCI_POLL_MS (default 1500). Consider implementing event-driven variation generation using EventEmitter pattern instead of setInterval polling. Add backoff logic when no active Vinci tasks exist to reduce CPU usage. | Define interfaces; implement core; integrate; add safety/observability; validate with a smoke run."
+        },
+        {
+          "id": "1769930312111-26bf00c4b306-3042",
+          "timestamp": "2026-02-01T07:18:32.111Z",
+          "lens": "Trust-First",
+          "mode": "RISKS",
+          "tags": [
+            "security"
+          ],
+          "text": "(Trust-First) Risks for: PERFORMANCE: Make Vinci poll interval configurable via environment variable VINCI_POLL_MS (default 1500). Consider implementing event-driven variation generation using EventEmitter pattern instead of setInterval polling. Add backoff logic when no active Vinci tasks exist to reduce CPU usage. | Shared-state races; unbounded output; unclear triggers; mitigations: separate state, caps, throttles, explicit enable flags."
+        },
+        {
+          "id": "1769930322618-26bf00c4b306-3043",
+          "timestamp": "2026-02-01T07:18:42.618Z",
+          "lens": "Observability",
+          "mode": "ACCEPTANCE",
+          "tags": [
+            "monitoring"
+          ],
+          "text": "(Observability) Acceptance for: PERFORMANCE: Make Vinci poll interval configurable via environment variable VINCI_POLL_MS (default 1500). Consider implementing event-driven variation generation using EventEmitter pattern instead of setInterval polling. Add backoff logic when no active Vinci tasks exist to reduce CPU usage. | Produces distinct variations; retrievable via API; emits lens events; bounded storage; compatible with existing task pipeline."
+        },
+        {
+          "id": "1769930333181-26bf00c4b306-3044",
+          "timestamp": "2026-02-01T07:18:53.181Z",
+          "lens": "Performance",
+          "mode": "REWRITE",
+          "tags": [
+            "performance"
+          ],
+          "text": "(Performance) PERFORMANCE: Make Vinci poll interval configurable via environment variable VINCI_POLL_MS (default 1500). Consider implementing event-driven variation generation using EventEmitter pattern instead of setInterval polling. Add backoff logic when no active Vinci tasks exist to reduce CPU usage. | Focus: low overhead, throttled loops, bounded state."
+        },
+        {
+          "id": "1769930343636-26bf00c4b306-3045",
+          "timestamp": "2026-02-01T07:19:03.636Z",
+          "lens": "Extensibility",
+          "mode": "PLAN",
+          "tags": [
+            "extensibility"
+          ],
+          "text": "(Extensibility) Plan for: PERFORMANCE: Make Vinci poll interval configurable via environment variable VINCI_POLL_MS (default 1500). Consider implementing event-driven variation generation using EventEmitter pattern instead of setInterval polling. Add backoff logic when no active Vinci tasks exist to reduce CPU usage. | Define interfaces; implement core; integrate; add safety/observability; validate with a smoke run."
+        },
+        {
+          "id": "1769930354144-26bf00c4b306-3046",
+          "timestamp": "2026-02-01T07:19:14.144Z",
+          "lens": "Testing",
+          "mode": "RISKS",
+          "tags": [
+            "testing"
+          ],
+          "text": "(Testing) Risks for: PERFORMANCE: Make Vinci poll interval configurable via environment variable VINCI_POLL_MS (default 1500). Consider implementing event-driven variation generation using EventEmitter pattern instead of setInterval polling. Add backoff logic when no active Vinci tasks exist to reduce CPU usage. | Shared-state races; unbounded output; unclear triggers; mitigations: separate state, caps, throttles, explicit enable flags."
+        },
+        {
+          "id": "1769930364656-26bf00c4b306-3047",
+          "timestamp": "2026-02-01T07:19:24.656Z",
+          "lens": "Wildcard",
+          "mode": "ACCEPTANCE",
+          "tags": [
+            "wildcard"
+          ],
+          "text": "(Wildcard) Acceptance for: PERFORMANCE: Make Vinci poll interval configurable via environment variable VINCI_POLL_MS (default 1500). Consider implementing event-driven variation generation using EventEmitter pattern instead of setInterval polling. Add backoff logic when no active Vinci tasks exist to reduce CPU usage. | Produces distinct variations; retrievable via API; emits lens events; bounded storage; compatible with existing task pipeline."
+        },
+        {
+          "id": "1769930375167-26bf00c4b306-3048",
+          "timestamp": "2026-02-01T07:19:35.167Z",
+          "lens": "Minimalist",
+          "mode": "REWRITE",
+          "tags": [
+            "minimal"
+          ],
+          "text": "(Minimalist) PERFORMANCE: Make Vinci poll interval configurable via environment variable VINCI_POLL_MS (default 1500). Consider implementing event-driven variation generation using EventEmitter pattern instead of setInterval polling. Add backoff logic when no active Vinci tasks exist to reduce CPU usage. | Focus: smallest change that works."
+        },
+        {
+          "id": "1769930385677-26bf00c4b306-3049",
+          "timestamp": "2026-02-01T07:19:45.677Z",
+          "lens": "Systems",
+          "mode": "PLAN",
+          "tags": [
+            "architecture"
+          ],
+          "text": "(Systems) Plan for: PERFORMANCE: Make Vinci poll interval configurable via environment variable VINCI_POLL_MS (default 1500). Consider implementing event-driven variation generation using EventEmitter pattern instead of setInterval polling. Add backoff logic when no active Vinci tasks exist to reduce CPU usage. | Define interfaces; implement core; integrate; add safety/observability; validate with a smoke run."
+        },
+        {
+          "id": "1769930396189-26bf00c4b306-3050",
+          "timestamp": "2026-02-01T07:19:56.189Z",
+          "lens": "Trust-First",
+          "mode": "RISKS",
+          "tags": [
+            "security"
+          ],
+          "text": "(Trust-First) Risks for: PERFORMANCE: Make Vinci poll interval configurable via environment variable VINCI_POLL_MS (default 1500). Consider implementing event-driven variation generation using EventEmitter pattern instead of setInterval polling. Add backoff logic when no active Vinci tasks exist to reduce CPU usage. | Shared-state races; unbounded output; unclear triggers; mitigations: separate state, caps, throttles, explicit enable flags."
+        },
+        {
+          "id": "1769930406700-26bf00c4b306-3051",
+          "timestamp": "2026-02-01T07:20:06.700Z",
+          "lens": "Observability",
+          "mode": "ACCEPTANCE",
+          "tags": [
+            "monitoring"
+          ],
+          "text": "(Observability) Acceptance for: PERFORMANCE: Make Vinci poll interval configurable via environment variable VINCI_POLL_MS (default 1500). Consider implementing event-driven variation generation using EventEmitter pattern instead of setInterval polling. Add backoff logic when no active Vinci tasks exist to reduce CPU usage. | Produces distinct variations; retrievable via API; emits lens events; bounded storage; compatible with existing task pipeline."
+        },
+        {
+          "id": "1769930417207-26bf00c4b306-3052",
+          "timestamp": "2026-02-01T07:20:17.208Z",
+          "lens": "Performance",
+          "mode": "REWRITE",
+          "tags": [
+            "performance"
+          ],
+          "text": "(Performance) PERFORMANCE: Make Vinci poll interval configurable via environment variable VINCI_POLL_MS (default 1500). Consider implementing event-driven variation generation using EventEmitter pattern instead of setInterval polling. Add backoff logic when no active Vinci tasks exist to reduce CPU usage. | Focus: low overhead, throttled loops, bounded state."
+        },
+        {
+          "id": "1769930427715-26bf00c4b306-3053",
+          "timestamp": "2026-02-01T07:20:27.715Z",
+          "lens": "Extensibility",
+          "mode": "PLAN",
+          "tags": [
+            "extensibility"
+          ],
+          "text": "(Extensibility) Plan for: PERFORMANCE: Make Vinci poll interval configurable via environment variable VINCI_POLL_MS (default 1500). Consider implementing event-driven variation generation using EventEmitter pattern instead of setInterval polling. Add backoff logic when no active Vinci tasks exist to reduce CPU usage. | Define interfaces; implement core; integrate; add safety/observability; validate with a smoke run."
+        },
+        {
+          "id": "1769930438230-26bf00c4b306-3054",
+          "timestamp": "2026-02-01T07:20:38.230Z",
+          "lens": "Testing",
+          "mode": "RISKS",
+          "tags": [
+            "testing"
+          ],
+          "text": "(Testing) Risks for: PERFORMANCE: Make Vinci poll interval configurable via environment variable VINCI_POLL_MS (default 1500). Consider implementing event-driven variation generation using EventEmitter pattern instead of setInterval polling. Add backoff logic when no active Vinci tasks exist to reduce CPU usage. | Shared-state races; unbounded output; unclear triggers; mitigations: separate state, caps, throttles, explicit enable flags."
+        },
+        {
+          "id": "1769930448740-26bf00c4b306-3055",
+          "timestamp": "2026-02-01T07:20:48.740Z",
+          "lens": "Wildcard",
+          "mode": "ACCEPTANCE",
+          "tags": [
+            "wildcard"
+          ],
+          "text": "(Wildcard) Acceptance for: PERFORMANCE: Make Vinci poll interval configurable via environment variable VINCI_POLL_MS (default 1500). Consider implementing event-driven variation generation using EventEmitter pattern instead of setInterval polling. Add backoff logic when no active Vinci tasks exist to reduce CPU usage. | Produces distinct variations; retrievable via API; emits lens events; bounded storage; compatible with existing task pipeline."
+        },
+        {
+          "id": "1769930459257-26bf00c4b306-3056",
+          "timestamp": "2026-02-01T07:20:59.257Z",
+          "lens": "Minimalist",
+          "mode": "REWRITE",
+          "tags": [
+            "minimal"
+          ],
+          "text": "(Minimalist) PERFORMANCE: Make Vinci poll interval configurable via environment variable VINCI_POLL_MS (default 1500). Consider implementing event-driven variation generation using EventEmitter pattern instead of setInterval polling. Add backoff logic when no active Vinci tasks exist to reduce CPU usage. | Focus: smallest change that works."
+        },
+        {
+          "id": "1769930469763-26bf00c4b306-3057",
+          "timestamp": "2026-02-01T07:21:09.763Z",
+          "lens": "Systems",
+          "mode": "PLAN",
+          "tags": [
+            "architecture"
+          ],
+          "text": "(Systems) Plan for: PERFORMANCE: Make Vinci poll interval configurable via environment variable VINCI_POLL_MS (default 1500). Consider implementing event-driven variation generation using EventEmitter pattern instead of setInterval polling. Add backoff logic when no active Vinci tasks exist to reduce CPU usage. | Define interfaces; implement core; integrate; add safety/observability; validate with a smoke run."
+        },
+        {
+          "id": "1769930480272-26bf00c4b306-3058",
+          "timestamp": "2026-02-01T07:21:20.272Z",
+          "lens": "Trust-First",
+          "mode": "RISKS",
+          "tags": [
+            "security"
+          ],
+          "text": "(Trust-First) Risks for: PERFORMANCE: Make Vinci poll interval configurable via environment variable VINCI_POLL_MS (default 1500). Consider implementing event-driven variation generation using EventEmitter pattern instead of setInterval polling. Add backoff logic when no active Vinci tasks exist to reduce CPU usage. | Shared-state races; unbounded output; unclear triggers; mitigations: separate state, caps, throttles, explicit enable flags."
+        },
+        {
+          "id": "1769930490783-26bf00c4b306-3059",
+          "timestamp": "2026-02-01T07:21:30.783Z",
+          "lens": "Observability",
+          "mode": "ACCEPTANCE",
+          "tags": [
+            "monitoring"
+          ],
+          "text": "(Observability) Acceptance for: PERFORMANCE: Make Vinci poll interval configurable via environment variable VINCI_POLL_MS (default 1500). Consider implementing event-driven variation generation using EventEmitter pattern instead of setInterval polling. Add backoff logic when no active Vinci tasks exist to reduce CPU usage. | Produces distinct variations; retrievable via API; emits lens events; bounded storage; compatible with existing task pipeline."
+        },
+        {
+          "id": "1769930501291-26bf00c4b306-3060",
+          "timestamp": "2026-02-01T07:21:41.291Z",
+          "lens": "Performance",
+          "mode": "REWRITE",
+          "tags": [
+            "performance"
+          ],
+          "text": "(Performance) PERFORMANCE: Make Vinci poll interval configurable via environment variable VINCI_POLL_MS (default 1500). Consider implementing event-driven variation generation using EventEmitter pattern instead of setInterval polling. Add backoff logic when no active Vinci tasks exist to reduce CPU usage. | Focus: low overhead, throttled loops, bounded state."
+        },
+        {
+          "id": "1769930511801-26bf00c4b306-3061",
+          "timestamp": "2026-02-01T07:21:51.802Z",
+          "lens": "Extensibility",
+          "mode": "PLAN",
+          "tags": [
+            "extensibility"
+          ],
+          "text": "(Extensibility) Plan for: PERFORMANCE: Make Vinci poll interval configurable via environment variable VINCI_POLL_MS (default 1500). Consider implementing event-driven variation generation using EventEmitter pattern instead of setInterval polling. Add backoff logic when no active Vinci tasks exist to reduce CPU usage. | Define interfaces; implement core; integrate; add safety/observability; validate with a smoke run."
+        },
+        {
+          "id": "1769930522313-26bf00c4b306-3062",
+          "timestamp": "2026-02-01T07:22:02.313Z",
+          "lens": "Testing",
+          "mode": "RISKS",
+          "tags": [
+            "testing"
+          ],
+          "text": "(Testing) Risks for: PERFORMANCE: Make Vinci poll interval configurable via environment variable VINCI_POLL_MS (default 1500). Consider implementing event-driven variation generation using EventEmitter pattern instead of setInterval polling. Add backoff logic when no active Vinci tasks exist to reduce CPU usage. | Shared-state races; unbounded output; unclear triggers; mitigations: separate state, caps, throttles, explicit enable flags."
+        }
+      ]
+    }
+  }
+}

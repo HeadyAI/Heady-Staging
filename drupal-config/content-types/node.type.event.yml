@@ -1,0 +1,42 @@
+# Drupal Content Type: Event
+# Generated for Heady™ Platform — HeadyAutoContext vector-indexed
+# All content auto-synced to pgvector via webhook + polling fallback
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+    - text
+    - field
+    - heady_cms
+id: event
+label: 'Event'
+description: 'Community events, meetups, hackathons, and conferences.'
+help: ''
+new_revision: true
+preview_mode: 1
+display_submitted: true
+
+# Field: field_event_date
+# field_type: datetime
+
+# Field: field_location
+# field_type: text_long
+
+# Field: field_event_type
+# field_type: entity_reference
+
+# Field: field_description
+# field_type: text_long
+
+# Field: field_registration_url
+# field_type: link
+
+# Field: field_capacity
+# field_type: text_long
+
+# Field: field_site_assignment
+# field_type: text_long
+
+# Field: field_vector_embedding
+# field_type: text_long

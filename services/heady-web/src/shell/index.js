@@ -13,6 +13,7 @@
  */
 
 'use strict';
+const logger = require('../../shared/logger')('index');
 
 import { loadDynamicRemote, mountRemote, preloadRemote } from './load-dynamic-remote';
 import { renderIntegratedWorkspace } from './integrated-workspace';
@@ -166,7 +167,7 @@ function preloadFrequentRemotes() {
     );
   } catch (err) {
     // Preload failures are non-fatal
-    console.warn('[HeadyShell] Preload warning:', err.message);
+    logger.warn('[HeadyShell] Preload warning:', err.message);
   }
 }
 
@@ -181,7 +182,7 @@ function preloadFrequentRemotes() {
 async function bootShell() {
   const container = document.getElementById('heady-root');
   if (!container) {
-    console.error('[HeadyShell] #heady-root not found in DOM');
+    logger.error('[HeadyShell] #heady-root not found in DOM');
     return;
   }
 
@@ -202,7 +203,7 @@ async function bootShell() {
       }
     } catch (fetchErr) {
       // Domain API is optional — fall back to DEFAULT_REMOTE
-      console.warn('[HeadyShell] Domain API unavailable, using default remote:', fetchErr.message);
+      logger.warn('[HeadyShell] Domain API unavailable, using default remote:', fetchErr.message);
     }
 
     // ── Step 2: Look up remote ────────────────────────────────────────────
@@ -210,7 +211,7 @@ async function bootShell() {
 
     const remote = REMOTE_REGISTRY[projection];
     if (!remote) {
-      console.warn(`[HeadyShell] No remote registered for projection "${projection}". Rendering fallback.`);
+      logger.warn(`[HeadyShell] No remote registered for projection "${projection}". Rendering fallback.`);
       hideLoader();
       renderFallbackUI(projection);
       return;
@@ -236,7 +237,7 @@ async function bootShell() {
     console.info(`[HeadyShell] ✓ Mounted remote "${projection}" (shell v${SHELL_VERSION})`);
 
   } catch (err) {
-    console.error('[HeadyShell] Boot failure:', err);
+    logger.error('[HeadyShell] Boot failure:', err);
     hideLoader();
     renderErrorUI(err);
   }

@@ -1,0 +1,88 @@
+{
+  "version": "1.0",
+  "enabled": true,
+  "strict_mode": true,
+  "auto_approve_low_risk": true,
+  "require_human_for_critical": true,
+  "approval_timeout_seconds": 3600,
+  "blocked_patterns": [
+    "rm -rf /",
+    "drop database",
+    "delete all",
+    "format drive",
+    "expose secret",
+    "disable security",
+    "bypass authentication",
+    "remove encryption"
+  ],
+  "trusted_sources": [
+    "orchestrator",
+    "conductor",
+    "governance",
+    "admin_ui"
+  ],
+  "audit_retention_days": 90,
+  "compliance_rules": {
+    "security": {
+      "enabled": true,
+      "block_hardcoded_secrets": true,
+      "require_encryption": true,
+      "scan_dependencies": true,
+      "enforce_authentication": true
+    },
+    "architecture": {
+      "enabled": true,
+      "enforce_trust_first": true,
+      "require_glass_box_logging": true,
+      "enforce_zero_start": true,
+      "validate_service_boundaries": true
+    },
+    "governance": {
+      "enabled": true,
+      "require_audit_logging": true,
+      "enforce_domain_separation": true,
+      "validate_permissions": true,
+      "track_all_changes": true
+    },
+    "data_handling": {
+      "enabled": true,
+      "protect_pii": true,
+      "classify_data_scope": true,
+      "enforce_data_retention": true,
+      "require_data_masking": true
+    },
+    "dependencies": {
+      "enabled": true,
+      "require_version_pinning": true,
+      "scan_vulnerabilities": true,
+      "validate_licenses": true,
+      "check_supply_chain": true
+    },
+    "performance": {
+      "enabled": true,
+      "enforce_resource_limits": true,
+      "monitor_memory_usage": true,
+      "track_execution_time": true
+    },
+    "documentation": {
+      "enabled": true,
+      "require_change_docs": false,
+      "validate_api_docs": false,
+      "check_readme_updates": false
+    }
+  },
+  "notification_settings": {
+    "notify_on_block": true,
+    "notify_on_pending": true,
+    "notify_on_critical": true,
+    "notification_channels": ["governance_log", "admin_ui"]
+  },
+  "auto_fix": {
+    "enabled": false,
+    "allowed_fixes": [
+      "add_logging",
+      "pin_versions",
+      "add_documentation"
+    ]
+  }
+}

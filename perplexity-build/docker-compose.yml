@@ -1,0 +1,465 @@
+# Heady™ Full Platform — Docker Compose for Local Development
+# Runs ALL 50 services, PostgreSQL + pgvector, Consul, OpenTelemetry, and Drupal CMS
+# All services operate as concurrent equals — NO priority ordering.
+# © 2024-2026 HeadySystems Inc. All Rights Reserved.
+
+version: '3.8'
+
+x-heady-service: &heady-service
+  restart: unless-stopped
+  networks:
+    - heady-mesh
+  environment:
+    - NODE_ENV=development
+    - CONSUL_HOST=consul
+    - CONSUL_PORT=8500
+    - OTEL_EXPORTER_OTLP_ENDPOINT=http://otel-collector:4317
+    - PGHOST=postgres
+    - PGPORT=5432
+    - PGDATABASE=heady_vector
+    - PGUSER=heady
+    - PGPASSWORD=${PG_PASSWORD:-heady_dev_2026}
+    - FIREBASE_PROJECT_ID=gen-lang-client-0920560496
+    - VECTOR_DIM=384
+  healthcheck:
+    test: ["CMD", "curl", "-f", "http://localhost:${SERVICE_PORT:-3310}/health"]
+    interval: 13s        # Fibonacci
+    timeout: 5s          # Fibonacci
+    retries: 5           # Fibonacci
+    start_period: 21s    # Fibonacci
+
+services:
+  # ─── Infrastructure ────────────────────────────────────────────────────────
+
+  postgres:
+    image: pgvector/pgvector:pg16
+    environment:
+      POSTGRES_DB: heady_vector
+      POSTGRES_USER: heady
+      POSTGRES_PASSWORD: ${PG_PASSWORD:-heady_dev_2026}
+    ports:
+      - "5432:5432"
+    volumes:
+      - heady-pgdata:/var/lib/postgresql/data
+    networks:
+      - heady-mesh
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U heady"]
+      interval: 8s
+      timeout: 5s
+      retries: 8
+
+  consul:
+    image: hashicorp/consul:1.18
+    command: agent -dev -client=0.0.0.0
+    ports:
+      - "8500:8500"
+    networks:
+      - heady-mesh
+
+  otel-collector:
+    image: otel/opentelemetry-collector-contrib:0.100.0
+    command: ["--config", "/etc/otel-config.yaml"]
+    volumes:
+      - ./shared/otel-config.yaml:/etc/otel-config.yaml:ro
+    ports:
+      - "4317:4317"   # gRPC
+      - "4318:4318"   # HTTP
+      - "8888:8888"   # Prometheus metrics
+    networks:
+      - heady-mesh
+
+  # ─── Drupal CMS ────────────────────────────────────────────────────────────
+
+  drupal:
+    image: drupal:10
+    ports:
+      - "8080:80"
+    environment:
+      - DRUPAL_DB_HOST=postgres
+      - DRUPAL_DB_PORT=5432
+      - DRUPAL_DB_NAME=heady_drupal
+      - DRUPAL_DB_USER=heady
+      - DRUPAL_DB_PASS=${PG_PASSWORD:-heady_dev_2026}
+    volumes:
+      - ./drupal-config/web/modules:/opt/drupal/web/modules/custom:ro
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - heady-mesh
+
+  # ─── Core Intelligence Services ────────────────────────────────────────────
+
+  heady-brain:
+    <<: *heady-service
+    build: ./services/heady-brain
+    ports: ["3310:3310"]
+    environment:
+      - SERVICE_PORT=3310
+
+  heady-brains:
+    <<: *heady-service
+    build: ./services/heady-brains
+    ports: ["3311:3311"]
+    environment:
+      - SERVICE_PORT=3311
+
+  heady-soul:
+    <<: *heady-service
+    build: ./services/heady-soul
+    ports: ["3312:3312"]
+    environment:
+      - SERVICE_PORT=3312
+
+  heady-conductor:
+    <<: *heady-service
+    build: ./services/heady-conductor
+    ports: ["3313:3313"]
+    environment:
+      - SERVICE_PORT=3313
+
+  heady-infer:
+    <<: *heady-service
+    build: ./services/heady-infer
+    ports: ["3314:3314"]
+    environment:
+      - SERVICE_PORT=3314
+
+  heady-embed:
+    <<: *heady-service
+    build: ./services/heady-embed
+    ports: ["3315:3315"]
+    environment:
+      - SERVICE_PORT=3315
+
+  heady-memory:
+    <<: *heady-service
+    build: ./services/heady-memory
+    ports: ["3316:3316"]
+    environment:
+      - SERVICE_PORT=3316
+
+  heady-vector:
+    <<: *heady-service
+    build: ./services/heady-vector
+    ports: ["3317:3317"]
+    environment:
+      - SERVICE_PORT=3317
+
+  heady-projection:
+    <<: *heady-service
+    build: ./services/heady-projection
+    ports: ["3318:3318"]
+    environment:
+      - SERVICE_PORT=3318
+
+  # ─── Agent & Bee Services ──────────────────────────────────────────────────
+
+  heady-bee-factory:
+    <<: *heady-service
+    build: ./services/heady-bee-factory
+    ports: ["3319:3319"]
+    environment:
+      - SERVICE_PORT=3319
+
+  heady-hive:
+    <<: *heady-service
+    build: ./services/heady-hive
+    ports: ["3320:3320"]
+    environment:
+      - SERVICE_PORT=3320
+
+  heady-orchestration:
+    <<: *heady-service
+    build: ./services/heady-orchestration
+    ports: ["3321:3321"]
+    environment:
+      - SERVICE_PORT=3321
+
+  heady-federation:
+    <<: *heady-service
+    build: ./services/heady-federation
+    ports: ["3322:3322"]
+    environment:
+      - SERVICE_PORT=3322
+
+  # ─── Security & Governance ─────────────────────────────────────────────────
+
+  heady-guard:
+    <<: *heady-service
+    build: ./services/heady-guard
+    ports: ["3323:3323"]
+    environment:
+      - SERVICE_PORT=3323
+
+  heady-security:
+    <<: *heady-service
+    build: ./services/heady-security
+    ports: ["3324:3324"]
+    environment:
+      - SERVICE_PORT=3324
+
+  heady-governance:
+    <<: *heady-service
+    build: ./services/heady-governance
+    ports: ["3325:3325"]
+    environment:
+      - SERVICE_PORT=3325
+
+  # ─── Monitoring & Health ───────────────────────────────────────────────────
+
+  heady-health:
+    <<: *heady-service
+    build: ./services/heady-health
+    ports: ["3326:3326"]
+    environment:
+      - SERVICE_PORT=3326
+
+  heady-eval:
+    <<: *heady-service
+    build: ./services/heady-eval
+    ports: ["3327:3327"]
+    environment:
+      - SERVICE_PORT=3327
+
+  heady-maintenance:
+    <<: *heady-service
+    build: ./services/heady-maintenance
+    ports: ["3328:3328"]
+    environment:
+      - SERVICE_PORT=3328
+
+  heady-testing:
+    <<: *heady-service
+    build: ./services/heady-testing
+    ports: ["3329:3329"]
+    environment:
+      - SERVICE_PORT=3329
+
+  # ─── User-Facing Services ──────────────────────────────────────────────────
+
+  heady-web:
+    <<: *heady-service
+    build: ./services/heady-web
+    ports: ["3330:3330"]
+    environment:
+      - SERVICE_PORT=3330
+
+  heady-buddy:
+    <<: *heady-service
+    build: ./services/heady-buddy
+    ports: ["3331:3331"]
+    environment:
+      - SERVICE_PORT=3331
+
+  heady-ui:
+    <<: *heady-service
+    build: ./services/heady-ui
+    ports: ["3332:3332"]
+    environment:
+      - SERVICE_PORT=3332
+
+  heady-onboarding:
+    <<: *heady-service
+    build: ./services/heady-onboarding
+    ports: ["3333:3333"]
+    environment:
+      - SERVICE_PORT=3333
+
+  heady-pilot-onboarding:
+    <<: *heady-service
+    build: ./services/heady-pilot-onboarding
+    ports: ["3334:3334"]
+    environment:
+      - SERVICE_PORT=3334
+
+  heady-task-browser:
+    <<: *heady-service
+    build: ./services/heady-task-browser
+    ports: ["3335:3335"]
+    environment:
+      - SERVICE_PORT=3335
+
+  # ─── Pipeline & Workflow ───────────────────────────────────────────────────
+
+  auto-success-engine:
+    <<: *heady-service
+    build: ./services/auto-success-engine
+    ports: ["3340:3340"]
+    environment:
+      - SERVICE_PORT=3340
+
+  hcfullpipeline-executor:
+    <<: *heady-service
+    build: ./services/hcfullpipeline-executor
+    ports: ["3341:3341"]
+    environment:
+      - SERVICE_PORT=3341
+
+  heady-chain:
+    <<: *heady-service
+    build: ./services/heady-chain
+    ports: ["3342:3342"]
+    environment:
+      - SERVICE_PORT=3342
+
+  heady-cache:
+    <<: *heady-service
+    build: ./services/heady-cache
+    ports: ["3343:3343"]
+    environment:
+      - SERVICE_PORT=3343
+
+  # ─── AI Routing & Gateway ──────────────────────────────────────────────────
+
+  ai-router:
+    <<: *heady-service
+    build: ./services/ai-router
+    ports: ["3350:3350"]
+    environment:
+      - SERVICE_PORT=3350
+
+  api-gateway:
+    <<: *heady-service
+    build: ./services/api-gateway
+    ports: ["3351:3351"]
+    environment:
+      - SERVICE_PORT=3351
+
+  model-gateway:
+    <<: *heady-service
+    build: ./services/model-gateway
+    ports: ["3352:3352"]
+    environment:
+      - SERVICE_PORT=3352
+
+  domain-router:
+    <<: *heady-service
+    build: ./services/domain-router
+    ports: ["3353:3353"]
+    environment:
+      - SERVICE_PORT=3353
+
+  # ─── External Integrations ─────────────────────────────────────────────────
+
+  mcp-server:
+    <<: *heady-service
+    build: ./services/mcp-server
+    ports: ["3360:3360"]
+    environment:
+      - SERVICE_PORT=3360
+
+  google-mcp:
+    <<: *heady-service
+    build: ./services/google-mcp
+    ports: ["3361:3361"]
+    environment:
+      - SERVICE_PORT=3361
+
+  memory-mcp:
+    <<: *heady-service
+    build: ./services/memory-mcp
+    ports: ["3362:3362"]
+    environment:
+      - SERVICE_PORT=3362
+
+  perplexity-mcp:
+    <<: *heady-service
+    build: ./services/perplexity-mcp
+    ports: ["3363:3363"]
+    environment:
+      - SERVICE_PORT=3363
+
+  jules-mcp:
+    <<: *heady-service
+    build: ./services/jules-mcp
+    ports: ["3364:3364"]
+    environment:
+      - SERVICE_PORT=3364
+
+  huggingface-gateway:
+    <<: *heady-service
+    build: ./services/huggingface-gateway
+    ports: ["3365:3365"]
+    environment:
+      - SERVICE_PORT=3365
+
+  colab-gateway:
+    <<: *heady-service
+    build: ./services/colab-gateway
+    ports: ["3366:3366"]
+    environment:
+      - SERVICE_PORT=3366
+
+  silicon-bridge:
+    <<: *heady-service
+    build: ./services/silicon-bridge
+    ports: ["3367:3367"]
+    environment:
+      - SERVICE_PORT=3367
+
+  discord-bot:
+    <<: *heady-service
+    build: ./services/discord-bot
+    ports: ["3368:3368"]
+    environment:
+      - SERVICE_PORT=3368
+
+  # ─── Specialized Services ──────────────────────────────────────────────────
+
+  heady-vinci:
+    <<: *heady-service
+    build: ./services/heady-vinci
+    ports: ["3380:3380"]
+    environment:
+      - SERVICE_PORT=3380
+
+  heady-autobiographer:
+    <<: *heady-service
+    build: ./services/heady-autobiographer
+    ports: ["3381:3381"]
+    environment:
+      - SERVICE_PORT=3381
+
+  heady-midi:
+    <<: *heady-service
+    build: ./services/heady-midi
+    ports: ["3382:3382"]
+    environment:
+      - SERVICE_PORT=3382
+
+  budget-tracker:
+    <<: *heady-service
+    build: ./services/budget-tracker
+    ports: ["3390:3390"]
+    environment:
+      - SERVICE_PORT=3390
+
+  cli-service:
+    <<: *heady-service
+    build: ./services/cli-service
+    ports: ["3391:3391"]
+    environment:
+      - SERVICE_PORT=3391
+
+  prompt-manager:
+    <<: *heady-service
+    build: ./services/prompt-manager
+    ports: ["3392:3392"]
+    environment:
+      - SERVICE_PORT=3392
+
+  secret-gateway:
+    <<: *heady-service
+    build: ./services/secret-gateway
+    ports: ["3393:3393"]
+    environment:
+      - SERVICE_PORT=3393
+
+networks:
+  heady-mesh:
+    driver: bridge
+
+volumes:
+  heady-pgdata:

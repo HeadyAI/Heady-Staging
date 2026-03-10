@@ -1,3 +1,4 @@
+const logger = require('../shared/logger')('sdk-quickstart');
 /*
  * © 2026 Heady™Systems Inc..
  * PROPRIETARY AND CONFIDENTIAL.
@@ -129,25 +130,25 @@ class HeadySDK {
  * Usage: npx heady-sdk init
  */
 async function cliQuickstart() {
-    console.log('🐝 Heady SDK Quickstart');
-    console.log('═'.repeat(50));
+    logger.info('🐝 Heady SDK Quickstart');
+    logger.info('═'.repeat(50));
 
     const sdk = new HeadySDK();
     const result = await sdk.init();
 
     if (result.success) {
-        console.log('✅ SDK initialized successfully');
-        console.log(`   Session: ${result.sessionId}`);
-        console.log(`   Manager: ${result.manager}`);
-        console.log('');
-        console.log('   Endpoints:');
+        logger.info('✅ SDK initialized successfully');
+        logger.info(`   Session: ${result.sessionId}`);
+        logger.info(`   Manager: ${result.manager}`);
+        logger.info('');
+        logger.info('   Endpoints:');
         for (const [name, url] of Object.entries(result.endpoints)) {
-            console.log(`     ${name}: ${url}`);
+            logger.info(`     ${name}: ${url}`);
         }
     } else {
-        console.error(`❌ Initialization failed at stage: ${result.stage}`);
-        console.error(`   Error: ${result.error}`);
-        console.error(`   Fix: ${result.remediation}`);
+        logger.error(`❌ Initialization failed at stage: ${result.stage}`);
+        logger.error(`   Error: ${result.error}`);
+        logger.error(`   Fix: ${result.remediation}`);
     }
 
     return result;

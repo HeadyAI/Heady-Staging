@@ -2,7 +2,7 @@
 
 **Status:** Accepted  
 **Date:** 2026-03-07  
-**Authors:** Eric Headington, Platform Architecture  
+**Authors:** Eric Haywood, Platform Architecture  
 **Deciders:** HeadySystems Core Team  
 **φ-revision:** 1.618  
 
@@ -136,5 +136,5 @@ VSA naturally supports the multi-agent topology:
 
 | Reviewer | Date | Decision |
 |----------|------|----------|
-| Eric Headington | 2026-03-07 | Accepted |
+| Eric Haywood | 2026-03-07 | Accepted |
 | Platform Arch | 2026-03-07 | Accepted |

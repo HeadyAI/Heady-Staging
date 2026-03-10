@@ -9,6 +9,7 @@
  */
 
 'use strict';
+const logger = require('../../shared/logger')('jit-tool-loader');
 
 class JITToolLoader {
     constructor(options = {}) {
@@ -169,7 +170,7 @@ if (require.main === module) {
     const args = process.argv.slice(2);
 
     if (args.includes('--benchmark')) {
-        console.log('═══ MCP JIT Tool Loader Benchmark ═══\n');
+        logger.info('═══ MCP JIT Tool Loader Benchmark ═══\n');
         const intents = [
             'deploy my code to cloud run',
             'search for kubernetes best practices',
@@ -179,19 +180,19 @@ if (require.main === module) {
         ];
         for (const intent of intents) {
             const result = loader.route(intent);
-            console.log(`Intent: "${intent}"`);
-            console.log(`  → Tool: ${result.then ? '(async)' : 'sync'}`);
+            logger.info(`Intent: "${intent}"`);
+            logger.info(`  → Tool: ${result.then ? '(async)' : 'sync'}`);
         }
         // Run async
         Promise.all(intents.map(i => loader.route(i))).then(results => {
             results.forEach((r, i) => {
-                console.log(`${intents[i]}: → ${r.tool} (score: ${r.score}, savings: ${r.contextSavings})`);
+                logger.info(`${intents[i]}: → ${r.tool} (score: ${r.score}, savings: ${r.contextSavings})`);
             });
-            console.log(`\nStats:`, loader.getStats());
-            console.log('✅ JIT tool loader operational');
+            logger.info(`\nStats:`, loader.getStats());
+            logger.info('✅ JIT tool loader operational');
         });
     } else {
-        console.log('Usage: node jit-tool-loader.js --benchmark');
+        logger.info('Usage: node jit-tool-loader.js --benchmark');
     }
 }
 

@@ -370,13 +370,13 @@ On [DATE] at approximately [TIME] UTC, HeadySystems detected [brief description 
 3. [Future prevention measure]
 
 **Point of Contact:**  
-Eric Headington, CEO — eric@headyconnection.org  
+Eric Haywood, CEO — eric@headyconnection.org  
 HeadySystems Inc., [Address]
 
 This notification is provided within the required timeframe ([72 hours under GDPR / 30 days under CCPA]).
 
 Sincerely,  
-Eric Headington  
+Eric Haywood  
 Founder & CEO, HeadySystems Inc.
 
 ---

@@ -21,7 +21,7 @@ The Heady™OS Founders Community is a private portal for Founder Tier pilot par
 ### 1. Welcome & Introductions
 **Slug**: `welcome`  
 **Description**: Introduce yourself, your organization, and your primary use case.  
-**Moderation**: Auto-pinned welcome thread from Eric Headington.  
+**Moderation**: Auto-pinned welcome thread from Eric Haywood.  
 **Required post**: All new members must post introduction within fib(5)=5 days.
 
 ### 2. Getting Started
@@ -87,7 +87,7 @@ The Heady™OS Founders Community is a private portal for Founder Tier pilot par
 
 ## Office Hours Schedule
 
-Hosted by Eric Headington (Founder & CEO) + relevant engineers.  
+Hosted by Eric Haywood (Founder & CEO) + relevant engineers.  
 Cadence: Every **fib(7) = 13 days** from activation date.  
 Duration: 55 minutes (fib(10)) per session.  
 Format: Video (Zoom/Google Meet) + Slack thread for async Q&A.  

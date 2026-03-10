@@ -1,0 +1,970 @@
+[
+  {
+    "id": "TASK-102",
+    "status": "STAGED",
+    "instruction": "Run database migration and update security core protocols.",
+    "artifact_path": "./dist/artifact.js",
+    "files_changed": ["core/auth.js", "core/db.js", "api/routes.js", "config/security.json", "migrations/001_init.sql", "services/user.js"],
+    "build_type": "FULL_REBUILD"
+  },
+  {
+    "id": "1769842080727",
+    "instruction": "Refactor user authentication schema with security audit",
+    "priority": "NORMAL",
+    "status": "COMPLETE",
+    "created_at": "2026-01-31T06:48:00.727Z",
+    "artifact_path": "/shared/drafts/build_1769842080727.js",
+    "optimization_strategy": "HIGH",
+    "required_mcp_tools": [
+      "filesystem",
+      "snyk"
+    ],
+    "reasoning": "Detected critical system keywords: [security, auth]. Identified need for 'security' capabilities -> Added [snyk]. Identified need for 'audit' capabilities -> Added [snyk].",
+    "security_audit_required": true
+  },
+  {
+    "id": "1769842235524",
+    "instruction": "Update README with new API endpoints",
+    "priority": "NORMAL",
+    "status": "COMPLETE",
+    "created_at": "2026-01-31T06:50:35.524Z",
+    "artifact_path": "/shared/drafts/build_1769842235524.js",
+    "optimization_strategy": "HIGH",
+    "required_mcp_tools": [
+      "filesystem"
+    ],
+    "reasoning": "Detected critical system keywords: [api]."
+  },
+  {
+    "id": "1769842263159",
+    "instruction": "Integrate risk analysis protocol",
+    "priority": "NORMAL",
+    "status": "COMPLETE",
+    "created_at": "2026-01-31T06:51:03.159Z",
+    "artifact_path": "/shared/drafts/build_1769842263159.js",
+    "optimization_strategy": "LOW",
+    "required_mcp_tools": [
+      "filesystem"
+    ],
+    "reasoning": "Standard build parameters observed."
+  },
+  {
+    "id": "1769842446866",
+    "instruction": "Research the latest React patterns and update the UI documentation",
+    "priority": "NORMAL",
+    "status": "COMPLETE",
+    "created_at": "2026-01-31T06:54:06.866Z",
+    "artifact_path": "/shared/drafts/build_1769842446866.js",
+    "optimization_strategy": "LOW",
+    "required_mcp_tools": [
+      "filesystem",
+      "perplexity-ask",
+      "exa",
+      "deepwiki",
+      "mcp-playwright",
+      "puppeteer"
+    ],
+    "reasoning": "Identified need for 'search' capabilities -> Added [perplexity-ask, exa]. Identified need for 'research' capabilities -> Added [perplexity-ask, deepwiki]. Identified need for 'test' capabilities -> Added [mcp-playwright, puppeteer]. Identified need for 'ui' capabilities -> Added [mcp-playwright, puppeteer]."
+  },
+  {
+    "id": "1769844096211",
+    "instruction": "Q&A pause/resume integration test",
+    "priority": "NORMAL",
+    "status": "COMPLETE",
+    "created_at": "2026-01-31T07:21:36.211Z",
+    "qa_history": [
+      {
+        "question_id": "1769844096235",
+        "question": "Should this task pause for clarification?",
+        "answer": "Yes. Resume.",
+        "asked_by": "erich",
+        "answered_by": "erich",
+        "answered_at": "2026-01-31T07:21:36.266Z"
+      }
+    ],
+    "artifact_path": "/shared/drafts/build_1769844096211.js",
+    "optimization_strategy": "LOW",
+    "required_mcp_tools": [
+      "filesystem",
+      "mcp-playwright",
+      "puppeteer"
+    ],
+    "reasoning": "Identified need for 'test' capabilities -> Added [mcp-playwright, puppeteer]."
+  },
+  {
+    "id": "1769844096295",
+    "instruction": "Add content where missing and implement changes systematically to add content to the appropriate webpages with functionality and optimized connectivity with the orchestration and mods",
+    "priority": "NORMAL",
+    "status": "COMPLETE",
+    "created_at": "2026-01-31T07:21:36.295Z",
+    "artifact_path": "/shared/drafts/build_1769844096295.js",
+    "optimization_strategy": "LOW",
+    "required_mcp_tools": [
+      "filesystem"
+    ],
+    "reasoning": "Standard build parameters observed."
+  },
+  {
+    "id": "1769846408097",
+    "instruction": "# @title Universal MCP Agent (Gemini Powered)\n# @markdown Run this cell to configure the environment, install the MCP SDK, and connect your Google API Key.\n\nimport os\nimport subprocess\nimport sys\nimport json\nimport asyncio\nimport nest_asyncio\n\n# --- 1. CONFIGURATION & INSTALL ---\nprint(\" Checking GPU Configuration...\")\ntry:\n    gpu_info = subprocess.check_output(['nvidia-smi', '--query-gpu=name,memory.total,memory.free', '--format=csv,noheader'])\n    print(f\" GPU Detected: {gpu_info.decode('utf-8').strip()}\")\nexcept Exception:\n    print(\" No GPU detected. For best performance, use Runtime > Change runtime type > T4 GPU.\")\n\nprint(\"\\n Installing MCP SDK and Google Generative AI...\")\nsubprocess.check_call([\n    sys.executable, \"-m\", \"pip\", \"install\", \n    \"mcp[cli]\", \"google-generativeai\", \"nest_asyncio\"\n])\n\nimport google.generativeai as genai\nfrom google.colab import userdata\nfrom mcp import ClientSession, StdioServerParameters\nfrom mcp.client.stdio import stdio_client\nfrom mcp.server.fastmcp import FastMCP\n\n# Apply nested asyncio for Colab compatibility\nnest_asyncio.apply()\n\n# --- 2. AUTHENTICATION ---\n# We try to get the key from Colab Secrets (recommended)\ntry:\n    API_KEY = userdata.get('GOOGLE_API_KEY')\n    genai.configure(api_key=API_KEY)\n    print(\" Google API Key loaded from Secrets.\")\nexcept Exception:\n    print(\" WARNING: 'GOOGLE_API_KEY' not found in Secrets.\")\n    print(\" Click the 'Key' icon on the left sidebar -> Add 'GOOGLE_API_KEY'.\")\n\n# --- 3. CREATE A SAMPLE MCP SERVER ---\n# This server runs LOCALLY in Colab and provides tools to the Agent.\n# You can extend this by adding more @mcp.tool() functions.\n\nserver_script = \"\"\"\nfrom mcp.server.fastmcp import FastMCP\nimport platform\nimport math\n\nmcp = FastMCP(\"Colab-gpu-server\")\n\n@mcp.tool()\ndef heavy_computation(n: int) -> int:\n    \\\"\\\"\\\"Calculates factorial of N to simulate a heavy CPU/GPU task.\\\"\\\"\\\"\n    return math.factorial(n)\n\n@mcp.tool()\ndef get_gpu_status() -> str:\n    \\\"\\\"\\\"Returns the current GPU memory status using nvidia-smi.\\\"\\\"\\\"\n    import subprocess\n    try:\n        return subprocess.check_output(['nvidia-smi']).decode('utf-8')\n    except:\n        return \"No GPU Available\"\n\nif __name__ == \"__main__\":\n    mcp.run(transport='stdio')\n\"\"\"\n\nwith open(\"mcp_server.py\", \"w\") as f:\n    f.write(server_script)\nprint(\" MCP Server ('mcp_server.py') ready.\")\n\n# --- 4. THE GEMINI AGENT ORCHESTRATOR ---\n# This function connects the 'Brain' (Gemini) to the 'Hands' (MCP Tools).\n\nasync def run_gemini_agent(user_query: str):\n    print(f\"\\n AGENT: Processing task -> '{user_query}'\")\n    \n    if not API_KEY:\n        print(\" Cannot proceed without API Key.\")\n        return\n\n    # Define how to connect to our local MCP script\n    server_params = StdioServerParameters(\n        command=sys.executable,\n        args=[\"mcp_server.py\"],\n        env=None\n    )\n\n    async with stdio_client(server_params) as (read, write):\n        async with ClientSession(read, write) as session:\n            await session.initialize()\n            \n            # 1. DISCOVER TOOLS\n            tools = await session.list_tools()\n            print(f\" Discovered {len(tools.tools)} MCP tools.\")\n            \n            # 2. MAP TOOLS TO GEMINI PROMPT\n            # We convert MCP tool definitions into a text schema for Gemini.\n            tool_definitions = []\n            for t in tools.tools:\n                tool_definitions.append({\n                    \"name\": t.name,\n                    \"description\": t.description,\n                    \"schema\": t.inputSchema\n                })\n            \n            # 3. REASONING STEP (The \"Brain\")\n            model = genai.GenerativeModel('gemini-1.5-flash')\n            \n            system_prompt = f\"\"\"\n            You are an orchestration agent. You have access to the following MCP tools:\n            {json.dumps(tool_definitions, indent=2)}\n\n            Your Goal: Answer the user query using the tools provided.\n            \n            INSTRUCTIONS:\n            1. Analyze the USER QUERY.\n            2. Decide which tool to call.\n            3. OUTPUT ONLY A JSON OBJECT. Do not write markdown or explanations.\n            \n            Format:\n            {{\n              \"tool_name\": \"name_of_tool\",\n              \"arguments\": {{ \"arg_name\": value }}\n            }}\n            \"\"\"\n            \n            chat = model.start_chat(history=[{\"role\": \"user\", \"parts\": [system_prompt]}])\n            response = chat.send_message(f\"USER QUERY: {user_query}\")\n            \n            # 4. PARSE & EXECUTE (The \"Hands\")\n            try:\n                # Clean up potential markdown formatting from LLM\n                clean_json = response.text.replace('```json', '').replace('```', '').strip()\n                action = json.loads(clean_json)\n                \n                tool_name = action.get('tool_name')\n                tool_args = action.get('arguments', {})\n                \n                print(f\" AGENT: Decided to call -> {tool_name}({tool_args})\")\n                \n                result = await session.call_tool(tool_name, arguments=tool_args)\n                tool_output = result.content[0].text\n                \n                print(f\" RESULT:\\n{tool_output[:500]}...\") # Truncate long outputs for display\n                \n            except json.JSONDecodeError:\n                print(f\" Failed to parse Gemini response: {response.text}\")\n            except Exception as e:\n                print(f\" Execution Error: {e}\")\n\n# --- 5. EXECUTION EXAMPLES ---\nprint(\"\\n--- TEST 1: System Info ---\")\nasyncio.run(run_gemini_agent(\"Check the GPU status please\"))\n\nprint(\"\\n--- TEST 2: Computation ---\")\nasyncio.run(run_gemini_agent(\"Calculate the factorial of 100\"))",
+    "priority": "NORMAL",
+    "status": "COMPLETE",
+    "created_at": "2026-01-31T08:00:08.098Z",
+    "artifact_path": "/shared/drafts/build_1769846408097.js",
+    "optimization_strategy": "HIGH",
+    "required_mcp_tools": [
+      "filesystem",
+      "mcp-playwright",
+      "puppeteer",
+      "sequential-thinking"
+    ],
+    "reasoning": "Detected critical system keywords: [auth, api]. Identified need for 'test' capabilities -> Added [mcp-playwright, puppeteer]. Instruction length suggests broad scope. Added sequential-thinking for complex planning."
+  },
+  {
+    "id": "1769846521790",
+    "instruction": "Optimize system components by creating nodes that can be dynamically allocated and intelligently orchestrated to optimally perform tasks associated with dynamic node configuration and execution",
+    "priority": "NORMAL",
+    "status": "COMPLETE",
+    "created_at": "2026-01-31T08:02:01.793Z",
+    "artifact_path": "/shared/drafts/build_1769846521790.js",
+    "optimization_strategy": "LOW",
+    "required_mcp_tools": [
+      "filesystem"
+    ],
+    "reasoning": "Standard build parameters observed."
+  },
+  {
+    "id": "1769846540675",
+    "instruction": "Extract content from my Google Gemini chat history export for use in this project. Prefer ingesting from an export file (Google Takeout JSON/HTML or other Gemini export). If export format/path is unclear, pause the task and ask a Q&A question requesting: export format, file location, whether to store full transcripts or only summaries, and desired output directory. Implement an importer script (Python or Node) that parses messages with timestamps/speaker, redacts secrets, and writes normalized Markdown transcripts plus a searchable index/summary into _AI_CONTEXT/gemini/.",
+    "priority": "NORMAL",
+    "status": "COMPLETE",
+    "created_at": "2026-01-31T08:02:20.675Z",
+    "artifact_path": "/shared/drafts/build_1769846540675.js",
+    "optimization_strategy": "HIGH",
+    "required_mcp_tools": [
+      "filesystem",
+      "perplexity-ask",
+      "exa",
+      "sequential-thinking"
+    ],
+    "reasoning": "Identified need for 'search' capabilities -> Added [perplexity-ask, exa]. Instruction length suggests broad scope. Added sequential-thinking for complex planning."
+  },
+  {
+    "id": "1769847666264",
+    "instruction": "Perform unfinished tasks",
+    "priority": "NORMAL",
+    "status": "COMPLETE",
+    "created_at": "2026-01-31T08:21:06.265Z",
+    "artifact_path": "/shared/drafts/build_1769847666264.js",
+    "optimization_strategy": "LOW",
+    "required_mcp_tools": [
+      "filesystem"
+    ],
+    "reasoning": "Standard build parameters observed."
+  },
+  {
+    "id": "1769847844656",
+    "instruction": "gemini-cli perform unfinished tasks",
+    "priority": "NORMAL",
+    "status": "COMPLETE",
+    "created_at": "2026-01-31T08:24:04.656Z",
+    "artifact_path": "/shared/drafts/build_1769847844656.js",
+    "optimization_strategy": "LOW",
+    "required_mcp_tools": [
+      "filesystem"
+    ],
+    "reasoning": "Standard build parameters observed."
+  },
+  {
+    "id": "1769847943570",
+    "instruction": "Use perplexity-cli to perform unfinished tasks",
+    "priority": "NORMAL",
+    "status": "COMPLETE",
+    "created_at": "2026-01-31T08:25:43.570Z",
+    "artifact_path": "/shared/drafts/build_1769847943570.js",
+    "optimization_strategy": "LOW",
+    "required_mcp_tools": [
+      "filesystem"
+    ],
+    "reasoning": "Standard build parameters observed."
+  },
+  {
+    "id": "1769847959031",
+    "instruction": "use @jules to perform unfinished tasks",
+    "priority": "NORMAL",
+    "status": "COMPLETE",
+    "created_at": "2026-01-31T08:25:59.031Z",
+    "artifact_path": "/shared/drafts/build_1769847959031.js",
+    "optimization_strategy": "LOW",
+    "required_mcp_tools": [
+      "filesystem"
+    ],
+    "reasoning": "Standard build parameters observed."
+  },
+  {
+    "id": "1769848079136",
+    "instruction": "use all mcp servers and tools and anything else to perform improvements, fix errors, optimize build, and to perform any other beneficial task for the project",
+    "priority": "NORMAL",
+    "status": "COMPLETE",
+    "created_at": "2026-01-31T08:27:59.136Z",
+    "artifact_path": "/shared/drafts/build_1769848079136.js",
+    "optimization_strategy": "LOW",
+    "required_mcp_tools": [
+      "filesystem",
+      "mcp-playwright",
+      "puppeteer"
+    ],
+    "reasoning": "Identified need for 'ui' capabilities -> Added [mcp-playwright, puppeteer]."
+  },
+  {
+    "id": "1769848156245",
+    "instruction": "utilize any mcp servers, tools or anything beneficial and integrate into project",
+    "priority": "NORMAL",
+    "status": "COMPLETE",
+    "created_at": "2026-01-31T08:29:16.245Z",
+    "artifact_path": "/shared/drafts/build_1769848156245.js",
+    "optimization_strategy": "LOW",
+    "required_mcp_tools": [
+      "filesystem"
+    ],
+    "reasoning": "Standard build parameters observed."
+  },
+  {
+    "id": "1769848280486",
+    "instruction": "multi line and perform tasks to benefit the project",
+    "priority": "NORMAL",
+    "status": "COMPLETE",
+    "created_at": "2026-01-31T08:31:20.486Z",
+    "artifact_path": "/shared/drafts/build_1769848280486.js",
+    "optimization_strategy": "LOW",
+    "required_mcp_tools": [
+      "filesystem"
+    ],
+    "reasoning": "Standard build parameters observed."
+  },
+  {
+    "id": "1769848368676",
+    "instruction": "Goal:\n- Perform high-impact improvements to the HeadySystems project.\n\nPriority areas (pick what's best):\n- Make the swarm less simulated (architect/optimizer/conductor do real work).\n- Integrate useful MCP servers (github, postgres, snyk, perplexity) into actual workflows.\n- Add regression checks + smoke tests for orchestrator endpoints.\n\nDefinition of done:\n- At least 1 real integration merged (not placeholder output).\n- Evidence via hb monitor / lens_stream.json events.",
+    "priority": "NORMAL",
+    "status": "COMPLETE",
+    "created_at": "2026-01-31T08:32:48.676Z",
+    "artifact_path": "/shared/drafts/build_1769848368676.js",
+    "optimization_strategy": "HIGH",
+    "required_mcp_tools": [
+      "filesystem",
+      "mcp-playwright",
+      "puppeteer",
+      "sequential-thinking"
+    ],
+    "reasoning": "Identified need for 'test' capabilities -> Added [mcp-playwright, puppeteer]. Instruction length suggests broad scope. Added sequential-thinking for complex planning."
+  },
+  {
+    "id": "1769848871964",
+    "instruction": "integrate and setup convenient use of hugging face",
+    "priority": "NORMAL",
+    "status": "COMPLETE",
+    "created_at": "2026-01-31T08:41:11.964Z",
+    "artifact_path": "/shared/drafts/build_1769848871964.js",
+    "optimization_strategy": "LOW",
+    "required_mcp_tools": [
+      "filesystem"
+    ],
+    "reasoning": "Standard build parameters observed."
+  },
+  {
+    "id": "1769849449337",
+    "instruction": "Use these images as logos for the two companies. Make them similar but obviously different",
+    "priority": "NORMAL",
+    "status": "COMPLETE",
+    "created_at": "2026-01-31T08:50:49.337Z",
+    "artifact_path": "/shared/drafts/build_1769849449337.js",
+    "optimization_strategy": "LOW",
+    "required_mcp_tools": [
+      "filesystem"
+    ],
+    "reasoning": "Standard build parameters observed."
+  },
+  {
+    "id": "1769849605897",
+    "instruction": "test huggingface mcp integration by searching for models and running inference",
+    "priority": "NORMAL",
+    "status": "COMPLETE",
+    "created_at": "2026-01-31T08:53:25.897Z",
+    "artifact_path": "/shared/drafts/build_1769849605897.js",
+    "optimization_strategy": "LOW",
+    "required_mcp_tools": [
+      "filesystem",
+      "perplexity-ask",
+      "exa",
+      "mcp-playwright",
+      "puppeteer"
+    ],
+    "reasoning": "Identified need for 'search' capabilities -> Added [perplexity-ask, exa]. Identified need for 'test' capabilities -> Added [mcp-playwright, puppeteer]."
+  },
+  {
+    "id": "1769849637922",
+    "instruction": "use huggingface to search for text generation models and run inference",
+    "priority": "NORMAL",
+    "status": "COMPLETE",
+    "created_at": "2026-01-31T08:53:57.922Z",
+    "artifact_path": "/shared/drafts/build_1769849637922.js",
+    "optimization_strategy": "LOW",
+    "required_mcp_tools": [
+      "filesystem",
+      "perplexity-ask",
+      "exa"
+    ],
+    "reasoning": "Identified need for 'search' capabilities -> Added [perplexity-ask, exa]."
+  },
+  {
+    "id": "1769849679142",
+    "instruction": "use huggingface to search for text generation models",
+    "priority": "NORMAL",
+    "status": "COMPLETE",
+    "created_at": "2026-01-31T08:54:39.142Z",
+    "artifact_path": "/shared/drafts/build_1769849679142.js",
+    "optimization_strategy": "LOW",
+    "required_mcp_tools": [
+      "filesystem",
+      "perplexity-ask",
+      "exa"
+    ],
+    "reasoning": "Identified need for 'search' capabilities -> Added [perplexity-ask, exa]."
+  },
+  {
+    "id": "1769850403088",
+    "instruction": "@mcp servers to collect project data from these urls and integrate appropriately into project: https://gemini.google.com/share/a948cc02b7bd https://gemini.google.com/share/a14c245f3449 https://gemini.google.com/share/fce896b700be https://gemini.google.com/share/d400b945a112 https://gemini.google.com/share/d93ad557efc5 https://gemini.google.com/share/96c605b548f5 https://gemini.google.com/share/bb3f64b56091 https://gemini.google.com/share/2647ed387ceb https://gemini.google.com/share/7cf0763996ae",
+    "priority": "NORMAL",
+    "status": "COMPLETE",
+    "created_at": "2026-01-31T09:06:43.088Z",
+    "artifact_path": "/shared/drafts/build_1769850403088.js",
+    "optimization_strategy": "HIGH",
+    "required_mcp_tools": [
+      "filesystem",
+      "sequential-thinking"
+    ],
+    "reasoning": "Instruction length suggests broad scope. Added sequential-thinking for complex planning."
+  },
+  {
+    "id": "1769850478529",
+    "instruction": "@puppeteer extract data from these Gemini URLs: https://gemini.google.com/share/a948cc02b7bd https://gemini.google.com/share/a14c245f3449 https://gemini.google.com/share/fce896b700be https://gemini.google.com/share/d400b945a112 https://gemini.google.com/share/d93ad557efc5 https://gemini.google.com/share/96c605b548f5 https://gemini.google.com/share/bb3f64b56091 https://gemini.google.com/share/2647ed387ceb https://gemini.google.com/share/7cf0763996ae",
+    "priority": "NORMAL",
+    "status": "COMPLETE",
+    "created_at": "2026-01-31T09:07:58.530Z",
+    "artifact_path": "/shared/drafts/build_1769850478529.js",
+    "optimization_strategy": "HIGH",
+    "required_mcp_tools": [
+      "filesystem",
+      "sequential-thinking"
+    ],
+    "reasoning": "Instruction length suggests broad scope. Added sequential-thinking for complex planning."
+  },
+  {
+    "id": "1769850502467",
+    "instruction": "Use @puppeteer to navigate to and scrape content from these Gemini URLs: https://gemini.google.com/share/a948cc02b7bd https://gemini.google.com/share/a14c245f3449 https://gemini.google.com/share/fce896b700be https://gemini.google.com/share/d400b945a112 https://gemini.google.com/share/d93ad557efc5 https://gemini.google.com/share/96c605b548f5 https://gemini.google.com/share/bb3f64b56091 https://gemini.google.com/share/2647ed387ceb https://gemini.google.com/share/7cf0763996ae",
+    "priority": "NORMAL",
+    "status": "COMPLETE",
+    "created_at": "2026-01-31T09:08:22.467Z",
+    "artifact_path": "/shared/drafts/build_1769850502467.js",
+    "optimization_strategy": "HIGH",
+    "required_mcp_tools": [
+      "filesystem",
+      "sequential-thinking"
+    ],
+    "reasoning": "Instruction length suggests broad scope. Added sequential-thinking for complex planning."
+  },
+  {
+    "id": "1769850522700",
+    "instruction": "@puppeteer navigate to and scrape content from these URLs: https://gemini.google.com/share/a948cc02b7bd https://gemini.google.com/share/a14c245f3449 https://gemini.google.com/share/fce896b700be https://gemini.google.com/share/d400b945a112 https://gemini.google.com/share/d93ad557efc5 https://gemini.google.com/share/96c605b548f5 https://gemini.google.com/share/bb3f64b56091 https://gemini.google.com/share/2647ed387ceb https://gemini.google.com/share/7cf0763996ae",
+    "priority": "NORMAL",
+    "status": "COMPLETE",
+    "created_at": "2026-01-31T09:08:42.700Z",
+    "artifact_path": "/shared/drafts/build_1769850522700.js",
+    "optimization_strategy": "HIGH",
+    "required_mcp_tools": [
+      "filesystem",
+      "sequential-thinking"
+    ],
+    "reasoning": "Instruction length suggests broad scope. Added sequential-thinking for complex planning."
+  },
+  {
+    "id": "1769850605768",
+    "instruction": "perform unfinished tasks and fix errors",
+    "priority": "NORMAL",
+    "status": "COMPLETE",
+    "created_at": "2026-01-31T09:10:05.769Z",
+    "artifact_path": "/shared/drafts/build_1769850605768.js",
+    "optimization_strategy": "LOW",
+    "required_mcp_tools": [
+      "filesystem"
+    ],
+    "reasoning": "Standard build parameters observed."
+  },
+  {
+    "id": "1769850871203",
+    "instruction": "utilize https://www.canva.com/design/DAG_prIYCPs/I6buk1QYr6DKajXn9dGtAQ/edit?utm_content=DAG_prIYCPs&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton as a uri accessable to edit designs with heady tools",
+    "priority": "NORMAL",
+    "status": "COMPLETE",
+    "created_at": "2026-01-31T09:14:31.203Z",
+    "artifact_path": "/shared/drafts/build_1769850871203.js",
+    "optimization_strategy": "HIGH",
+    "required_mcp_tools": [
+      "filesystem",
+      "sequential-thinking"
+    ],
+    "reasoning": "Instruction length suggests broad scope. Added sequential-thinking for complex planning."
+  },
+  {
+    "id": "1769850934557",
+    "instruction": "extract canva logo designs as prototypes",
+    "priority": "NORMAL",
+    "status": "COMPLETE",
+    "created_at": "2026-01-31T09:15:34.557Z",
+    "artifact_path": "/shared/drafts/build_1769850934557.js",
+    "optimization_strategy": "LOW",
+    "required_mcp_tools": [
+      "filesystem"
+    ],
+    "reasoning": "Standard build parameters observed."
+  },
+  {
+    "id": "1769851060576",
+    "instruction": "suggest advanced workflows and explain complex integration capabilities and the efficient extraction processes in place",
+    "priority": "NORMAL",
+    "status": "COMPLETE",
+    "created_at": "2026-01-31T09:17:40.576Z",
+    "artifact_path": "/shared/drafts/build_1769851060576.js",
+    "optimization_strategy": "LOW",
+    "required_mcp_tools": [
+      "filesystem"
+    ],
+    "reasoning": "Standard build parameters observed."
+  },
+  {
+    "id": "1769853609397",
+    "instruction": "create complex ai workflow using render, github actions and apps, gists, and cloudflare",
+    "priority": "high",
+    "status": "COMPLETE",
+    "created_at": "2026-01-31T10:00:09.397Z",
+    "artifact_path": "/shared/drafts/build_1769853609397.js",
+    "optimization_strategy": "LOW",
+    "required_mcp_tools": [
+      "filesystem",
+      "huggingface",
+      "google_mcp"
+    ],
+    "reasoning": "Identified need for 'ai' capabilities -> Added [huggingface, google_mcp]."
+  },
+  {
+    "id": "1769857270127",
+    "instruction": "complete data extraction from Gemini URLs and integrate into project context",
+    "priority": "NORMAL",
+    "status": "COMPLETE",
+    "created_at": "2026-01-31T11:01:10.127Z",
+    "artifact_path": "/shared/drafts/build_1769857270127.js",
+    "optimization_strategy": "LOW",
+    "required_mcp_tools": [
+      "filesystem",
+      "google_mcp"
+    ],
+    "reasoning": "Identified need for 'gemini' capabilities -> Added [google_mcp]."
+  },
+  {
+    "id": "1769857475665",
+    "instruction": "complete unfinished tasks and dynamically allocate resources deterministicly with optimized orchestration",
+    "priority": "NORMAL",
+    "status": "COMPLETE",
+    "created_at": "2026-01-31T11:04:35.665Z",
+    "artifact_path": "/shared/drafts/build_1769857475665.js",
+    "optimization_strategy": "LOW",
+    "required_mcp_tools": [
+      "filesystem"
+    ],
+    "reasoning": "Standard build parameters observed."
+  },
+  {
+    "id": "1769885824918",
+    "instruction": "Implement Heady Silicon Refinery - GPU-accelerated batch processing with topology mapping, sanity stress testing, and chronological sorting",
+    "priority": "NORMAL",
+    "status": "COMPLETE",
+    "created_at": "2026-01-31T18:57:04.919Z",
+    "refiner": {
+      "enabled": true,
+      "context": "TOPOLOGY_MAPPING"
+    },
+    "artifact_path": "/shared/drafts/build_1769885824918.js",
+    "optimization_strategy": "LOW",
+    "required_mcp_tools": [
+      "filesystem",
+      "mcp-playwright",
+      "puppeteer"
+    ],
+    "reasoning": "Identified need for 'test' capabilities -> Added [mcp-playwright, puppeteer]."
+  },
+  {
+    "id": "1769886136933",
+    "instruction": "setup completely the ai-workflow-engine and connect to project beneficially utilizing render,cloudflare workers,gists, github apps and actions",
+    "priority": "NORMAL",
+    "status": "COMPLETE",
+    "created_at": "2026-01-31T19:02:16.933Z",
+    "artifact_path": "/shared/drafts/build_1769886136933.js",
+    "optimization_strategy": "LOW",
+    "required_mcp_tools": [
+      "filesystem",
+      "huggingface",
+      "google_mcp"
+    ],
+    "reasoning": "Identified need for 'ai' capabilities -> Added [huggingface, google_mcp]."
+  },
+  {
+    "id": "1769886498848",
+    "instruction": "deploy AI workflow engine to production with all integrations enabled",
+    "priority": "NORMAL",
+    "status": "COMPLETE",
+    "created_at": "2026-01-31T19:08:18.849Z",
+    "artifact_path": "/shared/drafts/build_1769886498848.js",
+    "optimization_strategy": "HIGH",
+    "required_mcp_tools": [
+      "filesystem",
+      "terraform",
+      "github-mcp-server",
+      "huggingface",
+      "google_mcp"
+    ],
+    "reasoning": "Detected critical system keywords: [deploy]. Identified need for 'deploy' capabilities -> Added [terraform, github-mcp-server]. Identified need for 'ai' capabilities -> Added [huggingface, google_mcp]."
+  },
+  {
+    "id": "1769887185136",
+    "instruction": "complete all unfinished tasks, fix errors, dynamically allocate resources intelligently and orchestrate changes and push to local and remote repos",
+    "priority": "NORMAL",
+    "status": "COMPLETE",
+    "created_at": "2026-01-31T19:19:45.136Z",
+    "artifact_path": "/shared/drafts/build_1769887185136.js",
+    "optimization_strategy": "LOW",
+    "required_mcp_tools": [
+      "filesystem"
+    ],
+    "reasoning": "Standard build parameters observed."
+  },
+  {
+    "id": "1769890913448",
+    "instruction": "Implement the following intelligently and modify and add content as needed to benefit the project: The Orchestration Master Prompt\n\nRole: Lead Systems Architect & AI Orchestrator Context: Activating the HeadySystems Optimization Protocol.\n\nObjective: Initialize a cross-platform orchestration layer using GitHub Apps, Gists (for state), Cloudflare Workers (for low-latency coordination), and GitHub Actions (for automated CI/CD and task execution).\n\nTask 1: Infrastructure Setup\n\nState Management: Use GitHub Gists as a 'Global Memory' store to sync context between this session and any other active sessions.\n\nCoordination Layer: Deploy a Cloudflare Worker to act as a real-time 'Task Router' that manages resource allocation and prevents 'Cascade collisions.'\n\nAction Triggers: Configure a GitHub Action that triggers on repository_dispatch to run headless builds and tests.\n\nTask 2: Resource Allocation & Execution Utilize the internal build engine with the following command logic: hb build --mcp all 'create all necessary context and dynamically issue and allocate resources to build and complete tasks associated with optimized orchestration and utilization of all @mcp servers and tools'\n\nTask 3: Continuous Optimization Loop Once the infrastructure is mapped, execute the following recursive command to finalize the current sprint: hb build --mcp all 'unfinished tasks, fix errors and apply beneficial changes for the Heady project'\n\nConstraint: Ensure all outputs adhere to the Golden Ratio for system architecture design and sacred geometry principles in UI/UX components.\n\nDeliverable: A fully integrated .github/workflows/heady-orchestrator.yml and a manifest.json mapping all @mcp tool dependencies.",
+    "priority": "NORMAL",
+    "status": "COMPLETE",
+    "created_at": "2026-01-31T20:21:53.448Z",
+    "artifact_path": "/shared/drafts/build_1769890913448.js",
+    "optimization_strategy": "HIGH",
+    "required_mcp_tools": [
+      "filesystem",
+      "terraform",
+      "github-mcp-server",
+      "mcp-playwright",
+      "puppeteer",
+      "huggingface",
+      "google_mcp",
+      "sequential-thinking"
+    ],
+    "reasoning": "Detected critical system keywords: [infrastructure, deploy]. Identified need for 'deploy' capabilities -> Added [terraform, github-mcp-server]. Identified need for 'test' capabilities -> Added [mcp-playwright, puppeteer]. Identified need for 'ui' capabilities -> Added [mcp-playwright, puppeteer]. Identified need for 'ai' capabilities -> Added [huggingface, google_mcp]. Instruction length suggests broad scope. Added sequential-thinking for complex planning."
+  },
+  {
+    "id": "1769892032620",
+    "instruction": "utilize any beneficial means necessary to implement the following: The Architecture: 'The Cloud Supervisor'\n\nThe Brain (Render): Hosts a lightweight FastAPI service that acts as the central logic engine for the Supervisor. It accepts webhooks and performs heavy analysis.\n\nThe Nervous System (Cloudflare Workers): Acts as the high-speed 'Reflex' layer. It intercepts every request and file change before it hits your servers to ensure security and valid headers.\n\nThe Memory (GitHub Gists): Stores the 'Health Report' and 'Audit Logs' in a publicly accessible (but obscure) JSON format that all nodes can read.\n\nThe Muscle (GitHub Actions): Executes the heavy enforcement tasks (e.g., blocking a bad PR, reverting a security violation, auto-fixing code styles).\n\nPhase 1: The Brain (Render Web Service) - Scaffold Python/FastAPI Service with audit endpoint\nPhase 2: The Memory (Gist Integration) - State management via PyGithub\nPhase 3: The Reflex (Cloudflare Worker) - Health checks and traffic guard\nPhase 4: The Muscle (GitHub Actions) - Compliance enforcement workflow\n\nGenerate FastAPI application (main.py) and GitHub Action workflow file with JWT security and Golden Ratio validation.",
+    "priority": "NORMAL",
+    "status": "COMPLETE",
+    "created_at": "2026-01-31T20:40:32.620Z",
+    "artifact_path": "/shared/drafts/build_1769892032620.js",
+    "optimization_strategy": "HIGH",
+    "required_mcp_tools": [
+      "filesystem",
+      "snyk",
+      "huggingface",
+      "google_mcp",
+      "sequential-thinking"
+    ],
+    "reasoning": "Detected critical system keywords: [security, api]. Identified need for 'security' capabilities -> Added [snyk]. Identified need for 'audit' capabilities -> Added [snyk]. Identified need for 'ai' capabilities -> Added [huggingface, google_mcp]. Instruction length suggests broad scope. Added sequential-thinking for complex planning.",
+    "security_audit_required": true
+  },
+  {
+    "id": "1769894719897",
+    "instruction": "Integrate github repo ai-workfllow-engine into the project beneficially",
+    "priority": "NORMAL",
+    "status": "COMPLETE",
+    "created_at": "2026-01-31T21:25:19.897Z",
+    "artifact_path": "/shared/drafts/build_1769894719897.js",
+    "optimization_strategy": "LOW",
+    "required_mcp_tools": [
+      "filesystem",
+      "huggingface",
+      "google_mcp"
+    ],
+    "reasoning": "Identified need for 'ai' capabilities -> Added [huggingface, google_mcp]."
+  },
+  {
+    "id": "1769897222451",
+    "instruction": "perform beneficial tasks",
+    "priority": "NORMAL",
+    "status": "COMPLETE",
+    "created_at": "2026-01-31T22:07:02.451Z",
+    "artifact_path": "/shared/drafts/build_1769897222451.js",
+    "optimization_strategy": "LOW",
+    "required_mcp_tools": [
+      "filesystem"
+    ],
+    "reasoning": "Standard build parameters observed."
+  },
+  {
+    "id": "1769897394584",
+    "instruction": "ensure connectivity of local and remote system components",
+    "priority": "HIGH",
+    "status": "COMPLETE",
+    "created_at": "2026-01-31T22:09:54.584Z",
+    "artifact_path": "/shared/drafts/build_1769897394584.js",
+    "optimization_strategy": "LOW",
+    "required_mcp_tools": [
+      "filesystem"
+    ],
+    "reasoning": "Standard build parameters observed."
+  },
+  {
+    "id": "1769897487146",
+    "instruction": "system health check",
+    "priority": "HIGH",
+    "status": "COMPLETE",
+    "created_at": "2026-01-31T22:11:27.146Z",
+    "artifact_path": "/shared/drafts/build_1769897487146.js",
+    "optimization_strategy": "LOW",
+    "required_mcp_tools": [
+      "filesystem"
+    ],
+    "reasoning": "Standard build parameters observed."
+  },
+  {
+    "id": "1769897689786",
+    "instruction": "optimize and analyze system health",
+    "priority": "HIGH",
+    "status": "COMPLETE",
+    "created_at": "2026-01-31T22:14:49.786Z",
+    "artifact_path": "/shared/drafts/build_1769897689786.js",
+    "optimization_strategy": "LOW",
+    "required_mcp_tools": [
+      "filesystem"
+    ],
+    "reasoning": "Standard build parameters observed."
+  },
+  {
+    "id": "1769897775140",
+    "instruction": "ensure all nodes are functioning and are setup to be intelligently orchestrated optimized performing nodes",
+    "priority": "HIGH",
+    "status": "COMPLETE",
+    "created_at": "2026-01-31T22:16:15.140Z",
+    "artifact_path": "/shared/drafts/build_1769897775140.js",
+    "optimization_strategy": "LOW",
+    "required_mcp_tools": [
+      "filesystem"
+    ],
+    "reasoning": "Standard build parameters observed."
+  },
+  {
+    "id": "1769898328852",
+    "instruction": "SECURITY-CRITICAL: Add rate limiting middleware to API using express-rate-limit. Configure: 100 requests per 15 minutes per IP for general endpoints, 10 requests per minute for auth-related endpoints. Add to package.json dependencies and implement in api.js before all route handlers.",
+    "priority": "CRITICAL",
+    "status": "COMPLETE",
+    "created_at": "2026-01-31T22:25:28.852Z",
+    "artifact_path": "/shared/drafts/build_1769898328852.js",
+    "optimization_strategy": "HIGH",
+    "required_mcp_tools": [
+      "filesystem",
+      "snyk",
+      "sequential-thinking"
+    ],
+    "reasoning": "Detected critical system keywords: [security, auth, api]. Identified need for 'security' capabilities -> Added [snyk]. Instruction length suggests broad scope. Added sequential-thinking for complex planning.",
+    "security_audit_required": true
+  },
+  {
+    "id": "1769898334978",
+    "instruction": "SECURITY-CRITICAL: Add helmet middleware for HTTP security headers. Install helmet package, configure with: contentSecurityPolicy, crossOriginEmbedderPolicy, crossOriginOpenerPolicy, crossOriginResourcePolicy, dnsPrefetchControl, frameguard, hidePoweredBy, hsts, ieNoOpen, noSniff, originAgentCluster, permittedCrossDomainPolicies, referrerPolicy, xssFilter. Apply before all routes in api.js.",
+    "priority": "CRITICAL",
+    "status": "COMPLETE",
+    "created_at": "2026-01-31T22:25:34.978Z",
+    "artifact_path": "/shared/drafts/build_1769898334978.js",
+    "optimization_strategy": "HIGH",
+    "required_mcp_tools": [
+      "filesystem",
+      "snyk",
+      "huggingface",
+      "google_mcp",
+      "sequential-thinking"
+    ],
+    "reasoning": "Detected critical system keywords: [security, api]. Identified need for 'security' capabilities -> Added [snyk]. Identified need for 'ai' capabilities -> Added [huggingface, google_mcp]. Instruction length suggests broad scope. Added sequential-thinking for complex planning.",
+    "security_audit_required": true
+  },
+  {
+    "id": "1769898337436",
+    "instruction": "SECURITY-CRITICAL: Replace hardcoded admin_token in shared/config/hive_config.json with environment variable reference. Update hive_config.json to use {\"admin_token\": \"${HEADY_ADMIN_TOKEN}\"} pattern. Modify config loading in governance.js to resolve env vars. Add HEADY_ADMIN_TOKEN to docker-compose.yml environment section.",
+    "priority": "CRITICAL",
+    "status": "COMPLETE",
+    "created_at": "2026-01-31T22:25:37.436Z",
+    "artifact_path": "/shared/drafts/build_1769898337436.js",
+    "optimization_strategy": "HIGH",
+    "required_mcp_tools": [
+      "filesystem",
+      "snyk",
+      "sequential-thinking"
+    ],
+    "reasoning": "Detected critical system keywords: [security]. Identified need for 'security' capabilities -> Added [snyk]. Instruction length suggests broad scope. Added sequential-thinking for complex planning.",
+    "security_audit_required": true
+  },
+  {
+    "id": "1769898340032",
+    "instruction": "SECURITY: Add input validation and sanitization middleware using express-validator. Create validation schemas for all POST endpoints: /api/tasks (instruction:string required, priority:enum), /api/questions (question:string required), /api/connections (type:enum, config:object). Sanitize all string inputs to prevent XSS and injection attacks.",
+    "priority": "HIGH",
+    "status": "COMPLETE",
+    "created_at": "2026-01-31T22:25:40.032Z",
+    "artifact_path": "/shared/drafts/build_1769898340032.js",
+    "optimization_strategy": "HIGH",
+    "required_mcp_tools": [
+      "filesystem",
+      "mcp-playwright",
+      "puppeteer",
+      "snyk",
+      "sequential-thinking"
+    ],
+    "reasoning": "Detected critical system keywords: [security, api]. Identified need for 'ui' capabilities -> Added [mcp-playwright, puppeteer]. Identified need for 'security' capabilities -> Added [snyk]. Instruction length suggests broad scope. Added sequential-thinking for complex planning.",
+    "security_audit_required": true
+  },
+  {
+    "id": "1769898346118",
+    "instruction": "FUNCTIONALITY: Upgrade architect.js from stub to functional code generator. Integrate with AI router MCP service to analyze task instructions and generate real code drafts. Use sequential-thinking for complex planning. Output structured code with proper imports, error handling, and documentation to /shared/drafts/. Include code quality scoring.",
+    "priority": "HIGH",
+    "status": "COMPLETE",
+    "created_at": "2026-01-31T22:25:46.118Z",
+    "artifact_path": "/shared/drafts/build_1769898346118.js",
+    "optimization_strategy": "HIGH",
+    "required_mcp_tools": [
+      "filesystem",
+      "huggingface",
+      "google_mcp",
+      "sequential-thinking"
+    ],
+    "reasoning": "Identified need for 'ai' capabilities -> Added [huggingface, google_mcp]. Instruction length suggests broad scope. Added sequential-thinking for complex planning."
+  },
+  {
+    "id": "1769898348218",
+    "instruction": "FUNCTIONALITY: Upgrade optimizer.js from stub to real optimization engine. Implement actual build complexity analysis using AST parsing. Integrate with Snyk MCP for security scanning. Add dependency analysis, circular dependency detection, and build order optimization using Kahn topological sort algorithm from hive_config.json.",
+    "priority": "HIGH",
+    "status": "COMPLETE",
+    "created_at": "2026-01-31T22:25:48.218Z",
+    "artifact_path": "/shared/drafts/build_1769898348218.js",
+    "optimization_strategy": "HIGH",
+    "required_mcp_tools": [
+      "filesystem",
+      "mcp-playwright",
+      "puppeteer",
+      "snyk",
+      "sequential-thinking"
+    ],
+    "reasoning": "Detected critical system keywords: [security]. Identified need for 'ui' capabilities -> Added [mcp-playwright, puppeteer]. Identified need for 'security' capabilities -> Added [snyk]. Instruction length suggests broad scope. Added sequential-thinking for complex planning.",
+    "security_audit_required": true
+  },
+  {
+    "id": "1769898350444",
+    "instruction": "FUNCTIONALITY: Upgrade conductor.js to spawn real Docker workers. Implement actual container lifecycle management using dockerode library. Add resource limits (CPU/memory) based on task complexity. Implement health checks, graceful shutdown, and automatic cleanup of orphaned containers. Log all container events to lens_stream.json.",
+    "priority": "HIGH",
+    "status": "COMPLETE",
+    "created_at": "2026-01-31T22:25:50.444Z",
+    "artifact_path": "/shared/drafts/build_1769898350444.js",
+    "optimization_strategy": "HIGH",
+    "required_mcp_tools": [
+      "filesystem",
+      "huggingface",
+      "google_mcp",
+      "sequential-thinking"
+    ],
+    "reasoning": "Identified need for 'ai' capabilities -> Added [huggingface, google_mcp]. Instruction length suggests broad scope. Added sequential-thinking for complex planning."
+  },
+  {
+    "id": "1769898356076",
+    "instruction": "PERFORMANCE: Add in-memory caching layer for state files. Implement LRU cache with configurable TTL (default 5s) for task_queue.json, hive_config.json reads. Use cache invalidation on writes. Add cache hit/miss metrics to governance logs. Reduce file I/O by 80% for read-heavy operations.",
+    "priority": "HIGH",
+    "status": "COMPLETE",
+    "created_at": "2026-01-31T22:25:56.076Z",
+    "artifact_path": "/shared/drafts/build_1769898356076.js",
+    "optimization_strategy": "HIGH",
+    "required_mcp_tools": [
+      "filesystem",
+      "sequential-thinking"
+    ],
+    "reasoning": "Instruction length suggests broad scope. Added sequential-thinking for complex planning."
+  },
+  {
+    "id": "1769898358487",
+    "instruction": "PERFORMANCE: Make Vinci poll interval configurable via environment variable VINCI_POLL_MS (default 1500). Consider implementing event-driven variation generation using EventEmitter pattern instead of setInterval polling. Add backoff logic when no active Vinci tasks exist to reduce CPU usage.",
+    "priority": "NORMAL",
+    "status": "COMPLETE",
+    "created_at": "2026-01-31T22:25:58.487Z",
+    "vinci": {
+      "enabled": true,
+      "mode": "CONSTANT",
+      "rate_ms": 10000,
+      "max_variations": 25
+    },
+    "artifact_path": "/shared/drafts/build_1769898358487.js",
+    "optimization_strategy": "HIGH",
+    "required_mcp_tools": [
+      "filesystem",
+      "sequential-thinking"
+    ],
+    "reasoning": "Instruction length suggests broad scope. Added sequential-thinking for complex planning."
+  },
+  {
+    "id": "1769898361109",
+    "instruction": "PERFORMANCE: Increase governance event limit from 100 to configurable value via LENS_EVENT_LIMIT env var (default 1000). Add event compression for older events. Implement event archival to separate file when limit reached. Add event filtering by type and source in get_recent_events.",
+    "priority": "NORMAL",
+    "status": "COMPLETE",
+    "created_at": "2026-01-31T22:26:01.109Z",
+    "artifact_path": "/shared/drafts/build_1769898361109.js",
+    "optimization_strategy": "HIGH",
+    "required_mcp_tools": [
+      "filesystem",
+      "sequential-thinking"
+    ],
+    "reasoning": "Instruction length suggests broad scope. Added sequential-thinking for complex planning."
+  },
+  {
+    "id": "1769898367114",
+    "instruction": "TESTING: Create automated test suite for orchestrator API endpoints using Jest and Supertest. Cover all 25+ endpoints with unit tests. Add integration tests for task lifecycle (create->optimize->build->complete). Include error case testing. Generate coverage report targeting 80% minimum. Add npm test script to package.json.",
+    "priority": "HIGH",
+    "status": "COMPLETE",
+    "created_at": "2026-01-31T22:26:07.114Z",
+    "artifact_path": "/shared/drafts/build_1769898367114.js",
+    "optimization_strategy": "HIGH",
+    "required_mcp_tools": [
+      "filesystem",
+      "mcp-playwright",
+      "puppeteer",
+      "sequential-thinking"
+    ],
+    "reasoning": "Detected critical system keywords: [api]. Identified need for 'test' capabilities -> Added [mcp-playwright, puppeteer]. Identified need for 'ui' capabilities -> Added [mcp-playwright, puppeteer]. Instruction length suggests broad scope. Added sequential-thinking for complex planning."
+  },
+  {
+    "id": "1769898369666",
+    "instruction": "TESTING: Add health check endpoints to all services. Implement /health for basic liveness, /ready for readiness with dependency checks. Add structured health response with version, uptime, memory usage, active connections. Update docker-compose.yml healthchecks to use new endpoints. Create health dashboard in admin-ui.",
+    "priority": "NORMAL",
+    "status": "COMPLETE",
+    "created_at": "2026-01-31T22:26:09.666Z",
+    "artifact_path": "/shared/drafts/build_1769898369666.js",
+    "optimization_strategy": "HIGH",
+    "required_mcp_tools": [
+      "filesystem",
+      "mcp-playwright",
+      "puppeteer",
+      "sequential-thinking"
+    ],
+    "reasoning": "Identified need for 'test' capabilities -> Added [mcp-playwright, puppeteer]. Identified need for 'ui' capabilities -> Added [mcp-playwright, puppeteer]. Instruction length suggests broad scope. Added sequential-thinking for complex planning."
+  },
+  {
+    "id": "1769898372928",
+    "instruction": "INTEGRATION: Create codemap indexer service that scans project structure and maintains shared/state/codemap.json. Index all JS/PY files with: path, exports, imports, dependencies, line count, complexity score. Update on file changes using chokidar. Expose via /api/codemap endpoint for AI services to understand project structure.",
+    "priority": "NORMAL",
+    "status": "COMPLETE",
+    "created_at": "2026-01-31T22:26:12.928Z",
+    "artifact_path": "/shared/drafts/build_1769898372928.js",
+    "optimization_strategy": "HIGH",
+    "required_mcp_tools": [
+      "filesystem",
+      "huggingface",
+      "google_mcp",
+      "sequential-thinking"
+    ],
+    "reasoning": "Detected critical system keywords: [core, api]. Identified need for 'ai' capabilities -> Added [huggingface, google_mcp]. Instruction length suggests broad scope. Added sequential-thinking for complex planning."
+  },
+  {
+    "id": "1769898379928",
+    "instruction": "INTEGRATION: Enhance MCP service registry with automatic health monitoring. Ping each registered MCP service every 30s. Update status in hive_config.json (ACTIVE/DEGRADED/DOWN). Add circuit breaker pattern with 3 failures threshold. Emit health events to lens_stream.json. Auto-failover to fallback providers per ai_workflow config.",
+    "priority": "NORMAL",
+    "status": "COMPLETE",
+    "created_at": "2026-01-31T22:26:19.928Z",
+    "artifact_path": "/shared/drafts/build_1769898379928.js",
+    "optimization_strategy": "HIGH",
+    "required_mcp_tools": [
+      "filesystem",
+      "mcp-playwright",
+      "puppeteer",
+      "huggingface",
+      "google_mcp",
+      "sequential-thinking"
+    ],
+    "reasoning": "Identified need for 'ui' capabilities -> Added [mcp-playwright, puppeteer]. Identified need for 'ai' capabilities -> Added [huggingface, google_mcp]. Instruction length suggests broad scope. Added sequential-thinking for complex planning."
+  },
+  {
+    "id": "1769898382480",
+    "instruction": "MONITORING: Create real-time metrics collector for system performance. Track: requests/sec, avg response time, error rate, active tasks, queue depth, memory usage. Store time-series data in shared/state/metrics.json with 1-hour rolling window. Add /api/metrics endpoint. Create Grafana-style dashboard component in admin-ui.",
+    "priority": "NORMAL",
+    "status": "COMPLETE",
+    "created_at": "2026-01-31T22:26:22.480Z",
+    "artifact_path": "/shared/drafts/build_1769898382480.js",
+    "optimization_strategy": "HIGH",
+    "required_mcp_tools": [
+      "filesystem",
+      "mcp-playwright",
+      "puppeteer",
+      "sequential-thinking"
+    ],
+    "reasoning": "Detected critical system keywords: [api]. Identified need for 'ui' capabilities -> Added [mcp-playwright, puppeteer]. Instruction length suggests broad scope. Added sequential-thinking for complex planning."
+  },
+  {
+    "id": "1769898385227",
+    "instruction": "DOCUMENTATION: Generate OpenAPI/Swagger specification for all orchestrator API endpoints. Include request/response schemas, authentication requirements, error codes. Serve Swagger UI at /api/docs. Add JSDoc comments to all exported functions in src/*.js files. Update README.md with API documentation links.",
+    "priority": "NORMAL",
+    "status": "COMPLETE",
+    "created_at": "2026-01-31T22:26:25.227Z",
+    "artifact_path": "/shared/drafts/build_1769898385227.js",
+    "optimization_strategy": "HIGH",
+    "required_mcp_tools": [
+      "filesystem",
+      "deepwiki",
+      "cloudflare-docs",
+      "mcp-playwright",
+      "puppeteer",
+      "sequential-thinking"
+    ],
+    "reasoning": "Detected critical system keywords: [auth, api]. Identified need for 'docs' capabilities -> Added [deepwiki, cloudflare-docs]. Identified need for 'ui' capabilities -> Added [mcp-playwright, puppeteer]. Instruction length suggests broad scope. Added sequential-thinking for complex planning."
+  },
+  {
+    "id": "1769898392413",
+    "instruction": "SECURITY: Implement request logging middleware for audit trail. Log all API requests with: timestamp, method, path, IP, user-agent, response status, duration. Store in infrastructure/system_audit_logs.db using SQLite. Add log rotation (7 days). Create /api/audit endpoint for viewing logs with filtering.",
+    "priority": "HIGH",
+    "status": "COMPLETE",
+    "created_at": "2026-01-31T22:26:32.413Z",
+    "artifact_path": "/shared/drafts/build_1769898392413.js",
+    "optimization_strategy": "HIGH",
+    "required_mcp_tools": [
+      "filesystem",
+      "postgresql",
+      "snyk",
+      "huggingface",
+      "google_mcp",
+      "sequential-thinking"
+    ],
+    "reasoning": "Detected critical system keywords: [security, api, infrastructure]. Identified need for 'sql' capabilities -> Added [postgresql]. Identified need for 'security' capabilities -> Added [snyk]. Identified need for 'audit' capabilities -> Added [snyk]. Identified need for 'ai' capabilities -> Added [huggingface, google_mcp]. Instruction length suggests broad scope. Added sequential-thinking for complex planning.",
+    "security_audit_required": true
+  },
+  {
+    "id": "1769898395076",
+    "instruction": "RELIABILITY: Add graceful shutdown handling to all Node.js services. Listen for SIGTERM/SIGINT signals. Drain active connections, complete in-flight requests (30s timeout), persist state to disk, close file handles and database connections. Log shutdown sequence to lens_stream.json. Exit with appropriate code.",
+    "priority": "NORMAL",
+    "status": "COMPLETE",
+    "created_at": "2026-01-31T22:26:35.076Z",
+    "artifact_path": "/shared/drafts/build_1769898395076.js",
+    "optimization_strategy": "HIGH",
+    "required_mcp_tools": [
+      "filesystem",
+      "postgresql",
+      "prisma-mcp-server",
+      "huggingface",
+      "google_mcp",
+      "sequential-thinking"
+    ],
+    "reasoning": "Detected critical system keywords: [database]. Identified need for 'database' capabilities -> Added [postgresql, prisma-mcp-server]. Identified need for 'ai' capabilities -> Added [huggingface, google_mcp]. Instruction length suggests broad scope. Added sequential-thinking for complex planning."
+  }
+]

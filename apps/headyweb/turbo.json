@@ -27,15 +27,5 @@
     "clean": {
       "cache": false
     }
-  },
-  "globalEnv": [
-    "NODE_ENV",
-    "HEADY_VERSION",
-    "HEADY_REGISTRY_URL"
-  ],
-  "globalDependencies": [
-    "webpack.config.js",
-    "package.json",
-    ".babelrc"
-  ]
+  }
 }

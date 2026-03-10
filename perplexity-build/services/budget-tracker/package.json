@@ -1,0 +1,29 @@
+{
+  "name": "budget-tracker",
+  "version": "3.2.3",
+  "type": "module",
+  "description": "Cost tracking \u2014 \u03c6-scaled budget routing, provider cost monitoring",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "PORT=3393 node --watch index.js",
+    "health": "curl -s http://localhost:3393/health | jq ."
+  },
+  "dependencies": {
+    "express": "^4.21.0",
+    "@opentelemetry/api": "^1.9.0",
+    "@opentelemetry/sdk-node": "^0.52.0",
+    "@opentelemetry/exporter-trace-otlp-grpc": "^0.52.0",
+    "@opentelemetry/instrumentation-express": "^0.41.0"
+  },
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "heady": {
+    "domain": "fintech",
+    "port": 3393,
+    "architecture": "concurrent-equals",
+    "phiScaled": true,
+    "autoContext": "mandatory"
+  }
+}

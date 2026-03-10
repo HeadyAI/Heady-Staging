@@ -1,3 +1,4 @@
+const logger = require('../../../shared/logger')('index');
 /**
  * Heady™ Task Browser Service
  * Headless browser automation with Puppeteer — screenshots, scraping,
@@ -265,6 +266,6 @@ app.post('/clipboard/browser-copy', async (req, res) => {
 
 // ── Start ───────────────────────────────────────────────────────────
 app.listen(PORT, () => {
-  console.log(`[heady-task-browser] Listening on :${PORT}`);
-  console.log(`[heady-task-browser] PHI_TIMING.CYCLE = ${PHI_TIMING.CYCLE}ms`);
+  logger.info(`[heady-task-browser] Listening on :${PORT}`);
+  logger.info(`[heady-task-browser] PHI_TIMING.CYCLE = ${PHI_TIMING.CYCLE}ms`);
 });

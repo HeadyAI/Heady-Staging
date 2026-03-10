@@ -10,6 +10,7 @@
  */
 
 'use strict';
+const logger = require('../../shared/logger')(require('path').basename('services/heady-security/jit-secrets-manager.js', '.js'));
 
 const crypto = require('crypto');
 
@@ -191,11 +192,11 @@ if (require.main === module) {
     mgr.store('API_KEY', 'sk-test-1234567890abcdef', { scope: 'service' });
     mgr.store('DB_PASSWORD', 'super-secret-pw', { scope: 'database' });
 
-    console.log('═══ JIT Secrets Manager ═══');
-    console.log('Stored:', mgr.list().map(s => s.name));
-    console.log('Retrieved:', mgr.retrieve('API_KEY', 'service').substring(0, 10) + '...');
-    console.log('Audit:', mgr.getAuditLog());
-    console.log('✅ JIT Secrets Manager operational');
+    logger.info('═══ JIT Secrets Manager ═══');
+    logger.info('Stored:', mgr.list().map(s => s.name));
+    logger.info('Retrieved:', mgr.retrieve('API_KEY', 'service').substring(0, 10) + '...');
+    logger.info('Audit:', mgr.getAuditLog());
+    logger.info('✅ JIT Secrets Manager operational');
 }
 
 module.exports = { JITSecretsManager, loadFromEnv };

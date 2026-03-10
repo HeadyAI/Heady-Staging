@@ -35,7 +35,7 @@
  *   app.use(verticalRouter());
  *
  *   app.get('/', (req, res) => {
- *     console.log(req.vertical);  // { id, domain, brand, content, meta, navigation, ... }
+ *     logger.info(req.vertical);  // { id, domain, brand, content, meta, navigation, ... }
  *     res.render('template', { vertical: req.vertical });
  *   });
  *
@@ -48,6 +48,7 @@
  */
 
 'use strict';
+const logger = require('../../shared/logger')('site-router');
 
 const path    = require('path');
 const fs      = require('fs');
@@ -105,13 +106,13 @@ class VerticalResolver extends EventEmitter {
     } catch (err) {
       if (!this._registry) {
         // First load failure — create empty registry
-        console.error(`[HeadySystems] vertical-registry.json not found at ${this.registryPath}. Using empty registry.`);
+        logger.error(`[HeadySystems] vertical-registry.json not found at ${this.registryPath}. Using empty registry.`);
         this._registry = { verticals: [] };
         this._loaded = true;
         return this._registry;
       }
       // Subsequent failure — keep stale registry
-      console.warn(`[HeadySystems] Could not reload vertical-registry.json: ${err.message}`);
+      logger.warn(`[HeadySystems] Could not reload vertical-registry.json: ${err.message}`);
       return this._registry;
     }
 
@@ -264,7 +265,7 @@ class VerticalResolver extends EventEmitter {
     // Find registry entry
     const entry = (this._registry.verticals || []).find(v => v.vertical_id === verticalId);
     if (!entry) {
-      console.warn(`[HeadySystems] Unknown vertical_id "${verticalId}", falling back to "${this.defaultVertical}"`);
+      logger.warn(`[HeadySystems] Unknown vertical_id "${verticalId}", falling back to "${this.defaultVertical}"`);
       return this.loadVerticalConfig(this.defaultVertical);
     }
 
@@ -284,7 +285,7 @@ class VerticalResolver extends EventEmitter {
           // Deep merge: file config overrides registry entry
           config = deepMerge(config, fileConfig);
         } catch (err) {
-          console.error(`[HeadySystems] Failed to load config at ${configFilePath}: ${err.message}`);
+          logger.error(`[HeadySystems] Failed to load config at ${configFilePath}: ${err.message}`);
         }
       }
     }
@@ -340,7 +341,7 @@ class VerticalResolver extends EventEmitter {
 
         next();
       } catch (err) {
-        console.error('[HeadySystems] verticalRouter error:', err);
+        logger.error('[HeadySystems] verticalRouter error:', err);
         // Attempt graceful degradation with default vertical
         try {
           req.verticalId = this.defaultVertical;
@@ -348,7 +349,7 @@ class VerticalResolver extends EventEmitter {
           res.locals.vertical   = req.vertical;
           res.locals.verticalId = req.verticalId;
         } catch (fallbackErr) {
-          console.error('[HeadySystems] Fatal: cannot load default vertical config:', fallbackErr);
+          logger.error('[HeadySystems] Fatal: cannot load default vertical config:', fallbackErr);
           req.vertical   = buildEmptyConfig(this.defaultVertical);
           res.locals.vertical = req.vertical;
         }
@@ -547,12 +548,12 @@ function watchRegistry(resolver) {
   try {
     watcher = fs.watch(resolver.registryPath, { persistent: false }, (eventType) => {
       if (eventType === 'change') {
-        console.log('[HeadySystems] vertical-registry.json changed — reloading');
+        logger.info('[HeadySystems] vertical-registry.json changed — reloading');
         resolver.invalidateCache();
       }
     });
   } catch (err) {
-    console.warn(`[HeadySystems] Could not watch registry file: ${err.message}`);
+    logger.warn(`[HeadySystems] Could not watch registry file: ${err.message}`);
   }
 
   return {

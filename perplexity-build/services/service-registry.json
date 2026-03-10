@@ -1,0 +1,361 @@
+{
+  "_meta": {
+    "name": "Heady Service Registry",
+    "version": "3.2.3",
+    "generated": "2026-03-09",
+    "architecture": "concurrent-equals",
+    "note": "NO priority/ranking. ALL services have equal status."
+  },
+  "services": {
+    "heady-brain": {
+      "port": 3310,
+      "domain": "inference",
+      "description": "Central AI reasoning engine \u2014 multi-model inference with CSL-gated routing",
+      "health": "http://localhost:3310/health",
+      "status": "configured"
+    },
+    "heady-brains": {
+      "port": 3311,
+      "domain": "reasoning",
+      "description": "Multi-brain federation \u2014 parallel reasoning across providers",
+      "health": "http://localhost:3311/health",
+      "status": "configured"
+    },
+    "heady-soul": {
+      "port": 3312,
+      "domain": "orchestration",
+      "description": "Orchestration core \u2014 HeadySoul awareness and values layer",
+      "health": "http://localhost:3312/health",
+      "status": "configured"
+    },
+    "heady-conductor": {
+      "port": 3313,
+      "domain": "orchestration",
+      "description": "Pipeline conductor \u2014 HCFullPipeline 21-stage execution",
+      "health": "http://localhost:3313/health",
+      "status": "configured"
+    },
+    "heady-infer": {
+      "port": 3314,
+      "domain": "inference",
+      "description": "Inference engine \u2014 model routing, streaming, evaluation",
+      "health": "http://localhost:3314/health",
+      "status": "configured"
+    },
+    "heady-embed": {
+      "port": 3315,
+      "domain": "memory",
+      "description": "Embedding service \u2014 multi-provider embedding with MRL truncation to 384-dim",
+      "health": "http://localhost:3315/health",
+      "status": "configured"
+    },
+    "heady-memory": {
+      "port": 3316,
+      "domain": "memory",
+      "description": "Memory persistence \u2014 pgvector HNSW, octree spatial, episodic recall",
+      "health": "http://localhost:3316/health",
+      "status": "configured"
+    },
+    "heady-vector": {
+      "port": 3317,
+      "domain": "memory",
+      "description": "Vector operations \u2014 CSL gates, similarity search, spatial indexing",
+      "health": "http://localhost:3317/health",
+      "status": "configured"
+    },
+    "heady-projection": {
+      "port": 3318,
+      "domain": "memory",
+      "description": "Vector projection engine \u2014 3D spatial computing, dynamic UI projection",
+      "health": "http://localhost:3318/health",
+      "status": "configured"
+    },
+    "heady-bee-factory": {
+      "port": 3320,
+      "domain": "agents",
+      "description": "Dynamic bee creation \u2014 30+ bee types, concurrent-equal spawning",
+      "health": "http://localhost:3320/health",
+      "status": "configured"
+    },
+    "heady-hive": {
+      "port": 3321,
+      "domain": "agents",
+      "description": "Bee coordination hub \u2014 swarm management, lifecycle tracking",
+      "health": "http://localhost:3321/health",
+      "status": "configured"
+    },
+    "heady-orchestration": {
+      "port": 3322,
+      "domain": "orchestration",
+      "description": "Swarm orchestration \u2014 17-swarm matrix, concurrent dispatch",
+      "health": "http://localhost:3322/health",
+      "status": "configured"
+    },
+    "heady-federation": {
+      "port": 3323,
+      "domain": "agents",
+      "description": "Agent federation \u2014 cross-swarm coordination, shared context",
+      "health": "http://localhost:3323/health",
+      "status": "configured"
+    },
+    "heady-guard": {
+      "port": 3330,
+      "domain": "security",
+      "description": "Security enforcement \u2014 zero-trust validation, mTLS, IP classification",
+      "health": "http://localhost:3330/health",
+      "status": "configured"
+    },
+    "heady-security": {
+      "port": 3331,
+      "domain": "security",
+      "description": "Security scanning \u2014 vulnerability detection, threat analysis",
+      "health": "http://localhost:3331/health",
+      "status": "configured"
+    },
+    "heady-governance": {
+      "port": 3332,
+      "domain": "governance",
+      "description": "Policy enforcement \u2014 rulez gatekeeper, compliance validation",
+      "health": "http://localhost:3332/health",
+      "status": "configured"
+    },
+    "heady-health": {
+      "port": 3340,
+      "domain": "monitoring",
+      "description": "Health monitoring \u2014 \u03c6-interval probes, anomaly detection",
+      "health": "http://localhost:3340/health",
+      "status": "configured"
+    },
+    "heady-eval": {
+      "port": 3341,
+      "domain": "testing",
+      "description": "Evaluation engine \u2014 Arena Mode battles, CSL scoring",
+      "health": "http://localhost:3341/health",
+      "status": "configured"
+    },
+    "heady-maintenance": {
+      "port": 3342,
+      "domain": "reliability",
+      "description": "Self-healing maintenance \u2014 quarantine, recovery, respawn",
+      "health": "http://localhost:3342/health",
+      "status": "configured"
+    },
+    "heady-testing": {
+      "port": 3343,
+      "domain": "testing",
+      "description": "Testing framework \u2014 automated verification, regression detection",
+      "health": "http://localhost:3343/health",
+      "status": "configured"
+    },
+    "heady-web": {
+      "port": 3350,
+      "domain": "web",
+      "description": "Web platform \u2014 micro-frontend portal with Module Federation",
+      "health": "http://localhost:3350/health",
+      "status": "configured"
+    },
+    "heady-buddy": {
+      "port": 3351,
+      "domain": "companion",
+      "description": "Chat companion widget \u2014 persistent memory, proactive assistance",
+      "health": "http://localhost:3351/health",
+      "status": "configured"
+    },
+    "heady-ui": {
+      "port": 3352,
+      "domain": "web",
+      "description": "UI component library \u2014 \u03c6-scaled design system components",
+      "health": "http://localhost:3352/health",
+      "status": "configured"
+    },
+    "heady-onboarding": {
+      "port": 3353,
+      "domain": "web",
+      "description": "User onboarding \u2014 guided setup, preference collection",
+      "health": "http://localhost:3353/health",
+      "status": "configured"
+    },
+    "heady-pilot-onboarding": {
+      "port": 3354,
+      "domain": "web",
+      "description": "Pilot program \u2014 early adopter enrollment and tracking",
+      "health": "http://localhost:3354/health",
+      "status": "configured"
+    },
+    "heady-task-browser": {
+      "port": 3355,
+      "domain": "web",
+      "description": "Task management UI \u2014 visual task DAG, swarm assignment",
+      "health": "http://localhost:3355/health",
+      "status": "configured"
+    },
+    "auto-success-engine": {
+      "port": 3360,
+      "domain": "orchestration",
+      "description": "\u03c6-scaled auto-success \u2014 dynamic heartbeat, CSL-discovered categories",
+      "health": "http://localhost:3360/health",
+      "status": "configured"
+    },
+    "hcfullpipeline-executor": {
+      "port": 3361,
+      "domain": "orchestration",
+      "description": "21-stage pipeline \u2014 RECON through EVOLUTION cognitive state machine",
+      "health": "http://localhost:3361/health",
+      "status": "configured"
+    },
+    "heady-chain": {
+      "port": 3362,
+      "domain": "orchestration",
+      "description": "Chain execution \u2014 multi-step workflow orchestration",
+      "health": "http://localhost:3362/health",
+      "status": "configured"
+    },
+    "heady-cache": {
+      "port": 3363,
+      "domain": "data",
+      "description": "Caching layer \u2014 hot/warm/cold with \u03c6-scaled TTLs, LRU eviction",
+      "health": "http://localhost:3363/health",
+      "status": "configured"
+    },
+    "ai-router": {
+      "port": 3370,
+      "domain": "inference",
+      "description": "Multi-model AI routing \u2014 CSL domain-match selection, no ranking",
+      "health": "http://localhost:3370/health",
+      "status": "configured"
+    },
+    "api-gateway": {
+      "port": 3371,
+      "domain": "integration",
+      "description": "API gateway \u2014 unified entry point, rate limiting, auth validation",
+      "health": "http://localhost:3371/health",
+      "status": "configured"
+    },
+    "model-gateway": {
+      "port": 3372,
+      "domain": "inference",
+      "description": "Model selection gateway \u2014 capability-match routing across providers",
+      "health": "http://localhost:3372/health",
+      "status": "configured"
+    },
+    "domain-router": {
+      "port": 3373,
+      "domain": "integration",
+      "description": "Domain-based routing \u2014 resolves all 9 sites + aliases to services",
+      "health": "http://localhost:3373/health",
+      "status": "configured"
+    },
+    "mcp-server": {
+      "port": 3380,
+      "domain": "integration",
+      "description": "MCP protocol server \u2014 31 registered tools, stdio+HTTP transport",
+      "health": "http://localhost:3380/health",
+      "status": "configured"
+    },
+    "google-mcp": {
+      "port": 3381,
+      "domain": "integration",
+      "description": "Google MCP integration \u2014 Vertex AI, Cloud APIs, OAuth",
+      "health": "http://localhost:3381/health",
+      "status": "configured"
+    },
+    "memory-mcp": {
+      "port": 3382,
+      "domain": "memory",
+      "description": "Memory MCP server \u2014 vector memory tools for external agents",
+      "health": "http://localhost:3382/health",
+      "status": "configured"
+    },
+    "perplexity-mcp": {
+      "port": 3383,
+      "domain": "research",
+      "description": "Perplexity MCP \u2014 Sonar Pro research with citation injection",
+      "health": "http://localhost:3383/health",
+      "status": "configured"
+    },
+    "jules-mcp": {
+      "port": 3384,
+      "domain": "integration",
+      "description": "Jules MCP \u2014 Google Jules AI agent integration",
+      "health": "http://localhost:3384/health",
+      "status": "configured"
+    },
+    "huggingface-gateway": {
+      "port": 3385,
+      "domain": "integration",
+      "description": "HuggingFace integration \u2014 model hub, inference API, datasets",
+      "health": "http://localhost:3385/health",
+      "status": "configured"
+    },
+    "colab-gateway": {
+      "port": 3386,
+      "domain": "integration",
+      "description": "Colab integration \u2014 GPU burst compute, notebook execution",
+      "health": "http://localhost:3386/health",
+      "status": "configured"
+    },
+    "silicon-bridge": {
+      "port": 3387,
+      "domain": "integration",
+      "description": "Silicon computing bridge \u2014 hardware acceleration routing",
+      "health": "http://localhost:3387/health",
+      "status": "configured"
+    },
+    "discord-bot": {
+      "port": 3388,
+      "domain": "integration",
+      "description": "Discord bot \u2014 community interaction, notifications, commands",
+      "health": "http://localhost:3388/health",
+      "status": "configured"
+    },
+    "heady-vinci": {
+      "port": 3390,
+      "domain": "analysis",
+      "description": "Pattern learning engine \u2014 recognition, clustering, prediction",
+      "health": "http://localhost:3390/health",
+      "status": "configured"
+    },
+    "heady-autobiographer": {
+      "port": 3391,
+      "domain": "documentation",
+      "description": "Auto-documentation \u2014 narrative event logging, system story generation",
+      "health": "http://localhost:3391/health",
+      "status": "configured"
+    },
+    "heady-midi": {
+      "port": 3392,
+      "domain": "creative",
+      "description": "MIDI/creative interface \u2014 music generation, event bus, Ableton integration",
+      "health": "http://localhost:3392/health",
+      "status": "configured"
+    },
+    "budget-tracker": {
+      "port": 3393,
+      "domain": "fintech",
+      "description": "Cost tracking \u2014 \u03c6-scaled budget routing, provider cost monitoring",
+      "health": "http://localhost:3393/health",
+      "status": "configured"
+    },
+    "cli-service": {
+      "port": 3394,
+      "domain": "integration",
+      "description": "CLI interface \u2014 interactive command-line with OAuth, themed output",
+      "health": "http://localhost:3394/health",
+      "status": "configured"
+    },
+    "prompt-manager": {
+      "port": 3395,
+      "domain": "orchestration",
+      "description": "Prompt management \u2014 64-prompt catalogue, template rendering",
+      "health": "http://localhost:3395/health",
+      "status": "configured"
+    },
+    "secret-gateway": {
+      "port": 3396,
+      "domain": "security",
+      "description": "Secret management \u2014 1Password integration, rotation, vault sync",
+      "health": "http://localhost:3396/health",
+      "status": "configured"
+    }
+  }
+}

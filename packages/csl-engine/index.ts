@@ -453,3 +453,181 @@ function phiDistributionLocal(tiers: number): number[] {
   const sum = raw.reduce((acc, w) => acc + w, 0);
   return raw.map((w) => w / sum);
 }
+
+// ---------------------------------------------------------------------------
+// DynamicCSLEngine — stateful, confidence-aware CSL processor
+// ---------------------------------------------------------------------------
+
+/**
+ * Options for constructing a DynamicCSLEngine instance.
+ */
+export interface DynamicCSLEngineOptions {
+  /** Confidence level in [0, 1]. Defaults to PSI (≈ 0.618). */
+  confidence?: number;
+  /** Enable momentum blending across consensus() calls. Defaults to false. */
+  momentum?: boolean;
+  /** Decay factor for momentum blending in [0, 1]. Defaults to PSI. */
+  momentumDecay?: number;
+  /** Dimensionality hint for dynamic threshold scaling. Defaults to VECTOR_DIMENSIONS. */
+  dimensions?: number;
+}
+
+/**
+ * Result of DynamicCSLEngine.and().
+ */
+export interface CSLAndResult {
+  similarity: number;
+  passes: boolean;
+  threshold: number;
+}
+
+/**
+ * Result of DynamicCSLEngine.route().
+ */
+export interface CSLRouteResult {
+  id: string;
+  score: number;
+  confidence: number;
+}
+
+/**
+ * DynamicCSLEngine — a stateful, confidence-aware Continuous Semantic Logic engine.
+ *
+ * All numeric constants derive from PHI, PSI, and FIB — zero magic numbers.
+ *
+ * @example
+ * const engine = new DynamicCSLEngine({ confidence: 0.9 });
+ * const result = engine.and(vectorA, vectorB);
+ */
+export class DynamicCSLEngine {
+  private confidence: number;
+  private momentumEnabled: boolean;
+  private momentumDecay: number;
+  private dimensions: number;
+  private lastConsensus: number[] | null = null;
+
+  constructor(options: DynamicCSLEngineOptions = {}) {
+    this.confidence = options.confidence ?? PSI; // default ≈ 0.618
+    this.momentumEnabled = options.momentum ?? false;
+    this.momentumDecay = options.momentumDecay ?? PSI; // default ≈ 0.618
+    this.dimensions = options.dimensions ?? VECTOR_DIMENSIONS;
+  }
+
+  /**
+   * Computes dynamic threshold based on current dimensions.
+   * Higher dimensions → lower threshold (signals are sparser in high-D space).
+   *
+   * Formula: CSL_THRESHOLD * (1 / (1 + PSI * ln(dimensions / FIB[4])))
+   * where FIB[4] = 5 is the baseline dimensionality anchor.
+   */
+  private dynamicThreshold(): number {
+    // FIB[4] = 5 — baseline anchor for dimension scaling
+    const baseline = FIB[4]; // 5
+    const scale = 1 / (1 + PSI * Math.log(this.dimensions / baseline));
+    return CSL_THRESHOLD * scale;
+  }
+
+  /**
+   * CSL AND with dynamic threshold and confidence-aware result.
+   *
+   * @param a - First embedding vector.
+   * @param b - Second embedding vector.
+   * @returns Object with similarity, passes (boolean), and threshold.
+   */
+  and(a: number[], b: number[]): CSLAndResult {
+    const similarity = cosineSimilarity(a, b);
+    const threshold = this.dynamicThreshold();
+    return {
+      similarity,
+      passes: similarity >= threshold,
+      threshold,
+    };
+  }
+
+  /**
+   * Soft sigmoid gate scaled by confidence.
+   *
+   * Higher confidence → higher gain → sharper gate transition.
+   * Gain = baseGain * (1 + PHI * confidence), where baseGain = FIB[4] (= 5).
+   *
+   * @param signal - Raw similarity value.
+   * @returns Soft gate output in (0, 1).
+   */
+  gate(signal: number): number {
+    // Base gain from FIB[4] = 5
+    const baseGain = FIB[4]; // 5
+    // Scale gain with confidence: higher confidence → steeper sigmoid
+    const gain = baseGain * (1 + PHI * this.confidence);
+    const threshold = this.dynamicThreshold();
+    return 1 / (1 + Math.exp(-gain * (signal - threshold)));
+  }
+
+  /**
+   * Phi-weighted consensus with optional momentum blending.
+   *
+   * When momentum is enabled, the result is blended with the previous consensus
+   * using momentumDecay: result = decay * previous + (1 - decay) * current.
+   *
+   * @param vectors - Array of embedding vectors.
+   * @returns Normalised consensus vector.
+   */
+  consensus(vectors: number[][]): number[] {
+    // Compute base consensus using phi-distribution weights
+    const current = cslConsensus(vectors);
+
+    if (!this.momentumEnabled) {
+      return current;
+    }
+
+    // Momentum blending with previous consensus
+    if (this.lastConsensus !== null && this.lastConsensus.length === current.length) {
+      const decay = this.momentumDecay;
+      const blended = current.map((v, i) => decay * this.lastConsensus![i] + (1 - decay) * v);
+      const result = normalize(blended);
+      this.lastConsensus = result;
+      return result;
+    }
+
+    // First call — no previous consensus to blend with
+    this.lastConsensus = current;
+    return current;
+  }
+
+  /**
+   * Routes an input vector to a set of targets ranked by cosine similarity.
+   * Confidence decays by PSI (1/φ) per rank position.
+   *
+   * @param input   - Input embedding vector.
+   * @param targets - Array of { id, vector } targets.
+   * @returns Sorted array of { id, score, confidence } with φ-decaying confidence.
+   */
+  route(
+    input: number[],
+    targets: { id: string; vector: number[] }[]
+  ): CSLRouteResult[] {
+    const scored = targets.map((t) => ({
+      id: t.id,
+      score: cosineSimilarity(input, t.vector),
+    }));
+
+    // Sort descending by score
+    scored.sort((a, b) => b.score - a.score);
+
+    // Apply φ-decaying confidence per rank
+    return scored.map((item, rank) => ({
+      id: item.id,
+      score: item.score,
+      confidence: this.confidence * Math.pow(PSI, rank),
+    }));
+  }
+
+  /**
+   * Updates engine context. Currently supports changing dimensions,
+   * which affects threshold behavior (higher dims → lower threshold).
+   *
+   * @param ctx - Context update with optional dimensions.
+   */
+  updateContext(ctx: { dimensions: number }): void {
+    this.dimensions = ctx.dimensions;
+  }
+}

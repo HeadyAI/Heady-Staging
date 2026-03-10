@@ -27,6 +27,7 @@
  */
 
 'use strict';
+const logger = require('../shared/logger')('stripe-config');
 
 // ── Phi-Math Import ───────────────────────────────────────────────────────────
 import {
@@ -402,7 +403,7 @@ async function handleWebhook(req, res, db, emailService) {
       process.env.STRIPE_WEBHOOK_SECRET
     );
   } catch (err) {
-    console.error('[Stripe Webhook] Signature verification failed:', err.message);
+    logger.error('[Stripe Webhook] Signature verification failed:', err.message);
     return res.status(400).send(`Webhook Error: ${err.message}`);
   }
 
@@ -412,7 +413,7 @@ async function handleWebhook(req, res, db, emailService) {
   try {
     await routeWebhookEvent(event, db, emailService);
   } catch (err) {
-    console.error(`[Stripe Webhook] Handler error for ${event.type}:`, err);
+    logger.error(`[Stripe Webhook] Handler error for ${event.type}:`, err);
     // Log to monitoring but don't re-throw — Stripe will retry on 4xx/5xx only
   }
 }
@@ -453,14 +454,14 @@ async function routeWebhookEvent(event, db, emailService) {
   if (handler) {
     await handler(event.data.object, db, emailService, event);
   } else {
-    console.log(`[Stripe Webhook] Unhandled event type: ${event.type}`);
+    logger.info(`[Stripe Webhook] Unhandled event type: ${event.type}`);
   }
 }
 
 // ── Subscription Lifecycle Handlers ──────────────────────────────────────────
 
 async function onSubscriptionCreated(subscription, db, emailService) {
-  console.log(`[Stripe] Subscription created: ${subscription.id}`);
+  logger.info(`[Stripe] Subscription created: ${subscription.id}`);
 
   const customerId = subscription.customer;
   const plan = getPlanFromSubscription(subscription);
@@ -493,7 +494,7 @@ async function onSubscriptionCreated(subscription, db, emailService) {
 }
 
 async function onSubscriptionUpdated(subscription, db, emailService) {
-  console.log(`[Stripe] Subscription updated: ${subscription.id} → ${subscription.status}`);
+  logger.info(`[Stripe] Subscription updated: ${subscription.id} → ${subscription.status}`);
 
   const plan = getPlanFromSubscription(subscription);
   const previousPlan = await db.subscriptions.getPlan(subscription.id);
@@ -524,7 +525,7 @@ async function onSubscriptionUpdated(subscription, db, emailService) {
 }
 
 async function onSubscriptionDeleted(subscription, db, emailService) {
-  console.log(`[Stripe] Subscription deleted: ${subscription.id}`);
+  logger.info(`[Stripe] Subscription deleted: ${subscription.id}`);
 
   await db.subscriptions.update(subscription.id, {
     status: 'canceled',
@@ -546,7 +547,7 @@ async function onSubscriptionDeleted(subscription, db, emailService) {
 
 async function onTrialWillEnd(subscription, db, emailService) {
   // Fires fib(4)=3 days before trial ends (replaces hardcoded "3 days" — fib(4)=3 ✓)
-  console.log(`[Stripe] Trial ending soon: ${subscription.id}`);
+  logger.info(`[Stripe] Trial ending soon: ${subscription.id}`);
 
   const customer = await stripe.customers.retrieve(subscription.customer);
   const daysLeft = Math.ceil((subscription.trial_end - Date.now() / 1000) / 86400);
@@ -576,7 +577,7 @@ async function onSubscriptionResumed(subscription, db) {
 // ── Payment Event Handlers ────────────────────────────────────────────────────
 
 async function onPaymentSucceeded(invoice, db, emailService) {
-  console.log(`[Stripe] Payment succeeded: invoice ${invoice.id}, amount: ${invoice.amount_paid}`);
+  logger.info(`[Stripe] Payment succeeded: invoice ${invoice.id}, amount: ${invoice.amount_paid}`);
 
   await db.invoices.upsert({
     stripe_invoice_id: invoice.id,
@@ -592,7 +593,7 @@ async function onPaymentSucceeded(invoice, db, emailService) {
 }
 
 async function onPaymentFailed(invoice, db, emailService) {
-  console.error(`[Stripe] Payment FAILED: invoice ${invoice.id}`);
+  logger.error(`[Stripe] Payment FAILED: invoice ${invoice.id}`);
 
   await db.invoices.update(invoice.id, { status: 'failed', failed_at: new Date() });
 
@@ -669,7 +670,7 @@ async function onCustomerDeleted(customer, db) {
 // ── Checkout Handlers ─────────────────────────────────────────────────────────
 
 async function onCheckoutCompleted(session, db, emailService) {
-  console.log(`[Stripe] Checkout completed: ${session.id}`);
+  logger.info(`[Stripe] Checkout completed: ${session.id}`);
 
   if (session.mode === 'subscription') {
     // Subscription checkout — subscription.created will also fire
@@ -684,7 +685,7 @@ async function onCheckoutCompleted(session, db, emailService) {
 }
 
 async function onCheckoutExpired(session, db) {
-  console.log(`[Stripe] Checkout expired: ${session.id}`);
+  logger.info(`[Stripe] Checkout expired: ${session.id}`);
   // Re-trigger abandoned checkout email after fib(9)=34h delay (~1.5 days)
   if (session.customer_email) {
     await db.jobs.enqueue('abandoned_checkout_email', {
@@ -833,7 +834,7 @@ async function batchReportUsage(orgUsage, subscriptionItems) {
     if (quantity > 0 && subscriptionItems[metric]) {
       reports.push(
         reportUsage(subscriptionItems[metric], quantity)
-          .catch(err => console.error(`[Stripe] Failed to report usage for ${metric}:`, err))
+          .catch(err => logger.error(`[Stripe] Failed to report usage for ${metric}:`, err))
       );
     }
   }
@@ -906,15 +907,15 @@ async function getNonprofitCoupon() {
  * Prints price IDs to configure in environment variables.
  */
 async function createProducts() {
-  console.log('[Stripe Bootstrap] Creating products and prices...\n');
-  console.log(`[Stripe Bootstrap] Trial period: ${TRIAL_DAYS} days (fib(7))`);
-  console.log(`[Stripe Bootstrap] Annual discount: ${ANNUAL_DISCOUNT_PERCENT}% (fib(8))\n`);
+  logger.info('[Stripe Bootstrap] Creating products and prices...\n');
+  logger.info(`[Stripe Bootstrap] Trial period: ${TRIAL_DAYS} days (fib(7))`);
+  logger.info(`[Stripe Bootstrap] Annual discount: ${ANNUAL_DISCOUNT_PERCENT}% (fib(8))\n`);
   const results = {};
 
   for (const [tier, config] of Object.entries(PRODUCTS)) {
     if (!config.prices) continue;
 
-    console.log(`Creating product: ${config.name}`);
+    logger.info(`Creating product: ${config.name}`);
     const product = await stripe.products.create({
       name: config.name,
       description: config.description,
@@ -929,11 +930,11 @@ async function createProducts() {
         ...priceConfig,
       });
       results[tier].prices[cycle] = price.id;
-      console.log(`  [${cycle}] Price ID: ${price.id}`);
+      logger.info(`  [${cycle}] Price ID: ${price.id}`);
     }
   }
 
-  console.log('\n[Stripe Bootstrap] Metered products...\n');
+  logger.info('\n[Stripe Bootstrap] Metered products...\n');
   for (const [metric, config] of Object.entries(METERED_PRODUCTS)) {
     const product = await stripe.products.create({
       name: config.name,
@@ -948,11 +949,11 @@ async function createProducts() {
     });
 
     results[`metered_${metric}`] = { product_id: product.id, price_id: price.id };
-    console.log(`  [${metric}] Metered Price ID: ${price.id}`);
+    logger.info(`  [${metric}] Metered Price ID: ${price.id}`);
   }
 
-  console.log('\n[Stripe Bootstrap] Complete. Add these to your environment:\n');
-  console.log(JSON.stringify(results, null, 2));
+  logger.info('\n[Stripe Bootstrap] Complete. Add these to your environment:\n');
+  logger.info(JSON.stringify(results, null, 2));
   return results;
 }
 

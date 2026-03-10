@@ -2,7 +2,7 @@
 
 **Version:** 3.2.2
 **Effective:** 2026-03-07
-**Owner:** Eric Headington (eric@headyconnection.org)
+**Owner:** Eric Haywood (eric@headyconnection.org)
 **Classification:** Internal — Confidential
 
 ---
@@ -104,7 +104,7 @@ See: `runbooks/database-failover.md` for detailed steps.
 **Prerequisites:** Pre-provisioned standby in us-east1 (secondary region).
 
 ```bash
-# 1. Declare DR — get approval from CEO (Eric Headington)
+# 1. Declare DR — get approval from CEO (Eric Haywood)
 # DR activation requires: eric@headyconnection.org approval
 
 # 2. Point DNS to secondary region
@@ -219,7 +219,7 @@ We will provide updates every fib(7)=13 minutes.
 Enterprise customers may contact: eric@headyconnection.org
 
 We apologize for the interruption.
-— Eric Headington, HeadySystems Inc.
+— Eric Haywood, HeadySystems Inc.
 ```
 
 ---
@@ -257,8 +257,8 @@ We apologize for the interruption.
 | Role | Name | Contact | Escalation Time |
 |------|------|---------|-----------------|
 | Primary On-Call | On-Call Rotation | PagerDuty | T+0 |
-| Incident Commander | Eric Headington | eric@headyconnection.org | T+fib(5)=5m |
-| CEO / Founder | Eric Headington | eric@headyconnection.org | T+fib(7)=13m |
+| Incident Commander | Eric Haywood | eric@headyconnection.org | T+fib(5)=5m |
+| CEO / Founder | Eric Haywood | eric@headyconnection.org | T+fib(7)=13m |
 | GCP Support | Enterprise Support | console.cloud.google.com/support | T+fib(6)=8m |
 | Cloudflare | Enterprise Support | cloudflare.com/support | T+fib(6)=8m if DNS issue |
 

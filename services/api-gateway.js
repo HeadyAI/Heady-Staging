@@ -1,4 +1,5 @@
 'use strict';
+const logger = require('../shared/logger')('api-gateway');
 
 /**
  * HeadyGateway — Unified API Gateway for all Heady™ Native Services
@@ -8,7 +9,7 @@
 
 const express = require('express');
 const helmet = require('helmet');
-const cors = require('cors');
+const { securityHeaders } = require('../shared/security-headers');
 const compression = require('compression');
 
 const PHI = 1.618033988749895;
@@ -39,7 +40,7 @@ function createGateway() {
 
   // Middleware
   app.use(helmet());
-  app.use(cors());
+  app.use(securityHeaders());
   app.use(compression());
   app.use(express.json({ limit: '50mb' }));
 
@@ -48,7 +49,7 @@ function createGateway() {
     const start = Date.now();
     res.on('finish', () => {
       const duration = Date.now() - start;
-      console.log(`[Gateway] ${req.method} ${req.originalUrl} ${res.statusCode} ${duration}ms`);
+      logger.info(`[Gateway] ${req.method} ${req.originalUrl} ${res.statusCode} ${duration}ms`);
     });
     next();
   });
@@ -107,7 +108,7 @@ function createGateway() {
 
   // Error handler
   app.use((err, req, res, _next) => {
-    console.error('[Gateway] Error:', err.message);
+    logger.error('[Gateway] Error:', err.message);
     res.status(err.status || 500).json({
       error: err.message || 'Internal Server Error',
       service: 'HeadyGateway',
@@ -121,32 +122,32 @@ function createGateway() {
 if (require.main === module) {
   const app = createGateway();
   const server = app.listen(PORT, () => {
-    console.log('');
-    console.log('╔══════════════════════════════════════════════════════════╗');
-    console.log('║          HeadyGateway — Sacred Geometry v3.0.0          ║');
-    console.log('║     Sovereign AI • Zero External Dependencies           ║');
-    console.log('╠══════════════════════════════════════════════════════════╣');
-    console.log(`║  Gateway:     http://localhost:${PORT}                      ║`);
-    console.log('║                                                          ║');
+    logger.info('');
+    logger.info('╔══════════════════════════════════════════════════════════╗');
+    logger.info('║          HeadyGateway — Sacred Geometry v3.0.0          ║');
+    logger.info('║     Sovereign AI • Zero External Dependencies           ║');
+    logger.info('╠══════════════════════════════════════════════════════════╣');
+    logger.info(`║  Gateway:     http://localhost:${PORT}                      ║`);
+    logger.info('║                                                          ║');
     SERVICES.forEach(s => {
       const line = `║  ${s.name.padEnd(12)} /api/v1${s.prefix.padEnd(8)} (standalone :${s.port})    ║`;
-      console.log(line);
+      logger.info(line);
     });
-    console.log('║                                                          ║');
-    console.log(`║  PHI = ${PHI}                              ║`);
-    console.log('╚══════════════════════════════════════════════════════════╝');
-    console.log('');
+    logger.info('║                                                          ║');
+    logger.info(`║  PHI = ${PHI}                              ║`);
+    logger.info('╚══════════════════════════════════════════════════════════╝');
+    logger.info('');
   });
 
   // Graceful shutdown
   const shutdown = (signal) => {
-    console.log(`\n[Gateway] ${signal} received — shutting down gracefully...`);
+    logger.info(`\n[Gateway] ${signal} received — shutting down gracefully...`);
     server.close(() => {
-      console.log('[Gateway] All connections closed. Goodbye.');
+      logger.info('[Gateway] All connections closed. Goodbye.');
       process.exit(0);
     });
     setTimeout(() => {
-      console.error('[Gateway] Forced shutdown after timeout');
+      logger.error('[Gateway] Forced shutdown after timeout');
       process.exit(1);
     }, 10000);
   };

@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 'use strict';
+const logger = require('../shared/logger')('cli');
 
 /**
  * create-heady-agent CLI
@@ -48,13 +49,13 @@ program
 
       await scaffold(config, options);
     } catch (err) {
-      console.error(chalk.red(`\n❌ Error: ${err.message}\n`));
+      logger.error(chalk.red(`\n❌ Error: ${err.message}\n`));
       process.exit(1);
     }
   });
 
 async function interactivePrompt() {
-  console.log(chalk.yellow(`\n🐝 create-heady-agent v${VERSION}\n`));
+  logger.info(chalk.yellow(`\n🐝 create-heady-agent v${VERSION}\n`));
 
   const answers = await inquirer.prompt([
     {
@@ -87,10 +88,10 @@ async function scaffold(config, options) {
   const { name, template, language } = config;
   const targetDir = path.resolve(process.cwd(), name);
 
-  console.log(chalk.yellow(`\n🐝 Scaffolding HeadyBee: ${name}`));
-  console.log(chalk.gray(`   Template: ${template}`));
-  console.log(chalk.gray(`   Language: ${language}`));
-  console.log(chalk.gray(`   Directory: ${targetDir}\n`));
+  logger.info(chalk.yellow(`\n🐝 Scaffolding HeadyBee: ${name}`));
+  logger.info(chalk.gray(`   Template: ${template}`));
+  logger.info(chalk.gray(`   Language: ${language}`));
+  logger.info(chalk.gray(`   Directory: ${targetDir}\n`));
 
   // Create directory
   await fs.ensureDir(targetDir);
@@ -113,22 +114,22 @@ async function scaffold(config, options) {
   if (options.git !== false) {
     const { execSync } = require('child_process');
     execSync('git init', { cwd: targetDir, stdio: 'ignore' });
-    console.log(chalk.green('  ✅ Git initialized'));
+    logger.info(chalk.green('  ✅ Git initialized'));
   }
 
   // npm install
   if (options.install !== false) {
     const { execSync } = require('child_process');
-    console.log(chalk.gray('  📦 Installing dependencies...'));
+    logger.info(chalk.gray('  📦 Installing dependencies...'));
     execSync('npm install', { cwd: targetDir, stdio: 'inherit' });
   }
 
-  console.log(chalk.green(`\n✅ HeadyBee "${name}" created successfully!`));
-  console.log(chalk.gray(`\nNext steps:`));
-  console.log(chalk.white(`  cd ${name}`));
-  console.log(chalk.white(`  npm test`));
-  console.log(chalk.white(`  npm start`));
-  console.log(chalk.gray(`\nDocs: https://headyio.com/docs/create-agent\n`));
+  logger.info(chalk.green(`\n✅ HeadyBee "${name}" created successfully!`));
+  logger.info(chalk.gray(`\nNext steps:`));
+  logger.info(chalk.white(`  cd ${name}`));
+  logger.info(chalk.white(`  npm test`));
+  logger.info(chalk.white(`  npm start`));
+  logger.info(chalk.gray(`\nDocs: https://headyio.com/docs/create-agent\n`));
 }
 
 async function generatePackageJson(dir, name, template) {
@@ -172,7 +173,7 @@ async function generatePackageJson(dir, name, template) {
   }
 
   await fs.writeJson(path.join(dir, 'package.json'), pkg, { spaces: 2 });
-  console.log(chalk.green('  ✅ package.json'));
+  logger.info(chalk.green('  ✅ package.json'));
 }
 
 async function generateBee(dir, name, template, language) {
@@ -184,6 +185,7 @@ async function generateBee(dir, name, template, language) {
 
   const templates = {
     basic: `'use strict';
+const logger = require('../shared/logger')('cli');
 
 const PHI = 1.6180339887;
 
@@ -201,10 +203,10 @@ class ${className} {
 
   async initialize() {
     this.status = 'initializing';
-    console.log(\`[${className}] Initializing...\`);
+    logger.info(\`[${className}] Initializing...\`);
     // Setup logic here
     this.status = 'ready';
-    console.log(\`[${className}] Ready (interval: \${this.config.intervalMs}ms)\`);
+    logger.info(\`[${className}] Ready (interval: \${this.config.intervalMs}ms)\`);
   }
 
   async execute(task) {
@@ -238,7 +240,7 @@ class ${className} {
 
   async shutdown() {
     this.status = 'shutting_down';
-    console.log(\`[${className}] Shutting down...\`);
+    logger.info(\`[${className}] Shutting down...\`);
     // Cleanup logic here
     this.status = 'stopped';
   }
@@ -247,6 +249,7 @@ class ${className} {
 module.exports = { ${className} };
 `,
     monitor: `'use strict';
+const logger = require('../shared/logger')('cli');
 
 const PHI = 1.6180339887;
 const { EventEmitter } = require('events');
@@ -269,7 +272,7 @@ class ${className} extends EventEmitter {
   async initialize() {
     this.status = 'monitoring';
     this._timer = setInterval(() => this._check(), this.config.checkIntervalMs);
-    console.log(\`[${className}] Monitoring started (every \${this.config.checkIntervalMs}ms)\`);
+    logger.info(\`[${className}] Monitoring started (every \${this.config.checkIntervalMs}ms)\`);
   }
 
   async _check() {
@@ -315,10 +318,11 @@ module.exports = { ${className} };
 
   const code = templates[template] || templates.basic;
   await fs.writeFile(path.join(dir, 'src', `bee.${ext}`), code);
-  console.log(chalk.green(`  ✅ src/bee.${ext}`));
+  logger.info(chalk.green(`  ✅ src/bee.${ext}`));
 
   // Index file
   const indexCode = `'use strict';
+const logger = require('../shared/logger')('cli');
 
 const express = require('express');
 const { ${className} } = require('./bee');
@@ -332,7 +336,7 @@ app.get('/health', (req, res) => res.json(bee.health()));
 async function main() {
   await bee.initialize();
   app.listen(PORT, () => {
-    console.log(\`[${className}] Listening on port \${PORT}\`);
+    logger.info(\`[${className}] Listening on port \${PORT}\`);
   });
 }
 
@@ -344,7 +348,7 @@ process.on('SIGTERM', async () => {
 });
 `;
   await fs.writeFile(path.join(dir, 'src', `index.${ext}`), indexCode);
-  console.log(chalk.green(`  ✅ src/index.${ext}`));
+  logger.info(chalk.green(`  ✅ src/index.${ext}`));
 }
 
 async function generateConfig(dir, name, template) {
@@ -372,7 +376,7 @@ async function generateConfig(dir, name, template) {
     .join('\n\n');
 
   await fs.writeFile(path.join(dir, 'configs', 'bee-config.yaml'), `# ${name} HeadyBee Configuration\n# PHI = ${PHI}\n\n${yaml}`);
-  console.log(chalk.green('  ✅ configs/bee-config.yaml'));
+  logger.info(chalk.green('  ✅ configs/bee-config.yaml'));
 }
 
 async function generateTests(dir, name, template) {
@@ -382,6 +386,7 @@ async function generateTests(dir, name, template) {
     .join('') + 'Bee';
 
   const testCode = `'use strict';
+const logger = require('../shared/logger')('cli');
 
 const { ${className} } = require('../src/bee');
 
@@ -427,7 +432,7 @@ describe('${className}', () => {
 `;
 
   await fs.writeFile(path.join(dir, 'tests', 'bee.test.js'), testCode);
-  console.log(chalk.green('  ✅ tests/bee.test.js'));
+  logger.info(chalk.green('  ✅ tests/bee.test.js'));
 }
 
 async function generateCI(dir, name) {
@@ -445,11 +450,11 @@ jobs:
       - run: npm test -- --coverage
       - name: Coverage gate (80%)
         run: |
-          COVERAGE=$(node -e "const c=require('./coverage/coverage-summary.json'); console.log(c.total.lines.pct)")
+          COVERAGE=$(node -e "const c=require('./coverage/coverage-summary.json'); logger.info(c.total.lines.pct)")
           if (( $(echo "$COVERAGE < 80" | bc -l) )); then exit 1; fi
 `;
   await fs.writeFile(path.join(dir, '.github', 'workflows', 'ci.yml'), ci);
-  console.log(chalk.green('  ✅ .github/workflows/ci.yml'));
+  logger.info(chalk.green('  ✅ .github/workflows/ci.yml'));
 }
 
 async function generateReadme(dir, name, template) {
@@ -485,12 +490,12 @@ ${TEMPLATES[template]?.desc || 'Basic HeadyBee template'}
 MIT
 `;
   await fs.writeFile(path.join(dir, 'README.md'), readme);
-  console.log(chalk.green('  ✅ README.md'));
+  logger.info(chalk.green('  ✅ README.md'));
 }
 
 async function generateGitignore(dir) {
   await fs.writeFile(path.join(dir, '.gitignore'), `node_modules/\ncoverage/\n.env\n.env.*\ndist/\n*.log\n`);
-  console.log(chalk.green('  ✅ .gitignore'));
+  logger.info(chalk.green('  ✅ .gitignore'));
 }
 
 program.parse();

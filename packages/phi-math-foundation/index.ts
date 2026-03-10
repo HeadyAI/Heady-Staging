@@ -2,10 +2,31 @@
  * phi-math-foundation
  * Core mathematical foundation for Heady™ Systems
  * Based on golden ratio, Fibonacci sequences, and fractal patterns
+ *
+ * Re-exports all constants and utilities from src/
  */
 
-export const PHI = 1.618033988749895; // Golden ratio
-export const PHI_INVERSE = 0.618033988749895;
+// Re-export everything from the source module
+export {
+  PHI,
+  PSI,
+  PHI_SQUARED,
+  PHI_CUBED,
+  FIB,
+  CSL_THRESHOLDS,
+  CSL_THRESHOLD,
+  VECTOR_DIMENSIONS,
+  PROJECTION_DIMENSIONS,
+  EMBEDDING_DENSITY_GATE,
+  fib,
+  phiPower,
+  phiThreshold,
+  phiBackoff,
+  phiFusionWeights,
+} from './src/index.js';
+
+// Import constants needed by PhiMathCore
+import { PHI, PSI as PHI_INVERSE } from './src/index.js';
 
 export class PhiMathCore {
   static version = '1.0.0';
@@ -56,6 +77,7 @@ export class PhiMathCore {
 
   /**
    * Optimal resource allocation using phi ratio
+   * Uses PSI (PHI_INVERSE = 1/PHI) from constants
    * Used by liquid architecture
    */
   static optimalAllocation(total: number): { primary: number; secondary: number } {

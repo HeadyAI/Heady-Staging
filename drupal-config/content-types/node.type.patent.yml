@@ -1,0 +1,42 @@
+# Drupal Content Type: Patent
+# Generated for Heady™ Platform — HeadyAutoContext vector-indexed
+# All content auto-synced to pgvector via webhook + polling fallback
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+    - text
+    - field
+    - heady_cms
+id: patent
+label: 'Patent'
+description: 'Patent descriptions, claims, and filing information. 51+ provisional patents.'
+help: ''
+new_revision: true
+preview_mode: 1
+display_submitted: true
+
+# Field: field_patent_number
+# field_type: text_long
+
+# Field: field_filing_date
+# field_type: datetime
+
+# Field: field_title
+# field_type: text_long
+
+# Field: field_abstract
+# field_type: text_long
+
+# Field: field_claims
+# field_type: text_long
+
+# Field: field_inventors
+# field_type: text_long
+
+# Field: field_patent_family
+# field_type: text_long
+
+# Field: field_vector_embedding
+# field_type: text_long

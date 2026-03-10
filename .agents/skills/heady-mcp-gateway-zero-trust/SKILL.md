@@ -8,7 +8,7 @@ description: >
   Keywords: MCP, Model Context Protocol, gateway, tool routing, zero trust, sandbox, rate limiter,
   audit log, connection pool, meta-server, SSE, WebSocket, stdio, Heady™ MCP, tool execution.
 metadata:
-  author: eric-head
+  author: eric-haywood
   version: '2.0'
 ---
 

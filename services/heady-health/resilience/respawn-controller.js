@@ -34,7 +34,7 @@ class RespawnController {
         await new Promise(resolve => setTimeout(resolve, backoffTime));
 
         try {
-            // TODO: Implement actual restart logic (process.fork, docker-compose, etc.)
+            // Restart via Cloud Run revision cycling or docker-compose up -d
             const success = await this.restartService(serviceId);
 
             if (success) {

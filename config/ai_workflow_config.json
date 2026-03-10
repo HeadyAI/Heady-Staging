@@ -1,0 +1,24 @@
+{
+  "project": "heady-ai-workflow",
+  "timestamp": "2026-01-31T12:09:26.183861",
+  "services": {
+    "render": {
+      "enabled": true,
+      "region": "oregon"
+    },
+    "cloudflare": {
+      "enabled": true,
+      "account_id": null
+    },
+    "github": {
+      "enabled": true,
+      "app_id": null
+    }
+  },
+  "workflows": [
+    "deploy",
+    "test",
+    "monitor",
+    "update-gist"
+  ]
+}

@@ -1,0 +1,83 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: heady-brain
+  labels:
+    app: heady-brain
+    heady.io/domain: inference
+    heady.io/autocontext: "true"
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: heady-brain
+  template:
+    metadata:
+      labels:
+        app: heady-brain
+        heady.io/domain: inference
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "8100"
+    spec:
+      terminationGracePeriodSeconds: 34
+      containers:
+      - name: heady-brain
+        image: gcr.io/gen-lang-client-0920560496/heady-brain:latest
+        ports:
+        - containerPort: 8100
+          name: http
+        envFrom:
+        - configMapRef:
+            name: heady-global-config
+        - secretRef:
+            name: heady-secrets
+        env:
+        - name: SERVICE_NAME
+          value: "heady-brain"
+        - name: PORT
+          value: "8100"
+        - name: AUTOCONTEXT_URL
+          value: "http://heady-auto-context:8907"
+        - name: CONSUL_URL
+          value: "http://consul:8500"
+        - name: OTEL_ENDPOINT
+          value: "http://otel-collector:4318"
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "128Mi"
+          limits:
+            cpu: "500m"
+            memory: "512Mi"
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8100
+          initialDelaySeconds: 13
+          periodSeconds: 21
+          timeoutSeconds: 8
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8100
+          initialDelaySeconds: 8
+          periodSeconds: 13
+          timeoutSeconds: 5
+          failureThreshold: 2
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: heady-brain
+  labels:
+    app: heady-brain
+    heady.io/domain: inference
+spec:
+  selector:
+    app: heady-brain
+  ports:
+  - name: http
+    port: 8100
+    targetPort: 8100

@@ -1,3 +1,4 @@
+const logger = require('../../shared/logger')('vectorize-sync');
 /**
  * vectorize-sync.js
  * Heady™ Latent OS — Vectorize ↔ pgvector Bidirectional Sync
@@ -165,7 +166,7 @@ export class VectorizeSync {
     const watermark = fullResync ? 0 : await this._loadWatermark();
     let newWatermark = watermark;
 
-    console.log(`[VectorizeSync:${this.indexName}] starting incremental sync, watermark=${watermark}, fullResync=${fullResync}`);
+    logger.info(`[VectorizeSync:${this.indexName}] starting incremental sync, watermark=${watermark}, fullResync=${fullResync}`);
 
     try {
       while (offset < maxRecords) {
@@ -173,7 +174,7 @@ export class VectorizeSync {
         const batch = await this._fetchPgBatch(watermark, offset, PG_FETCH_BATCH_SIZE, namespace);
 
         if (batch.length === 0) {
-          console.log(`[VectorizeSync:${this.indexName}] no more records at offset=${offset}`);
+          logger.info(`[VectorizeSync:${this.indexName}] no more records at offset=${offset}`);
           break;
         }
 
@@ -187,7 +188,7 @@ export class VectorizeSync {
           newWatermark = maxUpdatedAt;
         }
 
-        console.log(`[VectorizeSync:${this.indexName}] batch synced: offset=${offset}, synced=${synced}, errors=${errors}`);
+        logger.info(`[VectorizeSync:${this.indexName}] batch synced: offset=${offset}, synced=${synced}, errors=${errors}`);
 
         // If batch was smaller than requested, we've reached the end
         if (batch.length < PG_FETCH_BATCH_SIZE) break;
@@ -215,10 +216,10 @@ export class VectorizeSync {
         duration_ms: result.duration_ms,
       });
 
-      console.log(`[VectorizeSync:${this.indexName}] sync complete:`, result);
+      logger.info(`[VectorizeSync:${this.indexName}] sync complete:`, result);
       return result;
     } catch (err) {
-      console.error(`[VectorizeSync:${this.indexName}] sync failed:`, err);
+      logger.error(`[VectorizeSync:${this.indexName}] sync failed:`, err);
       await this._updateHealth({ errors: totalErrors + 1, failure: true });
       throw err;
     }
@@ -261,7 +262,7 @@ export class VectorizeSync {
         await this.vectorize.deleteByIds(batch);
         deleted += batch.length;
       } catch (err) {
-        console.error(`[VectorizeSync] deletion batch failed:`, err);
+        logger.error(`[VectorizeSync] deletion batch failed:`, err);
         errors += batch.length;
       }
     }
@@ -294,7 +295,7 @@ export class VectorizeSync {
       );
       return vectorizeResult.matches ?? [];
     } catch (err) {
-      console.warn('[VectorizeSync] Vectorize query failed, falling back to pgvector:', err.message);
+      logger.warn('[VectorizeSync] Vectorize query failed, falling back to pgvector:', err.message);
       return this._pgVectorQuery(queryVector, topK, filter);
     }
   }
@@ -480,7 +481,7 @@ export class VectorizeSync {
           if (r.updated_at > maxUpdatedAt) maxUpdatedAt = r.updated_at;
         }
       } catch (err) {
-        console.error(`[VectorizeSync] Vectorize upsert failed for batch of ${vectors.length}:`, err);
+        logger.error(`[VectorizeSync] Vectorize upsert failed for batch of ${vectors.length}:`, err);
         errors += vectors.length;
       }
     }
@@ -600,8 +601,8 @@ export function createSyncScheduledHandler(options = {}) {
 
     ctx.waitUntil(
       sync.runIncrementalSync({ fullResync: isFullResyncDay })
-        .then((result) => console.log('[VectorizeSync] scheduled sync complete:', result))
-        .catch((err) => console.error('[VectorizeSync] scheduled sync failed:', err)),
+        .then((result) => logger.info('[VectorizeSync] scheduled sync complete:', result))
+        .catch((err) => logger.error('[VectorizeSync] scheduled sync failed:', err)),
     );
   };
 }

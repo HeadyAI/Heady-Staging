@@ -1,0 +1,10 @@
+[
+    {
+        "id": "TASK-102",
+        "status": "STAGED",
+        "instruction": "Run database migration and update security core protocols.",
+        "artifact_path": "./dist/artifact.js",
+        "files_changed": ["core/auth.js", "core/db.js", "api/routes.js", "config/security.json", "migrations/001_init.sql", "services/user.js"],
+        "build_type": "FULL_REBUILD"
+    }
+]

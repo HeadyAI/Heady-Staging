@@ -1,0 +1,36 @@
+# Drupal Content Type: FAQ
+# Generated for Heady™ Platform — HeadyAutoContext vector-indexed
+# All content auto-synced to pgvector via webhook + polling fallback
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+    - text
+    - field
+    - heady_cms
+id: faq
+label: 'FAQ'
+description: 'Knowledge base Q&A for all sites. High CSL relevance for semantic search.'
+help: ''
+new_revision: true
+preview_mode: 1
+display_submitted: true
+
+# Field: field_question
+# field_type: text_long
+
+# Field: field_answer
+# field_type: text_long
+
+# Field: field_site_assignment
+# field_type: text_long
+
+# Field: field_category
+# field_type: entity_reference
+
+# Field: field_csl_relevance_score
+# field_type: decimal
+
+# Field: field_vector_embedding
+# field_type: text_long

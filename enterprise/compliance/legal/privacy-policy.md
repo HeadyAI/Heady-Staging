@@ -369,7 +369,7 @@ We may update this Privacy Policy to reflect changes in law, technology, or our 
 **CCPA Requests**: ccpa@headyme.com  
 
 **HeadySystems Inc. (DBA Heady™)**  
-Founder/CEO: Eric Headington (eric@headyconnection.org)  
+Founder/CEO: Eric Haywood (eric@headyconnection.org)  
 Website: https://headyme.com
 
 ---

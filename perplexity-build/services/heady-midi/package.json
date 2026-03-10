@@ -1,0 +1,29 @@
+{
+  "name": "heady-midi",
+  "version": "3.2.3",
+  "type": "module",
+  "description": "MIDI/creative interface \u2014 music generation, event bus, Ableton integration",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "PORT=3392 node --watch index.js",
+    "health": "curl -s http://localhost:3392/health | jq ."
+  },
+  "dependencies": {
+    "express": "^4.21.0",
+    "@opentelemetry/api": "^1.9.0",
+    "@opentelemetry/sdk-node": "^0.52.0",
+    "@opentelemetry/exporter-trace-otlp-grpc": "^0.52.0",
+    "@opentelemetry/instrumentation-express": "^0.41.0"
+  },
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "heady": {
+    "domain": "creative",
+    "port": 3392,
+    "architecture": "concurrent-equals",
+    "phiScaled": true,
+    "autoContext": "mandatory"
+  }
+}

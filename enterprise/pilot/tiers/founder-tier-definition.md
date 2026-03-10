@@ -97,7 +97,7 @@ Backoff sequence: 1s, 1.618s, 2.618s, 4.236s, 6.854s (φ^n)
 |---|---|
 | Response SLA | 8 hours (business hours, MST) |
 | Dedicated Slack channel | Private `#founder-[orgname]` channel |
-| Weekly office hours | Every fib(7) = 13 days — video call with founder Eric Headington |
+| Weekly office hours | Every fib(7) = 13 days — video call with founder Eric Haywood |
 | Issue escalation | Direct engineering team access for P0/P1 incidents |
 | Documentation | Full internal docs access (including architecture diagrams) |
 | NPS survey schedule | Day fib(6)=8, Day fib(8)=21, Day fib(10)=55 |

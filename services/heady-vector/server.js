@@ -1,4 +1,5 @@
 'use strict';
+const logger = require('../../shared/logger')(require('path').basename('services/heady-vector/server.js', '.js'));
 
 /**
  * HeadyVector Server Entry Point
@@ -39,7 +40,7 @@ async function main() {
   if (config.nodeEnv !== 'test') {
     app.use((req, _res, next) => {
       if (req.path !== '/health/live' && req.path !== '/health/ready') {
-        console.log(`[${new Date().toISOString()}] ${req.method} ${req.path}`);
+        logger.info(`[${new Date().toISOString()}] ${req.method} ${req.path}`);
       }
       next();
     });
@@ -50,16 +51,16 @@ async function main() {
 
   // ── Start server ───────────────────────────────────────────────────────────
   const server = app.listen(config.port, config.host, () => {
-    console.log(`[heady-vector] Listening on http://${config.host}:${config.port}`);
-    console.log(`[heady-vector] PHI=${config.phi} | Node ${process.version}`);
+    logger.info(`[heady-vector] Listening on http://${config.host}:${config.port}`);
+    logger.info(`[heady-vector] PHI=${config.phi} | Node ${process.version}`);
   });
 
   // ── Graceful shutdown ──────────────────────────────────────────────────────
   const shutdown = async (signal) => {
-    console.log(`[heady-vector] Received ${signal}, shutting down...`);
+    logger.info(`[heady-vector] Received ${signal}, shutting down...`);
     server.close(async () => {
       await hv.stop();
-      console.log('[heady-vector] Bye.');
+      logger.info('[heady-vector] Bye.');
       process.exit(0);
     });
     // Force exit after 10s
@@ -70,14 +71,14 @@ async function main() {
   process.on('SIGINT', () => shutdown('SIGINT'));
 
   process.on('unhandledRejection', (reason) => {
-    console.error('[heady-vector] Unhandled rejection:', reason);
+    logger.error('[heady-vector] Unhandled rejection:', reason);
   });
 
   return { app, server, hv };
 }
 
 main().catch((err) => {
-  console.error('[heady-vector] Fatal startup error:', err);
+  logger.error('[heady-vector] Fatal startup error:', err);
   process.exit(1);
 });
 

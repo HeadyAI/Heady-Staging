@@ -1,0 +1,23 @@
+{
+  "service": {
+    "name": "${SERVICE_NAME}",
+    "id": "${SERVICE_NAME}-${INSTANCE_ID}",
+    "port": ${SERVICE_PORT},
+    "tags": ["heady", "${DOMAIN}", "v1"],
+    "meta": {
+      "domain": "${DOMAIN}",
+      "version": "1.0.0",
+      "phi_timeout_ms": "${PHI_TIMEOUT}",
+      "vector_dim": "384",
+      "csl_include": "0.382",
+      "csl_boost": "0.618",
+      "csl_inject": "0.718"
+    },
+    "check": {
+      "http": "http://127.0.0.1:${SERVICE_PORT}/health",
+      "interval": "13s",
+      "timeout": "5s",
+      "deregister_critical_service_after": "89s"
+    }
+  }
+}

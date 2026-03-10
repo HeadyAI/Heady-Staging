@@ -1,0 +1,158 @@
+# Cloud Build — Deploy Heady™ Dynamic Sites to Cloud Run
+# ═══════════════════════════════════════════════════════════════
+# Builds + deploys the multi-domain server, then maps all 15 domains.
+#
+# Trigger: gcloud builds submit --config deployment/dynamic-sites/cloudbuild-sites.yaml .
+# ═══════════════════════════════════════════════════════════════
+
+substitutions:
+  _SERVICE_NAME: heady-sites
+  _REGION: us-central1
+  _AR_REPO: heady-docker
+
+steps:
+  # ── Step 1: Build Docker Image ────────────────────────────────
+  - name: 'gcr.io/cloud-builders/docker'
+    id: build
+    args:
+      - 'build'
+      - '-f'
+      - 'deployment/dynamic-sites/Dockerfile'
+      - '-t'
+      - '${_AR_REPO}/${PROJECT_ID}/${_SERVICE_NAME}:${SHORT_SHA}'
+      - '-t'
+      - '${_AR_REPO}/${PROJECT_ID}/${_SERVICE_NAME}:latest'
+      - '--cache-from'
+      - '${_AR_REPO}/${PROJECT_ID}/${_SERVICE_NAME}:latest'
+      - '.'
+
+  # ── Step 2: Push to Artifact Registry ─────────────────────────
+  - name: 'gcr.io/cloud-builders/docker'
+    id: push
+    args:
+      - 'push'
+      - '--all-tags'
+      - '${_AR_REPO}/${PROJECT_ID}/${_SERVICE_NAME}'
+    waitFor: ['build']
+
+  # ── Step 3: Deploy to Cloud Run ───────────────────────────────
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    id: deploy
+    entrypoint: gcloud
+    args:
+      - 'run'
+      - 'deploy'
+      - '${_SERVICE_NAME}'
+      - '--image'
+      - '${_AR_REPO}/${PROJECT_ID}/${_SERVICE_NAME}:${SHORT_SHA}'
+      - '--region'
+      - '${_REGION}'
+      - '--platform'
+      - 'managed'
+      - '--port'
+      - '8080'
+      - '--memory'
+      - '256Mi'
+      - '--cpu'
+      - '1'
+      - '--min-instances'
+      - '1'
+      - '--max-instances'
+      - '8'
+      - '--timeout'
+      - '300'
+      - '--concurrency'
+      - '80'
+      - '--set-env-vars'
+      - 'NODE_ENV=production'
+      - '--allow-unauthenticated'
+      - '--startup-cpu-boost'
+      - '--cpu-throttling'
+    waitFor: ['push']
+
+  # ── Step 4: Health Verification ───────────────────────────────
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    id: verify-health
+    entrypoint: bash
+    args:
+      - '-c'
+      - |
+        SERVICE_URL=$(gcloud run services describe ${_SERVICE_NAME} \
+          --region=${_REGION} --format='value(status.url)')
+        echo "Service URL: $$SERVICE_URL"
+
+        # Liveness probe
+        HTTP_CODE=$(curl -s -o /dev/null -w '%{http_code}' "$$SERVICE_URL/health/live")
+        if [ "$$HTTP_CODE" != "200" ]; then
+          echo "FAIL: Liveness probe returned $$HTTP_CODE"
+          exit 1
+        fi
+        echo "✅ Liveness probe: $$HTTP_CODE"
+
+        # Readiness probe
+        HTTP_CODE=$(curl -s -o /dev/null -w '%{http_code}' "$$SERVICE_URL/health/ready")
+        if [ "$$HTTP_CODE" != "200" ]; then
+          echo "FAIL: Readiness probe returned $$HTTP_CODE"
+          exit 1
+        fi
+        echo "✅ Readiness probe: $$HTTP_CODE"
+
+        # Test Host header routing for key domains
+        for DOMAIN in headyme.com headysystems.com headyapi.com headybuddy.org perfecttrader.com; do
+          HTTP_CODE=$(curl -s -o /dev/null -w '%{http_code}' \
+            -H "Host: $$DOMAIN" "$$SERVICE_URL")
+          if [ "$$HTTP_CODE" != "200" ]; then
+            echo "FAIL: Host routing for $$DOMAIN returned $$HTTP_CODE"
+            exit 1
+          fi
+          echo "✅ $$DOMAIN → $$HTTP_CODE"
+        done
+
+        echo "All health checks passed!"
+    waitFor: ['deploy']
+
+  # ── Step 5: Map Custom Domains ────────────────────────────────
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    id: map-domains
+    entrypoint: bash
+    args:
+      - '-c'
+      - |
+        DOMAINS=(
+          headyme.com
+          headysystems.com
+          headyconnection.org
+          headybuddy.org
+          headymcp.com
+          headyio.com
+          headybot.com
+          headyapi.com
+          headysense.com
+          heady-ai.com
+          perfecttrader.com
+          headyos.com
+          headyex.com
+          headyfinance.com
+          headyconnection.com
+        )
+
+        for DOMAIN in "$${DOMAINS[@]}"; do
+          echo "Mapping $$DOMAIN → ${_SERVICE_NAME}..."
+          gcloud run domain-mappings create \
+            --service=${_SERVICE_NAME} \
+            --domain=$$DOMAIN \
+            --region=${_REGION} \
+            2>/dev/null || echo "  (already mapped or pending DNS)"
+        done
+
+        echo "Domain mapping complete!"
+    waitFor: ['verify-health']
+
+images:
+  - '${_AR_REPO}/${PROJECT_ID}/${_SERVICE_NAME}'
+
+options:
+  logging: CLOUD_LOGGING_ONLY
+  machineType: 'E2_HIGHCPU_8'
+
+timeout: '900s'

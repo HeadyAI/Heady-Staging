@@ -1,0 +1,26 @@
+[
+  {
+    "id": "1769843897465",
+    "question": "What is the target behavior for the Q&A protocol?",
+    "task_id": null,
+    "asked_by": "erich",
+    "status": "ANSWERED",
+    "created_at": "2026-01-31T07:18:17.466Z",
+    "context": null,
+    "answer": "Goal: allow agents to pause a task with a clarifying question, persist it, and resume the task once answered; questions should be visible via API + hb CLI and logged to lens stream.",
+    "answered_by": "erich",
+    "answered_at": "2026-01-31T07:18:25.556Z"
+  },
+  {
+    "id": "1769844096235",
+    "question": "Should this task pause for clarification?",
+    "task_id": "1769844096211",
+    "asked_by": "erich",
+    "status": "ANSWERED",
+    "created_at": "2026-01-31T07:21:36.235Z",
+    "context": null,
+    "answer": "Yes. Resume.",
+    "answered_by": "erich",
+    "answered_at": "2026-01-31T07:21:36.266Z"
+  }
+]

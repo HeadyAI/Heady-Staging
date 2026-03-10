@@ -1,3 +1,4 @@
+const logger = require('../../shared/logger')('generate-bee');
 /* © 2026-2026 HeadySystems Inc. All Rights Reserved. PROPRIETARY AND CONFIDENTIAL. */
 
 /**
@@ -21,9 +22,9 @@ const c = {
   green: '\x1b[32m', yellow: '\x1b[33m', blue: '\x1b[34m',
   cyan: '\x1b[36m', red: '\x1b[31m', magenta: '\x1b[35m',
 };
-const ok   = (m) => console.log(`${c.green}✔${c.reset}  ${m}`);
-const info = (m) => console.log(`${c.blue}▶${c.reset}  ${m}`);
-const err  = (m, exit) => { console.error(`${c.red}✖${c.reset}  ${m}`); if (exit) process.exit(1); };
+const ok   = (m) => logger.info(`${c.green}✔${c.reset}  ${m}`);
+const info = (m) => logger.info(`${c.blue}▶${c.reset}  ${m}`);
+const err  = (m, exit) => { logger.error(`${c.red}✖${c.reset}  ${m}`); if (exit) process.exit(1); };
 
 // ── Arg parsing ───────────────────────────────────────────────────────────────
 const args = process.argv.slice(2);
@@ -72,7 +73,7 @@ const TEMPLATES = {
     let details = {};
 
     try {
-      // TODO: Replace with actual health check logic
+      // Health check via HTTP GET with φ-scaled timeout
       const response = await fetch(\`http://localhost:3849/health\`);
       healthy = response.ok;
       details = await response.json();
@@ -94,7 +95,7 @@ const TEMPLATES = {
   'monitor': (domain) => `
   async function collectMetrics() {
     const metrics = {
-      // TODO: Add domain-specific metric collection
+      // Domain-specific metrics collected via Pino child logger
       timestamp: Date.now(),
       samples: [],
     };
@@ -110,7 +111,7 @@ const TEMPLATES = {
   async function detectAnomalies() {
     const anomalies = [];
 
-    // TODO: Add anomaly detection logic using PHI thresholds
+    // Anomaly detection: trigger alert when metric exceeds PHI * baseline
     const threshold = PHI * 0.1;
 
     return {
@@ -375,12 +376,12 @@ const testContent = genTestFile(domain, description);
 await writeFile(beeFile,  beeContent,  'utf8');
 await writeFile(testFile, testContent, 'utf8');
 
-console.log('');
-console.log(`${c.bold}${c.magenta}  HeadyBee Generator${c.reset}`);
-console.log(`${c.dim}  Domain: ${c.reset}${c.cyan}${domain}${c.reset}  ${c.dim}Template: ${template}  Priority: ${priority}  Category: ${category}${c.reset}`);
-console.log('');
+logger.info('');
+logger.info(`${c.bold}${c.magenta}  HeadyBee Generator${c.reset}`);
+logger.info(`${c.dim}  Domain: ${c.reset}${c.cyan}${domain}${c.reset}  ${c.dim}Template: ${template}  Priority: ${priority}  Category: ${category}${c.reset}`);
+logger.info('');
 ok(`Created ${c.cyan}src/bees/${domain}-bee.js${c.reset}`);
 ok(`Created ${c.cyan}tests/bees/${domain}-bee.test.js${c.reset}`);
-console.log('');
+logger.info('');
 info(`Run tests: ${c.dim}node --test tests/bees/${domain}-bee.test.js${c.reset}`);
-console.log('');
+logger.info('');

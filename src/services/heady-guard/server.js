@@ -1,3 +1,4 @@
+const logger = require('../../shared/logger')('server');
 'use strict';
 
 /**
@@ -54,7 +55,7 @@ app.use((req, res) => {
 
 // Global error handler
 app.use((err, req, res, _next) => {
-  console.error(`[HeadyGuard] Unhandled: ${err.stack || err.message}`);
+  logger.error(`[HeadyGuard] Unhandled: ${err.stack || err.message}`);
   const status = typeof err.status === 'number' ? err.status : 500;
   res.status(status > 499 ? 422 : status).json({
     error:   'server_error',
@@ -69,14 +70,14 @@ async function start() {
     await guard.initialize();
 
     const server = app.listen(config.port, config.host, () => {
-      console.log(`[HeadyGuard] Listening on ${config.host}:${config.port}`);
-      console.log(`[HeadyGuard] Environment: ${config.nodeEnv}`);
-      console.log(`[HeadyGuard] PHI scale factor: ${config.phi}`);
+      logger.info(`[HeadyGuard] Listening on ${config.host}:${config.port}`);
+      logger.info(`[HeadyGuard] Environment: ${config.nodeEnv}`);
+      logger.info(`[HeadyGuard] PHI scale factor: ${config.phi}`);
     });
 
     // Graceful shutdown
     const shutdown = async (signal) => {
-      console.log(`[HeadyGuard] ${signal} received — shutting down...`);
+      logger.info(`[HeadyGuard] ${signal} received — shutting down...`);
       server.close(async () => {
         await guard.shutdown();
         process.exit(0);
@@ -90,7 +91,7 @@ async function start() {
 
     return server;
   } catch (err) {
-    console.error(`[HeadyGuard] Startup failed: ${err.message}`);
+    logger.error(`[HeadyGuard] Startup failed: ${err.message}`);
     process.exit(1);
   }
 }

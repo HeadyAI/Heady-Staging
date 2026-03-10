@@ -1,0 +1,83 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: heady-midi
+  labels:
+    app: heady-midi
+    heady.io/domain: creative
+    heady.io/autocontext: "true"
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: heady-midi
+  template:
+    metadata:
+      labels:
+        app: heady-midi
+        heady.io/domain: creative
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "8902"
+    spec:
+      terminationGracePeriodSeconds: 34
+      containers:
+      - name: heady-midi
+        image: gcr.io/gen-lang-client-0920560496/heady-midi:latest
+        ports:
+        - containerPort: 8902
+          name: http
+        envFrom:
+        - configMapRef:
+            name: heady-global-config
+        - secretRef:
+            name: heady-secrets
+        env:
+        - name: SERVICE_NAME
+          value: "heady-midi"
+        - name: PORT
+          value: "8902"
+        - name: AUTOCONTEXT_URL
+          value: "http://heady-auto-context:8907"
+        - name: CONSUL_URL
+          value: "http://consul:8500"
+        - name: OTEL_ENDPOINT
+          value: "http://otel-collector:4318"
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "128Mi"
+          limits:
+            cpu: "500m"
+            memory: "512Mi"
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8902
+          initialDelaySeconds: 13
+          periodSeconds: 21
+          timeoutSeconds: 8
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8902
+          initialDelaySeconds: 8
+          periodSeconds: 13
+          timeoutSeconds: 5
+          failureThreshold: 2
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: heady-midi
+  labels:
+    app: heady-midi
+    heady.io/domain: creative
+spec:
+  selector:
+    app: heady-midi
+  ports:
+  - name: http
+    port: 8902
+    targetPort: 8902

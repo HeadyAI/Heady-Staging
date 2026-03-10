@@ -1,0 +1,24 @@
+{
+    "name": "@heady/analytics-service",
+    "version": "4.0.0",
+    "private": true,
+    "description": "Heady™ Privacy-First Analytics — self-hosted usage tracking with pgvector",
+    "main": "index.js",
+    "scripts": {
+        "dev": "node --watch index.js",
+        "start": "node index.js",
+        "test": "node --test __tests__/analytics-service.test.js",
+        "lint": "eslint ."
+    },
+    "dependencies": {
+        "express": "^4.21.0",
+        "pg": "^8.13.0",
+        "pino": "^9.6.0"
+    },
+    "devDependencies": {
+        "pino-pretty": "^13.0.0"
+    },
+    "engines": {
+        "node": ">=20.0.0"
+    }
+}

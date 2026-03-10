@@ -1,0 +1,83 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: silicon-bridge
+  labels:
+    app: silicon-bridge
+    heady.io/domain: integration
+    heady.io/autocontext: "true"
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: silicon-bridge
+  template:
+    metadata:
+      labels:
+        app: silicon-bridge
+        heady.io/domain: integration
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "8807"
+    spec:
+      terminationGracePeriodSeconds: 34
+      containers:
+      - name: silicon-bridge
+        image: gcr.io/gen-lang-client-0920560496/silicon-bridge:latest
+        ports:
+        - containerPort: 8807
+          name: http
+        envFrom:
+        - configMapRef:
+            name: heady-global-config
+        - secretRef:
+            name: heady-secrets
+        env:
+        - name: SERVICE_NAME
+          value: "silicon-bridge"
+        - name: PORT
+          value: "8807"
+        - name: AUTOCONTEXT_URL
+          value: "http://heady-auto-context:8907"
+        - name: CONSUL_URL
+          value: "http://consul:8500"
+        - name: OTEL_ENDPOINT
+          value: "http://otel-collector:4318"
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "128Mi"
+          limits:
+            cpu: "500m"
+            memory: "512Mi"
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8807
+          initialDelaySeconds: 13
+          periodSeconds: 21
+          timeoutSeconds: 8
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8807
+          initialDelaySeconds: 8
+          periodSeconds: 13
+          timeoutSeconds: 5
+          failureThreshold: 2
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: silicon-bridge
+  labels:
+    app: silicon-bridge
+    heady.io/domain: integration
+spec:
+  selector:
+    app: silicon-bridge
+  ports:
+  - name: http
+    port: 8807
+    targetPort: 8807

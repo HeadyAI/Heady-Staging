@@ -120,7 +120,7 @@ class AgentOrchestrator extends EventEmitter {
         // Store result in vector memory if available
         if (this._vectorMemory && task.payload.prompt) {
           const text = `Agent task: ${task.payload.prompt.slice(0, 200)}\nResult: ${result.text.slice(0, 300)}`;
-          this._vectorMemory.store(task.id, null, text, { type: 'agent_result', taskType: task.type, agentId }).catch(() => {});
+          this._vectorMemory.store(task.id, null, text, { type: 'agent_result', taskType: task.type, agentId }).catch(() => { });
         }
 
         return { text: result.text, provider: result.provider, model: result.model, tokens: result.tokens };
@@ -407,6 +407,73 @@ class AgentOrchestrator extends EventEmitter {
     });
 
     return app;
+  }
+
+  // ─── Pipeline Integration ──────────────────────────────────────────────────
+
+  /**
+   * Integrate with HybridPipeline — registers stage-specific agents and
+   * wires event forwarding between orchestrator and pipeline.
+   *
+   * @param {object} pipeline — HybridPipeline instance
+   * @returns {void}
+   */
+  integrateWithPipeline(pipeline) {
+    if (!pipeline) return;
+
+    // Register specialized agents for key pipeline stages
+    const stageAgents = [
+      { stage: 'EXECUTE', name: 'Pipeline Execute Agent', caps: ['pipeline_execute'] },
+      { stage: 'ARENA', name: 'Pipeline Arena Agent', caps: ['pipeline_arena'] },
+      { stage: 'TRIAL_AND_ERROR', name: 'Pipeline Trial Agent', caps: ['pipeline_trial'] },
+    ];
+
+    for (const sa of stageAgents) {
+      // Only register if no agent with this capability exists
+      const existing = this.listAgents().find(a => a.capabilities.includes(sa.caps[0]));
+      if (!existing) {
+        this.spawnLLMAgent({
+          name: sa.name,
+          capabilities: [...sa.caps, 'code_generation', 'research'],
+        });
+      }
+    }
+
+    // Forward pipeline events to orchestrator event bus
+    pipeline.on('pipeline:start', (e) => {
+      this.emit('pipeline:start', e);
+    });
+    pipeline.on('pipeline:complete', (e) => {
+      this.emit('pipeline:complete', e);
+    });
+
+    // Register pipeline-aware EXECUTE handler that uses orchestrator agents
+    pipeline.registerStageHandler('EXECUTE', async (ctx, deps) => {
+      const payload = ctx.payload || {};
+      const prompt = payload.prompt || payload.input || '';
+      if (!prompt) return { executed: true, source: 'passthrough', text: '', tokensUsed: 0 };
+
+      try {
+        const result = await this.run({
+          type: 'pipeline_execute',
+          payload: { prompt, ...payload },
+          priority: 10,
+          timeout: 11090, // phi^5 × 1000
+        });
+        return { executed: true, source: 'agent-orchestrator', ...result };
+      } catch (err) {
+        // Fallback to direct LLM router
+        if (deps.llmRouter) {
+          try {
+            const r = await deps.llmRouter.route({ prompt, taskType: ctx.type || 'general' });
+            return { executed: true, source: 'llm-router-fallback', text: r.text, tokensUsed: r.tokensUsed || 0 };
+          } catch (e) { /* fall through */ }
+        }
+        return { executed: false, source: 'agent-orchestrator', error: err.message };
+      }
+    });
+
+    this.emit('pipeline-integrated', { stageAgents: stageAgents.length });
   }
 }
 

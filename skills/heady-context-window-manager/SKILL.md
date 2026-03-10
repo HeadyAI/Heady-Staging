@@ -8,7 +8,7 @@ description: >
   Keywords: context window, context management, token budget, context compression, summarization,
   context capsule, eviction, tiered context, agent context, Heady context, working memory.
 metadata:
-  author: eric-head
+  author: eric-haywood
   version: '2.0'
 ---
 

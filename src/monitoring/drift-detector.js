@@ -22,6 +22,7 @@
  */
 
 'use strict';
+const logger = require('../shared/logger')('drift-detector');
 
 const EventEmitter = require('events');
 
@@ -258,7 +259,7 @@ class DriftDetector extends EventEmitter {
 
     // Persist to history
     await this._persistDriftRecord(result).catch(err =>
-      console.error('[DriftDetector] History persist failed:', err.message)
+      logger.error('[DriftDetector] History persist failed:', err.message)
     );
 
     // Cache result in Redis
@@ -292,10 +293,10 @@ class DriftDetector extends EventEmitter {
    */
   async triggerRecalibration(opts = {}) {
     const reason = opts.reason || 'manual';
-    console.log(`[DriftDetector] Recalibrating baseline (reason: ${reason})`);
+    logger.info(`[DriftDetector] Recalibrating baseline (reason: ${reason})`);
 
     if (!this._pgPool) {
-      console.warn('[DriftDetector] No database available for recalibration');
+      logger.warn('[DriftDetector] No database available for recalibration');
       return;
     }
 
@@ -329,10 +330,10 @@ class DriftDetector extends EventEmitter {
       await this._loadBaseline();
 
       this.emit('recalibrated', { reason, timestamp: new Date().toISOString() });
-      console.log('[DriftDetector] Baseline recalibration complete');
+      logger.info('[DriftDetector] Baseline recalibration complete');
     } catch (err) {
       await client.query('ROLLBACK').catch(() => {});
-      console.error('[DriftDetector] Recalibration failed:', err.message);
+      logger.error('[DriftDetector] Recalibration failed:', err.message);
       throw err;
     } finally {
       client.release();
@@ -611,7 +612,7 @@ class DriftDetector extends EventEmitter {
         ).catch(() => {});
       }
     } catch (err) {
-      console.warn('[DriftDetector] Could not load baseline:', err.message);
+      logger.warn('[DriftDetector] Could not load baseline:', err.message);
       this._baseline = {};
     }
   }
@@ -645,7 +646,7 @@ class DriftDetector extends EventEmitter {
         })
         .filter(v => v && v.length === EMBEDDING_DIMS);
     } catch (err) {
-      console.warn('[DriftDetector] Vector sample failed:', err.message);
+      logger.warn('[DriftDetector] Vector sample failed:', err.message);
       return [];
     }
   }
@@ -697,7 +698,7 @@ class DriftDetector extends EventEmitter {
         WHERE recorded_at < NOW() - INTERVAL '${this.config.historyRetentionDays} days'
       `);
     } catch (err) {
-      console.warn('[DriftDetector] Could not persist drift record:', err.message);
+      logger.warn('[DriftDetector] Could not persist drift record:', err.message);
     }
   }
 
@@ -731,7 +732,7 @@ class DriftDetector extends EventEmitter {
         );
       `);
     } catch (err) {
-      console.warn('[DriftDetector] Schema init warning:', err.message);
+      logger.warn('[DriftDetector] Schema init warning:', err.message);
     } finally {
       client.release();
     }
@@ -742,7 +743,7 @@ class DriftDetector extends EventEmitter {
   // ---------------------------------------------------------------------------
 
   async _onCriticalDrift(result) {
-    console.error('[DriftDetector] CRITICAL DRIFT DETECTED:', {
+    logger.error('[DriftDetector] CRITICAL DRIFT DETECTED:', {
       overallScore: result.overallScore,
       severity:     result.severity,
       trajectory:   result.trajectory?.predictedSeverity,
@@ -788,14 +789,14 @@ class DriftDetector extends EventEmitter {
               { title: 'Predicted Trajectory',  value: result.trajectory?.predictedSeverity ?? 'N/A',             short: true },
             ],
           }],
-        }).catch(err => console.error('[DriftDetector] Slack alert error:', err.message))
+        }).catch(err => logger.error('[DriftDetector] Slack alert error:', err.message))
       );
     }
 
     if (this.config.alertConfig.webhookUrl && axios) {
       tasks.push(
         axios.post(this.config.alertConfig.webhookUrl, { severity, message, result })
-          .catch(err => console.error('[DriftDetector] Webhook error:', err.message))
+          .catch(err => logger.error('[DriftDetector] Webhook error:', err.message))
       );
     }
 

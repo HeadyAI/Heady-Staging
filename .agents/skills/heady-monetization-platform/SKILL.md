@@ -8,7 +8,7 @@ description: >
   Keywords: monetization, Stripe, billing, subscription, usage metering, feature gate, feature flag,
   A/B testing, SOC 2, compliance, pricing, revenue model, Heady pricing, SaaS billing.
 metadata:
-  author: eric-head
+  author: eric-haywood
   version: '2.0'
 ---
 

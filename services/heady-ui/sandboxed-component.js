@@ -9,6 +9,7 @@
  */
 
 'use strict';
+const logger = require('../../shared/logger')(require('path').basename('services/heady-ui/sandboxed-component.js', '.js'));
 
 class SandboxedComponent {
     /**
@@ -127,18 +128,18 @@ if (require.main === module) {
     const engine = new GenerativeUIEngine();
 
     engine.generate('status dashboard with live metrics').then(component => {
-        console.log('═══ Sandboxed Component ═══\n');
+        logger.info('═══ Sandboxed Component ═══\n');
 
         const validation = SandboxedComponent.validate(component);
-        console.log('Validation:', validation);
+        logger.info('Validation:', validation);
 
         const sandboxHtml = SandboxedComponent.createSandbox(component);
-        console.log(`Sandbox HTML: ${sandboxHtml.length} chars`);
+        logger.info(`Sandbox HTML: ${sandboxHtml.length} chars`);
 
         const iframe = SandboxedComponent.createIframe(component);
-        console.log(`Iframe: ${iframe.length} chars`);
+        logger.info(`Iframe: ${iframe.length} chars`);
 
-        console.log('✅ SandboxedComponent operational');
+        logger.info('✅ SandboxedComponent operational');
     });
 }
 

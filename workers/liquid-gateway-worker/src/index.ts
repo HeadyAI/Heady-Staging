@@ -10,71 +10,127 @@ const PSI = 0.6180339887498949; // 1/φ
 const phiMs = (n: number) => Math.round(Math.pow(PHI, n) * 1000);
 
 const PHI_TIMING = {
-  TICK:    phiMs(0),   // 1000ms
-  PULSE:   phiMs(1),   // 1618ms
-  BEAT:    phiMs(2),   // 2618ms
-  BREATH:  phiMs(3),   // 4236ms
-  WAVE:    phiMs(4),   // 6854ms
-  SURGE:   phiMs(5),   // 11090ms
-  FLOW:    phiMs(6),   // 17944ms
-  CYCLE:   phiMs(7),   // 29034ms
-  TIDE:    phiMs(8),   // 46979ms
-  EPOCH:   phiMs(9),   // 76013ms
+  TICK: phiMs(0),   // 1000ms
+  PULSE: phiMs(1),   // 1618ms
+  BEAT: phiMs(2),   // 2618ms
+  BREATH: phiMs(3),   // 4236ms
+  WAVE: phiMs(4),   // 6854ms
+  SURGE: phiMs(5),   // 11090ms
+  FLOW: phiMs(6),   // 17944ms
+  CYCLE: phiMs(7),   // 29034ms
+  TIDE: phiMs(8),   // 46979ms
+  EPOCH: phiMs(9),   // 76013ms
 } as const;
 
 // ── Site Registry ───────────────────────────────────────────────────
 // Maps hostname patterns to GitHub repo names for origin resolution
 const SITE_REGISTRY: Record<string, { repo: string; tier: string; cacheTtl: number }> = {
   // Core sites
-  'headysystems.com':       { repo: 'headysystems',       tier: 'core',    cacheTtl: PHI_TIMING.EPOCH },
-  'www.headysystems.com':   { repo: 'headysystems',       tier: 'core',    cacheTtl: PHI_TIMING.EPOCH },
-  'headyme.com':            { repo: 'headyme',             tier: 'core',    cacheTtl: PHI_TIMING.EPOCH },
-  'headyme-com.pages.dev':  { repo: 'headyme-com',         tier: 'core',    cacheTtl: PHI_TIMING.EPOCH },
-  'headyconnection.org':    { repo: 'headyconnection',     tier: 'core',    cacheTtl: PHI_TIMING.EPOCH },
+  'headysystems.com': { repo: 'headysystems', tier: 'core', cacheTtl: PHI_TIMING.EPOCH },
+  'www.headysystems.com': { repo: 'headysystems', tier: 'core', cacheTtl: PHI_TIMING.EPOCH },
+  'headyme.com': { repo: 'headyme', tier: 'core', cacheTtl: PHI_TIMING.EPOCH },
+  'headyme-com.pages.dev': { repo: 'headyme-com', tier: 'core', cacheTtl: PHI_TIMING.EPOCH },
+  'headyconnection.org': { repo: 'headyconnection', tier: 'core', cacheTtl: PHI_TIMING.EPOCH },
   'headyconnection-org.pages.dev': { repo: 'headyconnection-org', tier: 'core', cacheTtl: PHI_TIMING.EPOCH },
-  'headybuddy.org':         { repo: 'headybuddy-org',      tier: 'core',    cacheTtl: PHI_TIMING.EPOCH },
-  'headybuddy.com':         { repo: 'HeadyBuddy',          tier: 'core',    cacheTtl: PHI_TIMING.EPOCH },
-  '1ime1.com':              { repo: '1ime1',               tier: 'core',    cacheTtl: PHI_TIMING.EPOCH },
-  'instant.headysystems.com': { repo: 'instant',           tier: 'core',    cacheTtl: PHI_TIMING.TIDE },
+  'headybuddy.org': { repo: 'headybuddy-org', tier: 'core', cacheTtl: PHI_TIMING.EPOCH },
+  'headybuddy.com': { repo: 'HeadyBuddy', tier: 'core', cacheTtl: PHI_TIMING.EPOCH },
+  '1ime1.com': { repo: '1ime1', tier: 'core', cacheTtl: PHI_TIMING.EPOCH },
+  'instant.headysystems.com': { repo: 'instant', tier: 'core', cacheTtl: PHI_TIMING.TIDE },
 
   // Product sites
-  'headyos.com':            { repo: 'headyos',             tier: 'product', cacheTtl: PHI_TIMING.TIDE },
-  'headyapi.com':           { repo: 'headyapi',            tier: 'product', cacheTtl: PHI_TIMING.TIDE },
-  'headymcp.com':           { repo: 'headymcp-com',        tier: 'product', cacheTtl: PHI_TIMING.TIDE },
-  'headyio.com':            { repo: 'headyio-com',         tier: 'product', cacheTtl: PHI_TIMING.TIDE },
-  'headyweb.com':           { repo: 'HeadyWeb',            tier: 'product', cacheTtl: PHI_TIMING.TIDE },
-  'headydocs.com':          { repo: 'headydocs',           tier: 'product', cacheTtl: PHI_TIMING.TIDE },
-  'headyatlas.com':         { repo: 'heady-atlas',         tier: 'product', cacheTtl: PHI_TIMING.TIDE },
-  'headyimagine.com':       { repo: 'heady-imagine',       tier: 'product', cacheTtl: PHI_TIMING.TIDE },
+  'headyos.com': { repo: 'headyos', tier: 'product', cacheTtl: PHI_TIMING.TIDE },
+  'headyapi.com': { repo: 'headyapi', tier: 'product', cacheTtl: PHI_TIMING.TIDE },
+  'headymcp.com': { repo: 'headymcp-com', tier: 'product', cacheTtl: PHI_TIMING.TIDE },
+  'headyio.com': { repo: 'headyio-com', tier: 'product', cacheTtl: PHI_TIMING.TIDE },
+  'headyweb.com': { repo: 'HeadyWeb', tier: 'product', cacheTtl: PHI_TIMING.TIDE },
+  'headydocs.com': { repo: 'headydocs', tier: 'product', cacheTtl: PHI_TIMING.TIDE },
+  'headyatlas.com': { repo: 'heady-atlas', tier: 'product', cacheTtl: PHI_TIMING.TIDE },
+  'headyimagine.com': { repo: 'heady-imagine', tier: 'product', cacheTtl: PHI_TIMING.TIDE },
+  'heady-ai.com': { repo: 'heady-ai', tier: 'product', cacheTtl: PHI_TIMING.TIDE },
+  'headybot.com': { repo: 'headybot', tier: 'product', cacheTtl: PHI_TIMING.TIDE },
+  'headysense.com': { repo: 'headysense', tier: 'product', cacheTtl: PHI_TIMING.TIDE },
+  'headyfinance.com': { repo: 'headyfinance', tier: 'product', cacheTtl: PHI_TIMING.TIDE },
+  'headycloud.com': { repo: 'headycloud', tier: 'product', cacheTtl: PHI_TIMING.TIDE },
+  'headystore.com': { repo: 'headystore', tier: 'product', cacheTtl: PHI_TIMING.TIDE },
+  'headylens.com': { repo: 'headylens', tier: 'product', cacheTtl: PHI_TIMING.TIDE },
+  'headymusic.com': { repo: 'headymusic', tier: 'product', cacheTtl: PHI_TIMING.TIDE },
+  'headyhealth.com': { repo: 'headyhealth', tier: 'product', cacheTtl: PHI_TIMING.TIDE },
+  'headylegal.com': { repo: 'headylegal', tier: 'product', cacheTtl: PHI_TIMING.TIDE },
+  'headyestate.com': { repo: 'headyestate', tier: 'product', cacheTtl: PHI_TIMING.TIDE },
+  'headygrants.com': { repo: 'headygrants', tier: 'product', cacheTtl: PHI_TIMING.TIDE },
+  'headyconnection.com': { repo: 'headyconnection-com', tier: 'product', cacheTtl: PHI_TIMING.TIDE },
 
   // Integration sites
-  'headyvscode.com':        { repo: 'heady-vscode',        tier: 'integration', cacheTtl: PHI_TIMING.CYCLE },
-  'headychrome.com':        { repo: 'heady-chrome',        tier: 'integration', cacheTtl: PHI_TIMING.CYCLE },
-  'headyjetbrains.com':     { repo: 'heady-jetbrains',     tier: 'integration', cacheTtl: PHI_TIMING.CYCLE },
-  'headydesktop.com':       { repo: 'heady-desktop',       tier: 'integration', cacheTtl: PHI_TIMING.CYCLE },
-  'headymobile.com':        { repo: 'heady-mobile',        tier: 'integration', cacheTtl: PHI_TIMING.CYCLE },
-  'headydiscord.com':       { repo: 'heady-discord',       tier: 'integration', cacheTtl: PHI_TIMING.CYCLE },
-  'headyslack.com':         { repo: 'heady-slack',         tier: 'integration', cacheTtl: PHI_TIMING.CYCLE },
-  'headyjules.com':         { repo: 'heady-jules',         tier: 'integration', cacheTtl: PHI_TIMING.CYCLE },
+  'headyvscode.com': { repo: 'heady-vscode', tier: 'integration', cacheTtl: PHI_TIMING.CYCLE },
+  'headychrome.com': { repo: 'heady-chrome', tier: 'integration', cacheTtl: PHI_TIMING.CYCLE },
+  'headyjetbrains.com': { repo: 'heady-jetbrains', tier: 'integration', cacheTtl: PHI_TIMING.CYCLE },
+  'headydesktop.com': { repo: 'heady-desktop', tier: 'integration', cacheTtl: PHI_TIMING.CYCLE },
+  'headymobile.com': { repo: 'heady-mobile', tier: 'integration', cacheTtl: PHI_TIMING.CYCLE },
+  'headydiscord.com': { repo: 'heady-discord', tier: 'integration', cacheTtl: PHI_TIMING.CYCLE },
+  'headyslack.com': { repo: 'heady-slack', tier: 'integration', cacheTtl: PHI_TIMING.CYCLE },
+  'headyjules.com': { repo: 'heady-jules', tier: 'integration', cacheTtl: PHI_TIMING.CYCLE },
 
   // Internal / monitoring
-  'admin.headysystems.com': { repo: 'admin-ui',            tier: 'internal',    cacheTtl: PHI_TIMING.FLOW },
-  'metrics.headysystems.com': { repo: 'heady-metrics',     tier: 'internal',    cacheTtl: PHI_TIMING.FLOW },
-  'logs.headysystems.com':  { repo: 'heady-logs',          tier: 'internal',    cacheTtl: PHI_TIMING.FLOW },
-  'traces.headysystems.com': { repo: 'heady-traces',       tier: 'internal',    cacheTtl: PHI_TIMING.FLOW },
-  'sentinel.headysystems.com': { repo: 'heady-sentinel',   tier: 'internal',    cacheTtl: PHI_TIMING.FLOW },
-  'observer.headysystems.com': { repo: 'heady-observer',   tier: 'internal',    cacheTtl: PHI_TIMING.FLOW },
-  'patterns.headysystems.com': { repo: 'heady-patterns',   tier: 'internal',    cacheTtl: PHI_TIMING.FLOW },
+  'admin.headysystems.com': { repo: 'admin-ui', tier: 'internal', cacheTtl: PHI_TIMING.FLOW },
+  'metrics.headysystems.com': { repo: 'heady-metrics', tier: 'internal', cacheTtl: PHI_TIMING.FLOW },
+  'logs.headysystems.com': { repo: 'heady-logs', tier: 'internal', cacheTtl: PHI_TIMING.FLOW },
+  'traces.headysystems.com': { repo: 'heady-traces', tier: 'internal', cacheTtl: PHI_TIMING.FLOW },
+  'sentinel.headysystems.com': { repo: 'heady-sentinel', tier: 'internal', cacheTtl: PHI_TIMING.FLOW },
+  'observer.headysystems.com': { repo: 'heady-observer', tier: 'internal', cacheTtl: PHI_TIMING.FLOW },
+  'patterns.headysystems.com': { repo: 'heady-patterns', tier: 'internal', cacheTtl: PHI_TIMING.FLOW },
 
   // AI / compute
-  'critique.headysystems.com': { repo: 'heady-critique',   tier: 'compute',  cacheTtl: PHI_TIMING.SURGE },
-  'pythia.headysystems.com':   { repo: 'heady-pythia',     tier: 'compute',  cacheTtl: PHI_TIMING.SURGE },
-  'vinci.headysystems.com':    { repo: 'heady-vinci',      tier: 'compute',  cacheTtl: PHI_TIMING.SURGE },
+  'critique.headysystems.com': { repo: 'heady-critique', tier: 'compute', cacheTtl: PHI_TIMING.SURGE },
+  'pythia.headysystems.com': { repo: 'heady-pythia', tier: 'compute', cacheTtl: PHI_TIMING.SURGE },
+  'vinci.headysystems.com': { repo: 'heady-vinci', tier: 'compute', cacheTtl: PHI_TIMING.SURGE },
   'montecarlo.headysystems.com': { repo: 'heady-montecarlo', tier: 'compute', cacheTtl: PHI_TIMING.SURGE },
-  'kinetics.headysystems.com':  { repo: 'heady-kinetics',  tier: 'compute',  cacheTtl: PHI_TIMING.SURGE },
-  'maestro.headysystems.com':   { repo: 'heady-maestro',   tier: 'compute',  cacheTtl: PHI_TIMING.SURGE },
-  'builder.headysystems.com':   { repo: 'heady-builder',   tier: 'compute',  cacheTtl: PHI_TIMING.SURGE },
-  'stories.headysystems.com':   { repo: 'heady-stories',   tier: 'compute',  cacheTtl: PHI_TIMING.SURGE },
+  'kinetics.headysystems.com': { repo: 'heady-kinetics', tier: 'compute', cacheTtl: PHI_TIMING.SURGE },
+  'maestro.headysystems.com': { repo: 'heady-maestro', tier: 'compute', cacheTtl: PHI_TIMING.SURGE },
+  'builder.headysystems.com': { repo: 'heady-builder', tier: 'compute', cacheTtl: PHI_TIMING.SURGE },
+  'stories.headysystems.com': { repo: 'heady-stories', tier: 'compute', cacheTtl: PHI_TIMING.SURGE },
+
+  // Extended domains (auto-discovered from Cloudflare zones)
+  '1imi1.com': { repo: '1imi1', tier: 'product', cacheTtl: PHI_TIMING.TIDE },
+  'headyadvisor.com': { repo: 'headyadvisor', tier: 'product', cacheTtl: PHI_TIMING.TIDE },
+  'headyagent.com': { repo: 'headyagent', tier: 'product', cacheTtl: PHI_TIMING.TIDE },
+  'headyaid.com': { repo: 'headyaid', tier: 'product', cacheTtl: PHI_TIMING.TIDE },
+  'headyarchive.com': { repo: 'headyarchive', tier: 'product', cacheTtl: PHI_TIMING.TIDE },
+  'headyassist.com': { repo: 'headyassist', tier: 'product', cacheTtl: PHI_TIMING.TIDE },
+  'headyassure.com': { repo: 'headyassure', tier: 'product', cacheTtl: PHI_TIMING.TIDE },
+  'headybare.com': { repo: 'headybare', tier: 'product', cacheTtl: PHI_TIMING.TIDE },
+  'headybet.com': { repo: 'headybet', tier: 'product', cacheTtl: PHI_TIMING.TIDE },
+  'headybio.com': { repo: 'headybio', tier: 'product', cacheTtl: PHI_TIMING.TIDE },
+  'headycheck.com': { repo: 'headycheck', tier: 'product', cacheTtl: PHI_TIMING.TIDE },
+  'headycore.com': { repo: 'headycore', tier: 'product', cacheTtl: PHI_TIMING.TIDE },
+  'headycorrections.com': { repo: 'headycorrections', tier: 'product', cacheTtl: PHI_TIMING.TIDE },
+  'headycreator.com': { repo: 'headycreator', tier: 'product', cacheTtl: PHI_TIMING.TIDE },
+  'headycrypt.com': { repo: 'headycrypt', tier: 'product', cacheTtl: PHI_TIMING.TIDE },
+  'headydb.com': { repo: 'headydb', tier: 'product', cacheTtl: PHI_TIMING.TIDE },
+  'headyex.com': { repo: 'headyex', tier: 'product', cacheTtl: PHI_TIMING.TIDE },
+  'headyfed.com': { repo: 'headyfed', tier: 'product', cacheTtl: PHI_TIMING.TIDE },
+  'headyfield.com': { repo: 'headyfield', tier: 'product', cacheTtl: PHI_TIMING.TIDE },
+  'headygov.com': { repo: 'headygov', tier: 'product', cacheTtl: PHI_TIMING.TIDE },
+  'headyhome.com': { repo: 'headyhome', tier: 'product', cacheTtl: PHI_TIMING.TIDE },
+  'headykey.com': { repo: 'headykey', tier: 'product', cacheTtl: PHI_TIMING.TIDE },
+  'headykiosk.com': { repo: 'headykiosk', tier: 'product', cacheTtl: PHI_TIMING.TIDE },
+  'headylibrary.com': { repo: 'headylibrary', tier: 'product', cacheTtl: PHI_TIMING.TIDE },
+  'headymanufacturing.com': { repo: 'headymanufacturing', tier: 'product', cacheTtl: PHI_TIMING.TIDE },
+  'headymd.com': { repo: 'headymd', tier: 'product', cacheTtl: PHI_TIMING.TIDE },
+  'headymx.com': { repo: 'headymx', tier: 'product', cacheTtl: PHI_TIMING.TIDE },
+  'headyplus.com': { repo: 'headyplus', tier: 'product', cacheTtl: PHI_TIMING.TIDE },
+  'headyrx.com': { repo: 'headyrx', tier: 'product', cacheTtl: PHI_TIMING.TIDE },
+  'headysafe.com': { repo: 'headysafe', tier: 'product', cacheTtl: PHI_TIMING.TIDE },
+  'headysecure.com': { repo: 'headysecure', tier: 'product', cacheTtl: PHI_TIMING.TIDE },
+  'headyship.com': { repo: 'headyship', tier: 'product', cacheTtl: PHI_TIMING.TIDE },
+  'headystate.com': { repo: 'headystate', tier: 'product', cacheTtl: PHI_TIMING.TIDE },
+  'headystudio.com': { repo: 'headystudio', tier: 'product', cacheTtl: PHI_TIMING.TIDE },
+  'headytube.com': { repo: 'headytube', tier: 'product', cacheTtl: PHI_TIMING.TIDE },
+  'headytxt.com': { repo: 'headytxt', tier: 'product', cacheTtl: PHI_TIMING.TIDE },
+  'headyu.com': { repo: 'headyu', tier: 'product', cacheTtl: PHI_TIMING.TIDE },
+  'headyusa.com': { repo: 'headyusa', tier: 'product', cacheTtl: PHI_TIMING.TIDE },
+  'headyvault.com': { repo: 'headyvault', tier: 'product', cacheTtl: PHI_TIMING.TIDE },
+  'openmindsplace.com': { repo: 'openmindsplace', tier: 'product', cacheTtl: PHI_TIMING.TIDE },
+  'openmindstop.com': { repo: 'openmindstop', tier: 'product', cacheTtl: PHI_TIMING.TIDE },
 };
 
 // ── 3D Vector Space for Service Routing ─────────────────────────────
@@ -82,11 +138,11 @@ interface Vec3 { x: number; y: number; z: number }
 
 // Tier vectors in 3D space: (latency_priority, compute_weight, cache_affinity)
 const TIER_VECTORS: Record<string, Vec3> = {
-  core:        { x: 1.0,       y: 0.0,       z: PHI },       // max cache, zero compute
-  product:     { x: PSI,       y: 0.0,       z: 1.0  },      // balanced cache
-  integration: { x: PSI * PSI, y: PSI,       z: PSI  },      // moderate all
-  internal:    { x: 0.0,       y: PSI,       z: PSI * PSI },  // low cache, some compute
-  compute:     { x: 0.0,       y: PHI,       z: 0.0  },      // max compute, no cache
+  core: { x: 1.0, y: 0.0, z: PHI },       // max cache, zero compute
+  product: { x: PSI, y: 0.0, z: 1.0 },      // balanced cache
+  integration: { x: PSI * PSI, y: PSI, z: PSI },      // moderate all
+  internal: { x: 0.0, y: PSI, z: PSI * PSI },  // low cache, some compute
+  compute: { x: 0.0, y: PHI, z: 0.0 },      // max compute, no cache
 };
 
 function vecMagnitude(v: Vec3): number {
@@ -106,9 +162,9 @@ function cslBlend(a: number, b: number, pressure: number, threshold = 0.5): numb
 
 // ── Colab Pro+ Runtime Endpoints ────────────────────────────────────
 const COLAB_RUNTIMES = [
-  { id: 'colab-1', region: 'us-east',  endpoint: '', weight: PHI },
-  { id: 'colab-2', region: 'us-west',  endpoint: '', weight: 1.0 },
-  { id: 'colab-3', region: 'eu-west',  endpoint: '', weight: PSI },
+  { id: 'colab-1', region: 'us-east', endpoint: '', weight: PHI },
+  { id: 'colab-2', region: 'us-west', endpoint: '', weight: 1.0 },
+  { id: 'colab-3', region: 'eu-west', endpoint: '', weight: PSI },
 ];
 
 function selectColabRuntime(requestRegion: string): typeof COLAB_RUNTIMES[0] {
@@ -246,10 +302,39 @@ export default {
       }
     }
 
-    // ── Default: serve gateway landing ──
-    return new Response(gatewayHTML(hostname), {
-      headers: { 'Content-Type': 'text/html; charset=utf-8' },
-    });
+    // ── Default: proxy to Cloud Run dynamic-site-server ──
+    // The dynamic-site-server renders rich branded content for ALL 60+ domains
+    // based on Host header — never show the placeholder gateway page
+    const cloudRunOrigin = env.BACKEND_ORIGIN || 'https://headyme-site-bf4q4zywhq-uc.a.run.app';
+    try {
+      const proxyUrl = `${cloudRunOrigin}${url.pathname}${url.search}`;
+      const proxyResponse = await fetch(proxyUrl, {
+        method: request.method,
+        headers: new Headers({
+          ...Object.fromEntries(request.headers),
+          'Host': hostname,
+          'X-Forwarded-Host': hostname,
+          'X-Heady-Gateway': 'liquid-4.0',
+        }),
+        body: request.method !== 'GET' && request.method !== 'HEAD' ? request.body : undefined,
+      });
+      // Clone response with gateway headers
+      const body = await proxyResponse.text();
+      return new Response(body, {
+        status: proxyResponse.status,
+        headers: {
+          'Content-Type': proxyResponse.headers.get('Content-Type') || 'text/html; charset=utf-8',
+          'X-Heady-Gateway': 'liquid-proxy',
+          'X-Heady-Origin': 'cloud-run',
+          'X-Heady-Host': hostname,
+        },
+      });
+    } catch (err) {
+      // Only show gateway HTML if Cloud Run is completely down
+      return new Response(gatewayHTML(hostname), {
+        headers: { 'Content-Type': 'text/html; charset=utf-8' },
+      });
+    }
   },
 };
 

@@ -315,7 +315,7 @@ These Terms do not create a partnership, joint venture, agency, or employment re
 **Security**: security@headyme.com  
 
 **HeadySystems Inc. (DBA Heady™)**  
-CEO: Eric Headington (eric@headyconnection.org)  
+CEO: Eric Haywood (eric@headyconnection.org)  
 Website: https://headyme.com
 
 ---

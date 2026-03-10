@@ -1,0 +1,571 @@
+{
+  "system_name": "Heady full system deployment and runtime directives",
+  "generated_at": "2026-03-10T00:00:00Z",
+  "sites": [
+    {
+      "site_id": "headyme",
+      "domain": "headyme.com",
+      "role": "Personal AI operating system and primary user cockpit",
+      "runtime_target": "Cloudflare Pages or static CDN with auth relay to auth.headysystems.com and API access through Envoy/API gateway",
+      "must_do": [
+        "Render premium dark-glass informational experience with sacred geometry canvas unique to the site.",
+        "Embed central auth entrypoint and cross-site navigation to the other Heady properties.",
+        "Load AutoContext client bridge for request/session context hydration.",
+        "Load bee injectors for ecosystem map, technology stack, and dynamic support sections.",
+        "Route privileged or stateful actions to API services through the gateway tier rather than client-only fallbacks."
+      ],
+      "source_path": "apps/headyme/index.html"
+    },
+    {
+      "site_id": "headysystems",
+      "domain": "headysystems.com",
+      "role": "Enterprise platform, architecture, and sovereign AI infrastructure hub",
+      "runtime_target": "Cloudflare Pages or static CDN with API access through Envoy/API gateway",
+      "must_do": [
+        "Render premium dark-glass informational experience with sacred geometry canvas unique to the site.",
+        "Embed central auth entrypoint and cross-site navigation to the other Heady properties.",
+        "Load AutoContext client bridge for request/session context hydration.",
+        "Load bee injectors for ecosystem map, technology stack, and dynamic support sections.",
+        "Route privileged or stateful actions to API services through the gateway tier rather than client-only fallbacks."
+      ],
+      "source_path": "apps/headysystems/index.html"
+    },
+    {
+      "site_id": "heady-ai",
+      "domain": "heady-ai.com",
+      "role": "Research, science, and model intelligence surface",
+      "runtime_target": "Cloudflare Pages or static CDN with AI routing through api-gateway and ai-router",
+      "must_do": [
+        "Render premium dark-glass informational experience with sacred geometry canvas unique to the site.",
+        "Embed central auth entrypoint and cross-site navigation to the other Heady properties.",
+        "Load AutoContext client bridge for request/session context hydration.",
+        "Load bee injectors for ecosystem map, technology stack, and dynamic support sections.",
+        "Route privileged or stateful actions to API services through the gateway tier rather than client-only fallbacks."
+      ],
+      "source_path": "apps/heady-ai/index.html"
+    },
+    {
+      "site_id": "headyos",
+      "domain": "headyos.com",
+      "role": "Developer operating system and orchestration console",
+      "runtime_target": "Cloudflare Pages or static CDN with developer workflows routed through mcp-server and api-gateway",
+      "must_do": [
+        "Render premium dark-glass informational experience with sacred geometry canvas unique to the site.",
+        "Embed central auth entrypoint and cross-site navigation to the other Heady properties.",
+        "Load AutoContext client bridge for request/session context hydration.",
+        "Load bee injectors for ecosystem map, technology stack, and dynamic support sections.",
+        "Route privileged or stateful actions to API services through the gateway tier rather than client-only fallbacks."
+      ],
+      "source_path": "apps/headyos/index.html"
+    },
+    {
+      "site_id": "headyconnection-org",
+      "domain": "headyconnection.org",
+      "role": "Nonprofit, grants, mission, and community impact presence",
+      "runtime_target": "Cloudflare Pages or static CDN with Drupal-backed structured content sync",
+      "must_do": [
+        "Render premium dark-glass informational experience with sacred geometry canvas unique to the site.",
+        "Embed central auth entrypoint and cross-site navigation to the other Heady properties.",
+        "Load AutoContext client bridge for request/session context hydration.",
+        "Load bee injectors for ecosystem map, technology stack, and dynamic support sections.",
+        "Route privileged or stateful actions to API services through the gateway tier rather than client-only fallbacks."
+      ],
+      "source_path": "apps/headyconnection-org/index.html"
+    },
+    {
+      "site_id": "headyconnection-com",
+      "domain": "headyconnection.com",
+      "role": "Community portal and public participation surface",
+      "runtime_target": "Cloudflare Pages or static CDN with community and portal workflows through api-gateway",
+      "must_do": [
+        "Render premium dark-glass informational experience with sacred geometry canvas unique to the site.",
+        "Embed central auth entrypoint and cross-site navigation to the other Heady properties.",
+        "Load AutoContext client bridge for request/session context hydration.",
+        "Load bee injectors for ecosystem map, technology stack, and dynamic support sections.",
+        "Route privileged or stateful actions to API services through the gateway tier rather than client-only fallbacks."
+      ],
+      "source_path": "apps/headyconnection-com/index.html"
+    },
+    {
+      "site_id": "headyex",
+      "domain": "headyex.com",
+      "role": "Marketplace and exchange surface for agents and services",
+      "runtime_target": "Cloudflare Pages or static CDN with marketplace workflows through api-gateway",
+      "must_do": [
+        "Render premium dark-glass informational experience with sacred geometry canvas unique to the site.",
+        "Embed central auth entrypoint and cross-site navigation to the other Heady properties.",
+        "Load AutoContext client bridge for request/session context hydration.",
+        "Load bee injectors for ecosystem map, technology stack, and dynamic support sections.",
+        "Route privileged or stateful actions to API services through the gateway tier rather than client-only fallbacks."
+      ],
+      "source_path": "apps/headyex/index.html"
+    },
+    {
+      "site_id": "headyfinance",
+      "domain": "headyfinance.com",
+      "role": "Investor relations, capital narrative, and financial intelligence surface",
+      "runtime_target": "Cloudflare Pages or static CDN with finance APIs through api-gateway",
+      "must_do": [
+        "Render premium dark-glass informational experience with sacred geometry canvas unique to the site.",
+        "Embed central auth entrypoint and cross-site navigation to the other Heady properties.",
+        "Load AutoContext client bridge for request/session context hydration.",
+        "Load bee injectors for ecosystem map, technology stack, and dynamic support sections.",
+        "Route privileged or stateful actions to API services through the gateway tier rather than client-only fallbacks."
+      ],
+      "source_path": "apps/headyfinance/index.html"
+    },
+    {
+      "site_id": "admin-portal",
+      "domain": "admin.headysystems.com",
+      "role": "Internal operations, security, deployment, and governance console",
+      "runtime_target": "Protected web surface behind central auth and governance controls",
+      "must_do": [
+        "Render premium dark-glass informational experience with sacred geometry canvas unique to the site.",
+        "Embed central auth entrypoint and cross-site navigation to the other Heady properties.",
+        "Load AutoContext client bridge for request/session context hydration.",
+        "Load bee injectors for ecosystem map, technology stack, and dynamic support sections.",
+        "Route privileged or stateful actions to API services through the gateway tier rather than client-only fallbacks."
+      ],
+      "source_path": "apps/admin-portal/index.html"
+    },
+    {
+      "site_id": "auth",
+      "domain": "auth.headysystems.com/login",
+      "role": "Central identity relay, cookie session minting, OAuth callbacks, and redirect validation",
+      "runtime_target": "Cloud Run or equivalent server runtime because cookie minting and OAuth callbacks must execute server-side",
+      "must_do": [
+        "Render premium dark-glass informational experience with sacred geometry canvas unique to the site.",
+        "Embed central auth entrypoint and cross-site navigation to the other Heady properties.",
+        "Load AutoContext client bridge for request/session context hydration.",
+        "Load bee injectors for ecosystem map, technology stack, and dynamic support sections.",
+        "Route privileged or stateful actions to API services through the gateway tier rather than client-only fallbacks."
+      ],
+      "source_path": "apps/auth/index.html"
+    }
+  ],
+  "services": [
+    {
+      "category": "agent-bee",
+      "service": "heady-bee-factory",
+      "port": 8200,
+      "domain": "bee",
+      "role": "Dynamic bee creation \u2014 spawns concurrent equal-status bee workers with no ranking",
+      "path": "services/agent-bee/heady-bee-factory"
+    },
+    {
+      "category": "agent-bee",
+      "service": "heady-federation",
+      "port": 8203,
+      "domain": "federation",
+      "role": "Agent federation \u2014 manages cross-domain agent collaboration and capability sharing",
+      "path": "services/agent-bee/heady-federation"
+    },
+    {
+      "category": "agent-bee",
+      "service": "heady-hive",
+      "port": 8201,
+      "domain": "bee",
+      "role": "Bee coordination hub \u2014 routes bee tasks via CSL domain match, concurrent dispatch",
+      "path": "services/agent-bee/heady-hive"
+    },
+    {
+      "category": "agent-bee",
+      "service": "heady-orchestration",
+      "port": 8202,
+      "domain": "orchestration",
+      "role": "Swarm orchestration \u2014 coordinates all 17 swarms simultaneously in equal standing",
+      "path": "services/agent-bee/heady-orchestration"
+    },
+    {
+      "category": "ai-routing",
+      "service": "ai-router",
+      "port": 8700,
+      "domain": "routing",
+      "role": "Multi-model AI routing \u2014 CSL-scored provider selection and capability match",
+      "path": "services/ai-routing/ai-router"
+    },
+    {
+      "category": "ai-routing",
+      "service": "api-gateway",
+      "port": 8701,
+      "domain": "gateway",
+      "role": "API gateway \u2014 request routing, rate limiting, auth validation, OTEL span injection",
+      "path": "services/ai-routing/api-gateway"
+    },
+    {
+      "category": "ai-routing",
+      "service": "domain-router",
+      "port": 8703,
+      "domain": "routing",
+      "role": "Domain-based router \u2014 resolves all 9 Heady sites plus aliases via CSL similarity",
+      "path": "services/ai-routing/domain-router"
+    },
+    {
+      "category": "ai-routing",
+      "service": "model-gateway",
+      "port": 8702,
+      "domain": "routing",
+      "role": "Model selection gateway \u2014 capability vector matching for Claude/GPT/Gemini/Groq/Workers AI",
+      "path": "services/ai-routing/model-gateway"
+    },
+    {
+      "category": "core-intelligence",
+      "service": "heady-brain",
+      "port": 8100,
+      "domain": "inference",
+      "role": "Central AI reasoning engine \u2014 routes inference requests by CSL domain and capability match",
+      "path": "services/core-intelligence/heady-brain"
+    },
+    {
+      "category": "core-intelligence",
+      "service": "heady-brains",
+      "port": 8101,
+      "domain": "federation",
+      "role": "Multi-brain federation \u2014 coordinates distributed AI reasoning across provider endpoints",
+      "path": "services/core-intelligence/heady-brains"
+    },
+    {
+      "category": "core-intelligence",
+      "service": "heady-conductor",
+      "port": 8103,
+      "domain": "pipeline",
+      "role": "Pipeline conductor \u2014 drives HCFullPipeline 21-stage cognitive state machine",
+      "path": "services/core-intelligence/heady-conductor"
+    },
+    {
+      "category": "core-intelligence",
+      "service": "heady-embed",
+      "port": 8105,
+      "domain": "embedding",
+      "role": "Embedding service \u2014 384-dim dense vector generation for all content types",
+      "path": "services/core-intelligence/heady-embed"
+    },
+    {
+      "category": "core-intelligence",
+      "service": "heady-infer",
+      "port": 8104,
+      "domain": "inference",
+      "role": "Inference engine \u2014 multi-provider LLM request handling with phi-backoff retries",
+      "path": "services/core-intelligence/heady-infer"
+    },
+    {
+      "category": "core-intelligence",
+      "service": "heady-memory",
+      "port": 8106,
+      "domain": "memory",
+      "role": "Memory persistence \u2014 pgvector long-term storage with CSL retrieval gates",
+      "path": "services/core-intelligence/heady-memory"
+    },
+    {
+      "category": "core-intelligence",
+      "service": "heady-projection",
+      "port": 8108,
+      "domain": "projection",
+      "role": "Vector projection engine \u2014 3D spatial computing and VALU tensor core bridge",
+      "path": "services/core-intelligence/heady-projection"
+    },
+    {
+      "category": "core-intelligence",
+      "service": "heady-soul",
+      "port": 8102,
+      "domain": "orchestration",
+      "role": "Orchestration core \u2014 the center of the 17-swarm sacred geometry ring topology",
+      "path": "services/core-intelligence/heady-soul"
+    },
+    {
+      "category": "core-intelligence",
+      "service": "heady-vector",
+      "port": 8107,
+      "domain": "vector",
+      "role": "Vector operations \u2014 cosine similarity, projection, and 3D octree spatial indexing",
+      "path": "services/core-intelligence/heady-vector"
+    },
+    {
+      "category": "external-integrations",
+      "service": "colab-gateway",
+      "port": 8806,
+      "domain": "integration",
+      "role": "Colab integration \u2014 notebook execution dispatch and result ingestion",
+      "path": "services/external-integrations/colab-gateway"
+    },
+    {
+      "category": "external-integrations",
+      "service": "discord-bot",
+      "port": 8808,
+      "domain": "integration",
+      "role": "Discord bot \u2014 HeadyBuddy presence in Discord with slash commands and webhooks",
+      "path": "services/external-integrations/discord-bot"
+    },
+    {
+      "category": "external-integrations",
+      "service": "drupal-sync",
+      "port": 8809,
+      "domain": "cms",
+      "role": "Drupal webhook/polling sync \u2014 indexes Drupal JSON:API content into vector memory",
+      "path": "services/external-integrations/drupal-sync"
+    },
+    {
+      "category": "external-integrations",
+      "service": "google-mcp",
+      "port": 8801,
+      "domain": "mcp",
+      "role": "Google MCP integration \u2014 Google Search, Gmail, Drive, Workspace tool adapters",
+      "path": "services/external-integrations/google-mcp"
+    },
+    {
+      "category": "external-integrations",
+      "service": "huggingface-gateway",
+      "port": 8805,
+      "domain": "integration",
+      "role": "HuggingFace integration \u2014 model inference, dataset access, and embedding endpoints",
+      "path": "services/external-integrations/huggingface-gateway"
+    },
+    {
+      "category": "external-integrations",
+      "service": "jules-mcp",
+      "port": 8804,
+      "domain": "mcp",
+      "role": "Jules MCP \u2014 async code task delegation to Jules AI with result streaming",
+      "path": "services/external-integrations/jules-mcp"
+    },
+    {
+      "category": "external-integrations",
+      "service": "mcp-server",
+      "port": 8800,
+      "domain": "mcp",
+      "role": "MCP protocol server \u2014 JSON-RPC 2.0 over SSE/stdio with CSL-gated tool routing",
+      "path": "services/external-integrations/mcp-server"
+    },
+    {
+      "category": "external-integrations",
+      "service": "memory-mcp",
+      "port": 8802,
+      "domain": "mcp",
+      "role": "Memory MCP server \u2014 exposes vector memory as MCP tool endpoints",
+      "path": "services/external-integrations/memory-mcp"
+    },
+    {
+      "category": "external-integrations",
+      "service": "perplexity-mcp",
+      "port": 8803,
+      "domain": "mcp",
+      "role": "Perplexity MCP \u2014 Sonar Pro research with citation injection via MCP protocol",
+      "path": "services/external-integrations/perplexity-mcp"
+    },
+    {
+      "category": "external-integrations",
+      "service": "silicon-bridge",
+      "port": 8807,
+      "domain": "integration",
+      "role": "Silicon computing bridge \u2014 edge compute routing to Cloudflare Workers AI",
+      "path": "services/external-integrations/silicon-bridge"
+    },
+    {
+      "category": "monitoring-health",
+      "service": "heady-eval",
+      "port": 8401,
+      "domain": "evaluation",
+      "role": "Evaluation engine \u2014 agent metrics: task success, tool accuracy, trajectory quality",
+      "path": "services/monitoring-health/heady-eval"
+    },
+    {
+      "category": "monitoring-health",
+      "service": "heady-health",
+      "port": 8400,
+      "domain": "monitoring",
+      "role": "Health monitoring \u2014 aggregates health from all 17 swarms and 50 services",
+      "path": "services/monitoring-health/heady-health"
+    },
+    {
+      "category": "monitoring-health",
+      "service": "heady-maintenance",
+      "port": 8402,
+      "domain": "reliability",
+      "role": "Self-healing maintenance \u2014 quarantine, respawn, drift recovery, phi-heartbeat",
+      "path": "services/monitoring-health/heady-maintenance"
+    },
+    {
+      "category": "monitoring-health",
+      "service": "heady-testing",
+      "port": 8403,
+      "domain": "testing",
+      "role": "Testing framework \u2014 integration tests, smoke tests, Arena Mode evaluation",
+      "path": "services/monitoring-health/heady-testing"
+    },
+    {
+      "category": "pipeline-workflow",
+      "service": "auto-success-engine",
+      "port": 8600,
+      "domain": "pipeline",
+      "role": "\u03c6-scaled auto-success engine \u2014 dynamic resource allocation across 9 task categories",
+      "path": "services/pipeline-workflow/auto-success-engine"
+    },
+    {
+      "category": "pipeline-workflow",
+      "service": "hcfullpipeline-executor",
+      "port": 8601,
+      "domain": "pipeline",
+      "role": "HCFullPipeline executor \u2014 21-stage cognitive state machine with CSL routing at Stage 4",
+      "path": "services/pipeline-workflow/hcfullpipeline-executor"
+    },
+    {
+      "category": "pipeline-workflow",
+      "service": "heady-cache",
+      "port": 8603,
+      "domain": "cache",
+      "role": "Caching layer \u2014 hot-cold cache with phi-scaled TTL and LRU eviction",
+      "path": "services/pipeline-workflow/heady-cache"
+    },
+    {
+      "category": "pipeline-workflow",
+      "service": "heady-chain",
+      "port": 8602,
+      "domain": "pipeline",
+      "role": "Chain execution \u2014 DAG-based subtask chaining with concurrent node dispatch",
+      "path": "services/pipeline-workflow/heady-chain"
+    },
+    {
+      "category": "security-governance",
+      "service": "heady-governance",
+      "port": 8302,
+      "domain": "governance",
+      "role": "Policy enforcement \u2014 compliance rules, audit trails, Ed25519 receipt signing",
+      "path": "services/security-governance/heady-governance"
+    },
+    {
+      "category": "security-governance",
+      "service": "heady-guard",
+      "port": 8300,
+      "domain": "security",
+      "role": "Security enforcement \u2014 zero-trust sanitization on all input/output channels",
+      "path": "services/security-governance/heady-guard"
+    },
+    {
+      "category": "security-governance",
+      "service": "heady-security",
+      "port": 8301,
+      "domain": "security",
+      "role": "Security scanning \u2014 TruffleHog secret detection, vuln scanning, SSRF prevention",
+      "path": "services/security-governance/heady-security"
+    },
+    {
+      "category": "specialized",
+      "service": "budget-tracker",
+      "port": 8903,
+      "domain": "finops",
+      "role": "Cost tracking \u2014 AI provider spend metering, rate limit monitoring, budget alerts",
+      "path": "services/specialized/budget-tracker"
+    },
+    {
+      "category": "specialized",
+      "service": "cli-service",
+      "port": 8904,
+      "domain": "cli",
+      "role": "CLI interface \u2014 interactive terminal with OAuth, phi-scaled theming, and REPL",
+      "path": "services/specialized/cli-service"
+    },
+    {
+      "category": "specialized",
+      "service": "heady-auto-context",
+      "port": 8907,
+      "domain": "context",
+      "role": "HeadyAutoContext primary service \u2014 384-dim vector indexing, CSL gates, enrichment API",
+      "path": "services/specialized/heady-auto-context"
+    },
+    {
+      "category": "specialized",
+      "service": "heady-autobiographer",
+      "port": 8901,
+      "domain": "documentation",
+      "role": "Auto-documentation \u2014 generates architectural docs from code analysis and chat history",
+      "path": "services/specialized/heady-autobiographer"
+    },
+    {
+      "category": "specialized",
+      "service": "heady-midi",
+      "port": 8902,
+      "domain": "creative",
+      "role": "MIDI/creative interface \u2014 CC\u2192MCP bridge, MIDI\u2192LLM tool dispatch, A/V sync",
+      "path": "services/specialized/heady-midi"
+    },
+    {
+      "category": "specialized",
+      "service": "heady-vinci",
+      "port": 8900,
+      "domain": "learning",
+      "role": "Pattern learning engine \u2014 extracts, scores, and surfaces reusable execution patterns",
+      "path": "services/specialized/heady-vinci"
+    },
+    {
+      "category": "specialized",
+      "service": "prompt-manager",
+      "port": 8905,
+      "domain": "prompts",
+      "role": "Prompt management \u2014 64-prompt catalogue with version control and CSL retrieval",
+      "path": "services/specialized/prompt-manager"
+    },
+    {
+      "category": "specialized",
+      "service": "secret-gateway",
+      "port": 8906,
+      "domain": "security",
+      "role": "Secret management \u2014 Vault-backed secret storage, OAuth token rotation, SDK layers",
+      "path": "services/specialized/secret-gateway"
+    },
+    {
+      "category": "user-facing",
+      "service": "heady-buddy",
+      "port": 8501,
+      "domain": "companion",
+      "role": "HeadyBuddy companion widget \u2014 chat, context enrichment, and personalization engine",
+      "path": "services/user-facing/heady-buddy"
+    },
+    {
+      "category": "user-facing",
+      "service": "heady-onboarding",
+      "port": 8503,
+      "domain": "onboarding",
+      "role": "User onboarding \u2014 adaptive multi-step onboarding with vector-indexed user journey",
+      "path": "services/user-facing/heady-onboarding"
+    },
+    {
+      "category": "user-facing",
+      "service": "heady-pilot-onboarding",
+      "port": 8504,
+      "domain": "onboarding",
+      "role": "Pilot program onboarding \u2014 enterprise pilot enrollment and guided setup flows",
+      "path": "services/user-facing/heady-pilot-onboarding"
+    },
+    {
+      "category": "user-facing",
+      "service": "heady-task-browser",
+      "port": 8505,
+      "domain": "tasks",
+      "role": "Task management UI \u2014 real-time concurrent task status with no priority ordering",
+      "path": "services/user-facing/heady-task-browser"
+    },
+    {
+      "category": "user-facing",
+      "service": "heady-ui",
+      "port": 8502,
+      "domain": "ui",
+      "role": "UI component library \u2014 shared glassmorphism components and phi-scaled design tokens",
+      "path": "services/user-facing/heady-ui"
+    },
+    {
+      "category": "user-facing",
+      "service": "heady-web",
+      "port": 8500,
+      "domain": "web",
+      "role": "Web platform \u2014 serves 9 Heady sites with SSR, sacred geometry, and auto-context injection",
+      "path": "services/user-facing/heady-web"
+    }
+  ],
+  "global_rules": [
+    "No priority or ranking language in runtime routing, queues, enums, or task classification.",
+    "HeadyAutoContext must enrich every request path, site interaction, API call, and agent workflow.",
+    "CSL is used for domain relevance matching and gating only, not importance ordering.",
+    "Central auth must be served from auth.headysystems.com with httpOnly, Secure, SameSite=Strict cookies.",
+    "Every service must emit health status and tracing metadata and register into service discovery."
+  ]
+}

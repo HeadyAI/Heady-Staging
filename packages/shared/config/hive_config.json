@@ -1,0 +1,193 @@
+{
+    "version": "3.0",
+    "updated": "2026-01-31",
+    "auth": { "admin_token": "heady-master-key-123" },
+    "orchestration": {
+        "max_concurrent_builds": 3,
+        "default_container_image": "node:18-alpine",
+        "build_order_algorithm": "topological_sort",
+        "parallel_builds_enabled": true
+    },
+    "heady_manager": {
+        "status": "ACTIVE",
+        "port": 3300,
+        "endpoints": {
+            "api": "http://localhost:3300/api",
+            "health": "http://localhost:3300/api/health",
+            "pulse": "http://localhost:3300/api/pulse"
+        },
+        "capabilities": ["mcp_orchestration", "service_mesh", "api_gateway"],
+        "services": ["huggingface", "perplexity", "gemini", "jules"],
+        "rate_limiting": {
+            "window_ms": 60000,
+            "max_requests": 100
+        },
+        "cors_origins": ["http://localhost:3000", "http://localhost:8080"]
+    },
+    "mcp_registry": {
+        "filesystem": { 
+            "status": "ACTIVE", 
+            "priority": "HIGH",
+            "capabilities": ["read", "write", "search"],
+            "endpoint": "mcp://filesystem",
+            "tools": ["read_file", "write_file", "list_directory", "search_files"]
+        },
+        "git": { 
+            "status": "ACTIVE", 
+            "priority": "MEDIUM",
+            "capabilities": ["commit", "branch", "diff", "history"],
+            "endpoint": "mcp://git",
+            "tools": ["git_commit", "git_status", "git_diff", "git_log"]
+        },
+        "sequential_thinking": { 
+            "status": "ACTIVE", 
+            "priority": "CRITICAL",
+            "capabilities": ["reasoning", "planning", "verification"],
+            "endpoint": "mcp://sequential-thinking",
+            "tools": ["sequentialthinking"]
+        },
+        "postgres": { 
+            "status": "ACTIVE", 
+            "priority": "HIGH",
+            "capabilities": ["query", "schema"],
+            "endpoint": "mcp://postgres",
+            "tools": ["query", "list_tables", "describe_table"]
+        },
+        "huggingface": { 
+            "status": "ACTIVE", 
+            "priority": "HIGH",
+            "capabilities": ["model-search", "inference", "model-info"],
+            "endpoint": "http://localhost:8083",
+            "models": ["mistralai/Mistral-7B-Instruct-v0.2", "microsoft/DialoGPT-medium"],
+            "tools": ["search_models", "get_model_details", "run_inference"],
+            "api_key_env": "HUGGINGFACE_TOKEN"
+        },
+        "perplexity": { 
+            "status": "ACTIVE", 
+            "priority": "HIGH",
+            "capabilities": ["research", "reasoning", "citations", "real-time-data"],
+            "endpoint": "http://localhost:8081",
+            "models": ["sonar", "sonar-pro", "sonar-reasoning", "sonar-reasoning-pro", "sonar-deep-research"],
+            "tools": ["ask_perplexity", "perplexity_research", "perplexity_reason", "perplexity_stats", "perplexity_search"],
+            "api_key_env": "PERPLEXITY_API_KEY"
+        },
+        "gemini": { 
+            "status": "ACTIVE", 
+            "priority": "HIGH",
+            "capabilities": ["generation", "thinking", "multimodal"],
+            "endpoint": "http://localhost:8082",
+            "models": ["gemini-2.0-flash", "gemini-2.0-flash-lite", "gemini-2.0-pro", "gemini-2.0-flash-thinking-exp"],
+            "tools": ["ask_gemini", "gemini_think", "gemini_fast", "gemini_quality", "gemini_stats", "gemini_clear_cache"],
+            "api_key_env": "GEMINI_API_KEY"
+        },
+        "yandex": { 
+            "status": "ACTIVE", 
+            "priority": "MEDIUM",
+            "capabilities": ["translation", "search"],
+            "endpoint": "http://localhost:8085",
+            "tools": ["translate", "search"],
+            "api_key_env": "YANDEX_API_KEY"
+        },
+        "jules": { 
+            "status": "ACTIVE", 
+            "priority": "MEDIUM",
+            "capabilities": ["analysis", "incident-reports", "code-review", "optimization"],
+            "endpoint": "http://localhost:8084",
+            "models": ["jules-v1"],
+            "tools": ["ask_jules", "analyze_code", "optimize"],
+            "api_key_env": "JULES_API_KEY"
+        },
+        "memory": {
+            "status": "ACTIVE",
+            "priority": "HIGH",
+            "capabilities": ["read", "write", "search", "spatial-context"],
+            "endpoint": "mcp://memory",
+            "tools": ["read_graph", "create_entities", "create_relations", "search_nodes", "open_nodes", "add_observations", "delete_entities"]
+        },
+        "ai_router": {
+            "status": "ACTIVE",
+            "priority": "CRITICAL",
+            "capabilities": ["unified-routing", "fallback", "research", "reasoning", "analysis", "incident-reports"],
+            "providers": ["jules", "perplexity", "gemini"],
+            "tools": ["ai_ask", "ai_research", "ai_reason", "ai_analyze_health", "ai_incident_report", "ai_router_stats", "ai_list_providers"]
+        },
+        "cli_service": {
+            "status": "ACTIVE",
+            "priority": "HIGH",
+            "port": 8086,
+            "capabilities": ["shell-execution", "command-registry", "batch-execution", "dynamic-commands"],
+            "endpoint": "http://localhost:8086",
+            "tools": ["execute_command", "execute_raw", "list_commands", "register_command", "docker_command", "git_command", "heady_build", "service_health"],
+            "endpoints": {
+                "api": "http://localhost:8086",
+                "mcp": "http://localhost:8086/mcp",
+                "health": "http://localhost:8086/health"
+            }
+        },
+        "browser": {
+            "status": "ACTIVE",
+            "priority": "MEDIUM",
+            "capabilities": ["web-automation", "screenshot", "navigation", "interaction"],
+            "endpoint": "mcp://playwright",
+            "tools": ["browser_navigate", "browser_click", "browser_snapshot", "browser_take_screenshot", "browser_type", "browser_evaluate"]
+        }
+    },
+    "ai_workflow": {
+        "primary_provider": "perplexity",
+        "fallback_chain": ["gemini", "jules"],
+        "research_provider": "perplexity",
+        "reasoning_provider": "gemini",
+        "caching": {
+            "enabled": true,
+            "ttl_seconds": 300,
+            "max_entries": 100
+        },
+        "rate_limiting": {
+            "requests_per_minute": 60,
+            "burst_limit": 10
+        }
+    },
+    "nodes": { 
+        "ORCHESTRATOR": "ACTIVE", 
+        "CONDUCTOR": "ACTIVE",
+        "OPTIMIZER": "ACTIVE",
+        "IDE_SERVER": "ACTIVE"
+    },
+    "universal_config_strategy": {
+        "description": "Optimal configuration hierarchy to avoid hardcoding",
+        "environment_hierarchy": ["docker_secrets", "env_file", "defaults"],
+        "secrets": {
+            "DB_PASSWORD": { "source": "docker_secrets", "env_key": "MYSQL_PASSWORD" },
+            "NODE_PRIVATE_KEY": { "source": "docker_secrets", "env_key": "HEADY_PRIVATE_KEY" },
+            "TUNNEL_TOKEN": { "source": "env_file", "env_key": "TUNNEL_TOKEN" }
+        },
+        "discovery": {
+            "REGISTRY_URL": { "default": "http://governance:8000", "env_key": "HEADY_REGISTRY_URL" },
+            "SEED_PEER_IP": { "default": "127.0.0.1", "env_key": "HEADY_SEED_PEER" },
+            "HEARTBEAT_INTERVAL": { "default": "5s", "env_key": "HEADY_HEARTBEAT_INTERVAL" }
+        },
+        "multi_stage_docker": {
+            "enabled": true,
+            "base_image": "node:18-alpine",
+            "python_base": "python:3.11-slim",
+            "optimization_note": "Copy artifacts from base stage, expected 60%+ build time reduction"
+        },
+        "health_checks": {
+            "wait_for_dependencies": true,
+            "script": "scripts/wait-for-it.ps1",
+            "default_timeout_seconds": 60,
+            "retry_interval_seconds": 5
+        }
+    },
+    "build_scenarios": {
+        "active": "microservices_mesh",
+        "available": ["blockchain_dlt", "microservices_mesh", "edge_iot", "heady_default"],
+        "config_file": "config/build_dependencies.json"
+    },
+    "dependency_graph": {
+        "algorithm": "kahn_topological_sort",
+        "critical_path_enforcement": true,
+        "circular_dependency_detection": true,
+        "parallel_tier_builds": true
+    }
+}

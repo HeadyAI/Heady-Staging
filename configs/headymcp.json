@@ -1,0 +1,187 @@
+{
+    "$schema": "https://heady.ai/schemas/headymcp.v1.json",
+    "name": "heady-mcp",
+    "version": "1.0.0",
+    "description": "Heady™ Model Context Protocol server configuration",
+    "server": {
+        "host": "0.0.0.0",
+        "port": 3321,
+        "transport": [
+            "http",
+            "sse"
+        ],
+        "cors": {
+            "origins": [
+                "https://heady.ai",
+                "https://headyai.com",
+                "https://headyme.com",
+                "https://headysystems.com",
+                "https://headyos.com",
+                "https://headybattle.com",
+                "https://headyarena.com",
+                "https://headyconnection.com",
+                "https://headyenterprises.com"
+            ]
+        }
+    },
+    "tools": [
+        {
+            "name": "heady_search",
+            "description": "Search Heady 3D vector memory",
+            "inputSchema": {
+                "type": "object",
+                "properties": {
+                    "query": {
+                        "type": "string",
+                        "description": "Natural language search query"
+                    },
+                    "limit": {
+                        "type": "number",
+                        "default": 10
+                    },
+                    "threshold": {
+                        "type": "number",
+                        "default": 0.618
+                    }
+                },
+                "required": [
+                    "query"
+                ]
+            }
+        },
+        {
+            "name": "heady_store",
+            "description": "Store data in Heady vector memory",
+            "inputSchema": {
+                "type": "object",
+                "properties": {
+                    "key": {
+                        "type": "string"
+                    },
+                    "value": {
+                        "type": "string"
+                    },
+                    "namespace": {
+                        "type": "string",
+                        "default": "default"
+                    }
+                },
+                "required": [
+                    "key",
+                    "value"
+                ]
+            }
+        },
+        {
+            "name": "heady_health",
+            "description": "Get Heady system health status",
+            "inputSchema": {
+                "type": "object",
+                "properties": {}
+            }
+        },
+        {
+            "name": "heady_pipeline_run",
+            "description": "Trigger an HCFullPipeline execution",
+            "inputSchema": {
+                "type": "object",
+                "properties": {
+                    "task": {
+                        "type": "string"
+                    },
+                    "lane": {
+                        "type": "string",
+                        "enum": [
+                            "fast",
+                            "full",
+                            "arena",
+                            "learning"
+                        ]
+                    },
+                    "priority": {
+                        "type": "number",
+                        "default": 0.618
+                    }
+                },
+                "required": [
+                    "task"
+                ]
+            }
+        },
+        {
+            "name": "heady_bee_list",
+            "description": "List all active bees in the swarm",
+            "inputSchema": {
+                "type": "object",
+                "properties": {}
+            }
+        },
+        {
+            "name": "heady_analyze",
+            "description": "Analyze code or data using Heady AI nodes",
+            "inputSchema": {
+                "type": "object",
+                "properties": {
+                    "input": {
+                        "type": "string"
+                    },
+                    "mode": {
+                        "type": "string",
+                        "enum": [
+                            "code",
+                            "data",
+                            "security",
+                            "performance"
+                        ]
+                    }
+                },
+                "required": [
+                    "input"
+                ]
+            }
+        }
+    ],
+    "resources": [
+        {
+            "uri": "heady://memory/vectors",
+            "name": "Vector Memory",
+            "description": "Heady 3D vector memory store"
+        },
+        {
+            "uri": "heady://pipeline/status",
+            "name": "Pipeline Status",
+            "description": "Current HCFullPipeline execution state"
+        },
+        {
+            "uri": "heady://swarm/health",
+            "name": "Swarm Health",
+            "description": "All bee health and circuit breaker states"
+        }
+    ],
+    "prompts": [
+        {
+            "name": "heady_analyze",
+            "description": "Analyze code or data using Heady intelligence",
+            "arguments": [
+                {
+                    "name": "input",
+                    "required": true
+                }
+            ]
+        },
+        {
+            "name": "heady_explain",
+            "description": "Explain a concept using Heady knowledge base",
+            "arguments": [
+                {
+                    "name": "topic",
+                    "required": true
+                }
+            ]
+        }
+    ],
+    "auth": {
+        "type": "bearer",
+        "headerName": "Authorization"
+    }
+}

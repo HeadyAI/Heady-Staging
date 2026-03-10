@@ -129,7 +129,7 @@ const welcomeEmail = (ctx) => ({
 
       <p>Questions? Reply directly to this email or reach Eric at <a href="mailto:eric@headyconnection.org" style="color: #3d7bd4;">eric@headyconnection.org</a>.</p>
 
-      <p style="margin-top: 24px;">Welcome to the future of AI orchestration,<br/><strong style="color: #f0f4ff;">Eric Headington</strong><br/>Founder & CEO, HeadySystems Inc.</p>
+      <p style="margin-top: 24px;">Welcome to the future of AI orchestration,<br/><strong style="color: #f0f4ff;">Eric Haywood</strong><br/>Founder & CEO, HeadySystems Inc.</p>
     </div>
 
     <div class="footer">
@@ -139,7 +139,7 @@ const welcomeEmail = (ctx) => ({
   </div>
 </body>
 </html>`,
-  text: `Welcome to HeadyOS Founder's Pilot, ${ctx.firstName}!\n\nYour 89-day pilot for ${ctx.orgName} is active.\nWorkspace: ${ctx.workspaceUrl}\nExpires: ${ctx.expiresAt}\n\nResources: 13 agents | 144 API calls/min | 987 MB storage | 987 vectors | 5 seats\n\nNext steps:\n1. Open your workspace\n2. Create your first agent\n3. Run your first task\n4. Join Founder Slack\n\nOffice hours: Day 13.\nQuestions: eric@headyconnection.org\n\nEric Headington, Founder & CEO, HeadySystems Inc.`,
+  text: `Welcome to HeadyOS Founder's Pilot, ${ctx.firstName}!\n\nYour 89-day pilot for ${ctx.orgName} is active.\nWorkspace: ${ctx.workspaceUrl}\nExpires: ${ctx.expiresAt}\n\nResources: 13 agents | 144 API calls/min | 987 MB storage | 987 vectors | 5 seats\n\nNext steps:\n1. Open your workspace\n2. Create your first agent\n3. Run your first task\n4. Join Founder Slack\n\nOffice hours: Day 13.\nQuestions: eric@headyconnection.org\n\nEric Haywood, Founder & CEO, HeadySystems Inc.`,
 });
 
 /**

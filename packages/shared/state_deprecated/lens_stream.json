@@ -1,0 +1,1047 @@
+{
+  "stream_metadata": {
+    "created_at": "2026-01-30T21:34:36.169975",
+    "version": "1.0",
+    "description": "Heady Systems Glass Box Event Stream"
+  },
+  "events": [
+    {
+      "timestamp": "2026-01-30T22:40:37.724292",
+      "source_container": "governance",
+      "operation_type": "container_registered",
+      "operation_details": {
+        "state": "provisioning",
+        "health_check": null
+      },
+      "user_visible": true,
+      "security_level": "info"
+    },
+    {
+      "timestamp": "2026-01-30T22:40:40.741385",
+      "source_container": "storage",
+      "operation_type": "container_registered",
+      "operation_details": {
+        "state": "provisioning",
+        "health_check": null
+      },
+      "user_visible": true,
+      "security_level": "info"
+    },
+    {
+      "timestamp": "2026-01-30T22:40:54.418463",
+      "source_container": "security",
+      "operation_type": "container_registered",
+      "operation_details": {
+        "state": "provisioning",
+        "health_check": null
+      },
+      "user_visible": true,
+      "security_level": "info"
+    },
+    {
+      "timestamp": "2026-01-30T22:47:57.208343",
+      "source_container": "governance",
+      "operation_type": "container_registered",
+      "operation_details": {
+        "state": "provisioning",
+        "health_check": null
+      },
+      "user_visible": true,
+      "security_level": "info"
+    },
+    {
+      "timestamp": "2026-01-30T22:48:25.234316",
+      "source_container": "storage",
+      "operation_type": "container_registered",
+      "operation_details": {
+        "state": "provisioning",
+        "health_check": null
+      },
+      "user_visible": true,
+      "security_level": "info"
+    },
+    {
+      "timestamp": "2026-01-30T22:48:36.939624",
+      "source_container": "security",
+      "operation_type": "container_registered",
+      "operation_details": {
+        "state": "provisioning",
+        "health_check": null
+      },
+      "user_visible": true,
+      "security_level": "info"
+    },
+    {
+      "timestamp": "2026-01-30T22:49:51.421885",
+      "source_container": "governance",
+      "operation_type": "container_registered",
+      "operation_details": {
+        "state": "provisioning",
+        "health_check": null
+      },
+      "user_visible": true,
+      "security_level": "info"
+    },
+    {
+      "timestamp": "2026-01-30T22:49:56.741211",
+      "source_container": "storage",
+      "operation_type": "container_registered",
+      "operation_details": {
+        "state": "provisioning",
+        "health_check": null
+      },
+      "user_visible": true,
+      "security_level": "info"
+    },
+    {
+      "timestamp": "2026-01-30T22:50:07.409009",
+      "source_container": "security",
+      "operation_type": "container_registered",
+      "operation_details": {
+        "state": "provisioning",
+        "health_check": null
+      },
+      "user_visible": true,
+      "security_level": "info"
+    },
+    {
+      "timestamp": "2026-01-30T23:31:35.690657",
+      "source_container": "governance",
+      "operation_type": "container_registered",
+      "operation_details": {
+        "state": "provisioning",
+        "health_check": null
+      },
+      "user_visible": true,
+      "security_level": "info"
+    },
+    {
+      "timestamp": "2026-01-30T23:31:35.690862",
+      "source_container": "safety_manager",
+      "operation_type": "fail_safe_initiated",
+      "operation_details": {
+        "reason": "lens_stream_unreachable"
+      },
+      "user_visible": true,
+      "security_level": "critical"
+    },
+    {
+      "timestamp": "2026-01-30T23:31:42.975112",
+      "source_container": "storage",
+      "operation_type": "container_registered",
+      "operation_details": {
+        "state": "provisioning",
+        "health_check": null
+      },
+      "user_visible": true,
+      "security_level": "info"
+    },
+    {
+      "timestamp": "2026-01-30T23:31:56.024899",
+      "source_container": "security",
+      "operation_type": "container_registered",
+      "operation_details": {
+        "state": "provisioning",
+        "health_check": null
+      },
+      "user_visible": true,
+      "security_level": "info"
+    },
+    {
+      "timestamp": "2026-01-30T23:32:01.306442",
+      "source_container": "governance",
+      "operation_type": "container_registered",
+      "operation_details": {
+        "state": "provisioning",
+        "health_check": null
+      },
+      "user_visible": true,
+      "security_level": "info"
+    },
+    {
+      "timestamp": "2026-01-30T23:32:01.306579",
+      "source_container": "safety_manager",
+      "operation_type": "fail_safe_initiated",
+      "operation_details": {
+        "reason": "lens_stream_unreachable"
+      },
+      "user_visible": true,
+      "security_level": "critical"
+    },
+    {
+      "timestamp": "2026-01-30T23:32:06.666042",
+      "source_container": "storage",
+      "operation_type": "container_registered",
+      "operation_details": {
+        "state": "provisioning",
+        "health_check": null
+      },
+      "user_visible": true,
+      "security_level": "info"
+    },
+    {
+      "timestamp": "2026-01-30T23:32:17.413460",
+      "source_container": "security",
+      "operation_type": "container_registered",
+      "operation_details": {
+        "state": "provisioning",
+        "health_check": null
+      },
+      "user_visible": true,
+      "security_level": "info"
+    },
+    {
+      "timestamp": "2026-01-30T23:33:56.956154",
+      "source_container": "governance",
+      "operation_type": "container_registered",
+      "operation_details": {
+        "state": "provisioning",
+        "health_check": null
+      },
+      "user_visible": true,
+      "security_level": "info"
+    },
+    {
+      "timestamp": "2026-01-30T23:34:02.278502",
+      "source_container": "storage",
+      "operation_type": "container_registered",
+      "operation_details": {
+        "state": "provisioning",
+        "health_check": null
+      },
+      "user_visible": true,
+      "security_level": "info"
+    },
+    {
+      "timestamp": "2026-01-30T23:34:12.943839",
+      "source_container": "security",
+      "operation_type": "container_registered",
+      "operation_details": {
+        "state": "provisioning",
+        "health_check": null
+      },
+      "user_visible": true,
+      "security_level": "info"
+    },
+    {
+      "timestamp": "2026-01-30T23:35:27.219377",
+      "source_container": "governance",
+      "operation_type": "container_registered",
+      "operation_details": {
+        "state": "provisioning",
+        "health_check": null
+      },
+      "user_visible": true,
+      "security_level": "info"
+    },
+    {
+      "timestamp": "2026-01-30T23:35:32.545407",
+      "source_container": "storage",
+      "operation_type": "container_registered",
+      "operation_details": {
+        "state": "provisioning",
+        "health_check": null
+      },
+      "user_visible": true,
+      "security_level": "info"
+    },
+    {
+      "timestamp": "2026-01-30T23:35:43.214016",
+      "source_container": "security",
+      "operation_type": "container_registered",
+      "operation_details": {
+        "state": "provisioning",
+        "health_check": null
+      },
+      "user_visible": true,
+      "security_level": "info"
+    },
+    {
+      "timestamp": "2026-01-30T23:49:10.819156",
+      "source_container": "governance",
+      "operation_type": "container_registered",
+      "operation_details": {
+        "state": "provisioning",
+        "health_check": null
+      },
+      "user_visible": true,
+      "security_level": "info"
+    },
+    {
+      "timestamp": "2026-01-30T23:49:17.343856",
+      "source_container": "storage",
+      "operation_type": "container_registered",
+      "operation_details": {
+        "state": "provisioning",
+        "health_check": null
+      },
+      "user_visible": true,
+      "security_level": "info"
+    },
+    {
+      "timestamp": "2026-01-30T23:49:30.047839",
+      "source_container": "security",
+      "operation_type": "container_registered",
+      "operation_details": {
+        "state": "provisioning",
+        "health_check": null
+      },
+      "user_visible": true,
+      "security_level": "info"
+    },
+    {
+      "timestamp": "2026-01-30T23:49:46.670327",
+      "source_container": "governance",
+      "operation_type": "handshake_completed",
+      "operation_details": {
+        "next_state": "ready"
+      },
+      "user_visible": true,
+      "security_level": "info"
+    },
+    {
+      "timestamp": "2026-01-30T23:49:56.673853",
+      "source_container": "storage",
+      "operation_type": "handshake_completed",
+      "operation_details": {
+        "next_state": "ready"
+      },
+      "user_visible": true,
+      "security_level": "info"
+    },
+    {
+      "timestamp": "2026-01-30T23:50:06.678001",
+      "source_container": "security",
+      "operation_type": "handshake_completed",
+      "operation_details": {
+        "next_state": "ready"
+      },
+      "user_visible": true,
+      "security_level": "info"
+    },
+    {
+      "timestamp": "2026-01-30T23:56:05.782490",
+      "source_container": "governance",
+      "operation_type": "container_registered",
+      "operation_details": {
+        "state": "provisioning",
+        "health_check": null
+      },
+      "user_visible": true,
+      "security_level": "info"
+    },
+    {
+      "timestamp": "2026-01-30T23:56:11.065707",
+      "source_container": "storage",
+      "operation_type": "container_registered",
+      "operation_details": {
+        "state": "provisioning",
+        "health_check": null
+      },
+      "user_visible": true,
+      "security_level": "info"
+    },
+    {
+      "timestamp": "2026-01-30T23:56:21.921662",
+      "source_container": "security",
+      "operation_type": "container_registered",
+      "operation_details": {
+        "state": "provisioning",
+        "health_check": null
+      },
+      "user_visible": true,
+      "security_level": "info"
+    },
+    {
+      "timestamp": "2026-01-30T23:56:37.276563",
+      "source_container": "governance",
+      "operation_type": "handshake_completed",
+      "operation_details": {
+        "next_state": "ready"
+      },
+      "user_visible": true,
+      "security_level": "info"
+    },
+    {
+      "timestamp": "2026-01-30T23:56:47.282401",
+      "source_container": "storage",
+      "operation_type": "handshake_completed",
+      "operation_details": {
+        "next_state": "ready"
+      },
+      "user_visible": true,
+      "security_level": "info"
+    },
+    {
+      "timestamp": "2026-01-30T23:56:57.287275",
+      "source_container": "security",
+      "operation_type": "handshake_completed",
+      "operation_details": {
+        "next_state": "ready"
+      },
+      "user_visible": true,
+      "security_level": "info"
+    },
+    {
+      "timestamp": "2026-01-31T00:05:29.309929",
+      "source_container": "governance",
+      "operation_type": "container_registered",
+      "operation_details": {
+        "state": "provisioning",
+        "health_check": null
+      },
+      "user_visible": true,
+      "security_level": "info"
+    },
+    {
+      "timestamp": "2026-01-31T00:05:36.161215",
+      "source_container": "storage",
+      "operation_type": "container_registered",
+      "operation_details": {
+        "state": "provisioning",
+        "health_check": null
+      },
+      "user_visible": true,
+      "security_level": "info"
+    },
+    {
+      "timestamp": "2026-01-31T00:05:47.066546",
+      "source_container": "security",
+      "operation_type": "container_registered",
+      "operation_details": {
+        "state": "provisioning",
+        "health_check": null
+      },
+      "user_visible": true,
+      "security_level": "info"
+    },
+    {
+      "timestamp": "2026-01-31T00:06:02.593508",
+      "source_container": "governance",
+      "operation_type": "handshake_completed",
+      "operation_details": {
+        "next_state": "ready"
+      },
+      "user_visible": true,
+      "security_level": "info"
+    },
+    {
+      "timestamp": "2026-01-31T00:06:12.597521",
+      "source_container": "storage",
+      "operation_type": "handshake_completed",
+      "operation_details": {
+        "next_state": "ready"
+      },
+      "user_visible": true,
+      "security_level": "info"
+    },
+    {
+      "timestamp": "2026-01-31T00:06:22.601666",
+      "source_container": "security",
+      "operation_type": "handshake_completed",
+      "operation_details": {
+        "next_state": "ready"
+      },
+      "user_visible": true,
+      "security_level": "info"
+    },
+    {
+      "timestamp": "2026-01-31T00:08:30.606160",
+      "source_container": "governance",
+      "operation_type": "container_registered",
+      "operation_details": {
+        "state": "provisioning",
+        "health_check": null
+      },
+      "user_visible": true,
+      "security_level": "info"
+    },
+    {
+      "timestamp": "2026-01-31T00:08:36.045557",
+      "source_container": "storage",
+      "operation_type": "container_registered",
+      "operation_details": {
+        "state": "provisioning",
+        "health_check": null
+      },
+      "user_visible": true,
+      "security_level": "info"
+    },
+    {
+      "timestamp": "2026-01-31T00:08:46.712806",
+      "source_container": "security",
+      "operation_type": "container_registered",
+      "operation_details": {
+        "state": "provisioning",
+        "health_check": null
+      },
+      "user_visible": true,
+      "security_level": "info"
+    },
+    {
+      "timestamp": "2026-01-31T00:09:02.051020",
+      "source_container": "governance",
+      "operation_type": "handshake_completed",
+      "operation_details": {
+        "next_state": "ready"
+      },
+      "user_visible": true,
+      "security_level": "info"
+    },
+    {
+      "timestamp": "2026-01-31T00:09:12.056046",
+      "source_container": "storage",
+      "operation_type": "handshake_completed",
+      "operation_details": {
+        "next_state": "ready"
+      },
+      "user_visible": true,
+      "security_level": "info"
+    },
+    {
+      "timestamp": "2026-01-31T00:09:22.060573",
+      "source_container": "security",
+      "operation_type": "handshake_completed",
+      "operation_details": {
+        "next_state": "ready"
+      },
+      "user_visible": true,
+      "security_level": "info"
+    },
+    {
+      "timestamp": "2026-01-31T00:24:48.376180",
+      "source_container": "governance",
+      "operation_type": "container_registered",
+      "operation_details": {
+        "state": "provisioning",
+        "health_check": null
+      },
+      "user_visible": true,
+      "security_level": "info"
+    },
+    {
+      "timestamp": "2026-01-31T00:24:56.109126",
+      "source_container": "storage",
+      "operation_type": "container_registered",
+      "operation_details": {
+        "state": "provisioning",
+        "health_check": null
+      },
+      "user_visible": true,
+      "security_level": "info"
+    },
+    {
+      "timestamp": "2026-01-31T00:25:06.992874",
+      "source_container": "security",
+      "operation_type": "container_registered",
+      "operation_details": {
+        "state": "provisioning",
+        "health_check": null
+      },
+      "user_visible": true,
+      "security_level": "info"
+    },
+    {
+      "timestamp": "2026-01-31T00:25:24.197123",
+      "source_container": "governance",
+      "operation_type": "handshake_completed",
+      "operation_details": {
+        "next_state": "ready"
+      },
+      "user_visible": true,
+      "security_level": "info"
+    },
+    {
+      "timestamp": "2026-01-31T00:25:34.201326",
+      "source_container": "storage",
+      "operation_type": "handshake_completed",
+      "operation_details": {
+        "next_state": "ready"
+      },
+      "user_visible": true,
+      "security_level": "info"
+    },
+    {
+      "timestamp": "2026-01-31T00:25:44.205204",
+      "source_container": "security",
+      "operation_type": "handshake_completed",
+      "operation_details": {
+        "next_state": "ready"
+      },
+      "user_visible": true,
+      "security_level": "info"
+    },
+    {
+      "timestamp": "2026-01-31T00:46:56.320618",
+      "source_container": "governance",
+      "operation_type": "container_registered",
+      "operation_details": {
+        "state": "provisioning",
+        "health_check": null
+      },
+      "user_visible": true,
+      "security_level": "info"
+    },
+    {
+      "timestamp": "2026-01-31T00:47:04.091440",
+      "source_container": "storage",
+      "operation_type": "container_registered",
+      "operation_details": {
+        "state": "provisioning",
+        "health_check": null
+      },
+      "user_visible": true,
+      "security_level": "info"
+    },
+    {
+      "timestamp": "2026-01-31T00:47:15.018314",
+      "source_container": "security",
+      "operation_type": "container_registered",
+      "operation_details": {
+        "state": "provisioning",
+        "health_check": null
+      },
+      "user_visible": true,
+      "security_level": "info"
+    },
+    {
+      "timestamp": "2026-01-31T00:47:31.207099",
+      "source_container": "governance",
+      "operation_type": "handshake_completed",
+      "operation_details": {
+        "next_state": "ready"
+      },
+      "user_visible": true,
+      "security_level": "info"
+    },
+    {
+      "timestamp": "2026-01-31T00:47:41.213089",
+      "source_container": "storage",
+      "operation_type": "handshake_completed",
+      "operation_details": {
+        "next_state": "ready"
+      },
+      "user_visible": true,
+      "security_level": "info"
+    },
+    {
+      "timestamp": "2026-01-31T00:47:51.218475",
+      "source_container": "security",
+      "operation_type": "handshake_completed",
+      "operation_details": {
+        "next_state": "ready"
+      },
+      "user_visible": true,
+      "security_level": "info"
+    },
+    {
+      "timestamp": "2026-01-31T00:53:36.784516",
+      "source_container": "governance",
+      "operation_type": "container_registered",
+      "operation_details": {
+        "state": "provisioning",
+        "health_check": null
+      },
+      "user_visible": true,
+      "security_level": "info"
+    },
+    {
+      "timestamp": "2026-01-31T00:53:42.187150",
+      "source_container": "storage",
+      "operation_type": "container_registered",
+      "operation_details": {
+        "state": "provisioning",
+        "health_check": null
+      },
+      "user_visible": true,
+      "security_level": "info"
+    },
+    {
+      "timestamp": "2026-01-31T00:53:52.953396",
+      "source_container": "security",
+      "operation_type": "container_registered",
+      "operation_details": {
+        "state": "provisioning",
+        "health_check": null
+      },
+      "user_visible": true,
+      "security_level": "info"
+    },
+    {
+      "timestamp": "2026-01-31T00:54:08.377544",
+      "source_container": "governance",
+      "operation_type": "handshake_completed",
+      "operation_details": {
+        "next_state": "ready"
+      },
+      "user_visible": true,
+      "security_level": "info"
+    },
+    {
+      "timestamp": "2026-01-31T00:54:18.382299",
+      "source_container": "storage",
+      "operation_type": "handshake_completed",
+      "operation_details": {
+        "next_state": "ready"
+      },
+      "user_visible": true,
+      "security_level": "info"
+    },
+    {
+      "timestamp": "2026-01-31T00:54:28.389863",
+      "source_container": "security",
+      "operation_type": "handshake_completed",
+      "operation_details": {
+        "next_state": "ready"
+      },
+      "user_visible": true,
+      "security_level": "info"
+    },
+    {
+      "timestamp": "2026-01-31T02:45:37.095831",
+      "source_container": "governance",
+      "operation_type": "container_registered",
+      "operation_details": {
+        "state": "provisioning",
+        "health_check": null
+      },
+      "user_visible": true,
+      "security_level": "info"
+    },
+    {
+      "timestamp": "2026-01-31T02:45:47.982276",
+      "source_container": "storage",
+      "operation_type": "container_registered",
+      "operation_details": {
+        "state": "provisioning",
+        "health_check": null
+      },
+      "user_visible": true,
+      "security_level": "info"
+    },
+    {
+      "timestamp": "2026-01-31T02:45:53.359590",
+      "source_container": "security",
+      "operation_type": "container_registered",
+      "operation_details": {
+        "state": "provisioning",
+        "health_check": null
+      },
+      "user_visible": true,
+      "security_level": "info"
+    },
+    {
+      "timestamp": "2026-01-31T02:46:08.741593",
+      "source_container": "governance",
+      "operation_type": "handshake_completed",
+      "operation_details": {
+        "next_state": "ready"
+      },
+      "user_visible": true,
+      "security_level": "info"
+    },
+    {
+      "timestamp": "2026-01-31T02:46:18.748138",
+      "source_container": "storage",
+      "operation_type": "handshake_completed",
+      "operation_details": {
+        "next_state": "ready"
+      },
+      "user_visible": true,
+      "security_level": "info"
+    },
+    {
+      "timestamp": "2026-01-31T02:46:28.754346",
+      "source_container": "security",
+      "operation_type": "handshake_completed",
+      "operation_details": {
+        "next_state": "ready"
+      },
+      "user_visible": true,
+      "security_level": "info"
+    },
+    {
+      "timestamp": "2026-01-31T02:49:14.866256",
+      "source_container": "governance",
+      "operation_type": "container_registered",
+      "operation_details": {
+        "state": "provisioning",
+        "health_check": null
+      },
+      "user_visible": true,
+      "security_level": "info"
+    },
+    {
+      "timestamp": "2026-01-31T02:49:25.664913",
+      "source_container": "storage",
+      "operation_type": "container_registered",
+      "operation_details": {
+        "state": "provisioning",
+        "health_check": null
+      },
+      "user_visible": true,
+      "security_level": "info"
+    },
+    {
+      "timestamp": "2026-01-31T02:49:31.340454",
+      "source_container": "security",
+      "operation_type": "container_registered",
+      "operation_details": {
+        "state": "provisioning",
+        "health_check": null
+      },
+      "user_visible": true,
+      "security_level": "info"
+    },
+    {
+      "timestamp": "2026-01-31T02:49:46.839342",
+      "source_container": "governance",
+      "operation_type": "handshake_completed",
+      "operation_details": {
+        "next_state": "ready"
+      },
+      "user_visible": true,
+      "security_level": "info"
+    },
+    {
+      "timestamp": "2026-01-31T02:49:56.843631",
+      "source_container": "storage",
+      "operation_type": "handshake_completed",
+      "operation_details": {
+        "next_state": "ready"
+      },
+      "user_visible": true,
+      "security_level": "info"
+    },
+    {
+      "timestamp": "2026-01-31T02:50:06.848333",
+      "source_container": "security",
+      "operation_type": "handshake_completed",
+      "operation_details": {
+        "next_state": "ready"
+      },
+      "user_visible": true,
+      "security_level": "info"
+    },
+    {
+      "timestamp": "2026-01-31T02:53:14.646375",
+      "source_container": "governance",
+      "operation_type": "container_registered",
+      "operation_details": {
+        "state": "provisioning",
+        "health_check": null
+      },
+      "user_visible": true,
+      "security_level": "info"
+    },
+    {
+      "timestamp": "2026-01-31T02:53:25.508755",
+      "source_container": "storage",
+      "operation_type": "container_registered",
+      "operation_details": {
+        "state": "provisioning",
+        "health_check": null
+      },
+      "user_visible": true,
+      "security_level": "info"
+    },
+    {
+      "timestamp": "2026-01-31T02:53:30.838024",
+      "source_container": "security",
+      "operation_type": "container_registered",
+      "operation_details": {
+        "state": "provisioning",
+        "health_check": null
+      },
+      "user_visible": true,
+      "security_level": "info"
+    },
+    {
+      "timestamp": "2026-01-31T02:53:46.190584",
+      "source_container": "governance",
+      "operation_type": "handshake_completed",
+      "operation_details": {
+        "next_state": "ready"
+      },
+      "user_visible": true,
+      "security_level": "info"
+    },
+    {
+      "timestamp": "2026-01-31T02:53:56.196182",
+      "source_container": "storage",
+      "operation_type": "handshake_completed",
+      "operation_details": {
+        "next_state": "ready"
+      },
+      "user_visible": true,
+      "security_level": "info"
+    },
+    {
+      "timestamp": "2026-01-31T02:54:06.203213",
+      "source_container": "security",
+      "operation_type": "handshake_completed",
+      "operation_details": {
+        "next_state": "ready"
+      },
+      "user_visible": true,
+      "security_level": "info"
+    },
+    {
+      "timestamp": "2026-01-31T03:56:31.029425",
+      "source_container": "test_container",
+      "operation_type": "container_registered",
+      "operation_details": {
+        "state": "provisioning",
+        "health_check": "/health"
+      },
+      "user_visible": true,
+      "security_level": "info"
+    },
+    {
+      "timestamp": "2026-01-31T03:56:31.035351",
+      "source_container": "test_container",
+      "operation_type": "handshake_completed",
+      "operation_details": {
+        "next_state": "ready"
+      },
+      "user_visible": true,
+      "security_level": "info"
+    },
+    {
+      "timestamp": "2026-01-31T03:56:31.056118",
+      "source_container": "test_container",
+      "operation_type": "test_operation",
+      "operation_details": {
+        "test": true
+      },
+      "user_visible": true,
+      "security_level": "info"
+    },
+    {
+      "timestamp": "2026-01-31T12:15:00.255905",
+      "source_container": "governance",
+      "operation_type": "container_registered",
+      "operation_details": {
+        "state": "provisioning",
+        "health_check": null
+      },
+      "user_visible": true,
+      "security_level": "info"
+    },
+    {
+      "timestamp": "2026-01-31T12:15:16.167154",
+      "source_container": "storage",
+      "operation_type": "container_registered",
+      "operation_details": {
+        "state": "provisioning",
+        "health_check": null
+      },
+      "user_visible": true,
+      "security_level": "info"
+    },
+    {
+      "timestamp": "2026-01-31T12:15:22.700140",
+      "source_container": "security",
+      "operation_type": "container_registered",
+      "operation_details": {
+        "state": "provisioning",
+        "health_check": null
+      },
+      "user_visible": true,
+      "security_level": "info"
+    },
+    {
+      "timestamp": "2026-01-31T12:15:40.252487",
+      "source_container": "governance",
+      "operation_type": "handshake_completed",
+      "operation_details": {
+        "next_state": "ready"
+      },
+      "user_visible": true,
+      "security_level": "info"
+    },
+    {
+      "timestamp": "2026-01-31T12:15:50.258250",
+      "source_container": "storage",
+      "operation_type": "handshake_completed",
+      "operation_details": {
+        "next_state": "ready"
+      },
+      "user_visible": true,
+      "security_level": "info"
+    },
+    {
+      "timestamp": "2026-01-31T12:16:00.269510",
+      "source_container": "security",
+      "operation_type": "handshake_completed",
+      "operation_details": {
+        "next_state": "ready"
+      },
+      "user_visible": true,
+      "security_level": "info"
+    },
+    {
+      "timestamp": "2026-01-31T15:01:32.206879",
+      "source_container": "governance",
+      "operation_type": "container_registered",
+      "operation_details": {
+        "state": "provisioning",
+        "health_check": null
+      },
+      "user_visible": true,
+      "security_level": "info"
+    },
+    {
+      "timestamp": "2026-01-31T15:01:43.118437",
+      "source_container": "storage",
+      "operation_type": "container_registered",
+      "operation_details": {
+        "state": "provisioning",
+        "health_check": null
+      },
+      "user_visible": true,
+      "security_level": "info"
+    },
+    {
+      "timestamp": "2026-01-31T15:01:48.483752",
+      "source_container": "security",
+      "operation_type": "container_registered",
+      "operation_details": {
+        "state": "provisioning",
+        "health_check": null
+      },
+      "user_visible": true,
+      "security_level": "info"
+    },
+    {
+      "timestamp": "2026-01-31T15:02:03.881538",
+      "source_container": "governance",
+      "operation_type": "handshake_completed",
+      "operation_details": {
+        "next_state": "ready"
+      },
+      "user_visible": true,
+      "security_level": "info"
+    },
+    {
+      "timestamp": "2026-01-31T15:02:13.886911",
+      "source_container": "storage",
+      "operation_type": "handshake_completed",
+      "operation_details": {
+        "next_state": "ready"
+      },
+      "user_visible": true,
+      "security_level": "info"
+    },
+    {
+      "timestamp": "2026-01-31T15:02:23.892010",
+      "source_container": "security",
+      "operation_type": "handshake_completed",
+      "operation_details": {
+        "next_state": "ready"
+      },
+      "user_visible": true,
+      "security_level": "info"
+    }
+  ]
+}

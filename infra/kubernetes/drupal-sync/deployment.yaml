@@ -1,0 +1,83 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: drupal-sync
+  labels:
+    app: drupal-sync
+    heady.io/domain: cms
+    heady.io/autocontext: "true"
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: drupal-sync
+  template:
+    metadata:
+      labels:
+        app: drupal-sync
+        heady.io/domain: cms
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "8809"
+    spec:
+      terminationGracePeriodSeconds: 34
+      containers:
+      - name: drupal-sync
+        image: gcr.io/gen-lang-client-0920560496/drupal-sync:latest
+        ports:
+        - containerPort: 8809
+          name: http
+        envFrom:
+        - configMapRef:
+            name: heady-global-config
+        - secretRef:
+            name: heady-secrets
+        env:
+        - name: SERVICE_NAME
+          value: "drupal-sync"
+        - name: PORT
+          value: "8809"
+        - name: AUTOCONTEXT_URL
+          value: "http://heady-auto-context:8907"
+        - name: CONSUL_URL
+          value: "http://consul:8500"
+        - name: OTEL_ENDPOINT
+          value: "http://otel-collector:4318"
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "128Mi"
+          limits:
+            cpu: "500m"
+            memory: "512Mi"
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8809
+          initialDelaySeconds: 13
+          periodSeconds: 21
+          timeoutSeconds: 8
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8809
+          initialDelaySeconds: 8
+          periodSeconds: 13
+          timeoutSeconds: 5
+          failureThreshold: 2
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: drupal-sync
+  labels:
+    app: drupal-sync
+    heady.io/domain: cms
+spec:
+  selector:
+    app: drupal-sync
+  ports:
+  - name: http
+    port: 8809
+    targetPort: 8809

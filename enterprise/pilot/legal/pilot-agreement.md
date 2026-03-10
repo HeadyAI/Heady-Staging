@@ -219,7 +219,7 @@ Participant shall not use the Platform to:
 **HeadySystems Inc.**
 
 Signature: ___________________________  
-Name: Eric Headington  
+Name: Eric Haywood  
 Title: Founder & CEO  
 Date: ___________________________  
 

@@ -1,0 +1,42 @@
+# Drupal Content Type: Article
+# Generated for Heady™ Platform — HeadyAutoContext vector-indexed
+# All content auto-synced to pgvector via webhook + polling fallback
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+    - text
+    - field
+    - heady_cms
+id: article
+label: 'Article'
+description: 'Blog posts, news, and announcements across all Heady sites.'
+help: ''
+new_revision: true
+preview_mode: 1
+display_submitted: true
+
+# Field: field_body
+# field_type: text_long
+
+# Field: field_summary
+# field_type: text_long
+
+# Field: field_image
+# field_type: file
+
+# Field: field_tags
+# field_type: entity_reference
+
+# Field: field_site_assignment
+# field_type: text_long
+
+# Field: field_author
+# field_type: text_long
+
+# Field: field_published_date
+# field_type: datetime
+
+# Field: field_vector_embedding
+# field_type: text_long

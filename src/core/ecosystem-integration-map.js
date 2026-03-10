@@ -190,7 +190,7 @@ const SERVICES = {
     entrypoint: 'index.js',
     port: 3303,
     publicPort: 443,
-    domains: [], // TODO: headyos.com not yet in domain table
+    domains: ['headyos.com'], // headyos.com — sovereign OS vertical
     status: 'projected',
     capabilities: [
       'latent-reasoning',
