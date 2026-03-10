@@ -16,6 +16,7 @@ import { setupMCPRoutes } from './src/mcp/mcp-server.js';
 import { setupAgentRoutes } from './src/agents/agent-router.js';
 import { setupMemoryRoutes } from './src/memory/memory-router.js';
 import { setupDashboardRoutes } from './src/gateway/dashboard-router.js';
+import { setupSubsystemRoutes, initializeSubsystems, shutdownSubsystems } from './src/gateway/subsystem-routes.js';
 import { AutoSuccessEngine } from './src/services/auto-success.js';
 import { errorHandler } from './src/gateway/error-handler.js';
 import { metricsMiddleware, metricsEndpoint } from './src/utils/metrics.js';
@@ -64,6 +65,7 @@ setupMCPRoutes(app);
 setupAgentRoutes(app);
 setupMemoryRoutes(app);
 setupDashboardRoutes(app);
+setupSubsystemRoutes(app);
 app.get('/metrics', metricsEndpoint);
 
 // ── Auth routes ──
@@ -82,6 +84,14 @@ const server = app.listen(PORT, () => {
   logger.info(`[HeadyManager] ✅ Health: http://localhost:${PORT}/health`);
 });
 
+// ── Subsystem Initialization (Colab Cluster, Bee Factory, Swarm Coordinator, Universal Prompt) ──
+initializeSubsystems().then((results) => {
+  const loaded = Object.entries(results).filter(([, v]) => v).map(([k]) => k);
+  logger.info(`[HeadyManager] ✅ Subsystems initialized: ${loaded.join(', ') || 'none'}`);
+}).catch(err => {
+  logger.error(`[HeadyManager] ⚠️ Subsystem init error: ${err.message}`);
+});
+
 // ── Auto-Success Engine ──
 const autoSuccess = new AutoSuccessEngine();
 autoSuccess.start().then(() => {
@@ -93,6 +103,7 @@ autoSuccess.start().then(() => {
 // ── Graceful shutdown ──
 const shutdown = async (signal) => {
   logger.info(`[HeadyManager] Received ${signal}. Shutting down gracefully...`);
+  await shutdownSubsystems();
   await autoSuccess.stop();
   server.close(() => {
     logger.info('[HeadyManager] Server closed.');

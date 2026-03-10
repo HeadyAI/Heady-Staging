@@ -37,12 +37,24 @@
 const EventEmitter = require('events');
 const crypto = require('crypto');
 
-// Sacred Geometry constants
-const PHI = 1.618033988749895;
-const PSI = 1 / PHI;
+// Import from single source of truth — ZERO hardcoded constants
+let PHI, PSI, fib, CSL_THRESHOLDS_RAW;
+try {
+  const phiMath = require('../../shared/phi-math.js');
+  PHI = phiMath.PHI;
+  PSI = phiMath.PSI;
+  fib = phiMath.fib;
+  CSL_THRESHOLDS_RAW = phiMath.CSL_THRESHOLDS;
+} catch {
+  // Fallback if phi-math not available (standalone usage)
+  PHI = 1.618033988749895;
+  PSI = 1 / PHI;
+  fib = (n) => [0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144][n] || 0;
+  CSL_THRESHOLDS_RAW = null;
+}
 const FIB = [1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144];
 
-const CSL_THRESHOLDS = Object.freeze({
+const CSL_THRESHOLDS = CSL_THRESHOLDS_RAW || Object.freeze({
   MINIMUM: 0.500,
   LOW: 0.691,
   MEDIUM: 0.809,

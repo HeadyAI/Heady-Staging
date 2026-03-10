@@ -40,6 +40,14 @@ class BaseAgent {
     this.skills = skills || [];
     this._description = description || `Agent: ${id}`;
     this.history = [];
+
+    // Inject universal prompt directive into every agent
+    this._universalDirective = universalPrompt.buildCompactDirective({
+      id: this.id,
+      skills: this.skills,
+      pool: "warm",
+    });
+    this._promptHash = universalPrompt.getPromptHash();
   }
 
   describe() { return this._description; }
@@ -64,6 +72,7 @@ class BaseAgent {
     return {
       id: this.id,
       skills: this.skills,
+      universalPromptHash: this._promptHash,
       invocations: this.history.length,
       successRate: this.history.length > 0
         ? this.history.filter(h => h.success).length / this.history.length
