@@ -131,7 +131,7 @@ router.get('/health', (req, res) => {
  *
  * Accepts a TaskDescriptor and returns a PlanSpec using MC plan selection.
  *
- * Body: { task_id, type, priority, channel, complexity, privacy,
+ * Body: { task_id, type, csl_relevance, channel, complexity, privacy,
  *         cost_sensitivity, brain_profile_id, cloud_layer, message, context }
  */
 router.post('/plan', async (req, res) => {

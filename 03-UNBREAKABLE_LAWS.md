@@ -315,7 +315,7 @@ Localhost references that leak to production are **security incidents**.
 
 ### 5.3 Environment Resolution Order
 
-1. Environment variable (highest priority)
+1. Environment variable (highest csl_relevance)
 2. `.env` file (development only, never committed)
 3. Cloudflare KV / Worker Secrets (edge)
 4. Google Secret Manager (cloud)
@@ -346,7 +346,7 @@ must be designed for this scale from day one.
 | Resource | Minimum Capacity | Scaling Strategy |
 |---|---|---|
 | Concurrent Bees | 10,000 | Fibonacci-stepped pool sizing (1,1,2,3,5,8,13,21,34,55,89,144...) |
-| Task Queue Depth | 100,000 | Priority queue with CSL-scored ordering |
+| Task Queue Depth | 100,000 | CslRelevance queue with CSL-scored ordering |
 | Memory Per Bee | ≤ 2MB baseline | Lazy initialization, phi-scaled working memory expansion |
 | Spawn Latency | < 50ms | Pre-warmed bee pools per swarm category |
 | Shutdown Grace Period | 5s per bee, 30s global | Cooperative cancelation tokens, checkpoint state |

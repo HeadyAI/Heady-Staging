@@ -153,7 +153,7 @@ raw UDP datagrams. Choose the right tool.
 | Third-party webhooks | MIDI → API/REST | < 200ms | SysEx → REST via Edge Proxy + mTLS |
 | Cross-swarm coordination | Event Bus | < 10ms | Spatial events with octant indexing |
 | AI model routing | LLM Router | < 100ms routing | CSL-scored provider selection |
-| Bee task distribution | Task Queue | < 5ms enqueue | Priority queue with phi-scoring |
+| Bee task distribution | Task Queue | < 5ms enqueue | CslRelevance queue with phi-scoring |
 
 ### 4.3 Determinism Requirements
 
@@ -254,7 +254,7 @@ controlled evolution, and promotion. 21 stages = fib(8) — Sacred Geometry alig
 | 1 | **RECON** | Reconnaissance & Deep Scan — map codebase, configs, services, attack surface, drift | Environment readiness ≥ 0.618 |
 | 2 | **INTAKE** | Async Semantic Barrier — blocks until 3D vector context fully retrieved | Context completeness ≥ 0.92 |
 | 3 | **CLASSIFY** | Intent classification via CSL Resonance Gate | `cos(intent, swarm) ≥ 0.618` |
-| 4 | **TRIAGE** | Priority classification (LOW/MEDIUM/HIGH/CRITICAL) + swarm assignment | Risk score computation |
+| 4 | **TRIAGE** | CslRelevance classification (LOW/MEDIUM/HIGH/CRITICAL) + swarm assignment | Risk score computation |
 | 5 | **DECOMPOSE** | Task decomposition into subtask DAG via Rabbit layer | All subtasks have clear completion criteria |
 | 6 | **TRIAL_AND_ERROR** | Safe sandboxed execution of candidate solutions with auto-rollback | ≥ 2 trials succeed, winner score > φ-threshold |
 | 7 | **ORCHESTRATE** | Bee spawning, resource allocation, dependency wiring | Required bees available and healthy |
@@ -278,7 +278,7 @@ controlled evolution, and promotion. 21 stages = fib(8) — Sacred Geometry alig
 - Failed stages trigger phi-backoff retry: 1618ms → 2618ms → 4236ms (max 3 attempts)
 - After 3 failures: escalate to HeadyBuddy with full diagnostic context
 - Stage duration metrics tracked via `observability-kernel`
-- Total pipeline SLA: < 60s for MEDIUM priority, < 300s for HIGH
+- Total pipeline SLA: < 60s for MEDIUM csl_relevance, < 300s for HIGH
 
 ### 7.4 Pipeline Variants
 
@@ -382,7 +382,7 @@ mathematical harmony.
 | Bee pool sizes | Fibonacci pre-warm: 5, 8, 13, 21 per swarm |
 | Timeout values | `baseTimeout × φ` for each escalation level |
 | CSL gate thresholds | 0.618 (1/φ) as default resonance threshold |
-| Priority scoring | φ-weighted factor fusion |
+| CslRelevance scoring | φ-weighted factor fusion |
 | Circuit breaker thresholds | Fibonacci failure counts before open |
 | Health check intervals | Fibonacci-distributed to prevent thundering herd |
 | Auto-Success task allocation | φ-ratio distribution across 9 categories |

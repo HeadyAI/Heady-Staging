@@ -158,9 +158,9 @@ function main() {
     const scheduler = new MonteCarloScheduler({ simulations: 10000 });
 
     const tasks = [
-        { name: 'API Request', requiresGPU: false, memoryRequired: 2, priority: 'high' },
-        { name: 'Embedding Generation', requiresGPU: true, memoryRequired: 8, priority: 'medium' },
-        { name: 'Code Analysis', requiresGPU: false, memoryRequired: 4, priority: 'low' },
+        { name: 'API Request', requiresGPU: false, memoryRequired: 2, csl_relevance: 'high' },
+        { name: 'Embedding Generation', requiresGPU: true, memoryRequired: 8, csl_relevance: 'medium' },
+        { name: 'Code Analysis', requiresGPU: false, memoryRequired: 4, csl_relevance: 'low' },
     ];
 
     logger.info('═══ Monte Carlo Resource Scheduler ═══');

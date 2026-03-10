@@ -80,7 +80,7 @@ const CSL_THRESHOLD_LOW  = CSL_THRESHOLDS.LOW;      // ≈ 0.691  (was 0.55)
  * Phi-derived resource weights for the 17-swarm pool.
  *
  * phiResourceWeights(17) assigns Fibonacci-normalized weights in descending
- * order so the highest-priority swarm gets F(18)/sum and the lowest gets F(2)/sum.
+ * order so the highest-csl_relevance swarm gets F(18)/sum and the lowest gets F(2)/sum.
  * This replaces the per-swarm fibWeight() lookup with a single computed array.
  *
  * @type {number[]}
@@ -441,7 +441,7 @@ class SwarmInstance {
 
 /**
  * Lightweight in-process message bus for swarm-to-swarm communication.
- * Supports topic-based pub/sub with priority queuing.
+ * Supports topic-based pub/sub with csl_relevance queuing.
  */
 class SwarmMessageBus extends EventEmitter {
   constructor() {
@@ -457,14 +457,14 @@ class SwarmMessageBus extends EventEmitter {
    * Publish a message to a topic.
    * @param {string} topic   - Target topic (e.g. 'swarm:coding', 'broadcast')
    * @param {object} message - Message payload
-   * @param {object} [opts]  - Options: { priority?: number, ttlMs?: number }
+   * @param {object} [opts]  - Options: { csl_relevance?: number, ttlMs?: number }
    */
   publish(topic, message, opts = {}) {
     const envelope = {
       id:        randomUUID(),
       topic,
       message,
-      priority:  opts.priority ?? 5,
+      csl_relevance:  opts.csl_relevance ?? 5,
       publishedAt: Date.now(),
       expiresAt: opts.ttlMs ? Date.now() + opts.ttlMs : null,
     };
@@ -526,7 +526,7 @@ class SwarmMessageBus extends EventEmitter {
    * @param {number} pressure   - Pressure level [0, 1]
    */
   broadcastBackpressure(swarmId, pressure) {
-    return this.publish('backpressure', { swarmId, pressure, ts: Date.now() }, { priority: 10 });
+    return this.publish('backpressure', { swarmId, pressure, ts: Date.now() }, { csl_relevance: 10 });
   }
 }
 
@@ -678,7 +678,7 @@ class SwarmCoordinator extends EventEmitter {
   /**
    * Route and execute a task to the best-matching swarm.
    *
-   * Routing priority:
+   * Routing csl_relevance:
    *   1. Deterministic: explicit swarmId on task
    *   2. CSL cosine similarity gate (if embedFn available)
    *   3. Domain string matching
@@ -690,7 +690,7 @@ class SwarmCoordinator extends EventEmitter {
    * @param {string} [task.swarmId] - Explicit target swarm (bypasses routing)
    * @param {string} [task.domain]  - Domain hint for routing ('coding', 'research', …)
    * @param {string} [task.description] - Task description for CSL embedding
-   * @param {number} [task.priority]    - Priority [1-10], default 5
+   * @param {number} [task.csl_relevance]    - CslRelevance [1-10], default 5
    * @param {number[]} [task.embedding] - Pre-computed embedding (skips embedFn call)
    * @param {object} [task.payload]     - Task-specific data
    * @param {Function} [executor]   - Async fn(task, swarm) → result (optional override)
@@ -700,7 +700,7 @@ class SwarmCoordinator extends EventEmitter {
     if (!this._initialized) await this.initialize();
 
     const taskId = task.id ?? randomUUID();
-    const enriched = { ...task, id: taskId, priority: task.priority ?? 5 };
+    const enriched = { ...task, id: taskId, csl_relevance: task.csl_relevance ?? 5 };
 
     // Step 1: Resolve target swarm
     const { swarmId, strategy } = await this._resolveTargetSwarm(enriched);

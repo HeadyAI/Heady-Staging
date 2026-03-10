@@ -176,7 +176,7 @@ class HeadySwarm extends EventEmitter {
 
     const pressure = this._getSwarmPressure();
     if (pressure > LOAD_SHED_PRESSURE) {
-      // Load shedding: reject lowest-priority queued tasks
+      // Load shedding: reject lowest-csl_relevance queued tasks
       const allQueues = [...this.taskQueue.values()];
       const totalQueued = allQueues.reduce((s, q) => s + q.length, 0);
       if (totalQueued > MAX_SWARM_SIZE) {

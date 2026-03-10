@@ -3,14 +3,14 @@
  *
  * Dynamic Bee Factory — Creates any type of bee on the fly at runtime.
  * CSL Integration: Uses Continuous Semantic Logic gates for intelligent
- * bee dispatch, swarm candidate scoring, and priority classification.
+ * bee dispatch, swarm candidate scoring, and csl_relevance classification.
  *
  * CSL gates used:
  *   - multi_resonance      → Score bee candidates against task intent
  *   - route_gate           → Select best bee for a task with soft activation
  *   - resonance_gate       → Match task intent to bee domain semantics
- *   - ternary_gate         → Classify bee health/priority: core / ephemeral / reject
- *   - soft_gate            → Continuous priority activation for swarm ordering
+ *   - ternary_gate         → Classify bee health/csl_relevance: core / ephemeral / reject
+ *   - soft_gate            → Continuous csl_relevance activation for swarm ordering
  *   - superposition_gate   → Fuse multi-domain bee vectors for composite swarms
  *   - orthogonal_gate      → Exclude specific domain influence from routing
  *
@@ -18,7 +18,7 @@
  *   const { createBee, spawnBee, routeBee, createWorkUnit } = require('./bee-factory');
  *
  *   // Create a bee for any domain
- *   createBee('new-domain', { description: 'Handles new-domain tasks', priority: 0.9, ... });
+ *   createBee('new-domain', { description: 'Handles new-domain tasks', csl_relevance: 0.9, ... });
  *
  *   // Route a task to the best bee using CSL
  *   const best = routeBee('deploy kubernetes cluster');
@@ -77,7 +77,7 @@ function _buildBeeVector(domain, description) {
  * @param {string} domain - Domain name for the bee
  * @param {Object} config - Bee configuration
  * @param {string} config.description - What this bee does
- * @param {number} config.priority - Urgency (0.0 - 1.0)
+ * @param {number} config.csl_relevance - Urgency (0.0 - 1.0)
  * @param {Array} config.workers - Array of { name, fn } work units
  * @param {boolean} config.persist - If true, writes a bee file to disk (default: false)
  * @returns {Object} The registered bee entry
@@ -85,7 +85,7 @@ function _buildBeeVector(domain, description) {
 function createBee(domain, config = {}) {
     const {
         description = `Dynamic ${domain} bee`,
-        priority = 0.5,
+        csl_relevance = 0.5,
         workers = [],
         persist = false,
     } = config;
@@ -103,21 +103,21 @@ function createBee(domain, config = {}) {
     // CSL: Build semantic vector for this bee
     const vector = _buildBeeVector(domain, description);
 
-    // CSL: Classify priority using ternary_gate
-    const priorityClass = CSL.ternary_gate(priority, 0.7, 0.3);
+    // CSL: Classify csl_relevance using ternary_gate
+    const csl_relevanceClass = CSL.ternary_gate(csl_relevance, 0.7, 0.3);
 
     const entry = {
         domain,
         description,
-        priority,
+        csl_relevance,
         createdAt: Date.now(),
         dynamic: true,
         validated,
         file: `dynamic:${domain}`,
         vector,
         csl: {
-            priorityState: priorityClass.state, // +1 = critical, 0 = normal, -1 = low
-            priorityActivation: priorityClass.resonanceActivation,
+            csl_relevanceState: csl_relevanceClass.state, // +1 = critical, 0 = normal, -1 = low
+            csl_relevanceActivation: csl_relevanceClass.resonanceActivation,
         },
         getWork: (ctx = {}) => workers.map(w => {
             if (typeof w === 'function') return w;
@@ -155,10 +155,10 @@ function createBee(domain, config = {}) {
  *
  * @param {string} name - Name for this bee
  * @param {Function|Function[]} work - Work function(s) to execute
- * @param {number} priority - Urgency (default: 0.8)
+ * @param {number} csl_relevance - Urgency (default: 0.8)
  * @returns {Object} The ephemeral bee entry
  */
-function spawnBee(name, work, priority = 0.8) {
+function spawnBee(name, work, csl_relevance = 0.8) {
     const workFns = Array.isArray(work) ? work : [work];
     const id = `ephemeral-${name}-${crypto.randomBytes(3).toString('hex')}`;
 
@@ -167,12 +167,12 @@ function spawnBee(name, work, priority = 0.8) {
     const entry = {
         domain: id,
         description: `Ephemeral bee: ${name}`,
-        priority,
+        csl_relevance,
         ephemeral: true,
         createdAt: Date.now(),
         file: `ephemeral:${id}`,
         vector,
-        csl: { priorityState: CSL.ternary_gate(priority, 0.7, 0.3).state },
+        csl: { csl_relevanceState: CSL.ternary_gate(csl_relevance, 0.7, 0.3).state },
         getWork: () => workFns.map(fn => async (ctx) => {
             const result = await fn(ctx);
             return { bee: id, action: name, ...(typeof result === 'object' ? result : { result }) };
@@ -234,19 +234,19 @@ function routeBee(taskDescription, options = {}) {
     const candidates = allBees.map(b => ({ id: b.domain, vector: b.vector }));
     const routeResult = CSL.route_gate(intentVec, candidates, threshold);
 
-    // Enrich with priority weighting via soft_gate
+    // Enrich with csl_relevance weighting via soft_gate
     const ranked = routeResult.scores.map(s => {
         const bee = allBees.find(b => b.domain === s.id);
-        const priorityActivation = CSL.soft_gate(bee.priority, 0.5, 10);
-        // Composite: 70% semantic resonance + 30% priority
-        const composite = s.score * 0.7 + priorityActivation * 0.3;
+        const csl_relevanceActivation = CSL.soft_gate(bee.csl_relevance, 0.5, 10);
+        // Composite: 70% semantic resonance + 30% csl_relevance
+        const composite = s.score * 0.7 + csl_relevanceActivation * 0.3;
         return {
             domain: s.id,
             description: bee.description,
             resonance: s.score,
             activation: s.activation,
-            priority: bee.priority,
-            priorityActivation: +priorityActivation.toFixed(6),
+            csl_relevance: bee.csl_relevance,
+            csl_relevanceActivation: +csl_relevanceActivation.toFixed(6),
             composite: +composite.toFixed(6),
         };
     }).sort((a, b) => b.composite - a.composite).slice(0, topK);
@@ -309,7 +309,7 @@ function createFromTemplate(template, config = {}) {
         'health-check': (cfg) => ({
             domain: cfg.domain || `health-${cfg.target}`,
             description: `Health checker for ${cfg.target}`,
-            priority: 0.9,
+            csl_relevance: 0.9,
             workers: [
                 {
                     name: 'probe', fn: async () => {
@@ -340,7 +340,7 @@ function createFromTemplate(template, config = {}) {
         'monitor': (cfg) => ({
             domain: cfg.domain || `monitor-${cfg.target}`,
             description: `Monitor for ${cfg.target}`,
-            priority: 0.7,
+            csl_relevance: 0.7,
             workers: [
                 {
                     name: 'metrics', fn: async () => {
@@ -382,7 +382,7 @@ function createFromTemplate(template, config = {}) {
         'processor': (cfg) => ({
             domain: cfg.domain || `processor-${cfg.name}`,
             description: `Data processor: ${cfg.name}`,
-            priority: cfg.priority || 0.6,
+            csl_relevance: cfg.csl_relevance || 0.6,
             workers: (cfg.tasks || []).map(task => ({
                 name: task.name || 'process',
                 fn: task.fn || (async () => ({ processed: true, task: task.name })),
@@ -392,7 +392,7 @@ function createFromTemplate(template, config = {}) {
         'scanner': (cfg) => ({
             domain: cfg.domain || `scanner-${cfg.target}`,
             description: `Scanner for ${cfg.target}`,
-            priority: 0.8,
+            csl_relevance: 0.8,
             workers: [
                 {
                     name: 'scan', fn: cfg.scanFn || (async () => {
@@ -444,7 +444,7 @@ function createFromTemplate(template, config = {}) {
         'alerter': (cfg) => ({
             domain: cfg.domain || `alerter-${cfg.target}`,
             description: `Threshold alerter for ${cfg.target}`,
-            priority: 0.85,
+            csl_relevance: 0.85,
             workers: [
                 {
                     name: 'check-thresholds', fn: async () => {
@@ -519,7 +519,7 @@ function createSwarm(name, beeConfigs = [], policy = {}) {
     // Create the orchestrating swarm bee
     const swarmBee = createBee(`swarm-${name}`, {
         description: `Swarm: ${name} (${mode}, ${bees.length} bees, CSL-scored)`,
-        priority: 1.0,
+        csl_relevance: 1.0,
         isSwarm: true,
         workers: [{
             name: 'orchestrate',
@@ -609,14 +609,14 @@ function listDynamicBees() {
     const bees = [];
     for (const [id, entry] of _dynamicRegistry) {
         bees.push({
-            domain: id, description: entry.description, priority: entry.priority,
+            domain: id, description: entry.description, csl_relevance: entry.csl_relevance,
             type: 'dynamic', createdAt: entry.createdAt,
             csl: entry.csl || null,
         });
     }
     for (const [id, entry] of _ephemeralBees) {
         bees.push({
-            domain: id, description: entry.description, priority: entry.priority,
+            domain: id, description: entry.description, csl_relevance: entry.csl_relevance,
             type: 'ephemeral', createdAt: entry.createdAt,
             csl: entry.csl || null,
         });
@@ -660,7 +660,7 @@ function _persistBee(domain, config) {
  */
 const domain = '${domain}';
 const description = '${(config.description || '').replace(/'/g, "\\'")}';
-const priority = ${config.priority || 0.5};
+const csl_relevance = ${config.csl_relevance || 0.5};
 
 function getWork(ctx = {}) {
     return [
@@ -668,7 +668,7 @@ ${workerNames.map(name => `        async () => ({ bee: domain, action: '${name}'
     ];
 }
 
-module.exports = { domain, description, priority, getWork };
+module.exports = { domain, description, csl_relevance, getWork };
 `;
 
     try {

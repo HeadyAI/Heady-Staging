@@ -116,7 +116,7 @@ function createRouter(embedService) {
    *             cached: number, latencyMs: number }
    */
   router.post('/embed', async (req, res) => {
-    const { texts, model, pooling, normalize, useCache, priority } = req.body || {};
+    const { texts, model, pooling, normalize, useCache, priority } = req.body || {}; const csl_relevance = priority;
 
     const validationErr = validateTexts(texts);
     if (validationErr) {
@@ -132,7 +132,7 @@ function createRouter(embedService) {
         poolingStrategy: pooling,
         normalize: normalize !== false,
         useCache: useCache !== false,
-        priority: typeof priority === 'number' ? priority : 5,
+        csl_relevance: typeof csl_relevance === 'number' ? csl_relevance : 5,
       });
 
       return res.json({
@@ -153,11 +153,11 @@ function createRouter(embedService) {
 
   /**
    * @route POST /embed/batch
-   * @body { texts: string[], model?: string, normalize?: boolean, priority?: number }
+   * @body { texts: string[], model?: string, normalize?: boolean, csl_relevance?: number }
    * @returns { jobId: string, status: 'pending', total: number }
    */
   router.post('/embed/batch', (req, res) => {
-    const { texts, model, normalize, priority } = req.body || {};
+    const { texts, model, normalize, priority } = req.body || {}; const csl_relevance = priority;
 
     const validationErr = validateTexts(texts);
     if (validationErr) {
@@ -169,7 +169,7 @@ function createRouter(embedService) {
       return res.status(400).json({ error: 'texts array is empty' });
     }
 
-    const job = createJob(textArr, { model, normalize, priority });
+    const job = createJob(textArr, { model, normalize, csl_relevance });
 
     // Run async (detached from request)
     setImmediate(() => {
@@ -180,7 +180,7 @@ function createRouter(embedService) {
         .embed(textArr, {
           modelId: model,
           normalize: normalize !== false,
-          priority: typeof priority === 'number' ? priority : 7, // batch = lower priority
+          csl_relevance: typeof csl_relevance === 'number' ? csl_relevance : 7, // batch = lower csl_relevance
           onProgress: (processed, total) => {
             job.progress = { processed, total };
           },

@@ -89,13 +89,13 @@ function resolveBrainProfile(req) {
   const profiles = brainProfiles.profiles;
   const routing = brainProfiles.routing || {};
 
-  // Priority 1: explicit brain_profile_id in request
+  // CslRelevance 1: explicit brain_profile_id in request
   const explicitId = req.body?.brain_profile_id || req.headers['x-brain-profile'];
   if (explicitId && profiles[explicitId]) {
     return { id: explicitId, profile: profiles[explicitId], source: 'explicit' };
   }
 
-  // Priority 2: workspace_id lookup
+  // CslRelevance 2: workspace_id lookup
   const workspaceId = req.body?.workspace_id || req.headers['x-workspace-id'];
   if (workspaceId && routing.workspace_type_to_brain) {
     const brainId = routing.workspace_type_to_brain[workspaceId];
@@ -104,7 +104,7 @@ function resolveBrainProfile(req) {
     }
   }
 
-  // Priority 3: domain-based lookup
+  // CslRelevance 3: domain-based lookup
   const domain = req.headers['x-forwarded-host'] || req.hostname;
   if (domain && routing.domain_to_brain) {
     for (const [domainPattern, brainId] of Object.entries(routing.domain_to_brain)) {
@@ -145,7 +145,7 @@ function buildTaskDescriptor(req, brainResolution, layerId) {
   return {
     id: `task-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
     type: req.body?.task_type || 'GENERAL',
-    priority: req.body?.priority || 'normal',
+    csl_relevance: req.body?.priority || 'normal',
     channel: req.body?.channel || 'api',
     complexity: req.body?.complexity || 'medium',
     privacy: req.body?.privacy || brainResolution.profile?.model_policy?.privacy || 'normal',
@@ -188,7 +188,7 @@ router.get('/health', (req, res) => {
  * builds a TaskDescriptor, and returns the execution plan.
  *
  * Body: { message, task_type?, workspace_id?, brain_profile_id?,
- *         cloud_layer?, priority?, channel?, privacy?, cost_sensitivity?,
+ *         cloud_layer?, csl_relevance?, channel?, privacy?, cost_sensitivity?,
  *         context? }
  */
 router.post('/route', (req, res) => {
@@ -325,7 +325,7 @@ router.get('/rebuild-status', (req, res) => {
  * End-to-end task execution: orchestrate → brain plan → pipeline run → feedback.
  *
  * Body: { message, task_type?, workspace_id?, brain_profile_id?,
- *         cloud_layer?, priority?, channel?, privacy?, cost_sensitivity?,
+ *         cloud_layer?, csl_relevance?, channel?, privacy?, cost_sensitivity?,
  *         context?, execute? }
  */
 router.post('/execute', async (req, res) => {

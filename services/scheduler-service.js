@@ -1,6 +1,6 @@
 /**
  * Heady Scheduler Service — Port 3315
- * Job scheduling with DAG deps, priority queue, φ-backoff retry, DLQ
+ * Job scheduling with DAG deps, csl_relevance queue, φ-backoff retry, DLQ
  * Author: Eric Haywood | All constants φ-derived | ESM only
  */
 import { createHash, randomBytes } from 'crypto';
@@ -56,8 +56,6 @@ function matchesCron(parsed, date) {
 // ── Job Creation ─────────────────────────────────────────────────
 function createJob(spec) {
   const id = sha256(randomBytes(16).toString('hex') + Date.now());
-  const priorityScore = spec.priority || phiThreshold(2);
-  const gatedPriority = cslGate(priorityScore, priorityScore, phiThreshold(1), PSI * PSI * PSI);
 
   const job = {
     id,
@@ -65,7 +63,7 @@ function createJob(spec) {
     type: spec.type || 'one_shot',
     handler: spec.handler || null,
     payload: spec.payload || {},
-    priority: gatedPriority,
+
     state: 'PENDING',
     attempts: 0,
     maxRetries: spec.maxRetries || MAX_RETRIES,
@@ -90,7 +88,7 @@ function createJob(spec) {
   }
 
   metrics.created++;
-  return { id, state: job.state, priority: job.priority };
+  return { id, state: job.state };
 }
 
 // ── DAG Dependency Resolution ────────────────────────────────────
