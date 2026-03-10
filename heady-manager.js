@@ -103,6 +103,12 @@ if (fs.existsSync(frontendBuildPath)) {
 }
 app.use(express.static("public"));
 
+// Mount UI directories for liquid nodes, swarms, and topology
+app.use("/ui/topology", express.static(path.join(__dirname, "ui", "topology-dashboard")));
+app.use("/ui/swarm", express.static(path.join(__dirname, "ui", "swarm-monitor")));
+app.use("/ui/colab", express.static(path.join(__dirname, "ui", "colab-runtime-panel")));
+app.use("/ui/vector", express.static(path.join(__dirname, "ui", "vector-explorer")));
+
 // ─── Utility ────────────────────────────────────────────────────────
 function readJsonSafe(filePath) {
   try { return JSON.parse(fs.readFileSync(filePath, "utf8")); }
@@ -318,6 +324,35 @@ app.post("/api/system/production", (req, res) => {
     sacred_geometry: "FULLY_ACTIVATED",
     ts,
   });
+});
+
+// ─── Liquid Mesh & Swarm Intelligence ────────────────────────────────
+let liquidMesh = null;
+let headySwarm = null;
+try {
+  const { LiquidMesh } = require('./src/liquid/liquid-mesh');
+  const { HeadySwarm } = require('./src/bees/heady-swarm');
+
+  liquidMesh = new LiquidMesh();
+  liquidMesh.start();
+
+  headySwarm = new HeadySwarm();
+  headySwarm.start();
+
+  logger.info("  ∞ Liquid Mesh: STARTED");
+  logger.info("  ∞ HeadySwarm: STARTED");
+} catch (err) {
+  logger.warn(`  ⚠ Liquid Mesh / Swarm failed to load: ${err.message}`);
+}
+
+app.get("/api/topology", (req, res) => {
+  if (!liquidMesh) return res.status(503).json({ error: "Liquid Mesh not active" });
+  res.json(liquidMesh.getTopology());
+});
+
+app.get("/api/swarm/status", (req, res) => {
+  if (!headySwarm) return res.status(503).json({ error: "HeadySwarm not active" });
+  res.json(headySwarm.getStatus());
 });
 
 // ─── Pipeline Engine (wired to src/hc_pipeline.js) ──────────────────
@@ -1163,7 +1198,7 @@ app.use((err, req, res, next) => {
 });
 
 // ─── SPA Fallback ───────────────────────────────────────────────────
-app.get("*", (req, res) => {
+app.get(/(.*)/, (req, res) => {
   const indexPath = path.join(frontendBuildPath, "index.html");
   if (fs.existsSync(indexPath)) return res.sendFile(indexPath);
   res.status(404).json({ error: "Not found" });

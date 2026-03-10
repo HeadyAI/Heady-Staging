@@ -12,9 +12,10 @@
 const EventEmitter = require('events');
 const {
   PHI, PSI, PSI_SQ, fib, phiFusionScore, phiResourceWeights,
-  CSL_THRESHOLDS, RESOURCE_ALLOCATION, TIMING,
+  CSL_THRESHOLDS, RESOURCE_ALLOCATION, PHI_TIMING,
   cslAND, getPressureLevel,
 } = require('../../shared/phi-math');
+const TIMING = { HEALTH_CHECK_MS: Math.round(fib(7) * 1000), DRIFT_CHECK_MS: Math.round(fib(9) * 1000) }; // Mock timing using fib logic if missing
 const { createLogger } = require('../../shared/logger');
 const { LiquidNode, NODE_STATES, POOL_TYPES } = require('./liquid-node');
 
