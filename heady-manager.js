@@ -48,7 +48,18 @@ const app = express();
 const PORT = process.env.PORT || 3301;
 
 // ── Global middleware ──
-app.use(helmet());
+app.use(helmet({
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'"],
+      styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
+      fontSrc: ["'self'", "https://fonts.gstatic.com"],
+      imgSrc: ["'self'", "data:", "https:"],
+      connectSrc: ["'self'", "https://*.headysystems.com", "https://*.headyconnection.com", "wss:"],
+    },
+  },
+}));
 app.use(cors({
   origin: process.env.CORS_ORIGINS?.split(',') || '*',
   credentials: true,
