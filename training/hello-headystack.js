@@ -73,13 +73,13 @@ class HeadyStackApp {
 
     // HeadyCloud connection simulation
     async connectToHeadyCloud() {
-        console.log("🔗 Connecting to HeadyCloud...");
+        console.info("🔗 Connecting to HeadyCloud...");
         
         // Simulate connection delay
         await new Promise(resolve => setTimeout(resolve, 1000));
         
         this.cloudConnected = true;
-        console.log("✅ Connected to HeadyCloud successfully!");
+        console.info("✅ Connected to HeadyCloud successfully!");
         
         return {
             status: "connected",
@@ -135,48 +135,48 @@ function designSacredPattern(shape, size, color) {
 // ===== MAIN EXECUTION =====
 
 async function main() {
-    console.log("🚀 Starting Hello HeadyStack Exercise...\n");
+    console.info("🚀 Starting Hello HeadyStack Exercise...\n");
     
     // Initialize HeadyStack app
     const app = new HeadyStackApp();
-    console.log(`✨ ${app.name} v${app.version} initialized!\n`);
+    console.info(`✨ ${app.name} v${app.version} initialized!\n`);
     
     // Sacred greeting
     const greeting = app.sacredGreeting("Developer");
-    console.log(greeting);
+    console.info(greeting);
     
     // Organic growth demonstration
     const growth = app.calculateGrowth(5);
-    console.log(`🌱 Organic growth over 5 iterations: ${growth}x\n`);
+    console.info(`🌱 Organic growth over 5 iterations: ${growth}x\n`);
     
     // HeadyCloud connection
     const connection = await app.connectToHeadyCloud();
-    console.log(`📊 Connection status: ${connection.status}\n`);
+    console.info(`📊 Connection status: ${connection.status}\n`);
     
     // Breathing interface
     const breathing = app.breathingAnimation();
-    console.log(`🫧 Breathing interface: ${breathing.inhale} → ${breathing.hold} → ${breathing.exhale}\n`);
+    console.info(`🫧 Breathing interface: ${breathing.inhale} → ${breathing.hold} → ${breathing.exhale}\n`);
     
     // ===== YOUR TURN =====
-    console.log("🎯 YOUR TURN - Complete the exercises:\n");
+    console.info("🎯 YOUR TURN - Complete the exercises:\n");
     
     // Exercise 1
-    console.log("1. Personal Greeting:");
-    console.log(createPersonalGreeting("YourName", "⬢"));
+    console.info("1. Personal Greeting:");
+    console.info(createPersonalGreeting("YourName", "⬢"));
     
     // Exercise 2
-    console.log("\n2. Fibonacci Growth:");
-    console.log(`Fibonacci(7): ${fibonacciGrowth(7)}`);
+    console.info("\n2. Fibonacci Growth:");
+    console.info(`Fibonacci(7): ${fibonacciGrowth(7)}`);
     
     // Exercise 3
-    console.log("\n3. Sacred Pattern:");
-    console.log(designSacredPattern("hexagon", 42, "cosmic blue"));
+    console.info("\n3. Sacred Pattern:");
+    console.info(designSacredPattern("hexagon", 42, "cosmic blue"));
     
-    console.log("\n🎓 Exercise Complete! You've learned:");
-    console.log("✅ HeadyStack architecture principles");
-    console.log("✅ Sacred geometry design patterns");
-    console.log("✅ Modern JavaScript practices");
-    console.log("✅ HeadyCloud integration concepts");
+    console.info("\n🎓 Exercise Complete! You've learned:");
+    console.info("✅ HeadyStack architecture principles");
+    console.info("✅ Sacred geometry design patterns");
+    console.info("✅ Modern JavaScript practices");
+    console.info("✅ HeadyCloud integration concepts");
 }
 
 // ===== EXPORT FOR TESTING =====

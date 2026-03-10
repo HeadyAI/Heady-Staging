@@ -130,22 +130,22 @@ function generateReport() {
 }
 
 function printReport(report) {
-  console.log('\n=== Heady System Recon Report ===');
-  console.log(`Timestamp: ${report.timestamp}`);
-  console.log(`Node: ${report.system.nodeVersion} | ${report.system.platform}`);
+  console.info('\n=== Heady System Recon Report ===');
+  console.info(`Timestamp: ${report.timestamp}`);
+  console.info(`Node: ${report.system.nodeVersion} | ${report.system.platform}`);
   
   if (report.repository.error) {
-    console.log(`Git: ${report.repository.error}`);
+    console.info(`Git: ${report.repository.error}`);
   } else {
-    console.log(`Git: ${report.repository.branch} @ ${report.repository.commit}`);
-    console.log(`Modified: ${report.repository.modifiedFiles} files`);
+    console.info(`Git: ${report.repository.branch} @ ${report.repository.commit}`);
+    console.info(`Modified: ${report.repository.modifiedFiles} files`);
   }
   
   if (report.package) {
-    console.log(`Package: ${report.package.name} v${report.package.version}`);
+    console.info(`Package: ${report.package.name} v${report.package.version}`);
   }
   
-  console.log('================================\n');
+  console.info('================================\n');
   
   return report;
 }

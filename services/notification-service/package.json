@@ -1,22 +1,16 @@
 {
-  "name": "@heady/notification-service",
+  "name": "notification-service",
   "version": "1.0.0",
-  "description": "Real-time notification service via WebSocket, SSE, and push for the Heady platform",
-  "main": "src/index.js",
+  "description": "Real-time notifications via WebSocket + SSE",
+  "main": "index.js",
   "scripts": {
-    "start": "node src/index.js",
-    "dev": "node --watch src/index.js",
-    "test": "node --test src/**/*.test.js",
-    "lint": "eslint src/"
-  },
-  "engines": {
-    "node": ">=20"
+    "start": "node index.js"
   },
   "dependencies": {
-    "express": "^4.21.0",
-    "helmet": "^8.0.0",
-    "ws": "^8.18.0"
-  },
-  "license": "UNLICENSED",
-  "private": true
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "firebase-admin": "^13.7.0",
+    "helmet": "^7.1.0",
+    "ws": "^8.13.0"
+  }
 }

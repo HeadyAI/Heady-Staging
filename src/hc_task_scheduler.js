@@ -67,7 +67,7 @@ function createTask(options) {
   return {
     id,
     type: options.type || "generic",
-    priority: options.priority != null ? options.priority : TASK_PRIORITY.NORMAL,
+    concurrent_equals: options.concurrent_equals != null ? options.concurrent_equals : TASK_PRIORITY.NORMAL,
     taskClass: options.taskClass || TASK_CLASS.BATCH,
     status: TASK_STATUS.QUEUED,
     resourceTier: null,
@@ -176,23 +176,23 @@ class HCTaskScheduler extends EventEmitter {
     const routing = this.tierRouting[task.type];
     if (!routing) return RESOURCE_TIER.M;
 
-    if (task.constraints.riskLevel === "critical" || task.priority === TASK_PRIORITY.CRITICAL) {
+    if (task.constraints.riskLevel === "critical" || task.concurrent_equals === TASK_PRIORITY.CRITICAL) {
       return routing.maxTier;
     }
 
-    if (this.safeModeActive || task.priority === TASK_PRIORITY.BACKGROUND) {
+    if (this.safeModeActive || task.concurrent_equals === TASK_PRIORITY.BACKGROUND) {
       return routing.minTier;
     }
 
     return routing.defaultTier;
   }
 
-  // ─── Priority insertion (lower number = higher priority) ────────────
+  // ─── Priority insertion (lower number = higher concurrent_equals) ────────────
 
   _insertByPriority(queue, task) {
     let inserted = false;
     for (let i = 0; i < queue.length; i++) {
-      if (task.priority < queue[i].priority) {
+      if (task.concurrent_equals < queue[i].concurrent_equals) {
         queue.splice(i, 0, task);
         inserted = true;
         break;
@@ -378,7 +378,7 @@ class HCTaskScheduler extends EventEmitter {
 
   getQueueDetails() {
     const summarize = (tasks) => tasks.map(t => ({
-      id: t.id, type: t.type, priority: t.priority, tier: t.resourceTier,
+      id: t.id, type: t.type, concurrent_equals: t.concurrent_equals, tier: t.resourceTier,
       status: t.status, waitMs: Date.now() - t.metrics.queuedAt,
     }));
     return {
@@ -390,7 +390,7 @@ class HCTaskScheduler extends EventEmitter {
 
   getRecentCompleted(limit = 20) {
     return this.completed.slice(-limit).map(t => ({
-      id: t.id, type: t.type, priority: t.priority, tier: t.resourceTier,
+      id: t.id, type: t.type, concurrent_equals: t.concurrent_equals, tier: t.resourceTier,
       status: t.status, waitMs: (t.metrics.startedAt || 0) - (t.metrics.queuedAt || 0),
       execMs: (t.metrics.completedAt || 0) - (t.metrics.startedAt || 0),
       retries: t.metrics.retries, error: t.error,
@@ -428,7 +428,7 @@ function registerSchedulerRoutes(app, scheduler) {
       const task = scheduler.submit({
         ...req.body,
         type: 'hcfullpipeline',
-        priority: TASK_PRIORITY.HIGH,
+        concurrent_equals: TASK_PRIORITY.HIGH,
         constraints: { queue: 'hcfp' }
       });
       res.json({ 
@@ -436,7 +436,7 @@ function registerSchedulerRoutes(app, scheduler) {
         task: { 
           id: task.id, 
           type: task.type,
-          priority: task.priority,
+          concurrent_equals: task.concurrent_equals,
           status: task.status 
         } 
       });
@@ -457,7 +457,7 @@ function registerSchedulerRoutes(app, scheduler) {
         task: { 
           id: task.id, 
           type: task.type,
-          priority: task.priority,
+          concurrent_equals: task.concurrent_equals,
           status: task.status 
         } 
       });

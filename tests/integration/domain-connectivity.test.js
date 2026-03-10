@@ -109,7 +109,7 @@ describe('Domain Connectivity Tests', () => {
     
     test('Manager API should NOT respond to internal.headyio.com', async () => {
       if (process.env.NODE_ENV === 'development') {
-        console.log('Skipping localhost test in development');
+        console.info('Skipping localhost test in development');
         return;
       }
       const url = `http://internal.headyio.com:3300/api/health`;
@@ -191,12 +191,12 @@ describe('Domain Connectivity Tests', () => {
 
 // Run tests with detailed output
 if (require.main === module) {
-  console.log('\n╔══════════════════════════════════════════════════════════════════╗');
-  console.log('║  🧪 HEADY DOMAIN CONNECTIVITY TESTS                            ║');
-  console.log('╚══════════════════════════════════════════════════════════════════╝\n');
+  console.info('\n╔══════════════════════════════════════════════════════════════════╗');
+  console.info('║  🧪 HEADY DOMAIN CONNECTIVITY TESTS                            ║');
+  console.info('╚══════════════════════════════════════════════════════════════════╝\n');
   
   // Run with Jest or similar
-  console.log('Run with: npm test -- domain-connectivity.test.js\n');
+  console.info('Run with: npm test -- domain-connectivity.test.js\n');
 }
 
 module.exports = { makeRequest, fetchWithTimeout, checkServiceStatus };

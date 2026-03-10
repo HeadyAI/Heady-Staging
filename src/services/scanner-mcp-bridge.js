@@ -33,10 +33,10 @@ class ScannerMCPBridge {
 
     // Register optimization strategies with Monte Carlo
     mcPlanScheduler.registerTaskType(this.taskType, {
-      fast_serial: { concurrency: 1, priority: 'normal' },
-      fast_parallel: { concurrency: 8, priority: 'normal' },
-      balanced: { concurrency: 4, priority: 'normal' },
-      thorough: { concurrency: 2, priority: 'high' }
+      fast_serial: { concurrency: 1, concurrent_equals: 'normal' },
+      fast_parallel: { concurrency: 8, concurrent_equals: 'normal' },
+      balanced: { concurrency: 4, concurrent_equals: 'normal' },
+      thorough: { concurrency: 2, concurrent_equals: 'high' }
     });
   }
 

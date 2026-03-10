@@ -9,17 +9,31 @@
 // ║                                                                  ║
 // ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
 // ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
-// ║  FILE: src/heady_maid.js                                                    ║
-// ║  LAYER: backend/src                                                  ║
+// ║  FILE: test-db-connection.js                                                    ║
+// ║  LAYER: root                                                  ║
 // ╚══════════════════════════════════════════════════════════════════╝
 // HEADY_BRAND:END
+const { Pool } = require('pg');
+const pool = new Pool({
+  user: 'postgres',
+  host: 'internal.headyio.com',
+  database: 'heady',
+  password: 'password',
+  port: 5432,
+});
 
-// Heady Maid - System Maintenance and Cleanup Service
-// Placeholder for automated system maintenance
+async function testConnection() {
+  try {
+    const res = await pool.query('SELECT NOW()');
+    console.info('Database connection successful:', res.rows[0]);
+    return true;
+  } catch (err) {
+    console.error('Database connection failed:', err);
+    return false;
+  } finally {
+    await pool.end();
+  }
+}
 
-const HeadyMaid = {
-  clean: () => console.info('Cleaning system...'),
-  optimize: () => console.info('Optimizing performance...'),
-};
+testConnection();
 
-module.exports = HeadyMaid;
