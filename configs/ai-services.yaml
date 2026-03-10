@@ -17,6 +17,12 @@
 # Enabled services will be automatically integrated into the AI service adapter
 
 services:
+  colab_gateway:
+    enabled: true
+    runtimes: 3
+    latent_space_ops: true
+    config_path: configs/colab.yaml
+
   claude:
     enabled: true
     default_model: claude-2.1

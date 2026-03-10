@@ -16,8 +16,10 @@
 const http = require('http');
 const fs = require('fs');
 const path = require('path');
+const { createLogger } = require('./shared/logger');
+const logger = createLogger('quick-server');
 
-const PORT = 3300;
+const PORT = process.env.PORT || 3300;
 
 const server = http.createServer((req, res) => {
     let filePath = req.url === '/' ? '/index.html' : req.url;
@@ -49,8 +51,8 @@ const server = http.createServer((req, res) => {
 });
 
 server.listen(PORT, () => {
-    console.log(`✅ HeadyManager RUNNING on http://manager.local:${PORT}`);
-    console.log(`🌐 Website: http://app.local:${PORT}`);
-    console.log(`📊 Health: http://manager.local:${PORT}/api/health`);
+    logger.info(`✅ HeadyManager RUNNING on http://manager.local:${PORT}`);
+    logger.info(`🌐 Website: http://app.local:${PORT}`);
+    logger.info(`📊 Health: http://manager.local:${PORT}/api/health`);
 });
 

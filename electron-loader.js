@@ -16,10 +16,12 @@
 // Custom Electron API loader
 const electronPath = require('electron');
 const electron = require(electronPath);
+const { createLogger } = require('./shared/logger');
+const logger = createLogger('electron-loader');
 
 // Test API access
 electron.app.whenReady().then(() => {
-  console.log('Electron API successfully accessed!');
+  logger.info('Electron API successfully accessed!');
   const win = new electron.BrowserWindow({ show: false });
   win.loadURL('about:blank');
   win.close();

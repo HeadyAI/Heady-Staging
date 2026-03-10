@@ -2,7 +2,7 @@
 
 **Version**: 3.2.0 Orion Patch  
 **Updated**: 2026-03-10  
-**Founder**: Eric Head (eric-head / headyme)  
+**Founder**: Eric Haywood (eric-head / headyme)
 **Organization**: HeadyMe (GitHub: HeadyMe)  
 **Cloud**: Google Cloud Run (gen-lang-client-0920560496, us-central1)  
 **Edge**: Cloudflare Workers + DNS proxy (11 zones)  
@@ -433,7 +433,7 @@ All system parameters derive from the golden ratio (φ ≈ 1.618033988749895):
 ## 15. Brand Identity
 
 - **Primary brand**: Heady™
-- **Founder**: Eric Head
+- **Founder**: Eric Haywood
 - **Tagline**: "Organic Systems · Breathing Interfaces"
 - **Version format**: v3.x.x · [Patch Name]
 - **Current version**: v3.2.0 · Orion Patch
