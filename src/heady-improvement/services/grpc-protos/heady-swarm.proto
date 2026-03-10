@@ -1,0 +1,172 @@
+/**
+ * HeadySystems Swarm Service gRPC Protocol
+ * 
+ * Inter-agent communication for the 17-swarm architecture.
+ * All constants φ-scaled per Heady Unbreakable Laws.
+ * 
+ * Founder: Eric Haywood | HeadySystems Inc. | 51+ Provisional Patents
+ */
+
+syntax = "proto3";
+
+package heady.swarm.v1;
+
+option go_package = "github.com/HeadyMe/heady-protos/swarm/v1";
+
+// SwarmService — bee lifecycle and task coordination
+service SwarmService {
+  // Spawn a new bee worker
+  rpc SpawnBee(SpawnBeeRequest) returns (SpawnBeeResponse);
+  
+  // Submit a task to the swarm
+  rpc SubmitTask(TaskRequest) returns (TaskResponse);
+  
+  // Get bee status
+  rpc GetBeeStatus(BeeStatusRequest) returns (BeeStatusResponse);
+  
+  // Stream swarm telemetry
+  rpc StreamTelemetry(TelemetryRequest) returns (stream SwarmTelemetry);
+  
+  // Initiate consensus round
+  rpc RequestConsensus(ConsensusRequest) returns (ConsensusResponse);
+  
+  // Report work completion (work-stealing protocol)
+  rpc ReportCompletion(CompletionReport) returns (CompletionAck);
+  
+  // Steal work from overloaded bees
+  rpc StealWork(StealRequest) returns (StealResponse);
+}
+
+enum BeeState {
+  BEE_STATE_UNSPECIFIED = 0;
+  BEE_STATE_SPAWNING = 1;
+  BEE_STATE_IDLE = 2;
+  BEE_STATE_ACTIVE = 3;
+  BEE_STATE_DRAINING = 4;
+  BEE_STATE_TERMINATED = 5;
+  BEE_STATE_ERROR = 6;
+}
+
+enum SwarmType {
+  SWARM_TYPE_UNSPECIFIED = 0;
+  SWARM_TYPE_DEPLOY = 1;
+  SWARM_TYPE_BATTLE = 2;
+  SWARM_TYPE_RESEARCH = 3;
+  SWARM_TYPE_SECURITY = 4;
+  SWARM_TYPE_MEMORY = 5;
+  SWARM_TYPE_CREATIVE = 6;
+  SWARM_TYPE_TRADING = 7;
+  SWARM_TYPE_HEALTH = 8;
+  SWARM_TYPE_GOVERNANCE = 9;
+  SWARM_TYPE_DOCUMENTATION = 10;
+  SWARM_TYPE_TESTING = 11;
+  SWARM_TYPE_MIGRATION = 12;
+  SWARM_TYPE_MONITORING = 13;
+  SWARM_TYPE_CLEANUP = 14;
+  SWARM_TYPE_ONBOARDING = 15;
+  SWARM_TYPE_ANALYTICS = 16;
+  SWARM_TYPE_EMERGENCY = 17;
+}
+
+message SpawnBeeRequest {
+  string template = 1;                 // Bee template name
+  SwarmType swarm_type = 2;            // Which of the 17 swarms
+  map<string, string> config = 3;      // Bee configuration
+  int32 max_tasks = 4;                 // Max concurrent tasks (default FIB[6]=8)
+  int64 ttl_ms = 5;                    // Time-to-live (default FIB[11]*1000=89s)
+}
+
+message SpawnBeeResponse {
+  string bee_id = 1;
+  BeeState state = 2;
+  int64 spawned_at = 3;
+}
+
+message TaskRequest {
+  string task_type = 1;
+  SwarmType target_swarm = 2;
+  bytes payload = 3;
+  map<string, string> metadata = 4;
+  int64 deadline_ms = 5;               // φ-scaled timeout
+  string idempotency_key = 6;
+}
+
+message TaskResponse {
+  string task_id = 1;
+  string assigned_bee = 2;
+  SwarmType swarm = 3;
+  int64 accepted_at = 4;
+}
+
+message BeeStatusRequest {
+  string bee_id = 1;
+}
+
+message BeeStatusResponse {
+  string bee_id = 1;
+  BeeState state = 2;
+  SwarmType swarm_type = 3;
+  int32 active_tasks = 4;
+  int32 completed_tasks = 5;
+  double cpu_usage = 6;
+  double memory_usage = 7;
+  int64 uptime_ms = 8;
+  double health_score = 9;             // CSL-scored health [0,1]
+}
+
+message TelemetryRequest {
+  SwarmType swarm_filter = 1;          // Filter by swarm (0 = all)
+  int32 interval_ms = 2;              // Telemetry interval (default FIB[7]*1000=13s)
+}
+
+message SwarmTelemetry {
+  SwarmType swarm_type = 1;
+  int32 active_bees = 2;
+  int32 idle_bees = 3;
+  int32 pending_tasks = 4;
+  double pressure_level = 5;           // φ-scaled: 0-ψ² nominal, ψ²-ψ elevated, ψ-1 high
+  double consensus_coherence = 6;      // CSL coherence score
+  int64 timestamp = 7;
+}
+
+message ConsensusRequest {
+  SwarmType swarm_type = 1;
+  string proposal_id = 2;
+  bytes proposal_data = 3;
+  double quorum_threshold = 4;         // Default phiThreshold(2)≈0.809
+  int64 timeout_ms = 5;
+}
+
+message ConsensusResponse {
+  string proposal_id = 1;
+  bool accepted = 2;
+  double agreement_score = 3;          // CSL consensus score
+  int32 votes_for = 4;
+  int32 votes_against = 5;
+  int32 abstentions = 6;
+}
+
+message CompletionReport {
+  string bee_id = 1;
+  string task_id = 2;
+  bool success = 3;
+  bytes result = 4;
+  int64 duration_ms = 5;
+  string error_message = 6;
+}
+
+message CompletionAck {
+  bool acknowledged = 1;
+  string next_task_id = 2;            // Next task if available (work-stealing)
+}
+
+message StealRequest {
+  string requester_bee_id = 1;
+  SwarmType swarm_type = 2;
+  int32 max_tasks = 3;                // How many tasks to steal (default 1)
+}
+
+message StealResponse {
+  repeated TaskRequest stolen_tasks = 1;
+  string donor_bee_id = 2;
+}

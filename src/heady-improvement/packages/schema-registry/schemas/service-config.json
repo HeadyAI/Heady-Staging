@@ -1,0 +1,108 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://heady.io/schemas/service-config.json",
+  "title": "ServiceConfig",
+  "description": "Service configuration schema for Heady platform microservices",
+  "type": "object",
+  "required": ["serviceName", "port", "domain", "healthCheckInterval", "phiConstants"],
+  "properties": {
+    "serviceName": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "pattern": "^[a-z][a-z0-9-]*$",
+      "description": "Service name (lowercase kebab-case)"
+    },
+    "port": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 65535,
+      "description": "Port number the service listens on"
+    },
+    "domain": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 64,
+      "description": "Business domain this service belongs to (e.g., auth, vectors, api)"
+    },
+    "healthCheckInterval": {
+      "type": "integer",
+      "minimum": 1000,
+      "maximum": 300000,
+      "description": "Health check interval in milliseconds (Fibonacci-distributed recommended)"
+    },
+    "phiConstants": {
+      "type": "object",
+      "required": ["PHI", "PSI", "PSI2"],
+      "properties": {
+        "PHI": {
+          "type": "number",
+          "const": 1.618033988749895,
+          "description": "Golden ratio"
+        },
+        "PSI": {
+          "type": "number",
+          "const": 0.6180339887498949,
+          "description": "Reciprocal of golden ratio"
+        },
+        "PSI2": {
+          "type": "number",
+          "const": 0.38196601125010515,
+          "description": "PSI squared"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Phi mathematical constants for the service"
+    },
+    "logLevel": {
+      "type": "string",
+      "enum": ["debug", "info", "warn", "error", "fatal"],
+      "default": "info",
+      "description": "Minimum log level"
+    },
+    "environment": {
+      "type": "string",
+      "enum": ["development", "staging", "production"],
+      "description": "Deployment environment"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+",
+      "description": "Service version (semver)"
+    },
+    "database": {
+      "type": "object",
+      "properties": {
+        "host": { "type": "string", "format": "hostname" },
+        "port": { "type": "integer", "minimum": 1, "maximum": 65535 },
+        "name": { "type": "string" },
+        "poolSize": { "type": "integer", "minimum": 1, "maximum": 100 },
+        "ssl": { "type": "boolean", "default": true }
+      },
+      "description": "Database connection configuration"
+    },
+    "redis": {
+      "type": "object",
+      "properties": {
+        "host": { "type": "string", "format": "hostname" },
+        "port": { "type": "integer", "minimum": 1, "maximum": 65535 },
+        "db": { "type": "integer", "minimum": 0, "maximum": 15 },
+        "keyPrefix": { "type": "string" }
+      },
+      "description": "Redis connection configuration"
+    },
+    "rateLimiting": {
+      "type": "object",
+      "properties": {
+        "windowMs": { "type": "integer", "minimum": 1000 },
+        "maxRequests": { "type": "integer", "minimum": 1 },
+        "burstMultiplier": {
+          "type": "number",
+          "description": "Burst allowance multiplier (PHI recommended)"
+        }
+      },
+      "description": "Rate limiting configuration"
+    }
+  },
+  "additionalProperties": false
+}

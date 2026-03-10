@@ -1,0 +1,95 @@
+# Husky + lint-staged pre-commit configuration
+# Install: npx husky init && npm i -D lint-staged
+#
+# .husky/pre-commit:
+#   npx lint-staged
+#
+# Add to package.json:
+#   "lint-staged": { ... } (see below)
+
+# ---
+# lint-staged configuration (add to root package.json)
+# ---
+lint-staged:
+  "*.{js,ts,jsx,tsx}":
+    - eslint --fix --max-warnings 0
+    - prettier --write
+
+  "*.{json,yml,yaml,md}":
+    - prettier --write
+
+  "*.{js,ts,jsx,tsx,json}":
+    - bash -c 'check-no-localhost'
+    - bash -c 'check-no-console-log'
+
+# ---
+# ESLint overrides for pre-commit blocking
+# Add to .eslintrc or eslint.config.js
+# ---
+eslint-rules:
+  no-console: error
+  no-debugger: error
+  no-restricted-globals:
+    - error
+    - name: localhost
+      message: "Do not reference localhost in production code"
+
+# ---
+# .husky/pre-commit script
+# ---
+husky-pre-commit: |
+  #!/usr/bin/env sh
+  . "$(dirname -- "$0")/_/husky.sh"
+
+  npx lint-staged
+
+  # Block console.log in staged files
+  STAGED=$(git diff --cached --name-only --diff-filter=ACM | grep -E '\.(js|ts|jsx|tsx)$' || true)
+  if [ -n "$STAGED" ]; then
+    CONSOLE_FOUND=$(echo "$STAGED" | xargs grep -l 'console\.\(log\|debug\|info\|warn\|error\)' 2>/dev/null | grep -v '\.test\.' | grep -v '\.spec\.' || true)
+    if [ -n "$CONSOLE_FOUND" ]; then
+      echo "❌ console.log found in staged files:"
+      echo "$CONSOLE_FOUND"
+      exit 1
+    fi
+
+    LOCALHOST_FOUND=$(echo "$STAGED" | xargs grep -l -E '(localhost|127\.0\.0\.1)' 2>/dev/null || true)
+    if [ -n "$LOCALHOST_FOUND" ]; then
+      echo "❌ localhost/127.0.0.1 found in staged files:"
+      echo "$LOCALHOST_FOUND"
+      exit 1
+    fi
+
+    TODO_FOUND=$(echo "$STAGED" | xargs grep -l -E '(TODO|FIXME|HACK|XXX)' 2>/dev/null || true)
+    if [ -n "$TODO_FOUND" ]; then
+      echo "⚠️  TODO/FIXME found in staged files:"
+      echo "$TODO_FOUND"
+      echo "(Warning only — not blocking commit)"
+    fi
+  fi
+
+  echo "✅ Pre-commit checks passed"
+
+# ---
+# Root package.json additions
+# ---
+package-json-additions:
+  scripts:
+    prepare: husky
+    lint: eslint .
+    "lint:fix": eslint --fix .
+    format: prettier --write .
+    "format:check": prettier --check .
+    "check-no-localhost": "grep -rn --include='*.js' --include='*.ts' -E '(localhost|127\\.0\\.0\\.1)' services/ shared/ packages/ && exit 1 || exit 0"
+    "check-no-console-log": "grep -rn --include='*.js' --include='*.ts' --exclude='*.test.*' 'console\\.' services/ shared/ && exit 1 || exit 0"
+  devDependencies:
+    husky: "^9.1.0"
+    lint-staged: "^15.2.0"
+    eslint: "^9.14.0"
+    prettier: "^3.4.0"
+  lint-staged:
+    "*.{js,ts,jsx,tsx}":
+      - eslint --fix --max-warnings 0
+      - prettier --write
+    "*.{json,yml,yaml,md}":
+      - prettier --write

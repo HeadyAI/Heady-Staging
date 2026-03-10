@@ -1,0 +1,22 @@
+{
+  "name": "@heady/billing-service",
+  "version": "1.0.0",
+  "description": "Stripe billing integration for HeadyEX marketplace subscriptions",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "node --watch src/index.js",
+    "test": "node --test src/**/*.test.js",
+    "lint": "eslint src/"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "express": "^4.21.0",
+    "helmet": "^8.0.0",
+    "stripe": "^17.3.0"
+  },
+  "license": "UNLICENSED",
+  "private": true
+}

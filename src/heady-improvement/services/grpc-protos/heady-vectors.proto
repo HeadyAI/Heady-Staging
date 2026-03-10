@@ -1,0 +1,140 @@
+/**
+ * HeadySystems Vector Service gRPC Protocol
+ * 
+ * High-performance vector operations for the Heady Latent OS.
+ * All constants φ-scaled per Heady Unbreakable Laws.
+ * 
+ * Founder: Eric Haywood | HeadySystems Inc. | 51+ Provisional Patents
+ */
+
+syntax = "proto3";
+
+package heady.vectors.v1;
+
+option go_package = "github.com/HeadyMe/heady-protos/vectors/v1";
+
+// VectorService — core vector memory operations
+service VectorService {
+  // Store a vector embedding with metadata
+  rpc Store(StoreRequest) returns (StoreResponse);
+  
+  // Retrieve a vector by ID
+  rpc Get(GetRequest) returns (GetResponse);
+  
+  // Similarity search (cosine distance via pgvector)
+  rpc Search(SearchRequest) returns (SearchResponse);
+  
+  // Hybrid search (BM25 + vector + RRF)
+  rpc HybridSearch(HybridSearchRequest) returns (SearchResponse);
+  
+  // Batch store multiple vectors
+  rpc BatchStore(BatchStoreRequest) returns (BatchStoreResponse);
+  
+  // Delete a vector
+  rpc Delete(DeleteRequest) returns (DeleteResponse);
+  
+  // Stream search results
+  rpc StreamSearch(SearchRequest) returns (stream SearchResult);
+}
+
+// CSL gate parameters for relevance filtering
+message CSLGateConfig {
+  // Threshold tau — use φ-scaled values: 0.691 (LOW), 0.809 (MEDIUM), 0.882 (HIGH)
+  double threshold = 1;
+  // Temperature — lower = sharper gate, default ψ²≈0.382
+  double temperature = 2;
+}
+
+message StoreRequest {
+  string namespace = 1;
+  string content = 2;
+  repeated float embedding = 3;  // 384-dimensional vector
+  map<string, string> metadata = 4;
+  string idempotency_key = 5;
+}
+
+message StoreResponse {
+  string id = 1;
+  string namespace = 2;
+  int64 stored_at = 3;  // Unix timestamp ms
+}
+
+message GetRequest {
+  string id = 1;
+  string namespace = 2;
+}
+
+message GetResponse {
+  string id = 1;
+  string content = 2;
+  repeated float embedding = 3;
+  map<string, string> metadata = 4;
+  string namespace = 5;
+  int64 created_at = 6;
+  int64 updated_at = 7;
+}
+
+message SearchRequest {
+  repeated float query_embedding = 1;   // 384-dimensional query vector
+  string namespace = 2;
+  int32 limit = 3;                      // Default FIB[8]=21
+  CSLGateConfig csl_gate = 4;           // Relevance gate
+  double min_similarity = 5;            // Minimum cosine similarity
+}
+
+message HybridSearchRequest {
+  string query_text = 1;               // For BM25
+  repeated float query_embedding = 2;   // For vector search
+  string namespace = 3;
+  int32 limit = 4;                      // Default FIB[8]=21
+  CSLGateConfig csl_gate = 5;
+  double bm25_weight = 6;              // Default ψ≈0.618
+  double vector_weight = 7;            // Default ψ²≈0.382
+  int32 rrf_k = 8;                     // Default FIB[10]=55
+}
+
+message SearchResult {
+  string id = 1;
+  string content = 2;
+  map<string, string> metadata = 3;
+  double similarity = 4;               // Cosine similarity [0,1]
+  double fused_score = 5;              // RRF fused score
+  double relevance_gate = 6;           // CSL gate output
+}
+
+message SearchResponse {
+  repeated SearchResult results = 1;
+  SearchMeta meta = 2;
+}
+
+message SearchMeta {
+  int32 total_candidates = 1;
+  int32 returned = 2;
+  double csl_threshold = 3;
+  int32 rrf_k = 4;
+  double bm25_weight = 5;
+  double vector_weight = 6;
+  int64 query_duration_ms = 7;
+}
+
+message BatchStoreRequest {
+  string namespace = 1;
+  repeated StoreRequest vectors = 2;
+  string idempotency_key = 3;
+}
+
+message BatchStoreResponse {
+  repeated string ids = 1;
+  int32 stored_count = 2;
+  int32 failed_count = 3;
+  repeated string errors = 4;
+}
+
+message DeleteRequest {
+  string id = 1;
+  string namespace = 2;
+}
+
+message DeleteResponse {
+  bool deleted = 1;
+}

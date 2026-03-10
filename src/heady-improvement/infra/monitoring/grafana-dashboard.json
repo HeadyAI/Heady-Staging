@@ -1,0 +1,296 @@
+{
+  "dashboard": {
+    "id": null,
+    "uid": "heady-platform-overview",
+    "title": "Heady Platform Overview",
+    "description": "φ-scaled monitoring dashboard for the Heady platform",
+    "tags": ["heady", "production", "phi-math"],
+    "timezone": "utc",
+    "refresh": "21s",
+    "time": {
+      "from": "now-1h",
+      "to": "now"
+    },
+    "templating": {
+      "list": [
+        {
+          "name": "service",
+          "type": "query",
+          "datasource": "Prometheus",
+          "query": "label_values(up{platform=\"heady\"}, service)",
+          "refresh": 2,
+          "includeAll": true,
+          "multi": true,
+          "current": { "text": "All", "value": "$__all" }
+        },
+        {
+          "name": "domain",
+          "type": "query",
+          "datasource": "Prometheus",
+          "query": "label_values(up{platform=\"heady\"}, domain)",
+          "refresh": 2,
+          "includeAll": true,
+          "multi": true,
+          "current": { "text": "All", "value": "$__all" }
+        }
+      ]
+    },
+    "panels": [
+      {
+        "id": 1,
+        "title": "Request Rate",
+        "description": "HTTP requests per second by service",
+        "type": "timeseries",
+        "gridPos": { "h": 8, "w": 12, "x": 0, "y": 0 },
+        "datasource": "Prometheus",
+        "targets": [
+          {
+            "expr": "sum(rate(http_requests_total{service=~\"$service\"}[5m])) by (service)",
+            "legendFormat": "{{ service }}",
+            "refId": "A"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "reqps",
+            "color": { "mode": "palette-classic" },
+            "custom": {
+              "drawStyle": "line",
+              "lineWidth": 2,
+              "fillOpacity": 10,
+              "gradientMode": "scheme"
+            }
+          }
+        }
+      },
+      {
+        "id": 2,
+        "title": "Error Rate",
+        "description": "5xx error rate by service. Warning at PSI=61.8%, Critical at 80.9%",
+        "type": "timeseries",
+        "gridPos": { "h": 8, "w": 12, "x": 12, "y": 0 },
+        "datasource": "Prometheus",
+        "targets": [
+          {
+            "expr": "sum(rate(http_requests_total{status=~\"5..\", service=~\"$service\"}[5m])) by (service) / sum(rate(http_requests_total{service=~\"$service\"}[5m])) by (service) * 100",
+            "legendFormat": "{{ service }}",
+            "refId": "A"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "percent",
+            "color": { "mode": "palette-classic" },
+            "custom": {
+              "drawStyle": "line",
+              "lineWidth": 2,
+              "fillOpacity": 10
+            },
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                { "color": "green", "value": null },
+                { "color": "yellow", "value": 61.8 },
+                { "color": "red", "value": 80.9 }
+              ]
+            }
+          }
+        }
+      },
+      {
+        "id": 3,
+        "title": "Latency p50 / p95 / p99",
+        "description": "Request latency percentiles. PHI×1000ms warning threshold shown.",
+        "type": "timeseries",
+        "gridPos": { "h": 8, "w": 24, "x": 0, "y": 8 },
+        "datasource": "Prometheus",
+        "targets": [
+          {
+            "expr": "histogram_quantile(0.50, sum(rate(http_request_duration_seconds_bucket{service=~\"$service\"}[5m])) by (le, service))",
+            "legendFormat": "p50 {{ service }}",
+            "refId": "A"
+          },
+          {
+            "expr": "histogram_quantile(0.95, sum(rate(http_request_duration_seconds_bucket{service=~\"$service\"}[5m])) by (le, service))",
+            "legendFormat": "p95 {{ service }}",
+            "refId": "B"
+          },
+          {
+            "expr": "histogram_quantile(0.99, sum(rate(http_request_duration_seconds_bucket{service=~\"$service\"}[5m])) by (le, service))",
+            "legendFormat": "p99 {{ service }}",
+            "refId": "C"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "s",
+            "color": { "mode": "palette-classic" },
+            "custom": {
+              "drawStyle": "line",
+              "lineWidth": 2,
+              "fillOpacity": 5
+            },
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                { "color": "green", "value": null },
+                { "color": "yellow", "value": 1.0 },
+                { "color": "orange", "value": 1.618 },
+                { "color": "red", "value": 2.618 }
+              ]
+            }
+          }
+        }
+      },
+      {
+        "id": 4,
+        "title": "WebSocket Connections",
+        "description": "Active WebSocket connections. FIB[16]=987 threshold.",
+        "type": "stat",
+        "gridPos": { "h": 4, "w": 6, "x": 0, "y": 16 },
+        "datasource": "Prometheus",
+        "targets": [
+          {
+            "expr": "sum(websocket_connections_active)",
+            "legendFormat": "Active",
+            "refId": "A"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "short",
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                { "color": "green", "value": null },
+                { "color": "yellow", "value": 610 },
+                { "color": "red", "value": 987 }
+              ]
+            }
+          }
+        }
+      },
+      {
+        "id": 5,
+        "title": "Vector Query Latency",
+        "description": "pgvector similarity search latency. 210ms target.",
+        "type": "timeseries",
+        "gridPos": { "h": 8, "w": 12, "x": 6, "y": 16 },
+        "datasource": "Prometheus",
+        "targets": [
+          {
+            "expr": "histogram_quantile(0.50, sum(rate(vector_query_duration_seconds_bucket[5m])) by (le))",
+            "legendFormat": "p50",
+            "refId": "A"
+          },
+          {
+            "expr": "histogram_quantile(0.95, sum(rate(vector_query_duration_seconds_bucket[5m])) by (le))",
+            "legendFormat": "p95",
+            "refId": "B"
+          },
+          {
+            "expr": "histogram_quantile(0.99, sum(rate(vector_query_duration_seconds_bucket[5m])) by (le))",
+            "legendFormat": "p99",
+            "refId": "C"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "s",
+            "custom": { "drawStyle": "line", "lineWidth": 2, "fillOpacity": 10 },
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                { "color": "green", "value": null },
+                { "color": "yellow", "value": 0.130 },
+                { "color": "red", "value": 0.210 }
+              ]
+            }
+          }
+        }
+      },
+      {
+        "id": 6,
+        "title": "Bee Spawn Rate",
+        "description": "Agent bee spawns per second",
+        "type": "timeseries",
+        "gridPos": { "h": 8, "w": 6, "x": 18, "y": 16 },
+        "datasource": "Prometheus",
+        "targets": [
+          {
+            "expr": "sum(rate(bee_spawn_total[5m]))",
+            "legendFormat": "Spawns/s",
+            "refId": "A"
+          },
+          {
+            "expr": "sum(rate(bee_spawn_failures_total[5m]))",
+            "legendFormat": "Failures/s",
+            "refId": "B"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "ops",
+            "custom": { "drawStyle": "bars", "lineWidth": 1, "fillOpacity": 50 }
+          }
+        }
+      },
+      {
+        "id": 7,
+        "title": "Circuit Breaker States",
+        "description": "Current circuit breaker status per service",
+        "type": "state-timeline",
+        "gridPos": { "h": 6, "w": 24, "x": 0, "y": 24 },
+        "datasource": "Prometheus",
+        "targets": [
+          {
+            "expr": "circuit_breaker_state{service=~\"$service\"}",
+            "legendFormat": "{{ service }} - {{ breaker }}",
+            "refId": "A"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "custom": { "fillOpacity": 80 },
+            "mappings": [
+              { "type": "value", "options": { "0": { "text": "CLOSED", "color": "green" } } },
+              { "type": "value", "options": { "1": { "text": "OPEN", "color": "red" } } },
+              { "type": "value", "options": { "2": { "text": "HALF-OPEN", "color": "yellow" } } }
+            ]
+          }
+        }
+      },
+      {
+        "id": 8,
+        "title": "Service Availability",
+        "description": "Service up/down status",
+        "type": "stat",
+        "gridPos": { "h": 4, "w": 24, "x": 0, "y": 30 },
+        "datasource": "Prometheus",
+        "targets": [
+          {
+            "expr": "up{service=~\"$service\"}",
+            "legendFormat": "{{ service }}",
+            "refId": "A"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "mappings": [
+              { "type": "value", "options": { "1": { "text": "UP", "color": "green" } } },
+              { "type": "value", "options": { "0": { "text": "DOWN", "color": "red" } } }
+            ]
+          }
+        },
+        "options": {
+          "reduceOptions": { "calcs": ["lastNotNull"] },
+          "orientation": "horizontal",
+          "textMode": "auto"
+        }
+      }
+    ],
+    "schemaVersion": 39,
+    "version": 1
+  },
+  "overwrite": true
+}

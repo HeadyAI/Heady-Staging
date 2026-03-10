@@ -1,0 +1,227 @@
+# Prometheus alerting rules for the Heady platform
+# Thresholds derived from φ-math:
+#   PSI   ≈ 0.618  (warning)
+#   PSI+PSI²×PSI ≈ 0.809  (critical)
+#   PHI×1000 = 1618ms (latency warning)
+
+groups:
+  - name: heady-error-rates
+    interval: 21s # FIB[8]
+    rules:
+      - alert: HighErrorRate
+        expr: |
+          sum(rate(http_requests_total{status=~"5.."}[5m])) by (service)
+          /
+          sum(rate(http_requests_total[5m])) by (service)
+          > 0.618
+        for: 2m
+        labels:
+          severity: warning
+          platform: heady
+        annotations:
+          summary: "High error rate on {{ $labels.service }}"
+          description: "Error rate is {{ $value | humanizePercentage }} (threshold: 61.8% = PSI)"
+
+      - alert: CriticalErrorRate
+        expr: |
+          sum(rate(http_requests_total{status=~"5.."}[5m])) by (service)
+          /
+          sum(rate(http_requests_total[5m])) by (service)
+          > 0.809
+        for: 1m
+        labels:
+          severity: critical
+          platform: heady
+        annotations:
+          summary: "Critical error rate on {{ $labels.service }}"
+          description: "Error rate is {{ $value | humanizePercentage }} (threshold: 80.9% = φ-medium)"
+
+  - name: heady-latency
+    interval: 21s
+    rules:
+      - alert: HighP99Latency
+        expr: |
+          histogram_quantile(0.99, sum(rate(http_request_duration_seconds_bucket[5m])) by (le, service))
+          > 1.618
+        for: 3m
+        labels:
+          severity: warning
+          platform: heady
+        annotations:
+          summary: "High p99 latency on {{ $labels.service }}"
+          description: "p99 latency is {{ $value | humanizeDuration }} (threshold: 1.618s = PHI)"
+
+      - alert: CriticalP99Latency
+        expr: |
+          histogram_quantile(0.99, sum(rate(http_request_duration_seconds_bucket[5m])) by (le, service))
+          > 2.618
+        for: 2m
+        labels:
+          severity: critical
+          platform: heady
+        annotations:
+          summary: "Critical p99 latency on {{ $labels.service }}"
+          description: "p99 latency is {{ $value | humanizeDuration }} (threshold: 2.618s = PHI²)"
+
+      - alert: HighP95Latency
+        expr: |
+          histogram_quantile(0.95, sum(rate(http_request_duration_seconds_bucket[5m])) by (le, service))
+          > 1.0
+        for: 3m
+        labels:
+          severity: warning
+          platform: heady
+        annotations:
+          summary: "High p95 latency on {{ $labels.service }}"
+          description: "p95 latency is {{ $value | humanizeDuration }} (threshold: 1.0s)"
+
+  - name: heady-availability
+    interval: 21s
+    rules:
+      - alert: ServiceDown
+        expr: up == 0
+        for: 5m
+        labels:
+          severity: critical
+          platform: heady
+        annotations:
+          summary: "Service {{ $labels.service }} is down"
+          description: "{{ $labels.service }} has been unreachable for more than 5 minutes"
+
+      - alert: ServiceFlapping
+        expr: changes(up[21m]) > 5
+        for: 5m
+        labels:
+          severity: warning
+          platform: heady
+        annotations:
+          summary: "Service {{ $labels.service }} is flapping"
+          description: "{{ $labels.service }} has changed state {{ $value }} times in 21 minutes"
+
+  - name: heady-circuit-breakers
+    interval: 21s
+    rules:
+      - alert: CircuitBreakerOpen
+        expr: circuit_breaker_state{state="open"} == 1
+        for: 2m
+        labels:
+          severity: critical
+          platform: heady
+        annotations:
+          summary: "Circuit breaker open for {{ $labels.service }}"
+          description: "Circuit breaker has been open for > 2 minutes on {{ $labels.service }}"
+
+  - name: heady-resources
+    interval: 21s
+    rules:
+      - alert: HighCPU
+        expr: |
+          100 - (avg(rate(node_cpu_seconds_total{mode="idle"}[5m])) by (instance) * 100)
+          > 61.8
+        for: 5m
+        labels:
+          severity: warning
+          platform: heady
+        annotations:
+          summary: "High CPU on {{ $labels.instance }}"
+          description: "CPU usage is {{ $value }}% (threshold: 61.8% = PSI)"
+
+      - alert: CriticalCPU
+        expr: |
+          100 - (avg(rate(node_cpu_seconds_total{mode="idle"}[5m])) by (instance) * 100)
+          > 85.4
+        for: 3m
+        labels:
+          severity: critical
+          platform: heady
+        annotations:
+          summary: "Critical CPU on {{ $labels.instance }}"
+          description: "CPU usage is {{ $value }}% (threshold: 85.4%)"
+
+      - alert: HighMemory
+        expr: |
+          (1 - node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes) * 100
+          > 61.8
+        for: 5m
+        labels:
+          severity: warning
+          platform: heady
+        annotations:
+          summary: "High memory on {{ $labels.instance }}"
+          description: "Memory usage is {{ $value }}% (threshold: 61.8% = PSI)"
+
+      - alert: CriticalMemory
+        expr: |
+          (1 - node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes) * 100
+          > 85.4
+        for: 3m
+        labels:
+          severity: critical
+          platform: heady
+        annotations:
+          summary: "Critical memory on {{ $labels.instance }}"
+
+      - alert: HighDisk
+        expr: |
+          (1 - node_filesystem_avail_bytes{fstype!="tmpfs"} / node_filesystem_size_bytes{fstype!="tmpfs"}) * 100
+          > 61.8
+        for: 5m
+        labels:
+          severity: warning
+          platform: heady
+        annotations:
+          summary: "High disk usage on {{ $labels.instance }}:{{ $labels.mountpoint }}"
+
+  - name: heady-websocket
+    interval: 21s
+    rules:
+      - alert: HighWebSocketConnections
+        expr: websocket_connections_active > 987
+        for: 5m
+        labels:
+          severity: warning
+          platform: heady
+        annotations:
+          summary: "High WebSocket connections: {{ $value }}"
+          description: "Active connections exceed FIB[16]=987"
+
+  - name: heady-vector
+    interval: 21s
+    rules:
+      - alert: SlowVectorQueries
+        expr: |
+          histogram_quantile(0.95, sum(rate(vector_query_duration_seconds_bucket[5m])) by (le))
+          > 0.210
+        for: 3m
+        labels:
+          severity: warning
+          platform: heady
+        annotations:
+          summary: "Vector queries slow: p95 = {{ $value | humanizeDuration }}"
+          description: "p95 vector query latency exceeds 210ms"
+
+  - name: heady-bee-spawner
+    interval: 21s
+    rules:
+      - alert: HighBeeSpawnRate
+        expr: rate(bee_spawn_total[5m]) > 13
+        for: 3m
+        labels:
+          severity: warning
+          platform: heady
+        annotations:
+          summary: "High bee spawn rate: {{ $value }}/s"
+          description: "Bee spawn rate exceeds FIB[7]=13 per second"
+
+      - alert: BeeSpawnFailures
+        expr: |
+          rate(bee_spawn_failures_total[5m])
+          / rate(bee_spawn_total[5m])
+          > 0.382
+        for: 3m
+        labels:
+          severity: critical
+          platform: heady
+        annotations:
+          summary: "High bee spawn failure rate: {{ $value | humanizePercentage }}"
+          description: "Failure rate exceeds PSI²=38.2%"

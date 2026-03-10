@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<!--
+  © 2026 HeadySystems Inc. PROPRIETARY AND CONFIDENTIAL.
+  Liquid Topology Dashboard — 3D vector space visualization
+  for the Heady liquid compute mesh.
+  Founder: Eric Haywood
+-->
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Heady™ Liquid Topology</title>
+  <link rel="stylesheet" href="topology.css">
+</head>
+<body>
+  <div id="app">
+    <header class="dashboard-header">
+      <h1 class="logo">Heady<span class="tm">™</span> Liquid Topology</h1>
+      <div class="cluster-health" id="cluster-health">
+        <span class="health-dot"></span>
+        <span class="health-label">Initializing...</span>
+      </div>
+    </header>
+
+    <main class="dashboard-grid">
+      <!-- 3D Topology Canvas -->
+      <section class="panel topology-panel">
+        <h2>3D Vector Space</h2>
+        <canvas id="topology-canvas" width="800" height="500"></canvas>
+        <div class="axis-labels">
+          <span class="axis-x">x: Latency</span>
+          <span class="axis-y">y: Compute</span>
+          <span class="axis-z">z: Cache</span>
+        </div>
+      </section>
+
+      <!-- Node List -->
+      <section class="panel node-list-panel">
+        <h2>Liquid Nodes</h2>
+        <div id="node-list" class="node-list"></div>
+      </section>
+
+      <!-- Layer Status -->
+      <section class="panel layers-panel">
+        <h2>Topology Layers</h2>
+        <div id="layers-status" class="layers-grid"></div>
+      </section>
+
+      <!-- Connection Map -->
+      <section class="panel connections-panel">
+        <h2>Active Connections</h2>
+        <div id="connections-list" class="connections-list"></div>
+      </section>
+
+      <!-- Routing Stats -->
+      <section class="panel routing-panel">
+        <h2>Routing Metrics</h2>
+        <div id="routing-stats" class="metrics-grid"></div>
+      </section>
+    </main>
+  </div>
+
+  <script src="topology.js"></script>
+</body>
+</html>

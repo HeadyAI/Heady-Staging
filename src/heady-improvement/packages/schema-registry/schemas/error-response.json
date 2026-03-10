@@ -1,0 +1,64 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://heady.io/schemas/error-response.json",
+  "title": "ErrorResponse",
+  "description": "Standard error response format for Heady platform services",
+  "type": "object",
+  "required": ["code", "message", "timestamp"],
+  "properties": {
+    "code": {
+      "type": "string",
+      "pattern": "^HEADY-[A-Z]+-\\d{3}$",
+      "description": "Error code in HEADY-SERVICE-NNN format",
+      "examples": ["HEADY-AUTH-401", "HEADY-VECTOR-500", "HEADY-API-422"]
+    },
+    "message": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 1024,
+      "description": "Human-readable error message"
+    },
+    "correlationId": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Correlation ID for request tracing"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 timestamp when the error occurred"
+    },
+    "details": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["field", "reason"],
+        "properties": {
+          "field": {
+            "type": "string",
+            "description": "The field or parameter that caused the error"
+          },
+          "reason": {
+            "type": "string",
+            "description": "Why this field is invalid"
+          },
+          "value": {
+            "description": "The invalid value that was provided"
+          }
+        },
+        "additionalProperties": false
+      },
+      "description": "Detailed error information for each invalid field"
+    },
+    "path": {
+      "type": "string",
+      "description": "The API path that generated the error"
+    },
+    "method": {
+      "type": "string",
+      "enum": ["GET", "POST", "PUT", "PATCH", "DELETE", "HEAD", "OPTIONS"],
+      "description": "HTTP method of the failed request"
+    }
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,341 @@
+# Prometheus configuration for Heady platform
+# Scrape interval: FIB[8] = 21 seconds
+
+global:
+  scrape_interval: 21s
+  evaluation_interval: 21s
+  scrape_timeout: 13s # FIB[7]
+  external_labels:
+    platform: heady
+    environment: production
+
+# Rule files
+rule_files:
+  - alerting-rules.yml
+
+# Alertmanager configuration
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets:
+            - alertmanager:9093
+      timeout: 8s # FIB[6]
+
+# Scrape configurations for all Heady services
+scrape_configs:
+  # ─── Core Services ───
+  - job_name: auth-session-server
+    metrics_path: /health
+    scrape_interval: 21s
+    static_configs:
+      - targets: ["auth-session-server:3380"]
+        labels:
+          service: auth-session-server
+          domain: auth
+
+  - job_name: notification-service
+    metrics_path: /health
+    scrape_interval: 21s
+    static_configs:
+      - targets: ["notification-service:3381"]
+        labels:
+          service: notification-service
+          domain: realtime
+
+  - job_name: analytics-service
+    metrics_path: /health
+    scrape_interval: 21s
+    static_configs:
+      - targets: ["analytics-service:3382"]
+        labels:
+          service: analytics-service
+          domain: analytics
+
+  - job_name: billing-service
+    metrics_path: /health
+    scrape_interval: 21s
+    static_configs:
+      - targets: ["billing-service:3383"]
+        labels:
+          service: billing-service
+          domain: billing
+
+  - job_name: scheduler-service
+    metrics_path: /health
+    scrape_interval: 21s
+    static_configs:
+      - targets: ["scheduler-service:3384"]
+        labels:
+          service: scheduler-service
+          domain: infra
+
+  # ─── API Gateway ───
+  - job_name: api-gateway
+    metrics_path: /health
+    scrape_interval: 21s
+    static_configs:
+      - targets: ["api-gateway:3300"]
+        labels:
+          service: api-gateway
+          domain: gateway
+
+  # ─── Vector Services ───
+  - job_name: vector-service
+    metrics_path: /health
+    scrape_interval: 21s
+    static_configs:
+      - targets:
+          - "vector-service-1:3390"
+          - "vector-service-2:3390"
+          - "vector-service-3:3390"
+        labels:
+          service: vector-service
+          domain: vectors
+
+  - job_name: embedding-service
+    metrics_path: /health
+    scrape_interval: 21s
+    static_configs:
+      - targets:
+          - "embedding-service-1:3391"
+          - "embedding-service-2:3391"
+        labels:
+          service: embedding-service
+          domain: vectors
+
+  # ─── Agent Services ───
+  - job_name: agent-orchestrator
+    metrics_path: /health
+    scrape_interval: 21s
+    static_configs:
+      - targets:
+          - "agent-orchestrator-1:3400"
+          - "agent-orchestrator-2:3400"
+          - "agent-orchestrator-3:3400"
+        labels:
+          service: agent-orchestrator
+          domain: agents
+
+  - job_name: bee-spawner
+    metrics_path: /health
+    scrape_interval: 21s
+    static_configs:
+      - targets:
+          - "bee-spawner-1:3401"
+          - "bee-spawner-2:3401"
+          - "bee-spawner-3:3401"
+          - "bee-spawner-4:3401"
+          - "bee-spawner-5:3401"
+        labels:
+          service: bee-spawner
+          domain: agents
+
+  - job_name: agent-memory
+    metrics_path: /health
+    scrape_interval: 21s
+    static_configs:
+      - targets:
+          - "agent-memory-1:3402"
+          - "agent-memory-2:3402"
+        labels:
+          service: agent-memory
+          domain: agents
+
+  # ─── Marketplace ───
+  - job_name: marketplace-api
+    metrics_path: /health
+    scrape_interval: 21s
+    static_configs:
+      - targets:
+          - "marketplace-api-1:3500"
+          - "marketplace-api-2:3500"
+          - "marketplace-api-3:3500"
+        labels:
+          service: marketplace-api
+          domain: marketplace
+
+  - job_name: marketplace-search
+    metrics_path: /health
+    scrape_interval: 21s
+    static_configs:
+      - targets:
+          - "marketplace-search-1:3501"
+          - "marketplace-search-2:3501"
+        labels:
+          service: marketplace-search
+          domain: marketplace
+
+  # ─── Content & Media ───
+  - job_name: content-service
+    metrics_path: /health
+    scrape_interval: 21s
+    static_configs:
+      - targets:
+          - "content-service-1:3600"
+          - "content-service-2:3600"
+        labels:
+          service: content-service
+          domain: content
+
+  - job_name: media-processor
+    metrics_path: /health
+    scrape_interval: 21s
+    static_configs:
+      - targets:
+          - "media-processor-1:3601"
+          - "media-processor-2:3601"
+          - "media-processor-3:3601"
+        labels:
+          service: media-processor
+          domain: content
+
+  # ─── User & Identity ───
+  - job_name: user-profile-service
+    metrics_path: /health
+    scrape_interval: 21s
+    static_configs:
+      - targets:
+          - "user-profile-1:3700"
+          - "user-profile-2:3700"
+        labels:
+          service: user-profile-service
+          domain: identity
+
+  - job_name: permission-service
+    metrics_path: /health
+    scrape_interval: 21s
+    static_configs:
+      - targets:
+          - "permission-service:3701"
+        labels:
+          service: permission-service
+          domain: identity
+
+  # ─── Infrastructure ───
+  - job_name: pgbouncer
+    metrics_path: /metrics
+    scrape_interval: 21s
+    static_configs:
+      - targets: ["pgbouncer-exporter:9127"]
+        labels:
+          service: pgbouncer
+          domain: infra
+
+  - job_name: nats
+    metrics_path: /metrics
+    scrape_interval: 21s
+    static_configs:
+      - targets: ["nats:8222"]
+        labels:
+          service: nats
+          domain: infra
+
+  - job_name: redis
+    metrics_path: /metrics
+    scrape_interval: 21s
+    static_configs:
+      - targets: ["redis-exporter:9121"]
+        labels:
+          service: redis
+          domain: infra
+
+  - job_name: postgres
+    metrics_path: /metrics
+    scrape_interval: 21s
+    static_configs:
+      - targets: ["postgres-exporter:9187"]
+        labels:
+          service: postgres
+          domain: infra
+
+  - job_name: node-exporter
+    scrape_interval: 21s
+    static_configs:
+      - targets:
+          - "node-exporter-1:9100"
+          - "node-exporter-2:9100"
+          - "node-exporter-3:9100"
+        labels:
+          service: node-exporter
+          domain: infra
+
+  # ─── Caddy / Load Balancer ───
+  - job_name: caddy
+    metrics_path: /metrics
+    scrape_interval: 21s
+    static_configs:
+      - targets:
+          - "caddy-1:2019"
+          - "caddy-2:2019"
+        labels:
+          service: caddy
+          domain: infra
+
+  # ─── Finance & Connection ───
+  - job_name: finance-service
+    metrics_path: /health
+    scrape_interval: 21s
+    static_configs:
+      - targets:
+          - "finance-service-1:3800"
+          - "finance-service-2:3800"
+        labels:
+          service: finance-service
+          domain: finance
+
+  - job_name: connection-service
+    metrics_path: /health
+    scrape_interval: 21s
+    static_configs:
+      - targets:
+          - "connection-service-1:3801"
+          - "connection-service-2:3801"
+        labels:
+          service: connection-service
+          domain: social
+
+  # ─── Wave 2+3 Services ───
+  - job_name: search-service
+    metrics_path: /health
+    scrape_interval: 21s
+    static_configs:
+      - targets: ["search-service:3385"]
+        labels:
+          service: search-service
+          domain: core
+
+  - job_name: migration-service
+    metrics_path: /health
+    scrape_interval: 21s
+    static_configs:
+      - targets: ["migration-service:4020"]
+        labels:
+          service: migration-service
+          domain: core
+
+  - job_name: saga-coordinator
+    metrics_path: /health
+    scrape_interval: 21s
+    static_configs:
+      - targets: ["saga-coordinator:4030"]
+        labels:
+          service: saga-coordinator
+          domain: core
+
+  - job_name: nats-consumers
+    metrics_path: /health
+    scrape_interval: 21s
+    static_configs:
+      - targets: ["nats-consumers:4040"]
+        labels:
+          service: nats-consumers
+          domain: core
+
+  # ─── Prometheus self-scrape ───
+  - job_name: prometheus
+    scrape_interval: 21s
+    static_configs:
+      - targets: ["localhost:9090"]
+        labels:
+          service: prometheus
+          domain: monitoring

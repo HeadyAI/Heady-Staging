@@ -1,0 +1,45 @@
+{
+  "name": "@headysystems/heady-platform",
+  "version": "3.0.0",
+  "private": true,
+  "description": "HeadySystems Inc. — Sovereign AI Operating System. 51+ Provisional Patents. Founder: Eric Haywood.",
+  "type": "module",
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "workspaces": [
+    "packages/*",
+    "services/*",
+    "core/*"
+  ],
+  "scripts": {
+    "test": "node --experimental-vm-modules node_modules/.bin/jest --config jest.config.js",
+    "test:unit": "npm test -- --testPathPattern=tests/",
+    "test:core": "npm test -- --testPathPattern=tests/(conductor|edge-runtime|liquid-gateway|bee-registry|pipeline)",
+    "test:wave1": "npm test -- --testPathPattern=tests/(auth|csl|vector)",
+    "test:wave2": "npm test -- --testPathPattern=tests/(liquid-nodes|swarm|async-engine|vector-ops|services)",
+    "lint": "eslint --ext .js packages/ services/ core/ shared/",
+    "lint:fix": "eslint --ext .js --fix packages/ services/ core/ shared/",
+    "verify": "bash scripts/scan-localhost.sh && npm run lint",
+    "build:docker": "docker compose -f infra/docker/docker-compose.services.yml build",
+    "start:services": "docker compose -f infra/docker/docker-compose.services.yml up -d",
+    "stop:services": "docker compose -f infra/docker/docker-compose.services.yml down",
+    "sbom": "bash scripts/generate-sbom.sh",
+    "setup": "bash scripts/setup-dev.sh"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "eslint": "^8.56.0",
+    "jest": "^29.7.0",
+    "supertest": "^6.3.3"
+  },
+  "dependencies": {
+    "dotenv": "^16.3.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/HeadyMe/heady-platform"
+  },
+  "author": "Eric Haywood <eric@headyconnection.org>",
+  "license": "PROPRIETARY"
+}

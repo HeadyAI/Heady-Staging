@@ -1,0 +1,59 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://heady.io/schemas/vector-query.json",
+  "title": "VectorQuery",
+  "description": "Vector similarity search query for the Heady platform (384-dim embeddings)",
+  "type": "object",
+  "required": ["vector", "namespace", "topK"],
+  "properties": {
+    "vector": {
+      "type": "array",
+      "items": {
+        "type": "number"
+      },
+      "minItems": 384,
+      "maxItems": 384,
+      "description": "384-dimensional embedding vector for similarity search"
+    },
+    "namespace": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "pattern": "^[a-zA-Z0-9_-]+$",
+      "description": "Vector namespace to search within"
+    },
+    "topK": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 1000,
+      "default": 10,
+      "description": "Number of nearest neighbors to return"
+    },
+    "threshold": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1,
+      "description": "Minimum similarity threshold (0-1, phi-scaled recommended)"
+    },
+    "includeMetadata": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether to include stored metadata in results"
+    },
+    "includeVectors": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether to include the stored vectors in results"
+    },
+    "filter": {
+      "type": "object",
+      "additionalProperties": true,
+      "description": "Metadata filter for pre-filtering vectors before similarity search"
+    },
+    "cursor": {
+      "type": "string",
+      "description": "Pagination cursor for retrieving the next page of results"
+    }
+  },
+  "additionalProperties": false
+}

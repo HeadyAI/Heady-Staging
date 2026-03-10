@@ -1,0 +1,77 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://heady.io/schemas/health-response.json",
+  "title": "HealthResponse",
+  "description": "Standard health check response for Heady platform services",
+  "type": "object",
+  "required": ["status", "service", "version", "uptime", "timestamp", "checks"],
+  "properties": {
+    "status": {
+      "type": "string",
+      "enum": ["healthy", "degraded", "unhealthy"],
+      "description": "Overall health status of the service"
+    },
+    "service": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "description": "Name of the service"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+",
+      "description": "Semantic version of the service"
+    },
+    "uptime": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Service uptime in milliseconds"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 timestamp of the health check"
+    },
+    "checks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "status", "latency"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Name of the individual check"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["healthy", "degraded", "unhealthy"],
+            "description": "Status of this check"
+          },
+          "latency": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Check execution time in milliseconds"
+          },
+          "detail": {
+            "type": "string",
+            "description": "Optional detail message about the check result"
+          }
+        },
+        "additionalProperties": false
+      },
+      "description": "Individual health check results"
+    },
+    "thresholds": {
+      "type": "object",
+      "properties": {
+        "GOOD": { "type": "number" },
+        "ACCEPTABLE": { "type": "number" },
+        "DEGRADED": { "type": "number" },
+        "UNHEALTHY": { "type": "number" }
+      },
+      "description": "Phi-scaled response time thresholds in ms"
+    }
+  },
+  "additionalProperties": false
+}

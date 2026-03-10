@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<!--
+  © 2026 HeadySystems Inc. PROPRIETARY AND CONFIDENTIAL.
+  Vector Explorer — Interactive 384D vector space visualization.
+  Founder: Eric Haywood
+-->
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Heady™ Vector Explorer</title>
+  <style>
+    :root {
+      --bg: #0a0e17; --bg2: #111827; --panel: #1a2332;
+      --border: #2a3a4d; --text: #e2e8f0; --muted: #64748b;
+      --cyan: #06b6d4; --purple: #8b5cf6; --green: #10b981;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); }
+
+    .header { padding: 1rem 1.618rem; background: var(--bg2); border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between; }
+    .header h1 { font-size: 1.618rem; }
+    .header h1 span { color: var(--purple); font-size: 0.618em; vertical-align: super; }
+
+    .layout { display: grid; grid-template-columns: 1fr 320px; gap: 1rem;
+      padding: 1rem; max-width: 1400px; margin: 0 auto; }
+
+    .canvas-panel { background: var(--panel); border: 1px solid var(--border);
+      border-radius: 0.618rem; padding: 1rem; }
+    canvas { width: 100%; border-radius: 0.382rem; background: #050810; }
+
+    .sidebar { display: flex; flex-direction: column; gap: 1rem; }
+    .side-panel { background: var(--panel); border: 1px solid var(--border);
+      border-radius: 0.618rem; padding: 1.618rem; }
+    .side-panel h2 { font-size: 0.875rem; color: var(--muted); text-transform: uppercase;
+      letter-spacing: 0.05em; margin-bottom: 1rem; }
+
+    .search-box { width: 100%; background: var(--bg); border: 1px solid var(--border);
+      color: var(--text); padding: 0.618rem 1rem; border-radius: 0.382rem;
+      font-size: 0.875rem; outline: none; }
+    .search-box:focus { border-color: var(--purple); }
+
+    .result-list { max-height: 300px; overflow-y: auto; }
+    .result-item { display: flex; justify-content: space-between; padding: 0.618rem;
+      border-bottom: 1px solid var(--border); font-size: 0.813rem; cursor: pointer; }
+    .result-item:hover { background: var(--bg2); }
+    .result-score { color: var(--green); font-weight: 600; font-variant-numeric: tabular-nums; }
+
+    .op-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.618rem; }
+    .op-btn { background: var(--bg); border: 1px solid var(--border); color: var(--text);
+      padding: 0.618rem; border-radius: 0.382rem; font-size: 0.75rem; cursor: pointer;
+      text-align: center; transition: border-color 0.2s; }
+    .op-btn:hover { border-color: var(--purple); }
+
+    .stat-row { display: flex; justify-content: space-between; padding: 0.382rem 0;
+      border-bottom: 1px solid var(--border); font-size: 0.813rem; }
+    .stat-label { color: var(--muted); }
+    .stat-value { font-weight: 600; }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <h1>Heady<span>™</span> Vector Explorer</h1>
+    <div style="font-size:0.875rem; color:var(--muted);">384D Semantic Space</div>
+  </header>
+
+  <div class="layout">
+    <div class="canvas-panel">
+      <canvas id="vector-canvas" width="900" height="600"></canvas>
+    </div>
+
+    <div class="sidebar">
+      <div class="side-panel">
+        <h2>Semantic Search</h2>
+        <input type="text" class="search-box" id="search-input" placeholder="Search vector memory..." />
+        <div class="result-list" id="search-results"></div>
+      </div>
+
+      <div class="side-panel">
+        <h2>CSL Operations</h2>
+        <div class="op-grid">
+          <div class="op-btn" data-op="AND">CSL AND</div>
+          <div class="op-btn" data-op="OR">CSL OR</div>
+          <div class="op-btn" data-op="NOT">CSL NOT</div>
+          <div class="op-btn" data-op="XOR">CSL XOR</div>
+          <div class="op-btn" data-op="IMPLY">CSL IMPLY</div>
+          <div class="op-btn" data-op="CONSENSUS">CONSENSUS</div>
+        </div>
+      </div>
+
+      <div class="side-panel">
+        <h2>Memory Stats</h2>
+        <div id="memory-stats">
+          <div class="stat-row"><span class="stat-label">Entries</span><span class="stat-value" id="stat-entries">0</span></div>
+          <div class="stat-row"><span class="stat-label">Dimensions</span><span class="stat-value">384</span></div>
+          <div class="stat-row"><span class="stat-label">Capacity</span><span class="stat-value">6,765</span></div>
+          <div class="stat-row"><span class="stat-label">Utilization</span><span class="stat-value" id="stat-util">0%</span></div>
+          <div class="stat-row"><span class="stat-label">Persistence</span><span class="stat-value">pgvector</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      'use strict';
+      const PHI = 1.618; const PSI = 0.618;
+
+      // Generate sample vector entries for visualization
+      const entries = [];
+      const domains = ['deploy', 'research', 'security', 'memory', 'creative',
+        'trading', 'health', 'governance', 'documentation', 'testing',
+        'monitoring', 'analytics', 'emergency', 'migration', 'cleanup'];
+
+      for (let i = 0; i < 50; i++) {
+        const domain = domains[i % domains.length];
+        entries.push({
+          id: 'vec-' + i,
+          label: domain + '-' + i,
+          x: (Math.random() - 0.5) * 4,
+          y: (Math.random() - 0.5) * 4,
+          z: (Math.random() - 0.5) * 4,
+          domain: domain,
+          importance: Math.random(),
+        });
+      }
+
+      const canvas = document.getElementById('vector-canvas');
+      const ctx = canvas.getContext('2d');
+      let angle = 0;
+
+      const DOMAIN_COLORS = {
+        deploy: '#06b6d4', research: '#8b5cf6', security: '#ef4444',
+        memory: '#10b981', creative: '#f59e0b', trading: '#ec4899',
+        health: '#14b8a6', governance: '#6366f1', documentation: '#a855f7',
+        testing: '#22c55e', monitoring: '#f97316', analytics: '#3b82f6',
+        emergency: '#dc2626', migration: '#84cc16', cleanup: '#64748b',
+      };
+
+      function render() {
+        const w = canvas.width, h = canvas.height;
+        ctx.clearRect(0, 0, w, h);
+
+        const cos = Math.cos(angle);
+        const sin = Math.sin(angle);
+
+        const projected = entries.map(e => {
+          const rx = e.x * cos - e.z * sin;
+          const rz = e.x * sin + e.z * cos;
+          const p = 3.5 / (3.5 + rz * 0.3);
+          return {
+            ...e,
+            px: w / 2 + rx * 60 * p,
+            py: h / 2 - e.y * 60 * p,
+            depth: rz,
+            scale: p,
+          };
+        });
+
+        projected.sort((a, b) => a.depth - b.depth);
+
+        for (const p of projected) {
+          const color = DOMAIN_COLORS[p.domain] || '#6b7280';
+          const r = (4 + p.importance * 6) * p.scale;
+
+          ctx.beginPath();
+          ctx.arc(p.px, p.py, r, 0, Math.PI * 2);
+          ctx.fillStyle = color + (p.depth > 0 ? 'cc' : '88');
+          ctx.fill();
+
+          if (r > 5) {
+            ctx.fillStyle = '#e2e8f088';
+            ctx.font = '9px Inter, sans-serif';
+            ctx.textAlign = 'center';
+            ctx.fillText(p.label, p.px, p.py + r + 10);
+          }
+        }
+
+        angle += 0.004;
+        requestAnimationFrame(render);
+      }
+
+      // Search simulation
+      document.getElementById('search-input').addEventListener('input', function (e) {
+        const q = e.target.value.toLowerCase();
+        const results = entries
+          .filter(e => e.label.includes(q) || e.domain.includes(q))
+          .slice(0, 10)
+          .map(e => ({ id: e.id, label: e.label, score: (0.6 + Math.random() * 0.4).toFixed(3) }));
+
+        const container = document.getElementById('search-results');
+        container.innerHTML = results.map(r =>
+          '<div class="result-item"><span>' + r.label + '</span><span class="result-score">' + r.score + '</span></div>'
+        ).join('');
+      });
+
+      // CSL operation buttons
+      document.querySelectorAll('.op-btn').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          var op = btn.getAttribute('data-op');
+          btn.style.borderColor = '#8b5cf6';
+          btn.textContent = op + ' \u2713';
+          setTimeout(function () {
+            btn.style.borderColor = '';
+            btn.textContent = 'CSL ' + op;
+          }, 1000);
+        });
+      });
+
+      document.getElementById('stat-entries').textContent = entries.length;
+      document.getElementById('stat-util').textContent = (entries.length / 6765 * 100).toFixed(2) + '%';
+
+      document.addEventListener('DOMContentLoaded', render);
+    })();
+  </script>
+</body>
+</html>

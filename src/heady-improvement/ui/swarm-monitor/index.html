@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<!--
+  © 2026 HeadySystems Inc. PROPRIETARY AND CONFIDENTIAL.
+  HeadySwarm Monitor — Real-time 17-swarm visualization.
+  Founder: Eric Haywood
+-->
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Heady™ Swarm Monitor</title>
+  <style>
+    :root {
+      --phi: 1.618; --psi: 0.618; --psi2: 0.382;
+      --bg: #0a0e17; --bg2: #111827; --panel: #1a2332;
+      --border: #2a3a4d; --text: #e2e8f0; --muted: #64748b;
+      --green: #10b981; --amber: #f59e0b; --red: #ef4444;
+      --cyan: #06b6d4; --purple: #8b5cf6;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); }
+
+    .header { display: flex; align-items: center; justify-content: space-between;
+      padding: 1rem 1.618rem; background: var(--bg2); border-bottom: 1px solid var(--border); }
+    .header h1 { font-size: 1.618rem; }
+    .header h1 span { color: var(--cyan); font-size: 0.618em; vertical-align: super; }
+    .mesh-status { font-size: 0.875rem; color: var(--muted); }
+
+    .swarm-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 1rem; padding: 1rem; max-width: 1600px; margin: 0 auto; }
+
+    .swarm-card { background: var(--panel); border: 1px solid var(--border);
+      border-radius: 0.618rem; padding: 1.618rem; transition: border-color 0.2s; }
+    .swarm-card:hover { border-color: var(--cyan); }
+
+    .swarm-name { font-size: 1rem; font-weight: 600; margin-bottom: 0.618rem; }
+    .swarm-meta { font-size: 0.75rem; color: var(--muted); margin-bottom: 1rem; }
+
+    .metric { display: flex; justify-content: space-between; padding: 0.382rem 0;
+      border-bottom: 1px solid var(--border); font-size: 0.813rem; }
+    .metric:last-child { border-bottom: none; }
+    .metric-label { color: var(--muted); }
+    .metric-value { font-weight: 600; font-variant-numeric: tabular-nums; }
+
+    .pressure-bar { height: 4px; background: var(--border); border-radius: 2px;
+      margin-top: 0.618rem; overflow: hidden; }
+    .pressure-fill { height: 100%; border-radius: 2px; transition: width 0.3s; }
+    .pressure-fill.nominal { background: var(--green); }
+    .pressure-fill.elevated { background: var(--amber); }
+    .pressure-fill.high { background: var(--red); }
+    .pressure-fill.critical { background: #dc2626; }
+
+    .bee-dots { display: flex; flex-wrap: wrap; gap: 3px; margin-top: 0.618rem; }
+    .bee-dot { width: 8px; height: 8px; border-radius: 50%; }
+    .bee-dot.idle { background: var(--green); }
+    .bee-dot.working { background: var(--amber); }
+    .bee-dot.paused { background: var(--muted); }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <h1>Heady<span>™</span> Swarm Monitor</h1>
+    <div class="mesh-status" id="mesh-status">17 Swarms · 34 Bees · NOMINAL</div>
+  </header>
+  <div class="swarm-grid" id="swarm-grid"></div>
+
+  <script>
+    (function () {
+      'use strict';
+      const PHI = 1.618; const PSI = 0.618; const PSI2 = PSI * PSI;
+
+      const SWARMS = [
+        'Deploy', 'Battle', 'Research', 'Security', 'Memory',
+        'Creative', 'Trading', 'Health', 'Governance', 'Documentation',
+        'Testing', 'Migration', 'Monitoring', 'Cleanup', 'Onboarding',
+        'Analytics', 'Emergency'
+      ];
+
+      function randomBees(min, max) {
+        return min + Math.floor(Math.random() * (max - min));
+      }
+
+      function classifyPressure(ratio) {
+        if (ratio < PSI2) return 'nominal';
+        if (ratio < PSI) return 'elevated';
+        if (ratio < 1 - PSI * PSI * PSI) return 'high';
+        return 'critical';
+      }
+
+      function renderSwarms() {
+        const grid = document.getElementById('swarm-grid');
+        let totalBees = 0;
+
+        grid.innerHTML = SWARMS.map(name => {
+          const beeCount = randomBees(2, 8);
+          totalBees += beeCount;
+          const utilization = Math.random() * 0.8;
+          const pressure = classifyPressure(utilization);
+          const idleBees = Math.floor(beeCount * (1 - utilization));
+          const workingBees = beeCount - idleBees;
+          const tasks = Math.floor(Math.random() * 50);
+
+          return '<div class="swarm-card">' +
+            '<div class="swarm-name">' + name + ' Swarm</div>' +
+            '<div class="swarm-meta">swarm-' + name.toLowerCase() + '</div>' +
+            '<div class="metric"><span class="metric-label">Bees</span><span class="metric-value">' + beeCount + '</span></div>' +
+            '<div class="metric"><span class="metric-label">Utilization</span><span class="metric-value">' + (utilization * 100).toFixed(1) + '%</span></div>' +
+            '<div class="metric"><span class="metric-label">Queue</span><span class="metric-value">' + tasks + '</span></div>' +
+            '<div class="metric"><span class="metric-label">Pressure</span><span class="metric-value">' + pressure.toUpperCase() + '</span></div>' +
+            '<div class="pressure-bar"><div class="pressure-fill ' + pressure + '" style="width:' + (utilization * 100) + '%"></div></div>' +
+            '<div class="bee-dots">' +
+              Array(workingBees).fill('<span class="bee-dot working"></span>').join('') +
+              Array(idleBees).fill('<span class="bee-dot idle"></span>').join('') +
+            '</div>' +
+          '</div>';
+        }).join('');
+
+        document.getElementById('mesh-status').textContent =
+          SWARMS.length + ' Swarms \u00b7 ' + totalBees + ' Bees \u00b7 NOMINAL';
+      }
+
+      document.addEventListener('DOMContentLoaded', renderSwarms);
+    })();
+  </script>
+</body>
+</html>
