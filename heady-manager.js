@@ -74,6 +74,23 @@ try {
 }
 
 const PORT = Number(process.env.PORT || 3300);
+
+// ─── Latent Space Ops (Colab Pro+ Liquid Nodes) ──────────────────────
+let liquidMesh = null;
+try {
+  const { LiquidMesh } = require('./src/liquid/liquid-mesh');
+  liquidMesh = new LiquidMesh();
+  liquidMesh.start().then(() => {
+    // Ensure the 3 Colab Pro+ runtimes are registered as liquid nodes mapped to latent space
+    liquidMesh.registerNode({ id: 'colab-hot', pool: 'hot', type: 'latent-space-ops' });
+    liquidMesh.registerNode({ id: 'colab-warm', pool: 'warm', type: 'latent-space-ops' });
+    liquidMesh.registerNode({ id: 'colab-cold', pool: 'cold', type: 'latent-space-ops' });
+    logger.info("  ∞ Liquid Nodes: 3 Colab Pro+ runtimes mapped to latent space ops");
+  });
+} catch (e) {
+  logger.warn("  ∞ Liquid Nodes: Mesh init skipped (" + e.message + ")");
+}
+
 const app = express();
 
 // ─── Middleware ─────────────────────────────────────────────────────
@@ -173,7 +190,8 @@ app.get("/api/pulse", (req, res) => {
 const REGISTRY_PATH = path.join(__dirname, ".heady", "registry.json");
 
 function loadRegistry() {
-  return readJsonSafe(REGISTRY_PATH) || { nodes: {}, tools: {}, workflows: {}, services: {}, skills: {}, metadata: {} };
+  return readJsonSafe(REGISTRY_PATH) || { liquidMesh: liquidMesh ? liquidMesh.getStatus() : null,
+    nodes: {}, tools: {}, workflows: {}, services: {}, skills: {}, metadata: {} };
 }
 
 function saveRegistry(data) {
@@ -1163,7 +1181,7 @@ app.use((err, req, res, next) => {
 });
 
 // ─── SPA Fallback ───────────────────────────────────────────────────
-app.get("*", (req, res) => {
+app.get('/*path', (req, res) => {
   const indexPath = path.join(frontendBuildPath, "index.html");
   if (fs.existsSync(indexPath)) return res.sendFile(indexPath);
   res.status(404).json({ error: "Not found" });

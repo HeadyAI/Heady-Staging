@@ -40,7 +40,7 @@ class HeadyRuntimeBridge:
     
     def __init__(self, pool='hot', gateway_url=None):
         self.pool = pool
-        self.gateway_url = gateway_url or os.environ.get('HEADY_GATEWAY_URL', 'http://localhost:3352')
+        self.gateway_url = gateway_url or os.environ.get('HEADY_GATEWAY_URL', 'http://colab-gateway.local.headysystems.com:3352')
         self.model = None
         self.tokenizer = None
         self.device = 'cpu'

@@ -10,7 +10,7 @@
 const http = require('http');
 const { PHI, PSI, fib, phiMs, CSL_THRESHOLDS, cosineSimilarity, normalize } = require('../shared/phi-math');
 
-const COLAB_GATEWAY = process.env.COLAB_GATEWAY_URL || 'http://localhost:3352';
+const COLAB_GATEWAY = process.env.COLAB_GATEWAY_URL || 'http://0.0.0.0:3352';
 const BATCH_SIZES = [fib(6), fib(7), fib(8), fib(9), fib(10)]; // [8, 13, 21, 34, 55]
 
 function log(level, msg, meta = {}) {
