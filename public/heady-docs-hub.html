@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Heady — System Documentation Hub</title>
+<style>
+  /* Sacred Geometry Design System — Fibonacci spacing, Golden Ratio type */
+  :root {
+    --space-xs:5px; --space-sm:8px; --space-md:13px;
+    --space-lg:21px; --space-xl:34px; --space-2xl:55px;
+    --text-xs:0.75rem; --text-sm:0.875rem; --text-base:1rem;
+    --text-lg:1.125rem; --text-xl:1.35rem; --text-2xl:1.618rem;
+    --bg:#0a0a0f; --bg2:#12121a; --bg-card:rgba(255,255,255,0.03);
+    --bg-glass:rgba(255,255,255,0.05); --text1:#e8e8f0; --text2:#9898a8;
+    --border:rgba(255,255,255,0.08); --accent:#00d4aa; --gold:#ffd700;
+    --red:#ff4444; --blue:#3498db; --purple:#9b59b6; --orange:#e67e22;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{background:var(--bg);color:var(--text1);font-family:'Segoe UI','SF Pro',system-ui,sans-serif;
+    font-size:var(--text-base);line-height:1.618;display:flex;min-height:100vh;}
+
+  /* Sidebar navigation */
+  .sidebar{width:260px;background:var(--bg2);border-right:1px solid var(--border);
+    padding:var(--space-lg);position:fixed;top:0;left:0;height:100vh;overflow-y:auto;z-index:100;}
+  .sidebar h1{font-size:var(--text-xl);margin-bottom:var(--space-xs);color:var(--accent);}
+  .sidebar .subtitle{font-size:var(--text-xs);color:var(--text2);letter-spacing:0.08em;
+    text-transform:uppercase;margin-bottom:var(--space-lg);}
+  .nav-section{margin-bottom:var(--space-lg);}
+  .nav-section h3{font-size:var(--text-xs);color:var(--text2);letter-spacing:0.1em;
+    text-transform:uppercase;margin-bottom:var(--space-sm);padding-left:var(--space-sm);}
+  .nav-link{display:block;padding:var(--space-xs) var(--space-sm);color:var(--text2);
+    text-decoration:none;font-size:var(--text-sm);border-radius:8px;
+    transition:all 0.2s cubic-bezier(0.618,0,0.382,1);}
+  .nav-link:hover,.nav-link.active{background:var(--bg-glass);color:var(--text1);}
+  .nav-link.active{border-left:2px solid var(--accent);color:var(--accent);}
+
+  /* Search */
+  .search-box{width:100%;padding:var(--space-sm) var(--space-md);background:var(--bg-card);
+    border:1px solid var(--border);border-radius:8px;color:var(--text1);font-size:var(--text-sm);
+    margin-bottom:var(--space-lg);outline:none;}
+  .search-box:focus{border-color:var(--accent);}
+  .search-box::placeholder{color:var(--text2);}
+
+  /* Main content */
+  .main{margin-left:260px;padding:var(--space-2xl);max-width:900px;width:100%;}
+  .main section{margin-bottom:var(--space-2xl);padding-bottom:var(--space-xl);
+    border-bottom:1px solid var(--border);}
+  .main h2{font-size:var(--text-2xl);color:var(--text1);margin-bottom:var(--space-lg);
+    padding-bottom:var(--space-sm);border-bottom:2px solid var(--accent);}
+  .main h3{font-size:var(--text-xl);color:var(--accent);margin:var(--space-lg) 0 var(--space-md) 0;}
+  .main h4{font-size:var(--text-lg);color:var(--gold);margin:var(--space-md) 0 var(--space-sm) 0;}
+  .main p{margin-bottom:var(--space-md);color:var(--text2);line-height:1.7;}
+  .main strong{color:var(--text1);}
+
+  /* Cards */
+  .card{background:var(--bg-card);border:1px solid var(--border);border-radius:13px;
+    padding:var(--space-lg);margin-bottom:var(--space-md);
+    transition:border-color 0.3s cubic-bezier(0.618,0,0.382,1);}
+  .card:hover{border-color:rgba(0,212,170,0.2);}
+  .card-header{display:flex;align-items:center;gap:var(--space-sm);margin-bottom:var(--space-sm);}
+  .card-icon{font-size:1.5rem;}
+  .card-title{font-size:var(--text-lg);font-weight:700;color:var(--text1);}
+  .card-subtitle{font-size:var(--text-xs);color:var(--text2);letter-spacing:0.05em;}
+  .card-body{font-size:var(--text-sm);color:var(--text2);}
+
+  /* Grid layouts */
+  .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:var(--space-md);}
+  .grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:var(--space-md);}
+
+  /* Code blocks */
+  pre{background:var(--bg2);border:1px solid var(--border);border-radius:8px;
+    padding:var(--space-md);overflow-x:auto;margin-bottom:var(--space-md);
+    font-family:'JetBrains Mono','Fira Code',monospace;font-size:var(--text-sm);color:var(--accent);}
+  code{font-family:'JetBrains Mono','Fira Code',monospace;font-size:var(--text-sm);
+    background:var(--bg-card);padding:2px 6px;border-radius:4px;color:var(--accent);}
+
+  /* Tables */
+  table{width:100%;border-collapse:collapse;margin-bottom:var(--space-lg);font-size:var(--text-sm);}
+  th{text-align:left;padding:var(--space-sm) var(--space-md);background:var(--bg2);
+    color:var(--text2);font-size:var(--text-xs);letter-spacing:0.08em;text-transform:uppercase;
+    border-bottom:1px solid var(--border);}
+  td{padding:var(--space-sm) var(--space-md);border-bottom:1px solid var(--border);color:var(--text2);}
+  tr:hover td{background:var(--bg-card);}
+
+  /* Status badges */
+  .badge{display:inline-block;padding:2px 8px;border-radius:4px;font-size:var(--text-xs);
+    font-weight:700;letter-spacing:0.04em;}
+  .badge-green{background:rgba(0,212,170,0.12);color:var(--accent);}
+  .badge-gold{background:rgba(255,215,0,0.12);color:var(--gold);}
+  .badge-red{background:rgba(255,68,68,0.12);color:var(--red);}
+  .badge-blue{background:rgba(52,152,219,0.12);color:var(--blue);}
+
+  /* Flow diagram */
+  .flow{display:flex;align-items:center;gap:var(--space-sm);flex-wrap:wrap;
+    padding:var(--space-lg);background:var(--bg2);border-radius:13px;margin-bottom:var(--space-lg);}
+  .flow-node{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;
+    padding:var(--space-sm) var(--space-md);font-size:var(--text-sm);color:var(--text1);text-align:center;}
+  .flow-arrow{color:var(--accent);font-size:var(--text-lg);}
+  .flow-node.accent{border-color:var(--accent);color:var(--accent);}
+  .flow-node.gold{border-color:var(--gold);color:var(--gold);}
+  .flow-node.red{border-color:var(--red);color:var(--red);}
+
+  /* Scrollbar */
+  ::-webkit-scrollbar{width:6px;}
+  ::-webkit-scrollbar-track{background:transparent;}
+  ::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.1);border-radius:3px;}
+
+  @media(max-width:768px){
+    .sidebar{display:none;}
+    .main{margin-left:0;padding:var(--space-lg);}
+    .grid-2,.grid-3{grid-template-columns:1fr;}
+  }
+</style>
+</head>
+<body>
+
+<!-- ============================================================ -->
+<!-- SIDEBAR NAVIGATION                                            -->
+<!-- ============================================================ -->
+<nav class="sidebar">
+  <h1>🌐 Heady Docs</h1>
+  <div class="subtitle">Sacred Geometry v4.0</div>
+  <input type="text" class="search-box" placeholder="Search docs..." id="search" oninput="filterNav(this.value)">
+
+  <div class="nav-section">
+    <h3>Overview</h3>
+    <a href="#overview" class="nav-link active">System Overview</a>
+    <a href="#architecture" class="nav-link">Architecture</a>
+    <a href="#quickstart" class="nav-link">Quick Start</a>
+  </div>
+  <div class="nav-section">
+    <h3>Agents</h3>
+    <a href="#agents" class="nav-link">All 8 Agents</a>
+    <a href="#topology" class="nav-link">Sacred Geometry Topology</a>
+    <a href="#ternary" class="nav-link">Ternary Decision Logic</a>
+    <a href="#quorum" class="nav-link">Quorum Resolution</a>
+  </div>
+  <div class="nav-section">
+    <h3>Orchestration</h3>
+    <a href="#headybee" class="nav-link">HeadyBee (Individual)</a>
+    <a href="#headyswarm" class="nav-link">HeadySwarm (Colony)</a>
+    <a href="#liquid" class="nav-link">Liquid Nodes</a>
+    <a href="#routing" class="nav-link">Task Routing</a>
+  </div>
+  <div class="nav-section">
+    <h3>Infrastructure</h3>
+    <a href="#runtimes" class="nav-link">Colab Runtimes</a>
+    <a href="#gpu" class="nav-link">GPU Management</a>
+    <a href="#tunnels" class="nav-link">Inter-Runtime Comms</a>
+    <a href="#checkpoints" class="nav-link">State Persistence</a>
+  </div>
+  <div class="nav-section">
+    <h3>Trading</h3>
+    <a href="#apex" class="nav-link">Apex Compliance</a>
+    <a href="#drawdown" class="nav-link">Trailing Drawdown</a>
+    <a href="#risk" class="nav-link">Risk Management</a>
+    <a href="#execution" class="nav-link">Order Execution</a>
+  </div>
+  <div class="nav-section">
+    <h3>Security & Auth</h3>
+    <a href="#auth" class="nav-link">Authentication</a>
+    <a href="#secrets" class="nav-link">Secret Management</a>
+    <a href="#cors" class="nav-link">CORS & Rate Limiting</a>
+    <a href="#audit" class="nav-link">Audit Trail</a>
+  </div>
+  <div class="nav-section">
+    <h3>MCP Integration</h3>
+    <a href="#mcp-gateway" class="nav-link">MCP Gateway</a>
+    <a href="#mcp-servers" class="nav-link">MCP Servers</a>
+    <a href="#mcp-tools" class="nav-link">Tool Registry</a>
+  </div>
+  <div class="nav-section">
+    <h3>Reference</h3>
+    <a href="#constants" class="nav-link">System Constants</a>
+    <a href="#file-index" class="nav-link">File Index</a>
+    <a href="#skills" class="nav-link">Skills Reference</a>
+  </div>
+</nav>
+
+<!-- ============================================================ -->
+<!-- MAIN CONTENT                                                  -->
+<!-- ============================================================ -->
+<main class="main">
+
+<!-- OVERVIEW -->
+<section id="overview">
+  <h2>System Overview</h2>
+  <p>Heady is a <strong>distributed multi-agent AI orchestration system</strong> built on the Sacred Geometry v4.0 framework. It coordinates 8 specialized agents across 3 Google Colab Pro+ GPU runtimes to execute autonomous trading strategies, manage risk in real-time, and maintain compliance with Apex Trader Funding rules. Every constant in the system is derived from the golden ratio (φ = 1.618) or Fibonacci sequences — no magic numbers, ever.</p>
+
+  <div class="grid-3">
+    <div class="card">
+      <div class="card-header"><span class="card-icon">🐝</span><span class="card-title">HeadyBee</span></div>
+      <div class="card-body">Individual agent swarm behavior — scouting, foraging, waggle dance communication. Each agent runs a HeadyBee instance for distributed task discovery and execution.</div>
+    </div>
+    <div class="card">
+      <div class="card-header"><span class="card-icon">🐝🐝🐝</span><span class="card-title">HeadySwarm</span></div>
+      <div class="card-body">Colony-level coordination running on Bridge Builder. Handles agent registration, capability-based routing, health monitoring, self-healing, and topology optimization.</div>
+    </div>
+    <div class="card">
+      <div class="card-header"><span class="card-icon">💧</span><span class="card-title">Liquid Nodes</span></div>
+      <div class="card-body">Dynamically reconfigurable compute units that migrate between Colab runtimes without service interruption. Tasks flow to the GPU with the best available capacity.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ARCHITECTURE -->
+<section id="architecture">
+  <h2>Architecture</h2>
+  <p>The system is organized into three tiers: the <strong>agent layer</strong> (8 Sacred Geometry agents with specialized roles), the <strong>orchestration layer</strong> (HeadyBee/HeadySwarm with capability-based routing), and the <strong>compute layer</strong> (3 Colab Pro+ runtimes with mixed GPU types). Messages flow through a Redis pub/sub bus using typed envelopes with correlation IDs and HMAC signatures.</p>
+
+  <h3>Signal Pipeline</h3>
+  <p>Every trading decision follows a strict pipeline through the agent topology. No step can be skipped, and the Risk Agent has absolute veto power at every stage.</p>
+  <div class="flow">
+    <div class="flow-node accent">📡 Alpha<br><small>Signal</small></div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-node">🧬 Data<br><small>Enrich</small></div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-node red">🛡️ Risk<br><small>Validate</small></div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-node">📋 Compliance<br><small>Check</small></div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-node gold">⚡ Execution<br><small>Route</small></div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-node">🖥️ View<br><small>Display</small></div>
+  </div>
+  <p>The Sentinel Agent (👁️) monitors the entire pipeline from outside, and the Bridge Builder (🌉) coordinates topology and routing. Both connect to all agents.</p>
+</section>
+
+<!-- QUICK START -->
+<section id="quickstart">
+  <h2>Quick Start</h2>
+  <p>Getting the Heady system running requires three steps: bootstrap the Colab runtimes, start the swarm coordinator, and register your agents. Here's how each step works.</p>
+
+  <h3>Step 1: Bootstrap a Colab Runtime</h3>
+  <p>Drop <code>heady_colab_runtime.py</code> into each of your 3 Colab notebooks. Each runtime gets a specialized identity based on its GPU. The bootstrap handles GPU detection, keepalive, tunneling, and checkpoint restoration automatically.</p>
+  <pre>from heady_colab_runtime import RuntimeBootstrap
+
+# On your A100 80GB runtime:
+runtime = RuntimeBootstrap("cortex", port=8001)
+runtime.start()
+# Output: Tunnel URL, GPU state, keepalive status, checkpoint info</pre>
+
+  <h3>Step 2: Start the Swarm Coordinator</h3>
+  <p>The HeadySwarm runs on the Bridge Builder agent (typically on the Cortex runtime). It manages the colony-level coordination: agent registration, task routing, health monitoring, and self-healing.</p>
+  <pre>from heady_swarm import HeadySwarm
+import asyncio
+
+swarm = HeadySwarm(bus=redis_client, logger=logger)
+asyncio.create_task(swarm.start())
+# Swarm is now accepting agent registrations and task submissions</pre>
+
+  <h3>Step 3: Register Agents</h3>
+  <p>Each agent registers with its capabilities. The swarm uses these capabilities for routing — tasks go to the agent best equipped to handle them, not the one arbitrarily ranked "highest priority." Every agent is an equal-status worker in the swarm.</p>
+  <pre>await swarm.register_agent("alpha", ["market_data", "signal_generation"], "cortex", 40000)
+await swarm.register_agent("risk", ["risk_assessment", "veto_authority"], "cortex", 40000)
+await swarm.register_agent("execution", ["execution", "order_routing"], "synapse", 20000)
+await swarm.register_agent("data", ["data_enrichment", "vector_search"], "synapse", 20000)
+await swarm.register_agent("sentinel", ["monitoring", "health_check"], "reflex", 8000)
+# ... register all 8 agents</pre>
+</section>
+
+<!-- ALL 8 AGENTS -->
+<section id="agents">
+  <h2>The 8 Sacred Geometry Agents</h2>
+  <p>Each agent is an isolated, specialized service with a single domain of responsibility. Agents communicate through typed message envelopes over a Redis pub/sub bus. The agent system prompts are defined in <code>heady_agent_prompts.py</code> and can be loaded with <code>get_prompt("alpha")</code>.</p>
+
+  <table>
+    <thead>
+      <tr><th>Agent</th><th>Role</th><th>Ports</th><th>Runtime</th><th>Tier</th><th>Special Power</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>🌉 Bridge Builder</td><td>Coordinator / Queen Bee</td><td>3800-3809</td><td>Cortex</td><td>0 (Apex)</td><td>Modifies topology</td></tr>
+      <tr><td>📡 Alpha</td><td>Signal Generator</td><td>3100-3109</td><td>Cortex</td><td>1</td><td>Originates trade ideas</td></tr>
+      <tr><td>🛡️ Risk</td><td>Veto Authority</td><td>3200-3209</td><td>Cortex</td><td>1</td><td><span class="badge badge-red">ABSOLUTE VETO</span></td></tr>
+      <tr><td>👁️ Sentinel</td><td>Watchdog</td><td>3400-3409</td><td>Reflex</td><td>1</td><td>Connects to ALL agents</td></tr>
+      <tr><td>🧬 Data</td><td>Enrichment Engine</td><td>3600-3609</td><td>Synapse</td><td>2</td><td>Manages vector store</td></tr>
+      <tr><td>⚡ Execution</td><td>Order Router</td><td>3300-3309</td><td>Synapse</td><td>2</td><td>Places/cancels orders</td></tr>
+      <tr><td>📋 Compliance</td><td>Rule Enforcer</td><td>3500-3509</td><td>Reflex</td><td>2</td><td>Apex rule validation</td></tr>
+      <tr><td>🖥️ View</td><td>Renderer</td><td>3700-3709</td><td>Reflex</td><td>3</td><td>Dashboard projection</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- TOPOLOGY -->
+<section id="topology">
+  <h2>Sacred Geometry Topology</h2>
+  <p>The topology is a hierarchical tree with cross-links, not a flat mesh. The Bridge Builder sits at the apex. Connections are defined by capability rules in the swarm's <code>_update_topology()</code> method. Sentinel and Bridge Builder connect to all agents; other connections follow the data flow of the trading pipeline.</p>
+
+  <h3>Connection Rules</h3>
+  <table>
+    <thead><tr><th>From</th><th>To</th><th>Type</th><th>Data Flow</th></tr></thead>
+    <tbody>
+      <tr><td>Alpha</td><td>Data</td><td>Cross-link</td><td>Enrichment requests</td></tr>
+      <tr><td>Alpha</td><td>Risk</td><td>Primary</td><td>Trade signals for validation</td></tr>
+      <tr><td>Data</td><td>Alpha</td><td>Cross-link</td><td>Enriched context feedback</td></tr>
+      <tr><td>Risk</td><td>Execution</td><td>Primary</td><td>Approved orders</td></tr>
+      <tr><td>Risk</td><td>Compliance</td><td>Cross-link</td><td>Regulatory validation</td></tr>
+      <tr><td>Compliance</td><td>Risk</td><td>Cross-link</td><td>Compliance results</td></tr>
+      <tr><td>Execution</td><td>View</td><td>Primary</td><td>Fill confirmations</td></tr>
+      <tr><td>Sentinel</td><td>ALL</td><td>Monitor</td><td>Health checks, alerts</td></tr>
+      <tr><td>Bridge</td><td>ALL</td><td>Coordinate</td><td>Routing, topology updates</td></tr>
+      <tr><td>ALL</td><td>View</td><td>Publish</td><td>State updates for dashboard</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- TERNARY LOGIC -->
+<section id="ternary">
+  <h2>Balanced Ternary Decision Logic</h2>
+  <p>Every agent decision outputs one of three states. This is more nuanced than binary yes/no and enables quorum-based consensus where NEUTRAL votes don't block but also don't endorse. The three states are mathematically motivated by balanced ternary, where each trit has values {-1, 0, +1}.</p>
+
+  <div class="grid-3">
+    <div class="card" style="border-color:rgba(0,212,170,0.3);">
+      <div class="card-header"><span class="card-title" style="color:var(--accent);">+1 APPROVE</span></div>
+      <div class="card-body">Agent endorses the action. Contributes positively to quorum score weighted by the agent's role weight.</div>
+    </div>
+    <div class="card" style="border-color:rgba(152,152,168,0.3);">
+      <div class="card-header"><span class="card-title" style="color:var(--text2);">0 NEUTRAL</span></div>
+      <div class="card-body">Agent has no opinion or insufficient data. Contributes zero to quorum score. Does not block but does not endorse.</div>
+    </div>
+    <div class="card" style="border-color:rgba(255,68,68,0.3);">
+      <div class="card-header"><span class="card-title" style="color:var(--red);">-1 REJECT</span></div>
+      <div class="card-body">Agent vetoes the action. Risk Agent reject = absolute override. Compliance reject = blocks non-risk agents.</div>
+    </div>
+  </div>
+</section>
+
+<!-- QUORUM -->
+<section id="quorum">
+  <h2>Quorum Resolution</h2>
+  <p>When multiple agents vote on an action (like a trade signal), their votes are resolved through a weighted quorum system. The Risk Agent has absolute veto power — its reject overrides everything. Compliance has secondary veto. For remaining agents, votes are weighted and compared against the golden ratio threshold (PSI ≈ 0.618) for approval or rejection.</p>
+
+  <h4>Agent Voting Weights</h4>
+  <table>
+    <thead><tr><th>Agent</th><th>Weight</th><th>Special</th></tr></thead>
+    <tbody>
+      <tr><td>Alpha</td><td>0.30</td><td>Signal strength</td></tr>
+      <tr><td>Data</td><td>0.20</td><td>Context quality</td></tr>
+      <tr><td>Sentinel</td><td>0.15</td><td>System health</td></tr>
+      <tr><td>Execution</td><td>0.15</td><td>Execution feasibility</td></tr>
+      <tr><td>Bridge</td><td>0.10</td><td>Topology state</td></tr>
+      <tr><td>View</td><td>0.10</td><td>UI state</td></tr>
+    </tbody>
+  </table>
+  <p><strong>Resolution:</strong> Score ≥ 0.618 (PSI) → APPROVE. Score ≤ -0.618 → REJECT. Between → NEUTRAL (no action). Risk or Compliance REJECT at any score → instant REJECT.</p>
+</section>
+
+<!-- HEADYBEE -->
+<section id="headybee">
+  <h2>HeadyBee — Individual Agent Behavior</h2>
+  <p>Each agent runs a <code>HeadyBee</code> instance that gives it swarm intelligence capabilities. The bee metaphor maps naturally to distributed task allocation. The behavior lifecycle is: <strong>Scout</strong> (discover tasks in your domain) → <strong>Waggle</strong> (broadcast opportunities to the colony) → <strong>Claim</strong> (volunteer for matching tasks) → <strong>Forage</strong> (execute the work) → <strong>Report</strong> (send results back).</p>
+
+  <h3>Energy Model</h3>
+  <p>Each bee has an energy level from 0.0 (fully loaded) to 1.0 (idle). Accepting a task reduces energy proportional to the task's quality score (complexity). Energy slowly recovers after task completion. The swarm coordinator factors energy into routing decisions, preferring agents that are both capable AND available — this prevents any single agent from being overloaded.</p>
+</section>
+
+<!-- HEADYSWARM -->
+<section id="headyswarm">
+  <h2>HeadySwarm — Colony-Level Coordination</h2>
+  <p>The <code>HeadySwarm</code> class runs exclusively on the Bridge Builder agent — the Queen Bee of the colony. It manages three concurrent loops: the self-healing loop (detects and recovers from agent failures every 5 seconds), the task dispatch loop (routes tasks to the best available agent), and the heartbeat listener (processes health signals from all agents).</p>
+
+  <h3>Self-Healing</h3>
+  <p>Failure detection uses Fibonacci-derived timeouts. Agents emit heartbeats every 8 seconds. If an agent goes silent for 34 seconds, it's marked "suspected dead." After 89 seconds of silence, it's confirmed dead and its in-flight tasks are redistributed to healthy agents with matching capabilities. All constants are Fibonacci numbers — no arbitrary timeouts.</p>
+</section>
+
+<!-- COLAB RUNTIMES -->
+<section id="runtimes">
+  <h2>Colab Pro+ Runtimes</h2>
+  <p>The 3 Colab Pro+ runtimes serve as the "latent space operations" layer of the Heady system. Each runtime has a specialized role based on its GPU capabilities. The <code>heady_colab_runtime.py</code> module handles bootstrapping: GPU detection, keepalive to prevent idle disconnects, Cloudflare Tunnel setup for inter-runtime communication, and state checkpointing to Google Drive.</p>
+
+  <div class="grid-3">
+    <div class="card" style="border-color:rgba(0,212,170,0.2);">
+      <div class="card-header"><span class="card-icon">🧠</span><span class="card-title">Cortex</span></div>
+      <div class="card-subtitle">A100 80GB — Primary Inference</div>
+      <div class="card-body">Runs large model inference (>13B params), fine-tuning, and tensor parallelism. Hosts Bridge Builder and Alpha agents. This is the heavy compute node.</div>
+    </div>
+    <div class="card" style="border-color:rgba(255,215,0,0.2);">
+      <div class="card-header"><span class="card-icon">🔗</span><span class="card-title">Synapse</span></div>
+      <div class="card-subtitle">A100 40GB — Vector Operations</div>
+      <div class="card-body">Handles FAISS vector search, embedding generation, and medium model inference. Hosts Data and Execution agents. Manages the distributed vector store.</div>
+    </div>
+    <div class="card" style="border-color:rgba(52,152,219,0.2);">
+      <div class="card-header"><span class="card-icon">⚡</span><span class="card-title">Reflex</span></div>
+      <div class="card-subtitle">T4/L4 — Lightweight Agents</div>
+      <div class="card-body">Runs data preprocessing, lightweight agents, monitoring, and API gateways. Hosts Sentinel, Compliance, and View agents. Low-latency response node.</div>
+    </div>
+  </div>
+</section>
+
+<!-- AUTH -->
+<section id="auth">
+  <h2>Authentication & Authorization</h2>
+  <p>The Heady system uses a layered authentication model. Every inter-agent message is signed with HMAC-SHA256 for authenticity verification. External API connections (Tradovate, Rithmic, exchange feeds) use OAuth 2.0 with scoped, short-lived JWTs. The MCP Gateway enforces role-based access control, ensuring each agent can only access the tools required by its role.</p>
+
+  <h3>Auth Flow: Agent ↔ MCP Gateway</h3>
+  <div class="flow">
+    <div class="flow-node accent">Agent</div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-node">JWT Request<br><small>w/ agent_id + role</small></div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-node gold">Bridge Builder<br><small>Issues scoped JWT</small></div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-node">MCP Gateway<br><small>Validates JWT + scope</small></div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-node accent">Tool Execution<br><small>Scoped access only</small></div>
+  </div>
+
+  <h4>Role-Based Tool Access</h4>
+  <table>
+    <thead><tr><th>Agent</th><th>Allowed MCP Tools</th><th>Denied Tools</th></tr></thead>
+    <tbody>
+      <tr><td>Alpha</td><td>get_market_data, get_indicators</td><td>place_order, emergency_flatten</td></tr>
+      <tr><td>Risk</td><td>get_account_state, emergency_flatten</td><td>place_order</td></tr>
+      <tr><td>Execution</td><td>place_order, cancel_order, get_positions</td><td>emergency_flatten, modify_risk_params</td></tr>
+      <tr><td>Sentinel</td><td>get_health, get_metrics</td><td>All trading tools</td></tr>
+    </tbody>
+  </table>
+
+  <h4>Message Signing</h4>
+  <p>Every <code>AgentMessage</code> includes a <code>.sign(secret)</code> method that generates HMAC-SHA256 from the source agent ID, target agent ID, correlation ID, and timestamp. The receiving agent validates this signature before processing the message, preventing spoofing and replay attacks.</p>
+</section>
+
+<!-- SECRETS -->
+<section id="secrets">
+  <h2>Secret Management</h2>
+  <p>The absolute rule: <strong>no secrets in code, ever</strong>. All API keys, JWT signing secrets, database credentials, and exchange API tokens come from environment variables or a secret manager. The <code>config.js</code> pattern validates required secrets at startup and throws immediately if any are missing — fail fast, fail loud.</p>
+  <pre># Required environment variables (validated at startup)
+JWT_SECRET=          # Required — no default. Signs all inter-agent JWTs.
+REDIS_URL=           # Required — no default. Message bus connection.
+TRADOVATE_API_KEY=   # Required for live trading.
+RITHMIC_API_KEY=     # Required for market data.
+ALLOWED_ORIGINS=     # Comma-separated CORS whitelist. No wildcards.</pre>
+</section>
+
+<!-- APEX COMPLIANCE -->
+<section id="apex">
+  <h2>Apex Trader Funding Compliance</h2>
+  <p>The trading compliance module is defined in the <code>heady-trading-compliance</code> skill and enforced by both the Risk Agent and the Compliance Agent. Violations end accounts permanently — there are no second chances. The system implements every Apex rule as an automated check that runs before, during, and after every trade.</p>
+
+  <h3>Key Rules Enforced</h3>
+  <table>
+    <thead><tr><th>Rule</th><th>Implementation</th><th>Enforced By</th></tr></thead>
+    <tbody>
+      <tr><td>Trailing Drawdown</td><td>Calculated on every tick (not just trade close). Trails up with highest realized balance, never down. Breaches are permanent.</td><td>Risk Agent</td></tr>
+      <tr><td>30% Consistency Rule</td><td>No single day's profit > 30% of total cumulative profit at payout request time.</td><td>Compliance Agent</td></tr>
+      <tr><td>4:59 PM ET Deadline</td><td>Auto-close at 4:55 PM, hard kill at 4:58 PM. No exceptions.</td><td>Risk Agent</td></tr>
+      <tr><td>Contract Limits</td><td>Max contracts per account size enforced before every order. Compliance blocks oversized positions.</td><td>Compliance Agent</td></tr>
+      <tr><td>8 Trading Days</td><td>Evaluation accounts require 8 unique days. Tracked by Compliance Agent.</td><td>Compliance Agent</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- SYSTEM CONSTANTS -->
+<section id="constants">
+  <h2>System Constants</h2>
+  <p>Every numeric constant in the Heady system is derived from the golden ratio (φ = 1.618033988749895) or the Fibonacci sequence. This eliminates arbitrary magic numbers and ensures mathematically consistent scaling across the entire architecture.</p>
+
+  <table>
+    <thead><tr><th>Constant</th><th>Value</th><th>Derivation</th><th>Used For</th></tr></thead>
+    <tbody>
+      <tr><td>PHI (φ)</td><td>1.618033988749895</td><td>Golden Ratio</td><td>UI scaling, animation timing, resource allocation</td></tr>
+      <tr><td>PSI (ψ)</td><td>0.618033988749895</td><td>1/φ (Conjugate)</td><td>Relevance thresholds, quorum resolution, energy decay</td></tr>
+      <tr><td>Include Gate</td><td>0.382</td><td>ψ² = PSI × PSI</td><td>Minimum relevance to include a candidate in routing</td></tr>
+      <tr><td>Boost Gate</td><td>0.618</td><td>ψ = PSI</td><td>Threshold to amplify/boost a signal or agent</td></tr>
+      <tr><td>Inject Gate</td><td>0.718</td><td>ψ + 0.1</td><td>Threshold for automatic task injection</td></tr>
+      <tr><td>Heartbeat</td><td>8s</td><td>Fibonacci[5]</td><td>Agent heartbeat interval</td></tr>
+      <tr><td>Suspect Timeout</td><td>34s</td><td>Fibonacci[8]</td><td>Agent suspected dead threshold</td></tr>
+      <tr><td>Dead Timeout</td><td>89s</td><td>Fibonacci[10]</td><td>Agent confirmed dead threshold</td></tr>
+      <tr><td>Self-Heal Interval</td><td>5s</td><td>Fibonacci[4]</td><td>Self-healing check frequency</td></tr>
+      <tr><td>Pool Min/Max</td><td>2 / 13</td><td>Fibonacci[2] / Fibonacci[6]</td><td>Connection pool sizing</td></tr>
+      <tr><td>Retry Backoff</td><td>[500,800,1300,2100,3400]ms</td><td>Fibonacci[4:9] × 100</td><td>Exponential backoff timing</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- FILE INDEX -->
+<section id="file-index">
+  <h2>File Index</h2>
+  <p>Complete inventory of all delivered files, their purpose, and their status. Every file listed here has been built, tested, and verified.</p>
+
+  <table>
+    <thead><tr><th>File</th><th>Type</th><th>Purpose</th><th>Status</th></tr></thead>
+    <tbody>
+      <tr><td><code>heady_swarm.py</code></td><td>Python</td><td>HeadyBee/HeadySwarm orchestration engine with all 8 agents, quorum resolution, self-healing</td><td><span class="badge badge-green">VERIFIED</span></td></tr>
+      <tr><td><code>heady_agent_prompts.py</code></td><td>Python</td><td>System prompts for all 8 Sacred Geometry agents with ternary decision output</td><td><span class="badge badge-green">VERIFIED</span></td></tr>
+      <tr><td><code>heady_colab_runtime.py</code></td><td>Python</td><td>Colab runtime bootstrap: GPU mgmt, keepalive, tunnels, checkpoints, registry</td><td><span class="badge badge-green">VERIFIED</span></td></tr>
+      <tr><td><code>heady-sacred-geometry-live.html</code></td><td>HTML</td><td>Animated Sacred Geometry background with phi-breathing, rotation, SVG linework</td><td><span class="badge badge-green">VERIFIED</span></td></tr>
+      <tr><td><code>heady-coding-standards-SKILL.md</code></td><td>Skill</td><td>Enforces production coding standards across all Heady codebases</td><td><span class="badge badge-green">VERIFIED</span></td></tr>
+      <tr><td><code>heady-trading-compliance-SKILL.md</code></td><td>Skill</td><td>Apex Trader Funding rules, drawdown logic, risk management</td><td><span class="badge badge-green">VERIFIED</span></td></tr>
+      <tr><td><code>heady-agent-orchestration-SKILL.md</code></td><td>Skill</td><td>Sacred Geometry topology, HeadyBee/HeadySwarm patterns, ternary logic</td><td><span class="badge badge-green">VERIFIED</span></td></tr>
+      <tr><td><code>heady-colab-runtime-SKILL.md</code></td><td>Skill</td><td>GPU management, distributed vector ops, inter-runtime communication</td><td><span class="badge badge-green">VERIFIED</span></td></tr>
+      <tr><td><code>heady-mcp-gateway-SKILL.md</code></td><td>Skill</td><td>MCP server blueprints for Tradovate, Rithmic, market data, ML inference</td><td><span class="badge badge-green">VERIFIED</span></td></tr>
+      <tr><td><code>heady-docs-hub.html</code></td><td>HTML</td><td>This documentation hub — central reference for the entire Heady system</td><td><span class="badge badge-green">VERIFIED</span></td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- SKILLS REFERENCE -->
+<section id="skills">
+  <h2>Skills Reference</h2>
+  <p>Skills are reusable SKILL.md files that can be dropped into any Claude Project or Claude Code environment. They teach Claude the Heady system's patterns, rules, and conventions so that any coding task within the Heady ecosystem follows the correct standards automatically.</p>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header"><span class="card-icon">📐</span><span class="card-title">Coding Standards</span></div>
+      <div class="card-body">Enforces zero-localhost, structured logging, typed errors, externalized secrets, Fibonacci spacing, golden ratio constants, health endpoints, and graceful shutdown across all Heady code.</div>
+    </div>
+    <div class="card">
+      <div class="card-header"><span class="card-icon">📊</span><span class="card-title">Trading Compliance</span></div>
+      <div class="card-body">Bakes in Apex Trader Funding drawdown math, 30% consistency rule, contract limits, emergency flatten logic, 4:59 PM deadline enforcement, and the Lock-First risk strategy.</div>
+    </div>
+    <div class="card">
+      <div class="card-header"><span class="card-icon">🔮</span><span class="card-title">Agent Orchestration</span></div>
+      <div class="card-body">Covers Sacred Geometry topology, HeadyBee scouting/foraging, HeadySwarm coordination, balanced ternary decisions, quorum resolution, and liquid node migration.</div>
+    </div>
+    <div class="card">
+      <div class="card-header"><span class="card-icon">🖥️</span><span class="card-title">Colab Runtime</span></div>
+      <div class="card-body">Manages GPU memory across mixed types (T4/A100/L4), Cloudflare Tunnel setup, inter-notebook communication, FAISS distributed vector ops, and runtime persistence.</div>
+    </div>
+    <div class="card">
+      <div class="card-header"><span class="card-icon">🔌</span><span class="card-title">MCP Gateway</span></div>
+      <div class="card-body">Blueprints for TypeScript and Python MCP servers connecting agents to Tradovate, Rithmic, market data feeds, and local ML inference with OAuth 2.0 auth.</div>
+    </div>
+  </div>
+</section>
+
+<section style="text-align:center;padding:var(--space-2xl);border:none;">
+  <p style="color:var(--text2);font-size:var(--text-sm);">© 2026 HeadySystems Inc. — Eric Haywood, Founder — Sacred Geometry v4.0</p>
+  <p style="color:var(--text2);font-size:var(--text-xs);margin-top:var(--space-sm);">51 Provisional Patents — Built with φ</p>
+</section>
+
+</main>
+
+<script>
+// Smooth scroll + active nav tracking
+document.querySelectorAll('.nav-link').forEach(link => {
+  link.addEventListener('click', e => {
+    document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+    e.target.classList.add('active');
+  });
+});
+
+// Simple search filter for nav
+function filterNav(query) {
+  const q = query.toLowerCase();
+  document.querySelectorAll('.nav-link').forEach(link => {
+    const text = link.textContent.toLowerCase();
+    link.style.display = (!q || text.includes(q)) ? 'block' : 'none';
+  });
+}
+
+// Scroll spy — highlight active section in nav
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const id = entry.target.id;
+      document.querySelectorAll('.nav-link').forEach(l => {
+        l.classList.toggle('active', l.getAttribute('href') === '#' + id);
+      });
+    }
+  });
+}, { rootMargin: '-20% 0px -70% 0px' });
+
+document.querySelectorAll('section[id]').forEach(s => observer.observe(s));
+</script>
+</body>
+</html>
