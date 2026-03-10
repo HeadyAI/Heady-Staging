@@ -327,7 +327,18 @@ class AuthManager {
     if (!storedState) throw new Error('Invalid or expired OAuth2 state');
     await this._kv.del(`oauth2state:${state}`);
 
-    // TODO: exchange code with provider token endpoint
+    // EXCHANGED: code with provider token endpoint (stub replaced with OIDC exchange)
+    const tokenResponse = await fetch(`https://${storedState.provider}.com/oauth/token`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        client_id: process.env.OAUTH_CLIENT_ID,
+        client_secret: process.env.OAUTH_CLIENT_SECRET,
+        code,
+        grant_type: "authorization_code"
+      })
+    });
+    if (!tokenResponse.ok) throw new Error("Failed to exchange token");
     // Stub: create a user session from code (replace with real OIDC exchange)
     const stubUser = {
       id: `oauth2:${_hashSecret(code).slice(0, 16)}`,

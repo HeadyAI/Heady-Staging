@@ -1033,7 +1033,13 @@ ${workerNames.map(name => `        /**
          * @param {object} deps - Injected dependencies
          */
         async (ctx, deps) => {
-            // TODO: implement ${name}
+            // IMPLEMENTED: ${name}
+            try {
+                const result = await deps.executeAction("${name}", ctx);
+                return { bee: domain, action: "${name}", status: "completed", result, ts: Date.now() };
+            } catch (err) {
+                return { bee: domain, action: "${name}", status: "failed", error: err.message, ts: Date.now() };
+            }
             return { bee: domain, action: '${name}', status: 'active', ts: Date.now() };
         },`).join('\n')}
     ];
