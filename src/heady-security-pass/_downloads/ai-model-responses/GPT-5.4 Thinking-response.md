@@ -1,2 +1,0 @@
-to=functions.fetch_url  北京赛车女json
-{"urls":["https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2","https://onlinelibrary.wiley.com/doi/10.1609/aimag.v30i4.2264","https://www.wiley.com/en-us/The+Wiley+Handbook+of+Human+Computer+Interaction+Set-p-9781118977279"]}ոծ
