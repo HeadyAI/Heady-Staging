@@ -1,37 +1,24 @@
-<<<<<<< HEAD
-FROM node:20-slim AS base
-=======
-# HEADY_BRAND:BEGIN
-# ╔══════════════════════════════════════════════════════════════════╗
-# ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
-# ║  ██║  ██║██╔════╝██╔══██╗██╔══██╗╚██╗ ██╔╝                     ║
-# ║  ███████║█████╗  ███████║██║  ██║ ╚████╔╝                      ║
-# ║  ██╔══██║██╔══╝  ██╔══██║██║  ██║  ╚██╔╝                       ║
-# ║  ██║  ██║███████╗██║  ██║██████╔╝   ██║                        ║
-# ║  ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝    ╚═╝                        ║
-# ║                                                                  ║
-# ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
-# ║  FILE: Dockerfile   LAYER: root                                 ║
-# ╚══════════════════════════════════════════════════════════════════╝
-# HEADY_BRAND:END
-FROM node:20-alpine
-
->>>>>>> f1ab914a56ebb387b9669c4d2f46e3c53f393edd
+# Heady — Multi-stage Production Build
+FROM node:20-slim AS deps
 WORKDIR /app
-
-# Install deps
 COPY package.json package-lock.json* ./
-RUN npm ci --omit=dev
+RUN npm ci --omit=dev && npm cache clean --force
 
-# Copy source
+FROM node:20-slim AS build
+WORKDIR /app
+COPY package.json package-lock.json* ./
+RUN npm ci
 COPY . .
+RUN npm run build --if-present
 
-# Health check
-HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
-  CMD curl -f http://localhost:3301/health || exit 1
-
+FROM node:20-slim AS production
+WORKDIR /app
+RUN groupadd -r heady && useradd -r -g heady heady
+COPY --from=deps /app/node_modules ./node_modules
+COPY --from=build /app .
+RUN mkdir -p data/memory data/logs data/checkpoints && chown -R heady:heady /app
+USER heady
 EXPOSE 3301
-VOLUME /app/data
-
-USER node
+HEALTHCHECK --interval=30s --timeout=5s --start-period=15s --retries=3 \
+  CMD node -e "const h=require('http');h.get('http://localhost:3301/health',r=>{process.exit(r.statusCode===200?0:1)}).on('error',()=>process.exit(1))"
 CMD ["node", "heady-manager.js"]

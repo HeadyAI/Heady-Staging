@@ -1,0 +1,228 @@
+{
+  "agents": [
+    {
+      "id": "heady-brain",
+      "name": "HeadyBrain",
+      "category": "thinker",
+      "description": "Primary reasoning engine \u2014 general intelligence and decision making",
+      "persistent": true,
+      "priority": 1,
+      "healthEndpoint": "/agents/brain/health",
+      "dependencies": []
+    },
+    {
+      "id": "heady-soul",
+      "name": "HeadySoul",
+      "category": "thinker",
+      "description": "Deep alignment \u2014 mission scoring, ethical guardrails, drift detection, hard veto authority",
+      "persistent": true,
+      "priority": 2,
+      "healthEndpoint": "/agents/soul/health",
+      "dependencies": [
+        "heady-brain"
+      ]
+    },
+    {
+      "id": "heady-vinci",
+      "name": "HeadyVinci",
+      "category": "thinker",
+      "description": "Pattern spotting \u2014 learns from outcomes, fractal self-similarity analysis",
+      "persistent": true,
+      "priority": 3,
+      "healthEndpoint": "/agents/vinci/health",
+      "dependencies": [
+        "heady-brain"
+      ]
+    },
+    {
+      "id": "heady-coder",
+      "name": "HeadyCoder",
+      "category": "builder",
+      "description": "Code orchestrator \u2014 assigns and coordinates coding tasks",
+      "persistent": true,
+      "priority": 2,
+      "healthEndpoint": "/agents/coder/health",
+      "dependencies": [
+        "heady-brain"
+      ]
+    },
+    {
+      "id": "heady-codex",
+      "name": "HeadyCodex",
+      "category": "builder",
+      "description": "Hands-on coder \u2014 writes, edits, and refactors code",
+      "persistent": false,
+      "priority": 3,
+      "healthEndpoint": "/agents/codex/health",
+      "dependencies": [
+        "heady-coder"
+      ]
+    },
+    {
+      "id": "heady-copilot",
+      "name": "HeadyCopilot",
+      "category": "builder",
+      "description": "Pair programming assistant \u2014 real-time code collaboration",
+      "persistent": false,
+      "priority": 4,
+      "healthEndpoint": "/agents/copilot/health",
+      "dependencies": [
+        "heady-coder"
+      ]
+    },
+    {
+      "id": "heady-jules",
+      "name": "HeadyJules",
+      "category": "builder",
+      "description": "Project management \u2014 task tracking, roadmap, sprint planning",
+      "persistent": true,
+      "priority": 3,
+      "healthEndpoint": "/agents/jules/health",
+      "dependencies": [
+        "heady-brain"
+      ]
+    },
+    {
+      "id": "heady-perplexity",
+      "name": "HeadyPerplexity",
+      "category": "researcher",
+      "description": "Web research and information gathering agent",
+      "persistent": false,
+      "priority": 3,
+      "healthEndpoint": "/agents/perplexity/health",
+      "dependencies": [
+        "heady-brain"
+      ]
+    },
+    {
+      "id": "heady-grok",
+      "name": "HeadyGrok",
+      "category": "researcher",
+      "description": "Red team \u2014 adversarial testing and edge-case discovery",
+      "persistent": false,
+      "priority": 3,
+      "healthEndpoint": "/agents/grok/health",
+      "dependencies": [
+        "heady-brain"
+      ]
+    },
+    {
+      "id": "heady-battle",
+      "name": "HeadyBattle",
+      "category": "researcher",
+      "description": "Quality gate \u2014 validates all changes before promotion",
+      "persistent": true,
+      "priority": 2,
+      "healthEndpoint": "/agents/battle/health",
+      "dependencies": [
+        "heady-brain"
+      ]
+    },
+    {
+      "id": "heady-sims",
+      "name": "HeadySims",
+      "category": "researcher",
+      "description": "Monte Carlo simulation engine for risk analysis",
+      "persistent": false,
+      "priority": 3,
+      "healthEndpoint": "/agents/sims/health",
+      "dependencies": [
+        "heady-battle"
+      ]
+    },
+    {
+      "id": "heady-creative",
+      "name": "HeadyCreative",
+      "category": "creative",
+      "description": "Creative content generation engine",
+      "persistent": false,
+      "priority": 4,
+      "healthEndpoint": "/agents/creative/health",
+      "dependencies": [
+        "heady-brain"
+      ]
+    },
+    {
+      "id": "heady-vinci-canvas",
+      "name": "HeadyVinci Canvas",
+      "category": "creative",
+      "description": "Design sandbox for visual content creation",
+      "persistent": false,
+      "priority": 4,
+      "healthEndpoint": "/agents/vinci-canvas/health",
+      "dependencies": [
+        "heady-vinci"
+      ]
+    },
+    {
+      "id": "heady-manager",
+      "name": "HeadyManager",
+      "category": "operations",
+      "description": "Control plane \u2014 orchestrates all services, resource allocation",
+      "persistent": true,
+      "priority": 0,
+      "healthEndpoint": "/health",
+      "dependencies": []
+    },
+    {
+      "id": "heady-conductor",
+      "name": "HeadyConductor",
+      "category": "operations",
+      "description": "System monitor \u2014 real-time observability, alerting, performance tracking",
+      "persistent": true,
+      "priority": 1,
+      "healthEndpoint": "/agents/conductor/health",
+      "dependencies": [
+        "heady-manager"
+      ]
+    },
+    {
+      "id": "heady-lens",
+      "name": "HeadyLens",
+      "category": "operations",
+      "description": "Change microscope \u2014 diffs, impact analysis, regression detection",
+      "persistent": false,
+      "priority": 3,
+      "healthEndpoint": "/agents/lens/health",
+      "dependencies": [
+        "heady-manager"
+      ]
+    },
+    {
+      "id": "heady-ops",
+      "name": "HeadyOps",
+      "category": "operations",
+      "description": "Deployment automation \u2014 CI/CD, release management",
+      "persistent": true,
+      "priority": 2,
+      "healthEndpoint": "/agents/ops/health",
+      "dependencies": [
+        "heady-manager"
+      ]
+    },
+    {
+      "id": "heady-maintenance",
+      "name": "HeadyMaintenance",
+      "category": "operations",
+      "description": "Cleanup, health checks, self-healing, dependency updates",
+      "persistent": true,
+      "priority": 2,
+      "healthEndpoint": "/agents/maintenance/health",
+      "dependencies": [
+        "heady-manager"
+      ]
+    },
+    {
+      "id": "heady-buddy",
+      "name": "HeadyBuddy",
+      "category": "assistant",
+      "description": "Browser-based personal assistant with persistent context memory",
+      "persistent": true,
+      "priority": 1,
+      "healthEndpoint": "/agents/buddy/health",
+      "dependencies": [
+        "heady-brain"
+      ]
+    }
+  ]
+}

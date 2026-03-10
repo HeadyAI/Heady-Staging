@@ -1,58 +1,39 @@
-version: '3.8'
-
+version: '3.9'
 services:
-  heady-manager:
+  heady:
     build: .
-    container_name: heady-manager
+    container_name: heady
     ports:
-      - "3300:3300"
-    environment:
-      - NODE_ENV=production
-      - PORT=3300
-      - HEADY_TARGET=Docker
-      - HEADY_VERSION=3.0.0
+      - "3301:3301"
+      - "9090:9090"
     volumes:
-      - heady-data:/app/.heady-memory
-    networks:
-      - heady-net
+      - ./data:/app/data
+    env_file: .env
+    restart: unless-stopped
     healthcheck:
-      test: ["CMD", "wget", "-qO-", "http://api.headysystems.com:3300/api/health"]
+      test: ["CMD", "node", "-e", "const h=require('http');h.get('http://localhost:3301/health',r=>{process.exit(r.statusCode===200?0:1)}).on('error',()=>process.exit(1))"]
       interval: 30s
-      timeout: 10s
+      timeout: 5s
       retries: 3
-    restart: unless-stopped
+      start_period: 15s
+    networks: [heady-net]
+    depends_on:
+      ollama: { condition: service_healthy }
 
-  heady-redis:
-    image: redis:7-alpine
-    container_name: heady-redis
-    ports:
-      - "6379:6379"
-    volumes:
-      - heady-redis:/data
-    networks:
-      - heady-net
+  ollama:
+    image: ollama/ollama:latest
+    container_name: heady-ollama
+    ports: ["11434:11434"]
+    volumes: [ollama-data:/root/.ollama]
     restart: unless-stopped
-
-  heady-postgres:
-    image: postgres:16-alpine
-    container_name: heady-postgres
-    environment:
-      - POSTGRES_DB=heady
-      - POSTGRES_USER=heady
-      - POSTGRES_PASSWORD=heady_secret
-    ports:
-      - "5432:5432"
-    volumes:
-      - heady-postgres:/var/lib/postgresql/data
-    networks:
-      - heady-net
-    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:11434/api/tags"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+    networks: [heady-net]
 
 volumes:
-  heady-data:
-  heady-redis:
-  heady-postgres:
-
+  ollama-data:
 networks:
   heady-net:
-    driver: bridge

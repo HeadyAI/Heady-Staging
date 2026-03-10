@@ -1,0 +1,18 @@
+# Heady CODEOWNERS
+# These owners will be automatically requested for review
+
+* @HeadyMe/core-team
+
+# Gateway & security
+src/gateway/ @HeadyMe/security-team
+
+# MCP protocol
+src/mcp/ @HeadyMe/core-team
+
+# AI agents
+src/agents/ @HeadyMe/ai-team
+
+# Infrastructure
+Dockerfile @HeadyMe/devops-team
+docker-compose.yml @HeadyMe/devops-team
+.github/ @HeadyMe/devops-team

@@ -1,0 +1,149 @@
+{
+  "providers": [
+    {
+      "id": "anthropic",
+      "name": "Anthropic Claude",
+      "models": [
+        "claude-sonnet-4-20250514",
+        "claude-3-5-haiku-20241022"
+      ],
+      "priority": 1,
+      "maxRetries": 3,
+      "rateLimit": {
+        "rpm": 60,
+        "tpm": 100000
+      },
+      "envKey": "ANTHROPIC_API_KEY",
+      "strengths": [
+        "reasoning",
+        "code",
+        "analysis"
+      ]
+    },
+    {
+      "id": "openai",
+      "name": "OpenAI",
+      "models": [
+        "gpt-4o",
+        "gpt-4o-mini",
+        "o3-mini"
+      ],
+      "priority": 2,
+      "maxRetries": 3,
+      "rateLimit": {
+        "rpm": 60,
+        "tpm": 150000
+      },
+      "envKey": "OPENAI_API_KEY",
+      "strengths": [
+        "code",
+        "general",
+        "creative"
+      ]
+    },
+    {
+      "id": "gemini",
+      "name": "Google Gemini",
+      "models": [
+        "gemini-2.5-pro",
+        "gemini-2.0-flash"
+      ],
+      "priority": 3,
+      "maxRetries": 3,
+      "rateLimit": {
+        "rpm": 30,
+        "tpm": 100000
+      },
+      "envKey": "GEMINI_API_KEY",
+      "strengths": [
+        "multimodal",
+        "long-context",
+        "reasoning"
+      ]
+    },
+    {
+      "id": "groq",
+      "name": "Groq",
+      "models": [
+        "llama-3.3-70b-versatile",
+        "mixtral-8x7b-32768"
+      ],
+      "priority": 4,
+      "maxRetries": 3,
+      "rateLimit": {
+        "rpm": 30,
+        "tpm": 100000
+      },
+      "envKey": "GROQ_API_KEY",
+      "strengths": [
+        "speed",
+        "inference"
+      ]
+    },
+    {
+      "id": "ollama",
+      "name": "Ollama (Local)",
+      "models": [
+        "llama3",
+        "codellama",
+        "nomic-embed-text"
+      ],
+      "priority": 5,
+      "maxRetries": 1,
+      "rateLimit": {
+        "rpm": 0,
+        "tpm": 0
+      },
+      "envKey": "OLLAMA_HOST",
+      "strengths": [
+        "privacy",
+        "embeddings",
+        "offline"
+      ]
+    }
+  ],
+  "routing": {
+    "strategy": "best-fit",
+    "fallbackChain": [
+      "anthropic",
+      "openai",
+      "gemini",
+      "groq",
+      "ollama"
+    ],
+    "taskMapping": {
+      "reasoning": [
+        "anthropic",
+        "gemini"
+      ],
+      "code": [
+        "anthropic",
+        "openai"
+      ],
+      "creative": [
+        "openai",
+        "gemini"
+      ],
+      "speed": [
+        "groq",
+        "ollama"
+      ],
+      "embeddings": [
+        "ollama",
+        "openai"
+      ],
+      "research": [
+        "anthropic",
+        "gemini"
+      ],
+      "validation": [
+        "anthropic",
+        "openai"
+      ],
+      "red_team": [
+        "anthropic",
+        "gemini"
+      ]
+    }
+  }
+}

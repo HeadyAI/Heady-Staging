@@ -1,80 +1,17 @@
 node_modules/
 .env
 .env.local
-dist/
-coverage/
-*.log
-.DS_Store
-.idea/
-.vscode/
-<<<<<<< HEAD
+.env.production
 data/
-*.pem
-=======
+!data/.gitkeep
+dist/
+build/
+.vscode/
+.idea/
 *.swp
-*.swo
-
-# OS
 .DS_Store
 Thumbs.db
-
-# Python
-__pycache__/
-*.py[cod]
-*.pyo
-*.pyd
-*.pyc
-.venv/
-env/
-venv/
-.pytest_cache/
-*.egg-info/
-.ipynb_checkpoints/
-
-# Data (raw and external, to avoid huge files in git)
-data/raw/
-data/external/
-
-# Generated
-heady-manifest.json
-HeadyAcademy/Content_Forge/Visualizations/
-pipeline-output/
-.heady_cache/
-
-# Standalone repos (separate git projects)
-windsurf-next/
-
-# Personal notebooks (experimental, not tracked)
-notebooks/personal/*
-!notebooks/personal/.gitkeep
-
-# Secrets
-configs/secrets/
-config/secrets/
-.heady/memory.db
-.heady/*.db
-*.db
-.heady/.heady/
-
-# Files exceeding GitHub LFS 2GB per-file limit
-AndroidSDK/system-images/**/*.img
-
-# Deploy packages (temp build artifacts)
-deploy-package-*/
-offline-packages/
-
-# Local Netlify folder
-.netlify
-
-# Security — sensitive files
-.env.hybrid
-*.pid
-*.bak
-audit_logs.jsonl
-.heady_deploy_log.jsonl
-*.jsonl
-*.shit
-
-# In-folder (ingest zips - too large for GitHub)
-in/
->>>>>>> f1ab914a56ebb387b9669c4d2f46e3c53f393edd
+*.log
+coverage/
+.nyc_output/
+tmp/
