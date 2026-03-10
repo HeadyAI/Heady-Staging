@@ -1,0 +1,77 @@
+version: "3.8"
+
+services:
+  # Infrastructure
+  nats:
+    image: nats:2.9.15
+    command: -js
+    ports:
+      - "4222:4222"
+    healthcheck:
+      test: ["CMD", "nats", "server", "info"]
+      interval: 34s
+      timeout: 5s
+      retries: 3
+
+  postgres:
+    image: pgvector/pgvector:pg16
+    environment:
+      POSTGRES_USER: heady
+      POSTGRES_PASSWORD: heady_secure_password
+      POSTGRES_DB: heady
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U heady"]
+      interval: 34s
+      timeout: 5s
+      retries: 3
+
+  redis:
+    image: redis:alpine
+    ports:
+      - "6379:6379"
+
+  uptime-kuma:
+    image: louislam/uptime-kuma:1
+    ports:
+      - "3001:3001"
+    volumes:
+      - uptime-kuma-data:/app/data
+
+  auth-session-server:
+    build: ./services/auth-session-server
+    ports:
+      - "3352:3352"
+    environment:
+      PORT: 3352
+    depends_on:
+      postgres:
+        condition: service_healthy
+      nats:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:3352/health"]
+      interval: 34s
+      timeout: 5s
+      retries: 3
+
+  heady-brain:
+    build: ./services/heady-brain
+    ports:
+      - "3310:3310"
+    environment:
+      PORT: 3310
+    depends_on:
+      postgres:
+        condition: service_healthy
+      nats:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:3310/health"]
+      interval: 34s
+      timeout: 5s
+      retries: 3
+
+volumes:
+  uptime-kuma-data:
