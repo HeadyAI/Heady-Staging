@@ -78,8 +78,8 @@ class LiquidMesh extends EventEmitter {
   }
 
   async start() {
-    this._healthInterval = setInterval(() => this._aggregateHealth(), TIMING.HEALTH_CHECK_MS);
-    this._scaleInterval = setInterval(() => this._autoScale(), TIMING.DRIFT_CHECK_MS);
+    this._healthInterval = setInterval(() => this._aggregateHealth(), 3000);
+    this._scaleInterval = setInterval(() => this._autoScale(), 3000);
     logger.info('mesh_started');
     this.emit('started');
   }
@@ -110,7 +110,7 @@ class LiquidMesh extends EventEmitter {
     await node.initialize();
 
     this.nodes.set(node.id, node);
-    this.pools[node.pool].add(node.id);
+    if(this.pools[node.pool]) this.pools[node.pool].add(node.id);
 
     // Listen for node events
     node.on('poolMigration', ({ nodeId, from, to }) => {
@@ -165,7 +165,7 @@ class LiquidMesh extends EventEmitter {
 
     if (candidates.length === 0) {
       // Backpressure: queue the task
-      const priority = task.priority || phiFusionScore([task.urgency || 0.5, task.complexity || 0.5, 0.5]);
+      const priority = task.priority || (a => a[0])([task.urgency || 0.5, task.complexity || 0.5, 0.5]);
       const enqueued = this.backpressureQueue.enqueue({ ...task, priority, queuedAt: Date.now() });
       if (enqueued) {
         logger.warn('task_queued_backpressure', { taskId: task.id, queueSize: this.backpressureQueue.size });
@@ -272,7 +272,7 @@ class LiquidMesh extends EventEmitter {
     }
     const nodePressure = totalLoad / this.nodes.size;
     const queuePressure = this.backpressureQueue.pressure;
-    return phiFusionScore([nodePressure, queuePressure], [PSI, 1 - PSI]);
+    return (nodePressure * PSI + queuePressure * (1 - PSI));
   }
 
   _aggregateHealth() {

@@ -22,26 +22,16 @@ const logger = pino({ level: process.env.LOG_LEVEL || 'info' });
  * ║  🎨 Phi-Based Design • Rainbow Magic • Zero Defect Code ✨                   ║
  * ╚══════════════════════════════════════════════════════════════════════════════╝
  */
-import 'dotenv/config';
-import express from 'express';
-import cors from 'cors';
-import helmet from 'helmet';
-import { createServer } from 'http';
-import { pino } from 'pino';
 
-import { healthRouter }       from './src/routes/health.js';
-import { brainRouter }        from './src/routes/brain.js';
-import { mcpRouter }          from './src/routes/mcp.js';
-import { memoryRouter }       from './src/routes/memory.js';
-import { agentRouter }        from './src/routes/agents.js';
-import { gatewayRouter }      from './src/routes/gateway.js';
-import { arenaRouter }        from './src/routes/arena.js';
+require("dotenv").config();
 
-import { AutoSuccessEngine }  from './src/core/auto-success-engine.js';
-import { SoulGovernance }     from './src/core/soul-governance.js';
-import { LiquidArchitecture } from './src/core/liquid-architecture.js';
-import { CircuitBreaker }     from './src/core/circuit-breaker.js';
-import { GracefulShutdown }   from './src/core/graceful-shutdown.js';
+const express = require("express");
+const cors = require("cors");
+const path = require("path");
+const fs = require("fs");
+const compression = require("compression");
+const helmet = require("helmet");
+const rateLimit = require("express-rate-limit");
 
 // ─── Imagination Engine ─────────────────────────────────────────────
 let imaginationRoutes = null;
@@ -84,14 +74,39 @@ try {
 }
 
 const PORT = Number(process.env.PORT || 3300);
-const app = express();
-const server = createServer(app);
 
-// ── Middleware ──────────────────────────────────────────────
-app.use(helmet());
-app.use(cors());
-app.use(express.json({ limit: '10mb' }));
-app.use((req, _res, next) => { req.log = log; next(); });
+// ─── Latent Space Ops (Colab Pro+ Liquid Nodes) ──────────────────────
+let liquidMesh = null;
+try {
+  const { LiquidMesh } = require('./src/liquid/liquid-mesh');
+  liquidMesh = new LiquidMesh();
+  liquidMesh.start().then(() => {
+    // Ensure the 3 Colab Pro+ runtimes are registered as liquid nodes mapped to latent space
+    liquidMesh.registerNode({ id: 'colab-hot', pool: 'hot', type: 'latent-space-ops' });
+    liquidMesh.registerNode({ id: 'colab-warm', pool: 'warm', type: 'latent-space-ops' });
+    liquidMesh.registerNode({ id: 'colab-cold', pool: 'cold', type: 'latent-space-ops' });
+    logger.info("  ∞ Liquid Nodes: 3 Colab Pro+ runtimes mapped to latent space ops");
+  });
+} catch (e) {
+  logger.warn("  ∞ Liquid Nodes: Mesh init skipped (" + e.message + ")");
+}
+
+const app = express();
+
+// ─── Middleware ─────────────────────────────────────────────────────
+app.use(helmet({ contentSecurityPolicy: false, crossOriginEmbedderPolicy: false }));
+app.use(compression());
+app.use(express.json({ limit: "5mb" }));
+app.use(cors({
+  origin: process.env.ALLOWED_ORIGINS ? process.env.ALLOWED_ORIGINS.split(",") : "*",
+  credentials: true,
+}));
+app.use("/api/", rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 1000,
+  standardHeaders: true,
+  legacyHeaders: false,
+}));
 
 // ─── Imagination Routes ────────────────────────────────────────────
 if (imaginationRoutes) {
@@ -105,24 +120,22 @@ if (fs.existsSync(frontendBuildPath)) {
 }
 app.use(express.static("public"));
 
-// Mount UI directories for liquid nodes, swarms, and topology
-app.use("/ui/topology", express.static(path.join(__dirname, "ui", "topology-dashboard")));
-app.use("/ui/swarm", express.static(path.join(__dirname, "ui", "swarm-monitor")));
-app.use("/ui/colab", express.static(path.join(__dirname, "ui", "colab-runtime-panel")));
-app.use("/ui/vector", express.static(path.join(__dirname, "ui", "vector-explorer")));
-
 // ─── Utility ────────────────────────────────────────────────────────
 function readJsonSafe(filePath) {
   try { return JSON.parse(fs.readFileSync(filePath, "utf8")); }
   catch { return null; }
 }
 
-// ── Start ──────────────────────────────────────────────────
-const PORT = process.env.PORT || 3301;
-
-server.listen(PORT, () => {
-  log.info({ port: PORT }, '🧠 HeadyManager online');
-  if (process.env.ENABLE_AUTO_SUCCESS === 'true') autoSuccess.start();
+// ─── Health & Pulse ─────────────────────────────────────────────────
+app.get("/api/health", (req, res) => {
+  res.json({
+    ok: true,
+    service: "heady-manager",
+    version: "3.0.0",
+    ts: new Date().toISOString(),
+    uptime: process.uptime(),
+    memory: process.memoryUsage(),
+  });
 });
 
 app.get("/api/pulse", (req, res) => {
@@ -177,7 +190,8 @@ app.get("/api/pulse", (req, res) => {
 const REGISTRY_PATH = path.join(__dirname, ".heady", "registry.json");
 
 function loadRegistry() {
-  return readJsonSafe(REGISTRY_PATH) || { nodes: {}, tools: {}, workflows: {}, services: {}, skills: {}, metadata: {} };
+  return readJsonSafe(REGISTRY_PATH) || { liquidMesh: liquidMesh ? liquidMesh.getStatus() : null,
+    nodes: {}, tools: {}, workflows: {}, services: {}, skills: {}, metadata: {} };
 }
 
 function saveRegistry(data) {
@@ -322,35 +336,6 @@ app.post("/api/system/production", (req, res) => {
     sacred_geometry: "FULLY_ACTIVATED",
     ts,
   });
-});
-
-// ─── Liquid Mesh & Swarm Intelligence ────────────────────────────────
-let liquidMesh = null;
-let headySwarm = null;
-try {
-  const { LiquidMesh } = require('./src/liquid/liquid-mesh');
-  const { HeadySwarm } = require('./src/bees/heady-swarm');
-
-  liquidMesh = new LiquidMesh();
-  liquidMesh.start();
-
-  headySwarm = new HeadySwarm();
-  headySwarm.start();
-
-  logger.info("  ∞ Liquid Mesh: STARTED");
-  logger.info("  ∞ HeadySwarm: STARTED");
-} catch (err) {
-  logger.warn(`  ⚠ Liquid Mesh / Swarm failed to load: ${err.message}`);
-}
-
-app.get("/api/topology", (req, res) => {
-  if (!liquidMesh) return res.status(503).json({ error: "Liquid Mesh not active" });
-  res.json(liquidMesh.getTopology());
-});
-
-app.get("/api/swarm/status", (req, res) => {
-  if (!headySwarm) return res.status(503).json({ error: "HeadySwarm not active" });
-  res.json(headySwarm.getStatus());
 });
 
 // ─── Pipeline Engine (wired to src/hc_pipeline.js) ──────────────────
@@ -1196,7 +1181,7 @@ app.use((err, req, res, next) => {
 });
 
 // ─── SPA Fallback ───────────────────────────────────────────────────
-app.get(/(.*)/, (req, res) => {
+app.get('/*path', (req, res) => {
   const indexPath = path.join(frontendBuildPath, "index.html");
   if (fs.existsSync(indexPath)) return res.sendFile(indexPath);
   res.status(404).json({ error: "Not found" });

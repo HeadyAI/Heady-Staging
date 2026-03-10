@@ -15,6 +15,10 @@
 
 'use strict';
 
+const pino = require('pino');
+const systemLogger = pino();
+
+
 const express = require('express');
 const http = require('http');
 const { PHI, PSI, fib, phiMs, phiBackoff, CSL_THRESHOLDS, PHI_TIMING, cosineSimilarity, normalize } = require('../shared/phi-math');
@@ -83,15 +87,18 @@ class ColabRuntime {
 }
 
 const runtimes = new Map([
-  ['hot', new ColabRuntime({ id: 'colab-hot', pool: 'hot', url: process.env.COLAB_RUNTIME_HOT_URL || '' })],
+  ['hot', new ColabRuntime({ id: 'colab-hot', pool: 'hot', url: process.env.COLAB_RUNTIME_HOT_URL || 'http://0.0.0.0:3352' })],
   ['warm', new ColabRuntime({ id: 'colab-warm', pool: 'warm', url: process.env.COLAB_RUNTIME_WARM_URL || '' })],
   ['cold', new ColabRuntime({ id: 'colab-cold', pool: 'cold', url: process.env.COLAB_RUNTIME_COLD_URL || '' })],
 ]);
 
 const taskQueue = [];
-
 function log(level, msg, meta = {}) {
-  process.stdout.write(JSON.stringify({ ts: new Date().toISOString(), level, service: 'colab-gateway', msg, ...meta }) + '\n');
+  if (systemLogger[level]) {
+    systemLogger[level]({ service: 'colab-gateway', ...meta }, msg);
+  } else {
+    systemLogger.info({ service: 'colab-gateway', level, ...meta }, msg);
+  }
 }
 
 // ─── CSL Task Routing ─────────────────────────────────────────────────────────
