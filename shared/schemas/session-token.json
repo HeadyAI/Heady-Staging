@@ -1,0 +1,59 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://headysystems.com/schemas/session-token.json",
+  "title": "Heady™ Session Token",
+  "description": "Schema for session data managed by auth-session-server. Sessions use httpOnly cookies (__Host-heady_session) — no localStorage. IP+UA binding for replay prevention.",
+  "type": "object",
+  "required": ["sessionId", "userId", "fingerprint", "createdAt", "expiresAt"],
+  "properties": {
+    "sessionId": {
+      "type": "string",
+      "description": "Unique session identifier (stored in cookie value)"
+    },
+    "userId": {
+      "type": "string",
+      "description": "Firebase user UID"
+    },
+    "email": {
+      "type": "string",
+      "format": "email",
+      "description": "User email address from Firebase"
+    },
+    "displayName": {
+      "type": "string",
+      "description": "User display name from Firebase"
+    },
+    "fingerprint": {
+      "type": "string",
+      "description": "SHA-256 hash of clientIP + userAgent for replay prevention"
+    },
+    "createdAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Session creation timestamp"
+    },
+    "expiresAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Session expiration timestamp (Fibonacci-derived TTL)"
+    },
+    "lastVerified": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Timestamp of last successful verification"
+    },
+    "cookieAttributes": {
+      "type": "object",
+      "description": "Cookie security attributes",
+      "properties": {
+        "httpOnly": { "type": "boolean", "const": true },
+        "secure": { "type": "boolean", "const": true },
+        "sameSite": { "type": "string", "const": "strict" },
+        "path": { "type": "string", "const": "/" },
+        "prefix": { "type": "string", "const": "__Host-" }
+      },
+      "required": ["httpOnly", "secure", "sameSite", "path", "prefix"]
+    }
+  },
+  "additionalProperties": false
+}

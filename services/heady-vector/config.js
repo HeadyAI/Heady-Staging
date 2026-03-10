@@ -7,6 +7,7 @@
  */
 
 const PHI = 1.618033988749895;
+const logger = require('../../shared/logger')('heady-vector');
 
 const config = {
   // Service identity
@@ -19,7 +20,7 @@ const config = {
 
   // PostgreSQL connection
   database: {
-    url: process.env.DATABASE_URL || 'postgresql://heady:heady@localhost:5432/heady_vector',
+    url: process.env.DATABASE_URL || 'postgresql://heady:heady@db:5432/heady_vector',
     poolSize: parseInt(process.env.PG_POOL_SIZE, 10) || Math.round(PHI * 10), // ~16
     idleTimeoutMillis: parseInt(process.env.PG_IDLE_TIMEOUT, 10) || 30000,
     connectionTimeoutMillis: parseInt(process.env.PG_CONNECT_TIMEOUT, 10) || 5000,
@@ -103,9 +104,12 @@ const config = {
 // Validate weights sum to ~1.0
 const weightSum = config.search.bm25Weight + config.search.semanticWeight;
 if (Math.abs(weightSum - 1.0) > 0.01) {
-  console.warn(
-    `[heady-vector] WARNING: BM25_WEIGHT(${config.search.bm25Weight}) + SEMANTIC_WEIGHT(${config.search.semanticWeight}) = ${weightSum} (should be 1.0)`
-  );
+  logger.warn({
+    msg: 'BM25+Semantic weights do not sum to 1.0',
+    bm25Weight: config.search.bm25Weight,
+    semanticWeight: config.search.semanticWeight,
+    sum: weightSum,
+  });
 }
 
 module.exports = config;

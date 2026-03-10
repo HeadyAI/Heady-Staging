@@ -1,0 +1,80 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://headysystems.com/schemas/event-envelope.json",
+  "title": "Heady™ Event Envelope",
+  "description": "Standard NATS JetStream message envelope for inter-service communication. All messages are concurrent equals — no priority field.",
+  "type": "object",
+  "required": ["id", "type", "source", "timestamp", "data"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Unique event identifier"
+    },
+    "type": {
+      "type": "string",
+      "pattern": "^heady\\.[a-z]+\\.[a-z.]+$",
+      "description": "Event type following NATS subject hierarchy",
+      "examples": [
+        "heady.memory.store",
+        "heady.memory.retrieve",
+        "heady.inference.request",
+        "heady.inference.response",
+        "heady.agents.dispatch",
+        "heady.agents.result",
+        "heady.notifications.send",
+        "heady.notifications.delivered"
+      ]
+    },
+    "source": {
+      "type": "string",
+      "description": "Originating service name"
+    },
+    "correlationId": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Correlation ID for distributed tracing"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 event creation timestamp"
+    },
+    "domain": {
+      "type": "string",
+      "description": "Source service domain"
+    },
+    "vectorDim": {
+      "type": "integer",
+      "const": 384,
+      "description": "Vector dimension context"
+    },
+    "data": {
+      "type": "object",
+      "description": "Event-specific payload data",
+      "additionalProperties": true
+    },
+    "metadata": {
+      "type": "object",
+      "description": "Additional metadata for routing and processing",
+      "properties": {
+        "cslScore": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "CSL confidence score for the event"
+        },
+        "retryCount": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Number of delivery retries"
+        },
+        "ttl": {
+          "type": "integer",
+          "description": "Time-to-live in seconds (Fibonacci values)"
+        }
+      }
+    }
+  },
+  "additionalProperties": false
+}

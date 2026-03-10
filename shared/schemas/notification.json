@@ -1,0 +1,72 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://headysystems.com/schemas/notification.json",
+  "title": "Heady™ Notification",
+  "description": "Schema for notifications sent via notification-service. Delivered via WebSocket, SSE, or webhook as concurrent-equal channels. Queue bounded at Fibonacci 233.",
+  "type": "object",
+  "required": ["id", "userId", "message", "channel", "createdAt"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Unique notification identifier"
+    },
+    "userId": {
+      "type": "string",
+      "description": "Target user identifier"
+    },
+    "message": {
+      "type": "string",
+      "description": "Notification message content"
+    },
+    "title": {
+      "type": "string",
+      "description": "Notification title (optional)"
+    },
+    "channel": {
+      "type": "string",
+      "enum": ["websocket", "sse", "webhook", "http"],
+      "description": "Delivery channel — all channels are concurrent equals"
+    },
+    "type": {
+      "type": "string",
+      "enum": ["info", "success", "warning", "error", "system"],
+      "description": "Notification type for client-side rendering"
+    },
+    "source": {
+      "type": "string",
+      "description": "Originating service name"
+    },
+    "correlationId": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Correlation ID for tracing"
+    },
+    "read": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether the notification has been read"
+    },
+    "data": {
+      "type": "object",
+      "description": "Additional notification payload data",
+      "additionalProperties": true
+    },
+    "createdAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Notification creation timestamp"
+    },
+    "deliveredAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Timestamp when notification was delivered to client"
+    },
+    "readAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Timestamp when notification was marked as read"
+    }
+  },
+  "additionalProperties": false
+}

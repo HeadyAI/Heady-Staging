@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://headysystems.com/schemas/error-response.json",
+  "title": "Heady™ Error Response",
+  "description": "Standard error response for all 58 Heady™ platform services. See ERROR_CODES.md for the complete catalog.",
+  "type": "object",
+  "required": ["error", "service", "correlationId"],
+  "properties": {
+    "error": {
+      "type": "string",
+      "description": "Human-readable error message"
+    },
+    "code": {
+      "type": "string",
+      "pattern": "^[A-Z]+-[0-9]{3}$",
+      "description": "Service-specific error code (e.g., BRAIN-001, AUTH-006)",
+      "examples": ["BRAIN-001", "AUTH-006", "SEARCH-004"]
+    },
+    "service": {
+      "type": "string",
+      "description": "Service that generated the error"
+    },
+    "correlationId": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Request correlation ID for distributed tracing"
+    },
+    "domain": {
+      "type": "string",
+      "description": "Service domain"
+    },
+    "bulkhead": {
+      "type": "object",
+      "properties": {
+        "active": { "type": "integer", "description": "Active concurrent requests" },
+        "queued": { "type": "integer", "description": "Queued requests" }
+      },
+      "description": "Bulkhead state (included in 503/429 responses)"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "additionalProperties": true
+}

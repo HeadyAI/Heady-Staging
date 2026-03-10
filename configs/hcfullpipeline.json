@@ -8,7 +8,30 @@
     "phiCompliance": "100%",
     "phi": 1.6180339887,
     "psi": 0.6180339887,
-    "fibSeries": [1,1,2,3,5,8,13,21,34,55,89,144,233,377,610,987,1597,2584,4181,6765,10946,17711]
+    "fibSeries": [
+      1,
+      1,
+      2,
+      3,
+      5,
+      8,
+      13,
+      21,
+      34,
+      55,
+      89,
+      144,
+      233,
+      377,
+      610,
+      987,
+      1597,
+      2584,
+      4181,
+      6765,
+      10946,
+      17711
+    ]
   },
   "global": {
     "maxDuration": 290340,
@@ -23,10 +46,22 @@
     "coherenceThreshold": 0.809,
     "deduplicationThreshold": 0.972,
     "pressureLevels": {
-      "NOMINAL":   [0, 0.382],
-      "ELEVATED":  [0.382, 0.618],
-      "HIGH":      [0.618, 0.854],
-      "CRITICAL":  [0.910, 1.0]
+      "NOMINAL": [
+        0,
+        0.382
+      ],
+      "ELEVATED": [
+        0.382,
+        0.618
+      ],
+      "HIGH": [
+        0.618,
+        0.854
+      ],
+      "CRITICAL": [
+        0.91,
+        1
+      ]
     }
   },
   "stages": [
@@ -40,7 +75,11 @@
       "_timeoutNote": "φ²×1000",
       "_tokenNote": "fib(17)",
       "description": "Ingest and normalize channel input; assign correlation ID and session token",
-      "outputs": ["normalized_input", "session_id", "channel_meta"]
+      "outputs": [
+        "normalized_input",
+        "session_id",
+        "channel_meta"
+      ]
     },
     {
       "id": 1,
@@ -52,7 +91,11 @@
       "_timeoutNote": "φ⁴×1000",
       "_tokenNote": "fib(18)",
       "description": "Retrieve context, history, and prior sessions; build situational awareness",
-      "outputs": ["context_snapshot", "history_summary", "user_profile"]
+      "outputs": [
+        "context_snapshot",
+        "history_summary",
+        "user_profile"
+      ]
     },
     {
       "id": 2,
@@ -64,7 +107,11 @@
       "_timeoutNote": "φ³×1000",
       "_tokenNote": "fib(18)",
       "description": "Parse, validate and structure the incoming request; extract entities and intent",
-      "outputs": ["structured_request", "entities", "intent_vector"]
+      "outputs": [
+        "structured_request",
+        "entities",
+        "intent_vector"
+      ]
     },
     {
       "id": 3,
@@ -76,7 +123,11 @@
       "_timeoutNote": "φ²×1000",
       "_tokenNote": "fib(17)",
       "description": "Assign task type, domain, criticality level and routing tags",
-      "outputs": ["task_class", "criticality", "routing_tags"]
+      "outputs": [
+        "task_class",
+        "criticality",
+        "routing_tags"
+      ]
     },
     {
       "id": 4,
@@ -88,7 +139,11 @@
       "_timeoutNote": "φ²×1000",
       "_tokenNote": "fib(17)",
       "description": "Prioritize workload; apply SRE adaptive throttle; gate via CSL",
-      "outputs": ["priority_score", "admission_decision", "shed_rationale"]
+      "outputs": [
+        "priority_score",
+        "admission_decision",
+        "shed_rationale"
+      ]
     },
     {
       "id": 5,
@@ -100,7 +155,11 @@
       "_timeoutNote": "φ⁴×1000",
       "_tokenNote": "fib(18)",
       "description": "Break complex tasks into atomic sub-tasks; emit dependency graph",
-      "outputs": ["subtask_graph", "dependency_map", "execution_plan"]
+      "outputs": [
+        "subtask_graph",
+        "dependency_map",
+        "execution_plan"
+      ]
     },
     {
       "id": 6,
@@ -112,7 +171,11 @@
       "_timeoutNote": "φ⁶×1000",
       "_tokenNote": "fib(20)",
       "description": "Exploratory hypothesis generation; sandboxed execution of candidate solutions",
-      "outputs": ["candidate_solutions", "trial_scores", "failure_modes"]
+      "outputs": [
+        "candidate_solutions",
+        "trial_scores",
+        "failure_modes"
+      ]
     },
     {
       "id": 7,
@@ -124,7 +187,11 @@
       "_timeoutNote": "φ⁵×1000",
       "_tokenNote": "fib(19)",
       "description": "Coordinate bee swarms; dispatch sub-agents; manage semantic backpressure",
-      "outputs": ["swarm_assignments", "backpressure_state", "agent_telemetry"]
+      "outputs": [
+        "swarm_assignments",
+        "backpressure_state",
+        "agent_telemetry"
+      ]
     },
     {
       "id": 8,
@@ -136,7 +203,11 @@
       "_timeoutNote": "φ⁶×1000",
       "_tokenNote": "fib(19)",
       "description": "Probabilistic outcome simulation; risk quantification via phi-weighted sampling",
-      "outputs": ["outcome_distribution", "risk_scores", "confidence_intervals"]
+      "outputs": [
+        "outcome_distribution",
+        "risk_scores",
+        "confidence_intervals"
+      ]
     },
     {
       "id": 9,
@@ -148,7 +219,11 @@
       "_timeoutNote": "φ⁷×1000",
       "_tokenNote": "fib(20)",
       "description": "Head-to-head model or strategy tournament; Elo-rated comparison of candidates",
-      "outputs": ["arena_rankings", "elo_scores", "winner_rationale"]
+      "outputs": [
+        "arena_rankings",
+        "elo_scores",
+        "winner_rationale"
+      ]
     },
     {
       "id": 10,
@@ -167,13 +242,17 @@
           "performance": 0.21,
           "quality": 0.13,
           "elegance": 0.11,
-          "_sum": 1.00,
+          "_sum": 1,
           "_note": "34+21+21+13+11=100; mirrors Fibonacci proportions"
         },
         "minPassScore": 0.618,
         "blockOnFail": true
       },
-      "outputs": ["judge_score", "dimension_scores", "judge_rationale"]
+      "outputs": [
+        "judge_score",
+        "dimension_scores",
+        "judge_rationale"
+      ]
     },
     {
       "id": 11,
@@ -181,12 +260,19 @@
       "timeout": 46979,
       "parallel": false,
       "required": false,
-      "requiredFor": ["HIGH", "CRITICAL"],
+      "requiredFor": [
+        "HIGH",
+        "CRITICAL"
+      ],
       "tokenBudget": 987,
       "_timeoutNote": "φ⁸×1000",
       "_tokenNote": "fib(16)",
       "description": "Human-in-the-loop or policy-gate approval for HIGH and CRITICAL tasks",
-      "outputs": ["approval_status", "approver_id", "approval_notes"]
+      "outputs": [
+        "approval_status",
+        "approver_id",
+        "approval_notes"
+      ]
     },
     {
       "id": 12,
@@ -198,7 +284,11 @@
       "_timeoutNote": "φ⁸×1000",
       "_tokenNote": "fib(21)",
       "description": "Primary task execution; tool calls, code generation, API actions",
-      "outputs": ["execution_result", "tool_call_log", "side_effects"]
+      "outputs": [
+        "execution_result",
+        "tool_call_log",
+        "side_effects"
+      ]
     },
     {
       "id": 13,
@@ -210,7 +300,11 @@
       "_timeoutNote": "φ⁵×1000",
       "_tokenNote": "fib(18)",
       "description": "Validate execution result against task spec; run unit/integration/property tests",
-      "outputs": ["verification_status", "test_results", "failure_details"]
+      "outputs": [
+        "verification_status",
+        "test_results",
+        "failure_details"
+      ]
     },
     {
       "id": 14,
@@ -226,7 +320,11 @@
         "confidenceThreshold": 0.618,
         "_note": "ψ = 1/φ ≈ 0.618; below this triggers SELF_CRITIQUE escalation"
       },
-      "outputs": ["coherence_score", "confidence_estimate", "uncertainty_map"]
+      "outputs": [
+        "coherence_score",
+        "confidence_estimate",
+        "uncertainty_map"
+      ]
     },
     {
       "id": 15,
@@ -238,7 +336,11 @@
       "_timeoutNote": "φ⁵×1000",
       "_tokenNote": "fib(19)",
       "description": "Adversarial self-review; identify logical gaps, hallucinations, and edge cases",
-      "outputs": ["critique_report", "identified_gaps", "revision_suggestions"]
+      "outputs": [
+        "critique_report",
+        "identified_gaps",
+        "revision_suggestions"
+      ]
     },
     {
       "id": 16,
@@ -250,7 +352,11 @@
       "_timeoutNote": "φ⁵×1000",
       "_tokenNote": "fib(18)",
       "description": "5-whys root cause analysis; generate prevention rules for wisdom store",
-      "outputs": ["root_causes", "prevention_rules", "mistake_fingerprint"]
+      "outputs": [
+        "root_causes",
+        "prevention_rules",
+        "mistake_fingerprint"
+      ]
     },
     {
       "id": 17,
@@ -262,7 +368,11 @@
       "_timeoutNote": "φ⁶×1000",
       "_tokenNote": "fib(18)",
       "description": "Performance profiling, cost optimization, latency reduction, token efficiency",
-      "outputs": ["optimization_report", "cost_delta", "perf_improvements"]
+      "outputs": [
+        "optimization_report",
+        "cost_delta",
+        "perf_improvements"
+      ]
     },
     {
       "id": 18,
@@ -274,7 +384,11 @@
       "_timeoutNote": "φ⁷×1000",
       "_tokenNote": "fib(19)",
       "description": "Background web search, paper ingestion, knowledge base refresh",
-      "outputs": ["search_results", "kb_updates", "novelty_score"]
+      "outputs": [
+        "search_results",
+        "kb_updates",
+        "novelty_score"
+      ]
     },
     {
       "id": 19,
@@ -292,7 +406,11 @@
         "maxMagnitude": 0.13,
         "_note": "mutationRate=ψ/10, populationSize=fib(6), maxMagnitude=fib(7)/100"
       },
-      "outputs": ["evolved_population", "fitness_scores", "champion_genome"]
+      "outputs": [
+        "evolved_population",
+        "fitness_scores",
+        "champion_genome"
+      ]
     },
     {
       "id": 20,
@@ -304,46 +422,50 @@
       "_timeoutNote": "φ³×1000",
       "_tokenNote": "fib(17)",
       "description": "Final response assembly, telemetry flush, session state commit, audit log write",
-      "outputs": ["final_response", "session_receipt", "audit_record"]
+      "outputs": [
+        "final_response",
+        "session_receipt",
+        "audit_record"
+      ]
     }
   ],
   "pools": {
     "llm_tokens": {
       "base": 8192,
       "tiers": {
-        "working":   8192,
-        "session":   21450,
-        "memory":    56131,
+        "working": 8192,
+        "session": 21450,
+        "memory": 56131,
         "artifacts": 146920
       },
       "_tierNotes": {
-        "working":   "base",
-        "session":   "base × φ²",
-        "memory":    "base × φ⁴",
+        "working": "base",
+        "session": "base × φ²",
+        "memory": "base × φ⁴",
         "artifacts": "base × φ⁶"
       },
       "stageAllocations": {
-        "CHANNEL_ENTRY":     1597,
-        "RECON":             2584,
-        "INTAKE":            2584,
-        "CLASSIFY":          1597,
-        "TRIAGE":            1597,
-        "DECOMPOSE":         2584,
-        "TRIAL_AND_ERROR":   6765,
-        "ORCHESTRATE":       4181,
-        "MONTE_CARLO":       4181,
-        "ARENA":             6765,
-        "JUDGE":             2584,
-        "APPROVE":            987,
-        "EXECUTE":          17711,
-        "VERIFY":            2584,
-        "SELF_AWARENESS":    4181,
-        "SELF_CRITIQUE":     4181,
-        "MISTAKE_ANALYSIS":  2584,
-        "OPTIMIZATION_OPS":  2584,
+        "CHANNEL_ENTRY": 1597,
+        "RECON": 2584,
+        "INTAKE": 2584,
+        "CLASSIFY": 1597,
+        "TRIAGE": 1597,
+        "DECOMPOSE": 2584,
+        "TRIAL_AND_ERROR": 6765,
+        "ORCHESTRATE": 4181,
+        "MONTE_CARLO": 4181,
+        "ARENA": 6765,
+        "JUDGE": 2584,
+        "APPROVE": 987,
+        "EXECUTE": 17711,
+        "VERIFY": 2584,
+        "SELF_AWARENESS": 4181,
+        "SELF_CRITIQUE": 4181,
+        "MISTAKE_ANALYSIS": 2584,
+        "OPTIMIZATION_OPS": 2584,
         "CONTINUOUS_SEARCH": 4181,
-        "EVOLUTION":         6765,
-        "RECEIPT":           1597
+        "EVOLUTION": 6765,
+        "RECEIPT": 1597
       }
     },
     "concurrent_requests": {
@@ -380,24 +502,72 @@
   },
   "variants": {
     "FAST_PATH": {
-      "stages": [0, 1, 2, 7, 12, 13, 20],
+      "stages": [
+        0,
+        1,
+        2,
+        7,
+        12,
+        13,
+        20
+      ],
       "description": "Minimal latency path — intake, orchestrate, execute, verify, receipt",
       "maxDurationMs": 110900,
       "_durationNote": "φ⁵×10000"
     },
     "FULL_PATH": {
-      "stages": [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20],
+      "stages": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20
+      ],
       "description": "Complete 21-stage sovereign cognitive pipeline",
       "maxDurationMs": 290340,
       "_durationNote": "φ⁷×10000"
     },
     "ARENA_PATH": {
-      "stages": [0, 1, 2, 3, 4, 8, 9, 10, 20],
+      "stages": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        8,
+        9,
+        10,
+        20
+      ],
       "description": "Competition path — classify, triage, Monte Carlo simulation, arena tournament, judge",
       "maxDurationMs": 110900
     },
     "LEARNING_PATH": {
-      "stages": [0, 1, 16, 17, 18, 19, 20],
+      "stages": [
+        0,
+        1,
+        16,
+        17,
+        18,
+        19,
+        20
+      ],
       "description": "Self-improvement loop — recon, mistake analysis, optimization, search, evolution",
       "maxDurationMs": 110900
     }
@@ -413,27 +583,626 @@
     "allowMonteCarlo": true,
     "tokenBudgetWarningAt": 0.764,
     "tokenBudgetCriticalAt": 0.854,
-    "tokenBudgetHardStopAt": 0.910,
+    "tokenBudgetHardStopAt": 0.91,
     "_thresholdNotes": {
-      "warning":  "1 - ψ²  ≈ 0.764",
+      "warning": "1 - ψ²  ≈ 0.764",
       "critical": "1 - ψ³  ≈ 0.854",
       "hardStop": "1 - ψ⁴  ≈ 0.910"
     }
   },
   "errorHandling": {
-    "retryableErrors": ["TIMEOUT", "RATE_LIMIT", "TRANSIENT_FAILURE", "COHERENCE_DRIFT"],
-    "fatalErrors":     ["SAFETY_VIOLATION", "BUDGET_EXCEEDED", "CRITICAL_COHERENCE_LOSS"],
-    "onFatalError":    "EMIT_RECEIPT_AND_HALT",
+    "retryableErrors": [
+      "TIMEOUT",
+      "RATE_LIMIT",
+      "TRANSIENT_FAILURE",
+      "COHERENCE_DRIFT"
+    ],
+    "fatalErrors": [
+      "SAFETY_VIOLATION",
+      "BUDGET_EXCEEDED",
+      "CRITICAL_COHERENCE_LOSS"
+    ],
+    "onFatalError": "EMIT_RECEIPT_AND_HALT",
     "maxCascadeDepth": 5,
     "_maxCascadeNote": "fib(5)"
   },
   "hooks": {
-    "onStageStart":    "telemetry.stageStart",
+    "onStageStart": "telemetry.stageStart",
     "onStageComplete": "telemetry.stageComplete",
-    "onStageError":    "telemetry.stageError",
+    "onStageError": "telemetry.stageError",
     "onPipelineComplete": "telemetry.pipelineComplete",
     "onCoherenceDrop": "wisdom.recordCoherenceEvent",
     "onBudgetWarning": "costTracker.emitWarning",
-    "onEvolution":     "wisdom.recordEvolutionEvent"
-  }
+    "onEvolution": "wisdom.recordEvolutionEvent"
+  },
+  "tasks": [
+    {
+      "id": "sec-modules-audit",
+      "name": "Audit & wire 17 new security modules",
+      "category": "security",
+      "priority": 1,
+      "status": "pending",
+      "source": "maxpot2-security",
+      "created": "2026-03-10T05:29:36.164Z"
+    },
+    {
+      "id": "accessibility-integration",
+      "name": "Wire accessibility modules (aria-injector, wcag-checker)",
+      "category": "accessibility",
+      "priority": 2,
+      "status": "pending",
+      "source": "maxpot2-accessibility",
+      "created": "2026-03-10T05:29:36.164Z"
+    },
+    {
+      "id": "deploy-tools-wire",
+      "name": "Wire deploy tools (cloudflare-deployer, cloud-run-deployer, universal-container)",
+      "category": "deploy",
+      "priority": 1,
+      "status": "pending",
+      "source": "maxpot2-deploy",
+      "created": "2026-03-10T05:29:36.164Z"
+    },
+    {
+      "id": "scaling-modules-audit",
+      "name": "Audit & wire 16 scaling modules",
+      "category": "scaling",
+      "priority": 2,
+      "status": "pending",
+      "source": "maxpot2-scaling",
+      "created": "2026-03-10T05:29:36.164Z"
+    },
+    {
+      "id": "core-modules-v2",
+      "name": "Integrate 10 new core modules (evolution-engine, brains, lens, etc)",
+      "category": "core",
+      "priority": 1,
+      "status": "pending",
+      "source": "maxpot2-core",
+      "created": "2026-03-10T05:29:36.164Z"
+    },
+    {
+      "id": "auth-gateway-wire",
+      "name": "Wire auth-gateway.js into auth flow",
+      "category": "auth",
+      "priority": 1,
+      "status": "pending",
+      "source": "maxpot2-auth",
+      "created": "2026-03-10T05:29:36.164Z"
+    },
+    {
+      "id": "site-apps-deploy",
+      "name": "Deploy 10 new site apps with auth/login pages",
+      "category": "sites",
+      "priority": 2,
+      "status": "pending",
+      "source": "sysb3-apps",
+      "created": "2026-03-10T05:29:36.164Z"
+    },
+    {
+      "id": "debug-docs-complete",
+      "name": "Complete debug docs for 8 services",
+      "category": "docs",
+      "priority": 3,
+      "status": "done",
+      "source": "sysb3-docs",
+      "created": "2026-03-10T05:29:36.164Z"
+    },
+    {
+      "id": "site-builds-robots",
+      "name": "Verify 10 site builds with robots.txt/sitemaps",
+      "category": "sites",
+      "priority": 3,
+      "status": "pending",
+      "source": "sysb-current1",
+      "created": "2026-03-10T05:29:36.164Z"
+    },
+    {
+      "id": "edge-workers-wire",
+      "name": "Wire edge-router.js and edge-worker.js into Cloudflare Workers",
+      "category": "edge",
+      "priority": 2,
+      "status": "pending",
+      "source": "maxpot-full1-workers",
+      "created": "2026-03-10T05:29:36.164Z"
+    },
+    {
+      "id": "multi-service-runtime",
+      "name": "Launch and verify full multi-service local runtime",
+      "category": "verification",
+      "priority": 1,
+      "status": "pending",
+      "source": "IMPROVEMENTS.md",
+      "created": "2026-03-10T05:29:36.164Z"
+    },
+    {
+      "id": "stack-health-orchestration",
+      "name": "Add stack-wide health orchestration checks",
+      "category": "monitoring",
+      "priority": 1,
+      "status": "pending",
+      "source": "IMPROVEMENTS.md",
+      "created": "2026-03-10T05:29:36.164Z"
+    },
+    {
+      "id": "cross-domain-signin",
+      "name": "Validate cross-domain sign-in across all public surfaces",
+      "category": "auth",
+      "priority": 1,
+      "status": "pending",
+      "source": "IMPROVEMENTS.md",
+      "created": "2026-03-10T05:29:36.164Z"
+    },
+    {
+      "id": "docker-mesh-cert-audit",
+      "name": "Audit Docker, mesh, certificate, and telemetry paths",
+      "category": "infra",
+      "priority": 2,
+      "status": "pending",
+      "source": "IMPROVEMENTS.md",
+      "created": "2026-03-10T05:29:36.164Z"
+    },
+    {
+      "id": "manifest-startup-tests",
+      "name": "Extend tests for manifest correctness and service startup",
+      "category": "testing",
+      "priority": 2,
+      "status": "pending",
+      "source": "IMPROVEMENTS.md",
+      "created": "2026-03-10T05:29:36.164Z"
+    },
+    {
+      "id": "50-service-launch",
+      "name": "Verify simultaneous launch of all 50 services",
+      "category": "verification",
+      "priority": 1,
+      "status": "pending",
+      "source": "GAPS_FOUND.md",
+      "created": "2026-03-10T05:29:36.164Z"
+    },
+    {
+      "id": "docker-compose-fullstack",
+      "name": "Full docker-compose bring-up across entire stack",
+      "category": "infra",
+      "priority": 1,
+      "status": "pending",
+      "source": "GAPS_FOUND.md",
+      "created": "2026-03-10T05:29:36.164Z"
+    },
+    {
+      "id": "drupal-webhook-verify",
+      "name": "Drupal content-type install + webhook verification",
+      "category": "verification",
+      "priority": 2,
+      "status": "pending",
+      "source": "GAPS_FOUND.md",
+      "created": "2026-03-10T05:29:36.164Z"
+    },
+    {
+      "id": "infra-cert-consul-otel",
+      "name": "Validate certs, Consul mesh, OTel collector export",
+      "category": "infra",
+      "priority": 2,
+      "status": "pending",
+      "source": "GAPS_FOUND.md",
+      "created": "2026-03-10T05:29:36.164Z"
+    },
+    {
+      "id": "adrs-12-integrated",
+      "name": "Integrate 12 Architecture Decision Records",
+      "category": "docs",
+      "priority": 3,
+      "status": "done",
+      "source": "maxpot2-adrs",
+      "created": "2026-03-10T05:29:36.164Z"
+    },
+    {
+      "id": "platform-docs-deploy",
+      "name": "Integrate platform docs (CI/CD, event-mesh, feature-flags, gRPC)",
+      "category": "docs",
+      "priority": 3,
+      "status": "done",
+      "source": "sysb3-platform",
+      "created": "2026-03-10T05:29:36.164Z"
+    },
+    {
+      "id": "runbooks-deploy",
+      "name": "Integrate 6 operational runbooks",
+      "category": "docs",
+      "priority": 3,
+      "status": "done",
+      "source": "sysb3+maxpot2-runbooks",
+      "created": "2026-03-10T05:29:36.164Z"
+    },
+    {
+      "id": "postman-collection",
+      "name": "Integrate Postman API collection",
+      "category": "docs",
+      "priority": 3,
+      "status": "done",
+      "source": "maxpot2-postman",
+      "created": "2026-03-10T05:29:36.164Z"
+    },
+    {
+      "id": "edge-kv-cache-wire",
+      "name": "Wire Cloudflare KV cache (edge/cloudflare-kv-cache.js) with φ-TTL and CSL invalidation",
+      "category": "edge",
+      "priority": 2,
+      "status": "pending",
+      "source": "maxpot3-wave5",
+      "created": "2026-03-10T11:30:00.000Z"
+    },
+    {
+      "id": "edge-d1-store-wire",
+      "name": "Wire D1 SQLite edge persistence (edge/d1-edge-store.js) with auto-migration",
+      "category": "edge",
+      "priority": 2,
+      "status": "pending",
+      "source": "maxpot3-wave5",
+      "created": "2026-03-10T11:30:00.000Z"
+    },
+    {
+      "id": "i18n-string-extractor",
+      "name": "Wire i18n AST-aware string extractor and locale manager",
+      "category": "i18n",
+      "priority": 3,
+      "status": "pending",
+      "source": "maxpot3-wave5",
+      "created": "2026-03-10T11:30:00.000Z"
+    },
+    {
+      "id": "accessibility-wcag-checker",
+      "name": "Wire WCAG 2.1 AA checker (13-rule) into build pipeline",
+      "category": "accessibility",
+      "priority": 2,
+      "status": "pending",
+      "source": "maxpot3-wave5",
+      "created": "2026-03-10T11:30:00.000Z"
+    },
+    {
+      "id": "accessibility-aria-injector",
+      "name": "Wire ARIA landmark/live-region injector into site generator",
+      "category": "accessibility",
+      "priority": 2,
+      "status": "pending",
+      "source": "maxpot3-wave5",
+      "created": "2026-03-10T11:30:00.000Z"
+    },
+    {
+      "id": "monitoring-grafana-dashboards",
+      "name": "Wire Grafana dashboard generator (monitoring/grafana-dashboards.js)",
+      "category": "monitoring",
+      "priority": 2,
+      "status": "pending",
+      "source": "maxpot3-wave5",
+      "created": "2026-03-10T11:30:00.000Z"
+    },
+    {
+      "id": "monitoring-log-pipeline",
+      "name": "Wire 8-level structured log pipeline with routing (monitoring/log-pipeline.js)",
+      "category": "monitoring",
+      "priority": 1,
+      "status": "pending",
+      "source": "maxpot3-wave5",
+      "created": "2026-03-10T11:30:00.000Z"
+    },
+    {
+      "id": "services-status-page",
+      "name": "Wire public status page service with SLA tracking",
+      "category": "services",
+      "priority": 2,
+      "status": "pending",
+      "source": "maxpot3-wave5",
+      "created": "2026-03-10T11:30:00.000Z"
+    },
+    {
+      "id": "services-developer-portal",
+      "name": "Wire developer API portal with key management and SDK docs",
+      "category": "services",
+      "priority": 2,
+      "status": "pending",
+      "source": "maxpot3-wave5",
+      "created": "2026-03-10T11:30:00.000Z"
+    },
+    {
+      "id": "security-dompurify-wrapper",
+      "name": "Wire LLM output sanitizer (security/dompurify-wrapper.js) with JSON validation",
+      "category": "security",
+      "priority": 1,
+      "status": "pending",
+      "source": "maxpot3-wave5",
+      "created": "2026-03-10T11:30:00.000Z"
+    },
+    {
+      "id": "security-host-cookie-binder",
+      "name": "Wire __Host- cookie binder with origin verification",
+      "category": "security",
+      "priority": 1,
+      "status": "pending",
+      "source": "maxpot3-wave5",
+      "created": "2026-03-10T11:30:00.000Z"
+    },
+    {
+      "id": "security-container-scanner",
+      "name": "Wire SBOM + CVE assessment + image verification scanner",
+      "category": "security",
+      "priority": 1,
+      "status": "pending",
+      "source": "maxpot3-wave5",
+      "created": "2026-03-10T11:30:00.000Z"
+    },
+    {
+      "id": "shared-csl-engine-v2",
+      "name": "Integrate shared/csl-engine-v2.js into core CSL pipeline",
+      "category": "shared",
+      "priority": 1,
+      "status": "pending",
+      "source": "maxpot3-shared",
+      "created": "2026-03-10T11:30:00.000Z"
+    },
+    {
+      "id": "shared-phi-math-v2",
+      "name": "Integrate shared/phi-math-v2.js replacing legacy phi constants",
+      "category": "shared",
+      "priority": 1,
+      "status": "pending",
+      "source": "maxpot3-shared",
+      "created": "2026-03-10T11:30:00.000Z"
+    },
+    {
+      "id": "shared-sacred-geometry-v2",
+      "name": "Integrate shared/sacred-geometry-v2.js topology module",
+      "category": "shared",
+      "priority": 1,
+      "status": "pending",
+      "source": "maxpot3-shared",
+      "created": "2026-03-10T11:30:00.000Z"
+    },
+    {
+      "id": "testing-chaos-engineering",
+      "name": "Wire chaos engineering suite (circuit breaker, bulkhead, φ-backoff, degradation, partition)",
+      "category": "testing",
+      "priority": 2,
+      "status": "pending",
+      "source": "maxpot3-wave6",
+      "created": "2026-03-10T11:30:00.000Z"
+    },
+    {
+      "id": "testing-contract-tests",
+      "name": "Wire 8 Pact-style contract test definitions with schema validation",
+      "category": "testing",
+      "priority": 2,
+      "status": "pending",
+      "source": "maxpot3-wave6",
+      "created": "2026-03-10T11:30:00.000Z"
+    },
+    {
+      "id": "adrs-18-wave6",
+      "name": "Integrate 18 ADRs (microservices, Drupal, pgvector, Firebase, CSL, Sacred Geometry, etc.)",
+      "category": "docs",
+      "priority": 3,
+      "status": "pending",
+      "source": "maxpot3-wave6",
+      "created": "2026-03-10T11:30:00.000Z"
+    },
+    {
+      "id": "debug-guides-8-domains",
+      "name": "Integrate 8 domain-specific debug guides (agents, inference, memory, security, monitoring, orchestration, web, integration)",
+      "category": "docs",
+      "priority": 3,
+      "status": "pending",
+      "source": "maxpot3-wave6",
+      "created": "2026-03-10T11:30:00.000Z"
+    },
+    {
+      "id": "runbooks-wave6",
+      "name": "Integrate 7 operational runbooks (api-gateway-overload, auth-session-failure, deployment-rollback, heady-brain-503, etc.)",
+      "category": "docs",
+      "priority": 3,
+      "status": "pending",
+      "source": "maxpot3-wave6",
+      "created": "2026-03-10T11:30:00.000Z"
+    },
+    {
+      "id": "infra-fluentd-config",
+      "name": "Integrate Fluentd production log collection config",
+      "category": "infra",
+      "priority": 2,
+      "status": "pending",
+      "source": "maxpot3-wave5",
+      "created": "2026-03-10T11:30:00.000Z"
+    },
+    {
+      "id": "infra-grafana-provisioning",
+      "name": "Integrate Grafana provisioning dashboard JSON with φ-threshold panels",
+      "category": "infra",
+      "priority": 2,
+      "status": "pending",
+      "source": "maxpot3-wave5",
+      "created": "2026-03-10T11:30:00.000Z"
+    },
+    {
+      "id": "scripts-health-check-all",
+      "name": "Wire scripts/health-check-all.sh for 50+ service verification",
+      "category": "scripts",
+      "priority": 2,
+      "status": "pending",
+      "source": "maxpot3-wave5",
+      "created": "2026-03-10T11:30:00.000Z"
+    },
+    {
+      "id": "shared-autonomy-guardrails",
+      "name": "Wire shared/autonomy-guardrails.js (17 ALLOWED, 14 FORBIDDEN operations)",
+      "category": "security",
+      "priority": 1,
+      "status": "pending",
+      "source": "maxpot2-wave2",
+      "created": "2026-03-10T11:30:00.000Z"
+    },
+    {
+      "id": "shared-cqrs-read-model",
+      "name": "Wire shared/cqrs-read-model.js with LRU cache (987 entries) and materialized views",
+      "category": "shared",
+      "priority": 2,
+      "status": "pending",
+      "source": "maxpot2-wave2",
+      "created": "2026-03-10T11:30:00.000Z"
+    },
+    {
+      "id": "shared-prompt-armor",
+      "name": "Wire shared/prompt-armor.js injection defense with 14-pattern guard",
+      "category": "security",
+      "priority": 1,
+      "status": "pending",
+      "source": "maxpot2-wave2",
+      "created": "2026-03-10T11:30:00.000Z"
+    },
+    {
+      "id": "docx-ai-accuracy-report",
+      "name": "Integrate AI accuracy research report findings into system knowledge base",
+      "category": "research",
+      "priority": 3,
+      "status": "pending",
+      "source": "in-docx",
+      "created": "2026-03-10T11:30:00.000Z"
+    },
+    {
+      "id": "docx-agent-effectiveness-report",
+      "name": "Integrate AI agent effectiveness report findings into system knowledge base",
+      "category": "research",
+      "priority": 3,
+      "status": "pending",
+      "source": "in-docx",
+      "created": "2026-03-10T11:30:00.000Z"
+    },
+    {
+      "id": "interservice-auth-wire",
+      "name": "Wire shared/interservice-auth.js — signed inter-service request verification",
+      "category": "security",
+      "priority": 1,
+      "status": "pending",
+      "source": "autonomy-v4.3",
+      "created": "2026-03-10T11:38:00.000Z"
+    },
+    {
+      "id": "monorepo-overlay-scripts",
+      "name": "Integrate 9 autonomy v4.3 scripts (audit, backup, chaos, health-matrix, lint, load-test, run, report, svg)",
+      "category": "scripts",
+      "priority": 2,
+      "status": "pending",
+      "source": "autonomy-v4.3",
+      "created": "2026-03-10T11:38:00.000Z"
+    },
+    {
+      "id": "overlay-shared-modules",
+      "name": "Integrate shared modules from overlay (csl-gates, http-helpers, schema-validator, service-map)",
+      "category": "shared",
+      "priority": 1,
+      "status": "pending",
+      "source": "autonomy-v4.3",
+      "created": "2026-03-10T11:38:00.000Z"
+    },
+    {
+      "id": "overlay-test-suites",
+      "name": "Wire 10 test suites from autonomy overlay (api-gateway, auth, billing, cache, contracts, csl, domain, health, notification, vector)",
+      "category": "testing",
+      "priority": 2,
+      "status": "pending",
+      "source": "autonomy-v4.3",
+      "created": "2026-03-10T11:38:00.000Z"
+    },
+    {
+      "id": "docker-compose-autonomy",
+      "name": "Integrate docker-compose.autonomy.yml for 12-service local runtime",
+      "category": "infra",
+      "priority": 2,
+      "status": "pending",
+      "source": "autonomy-v4.3",
+      "created": "2026-03-10T11:38:00.000Z"
+    },
+    {
+      "id": "perplexity-skills-14",
+      "name": "Integrate 14 Perplexity skills (code-review, competitor-intel, computer-use, content-gen, deep-research, benchmarker, eval, feedback, multi-agent, patent-search, rag-optimizer, drupal-sync, firebase-auth, sacred-css)",
+      "category": "skills",
+      "priority": 2,
+      "status": "pending",
+      "source": "platform-v3",
+      "created": "2026-03-10T11:38:00.000Z"
+    },
+    {
+      "id": "saga-coordinator",
+      "name": "Implement Saga pattern coordinator for distributed cross-service transactions",
+      "category": "architecture",
+      "priority": 2,
+      "status": "pending",
+      "source": "platform-v3-gaps-remaining",
+      "created": "2026-03-10T11:38:00.000Z"
+    },
+    {
+      "id": "feature-flag-system",
+      "name": "Build φ-scaled feature flag service with Fibonacci rollout percentages",
+      "category": "architecture",
+      "priority": 2,
+      "status": "pending",
+      "source": "platform-v3-gaps-remaining",
+      "created": "2026-03-10T11:38:00.000Z"
+    },
+    {
+      "id": "cq-eric-head-rename",
+      "name": "Controlled rename pass: replace all 'Eric Head' references with 'Eric Haywood' across repo",
+      "category": "code-quality",
+      "priority": 1,
+      "status": "pending",
+      "source": "autonomy-v4.3+platform-v3",
+      "created": "2026-03-10T11:38:00.000Z"
+    },
+    {
+      "id": "shared-json-schemas-6",
+      "name": "Wire 6 shared JSON schemas (error-response, event-envelope, health-response, notification, session-token, vector-document)",
+      "category": "shared",
+      "priority": 2,
+      "status": "pending",
+      "source": "platform-v3",
+      "created": "2026-03-10T11:38:00.000Z"
+    },
+    {
+      "id": "service-registry-wire",
+      "name": "Wire service-registry.json and site-registry-v2.json as canonical source of truth",
+      "category": "infra",
+      "priority": 1,
+      "status": "pending",
+      "source": "platform-v3",
+      "created": "2026-03-10T11:38:00.000Z"
+    },
+    {
+      "id": "ci-cd-pipeline",
+      "name": "Wire .github/workflows CI/CD pipeline (ci.yml + deploy.yml)",
+      "category": "infra",
+      "priority": 1,
+      "status": "pending",
+      "source": "platform-v3",
+      "created": "2026-03-10T11:38:00.000Z"
+    },
+    {
+      "id": "grpc-proto-definitions",
+      "name": "Wire shared/proto/heady-common.proto gRPC protocol definitions",
+      "category": "shared",
+      "priority": 3,
+      "status": "pending",
+      "source": "platform-v3",
+      "created": "2026-03-10T11:38:00.000Z"
+    },
+    {
+      "id": "laws-directives-archetypes",
+      "name": "Integrate 8 laws, 4 directive files, and 5 archetype definitions from full-rebuild-context",
+      "category": "docs",
+      "priority": 3,
+      "status": "pending",
+      "source": "full-rebuild-context",
+      "created": "2026-03-10T11:38:00.000Z"
+    }
+  ],
+  "lastScan": "2026-03-10T11:38:59.000Z",
+  "totalTasks": 65,
+  "completedTasks": 5
 }

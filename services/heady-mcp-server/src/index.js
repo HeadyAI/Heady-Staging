@@ -358,9 +358,12 @@ async function main() {
   }
 }
 
-main().catch((err) => {
-  console.error('Fatal:', err);
-  process.exit(1);
-});
+// Only start the server if not in test mode
+if (process.env.NODE_ENV !== 'test') {
+  main().catch((err) => {
+    log.fatal({ err }, 'Fatal error');
+    process.exit(1);
+  });
+}
 
 module.exports = { HeadyMCPProtocol, SERVER_INFO };

@@ -16,11 +16,12 @@
  */
 
 const express = require('express');
-const router  = express.Router();
+const logger = require('../../shared/logger')('heady-guard');
+const router = express.Router();
 
-const guard   = require('./index');
+const guard = require('./index');
 const { getRules, setRules, addRule, removeRule } = require('./rules');
-const config  = require('./config');
+const config = require('./config');
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
@@ -54,7 +55,7 @@ function requireField(body, field) {
  */
 router.post('/guard/check', asyncHandler(async (req, res) => {
   const body = req.body || {};
-  const text   = body.text   || '';
+  const text = body.text || '';
   const output = body.output || '';
 
   if (!text && !output) {
@@ -64,18 +65,18 @@ router.post('/guard/check', asyncHandler(async (req, res) => {
   const payload = {
     text,
     output,
-    userId:  body.userId  || req.headers['x-user-id']  || 'anonymous',
-    tokens:  typeof body.tokens === 'number' ? body.tokens : undefined,
-    source:  body.source  || (output && !text ? 'output' : 'input'),
+    userId: body.userId || req.headers['x-user-id'] || 'anonymous',
+    tokens: typeof body.tokens === 'number' ? body.tokens : undefined,
+    source: body.source || (output && !text ? 'output' : 'input'),
     context: body.context || {},
   };
 
   const opts = body.options || {};
   const result = await guard.check(payload, {
-    piiMode:        opts.piiMode,
-    stages:         opts.stages,
+    piiMode: opts.piiMode,
+    stages: opts.stages,
     blockThreshold: typeof opts.blockThreshold === 'number' ? opts.blockThreshold : undefined,
-    flagThreshold:  typeof opts.flagThreshold  === 'number' ? opts.flagThreshold  : undefined,
+    flagThreshold: typeof opts.flagThreshold === 'number' ? opts.flagThreshold : undefined,
   });
 
   const status = result.allowed ? 200 : 400;
@@ -102,11 +103,11 @@ router.post('/guard/check/batch', asyncHandler(async (req, res) => {
   const opts = body.options || {};
   const results = await guard.checkBatch(
     body.items.map(item => ({
-      text:    item.text    || '',
-      output:  item.output  || '',
-      userId:  item.userId  || req.headers['x-user-id'] || 'anonymous',
-      tokens:  item.tokens,
-      source:  item.source  || 'input',
+      text: item.text || '',
+      output: item.output || '',
+      userId: item.userId || req.headers['x-user-id'] || 'anonymous',
+      tokens: item.tokens,
+      source: item.source || 'input',
       context: item.context || {},
     })),
     opts
@@ -114,7 +115,7 @@ router.post('/guard/check/batch', asyncHandler(async (req, res) => {
 
   const anyBlocked = results.some(r => !r.allowed);
   return res.status(anyBlocked ? 207 : 200).json({
-    count:   results.length,
+    count: results.length,
     blocked: results.filter(r => !r.allowed).length,
     results,
   });
@@ -143,23 +144,23 @@ router.post('/guard/redact', asyncHandler(async (req, res) => {
   return res.json({
     original_length: body.text.length,
     redacted_length: result.redactedText.length,
-    redactedText:    result.redactedText,
-    detections:      result.detections.length,
-    types_found:     [...new Set(result.detections.map(d => d.type))],
+    redactedText: result.redactedText,
+    detections: result.detections.length,
+    types_found: [...new Set(result.detections.map(d => d.type))],
   });
 }));
 
 // ── GET /guard/rules ──────────────────────────────────────────────────────────
 
 router.get('/guard/rules', asyncHandler(async (req, res) => {
-  const allRules  = getRules();
-  const enabled   = allRules.filter(r => r.enabled !== false);
-  const disabled  = allRules.filter(r => r.enabled === false);
+  const allRules = getRules();
+  const enabled = allRules.filter(r => r.enabled !== false);
+  const disabled = allRules.filter(r => r.enabled === false);
   return res.json({
-    total:    allRules.length,
-    enabled:  enabled.length,
+    total: allRules.length,
+    enabled: enabled.length,
     disabled: disabled.length,
-    rules:    allRules,
+    rules: allRules,
   });
 }));
 
@@ -222,7 +223,7 @@ router.get('/guard/stats', asyncHandler(async (req, res) => {
  * @query userId — filter by userId
  */
 router.get('/guard/audit', asyncHandler(async (req, res) => {
-  const limit  = Math.min(parseInt(req.query.limit,  10) || 100, 1000);
+  const limit = Math.min(parseInt(req.query.limit, 10) || 100, 1000);
   const offset = parseInt(req.query.offset, 10) || 0;
 
   const log = guard.getAuditLog({ limit, offset });
@@ -239,13 +240,13 @@ router.get('/guard/audit', asyncHandler(async (req, res) => {
 // ── Error handler ─────────────────────────────────────────────────────────────
 
 router.use((err, req, res, _next) => {
-  const status  = err.status || 500;
+  const status = err.status || 500;
   const message = config.isProduction && status === 500
     ? 'Internal server error'
     : err.message;
 
   if (status === 500) {
-    console.error(`[HeadyGuard] Route error: ${err.stack || err.message}`);
+    logger.error({ err, msg: 'route error' });
   }
 
   return res.status(status).json({ error: 'guard_error', message });

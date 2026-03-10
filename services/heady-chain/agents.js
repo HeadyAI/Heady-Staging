@@ -19,6 +19,7 @@ const { MemoryManager, BufferMemory } = require('./memory');
 const { ChatPromptTemplate, OutputParsers, PromptTemplate } = require('./prompts');
 const { httpPost, interpolate } = require('./nodes');
 const config = require('./config');
+const logger = require('../../shared/logger')('heady-chain');
 
 // ─── Shared LLM call helper ───────────────────────────────────────────────────
 
@@ -69,10 +70,12 @@ async function callLLM(messages, opts = {}) {
     if (body.content && Array.isArray(body.content)) {
       const toolBlocks = body.content.filter(b => b.type === 'tool_use');
       if (toolBlocks.length > 0) {
-        return { type: 'tool_calls', tool_calls: toolBlocks.map(b => ({
-          id: b.id,
-          function: { name: b.name, arguments: JSON.stringify(b.input) },
-        })), content: body.content.filter(b => b.type === 'text').map(b => b.text).join('') };
+        return {
+          type: 'tool_calls', tool_calls: toolBlocks.map(b => ({
+            id: b.id,
+            function: { name: b.name, arguments: JSON.stringify(b.input) },
+          })), content: body.content.filter(b => b.type === 'text').map(b => b.text).join('')
+        };
       }
       return { type: 'text', content: body.content.map(b => b.text || '').join('') };
     }
@@ -182,7 +185,7 @@ Final Answer: [your complete answer]`;
         steps[steps.length - 1].observation = observation;
 
         if (this.verbose) {
-          console.log(`[ReAct] Iteration ${iterations}: Action=${toolName}, Observation=${observation.slice(0, 100)}`);
+          logger.info({ msg: 'ReAct iteration', iteration: iterations, action: toolName, observation: observation.slice(0, 100) });
         }
       } else {
         // Unexpected format — ask LLM to continue
@@ -447,7 +450,7 @@ class ConversationalAgent {
           let fnArgs = {};
           try {
             fnArgs = typeof tc.function?.arguments === 'string' ? JSON.parse(tc.function.arguments) : tc.input || {};
-          } catch {}
+          } catch { /* JSON parse fallback — use raw input */ }
 
           let toolResult;
           try {

@@ -1,0 +1,31 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "Heady Event Bus Message",
+    "description": "Standard envelope for all NATS JetStream messages across Heady services",
+    "type": "object",
+    "required": [
+        "source",
+        "timestamp",
+        "correlationId",
+        "data"
+    ],
+    "properties": {
+        "source": {
+            "type": "string",
+            "description": "Service name that produced this event"
+        },
+        "timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "description": "ISO 8601 timestamp of event creation"
+        },
+        "correlationId": {
+            "type": "string",
+            "description": "Unique ID for request tracing across services"
+        },
+        "data": {
+            "type": "object",
+            "description": "Event payload — schema varies by subject"
+        }
+    }
+}

@@ -1,0 +1,57 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "Heady Embedding Request",
+    "description": "Schema for embedding generation and vector memory indexing",
+    "type": "object",
+    "required": [
+        "content",
+        "contentType"
+    ],
+    "properties": {
+        "content": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 3948,
+            "description": "Text to embed (max Fibonacci 987 × 4 chars)"
+        },
+        "contentType": {
+            "type": "string",
+            "enum": [
+                "article",
+                "documentation",
+                "case_study",
+                "patent",
+                "event",
+                "grant_program",
+                "agent_listing",
+                "investor_update",
+                "testimonial",
+                "faq",
+                "product_catalog",
+                "news_release",
+                "media_asset",
+                "user_profile",
+                "chat_message",
+                "code_snippet"
+            ],
+            "description": "Content type for domain tagging"
+        },
+        "source": {
+            "type": "string",
+            "description": "Originating service or domain"
+        },
+        "metadata": {
+            "type": "object",
+            "description": "Additional metadata for vector storage"
+        },
+        "embedding": {
+            "type": "array",
+            "items": {
+                "type": "number"
+            },
+            "minItems": 384,
+            "maxItems": 384,
+            "description": "Pre-computed 384-dimensional embedding vector (optional — will be generated if not provided)"
+        }
+    }
+}

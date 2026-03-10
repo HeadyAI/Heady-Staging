@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://headysystems.com/schemas/vector-document.json",
+  "title": "Heady™ Vector Document",
+  "description": "Schema for documents stored in pgvector. Used by heady-vector, heady-memory, search-service, and heady-embed. VECTOR_DIM = 384.",
+  "type": "object",
+  "required": ["id", "content", "embedding"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Unique document identifier"
+    },
+    "content": {
+      "type": "string",
+      "description": "Document text content"
+    },
+    "embedding": {
+      "type": "array",
+      "items": { "type": "number" },
+      "minItems": 384,
+      "maxItems": 384,
+      "description": "384-dimensional embedding vector (VECTOR_DIM)"
+    },
+    "metadata": {
+      "type": "object",
+      "description": "Arbitrary metadata for filtering and context",
+      "properties": {
+        "source": { "type": "string", "description": "Document source service or system" },
+        "domain": { "type": "string", "description": "Content domain" },
+        "tags": { "type": "array", "items": { "type": "string" }, "description": "Categorization tags" },
+        "language": { "type": "string", "description": "Content language (ISO 639-1)" }
+      },
+      "additionalProperties": true
+    },
+    "cslScore": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1,
+      "description": "CSL relevance score (set during search, not storage)"
+    },
+    "createdAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Document creation timestamp"
+    },
+    "updatedAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Last update timestamp"
+    }
+  },
+  "additionalProperties": false
+}

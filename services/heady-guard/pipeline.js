@@ -19,6 +19,7 @@
  */
 
 const config = require('./config');
+const logger = require('../../shared/logger')('heady-guard');
 
 // ── Stage registry ────────────────────────────────────────────────────────────
 
@@ -64,15 +65,15 @@ const PHI = config.phi; // 1.618
 function _aggregateRiskScores(stageResults, stageOrder) {
   if (stageOrder.length === 0) return 0;
   const n = stageOrder.length;
-  let weightedSum  = 0;
-  let totalWeight  = 0;
+  let weightedSum = 0;
+  let totalWeight = 0;
 
   stageOrder.forEach((name, idx) => {
     const result = stageResults[name];
     if (!result) return;
     const baseWeight = 1 + (idx / n) * (PHI - 1); // 1.0 → 1.618 over the stages
-    weightedSum  += result.riskScore * baseWeight;
-    totalWeight  += baseWeight;
+    weightedSum += result.riskScore * baseWeight;
+    totalWeight += baseWeight;
   });
 
   if (totalWeight === 0) return 0;
@@ -93,11 +94,11 @@ async function _runStage(stageEntry, payload, pipelineCfg) {
   const timeoutMs = pipelineCfg.stageTimeoutMs || config.stageTimeoutMs;
   const stageConfig = {
     blockThreshold: pipelineCfg.blockThreshold || config.blockThreshold,
-    flagThreshold:  pipelineCfg.flagThreshold  || config.flagThreshold,
-    piiMode:        pipelineCfg.piiMode        || config.piiMode,
+    flagThreshold: pipelineCfg.flagThreshold || config.flagThreshold,
+    piiMode: pipelineCfg.piiMode || config.piiMode,
     piiRedactionStrategy: pipelineCfg.piiRedactionStrategy || config.piiRedactionStrategy,
-    toxicity:       pipelineCfg.toxicity       || config.toxicity,
-    rateLimit:      pipelineCfg.rateLimit      || config.rateLimit,
+    toxicity: pipelineCfg.toxicity || config.toxicity,
+    rateLimit: pipelineCfg.rateLimit || config.rateLimit,
     ...(pipelineCfg.stageOverrides?.[stageEntry.name] || {}),
   };
 
@@ -114,12 +115,12 @@ async function _runStage(stageEntry, payload, pipelineCfg) {
   } catch (err) {
     // Stage errors are non-fatal — treated as PASS with a warning
     return {
-      stage:     stageEntry.name,
-      action:    'PASS',
+      stage: stageEntry.name,
+      action: 'PASS',
       riskScore: 0,
       confidence: 0,
-      findings:  [],
-      meta:      { error: err.message, timedOut: err.message.includes('timed out') },
+      findings: [],
+      meta: { error: err.message, timedOut: err.message.includes('timed out') },
     };
   }
 }
@@ -146,17 +147,17 @@ async function run(payload, pipelineCfg = {}) {
     .filter(s => enabledNames.includes(s.name));
 
   const stageResults = {};
-  const flags        = [];
-  let   blockedBy    = null;
-  let   redactedText = null;
+  const flags = [];
+  let blockedBy = null;
+  let redactedText = null;
 
   // Group into serial runs and parallel batches:
   // Parallel stages are collected, run together as a batch, then serial stages continue.
   // For simplicity, we run non-parallel stages serially; collect all parallel stages
   // into one concurrent batch that runs together.
 
-  const serialStages   = orderedStages.filter(s => !parallelNames.has(s.name));
-  const parallelStages = orderedStages.filter(s =>  parallelNames.has(s.name));
+  const serialStages = orderedStages.filter(s => !parallelNames.has(s.name));
+  const parallelStages = orderedStages.filter(s => parallelNames.has(s.name));
 
   // ── Parallel batch (independent checks) ────────────────────────────────────
   if (parallelStages.length > 0) {
@@ -196,7 +197,7 @@ async function run(payload, pipelineCfg = {}) {
 
   // ── Aggregate ──────────────────────────────────────────────────────────────
   const executedOrder = orderedStages.map(s => s.name).filter(n => n in stageResults);
-  const riskScore     = _aggregateRiskScores(stageResults, executedOrder);
+  const riskScore = _aggregateRiskScores(stageResults, executedOrder);
   const processingTime = Date.now() - start;
 
   // Final allow/block decision
@@ -205,12 +206,12 @@ async function run(payload, pipelineCfg = {}) {
 
   return {
     allowed,
-    risk_score:      riskScore,
-    flags:           [...new Set(flags)],
-    blocked_by:      blockedBy || null,
+    risk_score: riskScore,
+    flags: [...new Set(flags)],
+    blocked_by: blockedBy || null,
     processing_time: processingTime,
-    stage_results:   stageResults,
-    redactedText:    redactedText || null,
+    stage_results: stageResults,
+    redactedText: redactedText || null,
   };
 }
 
@@ -218,12 +219,12 @@ async function run(payload, pipelineCfg = {}) {
 
 function loadBuiltinStages() {
   const stages = [
-    { name: 'injection',       path: './filters/injection-detector', priority: 10, parallel: false },
-    { name: 'pii',             path: './filters/pii-detector',       priority: 20, parallel: false },
-    { name: 'rate_limit',      path: './filters/rate-limiter',       priority: 25, parallel: false },
-    { name: 'toxicity',        path: './filters/toxicity-scorer',    priority: 30, parallel: true  },
-    { name: 'topic',           path: './filters/topic-filter',       priority: 40, parallel: true  },
-    { name: 'output_validator',path: './filters/output-validator',   priority: 50, parallel: false },
+    { name: 'injection', path: './filters/injection-detector', priority: 10, parallel: false },
+    { name: 'pii', path: './filters/pii-detector', priority: 20, parallel: false },
+    { name: 'rate_limit', path: './filters/rate-limiter', priority: 25, parallel: false },
+    { name: 'toxicity', path: './filters/toxicity-scorer', priority: 30, parallel: true },
+    { name: 'topic', path: './filters/topic-filter', priority: 40, parallel: true },
+    { name: 'output_validator', path: './filters/output-validator', priority: 50, parallel: false },
   ];
 
   for (const { name, path, priority, parallel } of stages) {
@@ -231,7 +232,7 @@ function loadBuiltinStages() {
       const mod = require(path);
       registerStage(name, mod.run, priority, parallel);
     } catch (err) {
-      console.error(`[HeadyGuard] Failed to load stage "${name}": ${err.message}`);
+      logger.error({ err, stage: name, msg: `Failed to load stage "${name}"` });
     }
   }
 }

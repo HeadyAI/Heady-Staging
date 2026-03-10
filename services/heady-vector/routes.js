@@ -8,6 +8,7 @@
 
 const { Router } = require('express');
 const config = require('./config');
+const logger = require('../../shared/logger')('heady-vector');
 
 // ─── Error handling helper ────────────────────────────────────────────────────
 
@@ -520,7 +521,7 @@ function createRouter(hv) {
       err.message.includes('mismatch');
 
     const statusCode = isUserError ? 400 : 500;
-    console.error(`[heady-vector] ${req.method} ${req.path} error:`, err.message);
+    logger.error({ err, method: req.method, path: req.path, msg: 'route error' });
 
     return sendError(res, statusCode, err.message, {
       path: req.path,
