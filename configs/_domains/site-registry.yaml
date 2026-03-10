@@ -63,11 +63,59 @@ sites:
 
   - id: headyos
     domain: headyos.com
-    cloud_run_service: heady-manager
+    cloud_run_service: heady-dynamic-sites
     port: 9007
     pm2: site-headyos
     purpose: "AI agent operating system dashboard"
     dir: /home/headyme/sites/headyos
+
+  - id: heady-ai
+    domain: heady-ai.com
+    cloud_run_service: heady-dynamic-sites
+    port: 9008
+    pm2: site-heady-ai
+    purpose: "AI research, CSL, patents, Sacred Geometry science"
+    dir: /home/headyme/sites/heady-ai
+
+  - id: headybot
+    domain: headybot.com
+    cloud_run_service: heady-dynamic-sites
+    port: 9009
+    pm2: site-headybot
+    purpose: "Autonomous automation and battle arena"
+    dir: /home/headyme/sites/headybot
+
+  - id: headysense
+    domain: headysense.com
+    cloud_run_service: heady-dynamic-sites
+    port: 9010
+    pm2: site-headysense
+    purpose: "Vision AI, OCR, screenshot analysis"
+    dir: /home/headyme/sites/headysense
+
+  - id: headyex
+    domain: headyex.com
+    cloud_run_service: heady-dynamic-sites
+    port: 9011
+    pm2: site-headyex
+    purpose: "Executive intelligence dashboard"
+    dir: /home/headyme/sites/headyex
+
+  - id: headyfinance
+    domain: headyfinance.com
+    cloud_run_service: heady-dynamic-sites
+    port: 9012
+    pm2: site-headyfinance
+    purpose: "Intelligent FinOps and billing"
+    dir: /home/headyme/sites/headyfinance
+
+  - id: perfecttrader
+    domain: perfecttrader.com
+    cloud_run_service: heady-dynamic-sites
+    port: 9013
+    pm2: site-perfecttrader
+    purpose: "AI-powered trading signals and backtesting"
+    dir: /home/headyme/sites/perfecttrader
 
   # ── Internal/Secondary Sites ──
   - id: headyweb
@@ -165,11 +213,11 @@ sites:
     deploy_script: scripts/deploy-hf-spaces.js
 
 # ── Summary ──
-# 8 public branded domains
+# 15 public branded domains (routed via dynamic-site-server)
 # 5 internal/secondary sites
 # 6 alias/duplicate processes
 # 2 Discord bots
 # 3 HuggingFace Spaces
-# = 24 total web properties
-# = 22 PM2 site processes
-# = 8 public domains routed through Cloudflare tunnels
+# = 31 total web properties
+# = 29 PM2 site processes
+# = 15 public domains routed through Cloud Run + Cloudflare
