@@ -31,8 +31,19 @@ const PORT = process.env.PORT || 3301;
 
 // ── Global middleware ──
 app.use(helmet());
+// Production CORS: explicit allowlist only; dev allows localhost
+const HEADY_DOMAINS = [
+  'https://headyme.com', 'https://headyapi.com', 'https://headysystems.com',
+  'https://headyconnection.org', 'https://headymcp.com', 'https://headybuddy.org',
+  'https://headyio.com', 'https://headybot.com', 'https://heady-ai.com',
+];
+const corsOrigins = process.env.CORS_ORIGINS
+  ? process.env.CORS_ORIGINS.split(',').map(s => s.trim())
+  : process.env.NODE_ENV === 'production'
+    ? HEADY_DOMAINS
+    : ['http://localhost:3301', 'http://localhost:5173', ...HEADY_DOMAINS];
 app.use(cors({
-  origin: process.env.CORS_ORIGINS?.split(',') || '*',
+  origin: corsOrigins,
   credentials: true,
 }));
 app.use(express.json({ limit: '10mb' }));

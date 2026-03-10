@@ -1,8 +1,13 @@
-let memoryToken = null;
+// Token management — stored in sessionStorage, never hardcoded
+export function getToken() {
+  return sessionStorage.getItem('heady_token') || null;
+}
 
-export const getToken = () => {
-  if (!memoryToken) {
-    memoryToken = prompt('Enter Heady API Key / Admin Token:') || 'default_insecure_token';
-  }
-  return memoryToken;
-};
+export function setToken(token) {
+  if (token) sessionStorage.setItem('heady_token', token);
+  else sessionStorage.removeItem('heady_token');
+}
+
+export function isAuthenticated() {
+  return !!getToken();
+}
