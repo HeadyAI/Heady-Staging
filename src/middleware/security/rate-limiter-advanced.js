@@ -26,29 +26,29 @@ const TIERS = {
   free: {
     requestsPerHour: 100,
     burstMultiplier: 1.5,   // Allow 150% of hourly rate as burst window
-    burstWindowMs:   60_000, // 1-minute burst window
-    concurrency:     5,
+    burstWindowMs: 60_000, // 1-minute burst window
+    concurrency: 5,                        // fib(5)
     webhookOnBreach: false,
   },
   pro: {
     requestsPerHour: 1_000,
     burstMultiplier: 2.0,
-    burstWindowMs:   60_000,
-    concurrency:     20,
+    burstWindowMs: 60_000,
+    concurrency: 21,                       // fib(8)
     webhookOnBreach: false,
   },
   enterprise: {
     requestsPerHour: 10_000,
     burstMultiplier: 3.0,
-    burstWindowMs:   60_000,
-    concurrency:     100,
+    burstWindowMs: 60_000,
+    concurrency: 89,                       // fib(11)
     webhookOnBreach: true,
   },
   internal: {
     requestsPerHour: 1_000_000, // Effectively unlimited for internal services
     burstMultiplier: 10.0,
-    burstWindowMs:   60_000,
-    concurrency:     500,
+    burstWindowMs: 60_000,
+    concurrency: 610,                      // fib(15)
     webhookOnBreach: false,
   },
 };
@@ -61,7 +61,7 @@ const DEFAULT_TIER = 'free';
 class InMemorySlidingWindowStore {
   constructor() {
     this._windows = new Map();   // key → sorted array of timestamps (ms)
-    this._buckets  = new Map();   // key → { tokens, lastRefill }
+    this._buckets = new Map();   // key → { tokens, lastRefill }
 
     // Cleanup expired entries every 5 minutes
     const interval = setInterval(() => this._cleanup(), 5 * 60_000);
@@ -83,14 +83,14 @@ class InMemorySlidingWindowStore {
     this._windows.set(key, timestamps);
 
     return {
-      count:     timestamps.length,
-      resetAt:   now + windowMs,
+      count: timestamps.length,
+      resetAt: now + windowMs,
       windowMs,
     };
   }
 
   async getCount(key, windowMs) {
-    const now  = Date.now();
+    const now = Date.now();
     const cutoff = now - windowMs;
     const timestamps = (this._windows.get(key) || []).filter(ts => ts > cutoff);
     return timestamps.length;
@@ -108,14 +108,14 @@ class InMemorySlidingWindowStore {
     const elapsed = now - bucket.lastRefill;
     const refillCount = Math.floor(elapsed / refillIntervalMs) * refillRate;
     if (refillCount > 0) {
-      bucket.tokens    = Math.min(maxTokens, bucket.tokens + refillCount);
+      bucket.tokens = Math.min(maxTokens, bucket.tokens + refillCount);
       bucket.lastRefill = now;
     }
 
     if (bucket.tokens >= 1) {
       bucket.tokens -= 1;
       this._buckets.set(key, bucket);
-      return { allowed: true,  tokensRemaining: Math.floor(bucket.tokens), nextRefillAt: now + refillIntervalMs };
+      return { allowed: true, tokensRemaining: Math.floor(bucket.tokens), nextRefillAt: now + refillIntervalMs };
     }
 
     this._buckets.set(key, bucket);
@@ -174,7 +174,7 @@ class RedisSlidingWindowStore {
   }
 
   async increment(key, windowMs) {
-    const now    = Date.now();
+    const now = Date.now();
     const member = `${now}:${Math.random().toString(36).slice(2)}`;
 
     let count;
@@ -194,8 +194,8 @@ class RedisSlidingWindowStore {
     }
 
     return {
-      count:     Number(count),
-      resetAt:   now + windowMs,
+      count: Number(count),
+      resetAt: now + windowMs,
       windowMs,
     };
   }
@@ -248,9 +248,9 @@ class RedisSlidingWindowStore {
         String(now), String(maxTokens), String(refillRate), String(refillIntervalMs));
       const [allowed, tokensRemaining] = result;
       return {
-        allowed:         allowed === 1,
+        allowed: allowed === 1,
         tokensRemaining: Number(tokensRemaining),
-        nextRefillAt:    now + refillIntervalMs,
+        nextRefillAt: now + refillIntervalMs,
       };
     } catch {
       return { allowed: true, tokensRemaining: maxTokens, nextRefillAt: now + refillIntervalMs };
@@ -258,7 +258,7 @@ class RedisSlidingWindowStore {
   }
 
   async reset(key) {
-    await this._redis.del(key, `bucket:${key}`).catch(() => {});
+    await this._redis.del(key, `bucket:${key}`).catch(() => { });
   }
 }
 
@@ -276,13 +276,13 @@ class AdvancedRateLimiter {
    * @param {string} [opts.webhookUrl]     - Webhook URL for breach notifications
    */
   constructor(opts = {}) {
-    this._store        = opts.redis ? new RedisSlidingWindowStore(opts.redis) : new InMemorySlidingWindowStore();
-    this._tiers        = { ...TIERS, ...opts.tiers };
-    this._tenantTiers  = opts.tenantTiers || {};
-    this._getTier      = opts.getTier;
-    this._keyPrefix    = opts.keyPrefix || 'rl:';
-    this._onBreach     = opts.onBreach;
-    this._webhookUrl   = opts.webhookUrl;
+    this._store = opts.redis ? new RedisSlidingWindowStore(opts.redis) : new InMemorySlidingWindowStore();
+    this._tiers = { ...TIERS, ...opts.tiers };
+    this._tenantTiers = opts.tenantTiers || {};
+    this._getTier = opts.getTier;
+    this._keyPrefix = opts.keyPrefix || 'rl:';
+    this._onBreach = opts.onBreach;
+    this._webhookUrl = opts.webhookUrl;
     this._fallbackMode = false;  // true when Redis is down
   }
 
@@ -303,7 +303,7 @@ class AdvancedRateLimiter {
     const tier = await this._resolveTier(tenantId, apiKey);
     const tierConfig = this._tiers[tier];
     const windowMs = 60 * 60 * 1000; // 1 hour sliding window
-    const limit  = tierConfig.requestsPerHour;
+    const limit = tierConfig.requestsPerHour;
     const burstLimit = Math.floor(limit * tierConfig.burstMultiplier);
 
     // Build rate limit keys (most → least specific)
@@ -342,9 +342,9 @@ class AdvancedRateLimiter {
     if (!result) return this._fallbackResponse(tier, limit);
 
     const { windowResult, burstResult } = result;
-    const count     = windowResult.count;
+    const count = windowResult.count;
     const remaining = Math.max(0, limit - count);
-    const resetAt   = windowResult.resetAt;
+    const resetAt = windowResult.resetAt;
 
     // Allowed if within hourly limit AND burst bucket has tokens
     const allowed = count <= limit && burstResult.allowed;
@@ -354,12 +354,12 @@ class AdvancedRateLimiter {
         tenantId, apiKey, userId, ip,
         tier, limit, count,
         retryAfter: Math.ceil((resetAt - Date.now()) / 1000),
-        timestamp:  new Date().toISOString(),
-        key:        chosenKey,
+        timestamp: new Date().toISOString(),
+        key: chosenKey,
       };
 
       // Fire breach notifications async
-      this._handleBreach(breachInfo).catch(() => {});
+      this._handleBreach(breachInfo).catch(() => { });
     }
 
     return {
@@ -369,8 +369,8 @@ class AdvancedRateLimiter {
       remaining,
       resetAt,
       count,
-      retryAfter:       allowed ? 0 : Math.ceil((resetAt - Date.now()) / 1000),
-      burstRemaining:   burstResult.tokensRemaining,
+      retryAfter: allowed ? 0 : Math.ceil((resetAt - Date.now()) / 1000),
+      burstRemaining: burstResult.tokensRemaining,
       burstNextRefillAt: burstResult.nextRefillAt,
     };
   }
@@ -378,10 +378,10 @@ class AdvancedRateLimiter {
   _buildKeys(tenantId, apiKey, userId, ip) {
     const keys = [];
     // Most specific → least specific for priority
-    if (apiKey)   keys.push(`apikey:${apiKey}`);
+    if (apiKey) keys.push(`apikey:${apiKey}`);
     if (tenantId) keys.push(`tenant:${tenantId}`);
-    if (userId)   keys.push(`user:${userId}`);
-    if (ip)       keys.push(`ip:${ip}`);
+    if (userId) keys.push(`user:${userId}`);
+    if (ip) keys.push(`ip:${ip}`);
     if (keys.length === 0) keys.push('global');
     return keys;
   }
@@ -395,7 +395,7 @@ class AdvancedRateLimiter {
       try {
         const tier = await this._getTier(tenantId, apiKey);
         if (tier && this._tiers[tier]) return tier;
-      } catch {}
+      } catch { }
     }
 
     return DEFAULT_TIER;
@@ -404,14 +404,14 @@ class AdvancedRateLimiter {
   _fallbackResponse(tier, limit) {
     // Degrade gracefully: allow request but signal degraded mode
     return {
-      allowed:      true,
+      allowed: true,
       tier,
       limit,
-      remaining:    -1,  // unknown
-      resetAt:      Date.now() + 3600_000,
-      count:        -1,
-      retryAfter:   0,
-      degraded:     true,
+      remaining: -1,  // unknown
+      resetAt: Date.now() + 3600_000,
+      count: -1,
+      retryAfter: 0,
+      degraded: true,
     };
   }
 
@@ -432,13 +432,13 @@ class AdvancedRateLimiter {
 
   async _sendWebhook(info) {
     const body = JSON.stringify({
-      event:     'rate_limit_breach',
+      event: 'rate_limit_breach',
       timestamp: info.timestamp,
-      tenantId:  info.tenantId,
-      apiKey:    info.apiKey ? info.apiKey.slice(0, 8) + '...' : null,
-      tier:      info.tier,
-      limit:     info.limit,
-      count:     info.count,
+      tenantId: info.tenantId,
+      apiKey: info.apiKey ? info.apiKey.slice(0, 8) + '...' : null,
+      tier: info.tier,
+      limit: info.limit,
+      count: info.count,
       retryAfter: info.retryAfter,
     });
 
@@ -464,7 +464,7 @@ class AdvancedRateLimiter {
   async reset(identity = {}) {
     const keys = this._buildKeys(identity.tenantId, identity.apiKey, identity.userId, identity.ip);
     for (const key of keys) {
-      await this._store.reset(`${this._keyPrefix}${key}`).catch(() => {});
+      await this._store.reset(`${this._keyPrefix}${key}`).catch(() => { });
     }
   }
 }
@@ -484,9 +484,9 @@ function rateLimiterMiddleware(limiter, opts = {}) {
   const {
     getIdentity = (req) => ({
       tenantId: req.tenantId || req.user?.tenantId,
-      apiKey:   req.headers['x-api-key'] || req.headers['authorization']?.replace('Bearer ', ''),
-      userId:   req.user?.id,
-      ip:       req.ip || req.headers['x-forwarded-for']?.split(',')[0]?.trim(),
+      apiKey: req.headers['x-api-key'] || req.headers['authorization']?.replace('Bearer ', ''),
+      userId: req.user?.id,
+      ip: req.ip || req.headers['x-forwarded-for']?.split(',')[0]?.trim(),
     }),
     skipOnError = true,
   } = opts;
@@ -504,10 +504,10 @@ function rateLimiterMiddleware(limiter, opts = {}) {
     }
 
     // Set standard rate limit headers
-    res.set('X-RateLimit-Limit',     String(result.limit));
+    res.set('X-RateLimit-Limit', String(result.limit));
     res.set('X-RateLimit-Remaining', String(Math.max(0, result.remaining)));
-    res.set('X-RateLimit-Reset',     String(Math.ceil(result.resetAt / 1000)));
-    res.set('X-RateLimit-Tier',      result.tier);
+    res.set('X-RateLimit-Reset', String(Math.ceil(result.resetAt / 1000)));
+    res.set('X-RateLimit-Tier', result.tier);
 
     if (result.degraded) {
       res.set('X-RateLimit-Degraded', 'true');
@@ -518,13 +518,13 @@ function rateLimiterMiddleware(limiter, opts = {}) {
       res.set('X-RateLimit-Retry-After', String(result.retryAfter));
 
       return res.status(429).json({
-        error:      'Too Many Requests',
-        code:       'RATE_LIMIT_EXCEEDED',
-        tier:       result.tier,
-        limit:      result.limit,
+        error: 'Too Many Requests',
+        code: 'RATE_LIMIT_EXCEEDED',
+        tier: result.tier,
+        limit: result.limit,
         retryAfter: result.retryAfter,
-        resetAt:    new Date(result.resetAt).toISOString(),
-        message:    `Rate limit exceeded. Upgrade to a higher tier for more requests. Retry after ${result.retryAfter}s.`,
+        resetAt: new Date(result.resetAt).toISOString(),
+        message: `Rate limit exceeded. Upgrade to a higher tier for more requests. Retry after ${result.retryAfter}s.`,
       });
     }
 
@@ -547,7 +547,7 @@ function rateLimiterMiddleware(limiter, opts = {}) {
  * @returns {{ limiter, middleware, TIERS }}
  */
 function createRateLimiter(opts = {}) {
-  const limiter    = new AdvancedRateLimiter(opts);
+  const limiter = new AdvancedRateLimiter(opts);
   const middleware = rateLimiterMiddleware(limiter, opts);
   return { limiter, middleware, TIERS };
 }
@@ -597,9 +597,9 @@ app.use('/api/', middleware);
 const strictLimiter = createRateLimiter({
   redis,
   tiers: {
-    free:       { requestsPerHour: 10,  burstMultiplier: 1.0, burstWindowMs: 60000, concurrency: 2, webhookOnBreach: false },
-    pro:        { requestsPerHour: 100, burstMultiplier: 1.5, burstWindowMs: 60000, concurrency: 10, webhookOnBreach: false },
-    enterprise: { requestsPerHour: 1000, burstMultiplier: 2.0, burstWindowMs: 60000, concurrency: 50, webhookOnBreach: true },
+    free:       { requestsPerHour: 13,  burstMultiplier: 1.0, burstWindowMs: 60000, concurrency: 2, webhookOnBreach: false },  // fib(7)=13, fib(3)=2
+    pro:        { requestsPerHour: 89, burstMultiplier: 1.618, burstWindowMs: 60000, concurrency: 8, webhookOnBreach: false },  // fib(11)=89, fib(6)=8, φ burst
+    enterprise: { requestsPerHour: 987, burstMultiplier: 2.618, burstWindowMs: 60000, concurrency: 55, webhookOnBreach: true },  // fib(16)=987, fib(10)=55, φ² burst
   },
 });
 

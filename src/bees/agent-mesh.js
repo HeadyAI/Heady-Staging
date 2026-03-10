@@ -50,20 +50,20 @@ const KNOWN_AGENTS = [
 
 /** Default capability catalogue inferred from agent names and analysis */
 const DEFAULT_CAPABILITIES = {
-  JULES:    ['code', 'review', 'refactor', 'test'],
-  BUILDER:  ['build', 'compile', 'deploy', 'ci'],
+  JULES: ['code', 'review', 'refactor', 'test'],
+  BUILDER: ['build', 'compile', 'deploy', 'ci'],
   OBSERVER: ['monitor', 'observe', 'trace', 'log'],
-  MURPHY:   ['chaos', 'test', 'fault-injection', 'resilience'],
-  ATLAS:    ['map', 'topology', 'graph', 'discovery'],
-  PYTHIA:   ['forecast', 'predict', 'analytics', 'insight'],
-  BRIDGE:   ['integrate', 'transform', 'bridge', 'etl'],
-  MUSE:     ['create', 'design', 'content', 'generate'],
+  MURPHY: ['chaos', 'test', 'fault-injection', 'resilience'],
+  ATLAS: ['map', 'topology', 'graph', 'discovery'],
+  PYTHIA: ['forecast', 'predict', 'analytics', 'insight'],
+  BRIDGE: ['integrate', 'transform', 'bridge', 'etl'],
+  MUSE: ['create', 'design', 'content', 'generate'],
   SENTINEL: ['alert', 'security', 'policy', 'audit'],
-  NOVA:     ['experiment', 'ab-test', 'feature-flag', 'rollout'],
-  JANITOR:  ['cleanup', 'gc', 'archive', 'purge'],
-  SOPHIA:   ['learn', 'adapt', 'train', 'improve'],
-  CIPHER:   ['encrypt', 'decrypt', 'secret', 'auth'],
-  LENS:     ['search', 'query', 'retrieve', 'index'],
+  NOVA: ['experiment', 'ab-test', 'feature-flag', 'rollout'],
+  JANITOR: ['cleanup', 'gc', 'archive', 'purge'],
+  SOPHIA: ['learn', 'adapt', 'train', 'improve'],
+  CIPHER: ['encrypt', 'decrypt', 'secret', 'auth'],
+  LENS: ['search', 'query', 'retrieve', 'index'],
 };
 
 // ---------------------------------------------------------------------------
@@ -266,7 +266,7 @@ class CapabilityIndex {
    * @param {number} [threshold=0.3]  minimum Jaccard score to include
    * @returns {{ agentId: string, score: number }[]}  sorted descending by score
    */
-  fuzzyMatch(query, threshold = 0.3) {
+  fuzzyMatch(query, threshold = 0.382) { // ψ² ≈ 0.382 — phi-scaled minimum similarity
     const qTokens = new Set(query.toLowerCase().split(/[\s\-_.]+/).filter(Boolean));
     const results = [];
 
@@ -303,11 +303,11 @@ class MessageBus extends EventEmitter {
    */
   constructor(opts = {}) {
     super();
-    this._maxRetries    = opts.maxRetries    ?? 3;
-    this._retryBaseMs   = opts.retryBaseMs   ?? 200;
+    this._maxRetries = opts.maxRetries ?? 3;
+    this._retryBaseMs = opts.retryBaseMs ?? 200;
     this._dedupWindowMs = opts.dedupWindowMs ?? 5_000;
-    this._defaultTtlMs  = opts.defaultTtlMs  ?? PHI_TIMING.CYCLE;
-    this._dlqMaxSize    = opts.dlqMaxSize    ?? 500;
+    this._defaultTtlMs = opts.defaultTtlMs ?? PHI_TIMING.CYCLE;
+    this._dlqMaxSize = opts.dlqMaxSize ?? 500;
 
     /** @type {Map<string, number>} msgId → deliveredAt for dedup */
     this._delivered = new Map();
@@ -541,7 +541,7 @@ class SubscriptionRegistry {
       .split('.')
       .map(seg => {
         if (seg === '**') return '(?:[^.]+\\.)*[^.]+';  // one or more segments
-        if (seg === '*')  return '[^.]+';                 // exactly one segment
+        if (seg === '*') return '[^.]+';                 // exactly one segment
         return seg.replace(/[$()+?[\\\]^{|}]/g, '\\$&'); // escape regex chars
       })
       .join('\\.') + '$';
@@ -587,18 +587,18 @@ class AgentMesh extends EventEmitter {
    */
   constructor(opts = {}) {
     super();
-    this._topology    = new TopologyGraph();
+    this._topology = new TopologyGraph();
     this._capabilities = new CapabilityIndex();
     this._subscriptions = new SubscriptionRegistry();
-    this._bus         = new MessageBus(opts);
-    this._metrics     = new MeshMetrics();
+    this._bus = new MessageBus(opts);
+    this._metrics = new MeshMetrics();
 
     /** @type {Map<string, object>} agentId → registration metadata */
     this._agents = new Map();
 
     // Forward bus events for observability
     this._bus.on('delivered', e => this.emit('message:delivered', e));
-    this._bus.on('dlq',       e => this.emit('message:dlq', e));
+    this._bus.on('dlq', e => this.emit('message:dlq', e));
 
     if (opts.autoRegisterKnown !== false) {
       for (const id of KNOWN_AGENTS) {
@@ -698,12 +698,12 @@ class AgentMesh extends EventEmitter {
    */
   async publish(fromAgentId, topic, payload, opts = {}) {
     const msg = {
-      id:      msgId(),
-      from:    fromAgentId,
+      id: msgId(),
+      from: fromAgentId,
       topic,
       payload,
-      ts:      Date.now(),
-      ttl:     opts.ttl,
+      ts: Date.now(),
+      ttl: opts.ttl,
     };
 
     const subscribers = this._subscriptions.matching(topic);
@@ -755,13 +755,13 @@ class AgentMesh extends EventEmitter {
 
     const path = this._topology.shortestPath(fromAgentId, toAgentId);
     const msg = {
-      id:      msgId(),
-      from:    fromAgentId,
-      to:      toAgentId,
-      topic:   `direct.${toAgentId}`,
+      id: msgId(),
+      from: fromAgentId,
+      to: toAgentId,
+      topic: `direct.${toAgentId}`,
       payload,
-      ts:      Date.now(),
-      ttl:     opts.ttl,
+      ts: Date.now(),
+      ttl: opts.ttl,
       path,
     };
 
@@ -824,12 +824,12 @@ class AgentMesh extends EventEmitter {
     const targets = [...this._agents.keys()].filter(id => !exclude.has(id));
 
     const msg = {
-      id:      msgId(),
-      from:    fromAgentId,
-      topic:   'mesh.broadcast',
+      id: msgId(),
+      from: fromAgentId,
+      topic: 'mesh.broadcast',
       payload,
-      ts:      Date.now(),
-      ttl:     opts.ttl,
+      ts: Date.now(),
+      ttl: opts.ttl,
       isBroadcast: true,
     };
 
@@ -912,17 +912,17 @@ class AgentMesh extends EventEmitter {
    */
   getTopology() {
     return {
-      topology:    this._topology.snapshot(),
-      agents:      Object.fromEntries(
+      topology: this._topology.snapshot(),
+      agents: Object.fromEntries(
         [...this._agents.entries()].map(([id, reg]) => [id, {
           capabilities: reg.capabilities,
           registeredAt: reg.registeredAt,
           hasDispatchFn: !!reg.dispatchFn,
         }])
       ),
-      metrics:     this._metrics.snapshot(),
-      dlqSize:     this._bus._dlq.length,
-      timestamp:   new Date().toISOString(),
+      metrics: this._metrics.snapshot(),
+      dlqSize: this._bus._dlq.length,
+      timestamp: new Date().toISOString(),
     };
   }
 

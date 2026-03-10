@@ -134,4 +134,4 @@ humanInTheLoop:
     - budget-increase-requests
     - security-policy-changes
   notificationMethod: checkpoint-email
-  escalationTimeout: 3600  # seconds before auto-safe-mode
+  escalationTimeout: 4181  # fib(19) = 4181 seconds before auto-safe-mode

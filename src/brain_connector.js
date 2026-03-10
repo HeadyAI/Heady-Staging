@@ -33,35 +33,35 @@ const { Worker } = require('worker_threads');
 class BrainConnector extends EventEmitter {
   constructor(options = {}) {
     super();
-    
+
     // Brain endpoints in priority order - PRODUCTION ONLY
     this.endpoints = [
       {
         id: 'primary',
         url: process.env.BRAIN_PRIMARY_URL || 'https://brain.headysystems.com',
-        timeout: 5000,
+        timeout: 4236, // φ³ × 1000
         retries: 2
       },
       {
         id: 'secondary',
         url: process.env.BRAIN_SECONDARY_URL || 'https://api.headysystems.com/brain',
-        timeout: 8000,
+        timeout: 6854, // φ⁴ × 1000
         retries: 3
       },
       {
         id: 'tertiary',
         url: process.env.BRAIN_TERTIARY_URL || 'https://me.headysystems.com/brain',
-        timeout: 10000,
+        timeout: 11090, // φ⁵ × 1000
         retries: 5
       },
       {
         id: 'emergency',
         url: process.env.BRAIN_EMERGENCY_URL || 'https://headysystems.com/api/brain',
-        timeout: 15000,
+        timeout: 17944, // φ⁶ × 1000
         retries: 10
       }
     ];
-    
+
     // Circuit breaker state - initialize all as CLOSED (healthy)
     this.circuitBreakers = new Map();
     this.endpoints.forEach(ep => {
@@ -73,7 +73,7 @@ class BrainConnector extends EventEmitter {
         consecutiveSuccesses: 0 // Track consecutive successes for recovery
       });
     });
-    
+
     // Connection pool
     this.pool = {
       size: options.poolSize || 5,
@@ -81,15 +81,15 @@ class BrainConnector extends EventEmitter {
       available: [],
       inUse: new Set()
     };
-    
+
     // Request queue for outages
     this.requestQueue = [];
     this.queueProcessing = false;
-    
+
     // Health monitoring
     this.healthCheckInterval = options.healthCheckInterval || 30000; // 30 seconds
     this.healthCheckTimer = null;
-    
+
     // Statistics
     this.stats = {
       totalRequests: 0,
@@ -100,23 +100,23 @@ class BrainConnector extends EventEmitter {
       uptime: 0,
       startTime: Date.now()
     };
-    
+
     // Initialize
     this.initializeConnectionPool();
     this.startHealthMonitoring();
   }
-  
+
   /**
    * Initialize connection pool
    */
   async initializeConnectionPool() {
     for (let i = 0; i < this.pool.size; i++) {
       const connection = axios.create({
-        timeout: 10000,
+        timeout: 11090, // φ⁵ × 1000
         maxRedirects: 2,
         validateStatus: (status) => status < 500
       });
-      
+
       // Add request interceptor for logging
       connection.interceptors.request.use(
         config => {
@@ -125,7 +125,7 @@ class BrainConnector extends EventEmitter {
         },
         error => Promise.reject(error)
       );
-      
+
       // Add response interceptor for metrics
       connection.interceptors.response.use(
         response => {
@@ -139,14 +139,14 @@ class BrainConnector extends EventEmitter {
           return Promise.reject(error);
         }
       );
-      
+
       this.pool.connections.push(connection);
       this.pool.available.push(connection);
     }
-    
+
     console.log(`[BrainConnector] Initialized connection pool with ${this.pool.size} connections`);
   }
-  
+
   /**
    * Get a connection from the pool
    */
@@ -158,7 +158,7 @@ class BrainConnector extends EventEmitter {
     }
     throw new Error('No connections available in pool');
   }
-  
+
   /**
    * Return a connection to the pool
    */
@@ -168,13 +168,13 @@ class BrainConnector extends EventEmitter {
       this.pool.available.push(connection);
     }
   }
-  
+
   /**
    * Make a request with automatic failover
    */
   async request(path, options = {}) {
     this.stats.totalRequests++;
-    
+
     // Add to queue if all endpoints are down
     if (this.allEndpointsDown()) {
       console.warn('[BrainConnector] All endpoints down, queuing request');
@@ -183,9 +183,9 @@ class BrainConnector extends EventEmitter {
         this.processQueue();
       });
     }
-    
+
     let lastError = null;
-    
+
     for (const endpoint of this.endpoints) {
       if (this.isEndpointAvailable(endpoint.id)) {
         try {
@@ -200,34 +200,34 @@ class BrainConnector extends EventEmitter {
         }
       }
     }
-    
+
     // All endpoints failed
     this.stats.failedRequests++;
     this.emit('allEndpointsFailed', { path, lastError });
-    
+
     // Queue the request for retry
     return new Promise((resolve, reject) => {
       this.requestQueue.push({ path, options, resolve, reject, timestamp: Date.now() });
       this.processQueue();
     });
   }
-  
+
   /**
    * Make request to specific endpoint
    */
   async makeRequest(endpoint, path, options = {}) {
     const circuit = this.circuitBreakers.get(endpoint.id);
-    
+
     if (circuit.state === 'OPEN') {
       if (Date.now() < circuit.nextAttempt) {
         throw new Error(`Circuit breaker OPEN for ${endpoint.id}`);
       }
       circuit.state = 'HALF_OPEN';
     }
-    
+
     const connection = this.getConnection();
     const url = `${endpoint.url}${path}`;
-    
+
     try {
       const config = {
         ...options,
@@ -240,30 +240,30 @@ class BrainConnector extends EventEmitter {
         },
         timeout: options.timeout || endpoint.timeout
       };
-      
+
       config.endpointId = endpoint.id; // For metrics
-      
+
       const response = await connection(config);
-      
+
       // Reset circuit breaker on success
       if (circuit.state === 'HALF_OPEN') {
         circuit.state = 'CLOSED';
         circuit.failures = 0;
         console.log(`[BrainConnector] Circuit breaker CLOSED for ${endpoint.id}`);
       }
-      
+
       return response.data;
     } finally {
       this.releaseConnection(connection);
     }
   }
-  
+
   /**
    * Check if endpoint is available
    */
   isEndpointAvailable(endpointId) {
     const circuit = this.circuitBreakers.get(endpointId);
-    
+
     if (circuit.state === 'OPEN') {
       if (Date.now() >= circuit.nextAttempt) {
         circuit.state = 'HALF_OPEN';
@@ -271,10 +271,10 @@ class BrainConnector extends EventEmitter {
       }
       return false;
     }
-    
+
     return true;
   }
-  
+
   /**
    * Check if all endpoints are down
    */
@@ -283,7 +283,7 @@ class BrainConnector extends EventEmitter {
       return circuit.state === 'OPEN' && Date.now() < circuit.nextAttempt;
     });
   }
-  
+
   /**
    * Handle successful request
    */
@@ -294,7 +294,7 @@ class BrainConnector extends EventEmitter {
     circuit.consecutiveSuccesses = (circuit.consecutiveSuccesses || 0) + 1;
     circuit.lastFailure = null;
     circuit.nextAttempt = null;
-    
+
     // Update stats
     if (!this.stats.endpointStats.has(endpointId)) {
       this.stats.endpointStats.set(endpointId, { success: 0, failure: 0, lastUsed: null });
@@ -303,7 +303,7 @@ class BrainConnector extends EventEmitter {
     stats.success++;
     stats.lastUsed = Date.now();
   }
-  
+
   /**
    * Handle failed request
    */
@@ -313,14 +313,14 @@ class BrainConnector extends EventEmitter {
     circuit.lastFailure = Date.now();
     circuit.consecutiveSuccesses = 0; // Reset on failure
     circuit.nextAttempt = null;
-    
+
     // Update stats
     if (!this.stats.endpointStats.has(endpointId)) {
       this.stats.endpointStats.set(endpointId, { success: 0, failure: 0, lastUsed: null });
     }
     const stats = this.stats.endpointStats.get(endpointId);
     stats.failure++;
-    
+
     // Open circuit breaker if threshold exceeded
     if (circuit.failures >= 3) {
       circuit.state = 'OPEN';
@@ -329,7 +329,7 @@ class BrainConnector extends EventEmitter {
       this.emit('circuitBreakerOpen', { endpointId, failures: circuit.failures });
     }
   }
-  
+
   /**
    * Record metrics
    */
@@ -342,7 +342,7 @@ class BrainConnector extends EventEmitter {
       timestamp: Date.now()
     });
   }
-  
+
   /**
    * Start health monitoring
    */
@@ -350,39 +350,39 @@ class BrainConnector extends EventEmitter {
     this.healthCheckTimer = setInterval(async () => {
       await this.performHealthCheck();
     }, this.healthCheckInterval);
-    
+
     // Initial health check
     this.performHealthCheck();
   }
-  
+
   /**
    * Perform health check on all endpoints
    */
   async performHealthCheck() {
     const results = new Map();
-    
+
     for (const endpoint of this.endpoints) {
       try {
         const start = Date.now();
-        await this.makeRequest(endpoint, '/api/health', { timeout: 3000 });
+        await this.makeRequest(endpoint, '/api/health', { timeout: 2618 }); // φ² × 1000
         const latency = Date.now() - start;
         results.set(endpoint.id, { status: 'healthy', latency });
       } catch (error) {
         results.set(endpoint.id, { status: 'unhealthy', error: error.message });
       }
     }
-    
+
     this.stats.lastHealthCheck = results;
     this.stats.uptime = ((Date.now() - this.stats.startTime) / (Date.now() - this.stats.startTime)) * 100;
-    
+
     this.emit('healthCheck', results);
-    
+
     // Process any queued requests if endpoints recovered
     if (this.requestQueue.length > 0 && !this.allEndpointsDown()) {
       this.processQueue();
     }
   }
-  
+
   /**
    * Process queued requests
    */
@@ -390,18 +390,18 @@ class BrainConnector extends EventEmitter {
     if (this.queueProcessing || this.requestQueue.length === 0 || this.allEndpointsDown()) {
       return;
     }
-    
+
     this.queueProcessing = true;
-    
+
     while (this.requestQueue.length > 0 && !this.allEndpointsDown()) {
       const request = this.requestQueue.shift();
-      
+
       // Skip old requests (>5 minutes)
       if (Date.now() - request.timestamp > 300000) {
         request.reject(new Error('Request expired in queue'));
         continue;
       }
-      
+
       try {
         const result = await this.request(request.path, request.options);
         request.resolve(result);
@@ -409,10 +409,10 @@ class BrainConnector extends EventEmitter {
         request.reject(error);
       }
     }
-    
+
     this.queueProcessing = false;
   }
-  
+
   /**
    * Get connection statistics
    */
@@ -431,7 +431,7 @@ class BrainConnector extends EventEmitter {
       }))
     };
   }
-  
+
   /**
    * Reset all circuit breakers
    */
@@ -445,7 +445,7 @@ class BrainConnector extends EventEmitter {
     });
     console.log('[BrainConnector] All circuit breakers reset');
   }
-  
+
   /**
    * Graceful shutdown
    */
@@ -453,13 +453,13 @@ class BrainConnector extends EventEmitter {
     if (this.healthCheckTimer) {
       clearInterval(this.healthCheckTimer);
     }
-    
+
     // Reject all queued requests
     this.requestQueue.forEach(request => {
       request.reject(new Error('BrainConnector shutting down'));
     });
     this.requestQueue = [];
-    
+
     console.log('[BrainConnector] Shutdown complete');
   }
 }

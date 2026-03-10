@@ -42,38 +42,38 @@ const { PHI_TIMING } = require('../shared/phi-math');
  */
 
 const EventEmitter = require('events');
-const https        = require('https');
-const http         = require('http');
-const { URL }      = require('url');
+const https = require('https');
+const http = require('http');
+const { URL } = require('url');
 
 // ─── φ constant (used for weighted load-balancing & back-off) ────────────────
 const PHI = 1.6180339887;
 
 // ─── Circuit-breaker states ───────────────────────────────────────────────────
 const CB_STATE = Object.freeze({
-  CLOSED:    'CLOSED',    // healthy, requests flow freely
-  OPEN:      'OPEN',      // tripped, requests rejected immediately
+  CLOSED: 'CLOSED',    // healthy, requests flow freely
+  OPEN: 'OPEN',      // tripped, requests rejected immediately
   HALF_OPEN: 'HALF_OPEN', // probe period — one request allowed through
 });
 
 // ─── Load-balancing strategies ────────────────────────────────────────────────
 const LB_STRATEGY = Object.freeze({
-  ROUND_ROBIN:       'round_robin',
+  ROUND_ROBIN: 'round_robin',
   LEAST_CONNECTIONS: 'least_connections',
-  PHI_WEIGHTED:      'phi_weighted',   // default — higher-weight endpoints get
-                                        // φ× more traffic than lower-weight ones
+  PHI_WEIGHTED: 'phi_weighted',   // default — higher-weight endpoints get
+  // φ× more traffic than lower-weight ones
 });
 
 // ─── Default configuration ────────────────────────────────────────────────────
 const DEFAULT_CONFIG = {
-  healthCheckIntervalMs:  Math.round(PHI_TIMING.CYCLE / PHI),  // ~18 500 ms
-  healthCheckTimeoutMs:   5_000,
-  healthCheckPath:        '/healthz',
+  healthCheckIntervalMs: Math.round(PHI_TIMING.CYCLE / PHI),  // ~18 500 ms
+  healthCheckTimeoutMs: 5_000,
+  healthCheckPath: '/healthz',
   circuitBreakerThreshold: 5,        // failures before OPEN
-  circuitBreakerResetMs:  Math.round(60_000 * PHI),  // ~97 s
-  maxRetries:             3,
-  retryDelayBaseMs:       200,
-  lbStrategy:             LB_STRATEGY.PHI_WEIGHTED,
+  circuitBreakerResetMs: Math.round(60_000 * PHI),  // ~97 s
+  maxRetries: 3,  // fib(4) = 3
+  retryDelayBaseMs: 200,
+  lbStrategy: LB_STRATEGY.PHI_WEIGHTED,
 };
 
 // ─── Built-in seed registry (from heady-registry.json + alive-software-architecture.md)
@@ -224,25 +224,25 @@ function httpGet(rawUrl, timeoutMs = 5_000) {
     let parsed;
     try { parsed = new URL(rawUrl); } catch (e) { return reject(e); }
 
-    const lib     = parsed.protocol === 'https:' ? https : http;
+    const lib = parsed.protocol === 'https:' ? https : http;
     const options = {
       hostname: parsed.hostname,
-      port:     parsed.port || (parsed.protocol === 'https:' ? 443 : 80),
-      path:     parsed.pathname + parsed.search,
-      method:   'GET',
-      timeout:  timeoutMs,
-      headers:  { 'User-Agent': 'heady-service-mesh/3.1.0' },
+      port: parsed.port || (parsed.protocol === 'https:' ? 443 : 80),
+      path: parsed.pathname + parsed.search,
+      method: 'GET',
+      timeout: timeoutMs,
+      headers: { 'User-Agent': 'heady-service-mesh/3.1.0' },
     };
 
     const req = lib.request(options, (res) => {
       let body = '';
       res.setEncoding('utf8');
       res.on('data', (chunk) => { body += chunk; });
-      res.on('end',  () => resolve({ statusCode: res.statusCode, body }));
+      res.on('end', () => resolve({ statusCode: res.statusCode, body }));
     });
 
     req.on('timeout', () => { req.destroy(); reject(new Error(`health-probe timeout: ${rawUrl}`)); });
-    req.on('error',   reject);
+    req.on('error', reject);
     req.end();
   });
 }
@@ -259,17 +259,17 @@ class CircuitBreaker {
    * @param {number} opts.resetMs     – ms before attempting HALF_OPEN
    */
   constructor({ threshold = 5, resetMs = Math.round(60_000 * PHI) } = {}) {
-    this.threshold  = threshold;
-    this.resetMs    = resetMs;
-    this.state      = CB_STATE.CLOSED;
-    this.failures   = 0;
-    this.lastTrip   = 0;
+    this.threshold = threshold;
+    this.resetMs = resetMs;
+    this.state = CB_STATE.CLOSED;
+    this.failures = 0;
+    this.lastTrip = 0;
     this.probeCount = 0;
   }
 
   /** @returns {boolean} true if the instance should receive traffic */
   isOpen() {
-    if (this.state === CB_STATE.CLOSED)    return false;
+    if (this.state === CB_STATE.CLOSED) return false;
     if (this.state === CB_STATE.HALF_OPEN) return false;
     // OPEN — check if reset timer expired
     if (Date.now() - this.lastTrip >= this.resetMs) {
@@ -283,14 +283,14 @@ class CircuitBreaker {
   /** Called when a request succeeds */
   onSuccess() {
     this.failures = 0;
-    this.state    = CB_STATE.CLOSED;
+    this.state = CB_STATE.CLOSED;
   }
 
   /** Called when a request fails */
   onFailure() {
     this.failures++;
     if (this.failures >= this.threshold) {
-      this.state    = CB_STATE.OPEN;
+      this.state = CB_STATE.OPEN;
       this.lastTrip = Date.now();
     }
   }
@@ -298,7 +298,7 @@ class CircuitBreaker {
   /** Serialisable snapshot */
   toJSON() {
     return {
-      state:    this.state,
+      state: this.state,
       failures: this.failures,
       lastTrip: this.lastTrip,
     };
@@ -318,19 +318,19 @@ class ServiceInstance {
    * @param {object}   cbConfig
    */
   constructor({ url, weight = 1.0, tags = [] }, cbConfig = {}) {
-    this.url              = url;
-    this.weight           = weight;
-    this.tags             = tags;
-    this.healthy          = true;
+    this.url = url;
+    this.weight = weight;
+    this.tags = tags;
+    this.healthy = true;
     this.consecutiveFails = 0;
-    this.activeConns      = 0;
-    this.totalRequests    = 0;
-    this.totalErrors      = 0;
-    this.lastHealthCheck  = 0;
-    this.latencyP95Ms     = 0;
-    this._latencySamples  = [];
-    this.registeredAt     = Date.now();
-    this.cb               = new CircuitBreaker(cbConfig);
+    this.activeConns = 0;
+    this.totalRequests = 0;
+    this.totalErrors = 0;
+    this.lastHealthCheck = 0;
+    this.latencyP95Ms = 0;
+    this._latencySamples = [];
+    this.registeredAt = Date.now();
+    this.cb = new CircuitBreaker(cbConfig);
   }
 
   /** Record a request latency sample (keeps last 100) */
@@ -352,17 +352,17 @@ class ServiceInstance {
 
   toJSON() {
     return {
-      url:             this.url,
-      weight:          this.weight,
-      tags:            this.tags,
-      healthy:         this.healthy,
-      activeConns:     this.activeConns,
-      totalRequests:   this.totalRequests,
-      totalErrors:     this.totalErrors,
-      latencyP95Ms:    this.latencyP95Ms,
-      registeredAt:    this.registeredAt,
+      url: this.url,
+      weight: this.weight,
+      tags: this.tags,
+      healthy: this.healthy,
+      activeConns: this.activeConns,
+      totalRequests: this.totalRequests,
+      totalErrors: this.totalErrors,
+      latencyP95Ms: this.latencyP95Ms,
+      registeredAt: this.registeredAt,
       lastHealthCheck: this.lastHealthCheck,
-      circuitBreaker:  this.cb.toJSON(),
+      circuitBreaker: this.cb.toJSON(),
     };
   }
 }
@@ -377,17 +377,17 @@ class ServiceEntry {
    * @param {object} config    – mesh config
    */
   constructor(def, config = DEFAULT_CONFIG) {
-    this.name        = def.name;
-    this.domain      = def.domain  ?? null;
-    this.version     = def.version ?? '0.0.0';
-    this.tier        = def.tier    ?? 'unknown';
-    this.healthPath  = def.healthPath ?? config.healthCheckPath;
-    this._config     = config;
-    this._rrIndex    = 0;
+    this.name = def.name;
+    this.domain = def.domain ?? null;
+    this.version = def.version ?? '0.0.0';
+    this.tier = def.tier ?? 'unknown';
+    this.healthPath = def.healthPath ?? config.healthCheckPath;
+    this._config = config;
+    this._rrIndex = 0;
 
     const cbCfg = {
       threshold: config.circuitBreakerThreshold,
-      resetMs:   config.circuitBreakerResetMs,
+      resetMs: config.circuitBreakerResetMs,
     };
 
     this.instances = (def.instances ?? []).map(
@@ -399,7 +399,7 @@ class ServiceEntry {
   addInstance(instOpts) {
     const cbCfg = {
       threshold: this._config.circuitBreakerThreshold,
-      resetMs:   this._config.circuitBreakerResetMs,
+      resetMs: this._config.circuitBreakerResetMs,
     };
     this.instances.push(new ServiceInstance(instOpts, cbCfg));
   }
@@ -456,10 +456,10 @@ class ServiceEntry {
 
   toJSON() {
     return {
-      name:      this.name,
-      domain:    this.domain,
-      version:   this.version,
-      tier:      this.tier,
+      name: this.name,
+      domain: this.domain,
+      version: this.version,
+      tier: this.tier,
       instances: this.instances.map((i) => i.toJSON()),
     };
   }
@@ -483,11 +483,11 @@ class HeadyServiceMesh extends EventEmitter {
    */
   constructor(config = {}, eventBus = null) {
     super();
-    this._config    = { ...DEFAULT_CONFIG, ...config };
-    this._eventBus  = eventBus;
-    this._registry  = new Map();     // name → ServiceEntry
+    this._config = { ...DEFAULT_CONFIG, ...config };
+    this._eventBus = eventBus;
+    this._registry = new Map();     // name → ServiceEntry
     this._probeTimer = null;
-    this._started    = false;
+    this._started = false;
 
     // Seed from built-in registry
     for (const def of SEED_SERVICES) {
@@ -547,10 +547,10 @@ class HeadyServiceMesh extends EventEmitter {
    */
   register(def) {
     const { name, url, weight = 1.0, tags = [],
-            healthPath, domain, version, tier } = def;
+      healthPath, domain, version, tier } = def;
 
     if (!name) throw new TypeError('[mesh] register: name required');
-    if (!url)  throw new TypeError('[mesh] register: url required');
+    if (!url) throw new TypeError('[mesh] register: url required');
 
     if (this._registry.has(name)) {
       const entry = this._registry.get(name);
@@ -561,8 +561,10 @@ class HeadyServiceMesh extends EventEmitter {
       }
     } else {
       const entry = new ServiceEntry(
-        { name, domain, version, tier, healthPath,
-          instances: [{ url, weight, tags }] },
+        {
+          name, domain, version, tier, healthPath,
+          instances: [{ url, weight, tags }]
+        },
         this._config
       );
       this._registry.set(name, entry);
@@ -605,7 +607,7 @@ class HeadyServiceMesh extends EventEmitter {
     if (!entry) throw new Error(`[mesh] unknown service: ${name}`);
 
     const inst = entry.pick(strategy ?? this._config.lbStrategy);
-    if (!inst)  throw new Error(`[mesh] no healthy instance for: ${name}`);
+    if (!inst) throw new Error(`[mesh] no healthy instance for: ${name}`);
 
     return inst.url;
   }
@@ -628,15 +630,15 @@ class HeadyServiceMesh extends EventEmitter {
       const inst = entry.pick(this._config.lbStrategy);
       if (!inst) throw new Error(`[mesh] no healthy instance for: ${name}`);
 
-      const url  = inst.url.replace(/\/$/, '') + path;
-      const t0   = Date.now();
+      const url = inst.url.replace(/\/$/, '') + path;
+      const t0 = Date.now();
 
       inst.activeConns++;
       inst.totalRequests++;
 
       try {
         const result = await httpGet(url, this._config.healthCheckTimeoutMs);
-        const ms     = Date.now() - t0;
+        const ms = Date.now() - t0;
 
         inst.activeConns--;
         inst.recordLatency(ms);
@@ -651,7 +653,7 @@ class HeadyServiceMesh extends EventEmitter {
         inst.cb.onFailure();
         lastError = err;
 
-        const wasOpen  = inst.cb.state === CB_STATE.OPEN;
+        const wasOpen = inst.cb.state === CB_STATE.OPEN;
         const prevState = wasOpen ? CB_STATE.CLOSED : null;
         if (wasOpen && prevState !== inst.cb.state) {
           this._publish('heady:service:circuit_opened',
@@ -660,7 +662,7 @@ class HeadyServiceMesh extends EventEmitter {
 
         if (attempt < this._config.maxRetries) {
           const delay = this._config.retryDelayBaseMs *
-                        Math.pow(PHI, attempt);
+            Math.pow(PHI, attempt);
           await _sleep(delay);
         }
       }
@@ -702,7 +704,7 @@ class HeadyServiceMesh extends EventEmitter {
       inst.lastHealthCheck = Date.now();
 
       const wasHealthy = inst.healthy;
-      inst.healthy     = result.statusCode >= 200 && result.statusCode < 300;
+      inst.healthy = result.statusCode >= 200 && result.statusCode < 300;
 
       if (inst.healthy) {
         inst.cb.onSuccess();
@@ -720,8 +722,8 @@ class HeadyServiceMesh extends EventEmitter {
   }
 
   _handleProbeFailure(entry, inst, err) {
-    const wasHealthy  = inst.healthy;
-    inst.healthy      = false;
+    const wasHealthy = inst.healthy;
+    inst.healthy = false;
     inst.consecutiveFails++;
     inst.cb.onFailure();
     inst.lastHealthCheck = Date.now();
@@ -729,18 +731,18 @@ class HeadyServiceMesh extends EventEmitter {
     if (wasHealthy) {
       logger.warn(`[mesh] ${entry.name} ${inst.url} — UNHEALTHY: ${err.message}`);
       this._publish('heady:service:unhealthy', {
-        name:  entry.name,
-        url:   inst.url,
+        name: entry.name,
+        url: inst.url,
         error: err.message,
-        ts:    Date.now(),
+        ts: Date.now(),
       });
     }
 
     if (inst.cb.state === CB_STATE.OPEN) {
       this._publish('heady:service:circuit_opened', {
         name: entry.name,
-        url:  inst.url,
-        ts:   Date.now(),
+        url: inst.url,
+        ts: Date.now(),
       });
     }
   }
@@ -769,24 +771,24 @@ class HeadyServiceMesh extends EventEmitter {
     const services = {};
 
     for (const [name, entry] of this._registry) {
-      const routable  = entry.routableInstances.length;
-      const total     = entry.instances.length;
+      const routable = entry.routableInstances.length;
+      const total = entry.instances.length;
       totalInstances += total;
       healthyInstances += routable;
-      services[name]  = {
-        healthy:   routable > 0,
+      services[name] = {
+        healthy: routable > 0,
         routable,
         total,
-        tier:      entry.tier,
+        tier: entry.tier,
       };
     }
 
     return {
-      status:           healthyInstances === totalInstances ? 'ok' : 'degraded',
+      status: healthyInstances === totalInstances ? 'ok' : 'degraded',
       totalInstances,
       healthyInstances,
       services,
-      ts:               Date.now(),
+      ts: Date.now(),
     };
   }
 
@@ -851,7 +853,7 @@ class HeadyServiceMesh extends EventEmitter {
   _publish(topic, payload) {
     this.emit(topic, payload);
     if (this._eventBus && typeof this._eventBus.publish === 'function') {
-      this._eventBus.publish(topic, payload).catch(() => {});
+      this._eventBus.publish(topic, payload).catch(() => { });
     }
   }
 }
@@ -874,7 +876,7 @@ class HeadyServiceMesh extends EventEmitter {
 function createMeshRouter(mesh) {
   // Lazy-require Express so the module can be used in non-Express contexts
   const express = require('express');
-  const router  = express.Router();
+  const router = express.Router();
 
   router.get('/services', (_req, res) => {
     res.json({ ok: true, services: mesh.snapshot(), ts: Date.now() });
@@ -882,7 +884,7 @@ function createMeshRouter(mesh) {
 
   router.get('/health', (_req, res) => {
     const summary = mesh.healthSummary();
-    const status  = summary.status === 'ok' ? 200 : 206;
+    const status = summary.status === 'ok' ? 200 : 206;
     res.status(status).json(summary);
   });
 

@@ -25,7 +25,7 @@ const DECISION_ENGINE_CONFIG = Object.freeze({
   },
   storyRhythms: {
     checkIntervalMs: 1000,
-    batchSize: 50,
+    batchSize: 55, // fib(10)
     maxConcurrentStories: 5,
   },
 });
@@ -61,17 +61,17 @@ class StoryDriver {
     this.rootDir = options.rootDir || process.cwd();
     this.registry = options.registry || null;
     this.lens = options.lens || null;
-    
+
     this.activeStories = new Map();
     this.decisionHistory = [];
     this.eventQueue = [];
-    
+
     this.storyIdCounter = 0;
     this.decisionIdCounter = 0;
-    
+
     this.ensureDirectories();
     this.loadState();
-    
+
     logger.info('∞ HeadyStoryDriver: Initialized - Deterministic story engine ready');
   }
 
@@ -158,7 +158,7 @@ class StoryDriver {
 
     story.steps.push(stepNode);
     story.updatedAt = new Date().toISOString();
-    
+
     await this.persistStory(story);
     return stepNode;
   }
@@ -228,7 +228,7 @@ class StoryDriver {
 
     try {
       decision.reasoning.push('Analyzing input context...');
-      
+
       const context = options.context || {};
       const storyContext = options.story?.context || {};
       const combinedContext = { ...storyContext, ...context };
@@ -323,31 +323,31 @@ class StoryDriver {
         success: true,
         action: 'safe_proceed',
         reason: 'Safety check passed',
-        confidence: 0.95,
+        confidence: 0.927, // phiThreshold(4) — CRITICAL
       }),
       compliance_check: async (opts) => ({
         success: true,
         action: 'compliant_proceed',
         reason: 'Compliance verified',
-        confidence: 0.9,
+        confidence: 0.882, // phiThreshold(3) — HIGH
       }),
       performance_optimize: async (opts) => ({
         success: true,
         action: 'optimize_performance',
         reason: 'Performance path selected',
-        confidence: 0.85,
+        confidence: 0.882, // phiThreshold(3) — HIGH
       }),
       usability_ensure: async (opts) => ({
         success: true,
         action: 'user_friendly',
         reason: 'Usability considered',
-        confidence: 0.85,
+        confidence: 0.809, // phiThreshold(2) — MEDIUM
       }),
       default_continue: async (opts) => ({
         success: true,
         action: 'continue',
         reason: 'Default action',
-        confidence: 0.8,
+        confidence: 0.809, // phiThreshold(2) — MEDIUM
       }),
     };
 
@@ -356,7 +356,7 @@ class StoryDriver {
       return await handler(options);
     }
 
-    return { success: true, action: 'continue', reason: 'No specific rule', confidence: 0.5 };
+    return { success: true, action: 'continue', reason: 'No specific rule', confidence: 0.500 }; // phiThreshold(0) — MINIMUM
   }
 
   async evaluateConditions(conditions, outcome) {
@@ -424,7 +424,7 @@ class StoryDriver {
 
   async listStories(filters = {}) {
     const stories = [];
-    
+
     for (const [id, story] of this.activeStories) {
       if (this.matchesFilters(story, filters)) {
         stories.push(story);
@@ -458,7 +458,7 @@ class StoryDriver {
     const type = options.type;
 
     let history = this.decisionHistory;
-    
+
     if (type) {
       history = history.filter(d => d.type === type);
     }

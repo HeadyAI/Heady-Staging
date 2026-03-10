@@ -36,5 +36,5 @@ task_types:
   default: HeadyBrain  # Fallback for all unconfigured types
 
 optimization:
-  interval: 300 # seconds
-  max_retries: 3
+  interval: 233 # fib(13) = 233 seconds
+  max_retries: 3  # fib(4) = 3

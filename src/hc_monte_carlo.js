@@ -127,7 +127,7 @@ function computeStats(samples) {
   };
 }
 
-function confidenceInterval(samples, confidence = 0.95) {
+function confidenceInterval(samples, confidence = 0.927) { // phiThreshold(4) — CRITICAL
   const stats = computeStats(samples);
   const z = confidence === 0.99 ? 2.576 : confidence === 0.95 ? 1.96 : 1.645;
   const marginOfError = z * (stats.stddev / Math.sqrt(stats.n));
@@ -978,33 +978,33 @@ class MonteCarloGlobal {
    */
   prioritizeImprovements(improvements) {
     if (!improvements || improvements.length === 0) return [];
-    
+
     // Score each improvement
     const scored = improvements.map(imp => {
       let score = 0;
-      
+
       // Base priority
       score += (4 - imp.priority) * 25; // Higher priority = higher score
-      
+
       // Pattern severity boost
       if (imp.type.includes('pattern') && imp.details?.severity) {
-        score += imp.details.severity === 'critical' ? 50 : 
-                 imp.details.severity === 'high' ? 30 : 10;
+        score += imp.details.severity === 'critical' ? 50 :
+          imp.details.severity === 'high' ? 30 : 10;
       }
-      
+
       // Critique confidence boost
       if (imp.type === 'self_critique' && imp.details?.confidence) {
         score += imp.details.confidence * 20;
       }
-      
+
       // Historical success rate (if available)
       if (this.lastResults.pipeline?.successRate) {
         score *= this.lastResults.pipeline.successRate;
       }
-      
+
       return { ...imp, score };
     });
-    
+
     // Sort by score
     return scored.sort((a, b) => b.score - a.score);
   }
@@ -1015,7 +1015,7 @@ class MonteCarloGlobal {
   getImprovementPlan(improvements) {
     const prioritized = this.prioritizeImprovements(improvements);
     const budget = 3; // Max improvements to recommend
-    
+
     return {
       recommendations: prioritized.slice(0, budget),
       confidence: this.quickReadiness(),
@@ -1071,19 +1071,19 @@ function saveSamples(data) {
 // ─── PLAN STRATEGIES ─────────────────────────────────────────────────
 
 const BUILTIN_STRATEGIES = [
-  { id: "fast_serial",       parallelism: 1,     validationLevel: "none",     modelPreference: "smallest",  baseQuality: 80 },
-  { id: "fast_parallel",     parallelism: "max", validationLevel: "none",     modelPreference: "smallest",  baseQuality: 80 },
-  { id: "balanced",          parallelism: "auto", validationLevel: "standard", modelPreference: "default",  baseQuality: 90 },
-  { id: "thorough",          parallelism: 1,     validationLevel: "full",     modelPreference: "largest",   baseQuality: 98 },
-  { id: "cached_fast",       parallelism: "auto", validationLevel: "none",    modelPreference: "cached",    baseQuality: 85 },
-  { id: "probe_then_commit", parallelism: "auto", validationLevel: "probe",   modelPreference: "adaptive",  baseQuality: 88 },
+  { id: "fast_serial", parallelism: 1, validationLevel: "none", modelPreference: "smallest", baseQuality: 80 },
+  { id: "fast_parallel", parallelism: "max", validationLevel: "none", modelPreference: "smallest", baseQuality: 80 },
+  { id: "balanced", parallelism: "auto", validationLevel: "standard", modelPreference: "default", baseQuality: 90 },
+  { id: "thorough", parallelism: 1, validationLevel: "full", modelPreference: "largest", baseQuality: 98 },
+  { id: "cached_fast", parallelism: "auto", validationLevel: "none", modelPreference: "cached", baseQuality: 85 },
+  { id: "probe_then_commit", parallelism: "auto", validationLevel: "probe", modelPreference: "adaptive", baseQuality: 88 },
 ];
 
 // Speed priority mode: when active, quality threshold drops and speed weight rises
 const SPEED_PRIORITY = {
-  OFF:    { minQuality: 50, speedWeight: 0.6, qualityWeight: 0.4, label: "normal" },
-  ON:     { minQuality: 40, speedWeight: 0.8, qualityWeight: 0.2, label: "speed_priority" },
-  MAX:    { minQuality: 30, speedWeight: 0.9, qualityWeight: 0.1, label: "max_speed" },
+  OFF: { minQuality: 50, speedWeight: 0.6, qualityWeight: 0.4, label: "normal" },
+  ON: { minQuality: 40, speedWeight: 0.8, qualityWeight: 0.2, label: "speed_priority" },
+  MAX: { minQuality: 30, speedWeight: 0.9, qualityWeight: 0.1, label: "max_speed" },
 };
 
 // ─── UCB1 SELECTION ──────────────────────────────────────────────────
@@ -1167,8 +1167,8 @@ class MCTaskPlanScheduler extends EventEmitter {
     }
 
     // Filter plans based on resource availability
-    plans = plans.filter(plan => 
-      plan.requiredResources.every(res => 
+    plans = plans.filter(plan =>
+      plan.requiredResources.every(res =>
         availableResources[res.type] >= res.amount
       )
     );
@@ -1413,10 +1413,10 @@ class MCTaskPlanScheduler extends EventEmitter {
 
     // Validation level bonus/penalty on top
     switch (strategy.validationLevel) {
-      case "full":     quality = Math.min(100, quality + 5); break;
+      case "full": quality = Math.min(100, quality + 5); break;
       case "standard": break; // no adjustment
-      case "probe":    quality = Math.max(50, quality - 3); break;
-      case "none":     quality = Math.max(50, quality - 5); break;
+      case "probe": quality = Math.max(50, quality - 3); break;
+      case "none": quality = Math.max(50, quality - 5); break;
     }
 
     return clamp(quality, 0, 100);

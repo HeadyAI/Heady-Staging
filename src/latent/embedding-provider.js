@@ -27,7 +27,7 @@ const {
 // ---------------------------------------------------------------------------
 
 /** Cache capacity (number of unique texts). */
-const DEFAULT_CACHE_SIZE = 2048;
+const DEFAULT_CACHE_SIZE = 2584; // fib(18) = 2584
 
 /** Default retry attempts per backend. */
 const DEFAULT_RETRIES = 2;

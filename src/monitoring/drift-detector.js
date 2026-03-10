@@ -29,9 +29,9 @@ const EventEmitter = require('events');
 
 // ─── Optional dependencies ────────────────────────────────────────────────────
 let pg, redis, axios;
-try { pg    = require('pg');       } catch {}
-try { redis = require('ioredis');  } catch {}
-try { axios = require('axios');    } catch {}
+try { pg = require('pg'); } catch { }
+try { redis = require('ioredis'); } catch { }
+try { axios = require('axios'); } catch { }
 
 // =============================================================================
 // Constants
@@ -41,28 +41,28 @@ try { axios = require('axios');    } catch {}
 const EMBEDDING_DIMS = 384;
 
 /** Default cosine similarity threshold below which drift is flagged */
-const DEFAULT_DRIFT_THRESHOLD = 0.75;
+const DEFAULT_DRIFT_THRESHOLD = 0.809; // phiThreshold(2) — MEDIUM alignment
 
 /** Drift categories */
 const DRIFT_CATEGORY = {
-  SEMANTIC:           'semantic',            // Meaning has drifted
-  STRUCTURAL:         'structural',          // Cluster structure changed
-  MISSION_ALIGNMENT:  'mission-alignment',   // Core mission context diverged
+  SEMANTIC: 'semantic',            // Meaning has drifted
+  STRUCTURAL: 'structural',          // Cluster structure changed
+  MISSION_ALIGNMENT: 'mission-alignment',   // Core mission context diverged
 };
 
 /** Drift severity levels */
 const DRIFT_SEVERITY = {
-  NOMINAL:  'nominal',   // > threshold
-  MINOR:    'minor',     // threshold - 0.1 to threshold
+  NOMINAL: 'nominal',   // > threshold
+  MINOR: 'minor',     // threshold - 0.1 to threshold
   MODERATE: 'moderate',  // threshold - 0.2 to threshold - 0.1
   CRITICAL: 'critical',  // < threshold - 0.2
 };
 
 /** Monte Carlo simulation parameters */
 const MC_PARAMS = {
-  iterations:      1000,
+  iterations: 1000,
   projectionSteps: 10,
-  noiseScale:      0.02,    // Gaussian noise std for trajectory simulation
+  noiseScale: 0.02,    // Gaussian noise std for trajectory simulation
 };
 
 // =============================================================================
@@ -81,7 +81,7 @@ function cosineSimilarity(a, b) {
   }
   let dot = 0, normA = 0, normB = 0;
   for (let i = 0; i < a.length; i++) {
-    dot   += a[i] * b[i];
+    dot += a[i] * b[i];
     normA += a[i] * a[i];
     normB += b[i] * b[i];
   }
@@ -152,25 +152,25 @@ class DriftDetector extends EventEmitter {
     super();
 
     this.config = {
-      databaseUrl:          opts.databaseUrl  || process.env.DATABASE_URL,
-      redisUrl:             opts.redisUrl     || process.env.REDIS_URL,
-      threshold:            opts.threshold    ?? DEFAULT_DRIFT_THRESHOLD,
-      baselineTable:        opts.baselineTable ?? 'memory_baseline_vectors',
-      currentTable:         opts.currentTable  ?? 'memory_vectors',
-      historyTable:         'drift_history',
+      databaseUrl: opts.databaseUrl || process.env.DATABASE_URL,
+      redisUrl: opts.redisUrl || process.env.REDIS_URL,
+      threshold: opts.threshold ?? DEFAULT_DRIFT_THRESHOLD,
+      baselineTable: opts.baselineTable ?? 'memory_baseline_vectors',
+      currentTable: opts.currentTable ?? 'memory_vectors',
+      historyTable: 'drift_history',
       historyRetentionDays: opts.historyRetentionDays ?? 90,
       mc: { ...MC_PARAMS, ...opts.mc },
       alertConfig: {
         slackWebhook: opts.alertConfig?.slackWebhook || process.env.SLACK_WEBHOOK_URL,
-        webhookUrl:   opts.alertConfig?.webhookUrl   || process.env.DRIFT_WEBHOOK_URL,
+        webhookUrl: opts.alertConfig?.webhookUrl || process.env.DRIFT_WEBHOOK_URL,
         ...opts.alertConfig,
       },
     };
 
-    this._pgPool      = null;
+    this._pgPool = null;
     this._redisClient = null;
-    this._baseline    = null;     // Cached baseline centroid
-    this._lastCheck   = null;
+    this._baseline = null;     // Cached baseline centroid
+    this._lastCheck = null;
   }
 
   // ---------------------------------------------------------------------------
@@ -196,7 +196,7 @@ class DriftDetector extends EventEmitter {
         maxRetriesPerRequest: 1,
         enableOfflineQueue: false,
       });
-      await this._redisClient.connect().catch(() => {});
+      await this._redisClient.connect().catch(() => { });
     }
 
     // Load baseline into memory
@@ -206,8 +206,8 @@ class DriftDetector extends EventEmitter {
   }
 
   async destroy() {
-    await this._pgPool?.end().catch(() => {});
-    await this._redisClient?.quit().catch(() => {});
+    await this._pgPool?.end().catch(() => { });
+    await this._redisClient?.quit().catch(() => { });
   }
 
   // ---------------------------------------------------------------------------
@@ -228,8 +228,8 @@ class DriftDetector extends EventEmitter {
     ]);
 
     const checks = {
-      [DRIFT_CATEGORY.SEMANTIC]:          this._settle(semantic),
-      [DRIFT_CATEGORY.STRUCTURAL]:        this._settle(structural),
+      [DRIFT_CATEGORY.SEMANTIC]: this._settle(semantic),
+      [DRIFT_CATEGORY.STRUCTURAL]: this._settle(structural),
       [DRIFT_CATEGORY.MISSION_ALIGNMENT]: this._settle(missionAlignment),
     };
 
@@ -237,23 +237,23 @@ class DriftDetector extends EventEmitter {
     const scores = Object.values(checks).map(c => c.similarity ?? 1.0);
     const overallScore = scores.reduce((a, b) => a + b, 0) / scores.length;
 
-    const severity  = this._scoreToSeverity(overallScore);
-    const critical  = severity === DRIFT_SEVERITY.CRITICAL;
-    const degraded  = severity === DRIFT_SEVERITY.MODERATE || severity === DRIFT_SEVERITY.MINOR;
+    const severity = this._scoreToSeverity(overallScore);
+    const critical = severity === DRIFT_SEVERITY.CRITICAL;
+    const degraded = severity === DRIFT_SEVERITY.MODERATE || severity === DRIFT_SEVERITY.MINOR;
 
     // Monte Carlo trajectory prediction
     const trajectory = await this._simulateTrajectory(overallScore);
 
     const result = {
-      overallScore:     overallScore.toFixed(4),
+      overallScore: overallScore.toFixed(4),
       severity,
       critical,
       degraded,
-      threshold:        this.config.threshold,
+      threshold: this.config.threshold,
       checks,
       trajectory,
-      duration:         Date.now() - startTime,
-      timestamp:        new Date().toISOString(),
+      duration: Date.now() - startTime,
+      timestamp: new Date().toISOString(),
     };
 
     this._lastCheck = result;
@@ -269,7 +269,7 @@ class DriftDetector extends EventEmitter {
         'drift:last-check',
         3600,
         JSON.stringify(result)
-      ).catch(() => {});
+      ).catch(() => { });
     }
 
     // Emit events
@@ -333,7 +333,7 @@ class DriftDetector extends EventEmitter {
       this.emit('recalibrated', { reason, timestamp: new Date().toISOString() });
       logger.info('[DriftDetector] Baseline recalibration complete');
     } catch (err) {
-      await client.query('ROLLBACK').catch(() => {});
+      await client.query('ROLLBACK').catch(() => { });
       logger.error('[DriftDetector] Recalibration failed:', err.message);
       throw err;
     } finally {
@@ -372,38 +372,38 @@ class DriftDetector extends EventEmitter {
     const baseline = await this._getBaseline('default');
     if (!baseline) {
       return {
-        category:   DRIFT_CATEGORY.SEMANTIC,
+        category: DRIFT_CATEGORY.SEMANTIC,
         similarity: 1.0,
-        status:     'no-baseline',
-        detail:     'No baseline available — treated as nominal',
+        status: 'no-baseline',
+        detail: 'No baseline available — treated as nominal',
       };
     }
 
     const currentVectors = await this._sampleCurrentVectors({ limit: 200 });
     if (currentVectors.length === 0) {
       return {
-        category:   DRIFT_CATEGORY.SEMANTIC,
+        category: DRIFT_CATEGORY.SEMANTIC,
         similarity: 1.0,
-        status:     'no-vectors',
-        detail:     'No current vectors to compare',
+        status: 'no-vectors',
+        detail: 'No current vectors to compare',
       };
     }
 
     const currentCentroid = centroid(currentVectors);
-    const similarity      = cosineSimilarity(normalize(baseline.vector), normalize(currentCentroid));
-    const severity        = this._scoreToSeverity(similarity);
+    const similarity = cosineSimilarity(normalize(baseline.vector), normalize(currentCentroid));
+    const severity = this._scoreToSeverity(similarity);
 
     return {
-      category:     DRIFT_CATEGORY.SEMANTIC,
-      similarity:   parseFloat(similarity.toFixed(4)),
+      category: DRIFT_CATEGORY.SEMANTIC,
+      similarity: parseFloat(similarity.toFixed(4)),
       severity,
-      status:       severity === DRIFT_SEVERITY.NOMINAL ? 'ok' : severity,
-      sampleSize:   currentVectors.length,
-      threshold:    this.config.threshold,
+      status: severity === DRIFT_SEVERITY.NOMINAL ? 'ok' : severity,
+      sampleSize: currentVectors.length,
+      threshold: this.config.threshold,
       detail: {
         baselineVectorCount: baseline.vectorCount,
-        baselineDate:        baseline.calibratedAt,
-        currentSampleSize:   currentVectors.length,
+        baselineDate: baseline.calibratedAt,
+        currentSampleSize: currentVectors.length,
       },
     };
   }
@@ -429,20 +429,20 @@ class DriftDetector extends EventEmitter {
           WHERE created_at > NOW() - INTERVAL '24 hours'
         `).catch(() => ({ rows: [{}] }));
 
-        const total          = parseInt(rows[0]?.total        || '0');
-        const clusterCount   = parseInt(rows[0]?.cluster_count || '0');
-        const avgConf        = parseFloat(rows[0]?.avg_confidence  || '0.8');
-        const stddevConf     = parseFloat(rows[0]?.stddev_confidence || '0.1');
+        const total = parseInt(rows[0]?.total || '0');
+        const clusterCount = parseInt(rows[0]?.cluster_count || '0');
+        const avgConf = parseFloat(rows[0]?.avg_confidence || '0.8');
+        const stddevConf = parseFloat(rows[0]?.stddev_confidence || '0.1');
 
         // Structural health: high confidence + low variance = good structure
         const structuralScore = Math.min(1.0, avgConf * (1 - Math.min(stddevConf, 0.5)));
         const severity = this._scoreToSeverity(structuralScore);
 
         return {
-          category:  DRIFT_CATEGORY.STRUCTURAL,
+          category: DRIFT_CATEGORY.STRUCTURAL,
           similarity: parseFloat(structuralScore.toFixed(4)),
           severity,
-          status:     severity === DRIFT_SEVERITY.NOMINAL ? 'ok' : severity,
+          status: severity === DRIFT_SEVERITY.NOMINAL ? 'ok' : severity,
           detail: { total, clusterCount, avgConfidence: avgConf, stddevConfidence: stddevConf },
         };
       } finally {
@@ -457,44 +457,44 @@ class DriftDetector extends EventEmitter {
     const baseline = await this._getBaseline('mission');
     if (!baseline) {
       return {
-        category:   DRIFT_CATEGORY.MISSION_ALIGNMENT,
+        category: DRIFT_CATEGORY.MISSION_ALIGNMENT,
         similarity: 1.0,
-        status:     'no-baseline',
-        detail:     'No mission baseline — treated as nominal',
+        status: 'no-baseline',
+        detail: 'No mission baseline — treated as nominal',
       };
     }
 
     // Sample mission-critical memory vectors (tagged as 'mission')
     const missionVectors = await this._sampleCurrentVectors({
-      limit:    50,
-      tag:      'mission',
+      limit: 50,
+      tag: 'mission',
     });
 
     if (missionVectors.length === 0) {
       return {
-        category:   DRIFT_CATEGORY.MISSION_ALIGNMENT,
+        category: DRIFT_CATEGORY.MISSION_ALIGNMENT,
         similarity: 1.0,
-        status:     'no-mission-vectors',
-        detail:     'No mission vectors found in current window',
+        status: 'no-mission-vectors',
+        detail: 'No mission vectors found in current window',
       };
     }
 
     const currentCentroid = centroid(missionVectors);
-    const similarity      = cosineSimilarity(normalize(baseline.vector), normalize(currentCentroid));
-    const severity        = this._scoreToSeverity(similarity);
+    const similarity = cosineSimilarity(normalize(baseline.vector), normalize(currentCentroid));
+    const severity = this._scoreToSeverity(similarity);
 
     // Mission alignment has a higher effective threshold
     const missionThreshold = Math.min(1.0, this.config.threshold + 0.1);
     const overThreshold = similarity >= missionThreshold;
 
     return {
-      category:        DRIFT_CATEGORY.MISSION_ALIGNMENT,
-      similarity:      parseFloat(similarity.toFixed(4)),
-      severity:        overThreshold ? DRIFT_SEVERITY.NOMINAL : severity,
-      status:          overThreshold ? 'ok' : severity,
+      category: DRIFT_CATEGORY.MISSION_ALIGNMENT,
+      similarity: parseFloat(similarity.toFixed(4)),
+      severity: overThreshold ? DRIFT_SEVERITY.NOMINAL : severity,
+      status: overThreshold ? 'ok' : severity,
       missionThreshold,
       detail: {
-        sampleSize:   missionVectors.length,
+        sampleSize: missionVectors.length,
         baselineDate: baseline.calibratedAt,
         alignmentPct: (similarity * 100).toFixed(1) + '%',
       },
@@ -529,8 +529,8 @@ class DriftDetector extends EventEmitter {
       for (let step = 0; step < projectionSteps; step++) {
         // Random walk with drift bias (slight mean-reversion toward 1.0)
         const meanReversion = (1.0 - score) * 0.05;
-        const delta         = gaussianRandom(meanReversion, deltaStd);
-        score               = Math.max(0, Math.min(1, score + delta));
+        const delta = gaussianRandom(meanReversion, deltaStd);
+        score = Math.max(0, Math.min(1, score + delta));
       }
 
       finalScores.push(score);
@@ -538,7 +538,7 @@ class DriftDetector extends EventEmitter {
 
     finalScores.sort((a, b) => a - b);
 
-    const p5  = finalScores[Math.floor(iterations * 0.05)];
+    const p5 = finalScores[Math.floor(iterations * 0.05)];
     const p25 = finalScores[Math.floor(iterations * 0.25)];
     const p50 = finalScores[Math.floor(iterations * 0.50)];
     const p75 = finalScores[Math.floor(iterations * 0.75)];
@@ -550,16 +550,16 @@ class DriftDetector extends EventEmitter {
       projectionSteps,
       iterations,
       percentiles: {
-        p5:  parseFloat(p5.toFixed(4)),
+        p5: parseFloat(p5.toFixed(4)),
         p25: parseFloat(p25.toFixed(4)),
         p50: parseFloat(p50.toFixed(4)),
         p75: parseFloat(p75.toFixed(4)),
         p95: parseFloat(p95.toFixed(4)),
       },
-      criticalProbability:  parseFloat(criticalProbability.toFixed(4)),
-      predictedSeverity:    this._scoreToSeverity(p50),
+      criticalProbability: parseFloat(criticalProbability.toFixed(4)),
+      predictedSeverity: this._scoreToSeverity(p50),
       riskLevel: criticalProbability > 0.3 ? 'high' :
-                 criticalProbability > 0.1 ? 'medium' : 'low',
+        criticalProbability > 0.1 ? 'medium' : 'low',
     };
   }
 
@@ -577,7 +577,7 @@ class DriftDetector extends EventEmitter {
         try {
           this._baseline = JSON.parse(cached);
           return;
-        } catch {}
+        } catch { }
       }
     }
 
@@ -598,8 +598,8 @@ class DriftDetector extends EventEmitter {
           : Array.isArray(row.centroid_vector) ? row.centroid_vector : [];
 
         this._baseline[row.category] = {
-          vector:       vec,
-          vectorCount:  row.vector_count,
+          vector: vec,
+          vectorCount: row.vector_count,
           calibratedAt: row.recalibrated_at,
         };
       }
@@ -610,7 +610,7 @@ class DriftDetector extends EventEmitter {
           'drift:baseline',
           1800,
           JSON.stringify(this._baseline)
-        ).catch(() => {});
+        ).catch(() => { });
       }
     } catch (err) {
       logger.warn('[DriftDetector] Could not load baseline:', err.message);
@@ -746,8 +746,8 @@ class DriftDetector extends EventEmitter {
   async _onCriticalDrift(result) {
     logger.error('[DriftDetector] CRITICAL DRIFT DETECTED:', {
       overallScore: result.overallScore,
-      severity:     result.severity,
-      trajectory:   result.trajectory?.predictedSeverity,
+      severity: result.severity,
+      trajectory: result.trajectory?.predictedSeverity,
     });
 
     // 1. Send alert
@@ -756,11 +756,11 @@ class DriftDetector extends EventEmitter {
     // 2. Publish to Redis pub/sub so HeadyMaintenance can react
     if (this._redisClient) {
       await this._redisClient.publish('heady:events:drift-critical', JSON.stringify({
-        event:       'drift:critical',
-        score:       result.overallScore,
-        timestamp:   result.timestamp,
-        trajectory:  result.trajectory,
-      })).catch(() => {});
+        event: 'drift:critical',
+        score: result.overallScore,
+        timestamp: result.timestamp,
+        trajectory: result.trajectory,
+      })).catch(() => { });
     }
 
     // 3. Emit for local subscribers (e.g., HealthMonitor integration)
@@ -780,14 +780,14 @@ class DriftDetector extends EventEmitter {
           text: `[Heady DriftDetector] ${severity.toUpperCase()}: ${message}`,
           attachments: [{
             color: severity === DRIFT_SEVERITY.CRITICAL ? '#d00000' :
-                   severity === DRIFT_SEVERITY.MODERATE  ? '#ff9900' : '#ffcc00',
+              severity === DRIFT_SEVERITY.MODERATE ? '#ff9900' : '#ffcc00',
             fields: [
-              { title: 'Overall Score',         value: String(result.overallScore),       short: true },
-              { title: 'Severity',              value: severity,                           short: true },
-              { title: 'Semantic',              value: String(result.checks[DRIFT_CATEGORY.SEMANTIC]?.similarity   ?? 'N/A'), short: true },
-              { title: 'Mission Alignment',     value: String(result.checks[DRIFT_CATEGORY.MISSION_ALIGNMENT]?.similarity ?? 'N/A'), short: true },
-              { title: 'Critical Probability',  value: String(result.trajectory?.criticalProbability ?? 'N/A'),    short: true },
-              { title: 'Predicted Trajectory',  value: result.trajectory?.predictedSeverity ?? 'N/A',             short: true },
+              { title: 'Overall Score', value: String(result.overallScore), short: true },
+              { title: 'Severity', value: severity, short: true },
+              { title: 'Semantic', value: String(result.checks[DRIFT_CATEGORY.SEMANTIC]?.similarity ?? 'N/A'), short: true },
+              { title: 'Mission Alignment', value: String(result.checks[DRIFT_CATEGORY.MISSION_ALIGNMENT]?.similarity ?? 'N/A'), short: true },
+              { title: 'Critical Probability', value: String(result.trajectory?.criticalProbability ?? 'N/A'), short: true },
+              { title: 'Predicted Trajectory', value: result.trajectory?.predictedSeverity ?? 'N/A', short: true },
             ],
           }],
         }).catch(err => logger.error('[DriftDetector] Slack alert error:', err.message))
@@ -810,9 +810,9 @@ class DriftDetector extends EventEmitter {
 
   _scoreToSeverity(score) {
     const t = this.config.threshold;
-    if (score >= t)             return DRIFT_SEVERITY.NOMINAL;
-    if (score >= t - 0.05)      return DRIFT_SEVERITY.MINOR;
-    if (score >= t - 0.15)      return DRIFT_SEVERITY.MODERATE;
+    if (score >= t) return DRIFT_SEVERITY.NOMINAL;
+    if (score >= t - 0.05) return DRIFT_SEVERITY.MINOR;
+    if (score >= t - 0.15) return DRIFT_SEVERITY.MODERATE;
     return DRIFT_SEVERITY.CRITICAL;
   }
 
@@ -820,8 +820,8 @@ class DriftDetector extends EventEmitter {
     if (promiseResult.status === 'fulfilled') return promiseResult.value;
     return {
       similarity: 1.0,
-      status:     'error',
-      detail:     promiseResult.reason?.message || 'Unknown error',
+      status: 'error',
+      detail: promiseResult.reason?.message || 'Unknown error',
     };
   }
 
@@ -836,9 +836,9 @@ class DriftDetector extends EventEmitter {
 // Exports
 // =============================================================================
 module.exports = DriftDetector;
-module.exports.DRIFT_CATEGORY  = DRIFT_CATEGORY;
-module.exports.DRIFT_SEVERITY  = DRIFT_SEVERITY;
-module.exports.EMBEDDING_DIMS  = EMBEDDING_DIMS;
+module.exports.DRIFT_CATEGORY = DRIFT_CATEGORY;
+module.exports.DRIFT_SEVERITY = DRIFT_SEVERITY;
+module.exports.EMBEDDING_DIMS = EMBEDDING_DIMS;
 module.exports.DEFAULT_DRIFT_THRESHOLD = DEFAULT_DRIFT_THRESHOLD;
 module.exports.cosineSimilarity = cosineSimilarity;
-module.exports.centroid         = centroid;
+module.exports.centroid = centroid;

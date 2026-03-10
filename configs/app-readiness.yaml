@@ -28,7 +28,7 @@ probes:
     expectedStatus: 200
     expectedBody: { contains: "ok" }
     maxLatencyMs: 2000
-    interval: 60
+    interval: 55                         # fib(10) = 55s
     criticality: critical
 
   - name: heady-manager-pulse
@@ -37,7 +37,7 @@ probes:
     method: GET
     expectedStatus: 200
     maxLatencyMs: 2000
-    interval: 60
+    interval: 55                         # fib(10) = 55s
     criticality: high
 
   - name: heady-frontend
@@ -47,7 +47,7 @@ probes:
     expectedStatus: 200
     expectedBody: { contains: "Heady" }
     maxLatencyMs: 3000
-    interval: 300
+    interval: 233                        # fib(13) = 233s
     criticality: high
 
   - name: heady-admin
@@ -56,14 +56,14 @@ probes:
     method: GET
     expectedStatus: 200
     maxLatencyMs: 3000
-    interval: 300
+    interval: 233                        # fib(13) = 233s
     criticality: medium
 
   - name: postgres-connection
     type: connection
     connectionVar: DATABASE_URL
     maxLatencyMs: 5000
-    interval: 120
+    interval: 144                        # fib(12) = 144s
     criticality: low
 
   - name: render-deployment
@@ -72,7 +72,7 @@ probes:
     method: GET
     expectedStatus: 200
     maxLatencyMs: 10000
-    interval: 300
+    interval: 233                        # fib(13) = 233s
     criticality: high
 
   - name: headybuddy-api
@@ -82,7 +82,7 @@ probes:
     expectedStatus: 200
     expectedBody: { contains: "headybuddy" }
     maxLatencyMs: 2000
-    interval: 60
+    interval: 55                         # fib(10) = 55s
     criticality: high
 
   - name: headybuddy-widget
@@ -91,7 +91,7 @@ probes:
     method: GET
     expectedStatus: 200
     maxLatencyMs: 3000
-    interval: 300
+    interval: 233                        # fib(13) = 233s
     criticality: medium
 
   - name: headybuddy-suggestions
@@ -100,7 +100,7 @@ probes:
     method: GET
     expectedStatus: 200
     maxLatencyMs: 2000
-    interval: 120
+    interval: 144                        # fib(12) = 144s
     criticality: low
 
 # ─── READINESS SCORING ───────────────────────────────────────────────────

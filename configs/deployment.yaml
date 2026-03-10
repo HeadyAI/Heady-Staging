@@ -18,18 +18,18 @@
 strategies:
   fast_parallel:
     max_parallel: 8
-    timeout: 300
-    retries: 2
+    timeout: 233                          # fib(13) = 233s
+    retries: 2                             # fib(3) = 2
     
   balanced:
     max_parallel: 4
-    timeout: 600
-    retries: 3
+    timeout: 610                          # fib(15) = 610s
+    retries: 3                             # fib(4) = 3
     
   thorough:
     max_parallel: 2
-    timeout: 900
-    retries: 5
+    timeout: 987                          # fib(16) = 987s
+    retries: 5                             # fib(5) = 5
 
 auto_mode:
   enabled: true
@@ -40,7 +40,7 @@ auto_mode:
     cost: 0.2
   
 monitoring:
-  health_check_interval: 30
+  health_check_interval: 34               # fib(9) = 34s
   performance_sample_size: 100
   
 services:

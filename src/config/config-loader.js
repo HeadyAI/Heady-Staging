@@ -9,8 +9,8 @@ const logger = pino();
 'use strict';
 
 const { PHI_TIMING } = require('../shared/phi-math');
-const fs           = require('fs');
-const path         = require('path');
+const fs = require('fs');
+const path = require('path');
 const EventEmitter = require('events');
 
 // ─────────────────────────────────────────────
@@ -23,36 +23,36 @@ const EventEmitter = require('events');
  */
 const DEFAULTS = {
   platform: {
-    name:        'HeadySystems',
-    version:     '4.0.0',
-    codename:    'Sovereign',
+    name: 'HeadySystems',
+    version: '4.0.0',
+    codename: 'Sovereign',
     environment: 'development',
-    debug:       false,
-    logLevel:    'info',
+    debug: false,
+    logLevel: 'info',
   },
   intelligence: {
-    defaultTaskType:    'quick',
-    dedupeTtlMs:        60_000,
-    dedupeMaxEntries:   1_000,
-    patternSimilarity:  0.65,
+    defaultTaskType: 'quick',
+    dedupeTtlMs: 60_000,
+    dedupeMaxEntries: 1_000,
+    patternSimilarity: 0.65,
     maxPatternsPerType: 500,
     monteCarlo: {
-      maxTrials:           10_000,
+      maxTrials: 10_000,
       convergenceThreshold: 0.01,
     },
   },
   resilience: {
     circuitBreaker: {
-      failureThreshold:  5,
+      failureThreshold: 5,
       recoveryTimeoutMs: PHI_TIMING.CYCLE,  // φ⁷ × 1000
     },
     retry: {
-      maxRetries:    3,
-      baseDelayMs:   1_000,
+      maxRetries: 3,  // fib(4) = 3
+      baseDelayMs: 1_000,
       backoffFactor: 2,
     },
     pool: {
-      primaryRatio:  0.618,   // Golden ratio
+      primaryRatio: 0.618,   // Golden ratio
       secondaryRatio: 0.382,
     },
   },
@@ -66,28 +66,28 @@ const DEFAULTS = {
   budget: {
     monthlyCap: 500,
     dailyCaps: {
-      anthropic:  50,
-      openai:     40,
-      google:     20,
-      groq:       10,
+      anthropic: 50,
+      openai: 40,
+      google: 20,
+      groq: 10,
       perplexity: 15,
-      local:       0,
+      local: 0,
     },
   },
   bees: {
-    maxConcurrent:    100,
+    maxConcurrent: 100,
     defaultLifetimeMs: 3_600_000,
     ephemeralLifetimeMs: 300_000,
   },
   monitoring: {
-    healthIntervalMs:  PHI_TIMING.CYCLE,  // φ⁷ × 1000
-    metricsWindowMs:   3_600_000,
-    alertCooldownMs:   300_000,
+    healthIntervalMs: PHI_TIMING.CYCLE,  // φ⁷ × 1000
+    metricsWindowMs: 3_600_000,
+    alertCooldownMs: 300_000,
   },
   edge: {
     rateLimitWindowMs: 60_000,
-    rateLimitMax:      100,
-    proxyTimeoutMs:    PHI_TIMING.CYCLE,  // φ⁷ × 1000
+    rateLimitMax: 100,
+    proxyTimeoutMs: PHI_TIMING.CYCLE,  // φ⁷ × 1000
   },
 };
 
@@ -150,16 +150,16 @@ function parseYAML(yamlText) {
 }
 
 function _minimalYAMLParse(text) {
-  const lines  = text.split('\n');
-  const root   = {};
-  const stack  = [{ obj: root, indent: -1 }];
+  const lines = text.split('\n');
+  const root = {};
+  const stack = [{ obj: root, indent: -1 }];
 
   for (const rawLine of lines) {
     const stripped = rawLine.replace(/#.*$/, '').trimEnd();
     if (!stripped.trim()) continue;
 
     const indent = stripped.length - stripped.trimStart().length;
-    const line   = stripped.trim();
+    const line = stripped.trim();
 
     // Pop stack to matching indent level
     while (stack.length > 1 && indent <= stack[stack.length - 1].indent) stack.pop();
@@ -167,7 +167,7 @@ function _minimalYAMLParse(text) {
     const colonIdx = line.indexOf(':');
     if (colonIdx < 0) continue;
 
-    const key   = line.slice(0, colonIdx).trim();
+    const key = line.slice(0, colonIdx).trim();
     const value = line.slice(colonIdx + 1).trim();
 
     const parent = stack[stack.length - 1].obj;
@@ -185,7 +185,7 @@ function _minimalYAMLParse(text) {
 }
 
 function _parseScalar(value) {
-  if (value === 'true')  return true;
+  if (value === 'true') return true;
   if (value === 'false') return false;
   if (value === 'null' || value === '~') return null;
   const num = Number(value);
@@ -208,7 +208,7 @@ function deepMerge(target, source) {
   const result = { ...target };
   for (const [key, val] of Object.entries(source)) {
     if (val !== null && typeof val === 'object' && !Array.isArray(val) &&
-        target[key] !== null && typeof target[key] === 'object' && !Array.isArray(target[key])) {
+      target[key] !== null && typeof target[key] === 'object' && !Array.isArray(target[key])) {
       result[key] = deepMerge(target[key], val);
     } else {
       result[key] = val;
@@ -255,12 +255,12 @@ class ConfigLoader extends EventEmitter {
    */
   constructor(opts = {}) {
     super();
-    this.opts           = opts;
-    this.registryPath   = opts.registryPath   ?? path.resolve(process.cwd(), 'heady-registry.json');
-    this.systemYamlPath = opts.systemYamlPath  ?? path.resolve(process.cwd(), 'configs/system.yaml');
-    this.domainsPath    = opts.domainsYamlPath ?? path.resolve(process.cwd(), 'configs/domains.yaml');
-    this.hotReload      = opts.hotReload       ?? false;
-    this.watchDebounce  = opts.watchDebounceMs ?? 500;
+    this.opts = opts;
+    this.registryPath = opts.registryPath ?? path.resolve(process.cwd(), 'heady-registry.json');
+    this.systemYamlPath = opts.systemYamlPath ?? path.resolve(process.cwd(), 'configs/system.yaml');
+    this.domainsPath = opts.domainsYamlPath ?? path.resolve(process.cwd(), 'configs/domains.yaml');
+    this.hotReload = opts.hotReload ?? false;
+    this.watchDebounce = opts.watchDebounceMs ?? 500;
 
     /** Resolved config object */
     this._config = null;
@@ -326,7 +326,7 @@ class ConfigLoader extends EventEmitter {
   getPath(dotPath, fallback = undefined) {
     if (!this._config) throw new Error('ConfigLoader: call load() first');
     const parts = dotPath.split('.');
-    let   cur   = this._config;
+    let cur = this._config;
     for (const part of parts) {
       if (cur === null || cur === undefined) return fallback;
       cur = cur[part];
@@ -365,9 +365,9 @@ class ConfigLoader extends EventEmitter {
    * @returns {Promise<object>}
    */
   async reload() {
-    const prev   = JSON.stringify(this._config);
+    const prev = JSON.stringify(this._config);
     await this.load();
-    const curr   = JSON.stringify(this._config);
+    const curr = JSON.stringify(this._config);
     if (prev !== curr) {
       const changed = this._diffKeys(JSON.parse(prev), this._config);
       this.emit('config_changed', { changedKeys: changed });
@@ -387,17 +387,17 @@ class ConfigLoader extends EventEmitter {
 
   async _loadRegistry() {
     try {
-      const raw  = fs.readFileSync(this.registryPath, 'utf8');
+      const raw = fs.readFileSync(this.registryPath, 'utf8');
       const json = JSON.parse(raw);
       // Extract relevant config sections from registry
       const out = {};
-      if (json.platform)      out.platform      = json.platform;
-      if (json.intelligence)  out.intelligence  = json.intelligence;
-      if (json.resilience)    out.resilience    = json.resilience;
-      if (json.pipeline)      out.pipeline      = json.pipeline;
-      if (json.budget)        out.budget        = json.budget;
-      if (json.bees)          out.bees          = json.bees;
-      if (json.monitoring)    out.monitoring    = json.monitoring;
+      if (json.platform) out.platform = json.platform;
+      if (json.intelligence) out.intelligence = json.intelligence;
+      if (json.resilience) out.resilience = json.resilience;
+      if (json.pipeline) out.pipeline = json.pipeline;
+      if (json.budget) out.budget = json.budget;
+      if (json.bees) out.bees = json.bees;
+      if (json.monitoring) out.monitoring = json.monitoring;
       return out;
     } catch (err) {
       if (err.code !== 'ENOENT') this.emit('load_error', { source: 'registry', err });
@@ -409,7 +409,7 @@ class ConfigLoader extends EventEmitter {
     let merged = null;
     for (const filePath of [this.systemYamlPath, this.domainsPath]) {
       try {
-        const raw  = fs.readFileSync(filePath, 'utf8');
+        const raw = fs.readFileSync(filePath, 'utf8');
         const parsed = parseYAML(raw);
         merged = merged ? deepMerge(merged, parsed) : parsed;
       } catch (err) {
@@ -426,17 +426,17 @@ class ConfigLoader extends EventEmitter {
     for (const [key, val] of Object.entries(process.env)) {
       if (!key.startsWith(prefix)) continue;
       // HEADY_PLATFORM_VERSION → platform.version
-      const parts   = key.slice(prefix.length).toLowerCase().split('_');
+      const parts = key.slice(prefix.length).toLowerCase().split('_');
       const section = parts[0];
-      const field   = parts.slice(1).join('_').replace(/_([a-z])/g, (_, c) => c.toUpperCase());
+      const field = parts.slice(1).join('_').replace(/_([a-z])/g, (_, c) => c.toUpperCase());
       if (!out[section]) out[section] = {};
       out[section][field] = _parseScalar(val);
     }
 
     // Well-known env overrides
-    if (process.env.NODE_ENV)        out.platform  = { ...(out.platform ?? {}), environment: process.env.NODE_ENV };
-    if (process.env.HEADY_DEBUG)     out.platform  = { ...(out.platform ?? {}), debug: process.env.HEADY_DEBUG === 'true' };
-    if (process.env.HEADY_LOG_LEVEL) out.platform  = { ...(out.platform ?? {}), logLevel: process.env.HEADY_LOG_LEVEL };
+    if (process.env.NODE_ENV) out.platform = { ...(out.platform ?? {}), environment: process.env.NODE_ENV };
+    if (process.env.HEADY_DEBUG) out.platform = { ...(out.platform ?? {}), debug: process.env.HEADY_DEBUG === 'true' };
+    if (process.env.HEADY_LOG_LEVEL) out.platform = { ...(out.platform ?? {}), logLevel: process.env.HEADY_LOG_LEVEL };
 
     return out;
   }

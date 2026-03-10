@@ -160,8 +160,8 @@ api:
     ip_package: 5        # Per minute
   
   # Default response limits
-  default_concept_limit: 20
-  max_concept_limit: 100
+  default_concept_limit: 21              # fib(8) = 21
+  max_concept_limit: 89                  # fib(11) = 89
 
 # Integration with other Heady systems
 integration:
