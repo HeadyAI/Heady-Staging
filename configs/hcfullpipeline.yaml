@@ -34,12 +34,12 @@ pipeline:
   global:
     deterministic: true
     seed: "heady-sacred-geometry-seed"
-    maxConcurrentTasks: 8
-    maxRetries: 3
-    retryBackoffMs: [500, 2000, 8000]
-    jitterEnabled: true
-    costBudgetDaily: 50.00
-    rateLimitPerMinute: 120
+    maxConcurrentTasks: 8               # fib(6) = 8
+    maxRetries: 3                        # fib(4) = 3
+    retryBackoffMs: [500, 809, 1309, 2118, 3427]  # φ-backoff: base×φⁿ
+    jitterEnabled: true                  # ±ψ² ≈ ±38.2%
+    costBudgetDaily: 55.00               # fib(10) = 55
+    rateLimitPerMinute: 144              # fib(12) = 144
     proxyPolicy: direct-for-internal
     monteCarloEnabled: true          # Use MC plan selection for task execution
     speedPriority: "on"              # off | on | max
@@ -57,19 +57,19 @@ pipeline:
     hot:
       description: "User-facing tasks, core pipelines"
       priority: critical
-      reservedConcurrency: 6  # Increase reserved concurrency for user tasks
-      maxLatencyMs: 2000
+      reservedConcurrency: 5             # fib(5) = 5 — user-facing hot pool
+      maxLatencyMs: 2618                  # φ² × 1000 ≈ 2618ms
       userTaskOnly: true  # Only user tasks can use this pool
     warm:
       description: "Important background tasks"
       priority: high
       reservedConcurrency: 2
-      maxLatencyMs: 10000
+      maxLatencyMs: 11090                # φ⁵ × 1000 ≈ 11090ms
     cold:
       description: "Async background tasks"
       priority: low
       reservedConcurrency: 0  # Dynamic allocation only when idle
-      maxLatencyMs: 60000
+      maxLatencyMs: 46368                # fib(24) = 46368ms
 
   # ─── STOP RULE ──────────────────────────────────────────────────────────
   stopRule:
@@ -79,10 +79,10 @@ pipeline:
       data integrity, or security.
     conditions:
       - type: error_rate
-        threshold: 0.15
+        threshold: 0.146                 # ψ⁴ ≈ 0.146 — error rate ceiling
         action: enter_recovery
       - type: readiness_score
-        threshold: 60
+        threshold: 55                    # fib(10) = 55 — readiness floor
         action: enter_recovery
       - type: critical_alarm
         count: 1
@@ -181,7 +181,7 @@ pipeline:
         - check_public_domain_inspiration
       mcConfig:
         speedPriority: "on"
-        candidatesPerTask: 6
+        candidatesPerTask: 8              # fib(6) = 8
         adaptiveQuality: true
 
     # ── STAGE 3: Execute Major Phase ─────────────────────────────────────
@@ -201,7 +201,7 @@ pipeline:
       supervisorConfig:
         directRouting: true
         noProxy: true
-        maxParallelAgents: 6
+        maxParallelAgents: 5              # fib(5) = 5
       feedbackConfig:
         recordToMC: true
         observePatterns: true
@@ -255,7 +255,7 @@ pipeline:
           - process_creep
           - cultural_blockers
         confidenceRating: true
-        weaknessMinCount: 3
+        weaknessMinCount: 3               # fib(4) = 3
 
     # ── STAGE 6: Optimize ────────────────────────────────────────────────
     - id: optimize
@@ -507,7 +507,7 @@ pipeline:
       stages:
         - auto-commit-push-deploy
       config:
-        debounceMs: 5000          # Wait 5s for batch changes
+        debounceMs: 4236          # φ³ × 1000 ≈ 4236ms — batch window
         skipIfClean: true         # Skip if nothing to commit
         commitMessageFormat: "feat: HCFullPipeline v{version} — {count} files [{timestamp}]"
     in_folder_watcher:
@@ -570,8 +570,8 @@ pipeline:
       - configs/imagination-engine.yaml
       - configs/hcfp-extension-flow.yaml
     escalationThreshold:
-      readinessBelow: 70
-      errorRateAbove: 0.10
+      readinessBelow: 55                 # fib(10) = 55
+      errorRateAbove: 0.090               # ψ⁵ ≈ 0.090
       costOverBudget: true
       bottleneckSeverity: "high"
       channelHealthDegraded: true
