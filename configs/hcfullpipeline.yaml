@@ -1428,3 +1428,209 @@ pipeline:
         stage: self-critique
         status: open
         priority: minor
+
+      # ─── IN-FOLDER SCAN: 2026-03-10T09:50 ─────────────────────────
+      - id: TB-054
+        task: "Wire Firebase Admin SDK for server-side token verification"
+        description: >
+          auth-session-server and heady-onboarding callback accept Firebase
+          tokens but never call firebase.auth().verifyIdToken(). Implement
+          real Admin SDK verification, remove client-trust placeholders,
+          and enforce HEADY_REQUIRE_FIREBASE_ADMIN gate in production.
+        source: "in/jules_session_3042080524948389498/GAPS_FOUND.md"
+        targets: [services/auth-session-server/index.js, services/heady-onboarding/]
+        stage: execute
+        status: open
+        priority: critical
+
+      - id: TB-055
+        task: "Structured logging migration — remaining 50+ service files"
+        description: >
+          api-gateway and cors-policy are fixed, but 50+ service files
+          still use console.log/console.error. Migrate all to pino
+          structured JSON logger per the pattern in heady-manager.js.
+        source: "in/jules_session_6437480038717298630/CHANGES.md"
+        targets: [services/, src/]
+        stage: execute
+        status: open
+        priority: major
+
+      - id: TB-056
+        task: "Remove duplicate cors-policy file"
+        description: >
+          src/middleware/cors-policy.js and src/middleware/security/cors-policy.js
+          are byte-identical. Remove the duplicate and re-export from the
+          canonical shared module.
+        source: "in/jules_session_16844719546955948096/GAPS_FOUND.md"
+        targets: [src/middleware/cors-policy.js, src/middleware/security/cors-policy.js]
+        stage: execute
+        status: open
+        priority: minor
+
+      - id: TB-057
+        task: "Implement session storage backend with httpOnly cookies"
+        description: >
+          Frontend mocks __heady_session cookie reads, but the backend
+          logic for setting httpOnly cookies securely is absent. Wire
+          auth-session-server with proper cookie signing and session store.
+        source: "in/jules_session_16844719546955948096/GAPS_FOUND.md"
+        targets: [services/auth-session-server/index.js]
+        stage: execute
+        status: open
+        priority: critical
+
+      - id: TB-058
+        task: "Implement CSL engine core (AND/OR/NOT/GATE/IMPLY)"
+        description: >
+          CSL engine with cosine AND, superposition OR, orthogonal NOT,
+          projection IMPLY, and XOR operations. Multi-provider embedding
+          router and hybrid BM25+vector search not yet implemented.
+        source: "in/jules_session_3042080524948389498/GAPS_FOUND.md"
+        targets: [src/core/vector-ops/csl-engine.js]
+        stage: execute
+        status: open
+        priority: major
+
+      - id: TB-059
+        task: "Implement bee lifecycle, work-stealing, and backpressure protocols"
+        description: >
+          Bee lifecycle, work-stealing, backpressure, and consensus
+          protocols absent from core. Wire swarm-engine with proper
+          bee lifecycle management and phi-scaled backpressure.
+        source: "in/jules_session_3042080524948389498/GAPS_FOUND.md"
+        targets: [src/core/swarm-engine/]
+        stage: execute
+        status: open
+        priority: major
+
+      - id: TB-060
+        task: "Add OWASP guards, rate limits, and Cloud Run min-instances"
+        description: >
+          Rate limits, OWASP-specific guards, and Cloud Run min-instances
+          infrastructure settings missing from docker-compose config and
+          HeadyOptimizer rules. Add security headers middleware.
+        source: "in/jules_session_16844719546955948096/GAPS_FOUND.md"
+        targets: [docker-compose.yml, infra/cloud-run/]
+        stage: execute
+        status: open
+        priority: major
+
+      - id: TB-061
+        task: "Create wrangler.toml for Cloudflare Workers CI/CD"
+        description: >
+          CI/CD references wrangler.toml but no Cloudflare Workers config
+          exists at the repo root. Create canonical wrangler.toml with
+          routes for all 11 domains.
+        source: "in/jules_session_3042080524948389498/GAPS_FOUND.md"
+        targets: [wrangler.toml, workers/]
+        stage: execute
+        status: open
+        priority: minor
+
+      - id: TB-062
+        task: "Wire pytest/vitest test suite into package.json"
+        description: >
+          Base test harnesses exist but no proper test suite is wired
+          into package.json testing flows. Add integration test runner
+          for domain-connectivity, auth, and AutoContext validation.
+        source: "in/jules_session_16844719546955948096/GAPS_FOUND.md"
+        targets: [package.json, tests/]
+        stage: optimize
+        status: open
+        priority: minor
+
+      - id: TB-063
+        task: "Integrate HeadySystems v13 multi-site architecture"
+        description: >
+          HeadySystems v13 delivers per-domain site packages for
+          headysystems, headyos, headyme, headyfinance, headyex,
+          headycon-org, headycon-com. Reconcile with dynamic-site-server.
+        source: "in/jules_session_15538589846449006457/HeadySystems_v13/"
+        targets: [sites/, dist/core/dynamic-site-server.js]
+        stage: execute
+        status: open
+        priority: minor
+
+      - id: TB-064
+        task: "Wire scanner-mcp-bridge into MCP server"
+        description: >
+          scanner-mcp-bridge.js provides MCP tool interface for the
+          codebase scanner. Wire into the HeadyMCP server as a registered
+          tool with proper JSON-RPC handlers.
+        source: "in/jules_session_16449122244454081823/src/services/scanner-mcp-bridge.js"
+        targets: [src/services/scanner-mcp-bridge.js, workers/]
+        stage: execute
+        status: open
+        priority: minor
+
+      - id: TB-065
+        task: "Deploy notification-service to Cloud Run"
+        description: >
+          notification-service/index.js is ready but not deployed.
+          Containerize and deploy to Cloud Run with proper health
+          checks and webhook integrations.
+        source: "in/jules_session_2386463515981511763/services/notification-service/"
+        targets: [services/notification-service/]
+        stage: execute
+        status: open
+        priority: minor
+
+      - id: TB-066
+        task: "Integrate heady_intelligence_verifier into pipeline"
+        description: >
+          Intelligence verifier validates AI output quality, confidence
+          scoring, and hallucination detection. Wire into the pipeline
+          as a post-execution verification step.
+        source: "in/jules_session_11625959678638198903/src/heady_intelligence_verifier.js"
+        targets: [src/heady_intelligence_verifier.js]
+        stage: self-critique
+        status: open
+        priority: minor
+
+      - id: TB-067
+        task: "Wire domain connectivity integration tests into CI"
+        description: >
+          domain-connectivity.test.js validates all 11 public domains
+          resolve and return proper branding. Add to CI pipeline as
+          post-deploy smoke test.
+        source: "in/jules_session_16449122244454081823/tests/integration/domain-connectivity.test.js"
+        targets: [tests/integration/domain-connectivity.test.js]
+        stage: optimize
+        status: open
+        priority: minor
+
+      - id: TB-068
+        task: "Complete OAuth token exchange for Google and GitHub"
+        description: >
+          Auth server has OAuth launch routes for Google and GitHub with
+          signed flow cookies and redirect allowlists, but the token
+          exchange callback and profile extraction are incomplete.
+        source: "in/jules_session_6437480038717298630/CHANGES.md"
+        targets: [services/auth-session-server/, services/heady-onboarding/]
+        stage: execute
+        status: open
+        priority: major
+
+      - id: TB-069
+        task: "Eliminate remaining CORS wildcard Access-Control-Allow-Origin: '*'"
+        description: >
+          14 instances of Access-Control-Allow-Origin '*' across 9 source
+          files. Replace with explicit origin whitelist for the 11 Heady
+          domains using the cors-policy middleware.
+        source: "in/jules_session_3042080524948389498/GAPS_FOUND.md"
+        targets: [src/, services/]
+        stage: execute
+        status: open
+        priority: major
+
+      - id: TB-070
+        task: "Map Colab Pro+ memberships as latent space operators"
+        description: >
+          3 Colab Pro+ memberships exist but no orchestration layer maps
+          them as latent space operators. Build colab-runtime integration
+          with role-based routing and phi-scaled batch sizes.
+        source: "in/jules_session_3042080524948389498/GAPS_FOUND.md"
+        targets: [src/core/liquid-nodes/colab-runtime.js]
+        stage: execute
+        status: open
+        priority: minor
