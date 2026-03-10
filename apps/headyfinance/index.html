@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HeadyFinance — Invest in the Future of AI</title>
+  <meta name="description" content="Investor relations, growth metrics, patent portfolio, strategic roadmap — the financial intelligence behind HeadySystems.">
+  <meta name="keywords" content="Heady, AI, HeadyFinance, investor-relations, sacred geometry, vector memory, CSL">
+  <meta property="og:title" content="HeadyFinance — Invest in the Future of AI">
+  <meta property="og:description" content="Investor relations, growth metrics, patent portfolio, strategic roadmap — the financial intelligence behind HeadySystems.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://headyfinance.com">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../packages/design-system/heady-design.css">
+  <style>
+    :root {
+      --accent: #a855f7;
+      --accent-glow: rgba(168,85,247,0.15);
+      --accent-subtle: rgba(168,85,247,0.06);
+    }
+    body { padding-top: 32px; } /* cross-nav offset */
+    .sacred-canvas {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      z-index: 0;
+      pointer-events: none;
+    }
+    .feature-icon {
+      font-size: 1.618rem;
+      display: block;
+      margin-bottom: 0.8rem;
+      color: var(--accent);
+    }
+    .btn-sm {
+      padding: 0.4rem 1rem;
+      font-size: var(--text-xs);
+      border-radius: var(--radius-sm);
+    }
+    .deep-dive { max-width: 800px; margin: 0 auto; text-align: left; }
+    .deep-dive h3 { font-size: var(--text-xl); margin: var(--space-21) 0 var(--space-8); color: var(--accent); }
+    .deep-dive h4 { font-size: var(--text-lg); margin: var(--space-13) 0 var(--space-5); color: var(--text-primary); }
+    .deep-dive p { margin-bottom: var(--space-8); font-size: var(--text-base); line-height: 1.8; }
+    .nav-links { display: flex; align-items: center; gap: var(--space-8); }
+    .nav-links a { color: var(--text-secondary); font-size: var(--text-sm); font-weight: 500; }
+    .nav-links a:hover { color: var(--text-primary); opacity: 1; }
+    .nav-logo {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+      font-size: 1.1rem;
+      letter-spacing: 0.05em;
+      color: var(--accent);
+    }
+    .eco-map { display: grid; grid-template-columns: repeat(3,1fr); gap: 1.3125rem; max-width: 900px; margin: 0 auto; }
+    .eco-node { display: flex; flex-direction: column; align-items: center; text-align: center; padding: 2rem 1rem; background: var(--glass-bg); backdrop-filter: blur(24px); border: 1px solid var(--glass-border); border-radius: var(--radius-lg); text-decoration: none; transition: all .382s; }
+    .eco-node:hover { transform: translateY(-3px); border-color: var(--node-accent); box-shadow: 0 0 21px rgba(124,94,255,.12); opacity: 1; }
+    .eco-node--current { border-color: var(--node-accent); background: rgba(124,94,255,.04); }
+    .eco-icon { font-size: 1.8rem; margin-bottom: .5rem; color: var(--node-accent); }
+    .eco-label { font-weight: 600; color: #e8e8f0; font-size: .95rem; margin-bottom: .25rem; }
+    .eco-desc { font-size: .75rem; color: #9898b0; }
+    .how-steps { display: grid; grid-template-columns: repeat(auto-fit,minmax(200px,1fr)); gap: 1.3125rem; }
+    .how-step { text-align: center; padding: 2rem 1rem; }
+    .how-step-num { font-family: 'JetBrains Mono', monospace; font-size: 2rem; font-weight: 700; color: rgba(168,85,247,0.3); margin-bottom: .5rem; }
+    .how-step h4 { color: #e8e8f0; margin-bottom: .5rem; }
+    .how-step p { font-size: .85rem; color: #9898b0; }
+    @media(max-width:768px) {
+      .eco-map { grid-template-columns: 1fr 1fr; }
+      .how-steps { grid-template-columns: 1fr; }
+      .nav-links { display: none; }
+    }
+    @media(max-width:480px) {
+      .eco-map { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Sacred Geometry Canvas Background -->
+  <canvas id="sacred-canvas" class="sacred-canvas"></canvas>
+
+  <!-- Navigation -->
+  <nav class="glass-nav" style="top:32px;">
+    <span class="nav-logo">HeadyFinance</span>
+    <div class="nav-links">
+      <a href="#financials">Financials</a>
+<a href="#patents">Patents</a>
+<a href="#roadmap">Roadmap</a>
+<a href="https://headysystems.com" class="btn btn-primary btn-sm" target="_blank" rel="noopener">HeadySystems</a>
+
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="version-badge">v3.0 · Vesica Piscis · Investor Relations</div>
+    <h1 class="text-gradient">Invest in the Future of AI</h1>
+    <p class="subtitle">Investor relations, growth metrics, patent portfolio, strategic roadmap — the financial intelligence behind HeadySystems.</p>
+    <div style="display:flex;gap:var(--space-8);">
+      <a href="#deep-dive" class="btn btn-primary">Learn More</a>
+      <a href="https://auth.headysystems.com/login?redirect=https://headyfinance.com" class="btn btn-ghost">Sign In</a>
+    </div>
+  </section>
+
+  <!-- Stats Banner -->
+  <section class="section" style="padding: var(--space-21) 0;">
+    <div class="container">
+      <div class="stats-row">
+
+        <div class="stat">
+          <div class="stat-num">51+</div>
+          <div class="stat-label">Patents</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num">9</div>
+          <div class="stat-label">Verticals</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num">$___</div>
+          <div class="stat-label">Raised</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num">2026</div>
+          <div class="stat-label">Series A Target</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Grid -->
+  <section id="features" class="section">
+    <div class="container">
+      <div class="section-header">
+        <h2>Core Capabilities</h2>
+        <p>Everything you need from HeadyFinance — powered by Sacred Geometry and Continuous Semantic Logic.</p>
+      </div>
+      <div class="grid-3">
+
+        <div class="glass-card">
+          <span class="feature-icon">📈</span>
+          <h4>Growth Metrics</h4>
+          <p>Revenue projections, user growth curves, platform adoption analytics, and market penetration data — all presented with φ-scaled precision and full transparency.</p>
+        </div>
+        <div class="glass-card">
+          <span class="feature-icon">📜</span>
+          <h4>Patent Portfolio</h4>
+          <p>51+ provisional patents creating a defensible competitive moat across CSL, VSA, sacred geometry computing, 3D spatial memory, and multi-agent orchestration.</p>
+        </div>
+        <div class="glass-card">
+          <span class="feature-icon">🌐</span>
+          <h4>9 Domain Verticals</h4>
+          <p>Diversified portfolio spanning consumer (HeadyMe), enterprise (HeadySystems), developer (HeadyOS), research (HeadyAI), community (HeadyConnection), marketplace (HeadyEX), and more.</p>
+        </div>
+        <div class="glass-card">
+          <span class="feature-icon">🗺️</span>
+          <h4>Strategic Roadmap</h4>
+          <p>Series A timeline, partnership pipeline, enterprise pilot programs, and milestone targets with clear success criteria and φ-scaled delivery projections.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Deep Dive Content (2000+ words) -->
+  <section id="deep-dive" class="section">
+    <div class="container">
+      <div class="section-header">
+        <h2>Deep Dive</h2>
+        <p>A comprehensive look at what HeadyFinance offers and how it works.</p>
+      </div>
+      <div class="deep-dive">
+
+<h3>Investment Thesis</h3>
+<p>HeadySystems represents a generational investment opportunity at the intersection of artificial intelligence, agent computing, and infrastructure technology. Our thesis is built on three pillars: a defensible patent portfolio (51+ provisional patents), a diversified multi-vertical platform (9 distinct market segments), and a novel technical architecture (CSL, VSA, Sacred Geometry) that creates fundamental advantages over competitors.</p>
+
+<h3>Market Opportunity</h3>
+<p>The global AI market is projected to exceed $1.5 trillion by 2030, with the AI agent segment growing at 45% CAGR. HeadySystems is positioned at the infrastructure layer — the "picks and shovels" of the AI gold rush — providing the operating system, orchestration, and marketplace that agent builders and enterprises need. Our total addressable market spans enterprise AI infrastructure ($200B), developer tools ($50B), AI marketplaces ($30B), and specialized verticals.</p>
+
+<h3>Patent Portfolio — 51+ Defensive Moat</h3>
+<p>Our intellectual property portfolio includes 51+ provisional patent applications covering core innovations: Continuous Semantic Logic gate mechanisms, Vector Symbolic Architecture composition operators, sacred geometry network topology algorithms, 3D spatial memory indexing structures, φ-scaled resource allocation methods, cognitive archetype processing pipelines, cross-domain context injection systems, and concurrent swarm orchestration protocols.</p>
+
+<p>These patents create multiple layers of defensibility. Competitors cannot replicate our core technology without licensing our IP. The patent portfolio covers both the theoretical foundations (CSL, VSA, sacred geometry) and the practical implementations (service mesh topology, memory architecture, bee swarm patterns), making workarounds difficult.</p>
+
+<h3>Revenue Model</h3>
+<p>HeadySystems generates revenue through multiple streams: subscription licensing for HeadyMe and HeadyOS, enterprise infrastructure contracts for HeadySystems, marketplace transaction fees on HeadyEX, token economics via HeadyCoin, professional services and custom deployments, and advertising-supported community platforms. This diversified model reduces single-stream dependency and creates cross-selling opportunities across verticals.</p>
+
+<h3>Growth Metrics</h3>
+<p>Key performance indicators include monthly active users across all platforms, developer adoption rate for HeadyOS SDK, enterprise pipeline value, marketplace GMV (gross merchandise value), vector memory storage growth, and community engagement metrics. All metrics are tracked with φ-scaled projections that model both conservative and optimistic scenarios.</p>
+
+<h3>Team</h3>
+<p>Founded by Eric Haywood, an experienced technologist with deep expertise in AI systems, distributed computing, and enterprise architecture. The founding team combines technical excellence with business acumen, having collectively built and scaled multiple technology platforms. We are actively recruiting additional senior leadership for our Series A phase.</p>
+
+<h3>Roadmap</h3>
+<p>Our strategic roadmap targets Series A fundraising in 2026, with milestones including: production deployment of all 50+ services, 1000+ agents on HeadyEX marketplace, 10,000+ HeadyOS developer accounts, 5+ enterprise pilot programs, HeadyCoin mainnet launch, and community growth to 25,000+ members. Each milestone has clear success criteria and φ-scaled delivery projections.</p>
+
+<h3>Competitive Landscape</h3>
+<p>While companies like Anthropic, OpenAI, and Google compete in model development, HeadySystems operates at the infrastructure and orchestration layer — complementary rather than competitive. Our closest comparisons are LangChain (agent framework), AutoGen (multi-agent orchestration), and CrewAI (agent teams), but none combine our patent-protected innovations in CSL, VSA, sacred geometry, and 3D spatial memory.</p>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- How It Works -->
+  <section id="how-it-works" class="section">
+    <div class="container">
+      <div class="section-header">
+        <h2>How It Works</h2>
+        <p>The HeadyFinance workflow in four steps.</p>
+      </div>
+      <div class="how-steps">
+
+        <div class="how-step glass-card">
+          <div class="how-step-num">01</div>
+          <h4>Technology</h4>
+          <p>51+ patented innovations in CSL, VSA, Sacred Geometry, and 3D Spatial Memory create fundamental competitive advantages.</p>
+        </div>
+        <div class="how-step glass-card">
+          <div class="how-step-num">02</div>
+          <h4>Platform</h4>
+          <p>9 interconnected verticals generate diversified revenue across consumer, enterprise, developer, research, community, and marketplace.</p>
+        </div>
+        <div class="how-step glass-card">
+          <div class="how-step-num">03</div>
+          <h4>Traction</h4>
+          <p>Growing user base, developer adoption, enterprise pipeline, and marketplace GMV demonstrate product-market fit.</p>
+        </div>
+        <div class="how-step glass-card">
+          <div class="how-step-num">04</div>
+          <h4>Vision</h4>
+          <p>Series A in 2026 to scale platform, expand enterprise partnerships, and launch HeadyCoin mainnet for agent economy.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Technology Stack -->
+  <section id="tech-stack" class="section">
+    <div class="container">
+      <div class="section-header">
+        <h2>Technology Stack</h2>
+        <p>Built on the Heady™ infrastructure — sacred geometry governs every parameter.</p>
+      </div>
+      <div id="tech-container"></div>
+    </div>
+  </section>
+
+  <!-- Ecosystem Map -->
+  <section id="ecosystem" class="section">
+    <div class="container">
+      <div class="section-header">
+        <h2>Heady Ecosystem</h2>
+        <p>Nine interconnected platforms. One unified intelligence layer.</p>
+      </div>
+      <div class="eco-map">
+
+        <a href="https://headyme.com" class="eco-node" style="--node-accent:#00d4aa" target="_blank" rel="noopener">
+          <span class="eco-icon">◎</span>
+          <span class="eco-label">HeadyMe</span>
+          <span class="eco-desc">Personal Cloud</span>
+        </a>
+        <a href="https://headysystems.com" class="eco-node" style="--node-accent:#00d4aa" target="_blank" rel="noopener">
+          <span class="eco-icon">⟐</span>
+          <span class="eco-label">HeadySystems</span>
+          <span class="eco-desc">Infrastructure</span>
+        </a>
+        <a href="https://heady-ai.com" class="eco-node" style="--node-accent:#8b5cf6" target="_blank" rel="noopener">
+          <span class="eco-icon">△</span>
+          <span class="eco-label">HeadyAI</span>
+          <span class="eco-desc">Research</span>
+        </a>
+        <a href="https://headyos.com" class="eco-node" style="--node-accent:#14b8a6" target="_blank" rel="noopener">
+          <span class="eco-icon">◇</span>
+          <span class="eco-label">HeadyOS</span>
+          <span class="eco-desc">Operating System</span>
+        </a>
+        <a href="https://headyconnection.org" class="eco-node" style="--node-accent:#f59e0b" target="_blank" rel="noopener">
+          <span class="eco-icon">✦</span>
+          <span class="eco-label">HeadyConnection</span>
+          <span class="eco-desc">Community</span>
+        </a>
+        <a href="https://headyconnection.com" class="eco-node" style="--node-accent:#06b6d4" target="_blank" rel="noopener">
+          <span class="eco-icon">🌐</span>
+          <span class="eco-label">HeadyConnection Community</span>
+          <span class="eco-desc">Community Portal</span>
+        </a>
+        <a href="https://headyex.com" class="eco-node" style="--node-accent:#10b981" target="_blank" rel="noopener">
+          <span class="eco-icon">🏪</span>
+          <span class="eco-label">HeadyEX</span>
+          <span class="eco-desc">Marketplace</span>
+        </a>
+        <a href="https://headyfinance.com" class="eco-node eco-node--current" style="--node-accent:#a855f7">
+          <span class="eco-icon">📈</span>
+          <span class="eco-label">HeadyFinance</span>
+          <span class="eco-desc">Investor Relations</span>
+        </a>
+        <a href="https://admin.headysystems.com" class="eco-node" style="--node-accent:#06b6d4" target="_blank" rel="noopener">
+          <span class="eco-icon">📊</span>
+          <span class="eco-label">HeadySystems Admin Portal</span>
+          <span class="eco-desc">Admin</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Use Cases -->
+  <section id="use-cases" class="section">
+    <div class="container">
+      <div class="section-header">
+        <h2>Use Cases</h2>
+        <p>Real-world applications of HeadyFinance.</p>
+      </div>
+      <div class="grid-3">
+
+        <div class="glass-card">
+          <span style="font-size:1.618rem;display:block;margin-bottom:0.8rem">💼</span>
+          <h4>Seed/Angel Investment</h4>
+          <p>Early-stage investors gain equity in a diversified AI platform with 51+ patents, 9 market verticals, and a clear path to Series A.</p>
+        </div>
+        <div class="glass-card">
+          <span style="font-size:1.618rem;display:block;margin-bottom:0.8rem">🏢</span>
+          <h4>Strategic Partnership</h4>
+          <p>Enterprise partners gain preferred access to HeadySystems infrastructure, custom deployments, and white-label opportunities.</p>
+        </div>
+        <div class="glass-card">
+          <span style="font-size:1.618rem;display:block;margin-bottom:0.8rem">🤝</span>
+          <h4>Corporate Venture</h4>
+          <p>CVC arms of cloud providers, AI companies, and enterprise software firms gain strategic positioning in the agent economy.</p>
+        </div>
+        <div class="glass-card">
+          <span style="font-size:1.618rem;display:block;margin-bottom:0.8rem">📊</span>
+          <h4>Due Diligence</h4>
+          <p>Access detailed technical documentation, patent filings, financial projections, and competitive analysis through our data room.</p>
+        </div>
+        <div class="glass-card">
+          <span style="font-size:1.618rem;display:block;margin-bottom:0.8rem">🌍</span>
+          <h4>Global Expansion</h4>
+          <p>International investors gain access to a platform architected for global edge deployment across 300+ Cloudflare locations.</p>
+        </div>
+        <div class="glass-card">
+          <span style="font-size:1.618rem;display:block;margin-bottom:0.8rem">🪙</span>
+          <h4>Token Pre-Sale</h4>
+          <p>Early HeadyCoin acquisition for investors interested in the agent economy and decentralized AI marketplace infrastructure.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section id="faq" class="section">
+    <div class="container">
+      <div class="section-header">
+        <h2>Frequently Asked Questions</h2>
+        <p>Everything you need to know about HeadyFinance.</p>
+      </div>
+      <div style="max-width:700px;margin:0 auto;">
+
+        <div class="faq-item" data-index="0">
+          <button class="faq-question">What stage is HeadySystems?</button>
+          <div class="faq-answer"><p>HeadySystems is currently in pre-seed/seed stage with production infrastructure deployed, 51+ patent applications filed, and 9 vertical platforms under active development. We are targeting Series A fundraising in 2026.</p></div>
+        </div>
+        <div class="faq-item" data-index="1">
+          <button class="faq-question">How many patents have been filed?</button>
+          <div class="faq-answer"><p>51+ provisional patent applications covering CSL gate mechanisms, VSA operators, sacred geometry computing, 3D spatial memory, φ-scaled resource allocation, cognitive archetypes, and concurrent swarm orchestration.</p></div>
+        </div>
+        <div class="faq-item" data-index="2">
+          <button class="faq-question">What is the revenue model?</button>
+          <div class="faq-answer"><p>Diversified across subscription (HeadyMe/HeadyOS), enterprise (HeadySystems infrastructure), marketplace (HeadyEX fees), token economics (HeadyCoin), professional services, and community platforms.</p></div>
+        </div>
+        <div class="faq-item" data-index="3">
+          <button class="faq-question">Who are the competitors?</button>
+          <div class="faq-answer"><p>We operate at the infrastructure/orchestration layer, complementary to model providers (Anthropic, OpenAI, Google). Closest comparisons are LangChain, AutoGen, and CrewAI, but none have our patented CSL/VSA/Sacred Geometry innovations.</p></div>
+        </div>
+        <div class="faq-item" data-index="4">
+          <button class="faq-question">Is there a data room?</button>
+          <div class="faq-answer"><p>Qualified investors can request access to our detailed data room containing technical documentation, patent filings, financial models, market analysis, and team backgrounds. Contact invest@headysystems.com.</p></div>
+        </div>
+        <div class="faq-item" data-index="5">
+          <button class="faq-question">What is HeadyCoin's role?</button>
+          <div class="faq-answer"><p>HeadyCoin (HCOIN) is the native utility token of the HeadyEX marketplace, used for agent purchases, compute payments, staking, governance, and community rewards. It creates a self-sustaining agent economy.</p></div>
+        </div>
+        <div class="faq-item" data-index="6">
+          <button class="faq-question">How is the 501(c)(3) related?</button>
+          <div class="faq-answer"><p>HeadyConnection.org is a separate 501(c)(3) entity that receives a portion of commercial revenue. It's a social impact commitment: commercial success funds non-profit mission delivery, creating positive brand association and community goodwill.</p></div>
+        </div>
+        <div class="faq-item" data-index="7">
+          <button class="faq-question">What are the key milestones for Series A?</button>
+          <div class="faq-answer"><p>Production deployment of 50+ services, 1000+ marketplace agents, 10K+ developer accounts, 5+ enterprise pilots, HeadyCoin mainnet launch, and 25K+ community members.</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <span class="nav-logo">HeadyFinance</span>
+          <p>Investor relations, growth metrics, patent portfolio, strategic roadmap — the financial intelligence behind HeadySystems.</p>
+        </div>
+
+        <div class="footer-col">
+          <h4>Platform</h4>
+          <a href="https://headyme.com" target="_blank" rel="noopener">HeadyMe</a>
+<a href="https://headysystems.com" target="_blank" rel="noopener">HeadySystems</a>
+<a href="https://heady-ai.com" target="_blank" rel="noopener">HeadyAI</a>
+<a href="https://headyos.com" target="_blank" rel="noopener">HeadyOS</a>
+
+        </div>
+        <div class="footer-col">
+          <h4>Community</h4>
+          <a href="https://headyconnection.org" target="_blank" rel="noopener">HeadyConnection.org</a>
+<a href="https://headyconnection.com" target="_blank" rel="noopener">HeadyConnection.com</a>
+<a href="https://headyex.com" target="_blank" rel="noopener">HeadyEX</a>
+
+        </div>
+        <div class="footer-col">
+          <h4>Company</h4>
+          <a href="https://headyfinance.com" target="_blank" rel="noopener">HeadyFinance</a>
+<a href="https://admin.headysystems.com" target="_blank" rel="noopener">Admin Portal</a>
+<a href="https://github.com/HeadyMe" target="_blank" rel="noopener">GitHub</a>
+
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>&copy; 2026 HeadySystems Inc. All Rights Reserved. 51+ Provisional Patents.</span>
+        <a href="https://www.perplexity.ai/computer" target="_blank" rel="noopener noreferrer" style="color:var(--text-muted);">
+          Created with Perplexity Computer
+        </a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="../packages/sacred-geometry/sacred-geometry.js"></script>
+  <script src="../packages/cross-nav/cross-nav.js"></script>
+  <script src="../packages/auth-widget/auth-widget.js"></script>
+  <script src="../packages/auto-context/auto-context-bridge.js"></script>
+  <script src="../packages/bee-injectors/bee-injectors.js"></script>
+  <script>
+    // Initialize Sacred Geometry Canvas with site-specific settings
+    new SacredGeometryCanvas('sacred-canvas', {
+      accentColor: '#a855f7',
+      secondaryColor: '#40e0d0',
+      goldColor: '#f0c040',
+      opacity: 0.3,
+      nodeCount: 34,
+      connectionDistance: 140,
+    });
+
+    // Initialize Cross-Site Navigation
+    new HeadyCrossNav({ siteId: 'headyfinance' });
+
+    // Initialize Auth Widget
+    new HeadyAuthWidget({
+      siteId: 'headyfinance',
+      accentColor: '#a855f7',
+    });
+
+    // Initialize AutoContext Bridge
+    new AutoContextBridge({ siteId: 'headyfinance' });
+
+    // Inject Tech Stack via Bee Injectors
+    const techContainer = document.getElementById('tech-container');
+    if (techContainer && window.HeadyBeeInjectors) {
+      HeadyBeeInjectors.injectTechStack(techContainer);
+    }
+
+    // FAQ Accordion
+    document.querySelectorAll('.faq-question').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const item = btn.parentElement;
+        const wasActive = item.classList.contains('active');
+        document.querySelectorAll('.faq-item').forEach(fi => fi.classList.remove('active'));
+        if (!wasActive) item.classList.add('active');
+      });
+    });
+
+    // Animated stat counters
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.querySelectorAll('.stat-num').forEach(el => {
+            const final = el.textContent;
+            const numeric = parseInt(final);
+            if (!isNaN(numeric) && numeric > 0) {
+              let current = 0;
+              const step = Math.max(1, Math.floor(numeric / 40));
+              const timer = setInterval(() => {
+                current += step;
+                if (current >= numeric) {
+                  el.textContent = final;
+                  clearInterval(timer);
+                } else {
+                  el.textContent = current + (final.includes('+') ? '+' : '');
+                }
+              }, 30);
+            }
+          });
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.3 });
+    document.querySelectorAll('.stats-row').forEach(row => observer.observe(row));
+  </script>
+</body>
+</html>

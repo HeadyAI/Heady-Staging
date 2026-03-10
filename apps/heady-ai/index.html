@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HeadyAI — The Science Behind HeadyOS</title>
+  <meta name="description" content="Continuous Semantic Logic, Vector Symbolic Architecture, Sacred Geometry topology, and 3D Spatial Memory — the research powering autonomous intelligence.">
+  <meta name="keywords" content="Heady, AI, HeadyAI, research, sacred geometry, vector memory, CSL">
+  <meta property="og:title" content="HeadyAI — The Science Behind HeadyOS">
+  <meta property="og:description" content="Continuous Semantic Logic, Vector Symbolic Architecture, Sacred Geometry topology, and 3D Spatial Memory — the research powering autonomous intelligence.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://heady-ai.com">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../packages/design-system/heady-design.css">
+  <style>
+    :root {
+      --accent: #8b5cf6;
+      --accent-glow: rgba(139,92,246,0.15);
+      --accent-subtle: rgba(139,92,246,0.06);
+    }
+    body { padding-top: 32px; } /* cross-nav offset */
+    .sacred-canvas {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      z-index: 0;
+      pointer-events: none;
+    }
+    .feature-icon {
+      font-size: 1.618rem;
+      display: block;
+      margin-bottom: 0.8rem;
+      color: var(--accent);
+    }
+    .btn-sm {
+      padding: 0.4rem 1rem;
+      font-size: var(--text-xs);
+      border-radius: var(--radius-sm);
+    }
+    .deep-dive { max-width: 800px; margin: 0 auto; text-align: left; }
+    .deep-dive h3 { font-size: var(--text-xl); margin: var(--space-21) 0 var(--space-8); color: var(--accent); }
+    .deep-dive h4 { font-size: var(--text-lg); margin: var(--space-13) 0 var(--space-5); color: var(--text-primary); }
+    .deep-dive p { margin-bottom: var(--space-8); font-size: var(--text-base); line-height: 1.8; }
+    .nav-links { display: flex; align-items: center; gap: var(--space-8); }
+    .nav-links a { color: var(--text-secondary); font-size: var(--text-sm); font-weight: 500; }
+    .nav-links a:hover { color: var(--text-primary); opacity: 1; }
+    .nav-logo {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+      font-size: 1.1rem;
+      letter-spacing: 0.05em;
+      color: var(--accent);
+    }
+    .eco-map { display: grid; grid-template-columns: repeat(3,1fr); gap: 1.3125rem; max-width: 900px; margin: 0 auto; }
+    .eco-node { display: flex; flex-direction: column; align-items: center; text-align: center; padding: 2rem 1rem; background: var(--glass-bg); backdrop-filter: blur(24px); border: 1px solid var(--glass-border); border-radius: var(--radius-lg); text-decoration: none; transition: all .382s; }
+    .eco-node:hover { transform: translateY(-3px); border-color: var(--node-accent); box-shadow: 0 0 21px rgba(124,94,255,.12); opacity: 1; }
+    .eco-node--current { border-color: var(--node-accent); background: rgba(124,94,255,.04); }
+    .eco-icon { font-size: 1.8rem; margin-bottom: .5rem; color: var(--node-accent); }
+    .eco-label { font-weight: 600; color: #e8e8f0; font-size: .95rem; margin-bottom: .25rem; }
+    .eco-desc { font-size: .75rem; color: #9898b0; }
+    .how-steps { display: grid; grid-template-columns: repeat(auto-fit,minmax(200px,1fr)); gap: 1.3125rem; }
+    .how-step { text-align: center; padding: 2rem 1rem; }
+    .how-step-num { font-family: 'JetBrains Mono', monospace; font-size: 2rem; font-weight: 700; color: rgba(139,92,246,0.3); margin-bottom: .5rem; }
+    .how-step h4 { color: #e8e8f0; margin-bottom: .5rem; }
+    .how-step p { font-size: .85rem; color: #9898b0; }
+    @media(max-width:768px) {
+      .eco-map { grid-template-columns: 1fr 1fr; }
+      .how-steps { grid-template-columns: 1fr; }
+      .nav-links { display: none; }
+    }
+    @media(max-width:480px) {
+      .eco-map { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Sacred Geometry Canvas Background -->
+  <canvas id="sacred-canvas" class="sacred-canvas"></canvas>
+
+  <!-- Navigation -->
+  <nav class="glass-nav" style="top:32px;">
+    <span class="nav-logo">HeadyAI</span>
+    <div class="nav-links">
+      <a href="#research">Research</a>
+<a href="#patents">Patents</a>
+<a href="#publications">Publications</a>
+<a href="https://headysystems.com" class="btn btn-primary btn-sm" target="_blank" rel="noopener">HeadySystems</a>
+
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="version-badge">v3.0 · Sri Yantra · Research</div>
+    <h1 class="text-gradient">The Science Behind HeadyOS</h1>
+    <p class="subtitle">Continuous Semantic Logic, Vector Symbolic Architecture, Sacred Geometry topology, and 3D Spatial Memory — the research powering autonomous intelligence.</p>
+    <div style="display:flex;gap:var(--space-8);">
+      <a href="#deep-dive" class="btn btn-primary">Learn More</a>
+      <a href="https://auth.headysystems.com/login?redirect=https://heady-ai.com" class="btn btn-ghost">Sign In</a>
+    </div>
+  </section>
+
+  <!-- Stats Banner -->
+  <section class="section" style="padding: var(--space-21) 0;">
+    <div class="container">
+      <div class="stats-row">
+
+        <div class="stat">
+          <div class="stat-num">51+</div>
+          <div class="stat-label">Patents Filed</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num">384</div>
+          <div class="stat-label">Vector Dimensions</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num">φ</div>
+          <div class="stat-label">Golden Ratio</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num">17</div>
+          <div class="stat-label">Research Domains</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Grid -->
+  <section id="features" class="section">
+    <div class="container">
+      <div class="section-header">
+        <h2>Core Capabilities</h2>
+        <p>Everything you need from HeadyAI — powered by Sacred Geometry and Continuous Semantic Logic.</p>
+      </div>
+      <div class="grid-3">
+
+        <div class="glass-card">
+          <span class="feature-icon">△</span>
+          <h4>Continuous Semantic Logic</h4>
+          <p>Multi-valued gate operations with soft thresholds enabling precise context filtering. CSL replaces binary true/false with continuous geometric relevance on the [0,1] spectrum.</p>
+        </div>
+        <div class="glass-card">
+          <span class="feature-icon">◈</span>
+          <h4>Vector Symbolic Architecture</h4>
+          <p>Hyperdimensional computing with d ≥ 10,000 dimensions. Binding, bundling, and permutation operations over holographic distributed representations.</p>
+        </div>
+        <div class="glass-card">
+          <span class="feature-icon">⊛</span>
+          <h4>Sacred Geometry Topology</h4>
+          <p>The golden ratio φ ≈ 1.618 and Fibonacci scaling encode natural optimization patterns — from resource allocation to network topology to visual design.</p>
+        </div>
+        <div class="glass-card">
+          <span class="feature-icon">◎</span>
+          <h4>3D Spatial Memory</h4>
+          <p>Agent memory as navigable 3D vector spaces with O(log n) octree retrieval, temporal decay functions, and semantic clustering that mirrors biological memory.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Deep Dive Content (2000+ words) -->
+  <section id="deep-dive" class="section">
+    <div class="container">
+      <div class="section-header">
+        <h2>Deep Dive</h2>
+        <p>A comprehensive look at what HeadyAI offers and how it works.</p>
+      </div>
+      <div class="deep-dive">
+
+<h3>The Science of Autonomous Intelligence</h3>
+<p>HeadyAI represents the research and scientific foundation underlying every component of the Heady ecosystem. While other AI platforms rely on brute-force scaling of transformer parameters, HeadyAI pioneers a fundamentally different approach: encoding mathematical harmony into the architecture itself. Our research spans Continuous Semantic Logic, Vector Symbolic Architecture, Sacred Geometry topology, and 3D Spatial Memory — each backed by provisional patents and peer-reviewed methodologies.</p>
+
+<h3>Continuous Semantic Logic (CSL)</h3>
+<p>Traditional computing operates on binary logic: true or false, 0 or 1. CSL extends this to a continuous spectrum where relevance, confidence, and similarity are expressed as real numbers between 0 and 1. The key innovation is the use of geometric thresholds derived from the golden ratio: ψ² ≈ 0.382 for inclusion gates, ψ ≈ 0.618 for boost gates, and ψ + 0.1 ≈ 0.718 for automatic injection gates.</p>
+
+<p>These aren't arbitrary cutoffs — they emerge from the mathematical properties of the golden ratio, which produces the most irrational number (hardest to approximate by rationals), ensuring maximum information separation between gate levels. CSL gates compose hierarchically: the output of one gate becomes the input to the next, creating cascading relevance filters that progressively refine context quality.</p>
+
+<p>In practice, CSL replaces traditional keyword matching and boolean filtering with semantic geometric operations. When HeadyAutoContext decides what information to inject into an AI interaction, it computes cosine similarity in 384-dimensional space and applies CSL gates to determine relevance. This produces dramatically better context quality than keyword search or simple embedding similarity thresholds.</p>
+
+<h3>Vector Symbolic Architecture (VSA)</h3>
+<p>VSA operates in hyperdimensional spaces (d ≥ 10,000) where information is encoded as high-dimensional vectors and manipulated through three fundamental operations: binding (element-wise multiplication), bundling (element-wise addition with normalization), and permutation (circular shift). These operations are holographic — every element of the vector participates in representing every concept.</p>
+
+<p>Heady's implementation of VSA enables compositional reasoning: complex concepts are constructed by binding and bundling simpler ones. For example, the concept "user preference for Python code in functional style" is created by binding the vectors for "Python," "functional," and "user-preference," then bundling with the user's historical interaction vectors. The result is a single high-dimensional vector that can be compared to any document or code artifact to determine relevance.</p>
+
+<h3>Sacred Geometry in Computing</h3>
+<p>The golden ratio φ (1.618033988749895) and its reciprocal ψ (0.618033988749895) appear throughout nature in structures optimized by evolution: sunflower spirals, nautilus shells, galaxy arms, DNA helices. HeadyAI applies these same mathematical constants to compute architecture with measurable benefits.</p>
+
+<p>Fibonacci-spaced retry intervals (1s, 1.618s, 2.618s, 4.236s, 6.854s) distribute load across non-overlapping windows, eliminating the thundering herd effect that plagues systems using powers-of-two backoff. φ-scaled thread pools allocate resources in ratios that naturally balance throughput and latency. Golden-angle (137.5°) node distribution on ring topologies maximizes network coverage while minimizing hop distance.</p>
+
+<p>Network topology follows sacred geometry patterns. The 5-ring concentric architecture (CENTER, INNER, MIDDLE, OUTER, GOVERNANCE) positions services at radii proportional to Fibonacci numbers. Service discovery uses golden-angle rotation for consistent hashing, producing more uniform load distribution than standard hash functions.</p>
+
+<h3>3D Spatial Memory Architecture</h3>
+<p>HeadyAI's memory system transcends flat key-value stores by organizing information in navigable 3D vector spaces. Each memory item exists as a point in 384-dimensional space (projected to 3D for visualization), with position determined by semantic content, temporal recency, and access frequency.</p>
+
+<p>The octree spatial index enables O(log n) nearest-neighbor queries in the 3D projection space, making memory retrieval logarithmically scalable regardless of database size. Temporal decay functions reduce the influence of older memories exponentially, but frequently-accessed memories resist decay — mirroring the biological mechanisms of long-term potentiation in neural tissue.</p>
+
+<p>Semantic clustering emerges naturally from the embedding process. Related concepts occupy nearby regions in vector space, forming knowledge galaxies that can be navigated, explored, and interrogated. The system supports multiple memory spaces per user, enabling context isolation between projects while maintaining global search across all spaces.</p>
+
+<h3>The 7 Cognitive Archetypes</h3>
+<p>HeadyAI implements seven cognitive processing layers inspired by animal intelligence patterns. The Owl Layer provides deep wisdom and first-principles reasoning. The Eagle Layer maintains 360° awareness across all inputs. The Dolphin Layer enables creative lateral thinking. The Rabbit Layer multiplies perspectives (5+ angles per task). The Ant Layer guarantees thoroughness with zero-skip execution. The Elephant Layer provides perfect recall from vector memory. The Beaver Layer structures clean architectural solutions.</p>
+
+<p>These archetypes aren't metaphors — they're implemented as distinct processing pipelines in the cognitive runtime, each with unique prompt engineering, model selection biases, and output formatting. Every AI interaction passes through all seven layers concurrently, and their outputs are aggregated using CSL gates to produce responses that are wise, aware, creative, thorough, memorable, and well-structured.</p>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- How It Works -->
+  <section id="how-it-works" class="section">
+    <div class="container">
+      <div class="section-header">
+        <h2>How It Works</h2>
+        <p>The HeadyAI workflow in four steps.</p>
+      </div>
+      <div class="how-steps">
+
+        <div class="how-step glass-card">
+          <div class="how-step-num">01</div>
+          <h4>Embed</h4>
+          <p>Content enters the system and is embedded into 384-dimensional vectors via multi-provider embedding router.</p>
+        </div>
+        <div class="how-step glass-card">
+          <div class="how-step-num">02</div>
+          <h4>Gate</h4>
+          <p>CSL geometric thresholds (0.382/0.618/0.718) filter and classify content by semantic relevance — not ranking.</p>
+        </div>
+        <div class="how-step glass-card">
+          <div class="how-step-num">03</div>
+          <h4>Compose</h4>
+          <p>VSA binding and bundling operations construct complex concepts from simpler components in hyperdimensional space.</p>
+        </div>
+        <div class="how-step glass-card">
+          <div class="how-step-num">04</div>
+          <h4>Reason</h4>
+          <p>7 cognitive archetypes process concurrently. Results aggregate via CSL relevance gates into unified intelligent output.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Technology Stack -->
+  <section id="tech-stack" class="section">
+    <div class="container">
+      <div class="section-header">
+        <h2>Technology Stack</h2>
+        <p>Built on the Heady™ infrastructure — sacred geometry governs every parameter.</p>
+      </div>
+      <div id="tech-container"></div>
+    </div>
+  </section>
+
+  <!-- Ecosystem Map -->
+  <section id="ecosystem" class="section">
+    <div class="container">
+      <div class="section-header">
+        <h2>Heady Ecosystem</h2>
+        <p>Nine interconnected platforms. One unified intelligence layer.</p>
+      </div>
+      <div class="eco-map">
+
+        <a href="https://headyme.com" class="eco-node" style="--node-accent:#00d4aa" target="_blank" rel="noopener">
+          <span class="eco-icon">◎</span>
+          <span class="eco-label">HeadyMe</span>
+          <span class="eco-desc">Personal Cloud</span>
+        </a>
+        <a href="https://headysystems.com" class="eco-node" style="--node-accent:#00d4aa" target="_blank" rel="noopener">
+          <span class="eco-icon">⟐</span>
+          <span class="eco-label">HeadySystems</span>
+          <span class="eco-desc">Infrastructure</span>
+        </a>
+        <a href="https://heady-ai.com" class="eco-node eco-node--current" style="--node-accent:#8b5cf6">
+          <span class="eco-icon">△</span>
+          <span class="eco-label">HeadyAI</span>
+          <span class="eco-desc">Research</span>
+        </a>
+        <a href="https://headyos.com" class="eco-node" style="--node-accent:#14b8a6" target="_blank" rel="noopener">
+          <span class="eco-icon">◇</span>
+          <span class="eco-label">HeadyOS</span>
+          <span class="eco-desc">Operating System</span>
+        </a>
+        <a href="https://headyconnection.org" class="eco-node" style="--node-accent:#f59e0b" target="_blank" rel="noopener">
+          <span class="eco-icon">✦</span>
+          <span class="eco-label">HeadyConnection</span>
+          <span class="eco-desc">Community</span>
+        </a>
+        <a href="https://headyconnection.com" class="eco-node" style="--node-accent:#06b6d4" target="_blank" rel="noopener">
+          <span class="eco-icon">🌐</span>
+          <span class="eco-label">HeadyConnection Community</span>
+          <span class="eco-desc">Community Portal</span>
+        </a>
+        <a href="https://headyex.com" class="eco-node" style="--node-accent:#10b981" target="_blank" rel="noopener">
+          <span class="eco-icon">🏪</span>
+          <span class="eco-label">HeadyEX</span>
+          <span class="eco-desc">Marketplace</span>
+        </a>
+        <a href="https://headyfinance.com" class="eco-node" style="--node-accent:#a855f7" target="_blank" rel="noopener">
+          <span class="eco-icon">📈</span>
+          <span class="eco-label">HeadyFinance</span>
+          <span class="eco-desc">Investor Relations</span>
+        </a>
+        <a href="https://admin.headysystems.com" class="eco-node" style="--node-accent:#06b6d4" target="_blank" rel="noopener">
+          <span class="eco-icon">📊</span>
+          <span class="eco-label">HeadySystems Admin Portal</span>
+          <span class="eco-desc">Admin</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Use Cases -->
+  <section id="use-cases" class="section">
+    <div class="container">
+      <div class="section-header">
+        <h2>Use Cases</h2>
+        <p>Real-world applications of HeadyAI.</p>
+      </div>
+      <div class="grid-3">
+
+        <div class="glass-card">
+          <span style="font-size:1.618rem;display:block;margin-bottom:0.8rem">🧬</span>
+          <h4>Computational Biology</h4>
+          <p>Model protein folding landscapes in hyperdimensional vector space. CSL gates filter structural similarities with precision beyond traditional alignment scores.</p>
+        </div>
+        <div class="glass-card">
+          <span style="font-size:1.618rem;display:block;margin-bottom:0.8rem">📚</span>
+          <h4>Research Synthesis</h4>
+          <p>Ingest thousands of papers into 3D spatial memory. Navigate the knowledge galaxy to discover connections between disparate fields that human researchers miss.</p>
+        </div>
+        <div class="glass-card">
+          <span style="font-size:1.618rem;display:block;margin-bottom:0.8rem">🤖</span>
+          <h4>Agent Architecture</h4>
+          <p>Design autonomous agents using the 7 cognitive archetypes. Each agent inherits wisdom, awareness, creativity, and thoroughness as foundational capabilities.</p>
+        </div>
+        <div class="glass-card">
+          <span style="font-size:1.618rem;display:block;margin-bottom:0.8rem">🔮</span>
+          <h4>Predictive Analytics</h4>
+          <p>Use φ-scaled temporal models to predict trends. Sacred geometry patterns in historical data reveal cycles that linear regression cannot capture.</p>
+        </div>
+        <div class="glass-card">
+          <span style="font-size:1.618rem;display:block;margin-bottom:0.8rem">🧠</span>
+          <h4>Neuroscience Research</h4>
+          <p>3D spatial memory architecture mirrors biological neural networks. Study memory formation, consolidation, and retrieval in computational models.</p>
+        </div>
+        <div class="glass-card">
+          <span style="font-size:1.618rem;display:block;margin-bottom:0.8rem">📐</span>
+          <h4>Mathematical Foundations</h4>
+          <p>Explore the theoretical properties of CSL, VSA, and sacred geometry computing. Contribute to the growing body of published research.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section id="faq" class="section">
+    <div class="container">
+      <div class="section-header">
+        <h2>Frequently Asked Questions</h2>
+        <p>Everything you need to know about HeadyAI.</p>
+      </div>
+      <div style="max-width:700px;margin:0 auto;">
+
+        <div class="faq-item" data-index="0">
+          <button class="faq-question">What is Continuous Semantic Logic?</button>
+          <div class="faq-answer"><p>CSL extends binary true/false logic to continuous [0,1] values using geometric thresholds derived from the golden ratio. Gates at 0.382 (include), 0.618 (boost), and 0.718 (inject) create cascading relevance filters that progressively refine information quality for AI interactions.</p></div>
+        </div>
+        <div class="faq-item" data-index="1">
+          <button class="faq-question">How does Sacred Geometry apply to computing?</button>
+          <div class="faq-answer"><p>The golden ratio φ (1.618) and Fibonacci sequences create mathematically optimal distributions for retry intervals, thread pools, network topology, and resource allocation. These patterns eliminate resonance effects and thundering herd problems while maximizing throughput.</p></div>
+        </div>
+        <div class="faq-item" data-index="2">
+          <button class="faq-question">What are the 51+ patents?</button>
+          <div class="faq-answer"><p>HeadyAI has filed 51+ provisional patents covering CSL gate mechanisms, VSA composition operators, sacred geometry network topology, 3D spatial memory indexing, φ-scaled resource allocation, cognitive archetype processing, and cross-domain context injection.</p></div>
+        </div>
+        <div class="faq-item" data-index="3">
+          <button class="faq-question">Can I use HeadyAI for academic research?</button>
+          <div class="faq-answer"><p>Yes. HeadyAI provides research APIs for embedding generation, CSL computation, VSA operations, and spatial memory queries. Academic licenses are available through HeadyConnection.org's grant program.</p></div>
+        </div>
+        <div class="faq-item" data-index="4">
+          <button class="faq-question">What is Vector Symbolic Architecture?</button>
+          <div class="faq-answer"><p>VSA encodes information as high-dimensional vectors (d ≥ 10,000) and manipulates them through binding (multiplication), bundling (addition), and permutation (shift). These holographic operations enable compositional reasoning where complex concepts emerge from combinations of simpler ones.</p></div>
+        </div>
+        <div class="faq-item" data-index="5">
+          <button class="faq-question">How does 3D Spatial Memory differ from RAG?</button>
+          <div class="faq-answer"><p>Traditional RAG retrieves flat document chunks by similarity. HeadyAI's 3D spatial memory organizes knowledge in navigable space with temporal decay, access frequency weighting, and semantic clustering. It's more like a knowledge galaxy than a document store.</p></div>
+        </div>
+        <div class="faq-item" data-index="6">
+          <button class="faq-question">Is HeadyAI open source?</button>
+          <div class="faq-answer"><p>Core research papers and reference implementations are published through HeadyConnection.org. Production systems are proprietary. The patent portfolio ensures defensive protection while enabling academic collaboration.</p></div>
+        </div>
+        <div class="faq-item" data-index="7">
+          <button class="faq-question">What models does HeadyAI use for research?</button>
+          <div class="faq-answer"><p>HeadyAI uses the Multi-Model Council: Claude for deep analysis, GPT for broad knowledge, Gemini for multimodal reasoning, Perplexity for research synthesis, and specialized open-source models for domain-specific tasks. Selection is by CSL domain similarity matching.</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <span class="nav-logo">HeadyAI</span>
+          <p>Continuous Semantic Logic, Vector Symbolic Architecture, Sacred Geometry topology, and 3D Spatial Memory — the research powering autonomous intelligence.</p>
+        </div>
+
+        <div class="footer-col">
+          <h4>Platform</h4>
+          <a href="https://headyme.com" target="_blank" rel="noopener">HeadyMe</a>
+<a href="https://headysystems.com" target="_blank" rel="noopener">HeadySystems</a>
+<a href="https://heady-ai.com" target="_blank" rel="noopener">HeadyAI</a>
+<a href="https://headyos.com" target="_blank" rel="noopener">HeadyOS</a>
+
+        </div>
+        <div class="footer-col">
+          <h4>Community</h4>
+          <a href="https://headyconnection.org" target="_blank" rel="noopener">HeadyConnection.org</a>
+<a href="https://headyconnection.com" target="_blank" rel="noopener">HeadyConnection.com</a>
+<a href="https://headyex.com" target="_blank" rel="noopener">HeadyEX</a>
+
+        </div>
+        <div class="footer-col">
+          <h4>Company</h4>
+          <a href="https://headyfinance.com" target="_blank" rel="noopener">HeadyFinance</a>
+<a href="https://admin.headysystems.com" target="_blank" rel="noopener">Admin Portal</a>
+<a href="https://github.com/HeadyMe" target="_blank" rel="noopener">GitHub</a>
+
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>&copy; 2026 HeadySystems Inc. All Rights Reserved. 51+ Provisional Patents.</span>
+        <a href="https://www.perplexity.ai/computer" target="_blank" rel="noopener noreferrer" style="color:var(--text-muted);">
+          Created with Perplexity Computer
+        </a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="../packages/sacred-geometry/sacred-geometry.js"></script>
+  <script src="../packages/cross-nav/cross-nav.js"></script>
+  <script src="../packages/auth-widget/auth-widget.js"></script>
+  <script src="../packages/auto-context/auto-context-bridge.js"></script>
+  <script src="../packages/bee-injectors/bee-injectors.js"></script>
+  <script>
+    // Initialize Sacred Geometry Canvas with site-specific settings
+    new SacredGeometryCanvas('sacred-canvas', {
+      accentColor: '#8b5cf6',
+      secondaryColor: '#40e0d0',
+      goldColor: '#f0c040',
+      opacity: 0.3,
+      nodeCount: 34,
+      connectionDistance: 140,
+    });
+
+    // Initialize Cross-Site Navigation
+    new HeadyCrossNav({ siteId: 'heady-ai' });
+
+    // Initialize Auth Widget
+    new HeadyAuthWidget({
+      siteId: 'heady-ai',
+      accentColor: '#8b5cf6',
+    });
+
+    // Initialize AutoContext Bridge
+    new AutoContextBridge({ siteId: 'heady-ai' });
+
+    // Inject Tech Stack via Bee Injectors
+    const techContainer = document.getElementById('tech-container');
+    if (techContainer && window.HeadyBeeInjectors) {
+      HeadyBeeInjectors.injectTechStack(techContainer);
+    }
+
+    // FAQ Accordion
+    document.querySelectorAll('.faq-question').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const item = btn.parentElement;
+        const wasActive = item.classList.contains('active');
+        document.querySelectorAll('.faq-item').forEach(fi => fi.classList.remove('active'));
+        if (!wasActive) item.classList.add('active');
+      });
+    });
+
+    // Animated stat counters
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.querySelectorAll('.stat-num').forEach(el => {
+            const final = el.textContent;
+            const numeric = parseInt(final);
+            if (!isNaN(numeric) && numeric > 0) {
+              let current = 0;
+              const step = Math.max(1, Math.floor(numeric / 40));
+              const timer = setInterval(() => {
+                current += step;
+                if (current >= numeric) {
+                  el.textContent = final;
+                  clearInterval(timer);
+                } else {
+                  el.textContent = current + (final.includes('+') ? '+' : '');
+                }
+              }, 30);
+            }
+          });
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.3 });
+    document.querySelectorAll('.stats-row').forEach(row => observer.observe(row));
+  </script>
+</body>
+</html>

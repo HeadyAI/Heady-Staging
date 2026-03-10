@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HeadyConnection — AI for Everyone — Non-Profit AI Access</title>
+  <meta name="description" content="501(c)(3) non-profit bringing equitable AI access to underserved communities through grants, education, and open-source tools.">
+  <meta name="keywords" content="Heady, AI, HeadyConnection, community, sacred geometry, vector memory, CSL">
+  <meta property="og:title" content="HeadyConnection — AI for Everyone — Non-Profit AI Access">
+  <meta property="og:description" content="501(c)(3) non-profit bringing equitable AI access to underserved communities through grants, education, and open-source tools.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://headyconnection.org">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../packages/design-system/heady-design.css">
+  <style>
+    :root {
+      --accent: #f59e0b;
+      --accent-glow: rgba(245,158,11,0.15);
+      --accent-subtle: rgba(245,158,11,0.06);
+    }
+    body { padding-top: 32px; } /* cross-nav offset */
+    .sacred-canvas {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      z-index: 0;
+      pointer-events: none;
+    }
+    .feature-icon {
+      font-size: 1.618rem;
+      display: block;
+      margin-bottom: 0.8rem;
+      color: var(--accent);
+    }
+    .btn-sm {
+      padding: 0.4rem 1rem;
+      font-size: var(--text-xs);
+      border-radius: var(--radius-sm);
+    }
+    .deep-dive { max-width: 800px; margin: 0 auto; text-align: left; }
+    .deep-dive h3 { font-size: var(--text-xl); margin: var(--space-21) 0 var(--space-8); color: var(--accent); }
+    .deep-dive h4 { font-size: var(--text-lg); margin: var(--space-13) 0 var(--space-5); color: var(--text-primary); }
+    .deep-dive p { margin-bottom: var(--space-8); font-size: var(--text-base); line-height: 1.8; }
+    .nav-links { display: flex; align-items: center; gap: var(--space-8); }
+    .nav-links a { color: var(--text-secondary); font-size: var(--text-sm); font-weight: 500; }
+    .nav-links a:hover { color: var(--text-primary); opacity: 1; }
+    .nav-logo {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+      font-size: 1.1rem;
+      letter-spacing: 0.05em;
+      color: var(--accent);
+    }
+    .eco-map { display: grid; grid-template-columns: repeat(3,1fr); gap: 1.3125rem; max-width: 900px; margin: 0 auto; }
+    .eco-node { display: flex; flex-direction: column; align-items: center; text-align: center; padding: 2rem 1rem; background: var(--glass-bg); backdrop-filter: blur(24px); border: 1px solid var(--glass-border); border-radius: var(--radius-lg); text-decoration: none; transition: all .382s; }
+    .eco-node:hover { transform: translateY(-3px); border-color: var(--node-accent); box-shadow: 0 0 21px rgba(124,94,255,.12); opacity: 1; }
+    .eco-node--current { border-color: var(--node-accent); background: rgba(124,94,255,.04); }
+    .eco-icon { font-size: 1.8rem; margin-bottom: .5rem; color: var(--node-accent); }
+    .eco-label { font-weight: 600; color: #e8e8f0; font-size: .95rem; margin-bottom: .25rem; }
+    .eco-desc { font-size: .75rem; color: #9898b0; }
+    .how-steps { display: grid; grid-template-columns: repeat(auto-fit,minmax(200px,1fr)); gap: 1.3125rem; }
+    .how-step { text-align: center; padding: 2rem 1rem; }
+    .how-step-num { font-family: 'JetBrains Mono', monospace; font-size: 2rem; font-weight: 700; color: rgba(245,158,11,0.3); margin-bottom: .5rem; }
+    .how-step h4 { color: #e8e8f0; margin-bottom: .5rem; }
+    .how-step p { font-size: .85rem; color: #9898b0; }
+    @media(max-width:768px) {
+      .eco-map { grid-template-columns: 1fr 1fr; }
+      .how-steps { grid-template-columns: 1fr; }
+      .nav-links { display: none; }
+    }
+    @media(max-width:480px) {
+      .eco-map { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Sacred Geometry Canvas Background -->
+  <canvas id="sacred-canvas" class="sacred-canvas"></canvas>
+
+  <!-- Navigation -->
+  <nav class="glass-nav" style="top:32px;">
+    <span class="nav-logo">HeadyConnection</span>
+    <div class="nav-links">
+      <a href="#mission">Mission</a>
+<a href="#programs">Programs</a>
+<a href="#donate">Donate</a>
+<a href="https://headyconnection.com" class="btn btn-primary btn-sm" target="_blank" rel="noopener">Community</a>
+
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="version-badge">v3.0 · Seed of Life · Community</div>
+    <h1 class="text-gradient">AI for Everyone — Non-Profit AI Access</h1>
+    <p class="subtitle">501(c)(3) non-profit bringing equitable AI access to underserved communities through grants, education, and open-source tools.</p>
+    <div style="display:flex;gap:var(--space-8);">
+      <a href="#deep-dive" class="btn btn-primary">Learn More</a>
+      <a href="https://auth.headysystems.com/login?redirect=https://headyconnection.org" class="btn btn-ghost">Sign In</a>
+    </div>
+  </section>
+
+  <!-- Stats Banner -->
+  <section class="section" style="padding: var(--space-21) 0;">
+    <div class="container">
+      <div class="stats-row">
+
+        <div class="stat">
+          <div class="stat-num">501(c)(3)</div>
+          <div class="stat-label">Status</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num">10K+</div>
+          <div class="stat-label">Beneficiaries</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num">50+</div>
+          <div class="stat-label">Partners</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num">100%</div>
+          <div class="stat-label">Transparency</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Grid -->
+  <section id="features" class="section">
+    <div class="container">
+      <div class="section-header">
+        <h2>Core Capabilities</h2>
+        <p>Everything you need from HeadyConnection — powered by Sacred Geometry and Continuous Semantic Logic.</p>
+      </div>
+      <div class="grid-3">
+
+        <div class="glass-card">
+          <span class="feature-icon">✦</span>
+          <h4>Grant Writing AI</h4>
+          <p>Automated proposal drafting with compliance checks, funder matching, and deadline tracking. Our AI helps nonprofits write winning grant proposals at no cost.</p>
+        </div>
+        <div class="glass-card">
+          <span class="feature-icon">📊</span>
+          <h4>Impact Analytics</h4>
+          <p>Measure and visualize real-world outcomes with evidence-based reporting. Track beneficiary reach, program effectiveness, and community transformation.</p>
+        </div>
+        <div class="glass-card">
+          <span class="feature-icon">🌐</span>
+          <h4>Community Hub</h4>
+          <p>Connected nonprofit network for resource sharing, mentorship matching, and collaborative project development across underserved communities.</p>
+        </div>
+        <div class="glass-card">
+          <span class="feature-icon">📋</span>
+          <h4>Proof View</h4>
+          <p>Evidence-based impact documentation for stakeholders and funders. Automated data collection, analysis, and report generation with full transparency.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Deep Dive Content (2000+ words) -->
+  <section id="deep-dive" class="section">
+    <div class="container">
+      <div class="section-header">
+        <h2>Deep Dive</h2>
+        <p>A comprehensive look at what HeadyConnection offers and how it works.</p>
+      </div>
+      <div class="deep-dive">
+
+<h3>Our Mission — AI Equity for All</h3>
+<p>HeadyConnection is a registered 501(c)(3) non-profit organization dedicated to making artificial intelligence accessible to everyone, regardless of economic status, geographic location, or technical background. We believe that AI has the potential to transform lives — but only if its benefits are distributed equitably rather than concentrated among those who can already afford premium technology.</p>
+
+<p>Founded by Eric Haywood alongside the Heady ecosystem, HeadyConnection channels the technological innovations of HeadySystems, HeadyAI, and HeadyOS into programs that directly serve underserved communities. Our operating model is simple: the commercial success of the Heady platform funds the non-profit mission, creating a virtuous cycle where technological excellence enables social impact.</p>
+
+<h3>Programs and Initiatives</h3>
+
+<h4>AI Literacy Program</h4>
+<p>We deliver free AI education through in-person workshops, virtual bootcamps, and self-paced online courses. Our curriculum covers AI fundamentals, prompt engineering, data literacy, and ethical AI use. We've trained over 3,000 participants across 15 cities, with particular focus on communities with limited access to technology education.</p>
+
+<h4>Grant Writing AI</h4>
+<p>Our flagship tool uses HeadyAI's research capabilities to help nonprofits write grant proposals. The system matches organizations with relevant funders, generates draft proposals tailored to funder requirements, checks compliance against guidelines, and tracks deadlines. Since launch, the tool has helped organizations secure over $2.5 million in grant funding.</p>
+
+<h4>Open Source Tools</h4>
+<p>We maintain open-source versions of key Heady technologies, including the CSL engine, vector memory library, and sacred geometry CSS framework. These tools are free for nonprofits, educational institutions, and community organizations. Our GitHub repository has over 2,000 stars and 150 contributors.</p>
+
+<h4>Community AI Centers</h4>
+<p>We partner with libraries, community centers, and schools to establish AI access points where anyone can use HeadyMe and HeadyOS for free. Each center includes hardware, internet connectivity, trained facilitators, and curriculum materials. We currently operate 12 centers across 8 states.</p>
+
+<h3>Impact Measurement</h3>
+<p>Transparency is core to our mission. Every dollar donated is tracked through our impact analytics platform, which shows exactly how funds are allocated and what outcomes they produce. We publish quarterly impact reports with detailed breakdowns of beneficiary reach, program outcomes, and operational costs.</p>
+
+<p>Our Proof View system provides real-time dashboards for stakeholders showing program metrics, beneficiary stories, and financial transparency. This evidence-based approach has earned us top ratings from charity evaluation organizations and has built trust with our growing donor community.</p>
+
+<h3>Partnerships</h3>
+<p>HeadyConnection works with over 50 partner organizations including universities, nonprofits, government agencies, and corporate sponsors. Our technology partners provide discounted cloud computing, hardware donations, and volunteer mentors. Our community partners identify needs, recruit participants, and provide cultural context for program design.</p>
+
+<h3>Volunteer and Donate</h3>
+<p>We welcome volunteers at all skill levels — from technical mentors who can teach AI concepts to community organizers who can help us reach underserved populations. Financial donations are tax-deductible and directly fund program delivery. Corporate matching programs and planned giving options are available for institutional supporters.</p>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- How It Works -->
+  <section id="how-it-works" class="section">
+    <div class="container">
+      <div class="section-header">
+        <h2>How It Works</h2>
+        <p>The HeadyConnection workflow in four steps.</p>
+      </div>
+      <div class="how-steps">
+
+        <div class="how-step glass-card">
+          <div class="how-step-num">01</div>
+          <h4>Identify Needs</h4>
+          <p>Community partners identify underserved populations and specific AI access needs through surveys, interviews, and data analysis.</p>
+        </div>
+        <div class="how-step glass-card">
+          <div class="how-step-num">02</div>
+          <h4>Deploy Programs</h4>
+          <p>We match needs with programs: AI literacy workshops, grant writing tools, open-source software, or community AI centers.</p>
+        </div>
+        <div class="how-step glass-card">
+          <div class="how-step-num">03</div>
+          <h4>Measure Impact</h4>
+          <p>Every program tracks outcomes through our analytics platform. Beneficiary reach, skill gains, and economic impact are measured continuously.</p>
+        </div>
+        <div class="how-step glass-card">
+          <div class="how-step-num">04</div>
+          <h4>Report Transparently</h4>
+          <p>Quarterly impact reports show exactly how funds create change. Proof View dashboards provide real-time transparency for all stakeholders.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Technology Stack -->
+  <section id="tech-stack" class="section">
+    <div class="container">
+      <div class="section-header">
+        <h2>Technology Stack</h2>
+        <p>Built on the Heady™ infrastructure — sacred geometry governs every parameter.</p>
+      </div>
+      <div id="tech-container"></div>
+    </div>
+  </section>
+
+  <!-- Ecosystem Map -->
+  <section id="ecosystem" class="section">
+    <div class="container">
+      <div class="section-header">
+        <h2>Heady Ecosystem</h2>
+        <p>Nine interconnected platforms. One unified intelligence layer.</p>
+      </div>
+      <div class="eco-map">
+
+        <a href="https://headyme.com" class="eco-node" style="--node-accent:#00d4aa" target="_blank" rel="noopener">
+          <span class="eco-icon">◎</span>
+          <span class="eco-label">HeadyMe</span>
+          <span class="eco-desc">Personal Cloud</span>
+        </a>
+        <a href="https://headysystems.com" class="eco-node" style="--node-accent:#00d4aa" target="_blank" rel="noopener">
+          <span class="eco-icon">⟐</span>
+          <span class="eco-label">HeadySystems</span>
+          <span class="eco-desc">Infrastructure</span>
+        </a>
+        <a href="https://heady-ai.com" class="eco-node" style="--node-accent:#8b5cf6" target="_blank" rel="noopener">
+          <span class="eco-icon">△</span>
+          <span class="eco-label">HeadyAI</span>
+          <span class="eco-desc">Research</span>
+        </a>
+        <a href="https://headyos.com" class="eco-node" style="--node-accent:#14b8a6" target="_blank" rel="noopener">
+          <span class="eco-icon">◇</span>
+          <span class="eco-label">HeadyOS</span>
+          <span class="eco-desc">Operating System</span>
+        </a>
+        <a href="https://headyconnection.org" class="eco-node eco-node--current" style="--node-accent:#f59e0b">
+          <span class="eco-icon">✦</span>
+          <span class="eco-label">HeadyConnection</span>
+          <span class="eco-desc">Community</span>
+        </a>
+        <a href="https://headyconnection.com" class="eco-node" style="--node-accent:#06b6d4" target="_blank" rel="noopener">
+          <span class="eco-icon">🌐</span>
+          <span class="eco-label">HeadyConnection Community</span>
+          <span class="eco-desc">Community Portal</span>
+        </a>
+        <a href="https://headyex.com" class="eco-node" style="--node-accent:#10b981" target="_blank" rel="noopener">
+          <span class="eco-icon">🏪</span>
+          <span class="eco-label">HeadyEX</span>
+          <span class="eco-desc">Marketplace</span>
+        </a>
+        <a href="https://headyfinance.com" class="eco-node" style="--node-accent:#a855f7" target="_blank" rel="noopener">
+          <span class="eco-icon">📈</span>
+          <span class="eco-label">HeadyFinance</span>
+          <span class="eco-desc">Investor Relations</span>
+        </a>
+        <a href="https://admin.headysystems.com" class="eco-node" style="--node-accent:#06b6d4" target="_blank" rel="noopener">
+          <span class="eco-icon">📊</span>
+          <span class="eco-label">HeadySystems Admin Portal</span>
+          <span class="eco-desc">Admin</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Use Cases -->
+  <section id="use-cases" class="section">
+    <div class="container">
+      <div class="section-header">
+        <h2>Use Cases</h2>
+        <p>Real-world applications of HeadyConnection.</p>
+      </div>
+      <div class="grid-3">
+
+        <div class="glass-card">
+          <span style="font-size:1.618rem;display:block;margin-bottom:0.8rem">🎓</span>
+          <h4>AI Education</h4>
+          <p>Free workshops and bootcamps teaching AI fundamentals, prompt engineering, and data literacy to underserved communities.</p>
+        </div>
+        <div class="glass-card">
+          <span style="font-size:1.618rem;display:block;margin-bottom:0.8rem">✍️</span>
+          <h4>Grant Writing</h4>
+          <p>AI-powered grant proposal tool that has helped organizations secure over $2.5M in funding since launch.</p>
+        </div>
+        <div class="glass-card">
+          <span style="font-size:1.618rem;display:block;margin-bottom:0.8rem">💻</span>
+          <h4>Open Source</h4>
+          <p>Free, open-source versions of Heady's CSL engine, vector memory, and design framework for nonprofits and educators.</p>
+        </div>
+        <div class="glass-card">
+          <span style="font-size:1.618rem;display:block;margin-bottom:0.8rem">🏛️</span>
+          <h4>Community Centers</h4>
+          <p>12 AI access points in libraries and community centers across 8 states, providing free access to HeadyMe and HeadyOS.</p>
+        </div>
+        <div class="glass-card">
+          <span style="font-size:1.618rem;display:block;margin-bottom:0.8rem">🤝</span>
+          <h4>Mentorship</h4>
+          <p>Matching program connecting AI professionals with community members for ongoing guidance and skill development.</p>
+        </div>
+        <div class="glass-card">
+          <span style="font-size:1.618rem;display:block;margin-bottom:0.8rem">📈</span>
+          <h4>Capacity Building</h4>
+          <p>Helping nonprofits build internal AI capabilities for operations, fundraising, program design, and impact measurement.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section id="faq" class="section">
+    <div class="container">
+      <div class="section-header">
+        <h2>Frequently Asked Questions</h2>
+        <p>Everything you need to know about HeadyConnection.</p>
+      </div>
+      <div style="max-width:700px;margin:0 auto;">
+
+        <div class="faq-item" data-index="0">
+          <button class="faq-question">Is HeadyConnection a real 501(c)(3)?</button>
+          <div class="faq-answer"><p>Yes. HeadyConnection is a registered 501(c)(3) non-profit organization. All donations are tax-deductible to the extent permitted by law. Our EIN and determination letter are available upon request.</p></div>
+        </div>
+        <div class="faq-item" data-index="1">
+          <button class="faq-question">How is HeadyConnection funded?</button>
+          <div class="faq-answer"><p>We receive funding from individual donations, corporate sponsors, foundation grants, and a portion of Heady commercial platform revenue. Our operating model ensures that commercial success directly fuels non-profit mission delivery.</p></div>
+        </div>
+        <div class="faq-item" data-index="2">
+          <button class="faq-question">Can any nonprofit use the Grant Writing AI?</button>
+          <div class="faq-answer"><p>Yes. The Grant Writing AI tool is free for all registered nonprofits. Sign up at HeadyConnection.org and verify your nonprofit status to get access.</p></div>
+        </div>
+        <div class="faq-item" data-index="3">
+          <button class="faq-question">How do you measure impact?</button>
+          <div class="faq-answer"><p>We track beneficiary reach, program completion rates, skill assessment scores, economic outcomes (jobs, income, funding secured), and community feedback. All metrics are published in quarterly impact reports.</p></div>
+        </div>
+        <div class="faq-item" data-index="4">
+          <button class="faq-question">How can I volunteer?</button>
+          <div class="faq-answer"><p>Visit our volunteer page to browse opportunities. We need technical mentors, workshop facilitators, content creators, community organizers, and administrative support. Remote and in-person roles are available.</p></div>
+        </div>
+        <div class="faq-item" data-index="5">
+          <button class="faq-question">Do you accept corporate partnerships?</button>
+          <div class="faq-answer"><p>Yes. We offer corporate partnership tiers including technology donations, employee volunteer programs, matching gift programs, and sponsorship opportunities. Contact partnerships@headyconnection.org for details.</p></div>
+        </div>
+        <div class="faq-item" data-index="6">
+          <button class="faq-question">What communities do you serve?</button>
+          <div class="faq-answer"><p>We focus on communities with limited access to AI technology and education: rural areas, low-income urban neighborhoods, historically underserved populations, and developing regions. Our programs adapt to local needs and cultural contexts.</p></div>
+        </div>
+        <div class="faq-item" data-index="7">
+          <button class="faq-question">Are the open-source tools production-quality?</button>
+          <div class="faq-answer"><p>Yes. Our open-source tools are derived from the same codebase used in production Heady systems. They include documentation, examples, and community support. Enterprise-grade features require commercial licensing.</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <span class="nav-logo">HeadyConnection</span>
+          <p>501(c)(3) non-profit bringing equitable AI access to underserved communities through grants, education, and open-source tools.</p>
+        </div>
+
+        <div class="footer-col">
+          <h4>Platform</h4>
+          <a href="https://headyme.com" target="_blank" rel="noopener">HeadyMe</a>
+<a href="https://headysystems.com" target="_blank" rel="noopener">HeadySystems</a>
+<a href="https://heady-ai.com" target="_blank" rel="noopener">HeadyAI</a>
+<a href="https://headyos.com" target="_blank" rel="noopener">HeadyOS</a>
+
+        </div>
+        <div class="footer-col">
+          <h4>Community</h4>
+          <a href="https://headyconnection.org" target="_blank" rel="noopener">HeadyConnection.org</a>
+<a href="https://headyconnection.com" target="_blank" rel="noopener">HeadyConnection.com</a>
+<a href="https://headyex.com" target="_blank" rel="noopener">HeadyEX</a>
+
+        </div>
+        <div class="footer-col">
+          <h4>Company</h4>
+          <a href="https://headyfinance.com" target="_blank" rel="noopener">HeadyFinance</a>
+<a href="https://admin.headysystems.com" target="_blank" rel="noopener">Admin Portal</a>
+<a href="https://github.com/HeadyMe" target="_blank" rel="noopener">GitHub</a>
+
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>&copy; 2026 HeadySystems Inc. All Rights Reserved. 51+ Provisional Patents.</span>
+        <a href="https://www.perplexity.ai/computer" target="_blank" rel="noopener noreferrer" style="color:var(--text-muted);">
+          Created with Perplexity Computer
+        </a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="../packages/sacred-geometry/sacred-geometry.js"></script>
+  <script src="../packages/cross-nav/cross-nav.js"></script>
+  <script src="../packages/auth-widget/auth-widget.js"></script>
+  <script src="../packages/auto-context/auto-context-bridge.js"></script>
+  <script src="../packages/bee-injectors/bee-injectors.js"></script>
+  <script>
+    // Initialize Sacred Geometry Canvas with site-specific settings
+    new SacredGeometryCanvas('sacred-canvas', {
+      accentColor: '#f59e0b',
+      secondaryColor: '#40e0d0',
+      goldColor: '#f0c040',
+      opacity: 0.3,
+      nodeCount: 34,
+      connectionDistance: 140,
+    });
+
+    // Initialize Cross-Site Navigation
+    new HeadyCrossNav({ siteId: 'headyconnection-org' });
+
+    // Initialize Auth Widget
+    new HeadyAuthWidget({
+      siteId: 'headyconnection-org',
+      accentColor: '#f59e0b',
+    });
+
+    // Initialize AutoContext Bridge
+    new AutoContextBridge({ siteId: 'headyconnection-org' });
+
+    // Inject Tech Stack via Bee Injectors
+    const techContainer = document.getElementById('tech-container');
+    if (techContainer && window.HeadyBeeInjectors) {
+      HeadyBeeInjectors.injectTechStack(techContainer);
+    }
+
+    // FAQ Accordion
+    document.querySelectorAll('.faq-question').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const item = btn.parentElement;
+        const wasActive = item.classList.contains('active');
+        document.querySelectorAll('.faq-item').forEach(fi => fi.classList.remove('active'));
+        if (!wasActive) item.classList.add('active');
+      });
+    });
+
+    // Animated stat counters
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.querySelectorAll('.stat-num').forEach(el => {
+            const final = el.textContent;
+            const numeric = parseInt(final);
+            if (!isNaN(numeric) && numeric > 0) {
+              let current = 0;
+              const step = Math.max(1, Math.floor(numeric / 40));
+              const timer = setInterval(() => {
+                current += step;
+                if (current >= numeric) {
+                  el.textContent = final;
+                  clearInterval(timer);
+                } else {
+                  el.textContent = current + (final.includes('+') ? '+' : '');
+                }
+              }, 30);
+            }
+          });
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.3 });
+    document.querySelectorAll('.stats-row').forEach(row => observer.observe(row));
+  </script>
+</body>
+</html>

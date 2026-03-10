@@ -8,3 +8,6 @@
 - Cleaned the site generator so future auth surfaces do not reintroduce browser storage or alert-based OAuth placeholders.
 - Added a root documentation tree for architecture, ADRs, security posture, onboarding, runbooks, and error catalog material.
 - Added validation tests and a local validation script for auth, AutoContext, bundle structure, and storage-policy enforcement.
+Added auth-session-server to docker-compose.yml
+Replaced string literals
+Updated missing files

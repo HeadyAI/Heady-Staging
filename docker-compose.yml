@@ -246,6 +246,24 @@ services:
     networks:
       - heady-net
 
+  auth-session-server:
+    build:
+      context: .
+      dockerfile: services/auth-session-server/Dockerfile
+    environment:
+      PORT: 4309
+      DATABASE_URL: postgres://postgres:postgres@postgres:5432/heady
+      REDIS_URL: redis://redis:6379
+    ports:
+      - "4309:4309"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - heady-net
+
 volumes:
   heady_postgres:
 

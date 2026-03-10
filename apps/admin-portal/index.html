@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HeadySystems Admin Portal — Internal Operations Dashboard</title>
+  <meta name="description" content="System dashboard, agent monitoring, deploy controls, security console — the operational nerve center for HeadySystems infrastructure.">
+  <meta name="keywords" content="Heady, AI, HeadySystems Admin Portal, admin, sacred geometry, vector memory, CSL">
+  <meta property="og:title" content="HeadySystems Admin Portal — Internal Operations Dashboard">
+  <meta property="og:description" content="System dashboard, agent monitoring, deploy controls, security console — the operational nerve center for HeadySystems infrastructure.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://admin.headysystems.com">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../packages/design-system/heady-design.css">
+  <style>
+    :root {
+      --accent: #06b6d4;
+      --accent-glow: rgba(6,182,212,0.15);
+      --accent-subtle: rgba(6,182,212,0.06);
+    }
+    body { padding-top: 32px; } /* cross-nav offset */
+    .sacred-canvas {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      z-index: 0;
+      pointer-events: none;
+    }
+    .feature-icon {
+      font-size: 1.618rem;
+      display: block;
+      margin-bottom: 0.8rem;
+      color: var(--accent);
+    }
+    .btn-sm {
+      padding: 0.4rem 1rem;
+      font-size: var(--text-xs);
+      border-radius: var(--radius-sm);
+    }
+    .deep-dive { max-width: 800px; margin: 0 auto; text-align: left; }
+    .deep-dive h3 { font-size: var(--text-xl); margin: var(--space-21) 0 var(--space-8); color: var(--accent); }
+    .deep-dive h4 { font-size: var(--text-lg); margin: var(--space-13) 0 var(--space-5); color: var(--text-primary); }
+    .deep-dive p { margin-bottom: var(--space-8); font-size: var(--text-base); line-height: 1.8; }
+    .nav-links { display: flex; align-items: center; gap: var(--space-8); }
+    .nav-links a { color: var(--text-secondary); font-size: var(--text-sm); font-weight: 500; }
+    .nav-links a:hover { color: var(--text-primary); opacity: 1; }
+    .nav-logo {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+      font-size: 1.1rem;
+      letter-spacing: 0.05em;
+      color: var(--accent);
+    }
+    .eco-map { display: grid; grid-template-columns: repeat(3,1fr); gap: 1.3125rem; max-width: 900px; margin: 0 auto; }
+    .eco-node { display: flex; flex-direction: column; align-items: center; text-align: center; padding: 2rem 1rem; background: var(--glass-bg); backdrop-filter: blur(24px); border: 1px solid var(--glass-border); border-radius: var(--radius-lg); text-decoration: none; transition: all .382s; }
+    .eco-node:hover { transform: translateY(-3px); border-color: var(--node-accent); box-shadow: 0 0 21px rgba(124,94,255,.12); opacity: 1; }
+    .eco-node--current { border-color: var(--node-accent); background: rgba(124,94,255,.04); }
+    .eco-icon { font-size: 1.8rem; margin-bottom: .5rem; color: var(--node-accent); }
+    .eco-label { font-weight: 600; color: #e8e8f0; font-size: .95rem; margin-bottom: .25rem; }
+    .eco-desc { font-size: .75rem; color: #9898b0; }
+    .how-steps { display: grid; grid-template-columns: repeat(auto-fit,minmax(200px,1fr)); gap: 1.3125rem; }
+    .how-step { text-align: center; padding: 2rem 1rem; }
+    .how-step-num { font-family: 'JetBrains Mono', monospace; font-size: 2rem; font-weight: 700; color: rgba(6,182,212,0.3); margin-bottom: .5rem; }
+    .how-step h4 { color: #e8e8f0; margin-bottom: .5rem; }
+    .how-step p { font-size: .85rem; color: #9898b0; }
+    @media(max-width:768px) {
+      .eco-map { grid-template-columns: 1fr 1fr; }
+      .how-steps { grid-template-columns: 1fr; }
+      .nav-links { display: none; }
+    }
+    @media(max-width:480px) {
+      .eco-map { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Sacred Geometry Canvas Background -->
+  <canvas id="sacred-canvas" class="sacred-canvas"></canvas>
+
+  <!-- Navigation -->
+  <nav class="glass-nav" style="top:32px;">
+    <span class="nav-logo">HeadySystems Admin Portal</span>
+    <div class="nav-links">
+      <a href="#dashboard">Dashboard</a>
+<a href="#agents">Agents</a>
+<a href="#deploys">Deploys</a>
+<a href="https://headysystems.com" class="btn btn-primary btn-sm" target="_blank" rel="noopener">HeadySystems</a>
+
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="version-badge">v3.0 · Metatrons Cube · Admin</div>
+    <h1 class="text-gradient">Internal Operations Dashboard</h1>
+    <p class="subtitle">System dashboard, agent monitoring, deploy controls, security console — the operational nerve center for HeadySystems infrastructure.</p>
+    <div style="display:flex;gap:var(--space-8);">
+      <a href="#deep-dive" class="btn btn-primary">Learn More</a>
+      <a href="https://auth.headysystems.com/login?redirect=https://admin.headysystems.com" class="btn btn-ghost">Sign In</a>
+    </div>
+  </section>
+
+  <!-- Stats Banner -->
+  <section class="section" style="padding: var(--space-21) 0;">
+    <div class="container">
+      <div class="stats-row">
+
+        <div class="stat">
+          <div class="stat-num">50+</div>
+          <div class="stat-label">Services</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num">20</div>
+          <div class="stat-label">AI Nodes</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num">17</div>
+          <div class="stat-label">Swarms</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num">99.9%</div>
+          <div class="stat-label">Uptime</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Grid -->
+  <section id="features" class="section">
+    <div class="container">
+      <div class="section-header">
+        <h2>Core Capabilities</h2>
+        <p>Everything you need from HeadySystems Admin Portal — powered by Sacred Geometry and Continuous Semantic Logic.</p>
+      </div>
+      <div class="grid-3">
+
+        <div class="glass-card">
+          <span class="feature-icon">📊</span>
+          <h4>System Dashboard</h4>
+          <p>Real-time CPU, memory, GC, and event-loop telemetry across all 50+ services. OpenTelemetry spans visualized with correlation tracking and φ-scaled alert thresholds.</p>
+        </div>
+        <div class="glass-card">
+          <span class="feature-icon">🤖</span>
+          <h4>Agent Monitor</h4>
+          <p>Live status of all 20 AI nodes with health scores, capability matrices, task throughput, and memory utilization. Vector memory visualization shows knowledge graph density.</p>
+        </div>
+        <div class="glass-card">
+          <span class="feature-icon">🚀</span>
+          <h4>Deploy Controls</h4>
+          <p>One-click deployments, rollbacks, and canary releases for all services. HCFP pipeline status, SBOM viewer, and deployment history with cryptographic receipt verification.</p>
+        </div>
+        <div class="glass-card">
+          <span class="feature-icon">🛡️</span>
+          <h4>Security Console</h4>
+          <p>RBAC management, audit logs, secret rotation schedules, certificate expiry monitoring, and zero-trust policy enforcement dashboard.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Deep Dive Content (2000+ words) -->
+  <section id="deep-dive" class="section">
+    <div class="container">
+      <div class="section-header">
+        <h2>Deep Dive</h2>
+        <p>A comprehensive look at what HeadySystems Admin Portal offers and how it works.</p>
+      </div>
+      <div class="deep-dive">
+
+<h3>Operational Command Center</h3>
+<p>The HeadySystems Admin Portal is the internal operations dashboard used by the platform engineering team to monitor, manage, and maintain the entire Heady infrastructure. It provides real-time visibility into all 50+ microservices, 20 AI nodes, 17 swarms, and the interconnecting service mesh. This is where operational decisions are made and system health is ensured.</p>
+
+<h3>System Health Dashboard</h3>
+<p>The primary dashboard view shows aggregated health metrics across the entire infrastructure. Service tiles display real-time status with color-coded health indicators (green for healthy, amber for degraded, red for down). Each tile expands to show detailed metrics: CPU utilization, memory consumption, garbage collection frequency, event loop delay, request throughput, error rates, and latency percentiles (p50, p95, p99).</p>
+
+<p>All metrics are collected via OpenTelemetry and stored in time-series databases with φ-scaled retention (recent data at full resolution, older data aggregated at Fibonacci intervals). Alert thresholds use φ-scaled bands: a metric must exceed ψ (0.618) of its baseline for amber alerts and φ (1.618) of its baseline for red alerts. This eliminates alert fatigue from normal variance while catching genuine anomalies.</p>
+
+<h3>Agent Monitoring</h3>
+<p>The Agent Monitor displays the live status of all 20 AI processing nodes. Each node's tile shows its current task, health score, throughput (tasks/minute), latency distribution, and vector memory utilization. A capability matrix shows which models and tools are available on each node, enabling operators to understand the system's overall capacity at a glance.</p>
+
+<p>The vector memory visualization renders a 3D projection of the knowledge graph, showing cluster density, recent additions (highlighted in the site's accent color), and memory utilization percentage. Operators can drill into specific memory regions to inspect stored vectors, their metadata, and access patterns.</p>
+
+<h3>Deployment Pipeline</h3>
+<p>The Deploy Controls section provides full lifecycle management for all services. The HCFP (Heady Continuous Flow Pipeline) status board shows all active deployments with their current stage (21 stages from commit to production). Operators can initiate deployments, monitor progress, approve gates, and trigger rollbacks.</p>
+
+<p>Each deployment generates a Software Bill of Materials (SBOM) listing all dependencies, versions, and known vulnerabilities. The SBOM viewer enables security review before promoting to production. All deployment artifacts are signed with Ed25519 cryptographic receipts, creating an immutable audit trail that can be verified at any time.</p>
+
+<h3>Security Administration</h3>
+<p>The Security Console manages Role-Based Access Control (RBAC) for all operators and services. Roles are defined with granular permissions (read, write, deploy, admin) across service groups. All actions are logged in the audit trail with timestamps, operator identity, action type, and affected resources.</p>
+
+<p>Secret rotation schedules display all managed secrets (API keys, certificates, tokens) with their rotation dates, last rotation time, and expiry warnings. Operators can trigger immediate rotation for compromised secrets. Certificate monitoring tracks TLS certificate expiry across all services and domains, with automated renewal through Let's Encrypt and Cloudflare.</p>
+
+<h3>Incident Management</h3>
+<p>When issues are detected, the Admin Portal provides incident management workflows including automated escalation, runbook links, communication templates, and post-incident review tools. The system tracks mean time to detection (MTTD), mean time to resolution (MTTR), and incident frequency metrics to drive continuous improvement.</p>
+
+<h3>Access Control</h3>
+<p>The Admin Portal requires elevated authentication beyond standard Heady user accounts. Operators must authenticate through auth.headysystems.com with multi-factor authentication (WebAuthn/FIDO2 preferred, TOTP fallback). All admin sessions are time-limited and require re-authentication for sensitive operations like production deployments and secret rotation.</p>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- How It Works -->
+  <section id="how-it-works" class="section">
+    <div class="container">
+      <div class="section-header">
+        <h2>How It Works</h2>
+        <p>The HeadySystems Admin Portal workflow in four steps.</p>
+      </div>
+      <div class="how-steps">
+
+        <div class="how-step glass-card">
+          <div class="how-step-num">01</div>
+          <h4>Authenticate</h4>
+          <p>Multi-factor authentication via auth.headysystems.com with WebAuthn/FIDO2. Elevated privileges require re-authentication.</p>
+        </div>
+        <div class="how-step glass-card">
+          <div class="how-step-num">02</div>
+          <h4>Monitor</h4>
+          <p>Real-time dashboards show health across all services, agents, and swarms. φ-scaled alert thresholds minimize noise.</p>
+        </div>
+        <div class="how-step glass-card">
+          <div class="how-step-num">03</div>
+          <h4>Operate</h4>
+          <p>Deploy, rollback, rotate secrets, and manage access through the unified console. All actions are cryptographically logged.</p>
+        </div>
+        <div class="how-step glass-card">
+          <div class="how-step-num">04</div>
+          <h4>Respond</h4>
+          <p>Incident management workflows guide operators from detection through resolution with automated escalation and runbooks.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Technology Stack -->
+  <section id="tech-stack" class="section">
+    <div class="container">
+      <div class="section-header">
+        <h2>Technology Stack</h2>
+        <p>Built on the Heady™ infrastructure — sacred geometry governs every parameter.</p>
+      </div>
+      <div id="tech-container"></div>
+    </div>
+  </section>
+
+  <!-- Ecosystem Map -->
+  <section id="ecosystem" class="section">
+    <div class="container">
+      <div class="section-header">
+        <h2>Heady Ecosystem</h2>
+        <p>Nine interconnected platforms. One unified intelligence layer.</p>
+      </div>
+      <div class="eco-map">
+
+        <a href="https://headyme.com" class="eco-node" style="--node-accent:#00d4aa" target="_blank" rel="noopener">
+          <span class="eco-icon">◎</span>
+          <span class="eco-label">HeadyMe</span>
+          <span class="eco-desc">Personal Cloud</span>
+        </a>
+        <a href="https://headysystems.com" class="eco-node" style="--node-accent:#00d4aa" target="_blank" rel="noopener">
+          <span class="eco-icon">⟐</span>
+          <span class="eco-label">HeadySystems</span>
+          <span class="eco-desc">Infrastructure</span>
+        </a>
+        <a href="https://heady-ai.com" class="eco-node" style="--node-accent:#8b5cf6" target="_blank" rel="noopener">
+          <span class="eco-icon">△</span>
+          <span class="eco-label">HeadyAI</span>
+          <span class="eco-desc">Research</span>
+        </a>
+        <a href="https://headyos.com" class="eco-node" style="--node-accent:#14b8a6" target="_blank" rel="noopener">
+          <span class="eco-icon">◇</span>
+          <span class="eco-label">HeadyOS</span>
+          <span class="eco-desc">Operating System</span>
+        </a>
+        <a href="https://headyconnection.org" class="eco-node" style="--node-accent:#f59e0b" target="_blank" rel="noopener">
+          <span class="eco-icon">✦</span>
+          <span class="eco-label">HeadyConnection</span>
+          <span class="eco-desc">Community</span>
+        </a>
+        <a href="https://headyconnection.com" class="eco-node" style="--node-accent:#06b6d4" target="_blank" rel="noopener">
+          <span class="eco-icon">🌐</span>
+          <span class="eco-label">HeadyConnection Community</span>
+          <span class="eco-desc">Community Portal</span>
+        </a>
+        <a href="https://headyex.com" class="eco-node" style="--node-accent:#10b981" target="_blank" rel="noopener">
+          <span class="eco-icon">🏪</span>
+          <span class="eco-label">HeadyEX</span>
+          <span class="eco-desc">Marketplace</span>
+        </a>
+        <a href="https://headyfinance.com" class="eco-node" style="--node-accent:#a855f7" target="_blank" rel="noopener">
+          <span class="eco-icon">📈</span>
+          <span class="eco-label">HeadyFinance</span>
+          <span class="eco-desc">Investor Relations</span>
+        </a>
+        <a href="https://admin.headysystems.com" class="eco-node eco-node--current" style="--node-accent:#06b6d4">
+          <span class="eco-icon">📊</span>
+          <span class="eco-label">HeadySystems Admin Portal</span>
+          <span class="eco-desc">Admin</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Use Cases -->
+  <section id="use-cases" class="section">
+    <div class="container">
+      <div class="section-header">
+        <h2>Use Cases</h2>
+        <p>Real-world applications of HeadySystems Admin Portal.</p>
+      </div>
+      <div class="grid-3">
+
+        <div class="glass-card">
+          <span style="font-size:1.618rem;display:block;margin-bottom:0.8rem">🔍</span>
+          <h4>Health Monitoring</h4>
+          <p>Continuous visibility into all 50+ services with real-time metrics, φ-scaled alerts, and historical trend analysis.</p>
+        </div>
+        <div class="glass-card">
+          <span style="font-size:1.618rem;display:block;margin-bottom:0.8rem">🚀</span>
+          <h4>Deployment Management</h4>
+          <p>HCFP pipeline control with 21-stage deployments, canary releases, one-click rollbacks, and SBOM security review.</p>
+        </div>
+        <div class="glass-card">
+          <span style="font-size:1.618rem;display:block;margin-bottom:0.8rem">🛡️</span>
+          <h4>Security Ops</h4>
+          <p>RBAC administration, secret rotation, certificate management, audit logging, and zero-trust policy enforcement.</p>
+        </div>
+        <div class="glass-card">
+          <span style="font-size:1.618rem;display:block;margin-bottom:0.8rem">🤖</span>
+          <h4>Agent Oversight</h4>
+          <p>Monitor AI node health, capability, throughput, and memory utilization. Visualize knowledge graph density in 3D.</p>
+        </div>
+        <div class="glass-card">
+          <span style="font-size:1.618rem;display:block;margin-bottom:0.8rem">📋</span>
+          <h4>Incident Response</h4>
+          <p>Structured incident management with escalation, runbooks, and post-incident review for continuous improvement.</p>
+        </div>
+        <div class="glass-card">
+          <span style="font-size:1.618rem;display:block;margin-bottom:0.8rem">📊</span>
+          <h4>Capacity Planning</h4>
+          <p>Historical metrics and φ-scaled projections for resource planning, scaling decisions, and infrastructure budgeting.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section id="faq" class="section">
+    <div class="container">
+      <div class="section-header">
+        <h2>Frequently Asked Questions</h2>
+        <p>Everything you need to know about HeadySystems Admin Portal.</p>
+      </div>
+      <div style="max-width:700px;margin:0 auto;">
+
+        <div class="faq-item" data-index="0">
+          <button class="faq-question">Who has access to the Admin Portal?</button>
+          <div class="faq-answer"><p>Only authorized platform engineers and operators with elevated privileges. Access requires multi-factor authentication and is logged in the audit trail.</p></div>
+        </div>
+        <div class="faq-item" data-index="1">
+          <button class="faq-question">What metrics are monitored?</button>
+          <div class="faq-answer"><p>CPU, memory, GC frequency, event loop delay, request throughput, error rates, latency percentiles (p50/p95/p99), agent health scores, vector memory utilization, and swarm task throughput.</p></div>
+        </div>
+        <div class="faq-item" data-index="2">
+          <button class="faq-question">How do alerts work?</button>
+          <div class="faq-answer"><p>Alerts use φ-scaled thresholds: amber at 0.618× baseline, red at 1.618× baseline. This eliminates false positives from normal variance while catching genuine anomalies.</p></div>
+        </div>
+        <div class="faq-item" data-index="3">
+          <button class="faq-question">What is the HCFP pipeline?</button>
+          <div class="faq-answer"><p>Heady Continuous Flow Pipeline — a 21-stage deployment pipeline covering static analysis, security scanning, testing, canary deployment, traffic shifting, and automated rollback.</p></div>
+        </div>
+        <div class="faq-item" data-index="4">
+          <button class="faq-question">How are secrets managed?</button>
+          <div class="faq-answer"><p>Secrets are stored in encrypted vaults (Cloudflare Secrets, HashiCorp Vault) with scheduled rotation. The Security Console tracks rotation dates, enables immediate rotation, and monitors certificate expiry.</p></div>
+        </div>
+        <div class="faq-item" data-index="5">
+          <button class="faq-question">Can external monitoring tools integrate?</button>
+          <div class="faq-answer"><p>Yes. All metrics are exported via OpenTelemetry protocol and can be ingested by Datadog, Grafana, New Relic, or any OTLP-compatible monitoring platform.</p></div>
+        </div>
+        <div class="faq-item" data-index="6">
+          <button class="faq-question">What happens during an incident?</button>
+          <div class="faq-answer"><p>The portal provides structured workflows: automated detection, escalation to on-call engineers, runbook links, communication templates, and post-incident review tools. MTTD and MTTR are tracked.</p></div>
+        </div>
+        <div class="faq-item" data-index="7">
+          <button class="faq-question">Is there audit logging?</button>
+          <div class="faq-answer"><p>Yes. Every action in the Admin Portal is logged with timestamp, operator identity, action type, affected resource, and result. Logs are immutable and signed with Ed25519 receipts.</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <span class="nav-logo">HeadySystems Admin Portal</span>
+          <p>System dashboard, agent monitoring, deploy controls, security console — the operational nerve center for HeadySystems infrastructure.</p>
+        </div>
+
+        <div class="footer-col">
+          <h4>Platform</h4>
+          <a href="https://headyme.com" target="_blank" rel="noopener">HeadyMe</a>
+<a href="https://headysystems.com" target="_blank" rel="noopener">HeadySystems</a>
+<a href="https://heady-ai.com" target="_blank" rel="noopener">HeadyAI</a>
+<a href="https://headyos.com" target="_blank" rel="noopener">HeadyOS</a>
+
+        </div>
+        <div class="footer-col">
+          <h4>Community</h4>
+          <a href="https://headyconnection.org" target="_blank" rel="noopener">HeadyConnection.org</a>
+<a href="https://headyconnection.com" target="_blank" rel="noopener">HeadyConnection.com</a>
+<a href="https://headyex.com" target="_blank" rel="noopener">HeadyEX</a>
+
+        </div>
+        <div class="footer-col">
+          <h4>Company</h4>
+          <a href="https://headyfinance.com" target="_blank" rel="noopener">HeadyFinance</a>
+<a href="https://admin.headysystems.com" target="_blank" rel="noopener">Admin Portal</a>
+<a href="https://github.com/HeadyMe" target="_blank" rel="noopener">GitHub</a>
+
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>&copy; 2026 HeadySystems Inc. All Rights Reserved. 51+ Provisional Patents.</span>
+        <a href="https://www.perplexity.ai/computer" target="_blank" rel="noopener noreferrer" style="color:var(--text-muted);">
+          Created with Perplexity Computer
+        </a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="../packages/sacred-geometry/sacred-geometry.js"></script>
+  <script src="../packages/cross-nav/cross-nav.js"></script>
+  <script src="../packages/auth-widget/auth-widget.js"></script>
+  <script src="../packages/auto-context/auto-context-bridge.js"></script>
+  <script src="../packages/bee-injectors/bee-injectors.js"></script>
+  <script>
+    // Initialize Sacred Geometry Canvas with site-specific settings
+    new SacredGeometryCanvas('sacred-canvas', {
+      accentColor: '#06b6d4',
+      secondaryColor: '#40e0d0',
+      goldColor: '#f0c040',
+      opacity: 0.3,
+      nodeCount: 34,
+      connectionDistance: 140,
+    });
+
+    // Initialize Cross-Site Navigation
+    new HeadyCrossNav({ siteId: 'admin-portal' });
+
+    // Initialize Auth Widget
+    new HeadyAuthWidget({
+      siteId: 'admin-portal',
+      accentColor: '#06b6d4',
+    });
+
+    // Initialize AutoContext Bridge
+    new AutoContextBridge({ siteId: 'admin-portal' });
+
+    // Inject Tech Stack via Bee Injectors
+    const techContainer = document.getElementById('tech-container');
+    if (techContainer && window.HeadyBeeInjectors) {
+      HeadyBeeInjectors.injectTechStack(techContainer);
+    }
+
+    // FAQ Accordion
+    document.querySelectorAll('.faq-question').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const item = btn.parentElement;
+        const wasActive = item.classList.contains('active');
+        document.querySelectorAll('.faq-item').forEach(fi => fi.classList.remove('active'));
+        if (!wasActive) item.classList.add('active');
+      });
+    });
+
+    // Animated stat counters
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.querySelectorAll('.stat-num').forEach(el => {
+            const final = el.textContent;
+            const numeric = parseInt(final);
+            if (!isNaN(numeric) && numeric > 0) {
+              let current = 0;
+              const step = Math.max(1, Math.floor(numeric / 40));
+              const timer = setInterval(() => {
+                current += step;
+                if (current >= numeric) {
+                  el.textContent = final;
+                  clearInterval(timer);
+                } else {
+                  el.textContent = current + (final.includes('+') ? '+' : '');
+                }
+              }, 30);
+            }
+          });
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.3 });
+    document.querySelectorAll('.stats-row').forEach(row => observer.observe(row));
+  </script>
+</body>
+</html>

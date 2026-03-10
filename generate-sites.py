@@ -14,7 +14,7 @@ Generates all 9 websites + auth app with:
 
 import os, json
 
-BASE = "/home/user/workspace/heady-system-build"
+BASE = "/app"
 
 # ════════════════════════════════════════════════════════════
 # SITE DEFINITIONS — All 9 sites from registry

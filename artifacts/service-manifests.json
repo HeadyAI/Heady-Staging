@@ -1,0 +1,187 @@
+[
+  {
+    "name": "domain-router",
+    "port": 4301,
+    "summary": "Environment-aware URL resolution and domain policy enforcement.",
+    "routes": [
+      "/resolve",
+      "/domain/:host"
+    ],
+    "dependencies": [
+      "config-core"
+    ]
+  },
+  {
+    "name": "observability-kernel",
+    "port": 4302,
+    "summary": "Structured logs, traces, health aggregation, and metrics snapshots.",
+    "routes": [
+      "/metrics/snapshot",
+      "/events/ingest"
+    ],
+    "dependencies": [
+      "observability-client"
+    ]
+  },
+  {
+    "name": "budget-tracker",
+    "port": 4303,
+    "summary": "Provider budgets, spend envelopes, and throttle decisions.",
+    "routes": [
+      "/budget/current",
+      "/budget/provider/:provider"
+    ],
+    "dependencies": [
+      "contract-types"
+    ]
+  },
+  {
+    "name": "heady-memory",
+    "port": 4304,
+    "summary": "pgvector-backed memory search, graph relations, and Vectorize sync.",
+    "routes": [
+      "/memory/search",
+      "/memory/upsert"
+    ],
+    "dependencies": [
+      "csl-gate",
+      "contract-types"
+    ]
+  },
+  {
+    "name": "heady-health",
+    "port": 4305,
+    "summary": "Health registry, drift evaluation, and readiness scoring.",
+    "routes": [
+      "/health/matrix",
+      "/health/drift"
+    ],
+    "dependencies": [
+      "observability-client"
+    ]
+  },
+  {
+    "name": "heady-conductor",
+    "port": 4306,
+    "summary": "Intent routing, pool assignment, and cross-service orchestration.",
+    "routes": [
+      "/route",
+      "/plan"
+    ],
+    "dependencies": [
+      "csl-gate",
+      "contract-types"
+    ]
+  },
+  {
+    "name": "heady-brains",
+    "port": 4307,
+    "summary": "Context assembly, capsules, and model prompt preparation.",
+    "routes": [
+      "/context/build",
+      "/context/capsule"
+    ],
+    "dependencies": [
+      "contract-types"
+    ]
+  },
+  {
+    "name": "heady-soul",
+    "port": 4308,
+    "summary": "Policy values, alignment checks, and output certification.",
+    "routes": [
+      "/alignment/check",
+      "/alignment/certify"
+    ],
+    "dependencies": [
+      "csl-gate"
+    ]
+  },
+  {
+    "name": "heady-vinci",
+    "port": 4309,
+    "summary": "Pattern learning, scenario ranking, and plan enrichment.",
+    "routes": [
+      "/patterns/score",
+      "/patterns/learn"
+    ],
+    "dependencies": [
+      "csl-gate"
+    ]
+  },
+  {
+    "name": "heady-governance",
+    "port": 4310,
+    "summary": "Protected action gates, audit decisions, and policy attestations.",
+    "routes": [
+      "/governance/pre",
+      "/governance/post"
+    ],
+    "dependencies": [
+      "contract-types"
+    ]
+  },
+  {
+    "name": "heady-guard",
+    "port": 4311,
+    "summary": "Validation, sanitization, and zero-trust request inspection.",
+    "routes": [
+      "/sanitize",
+      "/scan/request"
+    ],
+    "dependencies": [
+      "zod-schemas"
+    ]
+  },
+  {
+    "name": "heady-autobiographer",
+    "port": 4312,
+    "summary": "Narrative logging, decision lineage, and daily briefing material.",
+    "routes": [
+      "/story/append",
+      "/story/recent"
+    ],
+    "dependencies": [
+      "contract-types"
+    ]
+  },
+  {
+    "name": "heady-bee-factory",
+    "port": 4313,
+    "summary": "Bee registration, pool scaling, and lifecycle orchestration.",
+    "routes": [
+      "/bees/spawn",
+      "/bees/topology"
+    ],
+    "dependencies": [
+      "phi-math-foundation",
+      "contract-types"
+    ]
+  },
+  {
+    "name": "hcfullpipeline-executor",
+    "port": 4314,
+    "summary": "21-stage pipeline execution and stage-level checkpointing.",
+    "routes": [
+      "/pipeline/run",
+      "/pipeline/status"
+    ],
+    "dependencies": [
+      "contract-types",
+      "csl-gate"
+    ]
+  },
+  {
+    "name": "auto-success-engine",
+    "port": 4315,
+    "summary": "Dynamic phi-scaled heartbeat and category execution loops.",
+    "routes": [
+      "/cycle/run",
+      "/cycle/summary"
+    ],
+    "dependencies": [
+      "phi-math-foundation",
+      "observability-client"
+    ]
+  }
+]

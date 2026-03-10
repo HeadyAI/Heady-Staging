@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HeadyMe — Your AI Operating System</title>
+  <meta name="description" content="The autonomous intelligence platform that thinks, orchestrates, and evolves. 51+ patents. 21 microservices. One unified experience.">
+  <meta name="keywords" content="Heady, AI, HeadyMe, personal-cloud, sacred geometry, vector memory, CSL">
+  <meta property="og:title" content="HeadyMe — Your AI Operating System">
+  <meta property="og:description" content="The autonomous intelligence platform that thinks, orchestrates, and evolves. 51+ patents. 21 microservices. One unified experience.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://headyme.com">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../packages/design-system/heady-design.css">
+  <style>
+    :root {
+      --accent: #00d4aa;
+      --accent-glow: rgba(0,212,170,0.15);
+      --accent-subtle: rgba(0,212,170,0.06);
+    }
+    body { padding-top: 32px; } /* cross-nav offset */
+    .sacred-canvas {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      z-index: 0;
+      pointer-events: none;
+    }
+    .feature-icon {
+      font-size: 1.618rem;
+      display: block;
+      margin-bottom: 0.8rem;
+      color: var(--accent);
+    }
+    .btn-sm {
+      padding: 0.4rem 1rem;
+      font-size: var(--text-xs);
+      border-radius: var(--radius-sm);
+    }
+    .deep-dive { max-width: 800px; margin: 0 auto; text-align: left; }
+    .deep-dive h3 { font-size: var(--text-xl); margin: var(--space-21) 0 var(--space-8); color: var(--accent); }
+    .deep-dive h4 { font-size: var(--text-lg); margin: var(--space-13) 0 var(--space-5); color: var(--text-primary); }
+    .deep-dive p { margin-bottom: var(--space-8); font-size: var(--text-base); line-height: 1.8; }
+    .nav-links { display: flex; align-items: center; gap: var(--space-8); }
+    .nav-links a { color: var(--text-secondary); font-size: var(--text-sm); font-weight: 500; }
+    .nav-links a:hover { color: var(--text-primary); opacity: 1; }
+    .nav-logo {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+      font-size: 1.1rem;
+      letter-spacing: 0.05em;
+      color: var(--accent);
+    }
+    .eco-map { display: grid; grid-template-columns: repeat(3,1fr); gap: 1.3125rem; max-width: 900px; margin: 0 auto; }
+    .eco-node { display: flex; flex-direction: column; align-items: center; text-align: center; padding: 2rem 1rem; background: var(--glass-bg); backdrop-filter: blur(24px); border: 1px solid var(--glass-border); border-radius: var(--radius-lg); text-decoration: none; transition: all .382s; }
+    .eco-node:hover { transform: translateY(-3px); border-color: var(--node-accent); box-shadow: 0 0 21px rgba(124,94,255,.12); opacity: 1; }
+    .eco-node--current { border-color: var(--node-accent); background: rgba(124,94,255,.04); }
+    .eco-icon { font-size: 1.8rem; margin-bottom: .5rem; color: var(--node-accent); }
+    .eco-label { font-weight: 600; color: #e8e8f0; font-size: .95rem; margin-bottom: .25rem; }
+    .eco-desc { font-size: .75rem; color: #9898b0; }
+    .how-steps { display: grid; grid-template-columns: repeat(auto-fit,minmax(200px,1fr)); gap: 1.3125rem; }
+    .how-step { text-align: center; padding: 2rem 1rem; }
+    .how-step-num { font-family: 'JetBrains Mono', monospace; font-size: 2rem; font-weight: 700; color: rgba(0,212,170,0.3); margin-bottom: .5rem; }
+    .how-step h4 { color: #e8e8f0; margin-bottom: .5rem; }
+    .how-step p { font-size: .85rem; color: #9898b0; }
+    @media(max-width:768px) {
+      .eco-map { grid-template-columns: 1fr 1fr; }
+      .how-steps { grid-template-columns: 1fr; }
+      .nav-links { display: none; }
+    }
+    @media(max-width:480px) {
+      .eco-map { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Sacred Geometry Canvas Background -->
+  <canvas id="sacred-canvas" class="sacred-canvas"></canvas>
+
+  <!-- Navigation -->
+  <nav class="glass-nav" style="top:32px;">
+    <span class="nav-logo">HeadyMe</span>
+    <div class="nav-links">
+      <a href="#platform">Platform</a>
+<a href="#nodes">AI Nodes</a>
+<a href="#pricing">Pricing</a>
+<a href="https://headysystems.com" class="btn btn-primary btn-sm" target="_blank" rel="noopener">HeadySystems</a>
+
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="version-badge">v3.0 · Flower of Life · Personal Cloud</div>
+    <h1 class="text-gradient">Your AI Operating System</h1>
+    <p class="subtitle">The autonomous intelligence platform that thinks, orchestrates, and evolves. 51+ patents. 21 microservices. One unified experience.</p>
+    <div style="display:flex;gap:var(--space-8);">
+      <a href="#deep-dive" class="btn btn-primary">Learn More</a>
+      <a href="https://auth.headysystems.com/login?redirect=https://headyme.com" class="btn btn-ghost">Sign In</a>
+    </div>
+  </section>
+
+  <!-- Stats Banner -->
+  <section class="section" style="padding: var(--space-21) 0;">
+    <div class="container">
+      <div class="stats-row">
+
+        <div class="stat">
+          <div class="stat-num">51+</div>
+          <div class="stat-label">Patents</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num">21</div>
+          <div class="stat-label">Services</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num">20</div>
+          <div class="stat-label">AI Nodes</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num">384</div>
+          <div class="stat-label">Vector Dims</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Grid -->
+  <section id="features" class="section">
+    <div class="container">
+      <div class="section-header">
+        <h2>Core Capabilities</h2>
+        <p>Everything you need from HeadyMe — powered by Sacred Geometry and Continuous Semantic Logic.</p>
+      </div>
+      <div class="grid-3">
+
+        <div class="glass-card">
+          <span class="feature-icon">◎</span>
+          <h4>Personal Dashboard</h4>
+          <p>Unified view across all Heady services — your command center for orchestrating 20+ AI nodes, monitoring task execution, and reviewing context enrichment in real time. Every interaction is recorded, every pattern learned.</p>
+        </div>
+        <div class="glass-card">
+          <span class="feature-icon">◈</span>
+          <h4>3D AI Memory</h4>
+          <p>Vector-spatial context that remembers everything with O(log n) octree retrieval. Your personal knowledge graph spans 384-dimensional space, enabling instant semantic recall across every conversation and document.</p>
+        </div>
+        <div class="glass-card">
+          <span class="feature-icon">◇</span>
+          <h4>Cloud Runtime</h4>
+          <p>Managed execution environment for 20 autonomous AI nodes with hot-reload and φ-scaled auto-scaling. Each node runs in its own Cloudflare Worker with Durable Object state persistence.</p>
+        </div>
+        <div class="glass-card">
+          <span class="feature-icon">⬡</span>
+          <h4>Cross-Vertical Sync</h4>
+          <p>Seamlessly share context between all Heady apps — one memory, one identity, one continuous experience. What you learn in HeadyAI enhances your HeadyOS workflows automatically.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Deep Dive Content (2000+ words) -->
+  <section id="deep-dive" class="section">
+    <div class="container">
+      <div class="section-header">
+        <h2>Deep Dive</h2>
+        <p>A comprehensive look at what HeadyMe offers and how it works.</p>
+      </div>
+      <div class="deep-dive">
+
+<h3>What is HeadyMe?</h3>
+<p>HeadyMe is the personal face of the Heady™ ecosystem — a unified AI operating system that puts you at the center of an intelligent network spanning research, development, finance, community, and enterprise infrastructure. Unlike traditional AI assistants that reset with every conversation, HeadyMe maintains a persistent 3D vector memory space that continuously learns and evolves with every interaction.</p>
+
+<p>At its core, HeadyMe operates through a revolutionary architecture built on three foundational principles: Continuous Semantic Logic (CSL), Sacred Geometry scaling, and Vector Symbolic Architecture. These aren't marketing buzzwords — they represent patented innovations (51+ provisional patents filed) that fundamentally change how AI systems think, remember, and act.</p>
+
+<h3>The Personal Dashboard Experience</h3>
+<p>When you log into HeadyMe, you enter a living command center. The dashboard presents a real-time view of your entire AI ecosystem: active nodes processing tasks, memory vectors being enriched, context flowing between services, and patterns being discovered. Every element on the dashboard is backed by actual telemetry data flowing through OpenTelemetry-instrumented microservices.</p>
+
+<p>The dashboard's layout follows φ-scaled spacing — the golden ratio (1.618) governs every margin, padding, and proportion. This isn't aesthetic whimsy; research in cognitive science demonstrates that golden-ratio proportions reduce cognitive load and improve information retention. When every visual element harmonizes mathematically, your brain processes information more efficiently.</p>
+
+<h3>3D Vector Memory — Your Permanent Knowledge Graph</h3>
+<p>HeadyMe's memory system operates in 384-dimensional vector space using pgvector with octree spatial indexing. When you have a conversation, write a document, or browse a webpage within the Heady ecosystem, the content is embedded into this high-dimensional space using our multi-provider embedding router (supporting OpenAI, Cohere, Voyage AI, and local models).</p>
+
+<p>Retrieval uses CSL gates — geometric thresholds that determine context relevance. A cosine similarity of 0.382 (ψ²) means the content is included in the context window. At 0.618 (ψ), it's boosted and given higher prominence. At 0.718 (ψ + 0.1), it's automatically injected into any AI interaction without you asking. This means HeadyMe proactively surfaces the right information at the right time.</p>
+
+<p>The memory isn't flat — it's spatial. Related concepts cluster together in 3D space, and you can literally navigate your knowledge graph like exploring a galaxy. Each node represents an embedded concept, and connections between nodes represent semantic relationships discovered through continuous analysis.</p>
+
+<h3>20 Autonomous AI Nodes</h3>
+<p>HeadyMe orchestrates 20 distinct AI processing nodes, each running as a Cloudflare Worker with Durable Object state persistence. These nodes cover every aspect of AI interaction: natural language understanding, code generation, research synthesis, creative writing, data analysis, image understanding, voice processing, and more.</p>
+
+<p>Each node participates in the HeadyBee swarm system. When you submit a task, the system doesn't route to a single model — it dispatches concurrent worker bees across all relevant nodes simultaneously. Results are aggregated using CSL relevance scoring, and the best output is returned. There's no queue, no waiting, no sequential processing. Everything happens at once.</p>
+
+<h3>Cross-Vertical Context Sharing</h3>
+<p>What makes HeadyMe truly unique is its position as the nexus point for all Heady services. Context discovered while using HeadyAI for research automatically enriches your HeadyOS development environment. Patterns learned from HeadyFinance market analysis inform your HeadyEX agent strategies. Non-profit impact data from HeadyConnection.org feeds into community engagement metrics on HeadyConnection.com.</p>
+
+<p>This cross-pollination is handled by the AutoContext bridge — a persistent JavaScript module running on every page that continuously monitors, embeds, and syncs context across all nine Heady domains. The bridge uses a φ-scaled heartbeat (every 29.034 seconds — φ⁷ milliseconds) to synchronize state, ensuring no context is ever lost.</p>
+
+<h3>Security and Privacy</h3>
+<p>Every HeadyMe interaction is protected by zero-trust security architecture. Authentication flows through auth.headysystems.com using Firebase Auth with Google OAuth, email/password, and anonymous guest modes. Tokens are stored as httpOnly, Secure, SameSite=Strict cookies — never in browser storage where they'd be vulnerable to XSS attacks. All API calls use mTLS client certificates through Envoy sidecar proxies, and every request is signed with Ed25519 cryptographic receipts for complete audit trails.</p>
+
+<p>Your vector memory is encrypted at rest and in transit. Only your authenticated identity can query your personal knowledge graph. The system uses post-quantum cryptographic primitives (CRYSTALS-Kyber for key exchange, CRYSTALS-Dilithium for signatures) to ensure your data remains secure even against future quantum computing threats.</p>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- How It Works -->
+  <section id="how-it-works" class="section">
+    <div class="container">
+      <div class="section-header">
+        <h2>How It Works</h2>
+        <p>The HeadyMe workflow in four steps.</p>
+      </div>
+      <div class="how-steps">
+
+        <div class="how-step glass-card">
+          <div class="how-step-num">01</div>
+          <h4>Sign In</h4>
+          <p>Authenticate once via auth.headysystems.com. Your identity propagates across all 9 Heady sites instantly through secure cookie relay.</p>
+        </div>
+        <div class="how-step glass-card">
+          <div class="how-step-num">02</div>
+          <h4>Context Loads</h4>
+          <p>AutoContext bridge pre-enriches your session with relevant history, preferences, and active task context from 384-dim vector memory.</p>
+        </div>
+        <div class="how-step glass-card">
+          <div class="how-step-num">03</div>
+          <h4>Execute Tasks</h4>
+          <p>Submit any task — 20 AI nodes fire simultaneously. HeadyBee workers process concurrently. Results aggregate via CSL relevance scoring.</p>
+        </div>
+        <div class="how-step glass-card">
+          <div class="how-step-num">04</div>
+          <h4>Memory Evolves</h4>
+          <p>Every interaction enriches your persistent knowledge graph. Patterns compound over time, making the system faster and more accurate.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Technology Stack -->
+  <section id="tech-stack" class="section">
+    <div class="container">
+      <div class="section-header">
+        <h2>Technology Stack</h2>
+        <p>Built on the Heady™ infrastructure — sacred geometry governs every parameter.</p>
+      </div>
+      <div id="tech-container"></div>
+    </div>
+  </section>
+
+  <!-- Ecosystem Map -->
+  <section id="ecosystem" class="section">
+    <div class="container">
+      <div class="section-header">
+        <h2>Heady Ecosystem</h2>
+        <p>Nine interconnected platforms. One unified intelligence layer.</p>
+      </div>
+      <div class="eco-map">
+
+        <a href="https://headyme.com" class="eco-node eco-node--current" style="--node-accent:#00d4aa">
+          <span class="eco-icon">◎</span>
+          <span class="eco-label">HeadyMe</span>
+          <span class="eco-desc">Personal Cloud</span>
+        </a>
+        <a href="https://headysystems.com" class="eco-node" style="--node-accent:#00d4aa" target="_blank" rel="noopener">
+          <span class="eco-icon">⟐</span>
+          <span class="eco-label">HeadySystems</span>
+          <span class="eco-desc">Infrastructure</span>
+        </a>
+        <a href="https://heady-ai.com" class="eco-node" style="--node-accent:#8b5cf6" target="_blank" rel="noopener">
+          <span class="eco-icon">△</span>
+          <span class="eco-label">HeadyAI</span>
+          <span class="eco-desc">Research</span>
+        </a>
+        <a href="https://headyos.com" class="eco-node" style="--node-accent:#14b8a6" target="_blank" rel="noopener">
+          <span class="eco-icon">◇</span>
+          <span class="eco-label">HeadyOS</span>
+          <span class="eco-desc">Operating System</span>
+        </a>
+        <a href="https://headyconnection.org" class="eco-node" style="--node-accent:#f59e0b" target="_blank" rel="noopener">
+          <span class="eco-icon">✦</span>
+          <span class="eco-label">HeadyConnection</span>
+          <span class="eco-desc">Community</span>
+        </a>
+        <a href="https://headyconnection.com" class="eco-node" style="--node-accent:#06b6d4" target="_blank" rel="noopener">
+          <span class="eco-icon">🌐</span>
+          <span class="eco-label">HeadyConnection Community</span>
+          <span class="eco-desc">Community Portal</span>
+        </a>
+        <a href="https://headyex.com" class="eco-node" style="--node-accent:#10b981" target="_blank" rel="noopener">
+          <span class="eco-icon">🏪</span>
+          <span class="eco-label">HeadyEX</span>
+          <span class="eco-desc">Marketplace</span>
+        </a>
+        <a href="https://headyfinance.com" class="eco-node" style="--node-accent:#a855f7" target="_blank" rel="noopener">
+          <span class="eco-icon">📈</span>
+          <span class="eco-label">HeadyFinance</span>
+          <span class="eco-desc">Investor Relations</span>
+        </a>
+        <a href="https://admin.headysystems.com" class="eco-node" style="--node-accent:#06b6d4" target="_blank" rel="noopener">
+          <span class="eco-icon">📊</span>
+          <span class="eco-label">HeadySystems Admin Portal</span>
+          <span class="eco-desc">Admin</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Use Cases -->
+  <section id="use-cases" class="section">
+    <div class="container">
+      <div class="section-header">
+        <h2>Use Cases</h2>
+        <p>Real-world applications of HeadyMe.</p>
+      </div>
+      <div class="grid-3">
+
+        <div class="glass-card">
+          <span style="font-size:1.618rem;display:block;margin-bottom:0.8rem">🔬</span>
+          <h4>Research Synthesis</h4>
+          <p>Feed papers, articles, and datasets into HeadyMe. The system cross-references everything in vector space and surfaces insights you'd never find manually.</p>
+        </div>
+        <div class="glass-card">
+          <span style="font-size:1.618rem;display:block;margin-bottom:0.8rem">💻</span>
+          <h4>Development Workflow</h4>
+          <p>HeadyMe integrates with your IDE through HeadyOS. Code context, documentation, and architectural decisions are all vectorized and available instantly.</p>
+        </div>
+        <div class="glass-card">
+          <span style="font-size:1.618rem;display:block;margin-bottom:0.8rem">📊</span>
+          <h4>Business Intelligence</h4>
+          <p>Connect financial data from HeadyFinance, market signals from HeadyEX, and community feedback from HeadyConnection for holistic business intelligence.</p>
+        </div>
+        <div class="glass-card">
+          <span style="font-size:1.618rem;display:block;margin-bottom:0.8rem">🎨</span>
+          <h4>Creative Projects</h4>
+          <p>Use the multi-model council to generate, iterate, and refine creative content. HeadyMe remembers your style preferences and brand guidelines across sessions.</p>
+        </div>
+        <div class="glass-card">
+          <span style="font-size:1.618rem;display:block;margin-bottom:0.8rem">🤝</span>
+          <h4>Team Collaboration</h4>
+          <p>Share context graphs with team members. Collaborative vector spaces let multiple users contribute to and benefit from shared knowledge bases.</p>
+        </div>
+        <div class="glass-card">
+          <span style="font-size:1.618rem;display:block;margin-bottom:0.8rem">🔐</span>
+          <h4>Personal Privacy Vault</h4>
+          <p>All your data lives in your encrypted personal vault. Export, delete, or transfer at any time. You own your intelligence.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section id="faq" class="section">
+    <div class="container">
+      <div class="section-header">
+        <h2>Frequently Asked Questions</h2>
+        <p>Everything you need to know about HeadyMe.</p>
+      </div>
+      <div style="max-width:700px;margin:0 auto;">
+
+        <div class="faq-item" data-index="0">
+          <button class="faq-question">What makes HeadyMe different from ChatGPT or Claude?</button>
+          <div class="faq-answer"><p>HeadyMe isn't a chatbot — it's an operating system. While ChatGPT and Claude are conversation interfaces to single models, HeadyMe orchestrates 20+ AI nodes simultaneously, maintains persistent 3D vector memory across sessions, and connects nine specialized platforms into one unified intelligence layer. Your context never resets.</p></div>
+        </div>
+        <div class="faq-item" data-index="1">
+          <button class="faq-question">How does the 3D vector memory work?</button>
+          <div class="faq-answer"><p>Content is embedded into 384-dimensional vectors using our multi-provider embedding router. These vectors are stored in pgvector with octree spatial indexing for O(log n) retrieval. CSL gates (0.382/0.618/0.718 cosine thresholds) automatically determine what context to include, boost, or inject into any AI interaction.</p></div>
+        </div>
+        <div class="faq-item" data-index="2">
+          <button class="faq-question">Is my data private?</button>
+          <div class="faq-answer"><p>Absolutely. HeadyMe uses zero-trust architecture with mTLS, Ed25519 signed receipts, and post-quantum cryptographic primitives. Your vector memory is encrypted at rest and in transit. Only your authenticated identity can access your knowledge graph. We never train on your data.</p></div>
+        </div>
+        <div class="faq-item" data-index="3">
+          <button class="faq-question">What is Sacred Geometry scaling?</button>
+          <div class="faq-answer"><p>Every parameter in HeadyMe — spacing, timeouts, retry intervals, cache durations, resource pools — is scaled using the golden ratio φ (1.618) and Fibonacci sequences. This mathematically optimal scaling creates natural load distribution patterns that avoid resonance cascades common in systems using arbitrary constants.</p></div>
+        </div>
+        <div class="faq-item" data-index="4">
+          <button class="faq-question">Can I use HeadyMe offline?</button>
+          <div class="faq-answer"><p>HeadyMe supports progressive web app (PWA) capabilities with Cloudflare Workers providing edge caching. Core functionality including local vector search and cached model inference works offline. Full capabilities require connectivity for cross-service orchestration.</p></div>
+        </div>
+        <div class="faq-item" data-index="5">
+          <button class="faq-question">How does cross-site context work?</button>
+          <div class="faq-answer"><p>The AutoContext bridge runs on every Heady page, synchronizing context via secure postMessage channels and cookie-based session relay. When you learn something on HeadyAI, that knowledge is immediately available on HeadyMe, HeadyOS, and all other Heady sites.</p></div>
+        </div>
+        <div class="faq-item" data-index="6">
+          <button class="faq-question">What AI models does HeadyMe use?</button>
+          <div class="faq-answer"><p>HeadyMe routes through the Multi-Model Council: Claude (Anthropic), GPT (OpenAI), Gemini (Google), Groq (fast inference), Perplexity (research), and specialized open-source models via HuggingFace. Model selection is automatic based on CSL domain similarity matching — not cost tiers or ranking.</p></div>
+        </div>
+        <div class="faq-item" data-index="7">
+          <button class="faq-question">How much does HeadyMe cost?</button>
+          <div class="faq-answer"><p>HeadyMe offers a free tier with basic AI node access and 1GB vector memory. Pro plans scale with usage — pay for the compute and memory you consume. Enterprise plans include dedicated infrastructure, custom model fine-tuning, and SLA guarantees. All tiers receive equal service quality.</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <span class="nav-logo">HeadyMe</span>
+          <p>The autonomous intelligence platform that thinks, orchestrates, and evolves. 51+ patents. 21 microservices. One unified experience.</p>
+        </div>
+
+        <div class="footer-col">
+          <h4>Platform</h4>
+          <a href="https://headyme.com" target="_blank" rel="noopener">HeadyMe</a>
+<a href="https://headysystems.com" target="_blank" rel="noopener">HeadySystems</a>
+<a href="https://heady-ai.com" target="_blank" rel="noopener">HeadyAI</a>
+<a href="https://headyos.com" target="_blank" rel="noopener">HeadyOS</a>
+
+        </div>
+        <div class="footer-col">
+          <h4>Community</h4>
+          <a href="https://headyconnection.org" target="_blank" rel="noopener">HeadyConnection.org</a>
+<a href="https://headyconnection.com" target="_blank" rel="noopener">HeadyConnection.com</a>
+<a href="https://headyex.com" target="_blank" rel="noopener">HeadyEX</a>
+
+        </div>
+        <div class="footer-col">
+          <h4>Company</h4>
+          <a href="https://headyfinance.com" target="_blank" rel="noopener">HeadyFinance</a>
+<a href="https://admin.headysystems.com" target="_blank" rel="noopener">Admin Portal</a>
+<a href="https://github.com/HeadyMe" target="_blank" rel="noopener">GitHub</a>
+
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>&copy; 2026 HeadySystems Inc. All Rights Reserved. 51+ Provisional Patents.</span>
+        <a href="https://www.perplexity.ai/computer" target="_blank" rel="noopener noreferrer" style="color:var(--text-muted);">
+          Created with Perplexity Computer
+        </a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="../packages/sacred-geometry/sacred-geometry.js"></script>
+  <script src="../packages/cross-nav/cross-nav.js"></script>
+  <script src="../packages/auth-widget/auth-widget.js"></script>
+  <script src="../packages/auto-context/auto-context-bridge.js"></script>
+  <script src="../packages/bee-injectors/bee-injectors.js"></script>
+  <script>
+    // Initialize Sacred Geometry Canvas with site-specific settings
+    new SacredGeometryCanvas('sacred-canvas', {
+      accentColor: '#00d4aa',
+      secondaryColor: '#40e0d0',
+      goldColor: '#f0c040',
+      opacity: 0.3,
+      nodeCount: 34,
+      connectionDistance: 140,
+    });
+
+    // Initialize Cross-Site Navigation
+    new HeadyCrossNav({ siteId: 'headyme' });
+
+    // Initialize Auth Widget
+    new HeadyAuthWidget({
+      siteId: 'headyme',
+      accentColor: '#00d4aa',
+    });
+
+    // Initialize AutoContext Bridge
+    new AutoContextBridge({ siteId: 'headyme' });
+
+    // Inject Tech Stack via Bee Injectors
+    const techContainer = document.getElementById('tech-container');
+    if (techContainer && window.HeadyBeeInjectors) {
+      HeadyBeeInjectors.injectTechStack(techContainer);
+    }
+
+    // FAQ Accordion
+    document.querySelectorAll('.faq-question').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const item = btn.parentElement;
+        const wasActive = item.classList.contains('active');
+        document.querySelectorAll('.faq-item').forEach(fi => fi.classList.remove('active'));
+        if (!wasActive) item.classList.add('active');
+      });
+    });
+
+    // Animated stat counters
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.querySelectorAll('.stat-num').forEach(el => {
+            const final = el.textContent;
+            const numeric = parseInt(final);
+            if (!isNaN(numeric) && numeric > 0) {
+              let current = 0;
+              const step = Math.max(1, Math.floor(numeric / 40));
+              const timer = setInterval(() => {
+                current += step;
+                if (current >= numeric) {
+                  el.textContent = final;
+                  clearInterval(timer);
+                } else {
+                  el.textContent = current + (final.includes('+') ? '+' : '');
+                }
+              }, 30);
+            }
+          });
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.3 });
+    document.querySelectorAll('.stats-row').forEach(row => observer.observe(row));
+  </script>
+</body>
+</html>
