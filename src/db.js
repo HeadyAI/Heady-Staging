@@ -1,3 +1,4 @@
+const { logger } = require('./utils/logger');
 // HEADY_BRAND:BEGIN
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
@@ -23,9 +24,9 @@ const pool = new Pool({
 // Test the connection
 pool.query('SELECT NOW()', (err) => {
   if (err) {
-    console.error('⚠ Database connection error:', err.message);
+    logger.error('⚠ Database connection error:', err.message);
   } else {
-    console.log('  ∞ PostgreSQL: CONNECTED');
+    logger.info('  ∞ PostgreSQL: CONNECTED');
   }
 });
 

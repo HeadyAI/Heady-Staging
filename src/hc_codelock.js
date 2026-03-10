@@ -1,3 +1,4 @@
+const { logger } = require('./utils/logger');
 // HEADY_BRAND:BEGIN
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  HeadyCodeLock — Codebase Governance & Approval Gate            ║
@@ -573,15 +574,15 @@ const { execSync } = require('child_process');
 const files = execSync('git diff --cached --name-only', { encoding: 'utf8' }).trim().split('\\n').filter(Boolean);
 const result = codelock.preCommitCheck(files);
 if (!result.allowed) {
-  console.error('\\n❌ COMMIT BLOCKED by HeadyCodeLock');
-  console.error('Reason:', result.reason);
+  logger.error('\\n❌ COMMIT BLOCKED by HeadyCodeLock');
+  logger.error('Reason:', result.reason);
   if (result.unapproved) {
-    result.unapproved.forEach(f => console.error('  •', f));
+    result.unapproved.forEach(f => logger.error('  •', f));
   }
-  console.error('\\nUse the MCP tool heady_codelock_request to request approval.');
+  logger.error('\\nUse the MCP tool heady_codelock_request to request approval.');
   process.exit(1);
 } else {
-  console.log('✅ HeadyCodeLock: commit approved');
+  logger.info('✅ HeadyCodeLock: commit approved');
 }
 "
 `;

@@ -1,3 +1,4 @@
+const { logger } = require('./utils/logger');
 // HEADY_BRAND:BEGIN
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
@@ -339,7 +340,7 @@ class HeadyCloudConductor {
    * Trigger scale up for specific tier
    */
   triggerScaleUp(tier) {
-    console.log(`Scaling up ${tier} tier due to high latency`);
+    logger.info(`Scaling up ${tier} tier due to high latency`);
     // Implementation would call infrastructure APIs
   }
 
@@ -347,7 +348,7 @@ class HeadyCloudConductor {
    * Trigger scale down for specific tier
    */
   triggerScaleDown(tier) {
-    console.log(`Scaling down ${tier} tier due to low load`);
+    logger.info(`Scaling down ${tier} tier due to low load`);
     // Implementation would call infrastructure APIs
   }
 
@@ -372,7 +373,7 @@ class HeadyCloudConductor {
     const totalCost = allMetrics.reduce((sum, usage) => sum + usage.cost, 0);
     const totalWorkflows = allMetrics.reduce((sum, usage) => sum + usage.workflows, 0);
     
-    console.log(`Telemetry Analysis - Tokens: ${totalTokens}, Cost: $${totalCost.toFixed(2)}, Workflows: ${totalWorkflows}`);
+    logger.info(`Telemetry Analysis - Tokens: ${totalTokens}, Cost: $${totalCost.toFixed(2)}, Workflows: ${totalWorkflows}`);
     
     // Adjust policies based on usage patterns
     this.adjustPoliciesBasedOnUsage(totalTokens, totalCost, totalWorkflows);
@@ -386,7 +387,7 @@ class HeadyCloudConductor {
     const budget = this.policies.get('budget');
     
     if (cost < budget.dailyCostPerTenant * 0.5 && workflows > 10) {
-      console.log('Usage is low, considering quota relaxation');
+      logger.info('Usage is low, considering quota relaxation');
       // Implementation could adjust quotas dynamically
     }
   }

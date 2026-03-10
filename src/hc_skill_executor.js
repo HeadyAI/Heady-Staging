@@ -1,3 +1,4 @@
+const { logger } = require('./utils/logger');
 // HEADY_BRAND:BEGIN
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
@@ -59,11 +60,11 @@ class SkillExecutor extends EventEmitter {
       this.registerBuiltInHandlers();
       
       this.emit('initialized', { skillCount: this.skills.size });
-      console.log(`✓ Skill Executor initialized with ${this.skills.size} skills`);
+      logger.info(`✓ Skill Executor initialized with ${this.skills.size} skills`);
       
       return true;
     } catch (error) {
-      console.error('Failed to initialize skill executor:', error);
+      logger.error('Failed to initialize skill executor:', error);
       throw error;
     }
   }
@@ -74,103 +75,103 @@ class SkillExecutor extends EventEmitter {
   registerBuiltInHandlers() {
     // Archive actions
     this.registerAction('archive_to_preproduction', async (params) => {
-      console.log('Archiving to pre-production:', params);
+      logger.info('Archiving to pre-production:', params);
       // Implementation would copy current state to archive
       return { success: true, archived: true };
     });
 
     // Build actions
     this.registerAction('clean_build_dirs', async (params) => {
-      console.log('Cleaning build directories:', params.dirs);
+      logger.info('Cleaning build directories:', params.dirs);
       // Implementation would clean specified directories
       return { success: true, cleaned: params.dirs };
     });
 
     this.registerAction('npm_install', async (params) => {
-      console.log('Running npm install:', params);
+      logger.info('Running npm install:', params);
       // Implementation would run npm install
       return { success: true, installed: true };
     });
 
     // Pipeline actions
     this.registerAction('execute_pipeline', async (params) => {
-      console.log('Executing pipeline:', params.pipeline);
+      logger.info('Executing pipeline:', params.pipeline);
       // Implementation would trigger pipeline execution
       return { success: true, pipeline: params.pipeline };
     });
 
     // Deployment actions
     this.registerAction('deploy_production', async (params) => {
-      console.log('Deploying to production:', params);
+      logger.info('Deploying to production:', params);
       // Implementation would deploy to production
       return { success: true, deployed: true, verified: params.verify };
     });
 
     // Analysis actions
     this.registerAction('analyze_requirements', async (params) => {
-      console.log('Analyzing requirements:', params);
+      logger.info('Analyzing requirements:', params);
       return { success: true, analyzed: true, depth: params.depth };
     });
 
     // Validation actions
     this.registerAction('validate_state', async (params) => {
-      console.log('Validating state:', params);
+      logger.info('Validating state:', params);
       return { success: true, valid: true, integrity: params.check_integrity };
     });
 
     // Sync actions
     this.registerAction('update_registry', async (params) => {
-      console.log('Updating registry:', params.file);
+      logger.info('Updating registry:', params.file);
       return { success: true, updated: params.file };
     });
 
     this.registerAction('sync_docs', async (params) => {
-      console.log('Syncing documentation:', params.targets);
+      logger.info('Syncing documentation:', params.targets);
       return { success: true, synced: params.targets };
     });
 
     // Git actions
     this.registerAction('git_commit', async (params) => {
-      console.log('Git commit:', params.message);
+      logger.info('Git commit:', params.message);
       return { success: true, committed: true, message: params.message };
     });
 
     this.registerAction('git_fetch_all', async (params) => {
-      console.log('Git fetch all remotes:', params);
+      logger.info('Git fetch all remotes:', params);
       return { success: true, fetched: true };
     });
 
     // Research actions
     this.registerAction('search_implementations', async (params) => {
-      console.log('Searching implementations:', params.sources);
+      logger.info('Searching implementations:', params.sources);
       return { success: true, found: [], sources: params.sources };
     });
 
     this.registerAction('analyze_patterns', async (params) => {
-      console.log('Analyzing patterns:', params);
+      logger.info('Analyzing patterns:', params);
       return { success: true, patterns: [], extracted: params.extract_best_practices };
     });
 
     // Monte Carlo actions
     this.registerAction('run_monte_carlo', async (params) => {
-      console.log('Running Monte Carlo simulations:', params);
+      logger.info('Running Monte Carlo simulations:', params);
       return { success: true, iterations: params.iterations, optimal: {} };
     });
 
     // Intelligence actions
     this.registerAction('generate_concepts', async (params) => {
-      console.log('Generating concepts:', params);
+      logger.info('Generating concepts:', params);
       return { success: true, concepts: [], count: params.count };
     });
 
     // Infrastructure actions
     this.registerAction('setup_domains', async (params) => {
-      console.log('Setting up domains:', params.config);
+      logger.info('Setting up domains:', params.config);
       return { success: true, domains: [] };
     });
 
     this.registerAction('configure_dns', async (params) => {
-      console.log('Configuring DNS:', params.provider);
+      logger.info('Configuring DNS:', params.provider);
       return { success: true, provider: params.provider };
     });
   }

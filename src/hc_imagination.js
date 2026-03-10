@@ -1,3 +1,4 @@
+const { logger } = require('./utils/logger');
 // HEADY_BRAND:BEGIN
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
@@ -214,7 +215,7 @@ class ImaginationEngine {
     await this.loadIPPackages();
     
     this.initialized = true;
-    console.log(`[Imagination] Initialized with ${this.primitives.size} primitives, ${this.concepts.size} concepts`);
+    logger.info(`[Imagination] Initialized with ${this.primitives.size} primitives, ${this.concepts.size} concepts`);
   }
 
   async loadPrimitives() {
@@ -572,7 +573,7 @@ class ImaginationEngine {
     // Select primitives for recombination
     const primitives = this.selectPrimitives(this.config.maxPrimitivesPerConcept);
     if (primitives.length < this.config.minPrimitivesPerConcept) {
-      console.log('[Imagination] Not enough primitives for recombination');
+      logger.info('[Imagination] Not enough primitives for recombination');
       return [];
     }
     
@@ -629,7 +630,7 @@ class ImaginationEngine {
     await this.saveConcepts();
     await this.savePrimitives();
     
-    console.log(`[Imagination] Generated ${newConcepts.length} new concepts`);
+    logger.info(`[Imagination] Generated ${newConcepts.length} new concepts`);
     return newConcepts;
   }
 
@@ -854,7 +855,7 @@ class ImaginationEngine {
       
       if (isHot && concept.status === 'raw') {
         concept.status = 'hot';
-        console.log(`[Imagination] Hot concept identified: ${concept.title}`);
+        logger.info(`[Imagination] Hot concept identified: ${concept.title}`);
       }
     }
   }

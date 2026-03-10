@@ -1,3 +1,4 @@
+const { logger } = require('./utils/logger');
 // HEADY_BRAND:BEGIN
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
@@ -144,7 +145,7 @@ class BrainConnector extends EventEmitter {
       this.pool.available.push(connection);
     }
 
-    console.log(`[BrainConnector] Initialized connection pool with ${this.pool.size} connections`);
+    logger.info(`[BrainConnector] Initialized connection pool with ${this.pool.size} connections`);
   }
 
   /**
@@ -177,7 +178,7 @@ class BrainConnector extends EventEmitter {
 
     // Add to queue if all endpoints are down
     if (this.allEndpointsDown()) {
-      console.warn('[BrainConnector] All endpoints down, queuing request');
+      logger.warn('[BrainConnector] All endpoints down, queuing request');
       return new Promise((resolve, reject) => {
         this.requestQueue.push({ path, options, resolve, reject, timestamp: Date.now() });
         this.processQueue();
@@ -196,7 +197,7 @@ class BrainConnector extends EventEmitter {
         } catch (error) {
           lastError = error;
           this.onFailure(endpoint.id, error);
-          console.warn(`[BrainConnector] Endpoint ${endpoint.id} failed: ${error.message}`);
+          logger.warn(`[BrainConnector] Endpoint ${endpoint.id} failed: ${error.message}`);
         }
       }
     }
@@ -249,7 +250,7 @@ class BrainConnector extends EventEmitter {
       if (circuit.state === 'HALF_OPEN') {
         circuit.state = 'CLOSED';
         circuit.failures = 0;
-        console.log(`[BrainConnector] Circuit breaker CLOSED for ${endpoint.id}`);
+        logger.info(`[BrainConnector] Circuit breaker CLOSED for ${endpoint.id}`);
       }
 
       return response.data;
@@ -325,7 +326,7 @@ class BrainConnector extends EventEmitter {
     if (circuit.failures >= 3) {
       circuit.state = 'OPEN';
       circuit.nextAttempt = Date.now() + (Math.pow(2, circuit.failures) * 1000); // Exponential backoff
-      console.error(`[BrainConnector] Circuit breaker OPEN for ${endpointId}, next attempt in ${circuit.nextAttempt - Date.now()}ms`);
+      logger.error(`[BrainConnector] Circuit breaker OPEN for ${endpointId}, next attempt in ${circuit.nextAttempt - Date.now()}ms`);
       this.emit('circuitBreakerOpen', { endpointId, failures: circuit.failures });
     }
   }
@@ -443,7 +444,7 @@ class BrainConnector extends EventEmitter {
       circuit.nextAttempt = null;
       circuit.consecutiveSuccesses = 0;
     });
-    console.log('[BrainConnector] All circuit breakers reset');
+    logger.info('[BrainConnector] All circuit breakers reset');
   }
 
   /**
@@ -460,7 +461,7 @@ class BrainConnector extends EventEmitter {
     });
     this.requestQueue = [];
 
-    console.log('[BrainConnector] Shutdown complete');
+    logger.info('[BrainConnector] Shutdown complete');
   }
 }
 

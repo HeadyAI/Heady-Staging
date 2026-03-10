@@ -1,3 +1,4 @@
+const { logger } = require('./utils/logger');
 // HEADY_BRAND:BEGIN
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
@@ -28,7 +29,7 @@ try {
   const { patternStore } = require('./hc_pattern_engine');
   patternEngine = patternStore;
 } catch (e) {
-  console.log('[Imagination-Pattern] Pattern engine not available');
+  logger.info('[Imagination-Pattern] Pattern engine not available');
 }
 
 class ImaginationPatternIntegration {

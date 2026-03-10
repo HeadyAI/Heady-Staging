@@ -1,3 +1,4 @@
+const { logger } = require('./utils/logger');
 // HEADY_BRAND:BEGIN
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  Heady Auto-Deploy Engine                                        ║
@@ -105,9 +106,9 @@ function log(level, message, data = null) {
 
   // Console (structured)
   if (level === 'error') {
-    console.error(line);
+    logger.error(line);
   } else {
-    console.log(line);
+    logger.info(line);
   }
 
   // File
@@ -523,15 +524,15 @@ if (require.main === module) {
     start();
   } else if (arg === 'run' || arg === 'once') {
     runOnce({ force: process.argv.includes('--force') })
-      .then(r => { console.log(JSON.stringify(r, null, 2)); process.exit(0); })
-      .catch(e => { console.error(e.message); process.exit(1); });
+      .then(r => { logger.info(JSON.stringify(r, null, 2)); process.exit(0); })
+      .catch(e => { logger.error(e.message); process.exit(1); });
   } else if (arg === 'status') {
-    console.log(JSON.stringify(getStatus(), null, 2));
+    logger.info(JSON.stringify(getStatus(), null, 2));
   } else {
-    console.log('Usage: node hc_auto_deploy.js [start|run|once|status] [--force]');
-    console.log('  start  — Start the auto-deploy scheduler');
-    console.log('  run    — Run a single deploy cycle');
-    console.log('  status — Show current deploy status');
+    logger.info('Usage: node hc_auto_deploy.js [start|run|once|status] [--force]');
+    logger.info('  start  — Start the auto-deploy scheduler');
+    logger.info('  run    — Run a single deploy cycle');
+    logger.info('  status — Show current deploy status');
   }
 }
 

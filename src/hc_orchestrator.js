@@ -1,3 +1,4 @@
+const { logger } = require('./utils/logger');
 // HEADY_BRAND:BEGIN
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
@@ -642,7 +643,7 @@ class HeadyOrchestrator {
     if (constraints.targetLatency) {
       const currentLatency = Date.now() - workflowState.startTime;
       if (currentLatency > constraints.targetLatency) {
-        console.warn(`Latency target exceeded: ${currentLatency}ms > ${constraints.targetLatency}ms`);
+        logger.warn(`Latency target exceeded: ${currentLatency}ms > ${constraints.targetLatency}ms`);
       }
     }
   }
@@ -795,11 +796,11 @@ class HeadyOrchestrator {
     this.telemetryBuffer = [];
 
     // In real implementation, would send to CloudConductor
-    console.log(`Sending ${reports.length} telemetry reports to CloudConductor`);
+    logger.info(`Sending ${reports.length} telemetry reports to CloudConductor`);
 
     // Simulate sending
     reports.forEach(report => {
-      console.log(`Telemetry for ${report.runId}: ${report.status}, ${report.metrics.totalDuration}ms`);
+      logger.info(`Telemetry for ${report.runId}: ${report.status}, ${report.metrics.totalDuration}ms`);
     });
   }
 
@@ -824,7 +825,7 @@ class HeadyOrchestrator {
       resourceUtilization: this.getResourceUtilization()
     };
 
-    console.log('System Metrics:', JSON.stringify(systemMetrics, null, 2));
+    logger.info('System Metrics:', JSON.stringify(systemMetrics, null, 2));
   }
 
   /**

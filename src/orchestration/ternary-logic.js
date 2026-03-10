@@ -2,10 +2,11 @@
  * © 2026 Heady™Systems Inc..
  * PROPRIETARY AND CONFIDENTIAL.
  *
- * Balanced Ternary Logic Engine — Setun-Inspired {-1, 0, +1} Cognitive Filter
+ * CSL Cognitive Filter — Continuous Semantic Logic {-1, 0, +1} Classification
  *
  * Core decision matrix for Buddy's memory routing and swarm computation.
- * Eliminates binary waste by classifying all signals into three states:
+ * Uses CSL gates (continuous sigmoid activation) to classify all signals
+ * into three states:
  *   +1 (Core Resonance)  → Persistent truth, commit to K3D vector storage
  *    0 (Ephemeral State)  → Transient noise, volatile Redis cache only
  *   -1 (Repel State)      → Adversarial quarantine, Shadow Index
@@ -17,15 +18,15 @@ const EventEmitter = require('events');
 const logger = require('../utils/logger');
 const CSL = require('../core/semantic-logic');
 
-// ─── Ternary States ──────────────────────────────────────────────────────────
-const TERNARY = Object.freeze({
+// ─── CSL States ──────────────────────────────────────────────────────────────
+const CSL_STATE = Object.freeze({
     CORE_RESONANCE: +1,  // Persistent truth — commit to K3D
     EPHEMERAL: 0,  // Transient noise — volatile cache only
     REPEL: -1,  // Adversarial quarantine — Shadow Index
 });
 
-// ─── Ternary Decision Matrix ─────────────────────────────────────────────────
-class TernaryDecisionMatrix extends EventEmitter {
+// ─── CSL Cognitive Filter ────────────────────────────────────────────────────
+class CSLCognitiveFilter extends EventEmitter {
     constructor(opts = {}) {
         super();
         this._shadowIndex = [];     // Quarantined -1 signals
@@ -34,10 +35,10 @@ class TernaryDecisionMatrix extends EventEmitter {
         this._vectorMemory = opts.vectorMemory || null;
         this._redisCache = opts.redisCache || null;
         this._thresholds = {
-            resonanceConfidence: opts.resonanceThreshold || 0.72,
-            repelConfidence: opts.repelThreshold || 0.35,
-            maxShadowSize: opts.maxShadowSize || 500,
-            decayInterval: opts.decayInterval || 3600000, // 1 hour
+            resonanceConfidence: opts.resonanceThreshold || 0.691,   // phiThreshold(1) — LOW
+            repelConfidence: opts.repelThreshold || 0.382,           // ψ² ≈ 0.382
+            maxShadowSize: opts.maxShadowSize || 610,               // fib(15) = 610
+            decayInterval: opts.decayInterval || 3524578,           // fib(33) ≈ 58 min
         };
         this._stats = { classified: 0, resonance: 0, ephemeral: 0, repelled: 0 };
 
@@ -47,7 +48,7 @@ class TernaryDecisionMatrix extends EventEmitter {
     }
 
     /**
-     * Classify a signal into {-1, 0, +1} using feature analysis.
+     * Classify a signal into {-1, 0, +1} using CSL gates.
      * @param {Object} signal - The input signal to classify
      * @param {string} signal.type - Signal type (e.g., 'user_input', 'agent_output', 'error')
      * @param {*} signal.data - The actual data payload
@@ -57,18 +58,18 @@ class TernaryDecisionMatrix extends EventEmitter {
     classify(signal) {
         this._stats.classified++;
         const features = this._extractFeatures(signal);
-        const state = this._applyTernaryLogic(features);
+        const state = this._applyCSLGate(features);
 
         const result = { state, features, signal, ts: Date.now() };
 
         switch (state) {
-            case TERNARY.CORE_RESONANCE:
+            case CSL_STATE.CORE_RESONANCE:
                 this._handleResonance(result);
                 break;
-            case TERNARY.EPHEMERAL:
+            case CSL_STATE.EPHEMERAL:
                 this._handleEphemeral(result);
                 break;
-            case TERNARY.REPEL:
+            case CSL_STATE.REPEL:
                 this._handleRepel(result);
                 break;
         }
@@ -85,7 +86,7 @@ class TernaryDecisionMatrix extends EventEmitter {
         const results = [];
         for (const signal of signals) {
             const result = this.classify(signal);
-            if (result.state !== TERNARY.EPHEMERAL) {
+            if (result.state !== CSL_STATE.EPHEMERAL) {
                 results.push(result);
             }
         }
@@ -98,7 +99,7 @@ class TernaryDecisionMatrix extends EventEmitter {
     _extractFeatures(signal) {
         const features = {
             confidence: 0.500, // phiThreshold(0) — MINIMUM
-            novelty: 0.5,
+            novelty: 0.500,    // phiThreshold(0) — MINIMUM
             adversarial: false,
             verified: false,
             frequency: 0,
@@ -107,26 +108,26 @@ class TernaryDecisionMatrix extends EventEmitter {
 
         // Confidence from explicit metadata — pipe through CSL Soft Gate
         if (signal.confidence !== undefined) {
-            features.confidence = CSL.soft_gate(signal.confidence, 0.5, 10);
+            features.confidence = CSL.soft_gate(signal.confidence, 0.500, 13); // fib(7)=13 steepness
         }
         if (signal.verified) features.verified = true;
 
         // Adversarial detection: failed compilations, blocked prompts, errors
         if (signal.type === 'error' || signal.type === 'blocked' || signal.type === 'compilation_failure') {
             features.adversarial = true;
-            features.confidence = Math.min(features.confidence, 0.2);
+            features.confidence = Math.min(features.confidence, 0.236); // ψ³ ≈ 0.236
         }
 
         // High-value: verified proofs, user confirmations, successful actions
         if (signal.type === 'verified_proof' || signal.type === 'user_confirmation' || signal.type === 'action_success') {
             features.verified = true;
-            features.confidence = Math.max(features.confidence, 0.85);
+            features.confidence = Math.max(features.confidence, 0.882); // phiThreshold(3) — HIGH
         }
 
         // Novelty scoring: check shadow index for prior similar failures
         const shadowMatch = this._shadowIndex.find(s =>
             s.signal && s.signal.type === signal.type &&
-            JSON.stringify(s.signal.data).slice(0, 100) === JSON.stringify(signal.data).slice(0, 100)
+            JSON.stringify(s.signal.data).slice(0, 89) === JSON.stringify(signal.data).slice(0, 89) // fib(11)=89
         );
         if (shadowMatch) {
             features.adversarial = true;
@@ -138,26 +139,26 @@ class TernaryDecisionMatrix extends EventEmitter {
     }
 
     /**
-     * Apply ternary logic via CSL Ternary Gate: {-1, 0, +1} classification.
+     * Apply CSL Gate: {-1, 0, +1} classification.
      * Uses continuous sigmoid activation instead of hard thresholds.
      */
-    _applyTernaryLogic(features) {
+    _applyCSLGate(features) {
         // Forced REPEL for known adversarial signals
         if (features.adversarial) {
-            return TERNARY.REPEL;
+            return CSL_STATE.REPEL;
         }
 
         // Compute effective score: base confidence boosted by verification
         let effectiveScore = features.confidence;
-        if (features.verified) effectiveScore = Math.min(1.0, effectiveScore + 0.15);
-        if (features.novelty > 0.7) effectiveScore = Math.min(1.0, effectiveScore + 0.08);
+        if (features.verified) effectiveScore = Math.min(1.0, effectiveScore + 0.146); // ψ⁴ ≈ 0.146 boost
+        if (features.novelty > 0.691) effectiveScore = Math.min(1.0, effectiveScore + 0.090); // ψ⁵ ≈ 0.090 boost
 
-        // CSL Ternary Gate: continuous sigmoid classification
+        // CSL Gate: continuous sigmoid classification
         const gate = CSL.ternary_gate(
             effectiveScore,
             this._thresholds.resonanceConfidence,
             this._thresholds.repelConfidence,
-            15
+            13  // fib(7)=13 steepness
         );
 
         // Attach activation metadata for downstream consumers
@@ -167,9 +168,9 @@ class TernaryDecisionMatrix extends EventEmitter {
             raw: gate.raw,
         };
 
-        return gate.state === 1 ? TERNARY.CORE_RESONANCE
-            : gate.state === -1 ? TERNARY.REPEL
-                : TERNARY.EPHEMERAL;
+        return gate.state === 1 ? CSL_STATE.CORE_RESONANCE
+            : gate.state === -1 ? CSL_STATE.REPEL
+                : CSL_STATE.EPHEMERAL;
     }
 
     /**
@@ -183,9 +184,9 @@ class TernaryDecisionMatrix extends EventEmitter {
             confidence: result.features.confidence,
         });
 
-        // Keep resonance log bounded
-        if (this._resonanceLog.length > 1000) {
-            this._resonanceLog = this._resonanceLog.slice(-500);
+        // Keep resonance log bounded — fib(16)=987 max, trim to fib(13)=233
+        if (this._resonanceLog.length > 987) {
+            this._resonanceLog = this._resonanceLog.slice(-233);
         }
 
         // Deep Consolidation Protocol: commit to K3D
@@ -195,14 +196,14 @@ class TernaryDecisionMatrix extends EventEmitter {
                     content: JSON.stringify(result.signal.data),
                     type: 'core_resonance',
                     metadata: {
-                        ternary_state: +1,
+                        csl_state: +1,
                         confidence: result.features.confidence,
                         source: result.signal.type,
                     },
                 });
             } catch (err) {
-                logger.error?.(`Ternary K3D commit failed: ${err.message}`) ||
-                    logger.error(`Ternary K3D commit failed: ${err.message}`);
+                logger.error?.(`CSL K3D commit failed: ${err.message}`) ||
+                    logger.error(`CSL K3D commit failed: ${err.message}`);
             }
         }
 
@@ -218,8 +219,8 @@ class TernaryDecisionMatrix extends EventEmitter {
 
         // If Redis is available, store in volatile cache with TTL
         if (this._redisCache && typeof this._redisCache.set === 'function') {
-            const key = `ternary:ephemeral:${result.ts}`;
-            this._redisCache.set(key, JSON.stringify(result.signal.data), 'EX', 300)
+            const key = `csl:ephemeral:${result.ts}`;
+            this._redisCache.set(key, JSON.stringify(result.signal.data), 'EX', 233) // fib(13)=233s TTL
                 .catch(() => { }); // fire and forget
         }
     }
@@ -240,7 +241,7 @@ class TernaryDecisionMatrix extends EventEmitter {
 
         this._shadowIndex.push(shadowEntry);
 
-        // Bound shadow index
+        // Bound shadow index — fib(15)=610 max
         if (this._shadowIndex.length > this._thresholds.maxShadowSize) {
             this._shadowIndex = this._shadowIndex.slice(-Math.floor(this._thresholds.maxShadowSize / 2));
         }
@@ -252,7 +253,7 @@ class TernaryDecisionMatrix extends EventEmitter {
      * Decay old shadow entries to prevent stale quarantines.
      */
     _decayShadowIndex() {
-        const cutoff = Date.now() - (this._thresholds.decayInterval * 24); // 24 decay cycles
+        const cutoff = Date.now() - (this._thresholds.decayInterval * 21); // fib(8)=21 decay cycles
         const before = this._shadowIndex.length;
         this._shadowIndex = this._shadowIndex.filter(e => e.ts > cutoff);
         const removed = before - this._shadowIndex.length;
@@ -272,7 +273,7 @@ class TernaryDecisionMatrix extends EventEmitter {
     }
 
     /**
-     * Get ternary engine stats.
+     * Get CSL cognitive filter stats.
      */
     getStats() {
         return {
@@ -292,16 +293,20 @@ class TernaryDecisionMatrix extends EventEmitter {
      * Register API routes.
      */
     registerRoutes(app) {
-        app.get('/api/v2/ternary/stats', (req, res) => res.json({ ok: true, ...this.getStats() }));
-        app.get('/api/v2/ternary/shadow', (req, res) => {
+        app.get('/api/v2/csl/stats', (req, res) => res.json({ ok: true, ...this.getStats() }));
+        app.get('/api/v2/csl/shadow', (req, res) => {
             const query = req.query.q;
-            const results = query ? this.queryShadowIndex(query) : this._shadowIndex.slice(-20);
+            const results = query ? this.queryShadowIndex(query) : this._shadowIndex.slice(-21); // fib(8)=21
             res.json({ ok: true, count: results.length, entries: results });
         });
-        app.post('/api/v2/ternary/classify', (req, res) => {
+        app.post('/api/v2/csl/classify', (req, res) => {
             const result = this.classify(req.body);
             res.json({ ok: true, state: result.state, stateName: ['REPEL', 'EPHEMERAL', 'CORE_RESONANCE'][result.state + 1], features: result.features });
         });
+        // Backward-compatible aliases
+        app.get('/api/v2/ternary/stats', (req, res) => res.redirect(301, '/api/v2/csl/stats'));
+        app.get('/api/v2/ternary/shadow', (req, res) => res.redirect(301, `/api/v2/csl/shadow${req.url.includes('?') ? '?' + req.url.split('?')[1] : ''}`));
+        app.post('/api/v2/ternary/classify', (req, res) => res.redirect(307, '/api/v2/csl/classify'));
     }
 
     destroy() {
@@ -309,4 +314,8 @@ class TernaryDecisionMatrix extends EventEmitter {
     }
 }
 
-module.exports = { TernaryDecisionMatrix, TERNARY };
+// Backward-compatible exports
+const TernaryDecisionMatrix = CSLCognitiveFilter;
+const TERNARY = CSL_STATE;
+
+module.exports = { CSLCognitiveFilter, CSL_STATE, TernaryDecisionMatrix, TERNARY };

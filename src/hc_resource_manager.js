@@ -1,3 +1,4 @@
+const { logger } = require('./utils/logger');
 // HEADY_BRAND:BEGIN
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
@@ -316,7 +317,7 @@ class HCResourceManager extends EventEmitter {
   }
 
   start() {
-    console.log("[HCResourceManager] Starting resource monitoring (poll: %dms)", this.pollInterval);
+    logger.info("[HCResourceManager] Starting resource monitoring (poll: %dms)", this.pollInterval);
     this._poll();
     this.timer = setInterval(() => this._poll(), this.pollInterval);
     return this;
@@ -324,7 +325,7 @@ class HCResourceManager extends EventEmitter {
 
   stop() {
     if (this.timer) { clearInterval(this.timer); this.timer = null; }
-    console.log("[HCResourceManager] Stopped.");
+    logger.info("[HCResourceManager] Stopped.");
   }
 
   getSnapshot() {
