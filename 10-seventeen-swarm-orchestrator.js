@@ -32,37 +32,6 @@ const SWARM_NAMES = [
   'Emergency',
 ];
 
-// Priority levels: higher = more urgent
-const PRIORITY = {
-  EMERGENCY:  100,
-  CRITICAL:    80,
-  HIGH:        60,
-  NORMAL:      40,
-  LOW:         20,
-  BACKGROUND:  10,
-};
-
-// Default priorities per swarm
-const SWARM_PRIORITIES = {
-  Emergency:     PRIORITY.EMERGENCY,
-  Security:      PRIORITY.CRITICAL,
-  Health:        PRIORITY.CRITICAL,
-  Deploy:        PRIORITY.HIGH,
-  Migration:     PRIORITY.HIGH,
-  Monitoring:    PRIORITY.HIGH,
-  Governance:    PRIORITY.NORMAL,
-  Testing:       PRIORITY.NORMAL,
-  Battle:        PRIORITY.NORMAL,
-  Research:      PRIORITY.NORMAL,
-  Memory:        PRIORITY.NORMAL,
-  Trading:       PRIORITY.NORMAL,
-  Creative:      PRIORITY.LOW,
-  Documentation: PRIORITY.LOW,
-  Analytics:     PRIORITY.LOW,
-  Cleanup:       PRIORITY.BACKGROUND,
-  Onboarding:    PRIORITY.BACKGROUND,
-};
-
 const SWARM_STATUS = {
   IDLE:       'idle',
   ACTIVE:     'active',
@@ -88,7 +57,6 @@ class SwarmTask {
     this.id         = opts.id       || crypto.randomUUID();
     this.type       = opts.type     || 'generic';
     this.payload    = opts.payload  || {};
-    this.priority   = opts.priority || PRIORITY.NORMAL;
     this.targetSwarm = opts.targetSwarm || null;
     this.sourceSwarm = opts.sourceSwarm || null;
     this.createdAt  = Date.now();
@@ -136,7 +104,6 @@ class SwarmMessage {
     this.to       = opts.to   || null; // null = broadcast
     this.payload  = opts.payload || {};
     this.ts       = Date.now();
-    this.priority = opts.priority || PRIORITY.NORMAL;
   }
 }
 
@@ -226,7 +193,6 @@ class Swarm {
   constructor(name, opts = {}) {
     this.name       = name;
     this.id         = opts.id       || crypto.randomUUID();
-    this.priority   = opts.priority || SWARM_PRIORITIES[name] || PRIORITY.NORMAL;
     this.status     = SWARM_STATUS.IDLE;
     this._bus       = null;
     this._handlers  = {};   // task type → async fn
@@ -236,7 +202,7 @@ class Swarm {
     this._maxConcurrency = opts.maxConcurrency || 5;
     this._maxQueue       = opts.maxQueue       || 100;
     this._stats          = { received: 0, completed: 0, failed: 0, escalated: 0 };
-    this._heartbeatMs    = opts.heartbeatMs || Math.round(5000 * (1 + (this.priority / 200)));
+    this._heartbeatMs    = opts.heartbeatMs || 5000;
     this._heartbeatTimer = null;
     this._capabilities   = opts.capabilities || [name.toLowerCase()];
     this._callbacks      = { task: [], complete: [], error: [] };
@@ -262,20 +228,12 @@ class Swarm {
    */
   submit(task) {
     const t = task instanceof SwarmTask ? task : new SwarmTask({ ...task, targetSwarm: this.name });
-    if (this._queue.length >= this._maxQueue) {
-      // Evict lowest priority task if new one is higher
-      this._queue.sort((a, b) => a.priority - b.priority);
-      if (this._queue[0].priority < t.priority) {
-        const evicted = this._queue.shift();
-        evicted.fail(new Error('Queue overflow - evicted'));
-      } else {
-        t.fail(new Error('Swarm queue full'));
-        return t;
-      }
+    if (this._queue.length >= this._maxQueue) {      // Queue is full
+      t.fail(new Error('Swarm queue full'));
+      return t;
     }
     this._stats.received++;
     this._queue.push(t);
-    this._queue.sort((a, b) => b.priority - a.priority); // highest priority first
     this._drain();
     return t;
   }
@@ -302,17 +260,7 @@ class Swarm {
         this._emit('error', task);
         this._finishTask(task);
 
-        // Escalate to Emergency swarm if critical
-        if (this._bus && task.priority >= PRIORITY.HIGH) {
-          this._stats.escalated++;
-          this._bus.send({
-            type:    MESSAGE_TYPE.ESCALATION,
-            from:    this.name,
-            to:      'Emergency',
-            payload: { taskId: task.id, error: task.error, priority: task.priority },
-            priority: PRIORITY.CRITICAL,
-          });
-        }
+
       });
     }
 
@@ -341,7 +289,6 @@ class Swarm {
         from:    this.name,
         to:      task.sourceSwarm,
         payload: { taskId: task.id, status: task.status, result: task.result, error: task.error },
-        priority: task.priority,
       });
     }
     this._drain();
@@ -372,7 +319,6 @@ class Swarm {
           type:    MESSAGE_TYPE.HEARTBEAT,
           from:    this.name,
           payload: this.getStatus(),
-          priority: PRIORITY.LOW,
         });
       }
     }, this._heartbeatMs);
@@ -393,7 +339,6 @@ class Swarm {
       name:        this.name,
       id:          this.id,
       status:      this.status,
-      priority:    this.priority,
       queue:       this._queue.length,
       active:      this._active.length,
       capabilities: this._capabilities,
@@ -458,10 +403,7 @@ class ConsensusManager {
     // Tally with φ-weighted scores
     const tally = {};
     let totalWeight = 0;
-    for (const [swarm, { decision, weight }] of proposal.votes) {
-      // Weight by swarm priority
-      const priorityWeight = (SWARM_PRIORITIES[swarm] || PRIORITY.NORMAL) / PRIORITY.EMERGENCY;
-      const effectiveWeight = weight * priorityWeight * PHI;
+    for (const [swarm, { decision, weight }] of proposal.votes) {      const effectiveWeight = weight * PHI;
       tally[decision] = (tally[decision] || 0) + effectiveWeight;
       totalWeight += effectiveWeight;
     }
@@ -504,7 +446,7 @@ class ConsensusManager {
 class SwarmOrchestrator {
   /**
    * Manages all 17 canonical swarms with inter-swarm comms,
-   * priority-based scheduling, and consensus support.
+   * and consensus support.
    */
   constructor(opts = {}) {
     this._bus          = new SwarmBus();
@@ -525,7 +467,6 @@ class SwarmOrchestrator {
 
   _createSwarm(name, opts = {}) {
     const swarm = new Swarm(name, {
-      priority: SWARM_PRIORITIES[name] || PRIORITY.NORMAL,
       ...opts,
     });
     swarm.connectBus(this._bus);
@@ -577,13 +518,12 @@ class SwarmOrchestrator {
 
       case 'Emergency':
         swarm.on('*', async (task) => {
-          this._audit('emergency', { taskId: task.id, priority: task.priority, payload: task.payload });
+          this._audit('emergency', { taskId: task.id, payload: task.payload });
           // Broadcast emergency to all swarms
           this._bus.send({
             type:    MESSAGE_TYPE.BROADCAST,
             from:    'Emergency',
             payload: { emergency: true, taskId: task.id, payload: task.payload },
-            priority: PRIORITY.EMERGENCY,
           });
           return { acknowledged: true, ts: Date.now() };
         });
@@ -640,7 +580,7 @@ class SwarmOrchestrator {
   }
 
   _schedulerTick() {
-    // Priority-based: check overloaded swarms, rebalance tasks
+    // Check overloaded swarms
     for (const [name, swarm] of this._swarms.entries()) {
       if (swarm.status === SWARM_STATUS.ERROR) swarm.status = SWARM_STATUS.IDLE;
       const qd = swarm.getQueueDepth();
@@ -679,8 +619,8 @@ class SwarmOrchestrator {
   /**
    * Broadcast to all swarms.
    */
-  broadcast(payload, type = MESSAGE_TYPE.BROADCAST, priority = PRIORITY.NORMAL) {
-    this._bus.send({ type, from: 'Orchestrator', payload, priority });
+  broadcast(payload, type = MESSAGE_TYPE.BROADCAST) {
+    this._bus.send({ type, from: 'Orchestrator', payload });
     return this;
   }
 
@@ -701,8 +641,7 @@ class SwarmOrchestrator {
         type:        'vote',
         targetSwarm: 'Governance',
         sourceSwarm: swarmName,
-        payload:     { proposalId, swarmName, decision: 'approve', weight: swarm.priority / PRIORITY.EMERGENCY },
-        priority:    PRIORITY.HIGH,
+        payload:     { proposalId, swarmName, decision: 'approve', weight: 1.0 },
       }));
     }
 
@@ -760,8 +699,6 @@ class SwarmOrchestrator {
 module.exports = {
   PHI,
   SWARM_NAMES,
-  PRIORITY,
-  SWARM_PRIORITIES,
   SWARM_STATUS,
   MESSAGE_TYPE,
   SwarmTask,
