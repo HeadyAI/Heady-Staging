@@ -196,14 +196,14 @@ const PIPELINE = Object.freeze({
   STAGES: fib(8),           // 21
   MAX_CONCURRENT: fib(6),           // 8
   MAX_RETRIES: fib(4),           // 3
-  CONTEXT_GATE: 0.92,             // embedding density gate
+  CONTEXT_GATE: phiThreshold(4),   // ≈ 0.927 — embedding density gate (CRITICAL level)
   BACKOFF_MS: [phiMs(1), phiMs(2), phiMs(3)], // [1618, 2618, 4236]
   MAX_BACKOFF_MS: phiMs(5),         // 11,090
   TIMEOUT: Object.freeze({
     RECON: phiMs(4),           // 6,854ms
     INTAKE: phiMs(3),           // 4,236ms
     TRIAL: phiMs(6),           // 17,944ms
-    EXECUTE: 120000,
+    EXECUTE: phiMs(10),          // 121,393ms — max single operation
     AWARENESS: phiMs(5),           // 11,090ms
     SEARCH: phiMs(7),           // 29,034ms
     EVOLUTION: phiMs(7),           // 29,034ms

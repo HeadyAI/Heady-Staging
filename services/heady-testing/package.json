@@ -1,13 +1,15 @@
 {
   "name": "heady-testing",
-  "version": "3.2.3",
+  "version": "4.0.0",
   "type": "module",
-  "description": "Testing framework \u2014 automated verification, regression detection",
+  "description": "Heady™ Testing Framework — service health verification, regression detection, phi-compliance, sacred geometry validation, contract testing",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
     "dev": "PORT=3343 node --watch index.js",
-    "health": "curl -s http://localhost:3343/health | jq ."
+    "test": "node --test tests/",
+    "health": "curl -sf ${HEADY_TESTING_URL:-http://heady-testing:3343}/health | node -e \"process.stdin.pipe(process.stdout)\"",
+    "run-tests": "curl -sf -X POST ${HEADY_TESTING_URL:-http://heady-testing:3343}/run | node -e \"process.stdin.pipe(process.stdout)\""
   },
   "dependencies": {
     "express": "^4.21.0",
@@ -17,13 +19,22 @@
     "@opentelemetry/instrumentation-express": "^0.41.0"
   },
   "engines": {
-    "node": ">=22.0.0"
+    "node": ">=20.0.0"
   },
   "heady": {
     "domain": "testing",
     "port": 3343,
     "architecture": "concurrent-equals",
     "phiScaled": true,
-    "autoContext": "mandatory"
+    "autoContext": "mandatory",
+    "capabilities": [
+      "health-probes",
+      "contract-testing",
+      "regression-detection",
+      "phi-compliance",
+      "sacred-geometry-validation",
+      "invariant-checking",
+      "auto-test-scheduling"
+    ]
   }
 }
