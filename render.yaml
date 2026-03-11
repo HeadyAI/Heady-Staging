@@ -14,6 +14,7 @@
 # ╚══════════════════════════════════════════════════════════════════╝
 # HEADY_BRAND:END
 services:
+<<<<<<< HEAD
   - type: web
     name: heady-manager
     runtime: node
@@ -30,3 +31,43 @@ services:
         fromSecret: HEADY_API_KEY
       - key: ADMIN_TOKEN
         fromSecret: ADMIN_TOKEN
+=======
+- type: web
+  name: heady-manager
+  runtime: node
+  plan: performance
+  buildCommand: npm install
+  startCommand: npm start
+  healthCheckPath: /api/health
+  envVars:
+    - key: PORT
+      value: "3300"
+    - key: NODE_ENV
+      value: "production"
+    - key: HEADY_TARGET
+      value: "cloud"
+    - key: HEADY_MODE
+      value: "CLOUD_ONLY"
+    - key: HEADY_VERSION
+      value: "3.0.0"
+    - key: DISABLE_LOCALHOST
+      value: "true"
+    - key: CLOUD_FIRST
+      value: "true"
+    - key: DATABASE_URL
+      fromSecret: DATABASE_URL
+    - key: HEADY_API_KEY
+      fromSecret: HEADY_API_KEY
+    - key: ADMIN_TOKEN
+      fromSecret: ADMIN_TOKEN
+    - key: ANTHROPIC_API_KEY
+      fromSecret: ANTHROPIC_API_KEY
+    - key: GITHUB_TOKEN
+      fromSecret: GITHUB_TOKEN
+    - key: CLOUDFLARE_API_TOKEN
+      fromSecret: CLOUDFLARE_API_TOKEN
+    - key: CLOUDFLARE_ACCOUNT_ID
+      fromSecret: CLOUDFLARE_ACCOUNT_ID
+    - key: HF_TOKEN
+      fromSecret: HF_TOKEN
+>>>>>>> 233933e0e0de33ba336efea820f0aba57ae04586
