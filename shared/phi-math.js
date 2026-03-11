@@ -16,6 +16,8 @@
 
 const PHI          = 1.6180339887498948;    // φ = (1 + √5) / 2
 const PSI          = 0.6180339887498949;    // ψ = 1/φ = φ - 1
+const PSI_SQ       = PSI * PSI;             // ψ² ≈ 0.382
+const PSI_CUBED    = PSI * PSI * PSI;       // ψ³ ≈ 0.236
 const PHI_SQ       = 2.618033988749895;     // φ² = φ + 1
 const PHI_CUBED    = 4.23606797749979;      // φ³ = 2φ + 1
 const SQRT5        = 2.23606797749979;      // √5
@@ -140,6 +142,22 @@ function phiFusionWeights(n) {
 function phiMultiSplit(whole, n) {
   const weights = phiFusionWeights(n);
   return weights.map(w => Math.round(whole * w));
+}
+
+/**
+ * Compute a phi-weighted fusion score from an array of values.
+ * If explicit weights are provided, uses them; otherwise generates
+ * phi-fusion weights for values.length factors.
+ * @param {number[]} values - Score components (each 0–1)
+ * @param {number[]} [weights] - Optional explicit weights (must sum to ~1)
+ * @returns {number} Weighted composite score
+ */
+function phiFusionScore(values, weights) {
+  if (!values || values.length === 0) return 0;
+  const w = weights && weights.length === values.length
+    ? weights
+    : phiFusionWeights(values.length);
+  return values.reduce((sum, v, i) => sum + v * w[i], 0);
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -329,13 +347,45 @@ function normalize(v) {
   return mag === 0 ? v : v.map(x => x / mag);
 }
 
+/**
+ * CSL AND gate — cosine similarity between two vectors, gated by minimum threshold.
+ * Returns 0 if below MINIMUM threshold.
+ * @param {number[]} a - Vector A
+ * @param {number[]} b - Vector B
+ * @param {number} [minThreshold] - Floor below which result is 0
+ * @returns {number} Cosine similarity or 0
+ */
+function cslAND(a, b, minThreshold = CSL_THRESHOLDS.MINIMUM) {
+  const sim = cosineSimilarity(a, b);
+  return sim >= minThreshold ? sim : 0;
+}
+
+/**
+ * Generate a deterministic pseudo-random unit vector from a string seed.
+ * Uses LCG PRNG (multiplier 1103515245, increment 12345) seeded from
+ * a DJB2-style string hash, then normalizes to unit length.
+ * @param {string} seed - String seed for deterministic generation
+ * @param {number} [dims=384] - Vector dimensions (default VECTOR.DIMS)
+ * @returns {number[]} Normalized unit vector
+ */
+function placeholderVector(seed, dims = 384) {
+  const vec = new Array(dims);
+  let h = 0;
+  for (let i = 0; i < seed.length; i++) h = ((h << 5) - h + seed.charCodeAt(i)) | 0;
+  for (let i = 0; i < dims; i++) {
+    h = ((h * 1103515245 + 12345) & 0x7fffffff);
+    vec[i] = (h / 0x7fffffff) * 2 - 1;
+  }
+  return normalize(vec);
+}
+
 // ═══════════════════════════════════════════════════════════════════════════════
 // EXPORTS
 // ═══════════════════════════════════════════════════════════════════════════════
 
 module.exports = {
   // Core
-  PHI, PSI, PHI_SQ, PHI_CUBED, SQRT5,
+  PHI, PSI, PSI_SQ, PSI_CUBED, PHI_SQ, PHI_CUBED, SQRT5,
   // Fibonacci
   FIB_CACHE, fib, fibCeil, fibFloor,
   // Timing
@@ -345,7 +395,7 @@ module.exports = {
   // Backoff
   phiBackoff, phiBackoffWithJitter, PHI_BACKOFF_SEQ,
   // Fusion
-  phiFusionWeights, phiMultiSplit,
+  phiFusionWeights, phiFusionScore, phiMultiSplit,
   // Pressure
   PRESSURE, getPressureLevel, ALERTS,
   // Domain constants
@@ -353,11 +403,11 @@ module.exports = {
   // Scoring
   JUDGE, COST_W, EVICTION,
   // Vector
-  VECTOR,
+  VECTOR, placeholderVector,
   // Token budgets
   phiTokenBudgets,
   // CSL functions
-  sigmoid, cslGate, cslBlend, adaptiveTemperature,
+  sigmoid, cslGate, cslBlend, cslAND, adaptiveTemperature,
   // Vector math
   cosineSimilarity, normalize,
 };

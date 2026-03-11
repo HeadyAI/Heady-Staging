@@ -12,11 +12,10 @@
 const EventEmitter = require('events');
 const crypto = require('crypto');
 const {
-  PHI, PSI, fib, phiBackoffWithJitter,
+  PHI, PSI, PSI_SQ, fib, phiBackoffWithJitter,
   CSL_THRESHOLDS, VECTOR,
   cslAND, getPressureLevel, phiFusionScore,
 } = require('../../shared/phi-math');
-const PSI_SQ = PSI * PSI;             // ≈ 0.146 (not exported by phi-math)
 const EMBEDDING_DIM = VECTOR ? VECTOR.DIMS : 384;
 const { createLogger } = require('../../shared/logger');
 
