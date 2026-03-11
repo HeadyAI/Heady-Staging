@@ -1,6 +1,6 @@
 /**
  * Heady Notification Service — Port 3311
- * Multi-channel: Email, Push, In-App, SMS with csl_relevance queue + DLQ
+ * Multi-channel: Email, Push, In-App, SMS with concurrent queue + DLQ
  * Author: Eric Haywood | All constants φ-derived | ESM only
  */
 import { createHash, randomBytes } from 'crypto';
@@ -13,13 +13,6 @@ const BATCH_SIZE_MEDIUM    = fibonacci(8);                   // 21
 const BATCH_SIZE_LARGE     = fibonacci(10);                  // 55
 const MAX_RETRIES          = fibonacci(5);                   // 5
 const DLQ_MAX_SIZE         = fibonacci(14);                  // 377
-const CSL_RELEVANCE_LEVELS      = {
-  CRITICAL: phiThreshold(4),   // ≈0.927
-  HIGH:     phiThreshold(3),   // ≈0.882
-  MEDIUM:   phiThreshold(2),   // ≈0.809
-  LOW:      phiThreshold(1),   // ≈0.691
-  MINIMUM:  phiThreshold(0),   // ≈0.500
-};
 const CHANNEL_TYPES        = ['email', 'push', 'in_app', 'sms'];
 const TEMPLATE_CACHE_SIZE  = fibonacci(12);                  // 144
 
@@ -81,20 +74,12 @@ function getUserPreferences(userId) {
   };
 }
 
-// ── CslRelevance Queue (CSL-Gated) ───────────────────────────────────
-function computeCslRelevance(notification) {
-  const urgencyVec = [notification.urgency || 0.5];
-  const channelWeight = notification.channel === 'sms' ? PSI : (notification.channel === 'email' ? PSI2 : 1.0);
-  const rawScore = (notification.urgency || 0.5) * channelWeight;
-  return cslGate(rawScore, rawScore, phiThreshold(1), PSI * PSI * PSI);
-}
-
+// ── Queue ───────────────────────────────────
 function enqueueNotification(notification) {
   const id = sha256(randomBytes(16).toString('hex') + Date.now());
   const entry = {
     id,
     ...notification,
-    csl_relevance: computeCslRelevance(notification),
     attempts: 0,
     maxRetries: MAX_RETRIES,
     status: 'pending',
@@ -102,8 +87,7 @@ function enqueueNotification(notification) {
     lastAttempt: null,
   };
   notificationQueue.push(entry);
-  notificationQueue.sort((a, b) => b.csl_relevance - a.csl_relevance);
-  return { id, csl_relevance: entry.csl_relevance, status: 'queued' };
+  return { id, status: 'queued' };
 }
 
 // ── Channel Senders ──────────────────────────────────────────────
@@ -129,7 +113,7 @@ async function sendPush(notification) {
         body: notification.body || '',
       },
       data: notification.data || {},
-      android: { priority: 'high', ttl: String(fibonacci(13)) + 's' },
+      android: { ttl: String(fibonacci(13)) + 's' },
       apns: { payload: { aps: { sound: 'default' } } },
     },
   };
