@@ -1,12 +1,11 @@
 /**
- * Colab Gateway — CSL-based Workload Router
+ * Colab Gateway — Relevance-based Concurrent Workload Router
  * Author: Eric Haywood / HeadySystems Inc. — 51 Provisional Patents
  */
 
-import crypto from 'crypto';
 import {
   PHI, PSI, FIB, CSL_THRESHOLD,
-  type WorkloadRequest, type WorkloadResult, type WorkloadPriority, type WorkloadType
+  type WorkloadRequest, type WorkloadResult, type WorkloadType, type ExecutionLane
 } from './types.js';
 import { RuntimeManager } from './runtime-manager.js';
 
@@ -21,90 +20,87 @@ const log = (level: string, msg: string, meta?: Record<string, string | number |
 };
 
 export class WorkloadRouter {
-  private readonly queues: Record<WorkloadPriority, WorkloadRequest[]> = {
-    hot: [],
-    warm: [],
-    cold: []
+  private readonly queues: Record<ExecutionLane, WorkloadRequest[]> = {
+    realtime: [],
+    balanced: [],
+    batch: []
   };
 
-  private readonly maxQueueSizes: Record<WorkloadPriority, number> = {
-    hot: FIB[8],    // 21
-    warm: FIB[10],  // 55
-    cold: FIB[12]   // 144
+  private readonly maxQueueSizes: Record<ExecutionLane, number> = {
+    realtime: FIB[8],
+    balanced: FIB[10],
+    batch: FIB[12]
   };
 
   private readonly workloadVramEstimates: Record<WorkloadType, number> = {
-    embedding: FIB[9] * FIB[5],         // 34*5 = 170 MB
-    inference: FIB[10] * FIB[7],         // 55*13 = 715 MB
-    training: FIB[11] * FIB[8],          // 89*21 = 1869 MB
-    fine_tuning: FIB[12] * FIB[8],       // 144*21 = 3024 MB
-    evaluation: FIB[9] * FIB[6]          // 34*8 = 272 MB
+    embedding: FIB[9] * FIB[5],
+    inference: FIB[10] * FIB[7],
+    training: FIB[11] * FIB[8],
+    fine_tuning: FIB[12] * FIB[8],
+    evaluation: FIB[9] * FIB[6]
   };
 
   constructor(private readonly runtimeManager: RuntimeManager) {}
 
   enqueue(request: WorkloadRequest): boolean {
-    const queue = this.queues[request.priority];
-    if (queue.length >= this.maxQueueSizes[request.priority]) {
-      log('warn', 'queue_full', { priority: request.priority, size: queue.length });
+    const lane = request.lane || this.deriveLane(request);
+    const normalized: WorkloadRequest = { ...request, lane };
+    const queue = this.queues[lane];
+
+    if (queue.length >= this.maxQueueSizes[lane]) {
+      log('warn', 'queue_full', { lane, size: queue.length });
       return false;
     }
 
-    queue.push(request);
+    queue.push(normalized);
     log('info', 'workload_enqueued', {
-      requestId: request.requestId,
-      type: request.type,
-      priority: request.priority
+      requestId: normalized.requestId,
+      type: normalized.type,
+      lane: normalized.lane
     });
     return true;
   }
 
-  async dispatch(): Promise<WorkloadResult | null> {
-    // Process queues in priority order: hot → warm → cold
-    for (const priority of ['hot', 'warm', 'cold'] as WorkloadPriority[]) {
-      const queue = this.queues[priority];
-      if (queue.length === 0) continue;
+  async dispatchBatch(maxDispatches: number = FIB[6]): Promise<WorkloadResult[]> {
+    const results: WorkloadResult[] = [];
 
-      const request = queue[0];
-      if (!request) continue;
+    for (let i = 0; i < maxDispatches; i += 1) {
+      const request = this.nextRequest();
+      if (!request) break;
 
       const estimatedVram = request.estimatedVramMb || this.workloadVramEstimates[request.type];
       const runtime = this.runtimeManager.selectRuntime(request.type, estimatedVram);
+      if (!runtime) {
+        this.queues[request.lane].unshift(request);
+        break;
+      }
 
-      if (!runtime) continue;
-
-      queue.shift();
       this.runtimeManager.markBusy(runtime.runtimeId);
-
       const start = Date.now();
 
       try {
         log('info', 'workload_dispatched', {
           requestId: request.requestId,
           runtimeId: runtime.runtimeId,
-          type: request.type
+          type: request.type,
+          lane: request.lane
         });
 
-        // Simulate processing (in production: send via WebSocket bridge)
         const result: WorkloadResult = {
           requestId: request.requestId,
           runtimeId: runtime.runtimeId,
           status: 'completed',
-          result: { processed: true, type: request.type },
+          result: { processed: true, type: request.type, lane: request.lane },
           error: null,
           durationMs: Date.now() - start,
           gpuUtilization: PSI,
           completedAt: new Date().toISOString()
         };
-
-        this.runtimeManager.markFree(runtime.runtimeId);
-        return result;
+        results.push(result);
       } catch (err) {
-        this.runtimeManager.markFree(runtime.runtimeId);
         const errMsg = err instanceof Error ? err.message : 'unknown_error';
         log('error', 'workload_failed', { requestId: request.requestId, error: errMsg });
-
-        return {
+        results.push({
           requestId: request.requestId,
           runtimeId: runtime.runtimeId,
           status: 'failed',
@@ -113,29 +109,59 @@ export class WorkloadRouter {
           durationMs: Date.now() - start,
           gpuUtilization: 0,
           completedAt: new Date().toISOString()
-        };
+        });
+      } finally {
+        this.runtimeManager.markFree(runtime.runtimeId);
       }
     }
 
-    return null;
+    return results;
   }
 
-  getQueueDepths(): Record<WorkloadPriority, number> {
+  getQueueDepths(): Record<ExecutionLane, number> {
     return {
-      hot: this.queues.hot.length,
-      warm: this.queues.warm.length,
-      cold: this.queues.cold.length
+      realtime: this.queues.realtime.length,
+      balanced: this.queues.balanced.length,
+      batch: this.queues.batch.length
     };
   }
 
   computeCSLScore(request: WorkloadRequest): number {
     const urgencyVector = [
-      request.priority === 'hot' ? PHI : request.priority === 'warm' ? 1.0 : PSI,
+      request.lane === 'realtime' ? PHI : request.lane === 'balanced' ? 1.0 : PSI,
       request.estimatedVramMb / (FIB[12] * FIB[8]),
       request.timeout > 0 ? FIB[8] * 1000 / request.timeout : PSI
     ];
 
     const magnitude = Math.sqrt(urgencyVector.reduce((s, v) => s + v * v, 0));
     return magnitude > CSL_THRESHOLD ? magnitude : 0;
+  }
+
+  private deriveLane(request: WorkloadRequest): ExecutionLane {
+    const score = request.relevanceScore ?? this.computeCSLScore(request);
+    if (score >= PHI) return 'realtime';
+    if (score >= CSL_THRESHOLD) return 'balanced';
+    return 'batch';
+  }
+
+  private nextRequest(): WorkloadRequest | null {
+    const candidates = [
+      this.queues.realtime[0],
+      this.queues.balanced[0],
+      this.queues.batch[0]
+    ].filter((v): v is WorkloadRequest => Boolean(v));
+
+    if (candidates.length === 0) return null;
+
+    candidates.sort((a, b) => {
+      const scoreDelta = (b.relevanceScore ?? this.computeCSLScore(b)) - (a.relevanceScore ?? this.computeCSLScore(a));
+      if (scoreDelta !== 0) return scoreDelta;
+      return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
+    });
+
+    const best = candidates[0];
+    const queue = this.queues[best.lane];
+    queue.shift();
+    return best;
   }
 }

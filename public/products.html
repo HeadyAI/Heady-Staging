@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<!-- HEADY_BRAND:BEGIN
+  HeadyOS Products Catalog
+  The full Heady product universe
+  HEADY_BRAND:END -->
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="HeadyOS Products — The full ecosystem of Heady applications. AI, creativity, data, music, learning, and more.">
+  <meta name="theme-color" content="#050510">
+  <title>HeadyOS — Products</title>
+  <link rel="stylesheet" href="/sacred-geometry.css">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--heady-void);
+      color: var(--heady-white);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    body::before {
+      content: '';
+      position: fixed; top: -80px; right: -80px;
+      width: 500px; height: 500px;
+      background: radial-gradient(circle, rgba(212,175,55,0.06) 0%, transparent 70%);
+      border-radius: 50%; filter: blur(60px);
+      pointer-events: none; z-index: 0;
+    }
+
+    @keyframes slide-up {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
+
+    .page { position: relative; z-index: 1; }
+    .container { max-width: 1280px; margin: 0 auto; padding: 0 24px; }
+
+    /* ── Page Header ─────────────────────────────────────── */
+    .page-header {
+      padding: 100px 24px 64px;
+      text-align: center;
+      animation: slide-up 0.7s ease-out both;
+    }
+    .page-eyebrow {
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: rgba(212,175,55,0.7);
+      margin-bottom: 16px;
+    }
+    .page-title {
+      font-size: 3.5rem;
+      font-weight: 800;
+      letter-spacing: -1.5px;
+      line-height: 1.1;
+      margin-bottom: 20px;
+      background: linear-gradient(135deg, #FAFAFA 0%, #D4AF37 50%, #FF00A0 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .page-subtitle {
+      font-size: 1.1rem;
+      color: rgba(255,255,255,0.55);
+      max-width: 560px;
+      margin: 0 auto;
+      line-height: 1.75;
+    }
+
+    /* ── Category Label ──────────────────────────────────── */
+    .category-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 24px;
+      margin-top: 72px;
+    }
+    .category-header:first-child { margin-top: 0; }
+    .category-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.35);
+    }
+    .category-line {
+      flex: 1;
+      height: 1px;
+      background: rgba(255,255,255,0.07);
+    }
+
+    /* ── Product Cards ───────────────────────────────────── */
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      margin-bottom: 16px;
+    }
+
+    .product-card {
+      background: rgba(255,255,255,0.025);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 20px;
+      padding: 32px 28px;
+      text-decoration: none;
+      color: inherit;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      transition: all 0.3s cubic-bezier(0.34,1.56,0.64,1);
+      position: relative;
+      overflow: hidden;
+    }
+    .product-card::after {
+      content: '';
+      position: absolute;
+      top: 0; left: -100%;
+      width: 100%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.04), transparent);
+      transition: left 0.5s;
+      pointer-events: none;
+    }
+    .product-card:hover::after { left: 100%; }
+    .product-card:hover {
+      transform: translateY(-6px);
+      border-color: rgba(212,175,55,0.3);
+      background: rgba(212,175,55,0.04);
+      box-shadow: 0 16px 48px rgba(0,0,0,0.3);
+    }
+
+    .product-card.featured {
+      grid-column: span 2;
+      flex-direction: row;
+      align-items: center;
+      gap: 32px;
+    }
+
+    .product-emoji-wrap {
+      width: 60px;
+      height: 60px;
+      border-radius: 16px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      flex-shrink: 0;
+    }
+    .product-card.featured .product-emoji-wrap {
+      width: 80px; height: 80px; font-size: 2.5rem; border-radius: 20px;
+    }
+
+    .product-name {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: rgba(255,255,255,0.92);
+      margin-bottom: 4px;
+    }
+    .product-tagline {
+      font-size: 0.875rem;
+      color: rgba(255,255,255,0.5);
+      line-height: 1.6;
+    }
+    .product-card.featured .product-tagline {
+      font-size: 0.95rem;
+      max-width: 320px;
+    }
+
+    .product-tags {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-top: 4px;
+    }
+    .ptag {
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      padding: 3px 10px;
+      border-radius: 9999px;
+      background: rgba(0,217,255,0.08);
+      color: rgba(0,217,255,0.7);
+      border: 1px solid rgba(0,217,255,0.15);
+    }
+    .ptag.gold {
+      background: rgba(212,175,55,0.08);
+      color: rgba(212,175,55,0.7);
+      border-color: rgba(212,175,55,0.15);
+    }
+
+    .product-arrow {
+      margin-top: auto;
+      font-size: 1rem;
+      color: rgba(255,255,255,0.25);
+      transition: all 0.2s;
+    }
+    .product-card:hover .product-arrow {
+      color: #D4AF37;
+      transform: translateX(4px);
+    }
+
+    /* ── Core Tools Section (2-col wide cards) ───────────── */
+    .core-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+    }
+    .core-card {
+      background: rgba(0,217,255,0.03);
+      border: 1px solid rgba(0,217,255,0.12);
+      border-radius: 20px;
+      padding: 28px;
+      text-decoration: none;
+      color: inherit;
+      display: flex;
+      gap: 20px;
+      align-items: flex-start;
+      transition: all 0.25s ease;
+    }
+    .core-card:hover {
+      background: rgba(0,217,255,0.06);
+      border-color: rgba(0,217,255,0.3);
+      transform: translateY(-3px);
+      box-shadow: 0 10px 32px rgba(0,0,0,0.25);
+    }
+    .core-icon {
+      width: 52px; height: 52px;
+      border-radius: 14px;
+      background: rgba(0,217,255,0.1);
+      border: 1px solid rgba(0,217,255,0.2);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.6rem; flex-shrink: 0;
+    }
+    .core-body h3 {
+      font-size: 1rem; font-weight: 700; color: rgba(255,255,255,0.9);
+      margin-bottom: 6px;
+    }
+    .core-body p {
+      font-size: 0.85rem; color: rgba(255,255,255,0.5); line-height: 1.65;
+    }
+
+    /* ── Footer band ─────────────────────────────────────── */
+    .footer-band {
+      margin-top: 100px;
+      padding: 64px 0;
+      border-top: 1px solid rgba(255,255,255,0.06);
+      text-align: center;
+    }
+    .footer-band h2 {
+      font-size: 2rem; font-weight: 700;
+      background: linear-gradient(135deg,#FAFAFA,#00D9FF);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+      margin-bottom: 16px;
+    }
+    .footer-band p {
+      font-size: 0.95rem; color: rgba(255,255,255,0.5); margin-bottom: 32px;
+    }
+    .btn-row { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+    .btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 13px 28px; border-radius: 9999px;
+      font-size: 0.9rem; font-weight: 600;
+      text-decoration: none; transition: all 0.2s; border: none; cursor: pointer;
+    }
+    .btn-primary { background: linear-gradient(135deg,#D4AF37,#F4D03F); color: #050510;
+      box-shadow: 0 4px 20px rgba(212,175,55,0.35); }
+    .btn-primary:hover { box-shadow: 0 8px 32px rgba(212,175,55,0.5); transform: translateY(-2px); }
+    .btn-outline { background: transparent; color: rgba(255,255,255,0.75);
+      border: 1px solid rgba(255,255,255,0.2); }
+    .btn-outline:hover { border-color: rgba(0,217,255,0.5); color: #00D9FF; }
+
+    /* ── Footer ──────────────────────────────────────────── */
+    .site-footer {
+      border-top: 1px solid rgba(255,255,255,0.06);
+      padding: 32px 0;
+      text-align: center;
+    }
+    .site-footer p { font-size: 0.82rem; color: rgba(255,255,255,0.3); }
+    .site-footer a { color: rgba(0,217,255,0.6); text-decoration: none; }
+    .site-footer a:hover { color: #00D9FF; }
+
+    @media (max-width: 1000px) {
+      .products-grid { grid-template-columns: repeat(2, 1fr); }
+      .product-card.featured { grid-column: span 1; flex-direction: column; }
+    }
+    @media (max-width: 640px) {
+      .products-grid { grid-template-columns: 1fr; }
+      .core-grid { grid-template-columns: 1fr; }
+      .page-title { font-size: 2.4rem; }
+    }
+  </style>
+</head>
+<body>
+  <script src="/nav-component.js"></script>
+
+  <main class="page">
+    <div class="container">
+
+      <!-- ─── PAGE HEADER ──────────────────────────── -->
+      <header class="page-header">
+        <p class="page-eyebrow">✦ The Heady Universe</p>
+        <h1 class="page-title">All Products</h1>
+        <p class="page-subtitle">
+          HeadyOS powers a growing family of specialised applications.
+          Each product shares the same intelligent backbone — your data, agents,
+          and workflows connect seamlessly across the entire ecosystem.
+        </p>
+      </header>
+
+      <!-- ─── CORE PLATFORM ────────────────────────── -->
+      <div class="category-header">
+        <span class="category-label">Core Platform</span>
+        <div class="category-line"></div>
+      </div>
+      <div class="core-grid">
+        <a href="/headyos-desktop.html" class="core-card">
+          <div class="core-icon">🖥️</div>
+          <div class="core-body">
+            <h3>HeadyOS Desktop</h3>
+            <p>The full orchestration command centre. Run pipelines, inspect agents, manage containers, and monitor every system component in real time.</p>
+          </div>
+        </a>
+        <a href="/headyos-mobile.html" class="core-card">
+          <div class="core-icon">📱</div>
+          <div class="core-body">
+            <h3>HeadyOS Mobile</h3>
+            <p>Touch-optimised interface for managing HeadyOS on the go. Full feature parity in a responsive, gesture-friendly shell.</p>
+          </div>
+        </a>
+        <a href="/headybuddy-integrated.html" class="core-card">
+          <div class="core-icon">💬</div>
+          <div class="core-body">
+            <h3>HeadyBuddy Chat</h3>
+            <p>Conversational AI assistant wired directly into the system. Trigger pipelines, debug issues, and explore your stack with natural language.</p>
+          </div>
+        </a>
+        <a href="/mcp-dashboard.html" class="core-card">
+          <div class="core-icon">🔌</div>
+          <div class="core-body">
+            <h3>MCP Dashboard</h3>
+            <p>Manage and monitor MCP tool connections. View registered tools, test endpoints, and inspect request/response flows in real time.</p>
+          </div>
+        </a>
+        <a href="/docker-orchestrator.html" class="core-card">
+          <div class="core-icon">🐳</div>
+          <div class="core-body">
+            <h3>Docker Orchestrator</h3>
+            <p>Visual container management. Pull images, start/stop services, view logs, and wire containers into your HeadyOS pipeline.</p>
+          </div>
+        </a>
+        <a href="/api-docs.html" class="core-card">
+          <div class="core-icon">📡</div>
+          <div class="core-body">
+            <h3>API Explorer</h3>
+            <p>Interactive, always-live API documentation. Browse every endpoint and fire live requests against your running system in-page.</p>
+          </div>
+        </a>
+      </div>
+
+      <!-- ─── AI & AGENTS ──────────────────────────── -->
+      <div class="category-header">
+        <span class="category-label">AI &amp; Agents</span>
+        <div class="category-line"></div>
+      </div>
+      <div class="products-grid">
+        <a href="/verticals/headyagent.html" class="product-card featured">
+          <div class="product-emoji-wrap">🤖</div>
+          <div>
+            <div class="product-name">HeadyAgent</div>
+            <div class="product-tagline">
+              Deploy, manage, and monitor autonomous AI agents at scale. HeadyAgent provides the runtime environment, memory system, and task routing infrastructure for any agentic workflow.
+            </div>
+            <div class="product-tags">
+              <span class="ptag">Agents</span>
+              <span class="ptag">Automation</span>
+              <span class="ptag gold">Core</span>
+            </div>
+          </div>
+        </a>
+        <a href="/verticals/headybuddy.html" class="product-card">
+          <div class="product-emoji-wrap">🧠</div>
+          <div>
+            <div class="product-name">HeadyBuddy</div>
+            <div class="product-tagline">Personal AI companion with persistent memory and deep system integration.</div>
+            <div class="product-tags"><span class="ptag">AI</span><span class="ptag">Chat</span></div>
+          </div>
+          <span class="product-arrow">→</span>
+        </a>
+        <a href="/verticals/headybot.html" class="product-card">
+          <div class="product-emoji-wrap">⚡</div>
+          <div>
+            <div class="product-name">HeadyBot</div>
+            <div class="product-tagline">Configurable automation bots for repetitive workflows and integrations.</div>
+            <div class="product-tags"><span class="ptag">Bots</span><span class="ptag">Automation</span></div>
+          </div>
+          <span class="product-arrow">→</span>
+        </a>
+      </div>
+
+      <!-- ─── DATA & INFRASTRUCTURE ────────────────── -->
+      <div class="category-header">
+        <span class="category-label">Data &amp; Infrastructure</span>
+        <div class="category-line"></div>
+      </div>
+      <div class="products-grid">
+        <a href="/verticals/headydata.html" class="product-card featured">
+          <div class="product-emoji-wrap">📊</div>
+          <div>
+            <div class="product-name">HeadyData</div>
+            <div class="product-tagline">
+              End-to-end data pipeline management. Ingest, transform, and analyse data streams from any source. Supports the L0–L3 layered data model and integrates with the HeadyOS checkpoint system.
+            </div>
+            <div class="product-tags">
+              <span class="ptag">Data</span>
+              <span class="ptag">Pipelines</span>
+              <span class="ptag gold">Core</span>
+            </div>
+          </div>
+        </a>
+        <a href="/verticals/headycloud.html" class="product-card">
+          <div class="product-emoji-wrap">☁️</div>
+          <div>
+            <div class="product-name">HeadyCloud</div>
+            <div class="product-tagline">Cloud-native deployment, scaling, and managed infrastructure on Render.com.</div>
+            <div class="product-tags"><span class="ptag">Cloud</span><span class="ptag">Infra</span></div>
+          </div>
+          <span class="product-arrow">→</span>
+        </a>
+        <a href="/verticals/headyio.html" class="product-card">
+          <div class="product-emoji-wrap">🌐</div>
+          <div>
+            <div class="product-name">HeadyIO</div>
+            <div class="product-tagline">Real-time I/O — streaming data, WebSocket connections, and event routing.</div>
+            <div class="product-tags"><span class="ptag">Streaming</span><span class="ptag">Real-time</span></div>
+          </div>
+          <span class="product-arrow">→</span>
+        </a>
+        <a href="/verticals/headyapi.html" class="product-card">
+          <div class="product-emoji-wrap">⚙️</div>
+          <div>
+            <div class="product-name">HeadyAPI</div>
+            <div class="product-tagline">Developer API gateway, authentication, rate limiting, and integration hub.</div>
+            <div class="product-tags"><span class="ptag">API</span><span class="ptag">Gateway</span></div>
+          </div>
+          <span class="product-arrow">→</span>
+        </a>
+        <a href="/verticals/headymcp.html" class="product-card">
+          <div class="product-emoji-wrap">🔗</div>
+          <div>
+            <div class="product-name">HeadyMCP</div>
+            <div class="product-tagline">Model Context Protocol tooling — connect AI models to your entire stack.</div>
+            <div class="product-tags"><span class="ptag">MCP</span><span class="ptag">Protocol</span></div>
+          </div>
+          <span class="product-arrow">→</span>
+        </a>
+        <a href="/verticals/headyconnection.html" class="product-card">
+          <div class="product-emoji-wrap">🔌</div>
+          <div>
+            <div class="product-name">HeadyConnection</div>
+            <div class="product-tagline">Cross-service integration, networking topology management, and service mesh.</div>
+            <div class="product-tags"><span class="ptag">Integration</span><span class="ptag">Networking</span></div>
+          </div>
+          <span class="product-arrow">→</span>
+        </a>
+      </div>
+
+      <!-- ─── CREATIVE ──────────────────────────────── -->
+      <div class="category-header">
+        <span class="category-label">Creative</span>
+        <div class="category-line"></div>
+      </div>
+      <div class="products-grid">
+        <a href="/verticals/headycreator.html" class="product-card featured">
+          <div class="product-emoji-wrap">🎨</div>
+          <div>
+            <div class="product-name">HeadyCreator</div>
+            <div class="product-tagline">
+              AI-powered content creation suite. Generate images, video, copy, and multimedia assets using connected AI models — all managed through the HeadyOS pipeline.
+            </div>
+            <div class="product-tags">
+              <span class="ptag">Creative</span>
+              <span class="ptag">AI Generation</span>
+              <span class="ptag gold">Popular</span>
+            </div>
+          </div>
+        </a>
+        <a href="/verticals/headystudio.html" class="product-card">
+          <div class="product-emoji-wrap">🎬</div>
+          <div>
+            <div class="product-name">HeadyStudio</div>
+            <div class="product-tagline">Full creative production environment — edit, render, and publish from one workspace.</div>
+            <div class="product-tags"><span class="ptag">Studio</span><span class="ptag">Production</span></div>
+          </div>
+          <span class="product-arrow">→</span>
+        </a>
+        <a href="/verticals/headymusic.html" class="product-card">
+          <div class="product-emoji-wrap">🎵</div>
+          <div>
+            <div class="product-name">HeadyMusic</div>
+            <div class="product-tagline">Generative music, audio AI workflows, and composition tools.</div>
+            <div class="product-tags"><span class="ptag">Music</span><span class="ptag">Audio</span></div>
+          </div>
+          <span class="product-arrow">→</span>
+        </a>
+        <a href="/verticals/headytube.html" class="product-card">
+          <div class="product-emoji-wrap">📺</div>
+          <div>
+            <div class="product-name">HeadyTube</div>
+            <div class="product-tagline">AI video creation, summarisation, and streaming media management.</div>
+            <div class="product-tags"><span class="ptag">Video</span><span class="ptag">Streaming</span></div>
+          </div>
+          <span class="product-arrow">→</span>
+        </a>
+      </div>
+
+      <!-- ─── PERSONAL & LEARNING ───────────────────── -->
+      <div class="category-header">
+        <span class="category-label">Personal &amp; Learning</span>
+        <div class="category-line"></div>
+      </div>
+      <div class="products-grid">
+        <a href="/verticals/headyme.html" class="product-card featured">
+          <div class="product-emoji-wrap">👤</div>
+          <div>
+            <div class="product-name">HeadyMe</div>
+            <div class="product-tagline">
+              Your personal AI layer — digital twin, preference modelling, and adaptive assistance. HeadyMe learns your workflows and surfaces the right tools at the right moment.
+            </div>
+            <div class="product-tags">
+              <span class="ptag">Personal</span>
+              <span class="ptag">Digital Twin</span>
+            </div>
+          </div>
+        </a>
+        <a href="/verticals/headylearn.html" class="product-card">
+          <div class="product-emoji-wrap">🎓</div>
+          <div>
+            <div class="product-name">HeadyLearn</div>
+            <div class="product-tagline">AI-powered learning paths, knowledge graphs, and intelligent tutoring.</div>
+            <div class="product-tags"><span class="ptag">Education</span><span class="ptag">Knowledge</span></div>
+          </div>
+          <span class="product-arrow">→</span>
+        </a>
+        <a href="/verticals/headystore.html" class="product-card">
+          <div class="product-emoji-wrap">🛒</div>
+          <div>
+            <div class="product-name">HeadyStore</div>
+            <div class="product-tagline">Marketplace for Heady extensions, templates, models, and agent packages.</div>
+            <div class="product-tags"><span class="ptag">Marketplace</span><span class="ptag">Extensions</span></div>
+          </div>
+          <span class="product-arrow">→</span>
+        </a>
+      </div>
+
+      <!-- ─── CTA ───────────────────────────────────── -->
+      <div class="footer-band">
+        <h2>Ready to build?</h2>
+        <p>Get your HeadyOS node running in minutes. All products connect automatically.</p>
+        <div class="btn-row">
+          <a href="/onboarding.html" class="btn btn-primary">Get Started →</a>
+          <a href="/docs.html" class="btn btn-outline">Read the Docs</a>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>Heady Systems · <a href="/">Home</a> · <a href="/docs.html">Docs</a> · <a href="/api-docs.html">API</a> · <a href="/status.html">Status</a></p>
+    </div>
+  </footer>
+
+  <script src="/heady-shell.js"></script>
+</body>
+</html>

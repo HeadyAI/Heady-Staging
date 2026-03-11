@@ -4,6 +4,7 @@
   "description": "Heady Systems - Sacred Geometry :: Organic Systems :: Breathing Interfaces",
   "main": "heady-manager.js",
   "scripts": {
+    "postinstall": "node scripts/link-packages.js",
     "start:mcp": "node backend/app.js",
     "cli": "python scripts/heady_cli.py",
     "start": "node heady-manager.js",

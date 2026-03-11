@@ -1,234 +1,141 @@
-<<<<<<< HEAD
 <!-- HEADY_BRAND:BEGIN
-<!-- ╔══════════════════════════════════════════════════════════════════╗
-<!-- ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
-<!-- ║  ██║  ██║██╔════╝██╔══██╗██╔══██╗╚██╗ ██╔╝                     ║
-<!-- ║  ███████║█████╗  ███████║██║  ██║ ╚████╔╝                      ║
-<!-- ║  ██╔══██║██╔══╝  ██╔══██║██║  ██║  ╚██╔╝                       ║
-<!-- ║  ██║  ██║███████╗██║  ██║██████╔╝   ██║                        ║
-<!-- ║  ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝    ╚═╝                        ║
-<!-- ║                                                                  ║
-<!-- ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
-<!-- ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
-<!-- ║  FILE: README.md                                                    ║
-<!-- ║  LAYER: root                                                  ║
-<!-- ╚══════════════════════════════════════════════════════════════════╝
-<!-- HEADY_BRAND:END
--->
-=======
->>>>>>> a3d7d06c432bf92df85e53f8d0cf1e6c8622ccea
+╔══════════════════════════════════════════════════════════════════╗
+║  HeadyOS · Sacred Geometry · Organic Systems · Breathing Interfaces ║
+║  FILE: README.md  ·  LAYER: root                                ║
+╚══════════════════════════════════════════════════════════════════╝
+HEADY_BRAND:END -->
+
 # Heady Systems
 
-> Sacred Geometry :: Organic Systems :: Breathing Interfaces
+> **Sacred Geometry · Organic Systems · Breathing Interfaces**
 
-<<<<<<< HEAD
-## 🚀 System Status: 100% FULLY FUNCTIONAL
+HeadyOS is a **unified intelligent orchestration platform** for AI pipelines, distributed agents, and modern workloads. Every component self-monitors, self-corrects, and adapts in real time — a *living system*.
 
-**HeadyCloud is live and operational** with complete auto-deployment capabilities. All services are running at optimal performance with 100% HeadyBrain dominance and persistent memory integration.
+---
 
-### ✅ Live Services
-- **HeadyCloud API**: https://headysystems.com/api
-- **HeadyManager**: https://headysystems.com/manager  
-- **Registry Service**: https://headysystems.com/registry
-- **Brain Service**: https://brain.headysystems.com
-- **Auto-Deploy Pipeline**: Active and operational
-
-### 🎯 Quick Start (Cloud-First)
-
-```bash
-# Clone and auto-deploy
-git clone https://github.com/HeadySystems/Heady.git
-cd Heady
-./scripts/run-auto-deploy.ps1 -ForceProduction
-```
-
-**All services automatically deploy to HeadyCloud** - no local setup required.
-
-### 🧠 Intelligent Features
-
-- **100% HeadyBrain Dominance**: All operations routed through HeadyBrain
-- **Persistent Memory System**: Deep data scanning with pre-execution optimization
-- **Adaptive Complexity**: Intelligent orchestration based on task requirements
-- **Monte Carlo Optimization**: Real-time performance optimization
-- **Pattern Recognition**: Self-learning system with continuous improvement
-
-## Quickstart Guides
-
-Get started with Heady applications:
-
-- [HeadyBuddy](docs/quickstarts/HEADYBUDDY.md) - Android companion
-- [HeadyIDE](docs/quickstarts/HEADYIDE.md) - Desktop AI assistant
-- [HeadyBrowser](docs/quickstarts/HEADYBROWSER.md) - Web extension
-- [HeadyServices](docs/quickstarts/HEADYSERVICES.md) - Backend system
-- [Heady API](docs/quickstarts/HEADY_API_QUICKSTART.md) - Service interaction
-- [HeadyMCP](docs/quickstarts/HEADYMCP.md) - Manager Control Plane
-
-## Guides and References
-
-Deeper integration and API documentation:
-
-- [Service Integration](docs/guides/SERVICE_INTEGRATION.md) - How Heady services connect
-- [HeadyManager API](docs/api/HEADYMANAGER_API.md) - Service endpoints reference
-
-=======
 ## Quick Start
 
 ```bash
+git clone https://github.com/HeadySystems/Heady.git
+cd Heady
 npm install
 cp .env.example .env
-npm run dev
+# Edit .env — set at minimum ANTHROPIC_API_KEY
+npm start
+curl localhost:3300/api/health
 ```
 
->>>>>>> a3d7d06c432bf92df85e53f8d0cf1e6c8622ccea
+Cloud deploy: Connect to [Render.com](https://render.com) — the included `render.yaml` provisions everything automatically.
+
+---
+
 ## Architecture
 
 ```
-heady-manager.js          # Node.js MCP Server & API Gateway (port 3300)
-├── src/                  # Core pipeline engine & agents
-├── backend/              # Python worker & MCP servers
-├── frontend/             # React UI (Vite + TailwindCSS)
-<<<<<<< HEAD
-├── HeadyAcademy/         # AI Nodes & Tools (JULES, OBSERVER, BUILDER, ATLAS, PYTHIA)
-├── configs/              # YAML configuration (pipeline, resources, governance)
-├── scripts/              # Automation (Sync, Build, Deploy, Checkpoint)
-├── notebooks/            # Colab notebooks (quick-start, tutorials, examples)
-├── docs/                 # Documentation & Notion templates
-└── heady-registry.json   # HeadyRegistry — central catalog of the ecosystem
-=======
-├── HeadyAcademy/         # AI Nodes & Tools
-├── configs/              # YAML configuration
-├── scripts/              # Automation (Sync, Build, Deploy)
-└── workers/              # Edge workers
->>>>>>> a3d7d06c432bf92df85e53f8d0cf1e6c8622ccea
+heady-manager.js           # Node.js API Gateway (port 3300)
+├── src/hc_pipeline.js     # HCFullPipeline engine
+├── src/agents/            # Builder, Researcher, Claude Code, Deployer
+├── packages/hc-supervisor # Multi-agent Supervisor (parallel fan-out)
+├── packages/hc-brain/     # HeadyBrain meta-controller
+├── packages/hc-health/    # Health checks + cron
+├── configs/               # YAML configs (source of truth)
+├── public/                # Static frontend (this site)
+│   ├── index.html         # Landing page
+│   ├── docs.html          # Documentation hub
+│   ├── products.html      # Product catalog
+│   ├── api-docs.html      # Interactive API docs
+│   ├── status.html        # System status
+│   └── verticals/         # Product vertical pages
+├── frontend/              # React admin IDE (Vite)
+├── scripts/               # Build, deploy, checkpoint automation
+├── docs/                  # Developer documentation
+└── heady-registry.json    # Central component catalog
 ```
 
-## API
+---
 
-| Endpoint | Description |
-|---|---|
-| `GET /api/health` | Health check |
-| `GET /api/pulse` | System pulse with layer info |
-| `GET /api/system/status` | Full system status |
-| `POST /api/pipeline/run` | Trigger pipeline run |
-| `GET /api/pipeline/state` | Current pipeline state |
-| `GET /api/nodes` | List all AI nodes |
-<<<<<<< HEAD
-| `GET /api/registry` | Full HeadyRegistry catalog |
-| `GET /api/registry/component/:id` | Lookup a specific component |
-| `GET /api/registry/environments` | List all environments |
-| `GET /api/registry/docs` | List registered documents |
-| `GET /api/registry/notebooks` | List registered notebooks |
-| `GET /api/registry/patterns` | List architecture patterns |
-| `GET /api/registry/workflows` | List workflows |
-| `GET /api/registry/ai-nodes` | List AI nodes from registry |
+## HCFullPipeline
 
-## CLI Interface
+Five-stage deterministic execution with deep checkpoints:
 
-The Heady CLI provides command-line access to Heady services:
-
-```bash
-# Set API key (or add to .env)
-export HEADY_API_KEY="your_api_key"
-
-# Run CLI
-npm run cli
-# or directly:
-python scripts/heady_cli.py
+```
+ingest → plan → execute-major-phase → recover → finalize
 ```
 
-See [scripts/heady_cli.md](scripts/heady_cli.md) for full documentation.
+**Operational Readiness Score (ORS)** gates execution intensity:
+- **85–100**: Full parallelism, all optimisations enabled
+- **70–85**: Normal operation
+- **50–70**: Maintenance mode, no new large builds
+- **<50**: Recovery only — repair before building
+
+---
+
+## Key API Endpoints
+
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/api/health` | GET | Health check |
+| `/api/system/status` | GET | Full system status |
+| `/api/pipeline/run` | POST | Trigger pipeline run |
+| `/api/pipeline/state` | GET | Current state |
+| `/api/supervisor/status` | GET | All agent statuses |
+| `/api/brain/status` | GET | Brain + ORS |
+| `/api/registry` | GET | Component registry |
+
+Full reference: `public/api-docs.html` or `/api-docs.html` on the running system.
+
+---
+
+## Environment Variables
+
+| Variable | Required | Description |
+|----------|----------|-------------|
+| `ANTHROPIC_API_KEY` | **Yes** | Claude API key |
+| `DATABASE_URL` | Recommended | PostgreSQL connection |
+| `HEADY_API_KEY` | Recommended | Auto-generated if not set |
+| `PORT` | Optional | Server port (default: 3300) |
+| `NODE_ENV` | Optional | `development` or `production` |
+
+---
 
 ## Checkpoint Protocol
 
-All files are kept in sync at every checkpoint (commit, merge, pipeline completion, release). See `docs/CHECKPOINT_PROTOCOL.md` for the full protocol.
+At every checkpoint, 10-step deep analysis detects drift and syncs all files:
 
 ```powershell
 .\scripts\checkpoint-sync.ps1              # Full sync
 .\scripts\checkpoint-sync.ps1 -Mode check  # Read-only drift detection
-.\scripts\checkpoint-sync.ps1 -Mode fix    # Auto-fix issues
+.\scripts\checkpoint-sync.ps1 -Mode fix    # Auto-fix
 ```
 
-## HeadyRegistry
+Full protocol: `docs/CHECKPOINT_PROTOCOL.md`
 
-`heady-registry.json` is the central catalog of the entire ecosystem:
-- **Components** — services, modules, apps
-- **AI Nodes** — JULES, OBSERVER, BUILDER, ATLAS, PYTHIA
-- **Workflows** — HCFullPipeline, HeadySync, Checkpoint Sync
-- **Environments** — local, cloud-me, cloud-sys, cloud-conn, hybrid
-- **Patterns** — Sacred Geometry, Checkpoint Protocol, Direct Routing
-- **Docs & Notebooks** — tracked with version and review status
-
-## Notebooks
-
-Colab notebooks are stored under `notebooks/` and validated in CI:
-
-| Notebook | Purpose |
-|----------|---------|
-| `notebooks/quick-start/heady-quick-start.ipynb` | Fast system orientation |
-| `notebooks/tutorials/hcfullpipeline-walkthrough.ipynb` | Pipeline deep-dive |
-| `notebooks/examples/registry-api-demo.ipynb` | Registry API examples |
+---
 
 ## Key Documentation
 
 | Path | Purpose |
 |------|---------|
-| `docs/CHECKPOINT_PROTOCOL.md` | Master protocol for keeping all files in sync |
-| `docs/DOC_OWNERS.yaml` | Document ownership & review tracker |
-| `docs/notion-quick-start.md` | Notion Quick Start template |
-| `docs/notion-project-notebook.md` | Notion Project Notebook template |
-| `docs/heady-services-manual.md` | Comprehensive services manual |
+| `public/docs.html` | **Documentation hub** |
 | `CLAUDE.md` | Claude Code integration protocol |
+| `docs/CHECKPOINT_PROTOCOL.md` | Sync protocol |
+| `docs/C4_ARCHITECTURE.md` | Architecture diagrams |
+| `configs/hcfullpipeline.yaml` | Pipeline definition (source of truth) |
+| `heady-registry.json` | Central component catalog |
 
-## Python & Colab Development
-
-This project supports Python development with PyCharm and Google Colab integration.
-
-### Project Structure
-
-```
-data/                    # Data directories
-├── raw/                # Raw data files (git-ignored)
-├── processed/          # Processed data
-└── external/           # External data (git-ignored)
-
-notebooks/              # Jupyter notebooks
-├── exploratory/        # Scratch, EDA, experiments
-├── reports/            # Clean, final notebooks
-├── archive/            # Retired notebooks
-└── figures/            # Exported plots/images
-
-src/                    # Reusable Python code
-tests/                  # Unit tests
-```
-
-### Setup
-
-```bash
-# Install Python dependencies
-pip install -r requirements.txt
-
-# For PyCharm: Open as Python project
-# For Colab: See COLAB_WORKFLOW.md
-```
-
-### Key Files
-
-- `requirements.txt` - Python dependencies
-- `NOTEBOOK_TEMPLATE.md` - Template for new notebooks
-- `COLAB_WORKFLOW.md` - Google Colab workflow guide
-- `.env.example` - Environment variables template
-=======
-| `POST /api/system/production` | Activate production mode |
->>>>>>> a3d7d06c432bf92df85e53f8d0cf1e6c8622ccea
+---
 
 ## Deployment
 
-Deployed via [Render.com](https://render.com) using `render.yaml`.
+```powershell
+.\commit_and_build.ps1   # Local build
+.\nexus_deploy.ps1       # Push to all remotes
+```
+
+Render.com blueprint: `render.yaml`
+
+---
 
 ## License
 
-Proprietary - Heady Systems
-<<<<<<< HEAD
-
-=======
->>>>>>> a3d7d06c432bf92df85e53f8d0cf1e6c8622ccea
+Proprietary — Heady Systems

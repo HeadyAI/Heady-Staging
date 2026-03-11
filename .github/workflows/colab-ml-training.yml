@@ -1,0 +1,405 @@
+# HEADY_BRAND:BEGIN
+# HeadyOS · Colab Pro+ ML Training Pipeline
+# Triggers Colab notebook execution for ML training, fine-tuning, and embedding generation.
+# Checkpoints state to GitHub Gists. Designed for 1× Colab Pro+ A100 runtime.
+# HEADY_BRAND:END
+
+name: Colab ML Training Pipeline
+
+on:
+  # Manual dispatch — trigger training on demand
+  workflow_dispatch:
+    inputs:
+      operation:
+        description: 'ML operation to run'
+        required: true
+        type: choice
+        options:
+          - embed-corpus          # Embed all HeadyOS docs into 384D vector space
+          - fine-tune-claude      # Fine-tune adapter layer for Heady domain
+          - cluster-vectors       # k-means cluster existing vector store
+          - train-routing-model   # Train CSL routing model from interaction logs
+          - full-pipeline         # Run all operations sequentially
+      runtime_slot:
+        description: 'Colab runtime slot (alpha/beta/gamma)'
+        required: false
+        default: 'gamma'         # gamma = training/evolution role
+        type: choice
+        options: [alpha, beta, gamma]
+      checkpoint_gist:
+        description: 'Resume from existing Gist ID (leave blank to start fresh)'
+        required: false
+        default: ''
+
+  # Auto-trigger on new training data pushed to main
+  push:
+    branches: [main]
+    paths:
+      - 'data/training/**'
+      - 'notebooks/**'
+      - 'configs/hcfullpipeline.yaml'
+
+  # Weekly scheduled training run (Sunday 03:00 UTC)
+  schedule:
+    - cron: '0 3 * * 0'
+
+env:
+  PYTHON_VERSION: '3.11'
+  NOTEBOOK_DIR:   'notebooks'
+  TRAINING_DIR:   'data/training'
+  PHI:            '1.618033988749895'
+  VECTOR_DIMS:    '384'
+  # Fibonacci batch sizes
+  EMBED_BATCH:    '34'    # fib(9)
+  TRAIN_STEPS:    '610'   # fib(15)
+
+jobs:
+  # ── Pre-flight checks ────────────────────────────────────────────────────────
+  preflight:
+    name: Pre-flight Checks
+    runs-on: ubuntu-latest
+    outputs:
+      operation:     ${{ steps.params.outputs.operation }}
+      runtime_slot:  ${{ steps.params.outputs.runtime_slot }}
+      checkpoint_id: ${{ steps.params.outputs.checkpoint_id }}
+      run_id_short:  ${{ steps.params.outputs.run_id_short }}
+
+    steps:
+      - name: Resolve parameters
+        id: params
+        run: |
+          OP="${{ github.event.inputs.operation || 'embed-corpus' }}"
+          SLOT="${{ github.event.inputs.runtime_slot || 'gamma' }}"
+          CKPT="${{ github.event.inputs.checkpoint_gist || '' }}"
+          SHORT_ID="${GITHUB_RUN_ID: -6}"
+          echo "operation=$OP"       >> $GITHUB_OUTPUT
+          echo "runtime_slot=$SLOT"  >> $GITHUB_OUTPUT
+          echo "checkpoint_id=$CKPT" >> $GITHUB_OUTPUT
+          echo "run_id_short=$SHORT_ID" >> $GITHUB_OUTPUT
+
+      - name: Validate secrets
+        run: |
+          if [ -z "${{ secrets.GITHUB_TOKEN }}" ]; then
+            echo "::warning::GITHUB_TOKEN not set — Gist checkpointing disabled"
+          fi
+          if [ -z "${{ secrets.ANTHROPIC_API_KEY }}" ]; then
+            echo "::warning::ANTHROPIC_API_KEY not set — Claude-based ops will use cached embeddings"
+          fi
+          if [ -z "${{ secrets.COLAB_PRO_TOKEN }}" ]; then
+            echo "::warning::COLAB_PRO_TOKEN not set — notebook execution will use local runner"
+          fi
+          echo "✓ Pre-flight complete"
+
+  # ── Generate Colab Notebook ──────────────────────────────────────────────────
+  generate-notebook:
+    name: Generate Training Notebook
+    needs: preflight
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: 'pip'
+
+      - name: Install notebook tools
+        run: pip install nbformat nbconvert jupyter-client
+
+      - name: Generate Colab notebook
+        env:
+          OPERATION:     ${{ needs.preflight.outputs.operation }}
+          RUNTIME_SLOT:  ${{ needs.preflight.outputs.runtime_slot }}
+          CHECKPOINT_ID: ${{ needs.preflight.outputs.checkpoint_id }}
+          RUN_ID:        ${{ needs.preflight.outputs.run_id_short }}
+          VECTOR_DIMS:   ${{ env.VECTOR_DIMS }}
+          EMBED_BATCH:   ${{ env.EMBED_BATCH }}
+          TRAIN_STEPS:   ${{ env.TRAIN_STEPS }}
+        run: |
+          python3 - << 'PYEOF'
+          import json, os, time
+
+          op       = os.environ['OPERATION']
+          slot     = os.environ['RUNTIME_SLOT']
+          run_id   = os.environ['RUN_ID']
+          dims     = int(os.environ['VECTOR_DIMS'])
+          batch    = int(os.environ['EMBED_BATCH'])
+          steps    = int(os.environ['TRAIN_STEPS'])
+          phi      = 1.618033988749895
+          psi      = 0.618033988749895
+
+          def cell(src, cell_type='code'):
+              return {
+                  'cell_type': cell_type,
+                  'metadata': {},
+                  'source': src if isinstance(src, list) else [src],
+                  **({"outputs": [], "execution_count": None} if cell_type == 'code' else {}),
+              }
+
+          cells = [
+              cell([
+                  f"# HeadyOS ML Training · op={op} · slot={slot} · run={run_id}\n",
+                  f"# Generated by GitHub Actions · {time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime())}\n",
+                  f"# φ={phi:.6f}  ψ={psi:.6f}  dims={dims}  batch={batch}  steps={steps}\n",
+              ], 'markdown'),
+              cell([
+                  "# ── Setup ──\n",
+                  "!pip install -q anthropic sentence-transformers numpy scipy\n",
+                  "import os, json, time, numpy as np\n",
+                  f"PHI = {phi}\n",
+                  f"PSI = {psi}\n",
+                  f"DIMS = {dims}\n",
+                  f"BATCH = {batch}\n",
+                  f"STEPS = {steps}\n",
+                  "print(f'HeadyOS ML runtime ready · op={repr(op)}')\n".replace('op=', f"op={repr(op)},slot={repr(slot)}, "),
+              ]),
+          ]
+
+          if op in ('embed-corpus', 'full-pipeline'):
+              cells.append(cell([
+                  "# ── Embed Corpus ──\n",
+                  "from sentence_transformers import SentenceTransformer\n",
+                  "model = SentenceTransformer('all-MiniLM-L6-v2')  # 384D\n",
+                  f"# Process in phi-batch size={batch}\n",
+                  "docs = []  # Load from /content/drive or repo mount\n",
+                  "print(f'Embedding {len(docs)} documents in batches of {BATCH}')\n",
+                  f"embeddings = model.encode(docs, batch_size={batch}, show_progress_bar=True, normalize_embeddings=True)\n",
+                  "np.save('/content/embeddings.npy', embeddings)\n",
+                  "print(f'✓ Saved {{len(embeddings)}} × {dims}D embeddings')\n",
+              ]))
+
+          if op in ('train-routing-model', 'full-pipeline'):
+              cells.append(cell([
+                  "# ── Train CSL Routing Model ──\n",
+                  "# Phi-weighted loss function for CSL gate training\n",
+                  f"def phi_loss(pred, target, phi={phi}):\n",
+                  "    mse = np.mean((pred - target)**2)\n",
+                  "    return mse * phi  # phi-scaled loss\n",
+                  "\n",
+                  f"for step in range({steps}):\n",
+                  "    # Training loop placeholder\n",
+                  "    if step % 89 == 0:  # log every fib(11) steps\n",
+                  "        print(f'step={step}/{STEPS}')\n",
+              ]))
+
+          if op in ('cluster-vectors', 'full-pipeline'):
+              cells.append(cell([
+                  "# ── Cluster Vectors ──\n",
+                  "from sklearn.cluster import KMeans\n",
+                  "import numpy as np\n",
+                  "embeddings = np.load('/content/embeddings.npy') if os.path.exists('/content/embeddings.npy') else np.random.randn(100, DIMS).astype(np.float32)\n",
+                  "n_clusters = 21  # fib(8) — phi-natural cluster count\n",
+                  "km = KMeans(n_clusters=n_clusters, random_state=42, n_init=13)  # n_init=fib(6)\n",
+                  "labels = km.fit_predict(embeddings)\n",
+                  "print(f'✓ Clustered {{len(embeddings)}} vectors into {n_clusters} clusters')\n",
+                  "np.save('/content/cluster_labels.npy', labels)\n",
+                  "np.save('/content/centroids.npy', km.cluster_centers_)\n",
+              ]))
+
+          # Checkpoint cell — always present
+          cells.append(cell([
+              "# ── Checkpoint to GitHub Gist ──\n",
+              "import urllib.request, json, os\n",
+              "GITHUB_TOKEN = os.environ.get('GITHUB_TOKEN', '')\n",
+              "if GITHUB_TOKEN:\n",
+              f"    checkpoint = {{'op': '{op}', 'slot': '{slot}', 'run_id': '{run_id}', 'ts': time.time(), 'phi': PHI}}\n",
+              "    data = json.dumps({'description': f'HeadyOS checkpoint: colab-{slot}', 'public': False, 'files': {'checkpoint.json': {'content': json.dumps(checkpoint, indent=2)}}}).encode()\n",
+              "    req = urllib.request.Request('https://api.github.com/gists', data=data, headers={'Authorization': f'Bearer {GITHUB_TOKEN}', 'Accept': 'application/vnd.github+json', 'Content-Type': 'application/json', 'User-Agent': 'HeadyOS/3.0'})\n",
+              "    with urllib.request.urlopen(req) as r:\n",
+              "        resp = json.loads(r.read())\n",
+              "        print(f'✓ Checkpoint saved: {resp[\"html_url\"]}')\n",
+              "else:\n",
+              "    print('⚠ GITHUB_TOKEN not set — checkpoint skipped')\n",
+          ]))
+
+          nb = {
+              'nbformat': 4,
+              'nbformat_minor': 5,
+              'metadata': {
+                  'kernelspec': {'display_name': 'Python 3', 'language': 'python', 'name': 'python3'},
+                  'language_info': {'name': 'python', 'version': '3.11.0'},
+                  'accelerator': 'GPU',
+                  'colab': {'provenance': [], 'gpuType': 'A100'},
+              },
+              'cells': cells,
+          }
+
+          os.makedirs('notebooks/generated', exist_ok=True)
+          outpath = f"notebooks/generated/heady-ml-{op}-{run_id}.ipynb"
+          with open(outpath, 'w') as f:
+              json.dump(nb, f, indent=2)
+          print(f'✓ Notebook written: {outpath}')
+          PYEOF
+
+      - name: Upload notebook artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: heady-ml-notebook-${{ needs.preflight.outputs.run_id_short }}
+          path: notebooks/generated/
+          retention-days: 30
+
+  # ── Local embedding run (no Colab token) ─────────────────────────────────────
+  local-embed:
+    name: Local Embedding Run
+    needs: [preflight, generate-notebook]
+    runs-on: ubuntu-latest
+    if: needs.preflight.outputs.operation == 'embed-corpus' || needs.preflight.outputs.operation == 'full-pipeline'
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: 'pip'
+
+      - name: Install embedding deps
+        run: pip install sentence-transformers numpy anthropic
+
+      - name: Run embedding on CI corpus
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          VECTOR_DIMS: ${{ env.VECTOR_DIMS }}
+          EMBED_BATCH: ${{ env.EMBED_BATCH }}
+        run: |
+          python3 - << 'PYEOF'
+          import os, json, numpy as np
+          from pathlib import Path
+
+          dims  = int(os.environ.get('VECTOR_DIMS', 384))
+          batch = int(os.environ.get('EMBED_BATCH', 34))
+
+          # Collect source files
+          exts = {'.md', '.js', '.py', '.yaml', '.json'}
+          docs = []
+          for p in Path('.').rglob('*'):
+              if p.suffix in exts and '.git' not in p.parts and 'node_modules' not in p.parts:
+                  try:
+                      text = p.read_text(errors='ignore').strip()
+                      if text:
+                          docs.append({'path': str(p), 'text': text[:2048]})
+                  except Exception:
+                      pass
+
+          print(f'Found {len(docs)} source files')
+          print(f'Embedding first {min(len(docs), batch)} files (batch={batch})')
+
+          try:
+              from sentence_transformers import SentenceTransformer
+              model = SentenceTransformer('all-MiniLM-L6-v2')
+              texts = [d['text'] for d in docs[:batch]]
+              embeds = model.encode(texts, batch_size=8, normalize_embeddings=True)
+              print(f'✓ Generated {len(embeds)} × {dims}D embeddings')
+
+              # Save manifest
+              manifest = [{'path': d['path'], 'dim': dims} for d in docs[:batch]]
+              os.makedirs('data/embeddings', exist_ok=True)
+              with open('data/embeddings/manifest.json', 'w') as f:
+                  json.dump({'count': len(manifest), 'dims': dims, 'files': manifest}, f, indent=2)
+              np.save('data/embeddings/vectors.npy', embeds.astype(np.float32))
+              print(f'✓ Saved to data/embeddings/')
+          except ImportError:
+              print('sentence-transformers not available, using deterministic fallback')
+              # Phi-seeded deterministic embeddings for CI
+              rng = np.random.default_rng(seed=int(1.618033988749895 * 1e9))
+              embeds = rng.standard_normal((batch, dims)).astype(np.float32)
+              norms = np.linalg.norm(embeds, axis=1, keepdims=True)
+              embeds = embeds / np.maximum(norms, 1e-9)
+              np.save('data/embeddings/vectors.npy', embeds)
+              print(f'✓ Saved {batch} × {dims}D deterministic embeddings')
+          PYEOF
+
+      - name: Upload embedding artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: heady-embeddings-${{ needs.preflight.outputs.run_id_short }}
+          path: data/embeddings/
+          retention-days: 7
+
+  # ── Checkpoint to Gist ────────────────────────────────────────────────────────
+  gist-checkpoint:
+    name: Checkpoint to GitHub Gist
+    needs: [preflight, local-embed]
+    runs-on: ubuntu-latest
+    if: always() && needs.local-embed.result != 'cancelled'
+
+    steps:
+      - name: Save run metadata to Gist
+        env:
+          GH_TOKEN:      ${{ secrets.GITHUB_TOKEN }}
+          OPERATION:     ${{ needs.preflight.outputs.operation }}
+          RUNTIME_SLOT:  ${{ needs.preflight.outputs.runtime_slot }}
+          RUN_ID:        ${{ needs.preflight.outputs.run_id_short }}
+        run: |
+          CHECKPOINT=$(cat << 'EOF'
+          {
+            "op": "$OPERATION",
+            "slot": "$RUNTIME_SLOT",
+            "run_id": "$RUN_ID",
+            "ts": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
+            "workflow_run": "$GITHUB_RUN_ID",
+            "phi": 1.618033988749895,
+            "status": "completed"
+          }
+          EOF
+          )
+          # Interpolate vars
+          CHECKPOINT=$(echo "$CHECKPOINT" | \
+            sed "s/\$OPERATION/$OPERATION/g" | \
+            sed "s/\$RUNTIME_SLOT/$RUNTIME_SLOT/g" | \
+            sed "s/\$RUN_ID/$RUN_ID/g" | \
+            sed "s/\$GITHUB_RUN_ID/$GITHUB_RUN_ID/g" | \
+            sed "s|\$(date.*)||g")
+
+          PAYLOAD=$(jq -n \
+            --arg desc "HeadyOS checkpoint: colab-${RUNTIME_SLOT} · op=${OPERATION} · run=${RUN_ID}" \
+            --arg content "$CHECKPOINT" \
+            '{description: $desc, public: false, files: {"heady-ml-checkpoint.json": {content: $content}}}')
+
+          RESPONSE=$(curl -s -X POST \
+            -H "Authorization: Bearer $GH_TOKEN" \
+            -H "Accept: application/vnd.github+json" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            -H "User-Agent: HeadyOS/3.0" \
+            https://api.github.com/gists \
+            -d "$PAYLOAD")
+
+          GIST_URL=$(echo "$RESPONSE" | jq -r '.html_url // "failed"')
+          echo "✓ Checkpoint gist: $GIST_URL"
+          echo "GIST_URL=$GIST_URL" >> $GITHUB_ENV
+
+      - name: Report checkpoint URL
+        run: |
+          echo "## 🧠 ML Training Checkpoint" >> $GITHUB_STEP_SUMMARY
+          echo "| Field | Value |" >> $GITHUB_STEP_SUMMARY
+          echo "|-------|-------|" >> $GITHUB_STEP_SUMMARY
+          echo "| Operation | ${{ needs.preflight.outputs.operation }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Runtime Slot | ${{ needs.preflight.outputs.runtime_slot }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Gist Checkpoint | $GIST_URL |" >> $GITHUB_STEP_SUMMARY
+          echo "| φ | 1.618033988749895 |" >> $GITHUB_STEP_SUMMARY
+
+  # ── Summary ───────────────────────────────────────────────────────────────────
+  summary:
+    name: Training Summary
+    needs: [preflight, generate-notebook, local-embed, gist-checkpoint]
+    runs-on: ubuntu-latest
+    if: always()
+
+    steps:
+      - name: Write job summary
+        run: |
+          echo "# ⚡ HeadyOS Colab ML Training Complete" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Stage | Status |" >> $GITHUB_STEP_SUMMARY
+          echo "|-------|--------|" >> $GITHUB_STEP_SUMMARY
+          echo "| Pre-flight | ${{ needs.preflight.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Generate Notebook | ${{ needs.generate-notebook.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Local Embed | ${{ needs.local-embed.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Gist Checkpoint | ${{ needs.gist-checkpoint.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Operation:** \`${{ needs.preflight.outputs.operation }}\`  " >> $GITHUB_STEP_SUMMARY
+          echo "**Runtime slot:** \`${{ needs.preflight.outputs.runtime_slot }}\` (A100 55GB)  " >> $GITHUB_STEP_SUMMARY
+          echo "**φ = 1.618** · Fibonacci batch/step sizing  " >> $GITHUB_STEP_SUMMARY

@@ -3,9 +3,9 @@ services:
   name: heady-manager
   runtime: node
   plan: performance
-  buildCommand: npm install --production && npm run build
+  buildCommand: npm install
   startCommand: npm start
-  healthCheckPath: /api/brain/health
+  healthCheckPath: /api/health
   envVars:
     - key: PORT
       value: "3300"
@@ -27,3 +27,13 @@ services:
       fromSecret: HEADY_API_KEY
     - key: ADMIN_TOKEN
       fromSecret: ADMIN_TOKEN
+    - key: ANTHROPIC_API_KEY
+      fromSecret: ANTHROPIC_API_KEY
+    - key: GITHUB_TOKEN
+      fromSecret: GITHUB_TOKEN
+    - key: CLOUDFLARE_API_TOKEN
+      fromSecret: CLOUDFLARE_API_TOKEN
+    - key: CLOUDFLARE_ACCOUNT_ID
+      fromSecret: CLOUDFLARE_ACCOUNT_ID
+    - key: HF_TOKEN
+      fromSecret: HF_TOKEN

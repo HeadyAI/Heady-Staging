@@ -274,6 +274,36 @@ const VECTOR = Object.freeze({
 });
 
 // ═══════════════════════════════════════════════════════════════════════════════
+// COLAB RUNTIMES
+// ═══════════════════════════════════════════════════════════════════════════════
+
+const COLAB_RUNTIMES = Object.freeze({
+  COUNT:                3,
+  MAX_CONCURRENT_TASKS: 21,      // fib(8)
+  GPU_MEMORY_GB:        55,      // fib(10)
+  HEARTBEAT_MS:         13000,   // fib(7) seconds
+});
+
+// TIMING alias (matches COLAB runtime expectations)
+const TIMING = Object.freeze({
+  HEARTBEAT_MS: COLAB_RUNTIMES.HEARTBEAT_MS,
+  ...PHI_TIMING,
+});
+
+// RESOURCE_ALLOCATION alias (maps pool keys to fractional shares)
+const RESOURCE_ALLOCATION = Object.freeze({
+  HOT:  POOLS.HOT,
+  WARM: POOLS.WARM,
+  COLD: POOLS.COLD,
+});
+
+// POOL_SIZES alias
+const POOL_SIZES = POOLS;
+
+// PSI squared
+const PSI_SQ = PSI * PSI;
+
+// ═══════════════════════════════════════════════════════════════════════════════
 // TOKEN BUDGETS (phi-geometric progression)
 // ═══════════════════════════════════════════════════════════════════════════════
 
@@ -301,6 +331,23 @@ function cslGate(value, cosScore, tau = PSI, temp = Math.pow(PSI, 3)) {
 function cslBlend(wHigh, wLow, cosScore, tau = PSI) {
   const alpha = sigmoid((cosScore - tau) / Math.pow(PSI, 3));
   return wHigh * alpha + wLow * (1 - alpha);
+}
+
+// cslAND: geometric mean of cosine similarities between two embedding vectors
+function cslAND(a, b) {
+  if (!Array.isArray(a) || !Array.isArray(b) || a.length === 0 || b.length === 0) return 0;
+  const len = Math.min(a.length, b.length);
+  const av = a.slice(0, len);
+  const bv = b.slice(0, len);
+  return cosineSimilarity(av, bv);
+}
+
+// phiFusionScore: weighted fusion of multiple scores using phi-geometric weights
+function phiFusionScore(scores, weights) {
+  if (!scores || scores.length === 0) return 0;
+  const w = weights || scores.map(() => 1 / scores.length);
+  const total = w.reduce((s, x) => s + x, 0);
+  return scores.reduce((acc, score, i) => acc + score * (w[i] / total), 0);
 }
 
 function adaptiveTemperature(entropy, maxEntropy) {
@@ -357,7 +404,13 @@ module.exports = {
   // Token budgets
   phiTokenBudgets,
   // CSL functions
-  sigmoid, cslGate, cslBlend, adaptiveTemperature,
+  sigmoid, cslGate, cslBlend, adaptiveTemperature, cslAND,
+  // Fusion
+  phiFusionScore,
   // Vector math
   cosineSimilarity, normalize,
+  // Colab / timing aliases
+  TIMING, COLAB_RUNTIMES, RESOURCE_ALLOCATION, POOL_SIZES,
+  // Additional constants
+  PSI_SQ,
 };

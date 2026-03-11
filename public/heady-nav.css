@@ -1,0 +1,332 @@
+/* HEADY_BRAND:BEGIN
+ * HeadyOS Global Navigation — Sacred Geometry Design System
+ * Shared top navigation styles for all HeadyOS pages
+ * HEADY_BRAND:END */
+
+/* =====================================================
+   HEADY GLOBAL NAVIGATION
+   ===================================================== */
+
+.heady-nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 9999;
+  height: 64px;
+  background: rgba(5, 5, 16, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(0, 217, 255, 0.12);
+  display: flex;
+  align-items: center;
+  padding: 0 24px;
+  gap: 0;
+  box-shadow: 0 2px 40px rgba(0, 0, 0, 0.4);
+}
+
+/* Logo */
+.heady-nav-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  flex-shrink: 0;
+  margin-right: 32px;
+}
+
+.heady-nav-logo-orb {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: conic-gradient(from 0deg, #00D9FF 0deg, #FF00A0 120deg, #D4AF37 240deg, #00D9FF 360deg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  font-weight: 800;
+  color: #050510;
+  box-shadow: 0 0 16px rgba(0, 217, 255, 0.4);
+  flex-shrink: 0;
+  animation: nav-orb-breathe 3s ease-in-out infinite;
+}
+
+@keyframes nav-orb-breathe {
+  0%, 100% { box-shadow: 0 0 16px rgba(0, 217, 255, 0.4); }
+  50% { box-shadow: 0 0 24px rgba(0, 217, 255, 0.7), 0 0 40px rgba(255, 0, 160, 0.3); }
+}
+
+.heady-nav-logo-text {
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: #FAFAFA;
+  text-transform: uppercase;
+}
+
+.heady-nav-logo-sub {
+  font-size: 0.55rem;
+  color: rgba(0, 217, 255, 0.7);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  display: block;
+  line-height: 1;
+  margin-top: 1px;
+}
+
+/* Nav Links */
+.heady-nav-links {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex: 1;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.heady-nav-links a {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.65);
+  text-decoration: none;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.heady-nav-links a:hover {
+  color: #FAFAFA;
+  background: rgba(0, 217, 255, 0.1);
+}
+
+.heady-nav-links a.active {
+  color: #00D9FF;
+  background: rgba(0, 217, 255, 0.12);
+}
+
+.heady-nav-links a .nav-icon {
+  font-size: 0.9rem;
+  opacity: 0.8;
+}
+
+/* Divider */
+.heady-nav-divider {
+  width: 1px;
+  height: 24px;
+  background: rgba(255, 255, 255, 0.1);
+  margin: 0 8px;
+  flex-shrink: 0;
+}
+
+/* Right Actions */
+.heady-nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+.heady-nav-btn {
+  padding: 7px 18px;
+  border-radius: 9999px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  border: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.heady-nav-btn-ghost {
+  color: rgba(255, 255, 255, 0.7);
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.heady-nav-btn-ghost:hover {
+  color: #FAFAFA;
+  border-color: rgba(0, 217, 255, 0.4);
+  background: rgba(0, 217, 255, 0.08);
+}
+
+.heady-nav-btn-primary {
+  color: #050510;
+  background: linear-gradient(135deg, #D4AF37, #F4D03F);
+  box-shadow: 0 0 16px rgba(212, 175, 55, 0.3);
+}
+
+.heady-nav-btn-primary:hover {
+  box-shadow: 0 0 24px rgba(212, 175, 55, 0.5);
+  transform: translateY(-1px);
+}
+
+/* Mobile hamburger */
+.heady-nav-hamburger {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  cursor: pointer;
+  padding: 4px;
+  margin-left: auto;
+  background: none;
+  border: none;
+}
+
+.heady-nav-hamburger span {
+  display: block;
+  width: 22px;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.7);
+  border-radius: 2px;
+  transition: all 0.3s ease;
+}
+
+/* Mobile drawer */
+.heady-nav-mobile-drawer {
+  display: none;
+  position: fixed;
+  top: 64px;
+  left: 0;
+  right: 0;
+  background: rgba(5, 5, 16, 0.97);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(0, 217, 255, 0.12);
+  padding: 20px 24px 24px;
+  z-index: 9998;
+  flex-direction: column;
+  gap: 8px;
+  animation: nav-drawer-slide 0.2s ease-out;
+}
+
+@keyframes nav-drawer-slide {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.heady-nav-mobile-drawer.open {
+  display: flex;
+}
+
+.heady-nav-mobile-drawer a {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  border-radius: 12px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.75);
+  text-decoration: none;
+  transition: all 0.2s;
+}
+
+.heady-nav-mobile-drawer a:hover,
+.heady-nav-mobile-drawer a.active {
+  color: #00D9FF;
+  background: rgba(0, 217, 255, 0.1);
+}
+
+.heady-nav-mobile-drawer .mobile-nav-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 8px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.heady-nav-mobile-drawer .mobile-nav-actions .heady-nav-btn {
+  flex: 1;
+  justify-content: center;
+}
+
+/* Body padding to account for fixed nav */
+.heady-nav-spacer {
+  height: 64px;
+}
+
+/* Breadcrumb */
+.heady-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.82rem;
+  color: rgba(255, 255, 255, 0.45);
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.heady-breadcrumb a {
+  color: rgba(0, 217, 255, 0.7);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.heady-breadcrumb a:hover {
+  color: #00D9FF;
+}
+
+.heady-breadcrumb .sep {
+  opacity: 0.4;
+}
+
+.heady-breadcrumb .current {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* Page header pattern (used across pages) */
+.heady-page-header {
+  text-align: center;
+  padding: 60px 20px 48px;
+}
+
+.heady-page-header h1 {
+  font-size: 2.8rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, #FAFAFA 0%, #00D9FF 50%, #FF00A0 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 16px;
+}
+
+.heady-page-header p {
+  font-size: 1.1rem;
+  color: rgba(255, 255, 255, 0.6);
+  max-width: 600px;
+  margin: 0 auto;
+  line-height: 1.7;
+}
+
+/* Responsive breakpoints */
+@media (max-width: 900px) {
+  .heady-nav-links {
+    display: none;
+  }
+
+  .heady-nav-actions {
+    display: none;
+  }
+
+  .heady-nav-hamburger {
+    display: flex;
+  }
+}
+
+@media (max-width: 480px) {
+  .heady-nav {
+    padding: 0 16px;
+  }
+
+  .heady-nav-logo-text {
+    font-size: 1rem;
+  }
+}

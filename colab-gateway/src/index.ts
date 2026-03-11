@@ -95,7 +95,8 @@ function readBody(req: http.IncomingMessage): Promise<string> {
 }
 
 const server = http.createServer(async (req, res) => {
-  const url = new URL(req.url ?? '/', `http://${req.headers.host ?? 'localhost'}`);
+  const baseHost = process.env.COLAB_GATEWAY_HOST ?? req.headers.host ?? 'gateway.internal';
+  const url = new URL(req.url ?? '/', `http://${baseHost}`);
   const method = req.method ?? 'GET';
   const path = url.pathname;
 
@@ -122,19 +123,30 @@ const server = http.createServer(async (req, res) => {
 
     if (path === '/api/workload/submit' && method === 'POST') {
       const body = await readBody(req);
+      const parsed = JSON.parse(body) as Partial<WorkloadRequest> & { type?: WorkloadType };
+      if (!parsed.type || !parsed.payload || !parsed.userId) {
+        jsonRes(res, 400, { error: 'invalid_request' });
+        return;
+      }
+
       const request: WorkloadRequest = {
-        ...JSON.parse(body),
+        ...parsed,
+        lane: parsed.lane ?? 'balanced',
+        estimatedVramMb: parsed.estimatedVramMb ?? 0,
+        timeout: parsed.timeout ?? FIB[9] * 1000,
         requestId: crypto.randomUUID(),
         createdAt: new Date().toISOString()
-      };
+      } as WorkloadRequest;
       const queued = workloadRouter.enqueue(request);
       if (!queued) { jsonRes(res, 429, { error: 'queue_full' }); return; }
 
-      const result = await workloadRouter.dispatch();
+      const results = await workloadRouter.dispatchBatch(runtimeManager.getHealthy().length || FIB[2]);
+      const result = results.find(r => r.requestId === request.requestId);
+
       if (result) {
         jsonRes(res, 200, result as unknown as Record<string, unknown>);
       } else {
-        jsonRes(res, 202, { queued: true, requestId: request.requestId });
+        jsonRes(res, 202, { queued: true, requestId: request.requestId, drained: results.length });
       }
       return;
     }

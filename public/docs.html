@@ -1,0 +1,1112 @@
+<!DOCTYPE html>
+<!-- HEADY_BRAND:BEGIN
+  HeadyOS Documentation Hub
+  Comprehensive reference for the HeadyOS platform
+  HEADY_BRAND:END -->
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="HeadyOS Documentation — Complete reference for architecture, pipeline, agents, API, configuration, and deployment.">
+  <meta name="theme-color" content="#050510">
+  <title>HeadyOS — Documentation</title>
+  <link rel="stylesheet" href="/sacred-geometry.css">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    html, body { width: 100%; overflow-x: hidden; }
+
+    body {
+      background: var(--heady-void);
+      color: var(--heady-white);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      line-height: 1.6;
+    }
+
+    /* ── Background ──────────────────────────────────────── */
+    body::before {
+      content: '';
+      position: fixed; top: -100px; left: -100px;
+      width: 600px; height: 600px;
+      background: radial-gradient(circle, rgba(0,217,255,0.05) 0%, transparent 70%);
+      border-radius: 50%; filter: blur(60px);
+      pointer-events: none; z-index: 0;
+    }
+
+    /* ── Page Layout: Sidebar + Content ─────────────────── */
+    .docs-layout {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      min-height: 100vh;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ── Sidebar ─────────────────────────────────────────── */
+    .docs-sidebar {
+      position: fixed;
+      top: 64px; /* nav height */
+      left: 0;
+      width: 280px;
+      height: calc(100vh - 64px);
+      overflow-y: auto;
+      background: rgba(5,5,16,0.95);
+      border-right: 1px solid rgba(255,255,255,0.06);
+      padding: 32px 0 80px;
+      backdrop-filter: blur(12px);
+      z-index: 100;
+    }
+    .docs-sidebar::-webkit-scrollbar { width: 4px; }
+    .docs-sidebar::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 2px; }
+
+    .sidebar-section {
+      margin-bottom: 28px;
+      padding: 0 20px;
+    }
+    .sidebar-section-title {
+      font-size: 0.68rem;
+      font-weight: 800;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.25);
+      margin-bottom: 10px;
+      padding: 0 12px;
+    }
+    .sidebar-links {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .sidebar-links a {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 12px;
+      border-radius: 8px;
+      font-size: 0.875rem;
+      color: rgba(255,255,255,0.55);
+      text-decoration: none;
+      transition: all 0.15s;
+    }
+    .sidebar-links a:hover {
+      color: rgba(255,255,255,0.9);
+      background: rgba(255,255,255,0.05);
+    }
+    .sidebar-links a.active {
+      color: #00D9FF;
+      background: rgba(0,217,255,0.1);
+    }
+    .sidebar-links a .sidebar-icon {
+      font-size: 0.85rem;
+      width: 18px;
+      text-align: center;
+      opacity: 0.8;
+    }
+
+    /* ── Main Content ─────────────────────────────────────── */
+    .docs-main {
+      margin-left: 280px;
+      padding-top: 64px; /* nav */
+      min-height: 100vh;
+    }
+
+    .docs-content {
+      max-width: 860px;
+      padding: 64px 48px;
+    }
+
+    /* ── Breadcrumb ──────────────────────────────────────── */
+    .docs-breadcrumb {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.8rem;
+      color: rgba(255,255,255,0.35);
+      margin-bottom: 40px;
+      flex-wrap: wrap;
+    }
+    .docs-breadcrumb a {
+      color: rgba(0,217,255,0.6);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .docs-breadcrumb a:hover { color: #00D9FF; }
+    .docs-breadcrumb .sep { opacity: 0.4; }
+
+    /* ── Doc Sections ────────────────────────────────────── */
+    .doc-section {
+      padding: 80px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .doc-section:last-child { border-bottom: none; }
+
+    /* ── Typography ──────────────────────────────────────── */
+    .doc-h1 {
+      font-size: 3rem;
+      font-weight: 800;
+      letter-spacing: -1px;
+      line-height: 1.1;
+      margin-bottom: 20px;
+      background: linear-gradient(135deg, #FAFAFA 0%, #00D9FF 50%, #FF00A0 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .doc-h2 {
+      font-size: 1.9rem;
+      font-weight: 700;
+      color: rgba(255,255,255,0.92);
+      margin-bottom: 16px;
+      margin-top: 52px;
+      padding-top: 52px;
+      border-top: 1px solid rgba(255,255,255,0.06);
+    }
+    .doc-h2:first-of-type { margin-top: 0; padding-top: 0; border-top: none; }
+    .doc-h3 {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: rgba(255,255,255,0.85);
+      margin-bottom: 12px;
+      margin-top: 32px;
+    }
+    .doc-intro {
+      font-size: 1.15rem;
+      color: rgba(255,255,255,0.6);
+      line-height: 1.8;
+      margin-bottom: 32px;
+      max-width: 640px;
+    }
+    .doc-p {
+      font-size: 0.95rem;
+      color: rgba(255,255,255,0.6);
+      line-height: 1.85;
+      margin-bottom: 16px;
+    }
+    .doc-p strong { color: rgba(255,255,255,0.85); }
+    .doc-p code, code {
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      font-size: 0.82em;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 5px;
+      padding: 2px 7px;
+      color: #00D9FF;
+    }
+
+    /* ── Callout boxes ───────────────────────────────────── */
+    .callout {
+      border-radius: 12px;
+      padding: 18px 22px;
+      margin: 24px 0;
+      border-left: 3px solid;
+      font-size: 0.9rem;
+      line-height: 1.7;
+    }
+    .callout.info {
+      background: rgba(0,217,255,0.06);
+      border-color: rgba(0,217,255,0.4);
+      color: rgba(255,255,255,0.7);
+    }
+    .callout.warn {
+      background: rgba(212,175,55,0.07);
+      border-color: rgba(212,175,55,0.5);
+      color: rgba(255,255,255,0.7);
+    }
+    .callout.danger {
+      background: rgba(255,80,80,0.07);
+      border-color: rgba(255,80,80,0.4);
+      color: rgba(255,255,255,0.7);
+    }
+    .callout-title {
+      font-weight: 700;
+      color: rgba(255,255,255,0.9);
+      margin-bottom: 4px;
+    }
+
+    /* ── Code blocks ─────────────────────────────────────── */
+    .code-block {
+      background: rgba(0,0,0,0.5);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 14px;
+      overflow: hidden;
+      margin: 20px 0;
+    }
+    .code-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 18px;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      background: rgba(255,255,255,0.03);
+    }
+    .code-dot { width: 10px; height: 10px; border-radius: 50%; }
+    .code-dot.r { background: #FF5F56; }
+    .code-dot.y { background: #FFBD2E; }
+    .code-dot.g { background: #27C93F; }
+    .code-lang {
+      margin-left: auto;
+      font-size: 0.7rem;
+      font-family: monospace;
+      color: rgba(255,255,255,0.3);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .code-body {
+      padding: 20px 24px;
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      font-size: 0.82rem;
+      line-height: 1.85;
+      color: rgba(255,255,255,0.75);
+      overflow-x: auto;
+    }
+    .code-body .c  { color: rgba(255,255,255,0.3); }  /* comment */
+    .code-body .k  { color: #FF00A0; }                 /* keyword */
+    .code-body .s  { color: #D4AF37; }                 /* string */
+    .code-body .f  { color: #00D9FF; }                 /* function/cmd */
+    .code-body .n  { color: #FAFAFA; }                 /* name */
+
+    /* ── Tables ──────────────────────────────────────────── */
+    .doc-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+      font-size: 0.875rem;
+    }
+    .doc-table th {
+      background: rgba(255,255,255,0.04);
+      color: rgba(255,255,255,0.5);
+      font-weight: 700;
+      font-size: 0.75rem;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      padding: 12px 16px;
+      text-align: left;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .doc-table td {
+      padding: 12px 16px;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      color: rgba(255,255,255,0.65);
+      vertical-align: top;
+    }
+    .doc-table td:first-child {
+      font-family: monospace;
+      font-size: 0.8rem;
+      color: #00D9FF;
+      white-space: nowrap;
+    }
+    .doc-table tr:hover td { background: rgba(255,255,255,0.025); }
+
+    /* ── Badge tags ──────────────────────────────────────── */
+    .tag {
+      display: inline-block;
+      padding: 2px 10px;
+      border-radius: 9999px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+    .tag.cyan  { background: rgba(0,217,255,0.12); color: #00D9FF; border: 1px solid rgba(0,217,255,0.25); }
+    .tag.gold  { background: rgba(212,175,55,0.12); color: #D4AF37; border: 1px solid rgba(212,175,55,0.25); }
+    .tag.mag   { background: rgba(255,0,160,0.12); color: #FF00A0; border: 1px solid rgba(255,0,160,0.25); }
+    .tag.green { background: rgba(0,255,128,0.1); color: #00FF80; border: 1px solid rgba(0,255,128,0.2); }
+
+    /* ── Feature grid ────────────────────────────────────── */
+    .feature-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin: 24px 0;
+    }
+    .feature-card {
+      background: rgba(255,255,255,0.025);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 14px;
+      padding: 20px;
+    }
+    .feature-card h4 {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: rgba(255,255,255,0.85);
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .feature-card p {
+      font-size: 0.825rem;
+      color: rgba(255,255,255,0.5);
+      line-height: 1.6;
+    }
+
+    /* ── ORS Gauge ───────────────────────────────────────── */
+    .ors-table { margin: 24px 0; }
+    .ors-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 12px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+    .ors-range {
+      font-family: monospace;
+      font-size: 0.9rem;
+      font-weight: 700;
+      width: 80px;
+      flex-shrink: 0;
+    }
+    .ors-bar-wrap {
+      flex: 1;
+      height: 6px;
+      background: rgba(255,255,255,0.08);
+      border-radius: 3px;
+    }
+    .ors-bar { height: 6px; border-radius: 3px; }
+    .ors-desc { font-size: 0.82rem; color: rgba(255,255,255,0.5); width: 260px; flex-shrink: 0; }
+
+    /* ── Stage flow ──────────────────────────────────────── */
+    .stage-flow {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin: 24px 0;
+    }
+    .stage-node {
+      background: rgba(0,217,255,0.1);
+      border: 1px solid rgba(0,217,255,0.3);
+      color: #00D9FF;
+      font-size: 0.82rem;
+      font-weight: 700;
+      padding: 8px 16px;
+      border-radius: 9999px;
+    }
+    .stage-arrow {
+      color: rgba(255,255,255,0.3);
+      font-size: 1rem;
+    }
+
+    /* ── Responsive ──────────────────────────────────────── */
+    @media (max-width: 1024px) {
+      .docs-sidebar { display: none; }
+      .docs-main { margin-left: 0; }
+      .docs-content { padding: 48px 24px; }
+    }
+    @media (max-width: 600px) {
+      .doc-h1 { font-size: 2rem; }
+      .feature-grid { grid-template-columns: 1fr; }
+      .docs-content { padding: 32px 16px; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation -->
+  <script src="/nav-component.js"></script>
+
+  <div class="docs-layout">
+
+    <!-- ═══════════════════════════════════════════════
+         SIDEBAR
+         ═══════════════════════════════════════════════ -->
+    <aside class="docs-sidebar" role="navigation" aria-label="Documentation navigation">
+
+      <div class="sidebar-section">
+        <div class="sidebar-section-title">Getting Started</div>
+        <ul class="sidebar-links">
+          <li><a href="#overview" class="active"><span class="sidebar-icon">⬡</span>Overview</a></li>
+          <li><a href="#quickstart"><span class="sidebar-icon">🚀</span>Quick Start</a></li>
+          <li><a href="#concepts"><span class="sidebar-icon">💡</span>Core Concepts</a></li>
+          <li><a href="#environment"><span class="sidebar-icon">⚙️</span>Environment Setup</a></li>
+        </ul>
+      </div>
+
+      <div class="sidebar-section">
+        <div class="sidebar-section-title">Architecture</div>
+        <ul class="sidebar-links">
+          <li><a href="#architecture"><span class="sidebar-icon">🏗️</span>System Architecture</a></li>
+          <li><a href="#pipeline"><span class="sidebar-icon">⚡</span>HCFullPipeline</a></li>
+          <li><a href="#agents"><span class="sidebar-icon">🤖</span>Agent System</a></li>
+          <li><a href="#supervisor"><span class="sidebar-icon">🧠</span>Supervisor Pattern</a></li>
+          <li><a href="#brain"><span class="sidebar-icon">∞</span>HeadyBrain</a></li>
+        </ul>
+      </div>
+
+      <div class="sidebar-section">
+        <div class="sidebar-section-title">Configuration</div>
+        <ul class="sidebar-links">
+          <li><a href="#configs"><span class="sidebar-icon">📋</span>Config Files</a></li>
+          <li><a href="#pipeline-config"><span class="sidebar-icon">🔧</span>Pipeline Config</a></li>
+          <li><a href="#resource-policies"><span class="sidebar-icon">📊</span>Resource Policies</a></li>
+          <li><a href="#governance"><span class="sidebar-icon">🔒</span>Governance</a></li>
+        </ul>
+      </div>
+
+      <div class="sidebar-section">
+        <div class="sidebar-section-title">Operations</div>
+        <ul class="sidebar-links">
+          <li><a href="#ors"><span class="sidebar-icon">📈</span>ORS — Readiness Score</a></li>
+          <li><a href="#checkpoints"><span class="sidebar-icon">✅</span>Checkpoint Protocol</a></li>
+          <li><a href="#health"><span class="sidebar-icon">💚</span>Health Monitoring</a></li>
+          <li><a href="#deployment"><span class="sidebar-icon">🚀</span>Deployment</a></li>
+        </ul>
+      </div>
+
+      <div class="sidebar-section">
+        <div class="sidebar-section-title">Reference</div>
+        <ul class="sidebar-links">
+          <li><a href="/api-docs.html"><span class="sidebar-icon">📡</span>API Reference ↗</a></li>
+          <li><a href="#env-vars"><span class="sidebar-icon">🔑</span>Env Variables</a></li>
+          <li><a href="#naming"><span class="sidebar-icon">🏷️</span>Naming Standards</a></li>
+          <li><a href="#security"><span class="sidebar-icon">🛡️</span>Security Model</a></li>
+        </ul>
+      </div>
+
+      <div class="sidebar-section">
+        <div class="sidebar-section-title">Products</div>
+        <ul class="sidebar-links">
+          <li><a href="/products.html"><span class="sidebar-icon">✦</span>All Products ↗</a></li>
+          <li><a href="/headyos-desktop.html"><span class="sidebar-icon">🖥️</span>Desktop ↗</a></li>
+          <li><a href="/headybuddy-integrated.html"><span class="sidebar-icon">💬</span>HeadyBuddy ↗</a></li>
+          <li><a href="/api-docs.html"><span class="sidebar-icon">⚙️</span>HeadyAPI ↗</a></li>
+        </ul>
+      </div>
+
+    </aside>
+
+    <!-- ═══════════════════════════════════════════════
+         MAIN CONTENT
+         ═══════════════════════════════════════════════ -->
+    <main class="docs-main">
+      <div class="docs-content">
+
+        <div class="docs-breadcrumb">
+          <a href="/">Home</a>
+          <span class="sep">/</span>
+          <span>Documentation</span>
+        </div>
+
+        <!-- ─── OVERVIEW ──────────────────────────────── -->
+        <section class="doc-section" id="overview">
+          <h1 class="doc-h1">HeadyOS Docs</h1>
+          <p class="doc-intro">
+            Everything you need to understand, configure, deploy, and extend the HeadyOS platform.
+            Start with <a href="#quickstart" style="color:#00D9FF">Quick Start</a> to get running,
+            then dive into <a href="#architecture" style="color:#00D9FF">Architecture</a> to
+            understand the system deeply.
+          </p>
+
+          <div class="feature-grid">
+            <div class="feature-card">
+              <h4>⚡ HCFullPipeline</h4>
+              <p>Five-stage deterministic execution engine with checkpoint-based self-correction and agent fan-out.</p>
+            </div>
+            <div class="feature-card">
+              <h4>🧠 Multi-Agent Supervisor</h4>
+              <p>Parallel routing to specialised agents with aggregated, deterministic result merging.</p>
+            </div>
+            <div class="feature-card">
+              <h4>∞ Sacred Geometry UX</h4>
+              <p>Unified design language — gold/cyan/magenta, breathing animations, organic rounding — across every interface.</p>
+            </div>
+            <div class="feature-card">
+              <h4>📊 Live ORS Scoring</h4>
+              <p>Operational Readiness Score gates system behaviour from full parallelism (&gt;85) down to recovery-only (&lt;50).</p>
+            </div>
+            <div class="feature-card">
+              <h4>🔌 MCP Protocol</h4>
+              <p>Model Context Protocol integration for structured AI tool use across all registered agents and services.</p>
+            </div>
+            <div class="feature-card">
+              <h4>📡 REST + WebSocket API</h4>
+              <p>Every subsystem is reachable via a clean REST API at port 3300. WebSocket for real-time log streaming.</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- ─── QUICK START ────────────────────────────── -->
+        <section class="doc-section" id="quickstart">
+          <h2 class="doc-h2">Quick Start</h2>
+          <p class="doc-p">Get a HeadyOS node running locally in under five minutes.</p>
+
+          <h3 class="doc-h3">Prerequisites</h3>
+          <p class="doc-p">
+            <strong>Node.js 18+</strong>, <strong>Python 3.10+</strong>, and
+            <strong>npm 9+</strong> are required. Docker is optional but recommended for
+            the full container orchestration experience.
+          </p>
+
+          <h3 class="doc-h3">Installation</h3>
+          <div class="code-block">
+            <div class="code-header">
+              <div class="code-dot r"></div><div class="code-dot y"></div><div class="code-dot g"></div>
+              <span class="code-lang">bash</span>
+            </div>
+            <div class="code-body">
+<span class="c"># Clone the monorepo</span>
+<span class="f">git clone</span> <span class="s">https://github.com/HeadySystems/Heady.git</span>
+<span class="f">cd</span> Heady
+
+<span class="c"># Install root dependencies</span>
+<span class="f">npm install</span>
+
+<span class="c"># Set up environment variables</span>
+<span class="f">cp</span> .env.example .env
+<span class="c"># Edit .env — at minimum set ANTHROPIC_API_KEY</span>
+
+<span class="c"># Start the manager (port 3300)</span>
+<span class="f">npm start</span>
+            </div>
+          </div>
+
+          <div class="callout info">
+            <div class="callout-title">Cloud Deploy</div>
+            The repo includes a <code>render.yaml</code> blueprint. Connect the GitHub repo
+            to Render.com and it will auto-deploy heady-manager, the Python worker, and all
+            configured services with zero additional setup.
+          </div>
+
+          <h3 class="doc-h3">Verify the Installation</h3>
+          <div class="code-block">
+            <div class="code-header">
+              <div class="code-dot r"></div><div class="code-dot y"></div><div class="code-dot g"></div>
+              <span class="code-lang">bash</span>
+            </div>
+            <div class="code-body">
+<span class="c"># Health check</span>
+<span class="f">curl</span> localhost:3300/api/health
+
+<span class="c"># System status</span>
+<span class="f">curl</span> localhost:3300/api/system/status
+
+<span class="c"># Run the pipeline</span>
+<span class="f">curl</span> <span class="k">-X POST</span> localhost:3300/api/pipeline/run
+            </div>
+          </div>
+        </section>
+
+        <!-- ─── CORE CONCEPTS ──────────────────────────── -->
+        <section class="doc-section" id="concepts">
+          <h2 class="doc-h2">Core Concepts</h2>
+
+          <h3 class="doc-h3">The Living System Model</h3>
+          <p class="doc-p">
+            HeadyOS treats the entire software stack as a <strong>living organism</strong>.
+            Every component has a lifecycle (boot → healthy → degraded → recovering → healthy),
+            a health score, and the ability to self-correct. The system <strong>breathes</strong> —
+            it continuously polls its own state, detects drift, and applies corrections without human
+            intervention whenever possible.
+          </p>
+
+          <h3 class="doc-h3">Determinism Principle</h3>
+          <p class="doc-p">
+            Given the same inputs — <code>hcfullpipeline.yaml</code>, <code>resource-policies.yaml</code>,
+            and locked dependency versions — HeadyOS <strong>always produces the same execution plan</strong>
+            and the same task-routing decisions. Any randomness (for load balancing, sampling, etc.) is
+            seeded with the run ID and logged, making every result fully reproducible.
+          </p>
+
+          <h3 class="doc-h3">Stop Rule</h3>
+          <div class="callout warn">
+            <div class="callout-title">Stop Rule</div>
+            Build aggressively when healthy; repair first when not. HeadyOS will <strong>not</strong>
+            continue building when significant errors exist in core infrastructure, data integrity,
+            or security. The ORS score gates this behaviour.
+          </div>
+
+          <h3 class="doc-h3">Sacred Geometry Design</h3>
+          <p class="doc-p">
+            Every HeadyOS UI follows the Sacred Geometry visual language. The design system encodes
+            <strong>system state into visual signals</strong>: cyan glows indicate live/healthy components,
+            gold indicates high-priority items, magenta signals warnings or active processes.
+            Breathing animations convey the "living" nature of the system.
+          </p>
+        </section>
+
+        <!-- ─── ENVIRONMENT ────────────────────────────── -->
+        <section class="doc-section" id="environment">
+          <h2 class="doc-h2">Environment Setup</h2>
+
+          <h3 class="doc-h3" id="env-vars">Environment Variables</h3>
+          <table class="doc-table">
+            <thead>
+              <tr><th>Variable</th><th>Required</th><th>Description</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>ANTHROPIC_API_KEY</td><td><span class="tag green">Required</span></td><td>Claude API key for the claude-code agent and HeadyBuddy</td></tr>
+              <tr><td>DATABASE_URL</td><td><span class="tag gold">Recommended</span></td><td>PostgreSQL connection string (from Render or local)</td></tr>
+              <tr><td>HEADY_API_KEY</td><td><span class="tag gold">Recommended</span></td><td>Auto-generated on first boot if not set. Used to authenticate internal API calls</td></tr>
+              <tr><td>RENDER_API_KEY</td><td><span class="tag cyan">Optional</span></td><td>For Render.com deployment automation</td></tr>
+              <tr><td>NOTION_TOKEN</td><td><span class="tag cyan">Optional</span></td><td>Notion integration for doc sync</td></tr>
+              <tr><td>GITHUB_TOKEN</td><td><span class="tag cyan">Optional</span></td><td>GitHub integration for CI/CD hooks</td></tr>
+              <tr><td>STRIPE_SECRET_KEY</td><td><span class="tag cyan">Optional</span></td><td>Billing integration for HeadyStore vertical</td></tr>
+              <tr><td>PORT</td><td><span class="tag cyan">Optional</span></td><td>Server port (default: <code>3300</code>)</td></tr>
+              <tr><td>NODE_ENV</td><td><span class="tag cyan">Optional</span></td><td><code>development</code> or <code>production</code>. Controls logging verbosity and rate limits</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- ─── ARCHITECTURE ───────────────────────────── -->
+        <section class="doc-section" id="architecture">
+          <h2 class="doc-h2">System Architecture</h2>
+          <p class="doc-p">
+            HeadyOS follows a layered architecture with a single API gateway at the centre.
+            All traffic flows through <code>heady-manager.js</code> — there is no back-channel
+            between frontend and backend services.
+          </p>
+
+          <h3 class="doc-h3">Layer Overview</h3>
+          <table class="doc-table">
+            <thead>
+              <tr><th>Layer</th><th>Technology</th><th>Responsibility</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Frontend</td><td>HTML/CSS/JS · React (Vite)</td><td>All user-facing interfaces. Static assets served by heady-manager from <code>frontend/dist</code></td></tr>
+              <tr><td>API Gateway</td><td>Node.js · Express</td><td>Routes all API requests, handles auth, rate limiting, CORS, and static serving</td></tr>
+              <tr><td>Pipeline Engine</td><td>Node.js</td><td>HCFullPipeline — stage orchestration, dependency resolution, checkpoint management</td></tr>
+              <tr><td>Supervisor</td><td>Node.js (package)</td><td>Multi-agent fan-out, task routing, result aggregation</td></tr>
+              <tr><td>Agents</td><td>Node.js / Python</td><td>Specialised workers: Builder, Researcher, Claude Code, Deployer</td></tr>
+              <tr><td>Brain</td><td>Node.js (package)</td><td>Meta-controller: tunes concurrency, evaluates patterns, applies governance</td></tr>
+              <tr><td>Infrastructure</td><td>Render.com · PostgreSQL · Docker</td><td>Managed cloud hosting, persistent storage, container runtime</td></tr>
+            </tbody>
+          </table>
+
+          <h3 class="doc-h3">Key File Paths</h3>
+          <table class="doc-table">
+            <thead>
+              <tr><th>Path</th><th>Purpose</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>heady-manager.js</td><td>Node.js MCP server &amp; API gateway (port 3300)</td></tr>
+              <tr><td>src/hc_pipeline.js</td><td>HCFullPipeline runtime engine</td></tr>
+              <tr><td>src/agents/</td><td>Agent implementations</td></tr>
+              <tr><td>configs/</td><td>All YAML configs (pipeline, resources, governance, data)</td></tr>
+              <tr><td>packages/hc-supervisor/</td><td>Multi-agent supervisor package</td></tr>
+              <tr><td>packages/hc-brain/</td><td>System Brain meta-controller</td></tr>
+              <tr><td>packages/hc-health/</td><td>Health checks + cron integration</td></tr>
+              <tr><td>public/</td><td>Static HTML/CSS/JS frontend (this site)</td></tr>
+              <tr><td>frontend/</td><td>Vite React admin IDE</td></tr>
+              <tr><td>render.yaml</td><td>Infrastructure as Code — Render.com blueprint</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- ─── PIPELINE ───────────────────────────────── -->
+        <section class="doc-section" id="pipeline">
+          <h2 class="doc-h2">HCFullPipeline</h2>
+          <p class="doc-p">
+            The <strong>HCFullPipeline</strong> is the core execution engine. It runs all workloads
+            in a strict five-stage dependency order, with deep self-analysis at every checkpoint.
+          </p>
+
+          <h3 class="doc-h3">Stage Flow</h3>
+          <div class="stage-flow">
+            <div class="stage-node">ingest</div>
+            <span class="stage-arrow">→</span>
+            <div class="stage-node">plan</div>
+            <span class="stage-arrow">→</span>
+            <div class="stage-node">execute-major-phase</div>
+            <span class="stage-arrow">→</span>
+            <div class="stage-node">recover</div>
+            <span class="stage-arrow">→</span>
+            <div class="stage-node">finalize</div>
+          </div>
+
+          <table class="doc-table">
+            <thead>
+              <tr><th>Stage</th><th>Description</th><th>Can Fail Gracefully?</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>ingest</td><td>Collect and validate all inputs. Load configs, verify schemas, run initial integrity checks.</td><td><span class="tag cyan">Yes</span></td></tr>
+              <tr><td>plan</td><td>Build the DAG, evaluate resource policies, compute cost estimates, determine concurrency level.</td><td><span class="tag cyan">Yes</span></td></tr>
+              <tr><td>execute-major-phase</td><td>Fan out to agents via the Supervisor. Builder, Researcher, Claude Code, and Deployer run in parallel.</td><td><span class="tag gold">Partial</span></td></tr>
+              <tr><td>recover</td><td>Detect failures, apply circuit-breakers, attempt automated repair. Escalates if ORS drops below 50.</td><td><span class="tag cyan">Yes</span></td></tr>
+              <tr><td>finalize</td><td>Aggregate results, update HeadyRegistry, sync docs, emit checkpoint report.</td><td><span class="tag cyan">Yes</span></td></tr>
+            </tbody>
+          </table>
+
+          <div class="callout info">
+            <div class="callout-title">Config Source of Truth</div>
+            All stage definitions, retry policies, timeouts, and dependencies live in
+            <code>configs/hcfullpipeline.yaml</code>. The pipeline reads this file on every run.
+            Do not hardcode stage behaviour in source code.
+          </div>
+
+          <h3 class="doc-h3">Triggering a Run</h3>
+          <div class="code-block">
+            <div class="code-header">
+              <div class="code-dot r"></div><div class="code-dot y"></div><div class="code-dot g"></div>
+              <span class="code-lang">bash</span>
+            </div>
+            <div class="code-body">
+<span class="c"># Start a pipeline run</span>
+<span class="f">curl</span> <span class="k">-X POST</span> localhost:3300/api/pipeline/run
+
+<span class="c"># Check current state</span>
+<span class="f">curl</span> localhost:3300/api/pipeline/state
+
+<span class="c"># View stage DAG</span>
+<span class="f">curl</span> localhost:3300/api/pipeline/dag
+
+<span class="c"># Run history</span>
+<span class="f">curl</span> localhost:3300/api/pipeline/history
+            </div>
+          </div>
+        </section>
+
+        <!-- ─── AGENTS ─────────────────────────────────── -->
+        <section class="doc-section" id="agents">
+          <h2 class="doc-h2">Agent System</h2>
+          <p class="doc-p">
+            HeadyOS uses a <strong>multi-agent Supervisor pattern</strong>. The Supervisor
+            fans tasks out to specialised agents in parallel and aggregates their results
+            deterministically.
+          </p>
+
+          <table class="doc-table">
+            <thead>
+              <tr><th>Agent</th><th>Skills</th><th>Description</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>builder</td><td>code-generation, scaffolding</td><td>Generates and assembles code artefacts, builds project structures</td></tr>
+              <tr><td>researcher</td><td>search, analysis, summarisation</td><td>Gathers context, analyses codebases, produces research reports</td></tr>
+              <tr><td>claude-code</td><td>code-generation, refactoring, debugging, architecture</td><td>Claude-powered AI coding agent. Receives tasks from the Supervisor with full context and returns structured results</td></tr>
+              <tr><td>deployer</td><td>deployment, config, infrastructure</td><td>Handles Render.com deployments, Docker orchestration, and environment provisioning</td></tr>
+            </tbody>
+          </table>
+
+          <h3 class="doc-h3">Direct Routing Protocol</h3>
+          <p class="doc-p">
+            All calls between the Supervisor and agents use <strong>direct routing</strong> — no proxy.
+            The <code>@heady/networking</code> package is used with <code>proxy: false</code> for all
+            internal traffic. External API calls (Anthropic, Render, etc.) go through circuit breakers
+            with retry + exponential backoff.
+          </p>
+
+          <h3 class="doc-h3">Routing a Task</h3>
+          <div class="code-block">
+            <div class="code-header">
+              <div class="code-dot r"></div><div class="code-dot y"></div><div class="code-dot g"></div>
+              <span class="code-lang">bash</span>
+            </div>
+            <div class="code-body">
+<span class="c"># Check all agent statuses</span>
+<span class="f">curl</span> localhost:3300/api/supervisor/status
+
+<span class="c"># Route a task to the best-fit agent</span>
+<span class="f">curl</span> <span class="k">-X POST</span> localhost:3300/api/supervisor/route \
+  <span class="k">-H</span> <span class="s">'Content-Type: application/json'</span> \
+  <span class="k">-d</span> <span class="s">'{"type":"build","payload":{"task":"generate auth module"}}'</span>
+
+<span class="c"># Invoke Claude Code directly</span>
+<span class="f">curl</span> <span class="k">-X POST</span> localhost:3300/api/pipeline/claude \
+  <span class="k">-d</span> <span class="s">'{"prompt":"Refactor the pipeline engine for better error handling"}'</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- ─── SUPERVISOR ─────────────────────────────── -->
+        <section class="doc-section" id="supervisor">
+          <h2 class="doc-h2">Supervisor Pattern</h2>
+          <p class="doc-p">
+            The <strong>hc-supervisor</strong> package implements the multi-agent Supervisor pattern.
+            It is responsible for:
+          </p>
+          <ul style="list-style:none;display:flex;flex-direction:column;gap:10px;margin:16px 0 24px;padding-left:8px;">
+            <li style="display:flex;gap:12px;align-items:flex-start;">
+              <span style="color:#00D9FF;flex-shrink:0;">▸</span>
+              <span class="doc-p" style="margin:0"><strong>Capability matching</strong> — routes each task to the agent with the required skills</span>
+            </li>
+            <li style="display:flex;gap:12px;align-items:flex-start;">
+              <span style="color:#00D9FF;flex-shrink:0;">▸</span>
+              <span class="doc-p" style="margin:0"><strong>Parallel fan-out</strong> — dispatches multiple tasks concurrently within resource-policy limits</span>
+            </li>
+            <li style="display:flex;gap:12px;align-items:flex-start;">
+              <span style="color:#00D9FF;flex-shrink:0;">▸</span>
+              <span class="doc-p" style="margin:0"><strong>Result aggregation</strong> — merges agent outputs using a deterministic reduce strategy</span>
+            </li>
+            <li style="display:flex;gap:12px;align-items:flex-start;">
+              <span style="color:#00D9FF;flex-shrink:0;">▸</span>
+              <span class="doc-p" style="margin:0"><strong>Health gating</strong> — refuses to dispatch to unhealthy agents; reroutes automatically</span>
+            </li>
+          </ul>
+        </section>
+
+        <!-- ─── BRAIN ──────────────────────────────────── -->
+        <section class="doc-section" id="brain">
+          <h2 class="doc-h2">HeadyBrain</h2>
+          <p class="doc-p">
+            HeadyBrain (<code>packages/hc-brain/</code>) is the <strong>meta-controller</strong>.
+            It sits above the pipeline and supervisor, continuously monitoring system state and
+            making high-level tuning decisions.
+          </p>
+
+          <div class="feature-grid">
+            <div class="feature-card">
+              <h4>⚡ Auto-Tuning</h4>
+              <p>Adjusts concurrency limits in real time based on error rates, latency, and resource utilisation.</p>
+            </div>
+            <div class="feature-card">
+              <h4>🔒 Governance Checks</h4>
+              <p>Evaluates every action against governance policies before allowing execution.</p>
+            </div>
+            <div class="feature-card">
+              <h4>∞ Pattern Evaluation</h4>
+              <p>Tracks which architectural patterns are implemented and recommends beneficial additions.</p>
+            </div>
+            <div class="feature-card">
+              <h4>📊 ORS Computation</h4>
+              <p>Computes and publishes the Operational Readiness Score that gates all system behaviour.</p>
+            </div>
+          </div>
+
+          <div class="code-block">
+            <div class="code-header">
+              <div class="code-dot r"></div><div class="code-dot y"></div><div class="code-dot g"></div>
+              <span class="code-lang">bash</span>
+            </div>
+            <div class="code-body">
+<span class="c"># Brain status + readiness</span>
+<span class="f">curl</span> localhost:3300/api/brain/status
+
+<span class="c"># Auto-tune concurrency (pass current error rate)</span>
+<span class="f">curl</span> <span class="k">-X POST</span> localhost:3300/api/brain/tune \
+  <span class="k">-d</span> <span class="s">'{"errorRate":0.05}'</span>
+
+<span class="c"># Run a governance check</span>
+<span class="f">curl</span> <span class="k">-X POST</span> localhost:3300/api/brain/governance-check \
+  <span class="k">-d</span> <span class="s">'{"action":"execute","actor":"builder","domain":"build"}'</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- ─── ORS ────────────────────────────────────── -->
+        <section class="doc-section" id="ors">
+          <h2 class="doc-h2">Operational Readiness Score (ORS)</h2>
+          <p class="doc-p">
+            The ORS is a 0–100 score that HeadyBrain computes at every checkpoint.
+            It gates how aggressively the system operates.
+          </p>
+
+          <div class="ors-table">
+            <div class="ors-row">
+              <span class="ors-range" style="color:#00FF80">85 – 100</span>
+              <div class="ors-bar-wrap"><div class="ors-bar" style="width:100%;background:linear-gradient(90deg,#00D9FF,#00FF80)"></div></div>
+              <span class="ors-desc">Full parallelism. New optimisations and large builds allowed.</span>
+            </div>
+            <div class="ors-row">
+              <span class="ors-range" style="color:#00D9FF">70 – 85</span>
+              <div class="ors-bar-wrap"><div class="ors-bar" style="width:80%;background:#00D9FF"></div></div>
+              <span class="ors-desc">Normal operation. Standard parallelism and all features active.</span>
+            </div>
+            <div class="ors-row">
+              <span class="ors-range" style="color:#D4AF37">50 – 70</span>
+              <div class="ors-bar-wrap"><div class="ors-bar" style="width:55%;background:#D4AF37"></div></div>
+              <span class="ors-desc">Maintenance mode. Reduced load. No new large builds.</span>
+            </div>
+            <div class="ors-row">
+              <span class="ors-range" style="color:#FF00A0">0 – 50</span>
+              <div class="ors-bar-wrap"><div class="ors-bar" style="width:25%;background:#FF00A0"></div></div>
+              <span class="ors-desc">Recovery mode. Repair only. Escalate to owner immediately.</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- ─── CHECKPOINTS ────────────────────────────── -->
+        <section class="doc-section" id="checkpoints">
+          <h2 class="doc-h2">Checkpoint Protocol</h2>
+          <p class="doc-p">
+            At every pipeline checkpoint, the system performs a <strong>ten-step deep analysis</strong>
+            to detect drift and ensure all components are in sync.
+          </p>
+
+          <table class="doc-table">
+            <thead>
+              <tr><th>Step</th><th>Action</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>1</td><td>Validate run state — pipeline definition + resource policies still current</td></tr>
+              <tr><td>2</td><td>Compare config hashes — detect drift from repository state</td></tr>
+              <tr><td>3</td><td>Re-evaluate health — find bottlenecks, errors, spend vs budget</td></tr>
+              <tr><td>4</td><td>Check concept alignment — which patterns are active, suggest missing ones</td></tr>
+              <tr><td>5</td><td>Apply approved patterns — gradual enablement at system boundaries</td></tr>
+              <tr><td>6</td><td>Sync registry entries — update HeadyRegistry with new versions, endpoints, statuses</td></tr>
+              <tr><td>7</td><td>Sync documentation — update docs that reference changed APIs/schemas/configs</td></tr>
+              <tr><td>8</td><td>Validate notebooks — ensure Colab notebooks parse and reference correct APIs</td></tr>
+              <tr><td>9</td><td>Check doc ownership freshness — flag overdue reviews per <code>docs/DOC_OWNERS.yaml</code></td></tr>
+              <tr><td>10</td><td>Report — emit comprehensive status with concept usage + config hashes</td></tr>
+            </tbody>
+          </table>
+
+          <div class="callout warn">
+            <div class="callout-title">Documentation is a First-Class Concern</div>
+            Outdated documentation is treated as a defect. When a mismatch between docs and
+            behaviour is detected, an incident task is created automatically.
+          </div>
+
+          <div class="code-block">
+            <div class="code-header">
+              <div class="code-dot r"></div><div class="code-dot y"></div><div class="code-dot g"></div>
+              <span class="code-lang">bash</span>
+            </div>
+            <div class="code-body">
+<span class="c"># Run a checkpoint analysis</span>
+<span class="f">curl</span> <span class="k">-X POST</span> localhost:3300/api/checkpoint/analyze \
+  <span class="k">-d</span> <span class="s">'{"stage":"manual"}'</span>
+
+<span class="c"># View checkpoint records</span>
+<span class="f">curl</span> localhost:3300/api/checkpoint/records
+
+<span class="c"># PowerShell checkpoint sync (full)</span>
+<span class="n">.\scripts\checkpoint-sync.ps1</span>
+
+<span class="c"># Read-only drift detection</span>
+<span class="n">.\scripts\checkpoint-sync.ps1 -Mode check</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- ─── CONFIGS ────────────────────────────────── -->
+        <section class="doc-section" id="configs">
+          <h2 class="doc-h2">Configuration Files</h2>
+          <p class="doc-p">
+            All HeadyOS configuration lives in the <code>configs/</code> directory.
+            These YAML files are the <strong>single source of truth</strong> for the entire system.
+          </p>
+
+          <table class="doc-table">
+            <thead>
+              <tr><th>File</th><th>Purpose</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>hcfullpipeline.yaml</td><td>Master pipeline definition — stages, stop rules, checkpoint protocol, retry config</td></tr>
+              <tr><td>resource-policies.yaml</td><td>Concurrency limits, rate limits, cost budgets, retry/backoff, circuit breaker thresholds</td></tr>
+              <tr><td>service-catalog.yaml</td><td>All registered services, agents, tools, SLOs, external integrations</td></tr>
+              <tr><td>governance-policies.yaml</td><td>Access control, data domains, cost governance, change policies, security rules</td></tr>
+              <tr><td>data-schema.yaml</td><td>Layered data model (L0→L3), persistent and ephemeral storage schemas</td></tr>
+              <tr><td>concepts-index.yaml</td><td>Implemented, planned, and public-domain pattern tracking</td></tr>
+              <tr><td>system-components.yaml</td><td>Canonical registry of ALL system components</td></tr>
+              <tr><td>app-readiness.yaml</td><td>Business-level health probes and readiness scoring configuration</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- ─── DEPLOYMENT ─────────────────────────────── -->
+        <section class="doc-section" id="deployment">
+          <h2 class="doc-h2">Deployment</h2>
+
+          <h3 class="doc-h3">Render.com (Recommended)</h3>
+          <p class="doc-p">
+            HeadyOS ships with a complete <code>render.yaml</code> blueprint.
+            Connect the GitHub repository to Render.com and every service will be provisioned
+            automatically with managed PostgreSQL, environment variable injection, and
+            auto-deploy on push.
+          </p>
+
+          <h3 class="doc-h3">Local Development</h3>
+          <div class="code-block">
+            <div class="code-header">
+              <div class="code-dot r"></div><div class="code-dot y"></div><div class="code-dot g"></div>
+              <span class="code-lang">bash</span>
+            </div>
+            <div class="code-body">
+<span class="c"># Start manager in dev mode</span>
+<span class="f">NODE_ENV=development</span> <span class="f">npm start</span>
+
+<span class="c"># Build the React frontend</span>
+<span class="f">cd</span> frontend && <span class="f">npm run build</span>
+
+<span class="c"># Local build cycle (PowerShell)</span>
+<span class="n">.\commit_and_build.ps1</span>
+
+<span class="c"># Push to all remotes</span>
+<span class="n">.\nexus_deploy.ps1</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- ─── SECURITY ───────────────────────────────── -->
+        <section class="doc-section" id="security">
+          <h2 class="doc-h2">Security Model</h2>
+          <p class="doc-p">
+            HeadyOS enforces security at the API gateway layer using several complementary mechanisms.
+          </p>
+
+          <div class="feature-grid">
+            <div class="feature-card">
+              <h4>🔑 API Key Auth</h4>
+              <p>All API calls require a valid <code>HEADY_API_KEY</code>. Keys are validated using constant-time comparison to prevent timing attacks.</p>
+            </div>
+            <div class="feature-card">
+              <h4>🚦 Rate Limiting</h4>
+              <p>1,000 requests per 15-minute window on <code>/api/</code> endpoints. Configurable per service in <code>resource-policies.yaml</code>.</p>
+            </div>
+            <div class="feature-card">
+              <h4>🛡️ Helmet.js</h4>
+              <p>All security headers (CSP, HSTS, X-Frame-Options, etc.) set via Helmet middleware on every response.</p>
+            </div>
+            <div class="feature-card">
+              <h4>🔒 Least Privilege</h4>
+              <p>Each agent is granted only the permissions it needs. Governance policies define allowed actions per actor per domain.</p>
+            </div>
+          </div>
+
+          <div class="callout danger">
+            <div class="callout-title">Never hardcode secrets</div>
+            All secrets must be passed via environment variables. The codebase must never contain
+            API keys, tokens, or credentials in source files. Use <code>.env</code> locally and
+            Render.com's secret environment variable system in production.
+          </div>
+        </section>
+
+        <!-- ─── NAMING ─────────────────────────────────── -->
+        <section class="doc-section" id="naming">
+          <h2 class="doc-h2">Naming Standards</h2>
+          <p class="doc-p">
+            Consistent naming across all components prevents confusion and enables tooling automation.
+          </p>
+
+          <table class="doc-table">
+            <thead>
+              <tr><th>Context</th><th>Convention</th><th>Example</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Node.js files</td><td>kebab-case</td><td><code>heady-manager.js</code></td></tr>
+              <tr><td>Python files</td><td>snake_case</td><td><code>heady_conductor.py</code></td></tr>
+              <tr><td>YAML configs</td><td>kebab-case</td><td><code>hcfullpipeline.yaml</code></td></tr>
+              <tr><td>API routes</td><td>/api/noun/action</td><td><code>/api/pipeline/run</code></td></tr>
+              <tr><td>Packages</td><td>@heady/name</td><td><code>@heady/networking</code></td></tr>
+              <tr><td>CSS classes</td><td>heady-component</td><td><code>heady-nav</code>, <code>heady-orb</code></td></tr>
+              <tr><td>HTML data attrs</td><td>data-heady="field"</td><td><code>data-heady="status"</code></td></tr>
+              <tr><td>Internal hosts</td><td>service.dev.local.headysystems.com</td><td><code>manager.dev.local.headysystems.com:3300</code></td></tr>
+            </tbody>
+          </table>
+        </section>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- Shell for live status in sidebar -->
+  <script src="/heady-shell.js"></script>
+  <script>
+    // Highlight active sidebar section on scroll
+    const sections = document.querySelectorAll('.doc-section[id]');
+    const sidebarLinks = document.querySelectorAll('.sidebar-links a[href^="#"]');
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const id = entry.target.id;
+          sidebarLinks.forEach(a => {
+            a.classList.toggle('active', a.getAttribute('href') === '#' + id);
+          });
+        }
+      });
+    }, { rootMargin: '-64px 0px -60% 0px', threshold: 0 });
+
+    sections.forEach(s => observer.observe(s));
+  </script>
+</body>
+</html>

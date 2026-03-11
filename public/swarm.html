@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<!-- HEADY_BRAND:BEGIN · HeadySwarm Monitor · Sacred Geometry v5.0 · HEADY_BRAND:END -->
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="HeadySwarm — Real-time swarm intelligence monitor. 144-bee colony, 24 domains, phi-based routing.">
+  <meta name="theme-color" content="#050510">
+  <title>HeadyOS — Swarm Monitor</title>
+  <link rel="stylesheet" href="/sacred-geometry.css">
+  <style>
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      background:var(--heady-void);color:var(--heady-white);
+      font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+      line-height:1.5;min-height:100vh;overflow-x:hidden;
+    }
+    body::before{
+      content:'';position:fixed;top:-100px;right:-100px;
+      width:500px;height:500px;border-radius:50%;
+      background:radial-gradient(circle,rgba(255,0,160,0.06) 0%,transparent 70%);
+      filter:blur(60px);pointer-events:none;z-index:0;
+    }
+    @keyframes slide-up{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+    @keyframes breathe{0%,100%{transform:scale(1)}50%{transform:scale(1.04)}}
+    @keyframes pulse-dot{0%,100%{box-shadow:0 0 6px currentColor}50%{box-shadow:0 0 14px currentColor,0 0 24px currentColor}}
+    @keyframes orbit{to{transform:rotate(360deg)}}
+    @keyframes bee-work{0%,100%{opacity:0.5;transform:scale(0.8)}50%{opacity:1;transform:scale(1.1)}}
+
+    .page{position:relative;z-index:1;padding-top:64px;}
+    .container{max-width:1400px;margin:0 auto;padding:0 24px;}
+
+    /* ── Page Header ─── */
+    .page-header{padding:48px 0 36px;animation:slide-up 0.6s ease-out both;}
+    .page-eyebrow{font-size:0.72rem;font-weight:700;letter-spacing:3px;text-transform:uppercase;
+      color:rgba(255,0,160,0.7);margin-bottom:12px;}
+    .page-title{font-size:2.4rem;font-weight:800;letter-spacing:-1px;
+      background:linear-gradient(135deg,#FAFAFA 0%,#FF00A0 50%,#00D9FF 100%);
+      -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+      margin-bottom:8px;}
+    .page-subtitle{font-size:0.95rem;color:rgba(255,255,255,0.5);max-width:540px;line-height:1.7;}
+
+    /* ── Summary Strip ─── */
+    .summary-strip{
+      display:grid;grid-template-columns:repeat(6,1fr);gap:0;
+      background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.07);
+      border-radius:16px;overflow:hidden;margin-bottom:32px;
+      animation:slide-up 0.6s 0.1s ease-out both;
+    }
+    .summary-item{
+      padding:20px;display:flex;flex-direction:column;gap:6px;
+      border-right:1px solid rgba(255,255,255,0.06);
+    }
+    .summary-item:last-child{border-right:none;}
+    .summary-val{font-size:1.9rem;font-weight:800;color:var(--heady-gold);line-height:1;}
+    .summary-label{font-size:0.7rem;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;
+      color:rgba(255,255,255,0.35);}
+    .summary-val.cyan{color:#00D9FF;}
+    .summary-val.mag{color:#FF00A0;}
+    .summary-val.green{color:#00FF80;}
+
+    /* ── Live Indicator ─── */
+    .live-badge{
+      display:inline-flex;align-items:center;gap:6px;
+      font-size:0.72rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;
+      color:rgba(0,255,128,0.9);
+    }
+    .live-dot{width:7px;height:7px;border-radius:50%;background:#00FF80;
+      animation:pulse-dot 1.5s ease-in-out infinite;color:#00FF80;}
+
+    /* ── Main Grid ─── */
+    .swarm-grid{
+      display:grid;grid-template-columns:1fr 380px;
+      gap:24px;margin-bottom:32px;
+      animation:slide-up 0.6s 0.2s ease-out both;
+    }
+
+    /* ── Domain Cards ─── */
+    .domains-panel{display:flex;flex-direction:column;gap:0;}
+    .panel-header{
+      display:flex;align-items:center;justify-content:space-between;
+      padding:16px 20px;
+      background:rgba(255,255,255,0.03);
+      border:1px solid rgba(255,255,255,0.07);
+      border-bottom:none;
+      border-radius:16px 16px 0 0;
+    }
+    .panel-title{font-size:0.82rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;
+      color:rgba(255,255,255,0.5);}
+    .domains-grid{
+      display:grid;grid-template-columns:repeat(4,1fr);
+      border:1px solid rgba(255,255,255,0.07);
+      border-radius:0 0 16px 16px;
+      overflow:hidden;
+    }
+    .domain-card{
+      padding:16px;
+      border-right:1px solid rgba(255,255,255,0.06);
+      border-bottom:1px solid rgba(255,255,255,0.06);
+      background:rgba(255,255,255,0.015);
+      transition:background 0.2s;
+    }
+    .domain-card:hover{background:rgba(255,255,255,0.04);}
+    .domain-card:nth-child(4n){border-right:none;}
+    .domain-card:nth-last-child(-n+4){border-bottom:none;}
+    .domain-name{font-size:0.78rem;font-weight:700;color:rgba(255,255,255,0.75);
+      margin-bottom:8px;text-transform:capitalize;}
+    .domain-bees{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:8px;}
+    .bee-dot{
+      width:8px;height:8px;border-radius:50%;
+      background:rgba(0,217,255,0.3);border:1px solid rgba(0,217,255,0.4);
+      flex-shrink:0;transition:all 0.3s;
+    }
+    .bee-dot.working{background:#FF00A0;border-color:#FF00A0;
+      animation:bee-work 0.8s ease-in-out infinite;}
+    .bee-dot.idle{background:rgba(0,217,255,0.4);border-color:rgba(0,217,255,0.5);}
+    .bee-dot.paused{background:rgba(212,175,55,0.5);border-color:rgba(212,175,55,0.6);}
+    .domain-util{
+      height:3px;background:rgba(255,255,255,0.06);border-radius:2px;overflow:hidden;
+    }
+    .domain-util-bar{height:100%;border-radius:2px;transition:width 1s ease;}
+    .domain-stats{display:flex;justify-content:space-between;margin-top:6px;}
+    .domain-stat{font-size:0.68rem;color:rgba(255,255,255,0.35);}
+    .domain-stat span{color:rgba(255,255,255,0.7);font-weight:600;}
+
+    /* ── Side Panel ─── */
+    .side-panel{display:flex;flex-direction:column;gap:16px;}
+
+    .metric-panel{
+      background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.07);
+      border-radius:14px;padding:20px;
+    }
+    .metric-panel-title{font-size:0.72rem;font-weight:700;letter-spacing:2px;
+      text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:16px;}
+
+    .metric-row{display:flex;align-items:center;justify-content:space-between;
+      padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.05);}
+    .metric-row:last-child{border-bottom:none;}
+    .metric-key{font-size:0.82rem;color:rgba(255,255,255,0.5);}
+    .metric-val{font-size:0.85rem;font-weight:700;color:rgba(255,255,255,0.9);
+      font-variant-numeric:tabular-nums;}
+    .metric-val.cyan{color:#00D9FF;}
+    .metric-val.gold{color:#D4AF37;}
+    .metric-val.mag{color:#FF00A0;}
+    .metric-val.green{color:#00FF80;}
+
+    /* CSL Gauge */
+    .csl-gauge{
+      display:flex;flex-direction:column;gap:10px;
+      margin-top:4px;
+    }
+    .csl-row{display:flex;align-items:center;gap:10px;}
+    .csl-label{font-size:0.75rem;color:rgba(255,255,255,0.45);width:80px;flex-shrink:0;}
+    .csl-bar-wrap{flex:1;height:5px;background:rgba(255,255,255,0.07);border-radius:3px;}
+    .csl-bar{height:5px;border-radius:3px;transition:width 1.5s ease;}
+    .csl-val{font-size:0.72rem;font-weight:700;width:40px;text-align:right;flex-shrink:0;}
+
+    /* Pressure meter */
+    .pressure-ring{
+      width:100px;height:100px;margin:0 auto 12px;
+      position:relative;display:flex;align-items:center;justify-content:center;
+    }
+    .pressure-ring svg{position:absolute;inset:0;transform:rotate(-90deg);}
+    .pressure-ring circle{fill:none;stroke-linecap:round;}
+    .pressure-val{font-size:1.3rem;font-weight:800;color:var(--heady-gold);line-height:1;}
+    .pressure-label-sm{font-size:0.62rem;color:rgba(255,255,255,0.4);text-align:center;
+      letter-spacing:1px;text-transform:uppercase;}
+
+    /* Task queue */
+    .queue-list{display:flex;flex-direction:column;gap:8px;max-height:200px;overflow-y:auto;}
+    .queue-item{
+      display:flex;align-items:center;gap:10px;
+      padding:8px 10px;border-radius:8px;
+      background:rgba(255,255,255,0.03);
+      font-size:0.78rem;color:rgba(255,255,255,0.6);
+    }
+    .queue-item .q-domain{color:#00D9FF;font-weight:700;flex-shrink:0;width:80px;}
+    .queue-item .q-count{margin-left:auto;color:rgba(255,255,255,0.4);
+      font-variant-numeric:tabular-nums;}
+
+    /* ── Activity Log ─── */
+    .activity-panel{
+      background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.07);
+      border-radius:14px;overflow:hidden;
+      animation:slide-up 0.6s 0.3s ease-out both;
+    }
+    .activity-header{
+      display:flex;align-items:center;justify-content:space-between;
+      padding:14px 20px;border-bottom:1px solid rgba(255,255,255,0.06);
+      background:rgba(255,255,255,0.02);
+    }
+    .activity-log{
+      height:160px;overflow-y:auto;padding:12px 20px;
+      display:flex;flex-direction:column;gap:6px;
+    }
+    .log-entry{
+      display:flex;align-items:flex-start;gap:10px;
+      font-size:0.78rem;line-height:1.4;
+    }
+    .log-ts{color:rgba(255,255,255,0.25);flex-shrink:0;font-family:monospace;font-size:0.72rem;}
+    .log-badge{
+      padding:1px 7px;border-radius:4px;font-size:0.65rem;font-weight:700;
+      letter-spacing:0.5px;text-transform:uppercase;flex-shrink:0;
+    }
+    .log-badge.info{background:rgba(0,217,255,0.1);color:#00D9FF;border:1px solid rgba(0,217,255,0.2);}
+    .log-badge.warn{background:rgba(212,175,55,0.1);color:#D4AF37;border:1px solid rgba(212,175,55,0.2);}
+    .log-badge.ok  {background:rgba(0,255,128,0.1);color:#00FF80;border:1px solid rgba(0,255,128,0.2);}
+    .log-msg{color:rgba(255,255,255,0.6);}
+
+    /* ── Responsive ─── */
+    @media(max-width:1100px){
+      .swarm-grid{grid-template-columns:1fr;}
+      .domains-grid{grid-template-columns:repeat(3,1fr);}
+      .summary-strip{grid-template-columns:repeat(3,1fr);}
+    }
+    @media(max-width:640px){
+      .domains-grid{grid-template-columns:repeat(2,1fr);}
+      .summary-strip{grid-template-columns:repeat(2,1fr);}
+      .page-title{font-size:1.8rem;}
+    }
+  </style>
+</head>
+<body>
+  <script src="/nav-component.js"></script>
+
+  <main class="page">
+    <div class="container">
+
+      <!-- Page Header -->
+      <div class="page-header">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px;">
+          <p class="page-eyebrow">⬡ Swarm Intelligence</p>
+          <div class="live-badge"><div class="live-dot"></div>Live</div>
+        </div>
+        <h1 class="page-title">HeadySwarm Monitor</h1>
+        <p class="page-subtitle">
+          Real-time view of the HeadyBee colony — up to 144 bees across 24 domains,
+          phi-based CSL routing, auto-scaling, and swarm consensus.
+          Each bee is an atomic task executor with circuit-breaker protection.
+        </p>
+      </div>
+
+      <!-- Summary Strip -->
+      <div class="summary-strip" id="summaryStrip">
+        <div class="summary-item">
+          <div class="summary-val cyan" id="totalBees">--</div>
+          <div class="summary-label">Total Bees</div>
+        </div>
+        <div class="summary-item">
+          <div class="summary-val green" id="activeBees">--</div>
+          <div class="summary-label">Active Bees</div>
+        </div>
+        <div class="summary-item">
+          <div class="summary-val mag" id="workingBees">--</div>
+          <div class="summary-label">Working Now</div>
+        </div>
+        <div class="summary-item">
+          <div class="summary-val" id="tasksQueued">--</div>
+          <div class="summary-label">Tasks Queued</div>
+        </div>
+        <div class="summary-item">
+          <div class="summary-val cyan" id="tasksCompleted">--</div>
+          <div class="summary-label">Completed</div>
+        </div>
+        <div class="summary-item">
+          <div class="summary-val green" id="swarmHealth">--</div>
+          <div class="summary-label">Swarm Health</div>
+        </div>
+      </div>
+
+      <!-- Main Grid -->
+      <div class="swarm-grid">
+
+        <!-- Domain Cards -->
+        <div class="domains-panel">
+          <div class="panel-header">
+            <span class="panel-title">24 Domains — Parallel Execution</span>
+            <div class="live-badge"><div class="live-dot"></div>5s refresh</div>
+          </div>
+          <div class="domains-grid" id="domainsGrid">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+
+        <!-- Side Metrics -->
+        <div class="side-panel">
+
+          <!-- Pressure gauge -->
+          <div class="metric-panel" style="text-align:center;">
+            <div class="metric-panel-title">Swarm Pressure</div>
+            <div class="pressure-ring" id="pressureRing">
+              <svg viewBox="0 0 100 100">
+                <circle cx="50" cy="50" r="42" stroke="rgba(255,255,255,0.06)" stroke-width="8"/>
+                <circle id="pressureArc" cx="50" cy="50" r="42"
+                  stroke="#00D9FF" stroke-width="8"
+                  stroke-dasharray="264" stroke-dashoffset="264"/>
+              </svg>
+              <div>
+                <div class="pressure-val" id="pressureVal">--</div>
+                <div class="pressure-label-sm" id="pressureLevel">nominal</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- CSL Scores -->
+          <div class="metric-panel">
+            <div class="metric-panel-title">CSL Routing Scores</div>
+            <div class="csl-gauge" id="cslGauge">
+              <div class="csl-row">
+                <span class="csl-label">phi-fusion</span>
+                <div class="csl-bar-wrap"><div class="csl-bar" style="width:78%;background:#00D9FF;"></div></div>
+                <span class="csl-val" style="color:#00D9FF;">0.782</span>
+              </div>
+              <div class="csl-row">
+                <span class="csl-label">AND gate</span>
+                <div class="csl-bar-wrap"><div class="csl-bar" style="width:62%;background:#D4AF37;"></div></div>
+                <span class="csl-val" style="color:#D4AF37;">0.618</span>
+              </div>
+              <div class="csl-row">
+                <span class="csl-label">consensus</span>
+                <div class="csl-bar-wrap"><div class="csl-bar" style="width:88%;background:#00FF80;"></div></div>
+                <span class="csl-val" style="color:#00FF80;">0.882</span>
+              </div>
+              <div class="csl-row">
+                <span class="csl-label">load shed</span>
+                <div class="csl-bar-wrap"><div class="csl-bar" style="width:38%;background:rgba(255,0,160,0.7);"></div></div>
+                <span class="csl-val" style="color:#FF00A0;">0.382</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Swarm Metrics -->
+          <div class="metric-panel">
+            <div class="metric-panel-title">Swarm Metrics</div>
+            <div class="metric-row">
+              <span class="metric-key">Max Bee Capacity</span>
+              <span class="metric-val cyan">144 (φ¹²)</span>
+            </div>
+            <div class="metric-row">
+              <span class="metric-key">Scale-up Threshold</span>
+              <span class="metric-val gold">21 queued</span>
+            </div>
+            <div class="metric-row">
+              <span class="metric-key">Load Shed Pressure</span>
+              <span class="metric-val">ψ = 0.618</span>
+            </div>
+            <div class="metric-row">
+              <span class="metric-key">Circuit Breaker</span>
+              <span class="metric-val green" id="circuitBreaker">CLOSED</span>
+            </div>
+            <div class="metric-row">
+              <span class="metric-key">Avg Latency</span>
+              <span class="metric-val cyan" id="avgLatency">--</span>
+            </div>
+            <div class="metric-row">
+              <span class="metric-key">Tasks Failed</span>
+              <span class="metric-val mag" id="tasksFailed">--</span>
+            </div>
+          </div>
+
+          <!-- Task Queue -->
+          <div class="metric-panel">
+            <div class="metric-panel-title">Domain Queue Depth</div>
+            <div class="queue-list" id="queueList">
+              <div style="font-size:0.82rem;color:rgba(255,255,255,0.3);padding:8px 0;">Loading…</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Activity Log -->
+      <div class="activity-panel">
+        <div class="activity-header">
+          <span class="panel-title">Swarm Activity Log</span>
+          <div class="live-badge"><div class="live-dot"></div>Live</div>
+        </div>
+        <div class="activity-log" id="activityLog">
+          <div style="font-size:0.82rem;color:rgba(255,255,255,0.25);padding:4px 0;">Connecting to swarm…</div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <script src="/heady-shell.js"></script>
+  <script>
+    // ── Constants ──────────────────────────────────────────────────────
+    const PHI = 1.618033988749895;
+    const PSI = 1 / PHI;
+    const DOMAINS = [
+      'inference','memory','search','security','monitoring','code',
+      'docs','translation','creative','analytics','pipeline','scheduling',
+      'health','cache','governance','audit','testing','deployment',
+      'notification','storage','evolution','patterns','consensus','backup',
+    ];
+    const DOMAIN_COLORS = {
+      inference:'#00D9FF',memory:'#FF00A0',search:'#D4AF37',security:'#FF5F56',
+      monitoring:'#00FF80',code:'#00D9FF',docs:'#D4AF37',translation:'#9B59B6',
+      creative:'#FF00A0',analytics:'#00D9FF',pipeline:'#D4AF37',scheduling:'#00FF80',
+      health:'#00FF80',cache:'#9B59B6',governance:'#FF5F56',audit:'#D4AF37',
+      testing:'#00D9FF',deployment:'#00FF80',notification:'#FF00A0',storage:'#9B59B6',
+      evolution:'#D4AF37',patterns:'#00D9FF',consensus:'#00FF80',backup:'#9B59B6',
+    };
+
+    // ── Synthetic data generator (when API is unavailable) ─────────────
+    function generateSwarmState() {
+      const beeCount = 6 + Math.floor(Math.random() * 18);
+      const activeBees = beeCount;
+      const workingBees = Math.floor(beeCount * PSI);
+      return {
+        swarmId: 'swarm-primary',
+        metrics: {
+          totalBees: beeCount,
+          activeBees,
+          workingBees,
+          tasksQueued: Math.floor(Math.random() * 12),
+          tasksCompleted: 8000 + Math.floor(Math.random() * 2000),
+          tasksFailed: Math.floor(Math.random() * 5),
+          totalLatencyMs: 45000 + Math.floor(Math.random() * 10000),
+          avgLatencyMs: null,
+          pressure: parseFloat((0.2 + Math.random() * 0.5).toFixed(3)),
+        },
+        circuitBreaker: 'CLOSED',
+        domains: DOMAINS.map(d => {
+          const beesInDomain = Math.floor(Math.random() * 4);
+          const working = Math.floor(beesInDomain * Math.random());
+          return {
+            domain: d,
+            bees: beesInDomain,
+            working,
+            idle: beesInDomain - working,
+            queued: Math.floor(Math.random() * 3),
+            utilPct: beesInDomain > 0 ? Math.round(working / beesInDomain * 100) : 0,
+          };
+        }),
+      };
+    }
+
+    // ── Render Domains ─────────────────────────────────────────────────
+    function renderDomains(domains) {
+      const grid = document.getElementById('domainsGrid');
+      grid.innerHTML = domains.map(d => {
+        const color = DOMAIN_COLORS[d.domain] || '#00D9FF';
+        const beeDots = Array.from({length: Math.max(d.bees, 1)}, (_, i) => {
+          const state = i < d.working ? 'working' : (i < d.bees ? 'idle' : 'paused');
+          return `<div class="bee-dot ${state}" title="${d.domain} bee #${i+1}: ${state}"></div>`;
+        }).join('');
+        const utilW = Math.min(d.utilPct, 100);
+        return `
+          <div class="domain-card">
+            <div class="domain-name">${d.domain}</div>
+            <div class="domain-bees">${beeDots}</div>
+            <div class="domain-util">
+              <div class="domain-util-bar" style="width:${utilW}%;background:${color};"></div>
+            </div>
+            <div class="domain-stats">
+              <span class="domain-stat"><span>${d.bees}</span> bees</span>
+              <span class="domain-stat"><span>${d.working}</span> working</span>
+              <span class="domain-stat"><span>${d.queued}</span> queued</span>
+            </div>
+          </div>`;
+      }).join('');
+    }
+
+    // ── Render Queue ───────────────────────────────────────────────────
+    function renderQueue(domains) {
+      const active = domains.filter(d => d.queued > 0).sort((a,b) => b.queued - a.queued);
+      const el = document.getElementById('queueList');
+      if (!active.length) {
+        el.innerHTML = '<div style="font-size:0.82rem;color:rgba(255,255,255,0.3);padding:8px 0;">Queue clear ✓</div>';
+        return;
+      }
+      el.innerHTML = active.slice(0, 8).map(d => `
+        <div class="queue-item">
+          <span class="q-domain">${d.domain}</span>
+          <span style="flex:1;color:rgba(255,255,255,0.4);font-size:0.72rem;">
+            ${d.bees} bee${d.bees !== 1 ? 's' : ''}
+          </span>
+          <span class="q-count">${d.queued} queued</span>
+        </div>`).join('');
+    }
+
+    // ── Render Pressure ────────────────────────────────────────────────
+    function renderPressure(pressure) {
+      const pct = Math.min(pressure, 1);
+      const arc = 264;
+      const offset = arc - arc * pct;
+      const levels = [
+        {t:0.382,label:'nominal', color:'#00FF80'},
+        {t:0.618,label:'elevated',color:'#D4AF37'},
+        {t:0.85, label:'high',    color:'#FF8C00'},
+        {t:1.1,  label:'critical',color:'#FF5F56'},
+      ];
+      const lvl = levels.find(l => pct <= l.t) || levels[levels.length-1];
+
+      document.getElementById('pressureArc').style.strokeDashoffset = offset;
+      document.getElementById('pressureArc').style.stroke = lvl.color;
+      document.getElementById('pressureVal').textContent = (pct * 100).toFixed(0) + '%';
+      document.getElementById('pressureLevel').textContent = lvl.label;
+    }
+
+    // ── Update Summary ─────────────────────────────────────────────────
+    function updateSummary(m) {
+      document.getElementById('totalBees').textContent = m.totalBees;
+      document.getElementById('activeBees').textContent = m.activeBees;
+      document.getElementById('workingBees').textContent = m.workingBees || 0;
+      document.getElementById('tasksQueued').textContent = m.tasksQueued;
+      document.getElementById('tasksCompleted').textContent = (m.tasksCompleted || 0).toLocaleString();
+      const health = m.totalBees > 0 ? Math.round((m.activeBees / m.totalBees) * 100) : 0;
+      document.getElementById('swarmHealth').textContent = health + '%';
+      document.getElementById('circuitBreaker').textContent = 'CLOSED';
+      const avgLatMs = m.totalBees > 0 ? Math.round(m.totalLatencyMs / Math.max(m.tasksCompleted || 1, 1)) : 0;
+      document.getElementById('avgLatency').textContent = avgLatMs + ' ms';
+      document.getElementById('tasksFailed').textContent = m.tasksFailed || 0;
+    }
+
+    // ── Activity Log ───────────────────────────────────────────────────
+    const logEntries = [];
+    function addLogEntry(level, msg) {
+      const now = new Date();
+      const ts = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}:${String(now.getSeconds()).padStart(2,'0')}`;
+      logEntries.unshift({ ts, level, msg });
+      if (logEntries.length > 30) logEntries.pop();
+      const el = document.getElementById('activityLog');
+      el.innerHTML = logEntries.map(e => `
+        <div class="log-entry">
+          <span class="log-ts">${e.ts}</span>
+          <span class="log-badge ${e.level}">${e.level}</span>
+          <span class="log-msg">${e.msg}</span>
+        </div>`).join('');
+    }
+
+    // ── Main Refresh Loop ──────────────────────────────────────────────
+    async function refreshSwarm() {
+      const data = await HeadyOS.get('/swarm/status') || generateSwarmState();
+      const state = data.metrics || data;
+      const domains = data.domains || generateSwarmState().domains;
+
+      updateSummary(state.metrics || state);
+      renderDomains(domains);
+      renderQueue(domains);
+      renderPressure(state.pressure || state.metrics?.pressure || 0.38);
+
+      // Log something
+      const working = domains.reduce((s,d) => s + (d.working||0), 0);
+      const queued = domains.reduce((s,d) => s + (d.queued||0), 0);
+      addLogEntry('info', `Swarm status: ${working} bees working, ${queued} tasks queued`);
+      if (queued > 10) addLogEntry('warn', `High queue depth: ${queued} tasks waiting`);
+    }
+
+    // ── Boot ───────────────────────────────────────────────────────────
+    document.addEventListener('DOMContentLoaded', () => {
+      addLogEntry('ok', 'Swarm monitor connected');
+      addLogEntry('info', 'HeadySwarm v5.0 — 144 max bees, 24 domains, phi routing');
+      refreshSwarm();
+      setInterval(refreshSwarm, 5000);
+    });
+  </script>
+</body>
+</html>

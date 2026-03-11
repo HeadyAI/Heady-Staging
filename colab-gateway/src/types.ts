@@ -10,10 +10,9 @@ export const PHI_SQUARED = PHI * PHI;
 export const PHI_CUBED = PHI * PHI * PHI;
 export const FIB = [1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377, 610, 987] as const;
 
-
 export type RuntimeStatus = 'connecting' | 'ready' | 'busy' | 'draining' | 'disconnected' | 'error';
 export type WorkloadType = 'embedding' | 'inference' | 'training' | 'fine_tuning' | 'evaluation';
-export type WorkloadPriority = 'hot' | 'warm' | 'cold';
+export type ExecutionLane = 'realtime' | 'balanced' | 'batch';
 
 export interface ColabRuntime {
   readonly runtimeId: string;
@@ -33,12 +32,13 @@ export interface ColabRuntime {
 export interface WorkloadRequest {
   readonly requestId: string;
   readonly type: WorkloadType;
-  readonly priority: WorkloadPriority;
+  readonly lane: ExecutionLane;
   readonly payload: Readonly<Record<string, unknown>>;
   readonly estimatedVramMb: number;
   readonly timeout: number;
   readonly userId: string;
   readonly createdAt: string;
+  readonly relevanceScore?: number;
 }
 
 export interface WorkloadResult {
@@ -70,7 +70,7 @@ export interface GatewayHealthStatus {
   readonly status: 'healthy' | 'degraded' | 'unhealthy';
   readonly runtimes: ReadonlyArray<{ id: string; status: RuntimeStatus; load: number }>;
   readonly activeWorkloads: number;
-  readonly queueDepth: Record<WorkloadPriority, number>;
+  readonly queueDepth: Record<ExecutionLane, number>;
   readonly uptime: number;
   readonly coherenceScore: number;
 }
