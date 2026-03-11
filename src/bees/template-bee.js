@@ -166,11 +166,12 @@ function heady_auth(provider){
   var g=document.getElementById('heady-auth-gate');
   g.style.opacity='0';
   setTimeout(function(){g.style.display='none';},500);
-  document.cookie='__heady_session='+encodeURIComponent(JSON.stringify({ts:Date.now(),site:'${domain}',provider:provider}))+';path=/;max-age=31536000;SameSite=Lax;Secure';
+  try{sessionStorage.setItem('heady_auth_session',JSON.stringify({ts:Date.now(),site:'${domain}',provider:provider}));}catch(e){}
+  fetch('/api/auth/session',{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({provider:provider,site:'${domain}'})}).catch(function(){});
 }
 (function(){
-  var m=document.cookie.match(/(?:^|;\\s*)__heady_session=([^;]*)/);
-  if(m){try{var d=JSON.parse(decodeURIComponent(m[1]));if(Date.now()-d.ts<365*86400000){var g=document.getElementById('heady-auth-gate');if(g){g.style.display='none';}}}catch(err){/* structured-logger: emit error */}}
+  var s=sessionStorage.getItem('heady_auth_session');
+  if(s){try{var d=JSON.parse(s);if(Date.now()-d.ts<86400000){var g=document.getElementById('heady-auth-gate');if(g){g.style.display='none';}}}catch(e){}}
 })();
 <\\/script>`;
 }

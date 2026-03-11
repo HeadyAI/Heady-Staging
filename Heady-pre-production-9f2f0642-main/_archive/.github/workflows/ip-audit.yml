@@ -1,0 +1,30 @@
+name: Heady IP Protection Audit
+
+on:
+  push:
+    branches: [ "main", "master", "develop" ]
+  pull_request:
+    branches: [ "main", "master", "develop" ]
+
+jobs:
+  ip-audit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run License Checker
+        # This will fail the build if any copyleft or unauthorized GPL licenses are found
+        # in the project dependencies, preventing IP contamination.
+        run: |
+          npx license-checker --summary --failOn 'GPL;AGPL;LGPL' --excludePackages 'fake-package-to-exclude'
+        env:
+          CI: true

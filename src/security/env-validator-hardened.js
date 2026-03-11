@@ -1,4 +1,3 @@
-const logger = require('../shared/logger')('env-validator-hardened');
 'use strict';
 
 /**
@@ -91,9 +90,9 @@ function validateEnvironment(env = process.env) {
 if (process.env.NODE_ENV === 'production') {
   const result = validateEnvironment();
   if (!result.valid) {
-    logger.error('[EnvValidator] ❌ CRITICAL: Environment validation failed');
+    console.error('[EnvValidator] ❌ CRITICAL: Environment validation failed');
     for (const err of result.errors) {
-      logger.error(`  - ${err.message}`);
+      console.error(`  - ${err.message}`);
     }
     process.exit(1);
   }

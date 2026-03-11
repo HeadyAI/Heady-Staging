@@ -1,0 +1,91 @@
+/* =============================================================
+   @heady-ai/shared-ui — φ-Scaled CSS Design Tokens
+   All values derived from φ = 1.618033988749895
+   ============================================================= */
+
+:root {
+    /* ─── Golden Constants ─── */
+    --phi: 1.618033988749895;
+    --phi-inv: 0.6180339887498949;
+    --golden-angle: 137.508deg;
+
+    /* ─── φ-Scaled Spacing (base: 4px) ─── */
+    --space-0: 1.53px;
+    /* 4 × φ⁻² */
+    --space-1: 2.47px;
+    /* 4 × φ⁻¹ */
+    --space-2: 4px;
+    /* base */
+    --space-3: 6.47px;
+    /* 4 × φ¹ */
+    --space-4: 10.47px;
+    /* 4 × φ² */
+    --space-5: 16.94px;
+    /* 4 × φ³ */
+    --space-6: 27.42px;
+    /* 4 × φ⁴ */
+    --space-7: 44.35px;
+    /* 4 × φ⁵ */
+    --space-8: 71.78px;
+    /* 4 × φ⁶ */
+    --space-9: 116.12px;
+    /* 4 × φ⁷ */
+    --space-10: 187.9px;
+    /* 4 × φ⁸ */
+    --space-11: 304.01px;
+    /* 4 × φ⁹ */
+
+    /* ─── φ-Scaled Font Sizes (base: 16px) ─── */
+    --font-xs: 6px;
+    /* 16 × φ⁻² */
+    --font-sm: 10px;
+    /* 16 × φ⁻¹ */
+    --font-base: 16px;
+    /* base */
+    --font-lg: 26px;
+    /* 16 × φ¹ */
+    --font-xl: 42px;
+    /* 16 × φ² */
+    --font-2xl: 68px;
+    /* 16 × φ³ */
+    --font-3xl: 110px;
+    /* 16 × φ⁴ */
+
+    /* ─── φ-Scaled Timing (base: 200ms) ─── */
+    --timing-instant: 47ms;
+    /* 200 × φ⁻³ */
+    --timing-fast: 124ms;
+    /* 200 × φ⁻¹ */
+    --timing-normal: 200ms;
+    /* base */
+    --timing-slow: 324ms;
+    /* 200 × φ¹ */
+    --timing-slower: 524ms;
+    /* 200 × φ² */
+    --timing-slowest: 847ms;
+    /* 200 × φ³ */
+
+    /* ─── Border Radius ─── */
+    --radius-sm: 3px;
+    --radius-md: 5px;
+    --radius-lg: 8px;
+    --radius-xl: 13px;
+    --radius-2xl: 21px;
+    --radius-full: 9999px;
+
+    /* ─── Shadow ─── */
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 2px 5px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 5px 13px rgba(0, 0, 0, 0.15);
+    --shadow-xl: 0 13px 34px rgba(0, 0, 0, 0.2);
+
+    /* ─── Z-Index Scale (Fibonacci) ─── */
+    --z-dropdown: 1;
+    --z-sticky: 2;
+    --z-fixed: 3;
+    --z-overlay: 5;
+    --z-modal: 8;
+    --z-popover: 13;
+    --z-tooltip: 21;
+    --z-toast: 34;
+}

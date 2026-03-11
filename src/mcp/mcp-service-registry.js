@@ -210,7 +210,7 @@ const MCP_SERVICES = {
 
     heady_context_window_manager: {
         tool: 'heady_context_window_manager',
-        description: 'Intelligent context window management — compress, coordinate concurrently, evict context',
+        description: 'Intelligent context window management — compress, prioritize, evict context',
         category: 'memory',
         priority: Math.pow(PHI, 0.5),
         parameters: {

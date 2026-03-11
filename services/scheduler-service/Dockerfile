@@ -1,14 +1,29 @@
-FROM node:22-slim AS builder
-WORKDIR /build
-COPY package.json ./
-RUN npm install --omit=dev --ignore-scripts
-COPY . .
+FROM node:18-alpine AS builder
 
-FROM gcr.io/distroless/nodejs22-debian12:nonroot
 WORKDIR /app
-COPY --from=builder /build /app
-COPY --from=builder /build/../../shared /app/shared
-EXPOSE 3396
+
+COPY package*.json ./
+RUN npm ci
+
+COPY tsconfig.json ./
+COPY src/ ./src/
+
+RUN npm run build
+
+FROM gcr.io/distroless/nodejs18-debian11:nonroot
+
+WORKDIR /app
+
+COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/package.json ./package.json
+
 ENV NODE_ENV=production
-ENV SERVICE_PORT=3396
-CMD ["index.js"]
+ENV PORT=3370
+
+EXPOSE 3370
+
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+  CMD ["/app/dist/index.js", "health"]
+
+CMD ["node", "dist/index.js"]

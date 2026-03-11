@@ -22,7 +22,6 @@ const { buildHealthReport, buildLivenessProbe, buildReadinessProbe } = require('
 const { MODEL_REGISTRY } = require('./models');
 const { EmbeddingCache } = require('./cache');
 const config = require('./config');
-const logger = require('../../../shared/logger')('heady-embed');
 
 // ---------------------------------------------------------------------------
 // Async job store (in-memory, with TTL cleanup)
@@ -380,7 +379,7 @@ function createRouter(embedService) {
   // -------------------------------------------------------------------------
 
   router.use((err, req, res, next) => {
-    logger.error({ err, msg: 'Router error' });
+    console.error('[HeadyEmbed Router Error]', err);
     if (res.headersSent) return next(err);
     return res.status(422).json({ error: err.message || 'Internal error' });
   });

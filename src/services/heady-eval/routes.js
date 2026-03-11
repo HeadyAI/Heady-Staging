@@ -1,4 +1,3 @@
-const logger = require('../../shared/logger')('routes');
 'use strict';
 
 /**
@@ -105,11 +104,11 @@ module.exports = function createRouter(evalInstance) {
         metadata: metadata || {},
         reportOpts: reportOpts || {},
       }).catch((err) => {
-        logger.error(`[heady-eval] Run ${inferredRunId} failed:`, err.message);
+        console.error(`[heady-eval] Run ${inferredRunId} failed:`, err.message);
       });
 
     } catch (err) {
-      logger.error('[heady-eval] POST /eval/run error:', err);
+      console.error('[heady-eval] POST /eval/run error:', err);
       res.status(500).json({ error: err.message });
     }
   });
@@ -174,7 +173,7 @@ module.exports = function createRouter(evalInstance) {
       const result = await evalInstance.score(example, { scorers: scorerNames });
       res.json(result);
     } catch (err) {
-      logger.error('[heady-eval] POST /eval/score error:', err);
+      console.error('[heady-eval] POST /eval/score error:', err);
       res.status(err.message.includes('Unknown scorer') ? 400 : 500).json({ error: err.message });
     }
   });
@@ -209,7 +208,7 @@ module.exports = function createRouter(evalInstance) {
 
       res.json(comparison);
     } catch (err) {
-      logger.error('[heady-eval] POST /eval/compare error:', err);
+      console.error('[heady-eval] POST /eval/compare error:', err);
       res.status(500).json({ error: err.message });
     }
   });
@@ -245,7 +244,7 @@ module.exports = function createRouter(evalInstance) {
 
       res.json(result);
     } catch (err) {
-      logger.error('[heady-eval] POST /eval/ab-test error:', err);
+      console.error('[heady-eval] POST /eval/ab-test error:', err);
       res.status(500).json({ error: err.message });
     }
   });
@@ -286,7 +285,7 @@ module.exports = function createRouter(evalInstance) {
       await evalInstance.saveDataset(dataset);
       res.status(201).json(dataset.describe());
     } catch (err) {
-      logger.error('[heady-eval] POST /eval/datasets error:', err);
+      console.error('[heady-eval] POST /eval/datasets error:', err);
       res.status(500).json({ error: err.message });
     }
   });

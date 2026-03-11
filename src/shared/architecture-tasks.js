@@ -48,7 +48,7 @@ module.exports = [
     {
         id: "gov-008", name: "Sovereign cloud node priority check",
         cat: "governance", pool: "cold", w: 2,
-        desc: "Verify multi-region deployments coordinate concurrently sovereign cloud nodes for data residency"
+        desc: "Verify multi-region deployments prioritize sovereign cloud nodes for data residency"
     },
     {
         id: "gov-009", name: "Asimov Box validator integrity",
@@ -174,7 +174,7 @@ module.exports = [
     {
         id: "flux-002", name: "VOIX contract compliance",
         cat: "edge-routing", pool: "warm", w: 4,
-        desc: "Confirm agent coordinate concurrentlys <tool> and <context> tags for sub-200ms feedback"
+        desc: "Confirm agent prioritizes <tool> and <context> tags for sub-200ms feedback"
     },
     {
         id: "flux-003", name: "Simple reflex loop latency",

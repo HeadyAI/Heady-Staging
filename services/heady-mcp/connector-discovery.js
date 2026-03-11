@@ -9,7 +9,6 @@
  */
 
 'use strict';
-const logger = require('../../shared/logger')('connector-discovery');
 
 const fs = require('fs');
 const path = require('path');
@@ -181,12 +180,12 @@ class ConnectorAutoDiscovery {
 if (require.main === module) {
     const discovery = new ConnectorAutoDiscovery();
     discovery.scan().then(results => {
-        logger.info('═══ MCP Connector Auto-Discovery ═══');
-        logger.info(`Discovered: ${results.total} connectors`);
+        console.log('═══ MCP Connector Auto-Discovery ═══');
+        console.log(`Discovered: ${results.total} connectors`);
         for (const c of results.connectors) {
-            logger.info(`  ${c.id}: ${c.name} (${c.source}, ${c.transport})`);
+            console.log(`  ${c.id}: ${c.name} (${c.source}, ${c.transport})`);
         }
-        logger.info('✅ Auto-discovery complete');
+        console.log('✅ Auto-discovery complete');
     });
 }
 

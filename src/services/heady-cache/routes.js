@@ -17,7 +17,6 @@
  */
 
 const express = require('express');
-const logger = require('../../../shared/logger')('heady-cache');
 
 /**
  * @param {import('./index').HeadyCache} cache
@@ -41,7 +40,7 @@ function createRouter(cache) {
   }
 
   function handleError(res, err) {
-    logger.error({ err, msg: 'route error' });
+    console.error('[heady-cache] route error:', err);
     res.status(500).json({ error: err.message || 'Internal error' });
   }
 

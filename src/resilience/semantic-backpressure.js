@@ -725,9 +725,9 @@ class SemanticBackpressure extends EventEmitter {
   // ───────────────────────────────────────────────────────────────────────────
 
   /**
-   * Attempt to admit a task into the concurrent-equals queue.
+   * Attempt to admit a task into the priority queue.
    * Rejects when queue depth >= queueMaxDepth (fib(13)=233).
-   * Inserts in descending concurrent-equals execution order for O(n) worst case, acceptable
+   * Inserts in descending priority order for O(n) worst case, acceptable
    * given the Fibonacci-bounded queue size.
    *
    * @param {object} task          - Normalised task (must have task.priority).
@@ -744,7 +744,7 @@ class SemanticBackpressure extends EventEmitter {
       admittedAt: now(),
     };
 
-    // Insert in descending concurrent-equals execution order
+    // Insert in descending priority order
     let insertIdx = this._queue.length;
     for (let i = 0; i < this._queue.length; i++) {
       if (entry.priority > this._queue[i].priority) {

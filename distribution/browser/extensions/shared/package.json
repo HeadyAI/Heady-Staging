@@ -2,7 +2,7 @@
   "name": "heady-browser-extension",
   "version": "0.1.0",
   "private": true,
-  "description": "Heady AI Browser Extension \u2014 cross-browser (Chrome, Edge, Firefox, Safari)",
+  "description": "Heady AI Browser Extension — cross-browser (Chrome, Edge, Firefox, Safari)",
   "scripts": {
     "dev": "wxt dev",
     "dev:chrome": "wxt dev -b chrome",
@@ -17,12 +17,20 @@
     "test": "vitest"
   },
   "dependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "lucide-react": "^0.344.0",
     "zustand": "^4.5.1",
-    "webextension-polyfill": "^0.12.0"
+    "webextension-polyfill": "^0.12.0",
+    "@radix-ui/react-dialog": "^1.0.5",
+    "@radix-ui/react-popover": "^1.0.7"
   },
   "devDependencies": {
     "wxt": "^0.19.0",
     "@types/webextension-polyfill": "^0.10.7",
+    "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.0",
+    "@vitejs/plugin-react": "^4.3.1",
     "autoprefixer": "^10.4.19",
     "postcss": "^8.4.38",
     "tailwindcss": "^3.4.4",

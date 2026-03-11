@@ -10,7 +10,7 @@ description: >
   projection, semantic NOT, HDC, hyperdimensional computing, VSA, vector symbolic, MoE router,
   ternary logic, Heady CSL, geometric AI, Sacred Geometry logic.
 metadata:
-  author: eric-haywood
+  author: eric-head
   version: '2.0'
 ---
 

@@ -1,0 +1,40 @@
+{
+  "name": "@heady-ai/shared-ui",
+  "version": "4.0.0",
+  "description": "Shared UI component library for the Heady ecosystem — domain-aware navigation, theming, and branded components",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "lint": "eslint src/"
+  },
+  "dependencies": {},
+  "peerDependencies": {
+    "react": ">=18.0.0",
+    "react-dom": ">=18.0.0"
+  },
+  "keywords": [
+    "heady",
+    "shared-ui",
+    "domain-aware",
+    "sacred-geometry"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "license": "MIT",
+  "author": {
+    "name": "HeadySystems Inc.",
+    "email": "dev@heady.ai",
+    "url": "https://heady.ai"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/HeadyMe/Heady.git",
+    "directory": "packages/heady-shared-ui"
+  },
+  "files": [
+    "src",
+    "README.md",
+    "LICENSE"
+  ]
+}

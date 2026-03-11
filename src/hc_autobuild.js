@@ -1,4 +1,3 @@
-const logger = require('../shared/logger')('hc_autobuild');
 // HEADY_BRAND:BEGIN
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
@@ -18,6 +17,7 @@ const logger = require('../shared/logger')('hc_autobuild');
 const { execSync } = require('child_process');
 const path = require('path');
 const fs = require('fs');
+const logger = require('../shared/logger.js').createLogger({ service: 'autobuild' });
 
 logger.info('\n🔨 Heady AutoBuild - Sacred Geometry Build System with Codemap Optimization\n');
 

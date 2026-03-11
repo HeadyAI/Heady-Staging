@@ -1,0 +1,199 @@
+# HEADY_BRAND:BEGIN
+# ╔══════════════════════════════════════════════════════════════════╗
+# ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
+# ║  ██║  ██║██╔════╝██╔══██╗██╔══██╗╚██╗ ██╔╝                     ║
+# ║  ███████║█████╗  ███████║██║  ██║ ╚████╔╝                      ║
+# ║  ██╔══██║██╔══╝  ██╔══██║██║  ██║  ╚██╔╝                       ║
+# ║  ██║  ██║███████╗██║  ██║██████╔╝   ██║                        ║
+# ║  ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝    ╚═╝                        ║
+# ║                                                                  ║
+# ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
+# ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
+# ║  FILE: configs/imagination-engine.yaml                                                    ║
+# ║  LAYER: config                                                  ║
+# ╚══════════════════════════════════════════════════════════════════╝
+# HEADY_BRAND:END
+# Imagination Engine Configuration
+# 
+# Configuration for Heady's autonomous concept generation and IP discovery system.
+# Based on DABUS/Imagination Engines architecture + patent-system constraints.
+
+# Storage paths for imagination data
+storage:
+  primitives: "./.heady_cache/imagination/primitives.json"
+  concepts: "./.heady_cache/imagination/concepts.json"
+  experiments: "./.heady_cache/imagination/experiments.json"
+  ip_packages: "./.heady_cache/imagination/ip_packages.json"
+
+# Recombination settings
+recombination:
+  interval_minutes: 30           # How often to run imagination cycles
+  concepts_per_batch: 5          # Concepts to generate per cycle
+  max_primitives_per_concept: 5  # Max primitives to combine
+  min_primitives_per_concept: 2  # Min primitives needed
+  elaboration_budget: 3          # Hot concepts to elaborate per cycle
+
+# Scoring thresholds (0-1 scale)
+thresholds:
+  novelty: 0.6           # Min novelty to keep concept
+  usefulness: 0.5        # Min usefulness to keep concept
+  risk_max: 0.7        # Max acceptable risk
+  hot_novelty: 0.8     # Threshold for "hot" concept
+  hot_usefulness: 0.7  # Threshold for "hot" concept
+
+# Learning parameters
+learning:
+  success_weight_boost: 1.2   # Multiply weight on success
+  fail_weight_decay: 0.8      # Multiply weight on failure
+  diversity_pressure: 0.1     # Prob of cross-domain mix
+
+# Safety and ethics constraints
+safety:
+  hard_constraints:
+    - id: no_weapons
+      keywords: ["weapon", "arms", "munition", "ballistic", "explosive"]
+      description: "No weapons or military applications"
+    
+    - id: no_surveillance_exploitation
+      keywords: ["mass surveillance", "covert tracking", "spy", "surveillance state"]
+      description: "No mass surveillance or exploitation systems"
+    
+    - id: no_discriminatory_systems
+      keywords: ["discriminat", "racial profiling", "bias enforcement"]
+      description: "No systems that systematically discriminate"
+    
+    - id: no_environmental_harm
+      keywords: ["toxic waste", "deforestation", "carbon intensive"]
+      description: "No environmentally destructive systems"
+    
+    - id: no_human_rights_abuse
+      keywords: ["torture", "forced labor", "oppression", "rights violation"]
+      description: "No systems that facilitate human rights abuse"
+  
+  amber_zones:
+    - id: surveillance_technology
+      keywords: ["monitor", "track", "observ", "camera"]
+      description: "Surveillance-adjacent tech - requires review"
+    
+    - id: automated_decision_making
+      keywords: ["automated decision", "algorithmic choice", "auto-approve"]
+      description: "Algorithmic decision systems - requires review"
+    
+    - id: biometric_systems
+      keywords: ["biometric", "fingerprint", "facial recognition", "retina"]
+      description: "Biometric identification - requires review"
+    
+    - id: social_scoring
+      keywords: ["social score", "behavior rating", "reputation system"]
+      description: "Social scoring systems - requires review"
+
+# IP discovery settings
+ip_discovery:
+  auto_prior_art_search: true
+  max_prior_art_results: 10
+  
+  # IP posture preferences (in order)
+  posture_preferences:
+    - open_license
+    - defensive_publication
+    - patent
+    - trade_secret
+    - commons
+  
+  # When to choose each posture
+  posture_rules:
+    open_license:
+      conditions:
+        - "social_impact > 0.8"
+        - "commercial_potential < 0.4"
+      description: "High social impact, low commercial need"
+    
+    defensive_publication:
+      conditions:
+        - "prior_art_similarity > 0.7"
+      description: "Close prior art exists - publish to block"
+    
+    patent:
+      conditions:
+        - "novelty > 0.8"
+        - "prior_art_similarity < 0.7"
+        - "commercial_potential > 0.6"
+      description: "Novel, clear commercial potential"
+    
+    trade_secret:
+      conditions:
+        - "novelty < 0.6"
+        - "detectability < 0.3"
+      description: "Not obviously novel, hard to reverse-engineer"
+
+# Mission alignment
+mission:
+  # Prefer concepts that align with these values
+  preferred_tags:
+    - "social_impact"
+    - "equity"
+    - "accessibility"
+    - "open_source"
+    - "education"
+    - "health"
+    - "environment"
+  
+  # Concepts with these tags get novelty/usefulness boost
+  boost_tags:
+    - "social_impact": 0.1
+    - "equity": 0.15
+    - "wealth_redistribution": 0.2
+  
+  # Distributional effects check
+  check_distributional_effects: true
+  questions_to_ask:
+    - "Who benefits from this concept?"
+    - "Who might be disadvantaged?"
+    - "What happens if scaled globally?"
+    - "Does it increase or decrease inequality?"
+
+# API settings
+api:
+  rate_limit:
+    imagine: 10          # Per minute
+    create_primitive: 50 # Per minute
+    ip_package: 5        # Per minute
+  
+  # Default response limits
+  default_concept_limit: 20
+  max_concept_limit: 100
+
+# Integration with other Heady systems
+integration:
+  # Feed hot concepts to these systems
+  notify_on_hot:
+    - self_critique
+    - pattern_engine
+    - story_driver
+  
+  # Extract primitives from these sources
+  auto_extract_sources:
+    - code_commits
+    - documentation
+    - user_feedback
+    - patent_databases
+  
+  # Cross-reference with
+  cross_reference:
+    - heady_registry
+    - pattern_store
+    - billing_config
+
+# Experimental features (advanced)
+experimental:
+  # Use LLM for concept generation (vs template-based)
+  llm_generation: false
+  
+  # Use embedding model for novelty (vs Jaccard)
+  embedding_novelty: false
+  
+  # Multi-step reasoning for complex concepts
+  multi_step_reasoning: false
+  
+  # Visual imagination (for UI/UX concepts)
+  visual_imagination: false

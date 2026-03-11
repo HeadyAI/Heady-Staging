@@ -1,5 +1,4 @@
 'use strict';
-const logger = require('../shared/logger')('gateway');
 
 /**
  * HeadyGateway — Unified API Gateway for all Heady™ Native Services
@@ -26,13 +25,13 @@ const evalRoutes = require('./services/heady-eval/routes');
 const PORT = parseInt(process.env.HEADY_GATEWAY_PORT || '3100', 10);
 
 const SERVICES = [
-  { name: 'HeadyEmbed',  prefix: '/embed',  port: parseInt(process.env.HEADY_EMBED_PORT  || '3101', 10), status: 'unknown' },
-  { name: 'HeadyInfer',  prefix: '/infer',  port: parseInt(process.env.HEADY_INFER_PORT  || '3102', 10), status: 'unknown' },
-  { name: 'HeadyVector', prefix: '/vector', port: parseInt(process.env.HEADY_VECTOR_PORT || '3103', 10), status: 'unknown' },
-  { name: 'HeadyChain',  prefix: '/chain',  port: parseInt(process.env.HEADY_CHAIN_PORT  || '3104', 10), status: 'unknown' },
-  { name: 'HeadyCache',  prefix: '/cache',  port: parseInt(process.env.HEADY_CACHE_PORT  || '3105', 10), status: 'unknown' },
-  { name: 'HeadyGuard',  prefix: '/guard',  port: parseInt(process.env.HEADY_GUARD_PORT  || '3106', 10), status: 'unknown' },
-  { name: 'HeadyEval',   prefix: '/eval',   port: parseInt(process.env.HEADY_EVAL_PORT   || '3107', 10), status: 'unknown' },
+  { name: 'HeadyEmbed',  prefix: '/embed',  port: 3101, status: 'unknown' },
+  { name: 'HeadyInfer',  prefix: '/infer',  port: 3102, status: 'unknown' },
+  { name: 'HeadyVector', prefix: '/vector', port: 3103, status: 'unknown' },
+  { name: 'HeadyChain',  prefix: '/chain',  port: 3104, status: 'unknown' },
+  { name: 'HeadyCache',  prefix: '/cache',  port: 3105, status: 'unknown' },
+  { name: 'HeadyGuard',  prefix: '/guard',  port: 3106, status: 'unknown' },
+  { name: 'HeadyEval',   prefix: '/eval',   port: 3107, status: 'unknown' },
 ];
 
 function createGateway() {
@@ -40,7 +39,7 @@ function createGateway() {
 
   // Middleware
   app.use(helmet());
-  app.use(require('../shared/security-headers').securityHeaders());
+  app.use(cors());
   app.use(compression());
   app.use(express.json({ limit: '50mb' }));
 
@@ -49,7 +48,7 @@ function createGateway() {
     const start = Date.now();
     res.on('finish', () => {
       const duration = Date.now() - start;
-      logger.info(`[Gateway] ${req.method} ${req.originalUrl} ${res.statusCode} ${duration}ms`);
+      console.log(`[Gateway] ${req.method} ${req.originalUrl} ${res.statusCode} ${duration}ms`);
     });
     next();
   });
@@ -108,7 +107,7 @@ function createGateway() {
 
   // Error handler
   app.use((err, req, res, _next) => {
-    logger.error('[Gateway] Error:', err.message);
+    console.error('[Gateway] Error:', err.message);
     res.status(err.status || 500).json({
       error: err.message || 'Internal Server Error',
       service: 'HeadyGateway',
@@ -122,32 +121,32 @@ function createGateway() {
 if (require.main === module) {
   const app = createGateway();
   const server = app.listen(PORT, () => {
-    logger.info('');
-    logger.info('╔══════════════════════════════════════════════════════════╗');
-    logger.info('║          HeadyGateway — Sacred Geometry v3.0.0          ║');
-    logger.info('║     Sovereign AI • Zero External Dependencies           ║');
-    logger.info('╠══════════════════════════════════════════════════════════╣');
-    logger.info(`║  Gateway:     http://localhost:${PORT}                      ║`);
-    logger.info('║                                                          ║');
+    console.log('');
+    console.log('╔══════════════════════════════════════════════════════════╗');
+    console.log('║          HeadyGateway — Sacred Geometry v3.0.0          ║');
+    console.log('║     Sovereign AI • Zero External Dependencies           ║');
+    console.log('╠══════════════════════════════════════════════════════════╣');
+    console.log(`║  Gateway:     http://localhost:${PORT}                      ║`);
+    console.log('║                                                          ║');
     SERVICES.forEach(s => {
       const line = `║  ${s.name.padEnd(12)} /api/v1${s.prefix.padEnd(8)} (standalone :${s.port})    ║`;
-      logger.info(line);
+      console.log(line);
     });
-    logger.info('║                                                          ║');
-    logger.info(`║  PHI = ${PHI}                              ║`);
-    logger.info('╚══════════════════════════════════════════════════════════╝');
-    logger.info('');
+    console.log('║                                                          ║');
+    console.log(`║  PHI = ${PHI}                              ║`);
+    console.log('╚══════════════════════════════════════════════════════════╝');
+    console.log('');
   });
 
   // Graceful shutdown
   const shutdown = (signal) => {
-    logger.info(`\n[Gateway] ${signal} received — shutting down gracefully...`);
+    console.log(`\n[Gateway] ${signal} received — shutting down gracefully...`);
     server.close(() => {
-      logger.info('[Gateway] All connections closed. Goodbye.');
+      console.log('[Gateway] All connections closed. Goodbye.');
       process.exit(0);
     });
     setTimeout(() => {
-      logger.error('[Gateway] Forced shutdown after timeout');
+      console.error('[Gateway] Forced shutdown after timeout');
       process.exit(1);
     }, 10000);
   };

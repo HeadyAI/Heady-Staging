@@ -1,0 +1,58 @@
+{
+  "name": "@heady-ai/orchestrator",
+  "version": "3.2.2",
+  "description": "Service orchestration engine with Monte Carlo scheduling, liquid architecture, and multi-pool resource allocation for the Heady AI Platform.",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "files": [
+    "dist/",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "test": "jest",
+    "clean": "rm -rf dist",
+    "prepublishOnly": "npm run clean && npm run build"
+  },
+  "dependencies": {
+    "@heady-ai/core": "workspace:*",
+    "@heady-ai/vector-memory": "workspace:*"
+  },
+  "license": "UNLICENSED",
+  "author": {
+    "name": "HeadySystems Inc.",
+    "email": "eric@headyconnection.org",
+    "url": "https://headyme.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/HeadyMe/heady-production.git",
+    "directory": "packages/orchestrator"
+  },
+  "homepage": "https://headysystems.com",
+  "bugs": {
+    "url": "https://github.com/HeadyMe/heady-production/issues"
+  },
+  "keywords": [
+    "heady",
+    "ai",
+    "orchestrator",
+    "monte-carlo",
+    "scheduling",
+    "liquid-architecture",
+    "multi-agent"
+  ],
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

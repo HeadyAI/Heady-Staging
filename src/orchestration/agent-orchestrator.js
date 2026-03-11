@@ -281,7 +281,7 @@ class AgentOrchestrator extends EventEmitter {
             try {
                 const prunedCount = await this.vectorMem.pruneOldest(100);
                 this._audit({ type: "performance:prune_context", trigger: "high_latency", prunedCount });
-            } catch (err) { /* structured-logger: emit error */ }
+            } catch (e) { }
         }
     }
 
@@ -400,7 +400,7 @@ class AgentOrchestrator extends EventEmitter {
                         content: `STATIC REFUSAL TRIGGERED:\nAction: ${task.action}\nPayload: ${JSON.stringify(payload)}\nReason: Ill-typed arguments.`,
                         metadata: { type: "static_refusal", severity: "CRITICAL", ts: validation.ts }
                     }).catch(() => { });
-                } catch (err) { /* structured-logger: emit error */ }
+                } catch (e) { }
             }
 
             this._audit({ type: "security:static_refusal", action: task.action, reason: errorMsg });

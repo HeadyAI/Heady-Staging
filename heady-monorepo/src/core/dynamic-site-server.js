@@ -19,7 +19,7 @@
 const http = require('http');
 const crypto = require('crypto');
 
-const PORT = process.env.PORT || process.env.SITE_PORT || 3850;
+const PORT = process.env.SITE_PORT || 3850;
 const PHI = 1.6180339887;
 
 // ── Site Registry ───────────────────────────────────────────────
@@ -145,12 +145,12 @@ const SITES = {
     showAuth: true,
   },
   'headysense.com': {
-    brand: 'HeadySense',
+    brand: 'HeadyLens',
     tagline: 'Sovereign Sight',
     subtitle: 'Vision AI for screenshots, UI review, OCR, and visual code analysis.',
     color: '#f97316',
     accent: '#fb923c',
-    icon: 'S',
+    icon: 'L',
     heroServices: [
       { icon: '👁️', name: 'Vision', desc: 'Image analysis and classification' },
       { icon: '📸', name: 'Screenshot', desc: 'Automated visual QA' },
@@ -174,9 +174,9 @@ const SITES = {
     ],
     showAuth: true,
   },
-  'headyfinance.com': {
-    brand: 'HeadyFinance',
-    tagline: 'AI-Powered Trading Intelligence',
+  'perfecttrader.com': {
+    brand: 'PerfectTrader',
+    tagline: 'Algorithmic Intelligence',
     subtitle: 'AI-powered trading signals, backtesting, and portfolio optimization with real-time market data.',
     color: '#22c55e',
     accent: '#86efac',
@@ -621,7 +621,7 @@ function renderSite(site, host) {
 // ── HTTP Server ─────────────────────────────────────────────
 const server = http.createServer((req, res) => {
   const url = new URL(req.url, `http://localhost:${PORT}`);
-  const host = req.headers['x-forwarded-host'] || req.headers.host || 'headyme.com';
+  const host = req.headers.host || 'headyme.com';
   const site = resolveSite(host);
 
   res.setHeader('Access-Control-Allow-Origin', '*');

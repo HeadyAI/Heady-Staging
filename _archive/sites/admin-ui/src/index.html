@@ -1,0 +1,1081 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Heady Admin — Command Center</title>
+    <meta name="description"
+        content="Heady™ AI ecosystem admin dashboard — monitor, control, and interact with all Heady services">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #12121a;
+            --bg-card: rgba(255, 255, 255, 0.03);
+            --bg-card-hover: rgba(255, 255, 255, 0.06);
+            --border: rgba(255, 255, 255, 0.06);
+            --border-hover: rgba(255, 255, 255, 0.12);
+            --text-primary: #e8e8ed;
+            --text-secondary: #8888a0;
+            --text-muted: #55556a;
+            --accent: #6c5ce7;
+            --accent-glow: rgba(108, 92, 231, 0.3);
+            --green: #00d68f;
+            --green-glow: rgba(0, 214, 143, 0.15);
+            --red: #ff4757;
+            --red-glow: rgba(255, 71, 87, 0.15);
+            --yellow: #ffa502;
+            --yellow-glow: rgba(255, 165, 2, 0.15);
+            --blue: #48dbfb;
+            --blue-glow: rgba(72, 219, 251, 0.15);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* ─── Background Effects ─── */
+        body::before {
+            content: '';
+            position: fixed;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(ellipse at 20% 50%, rgba(108, 92, 231, 0.06) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 20%, rgba(72, 219, 251, 0.04) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 80%, rgba(0, 214, 143, 0.03) 0%, transparent 50%);
+            animation: bgDrift 30s ease-in-out infinite alternate;
+            z-index: 0;
+        }
+
+        @keyframes bgDrift {
+            0% {
+                transform: translate(0, 0) rotate(0deg);
+            }
+
+            100% {
+                transform: translate(-3%, -2%) rotate(2deg);
+            }
+        }
+
+        /* ─── Auth Screen ─── */
+        #auth-screen {
+            position: fixed;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            background: var(--bg-primary);
+        }
+
+        .auth-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 48px 40px;
+            width: 400px;
+            max-width: 90vw;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .auth-card h1 {
+            font-size: 1.6rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent), var(--blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 8px;
+        }
+
+        .auth-card p {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            margin-bottom: 28px;
+        }
+
+        .auth-input {
+            width: 100%;
+            padding: 14px 18px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            color: var(--text-primary);
+            font-size: 0.9rem;
+            font-family: inherit;
+            outline: none;
+            transition: border-color 0.3s;
+            margin-bottom: 12px;
+        }
+
+        .auth-input:focus {
+            border-color: var(--accent);
+        }
+
+        .auth-input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .auth-btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, var(--accent), #7c6cf0);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: inherit;
+            transition: all 0.3s;
+            margin-top: 6px;
+        }
+
+        .auth-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 8px 30px var(--accent-glow);
+        }
+
+        .auth-error {
+            color: var(--red);
+            font-size: 0.8rem;
+            margin-top: 12px;
+            display: none;
+        }
+
+        /* ─── Layout ─── */
+        #app {
+            display: none;
+            position: relative;
+            z-index: 1;
+        }
+
+        .topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 28px;
+            border-bottom: 1px solid var(--border);
+            backdrop-filter: blur(20px);
+            background: rgba(10, 10, 15, 0.8);
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+
+        .topbar-left {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .topbar-logo {
+            font-size: 1.1rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent), var(--blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .topbar-status {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .topbar-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .btn-sm {
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 0.78rem;
+            font-weight: 500;
+            cursor: pointer;
+            border: 1px solid var(--border);
+            background: var(--bg-card);
+            color: var(--text-secondary);
+            font-family: inherit;
+            transition: all 0.2s;
+        }
+
+        .btn-sm:hover {
+            background: var(--bg-card-hover);
+            border-color: var(--border-hover);
+            color: var(--text-primary);
+        }
+
+        .main {
+            display: grid;
+            grid-template-columns: 220px 1fr;
+            min-height: calc(100vh - 60px);
+        }
+
+        /* ─── Sidebar ─── */
+        .sidebar {
+            border-right: 1px solid var(--border);
+            padding: 20px 0;
+            background: rgba(18, 18, 26, 0.5);
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 24px;
+            font-size: 0.82rem;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.2s;
+            border-left: 2px solid transparent;
+        }
+
+        .nav-item:hover {
+            color: var(--text-primary);
+            background: var(--bg-card);
+        }
+
+        .nav-item.active {
+            color: var(--accent);
+            background: rgba(108, 92, 231, 0.08);
+            border-left-color: var(--accent);
+        }
+
+        .nav-section {
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--text-muted);
+            padding: 18px 24px 8px;
+            font-weight: 600;
+        }
+
+        /* ─── Content ─── */
+        .content {
+            padding: 28px 32px;
+            overflow-y: auto;
+        }
+
+        .page {
+            display: none;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        /* ─── Cards ─── */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 16px;
+            margin-bottom: 28px;
+        }
+
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 22px;
+            transition: all 0.3s;
+        }
+
+        .stat-card:hover {
+            border-color: var(--border-hover);
+            background: var(--bg-card-hover);
+            transform: translateY(-2px);
+        }
+
+        .stat-label {
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+        }
+
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+
+        .stat-sub {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            margin-top: 4px;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 6px;
+        }
+
+        .status-dot.green {
+            background: var(--green);
+            box-shadow: 0 0 8px var(--green);
+        }
+
+        .status-dot.red {
+            background: var(--red);
+            box-shadow: 0 0 8px var(--red);
+        }
+
+        .status-dot.yellow {
+            background: var(--yellow);
+            box-shadow: 0 0 8px var(--yellow);
+        }
+
+        .status-dot.blue {
+            background: var(--blue);
+            box-shadow: 0 0 8px var(--blue);
+        }
+
+        /* ─── Section Headers ─── */
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 18px;
+        }
+
+        .section-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .section-sub {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+        }
+
+        /* ─── Tables ─── */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 28px;
+        }
+
+        .data-table th,
+        .data-table td {
+            padding: 12px 18px;
+            text-align: left;
+            font-size: 0.82rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .data-table th {
+            font-weight: 600;
+            color: var(--text-muted);
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .data-table td {
+            color: var(--text-secondary);
+        }
+
+        .data-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .data-table tr:hover td {
+            background: var(--bg-card-hover);
+        }
+
+        /* ─── Chat Panel ─── */
+        .chat-container {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            display: flex;
+            flex-direction: column;
+            height: calc(100vh - 120px);
+        }
+
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        .chat-msg {
+            margin-bottom: 16px;
+            max-width: 85%;
+        }
+
+        .chat-msg.user {
+            margin-left: auto;
+            text-align: right;
+        }
+
+        .chat-msg .bubble {
+            display: inline-block;
+            padding: 12px 18px;
+            border-radius: 14px;
+            font-size: 0.85rem;
+            line-height: 1.6;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+        .chat-msg.user .bubble {
+            background: linear-gradient(135deg, var(--accent), #7c6cf0);
+            color: white;
+            border-bottom-right-radius: 4px;
+        }
+
+        .chat-msg.bot .bubble {
+            background: var(--bg-card-hover);
+            color: var(--text-primary);
+            border-bottom-left-radius: 4px;
+            border: 1px solid var(--border);
+        }
+
+        .chat-msg .meta {
+            font-size: 0.68rem;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        .chat-input-row {
+            display: flex;
+            gap: 10px;
+            padding: 16px 20px;
+            border-top: 1px solid var(--border);
+        }
+
+        .chat-input {
+            flex: 1;
+            padding: 12px 16px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            color: var(--text-primary);
+            font-size: 0.85rem;
+            font-family: inherit;
+            outline: none;
+        }
+
+        .chat-input:focus {
+            border-color: var(--accent);
+        }
+
+        .chat-send {
+            padding: 12px 22px;
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: inherit;
+            transition: all 0.2s;
+        }
+
+        .chat-send:hover {
+            background: #7c6cf0;
+        }
+
+        .chat-send:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        /* ─── Log Viewer ─── */
+        .log-viewer {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 16px;
+            font-family: 'SF Mono', 'Fira Code', monospace;
+            font-size: 0.75rem;
+            line-height: 1.8;
+            color: var(--text-secondary);
+            max-height: 500px;
+            overflow-y: auto;
+        }
+
+        .log-line {
+            padding: 2px 0;
+        }
+
+        .log-line .ts {
+            color: var(--text-muted);
+        }
+
+        .log-line .lvl-ok {
+            color: var(--green);
+        }
+
+        .log-line .lvl-warn {
+            color: var(--yellow);
+        }
+
+        .log-line .lvl-err {
+            color: var(--red);
+        }
+
+        /* ─── Responsive ─── */
+        @media (max-width: 768px) {
+            .main {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                display: none;
+            }
+
+            .cards-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .content {
+                padding: 20px 16px;
+            }
+        }
+
+        /* ─── Loading ─── */
+        .spinner {
+            display: inline-block;
+            width: 14px;
+            height: 14px;
+            border: 2px solid var(--border);
+            border-top-color: var(--accent);
+            border-radius: 50%;
+            animation: spin 0.6s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 6px;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+
+        .badge-green {
+            background: var(--green-glow);
+            color: var(--green);
+        }
+
+        .badge-red {
+            background: var(--red-glow);
+            color: var(--red);
+        }
+
+        .badge-yellow {
+            background: var(--yellow-glow);
+            color: var(--yellow);
+        }
+
+        .badge-blue {
+            background: var(--blue-glow);
+            color: var(--blue);
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ═══ Auth Screen ═══ -->
+    <div id="auth-screen">
+        <div class="auth-card">
+            <h1>⚡ Heady Admin</h1>
+            <p>Enter manager endpoint & API key to connect</p>
+            <input class="auth-input" id="auth-endpoint" type="url" placeholder="https://manager.headysystems.com"
+                value="https://manager.headysystems.com">
+            <input class="auth-input" id="auth-key" type="password" placeholder="API Key (HEADY_API_KEY)">
+            <button class="auth-btn" id="auth-submit" onclick="doLogin()">Connect</button>
+            <div class="auth-error" id="auth-error"></div>
+        </div>
+    </div>
+
+    <!-- ═══ App ═══ -->
+    <div id="app">
+        <div class="topbar">
+            <div class="topbar-left">
+                <div class="topbar-logo">⚡ Heady Admin</div>
+                <div class="topbar-status" id="connection-status">Connecting...</div>
+            </div>
+            <div class="topbar-right">
+                <button class="btn-sm" onclick="refreshAll()">↻ Refresh</button>
+                <button class="btn-sm" onclick="logout()">Logout</button>
+            </div>
+        </div>
+
+        <div class="main">
+            <nav class="sidebar">
+                <div class="nav-section">Overview</div>
+                <div class="nav-item active" data-page="dashboard" onclick="showPage('dashboard')">📊 Dashboard</div>
+                <div class="nav-item" data-page="health" onclick="showPage('health')">💚 Health</div>
+
+                <div class="nav-section">Intelligence</div>
+                <div class="nav-item" data-page="chat" onclick="showPage('chat')">🧠 Brain Chat</div>
+                <div class="nav-item" data-page="vectors" onclick="showPage('vectors')">🌐 Vector Memory</div>
+
+                <div class="nav-section">System</div>
+                <div class="nav-item" data-page="telemetry" onclick="showPage('telemetry')">📈 Telemetry</div>
+                <div class="nav-item" data-page="endpoints" onclick="showPage('endpoints')">🔌 Endpoints</div>
+                <div class="nav-item" data-page="logs" onclick="showPage('logs')">📋 Logs</div>
+            </nav>
+
+            <div class="content">
+                <!-- ─── Dashboard ─── -->
+                <div class="page active" id="page-dashboard">
+                    <div class="section-header">
+                        <div>
+                            <div class="section-title">System Dashboard</div>
+                            <div class="section-sub" id="dash-timestamp"></div>
+                        </div>
+                    </div>
+                    <div class="cards-grid" id="dash-cards"></div>
+                    <div class="section-header">
+                        <div class="section-title">Services</div>
+                    </div>
+                    <table class="data-table" id="services-table">
+                        <thead>
+                            <tr>
+                                <th>Endpoint</th>
+                                <th>Status</th>
+                                <th>Latency</th>
+                            </tr>
+                        </thead>
+                        <tbody id="services-tbody"></tbody>
+                    </table>
+                </div>
+
+                <!-- ─── Health ─── -->
+                <div class="page" id="page-health">
+                    <div class="section-header">
+                        <div class="section-title">Health Checks</div>
+                    </div>
+                    <div class="cards-grid" id="health-cards"></div>
+                    <div class="section-header">
+                        <div class="section-title">Full Status</div>
+                    </div>
+                    <div class="log-viewer" id="health-full"></div>
+                </div>
+
+                <!-- ─── Brain Chat ─── -->
+                <div class="page" id="page-chat">
+                    <div class="chat-container">
+                        <div class="chat-messages" id="chat-messages">
+                            <div class="chat-msg bot">
+                                <div class="bubble">HeadyBrain ready. Ask anything about the Heady™ ecosystem.</div>
+                            </div>
+                        </div>
+                        <div class="chat-input-row">
+                            <input class="chat-input" id="chat-input" placeholder="Ask HeadyBrain..."
+                                onkeydown="if(event.key==='Enter')sendChat()">
+                            <button class="chat-send" id="chat-send" onclick="sendChat()">Send</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ─── Vector Memory ─── -->
+                <div class="page" id="page-vectors">
+                    <div class="section-header">
+                        <div class="section-title">Vector Memory (3D Spatial Storage)</div>
+                    </div>
+                    <div class="cards-grid" id="vector-cards"></div>
+                    <div class="section-header">
+                        <div class="section-title">Recent Vectors</div>
+                    </div>
+                    <div class="log-viewer" id="vector-data"></div>
+                </div>
+
+                <!-- ─── Telemetry ─── -->
+                <div class="page" id="page-telemetry">
+                    <div class="section-header">
+                        <div class="section-title">Telemetry</div>
+                    </div>
+                    <div class="cards-grid" id="telemetry-cards"></div>
+                    <div class="section-header">
+                        <div class="section-title">Recent Events</div>
+                    </div>
+                    <div class="log-viewer" id="telemetry-log"></div>
+                </div>
+
+                <!-- ─── Endpoints ─── -->
+                <div class="page" id="page-endpoints">
+                    <div class="section-header">
+                        <div class="section-title">API Endpoints</div>
+                    </div>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Path</th>
+                                <th>Method</th>
+                                <th>Test</th>
+                            </tr>
+                        </thead>
+                        <tbody id="endpoints-tbody"></tbody>
+                    </table>
+                </div>
+
+                <!-- ─── Logs ─── -->
+                <div class="page" id="page-logs">
+                    <div class="section-header">
+                        <div class="section-title">System Introspection</div>
+                        <button class="btn-sm" onclick="loadLogs()">↻ Refresh</button>
+                    </div>
+                    <div class="log-viewer" id="system-logs"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ═══ State ═══
+        let API = '';
+        let API_KEY = '';
+
+        // ═══ Auth ═══
+        function doLogin() {
+            API = document.getElementById('auth-endpoint').value.replace(/\/+$/, '');
+            API_KEY = document.getElementById('auth-key').value;
+            const errEl = document.getElementById('auth-error');
+            errEl.style.display = 'none';
+
+            document.getElementById('auth-submit').textContent = 'Connecting...';
+            document.getElementById('auth-submit').disabled = true;
+
+            apiFetch('/api/health')
+                .then(data => {
+                    if (data && data.status === 'ok') {
+                        localStorage.setItem('heady_endpoint', API);
+                        localStorage.setItem('heady_key', API_KEY);
+                        document.getElementById('auth-screen').style.display = 'none';
+                        document.getElementById('app').style.display = 'block';
+                        refreshAll();
+                    } else {
+                        throw new Error(data?.error || 'Unexpected response');
+                    }
+                })
+                .catch(err => {
+                    errEl.textContent = 'Connection failed: ' + err.message;
+                    errEl.style.display = 'block';
+                })
+                .finally(() => {
+                    document.getElementById('auth-submit').textContent = 'Connect';
+                    document.getElementById('auth-submit').disabled = false;
+                });
+        }
+
+        function logout() {
+            localStorage.removeItem('heady_endpoint');
+            localStorage.removeItem('heady_key');
+            location.reload();
+        }
+
+        // Auto-login from localStorage
+        (function autoLogin() {
+            const ep = localStorage.getItem('heady_endpoint');
+            const key = localStorage.getItem('heady_key');
+            if (ep && key) {
+                document.getElementById('auth-endpoint').value = ep;
+                document.getElementById('auth-key').value = key;
+                doLogin();
+            }
+        })();
+
+        // ═══ API Helper ═══
+        async function apiFetch(path, opts = {}) {
+            const url = API + path;
+            const headers = { 'Content-Type': 'application/json' };
+            if (API_KEY) headers['Authorization'] = 'Bearer ' + API_KEY;
+            if (API_KEY) headers['x-heady-api-key'] = API_KEY;
+
+            try {
+                const r = await fetch(url, { ...opts, headers, mode: 'cors', signal: AbortSignal.timeout(15000) });
+                if (!r.ok) throw new Error(`HTTP ${r.status}`);
+                return await r.json();
+            } catch (e) {
+                console.warn(`API ${path}: ${e.message}`);
+                return { error: e.message };
+            }
+        }
+
+        // ═══ Navigation ═══
+        function showPage(id) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            const page = document.getElementById('page-' + id);
+            if (page) page.classList.add('active');
+            const nav = document.querySelector(`.nav-item[data-page="${id}"]`);
+            if (nav) nav.classList.add('active');
+
+            // Load page-specific data
+            if (id === 'health') loadHealth();
+            if (id === 'vectors') loadVectors();
+            if (id === 'telemetry') loadTelemetry();
+            if (id === 'endpoints') loadEndpoints();
+            if (id === 'logs') loadLogs();
+        }
+
+        // ═══ Dashboard ═══
+        async function loadDashboard() {
+            const [pulse, health] = await Promise.all([
+                apiFetch('/api/pulse'),
+                apiFetch('/api/health'),
+            ]);
+
+            const statusEl = document.getElementById('connection-status');
+            if (pulse && !pulse.error) {
+                statusEl.innerHTML = '<span class="status-dot green"></span>Connected — ' + (pulse.version || 'v?');
+            } else {
+                statusEl.innerHTML = '<span class="status-dot red"></span>Disconnected';
+            }
+
+            document.getElementById('dash-timestamp').textContent = 'Updated: ' + new Date().toLocaleTimeString();
+
+            const cards = document.getElementById('dash-cards');
+            const uptime = pulse.ok ? Math.floor((Date.now() - new Date(pulse.ts).getTime()) / 1000) : '—';
+            const endpointCount = pulse.endpoints ? pulse.endpoints.length : '—';
+            const secrets = pulse.secrets ? `${pulse.secrets.valid || 0}/${pulse.secrets.total || 0}` : '—';
+            const cf = pulse.cloudflare ? (pulse.cloudflare.tokenValid ? 'Valid' : 'Invalid') : '—';
+
+            cards.innerHTML = `
+        <div class="stat-card">
+            <div class="stat-label">Status</div>
+            <div class="stat-value">${pulse.ok ? '<span class="status-dot green"></span>Online' : '<span class="status-dot red"></span>Offline'}</div>
+            <div class="stat-sub">Service: ${pulse.service || '—'}</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">Version</div>
+            <div class="stat-value">${pulse.version || '—'}</div>
+            <div class="stat-sub">Active layer: ${pulse.active_layer || '—'}</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">Endpoints</div>
+            <div class="stat-value">${endpointCount}</div>
+            <div class="stat-sub">Registered API routes</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">Secrets</div>
+            <div class="stat-value">${secrets}</div>
+            <div class="stat-sub">Cloudflare: ${cf}</div>
+        </div>
+    `;
+
+            // Test key endpoints
+            const testEndpoints = [
+                '/api/health', '/api/pulse', '/health/live', '/health/ready',
+                '/api/telemetry/stats', '/healthz',
+            ];
+            const tbody = document.getElementById('services-tbody');
+            tbody.innerHTML = testEndpoints.map(ep =>
+                `<tr id="svc-${ep.replace(/\//g, '-')}"><td style="font-family:monospace;font-size:0.78rem">${ep}</td><td><span class="spinner"></span></td><td>—</td></tr>`
+            ).join('');
+
+            for (const ep of testEndpoints) {
+                const t0 = performance.now();
+                const data = await apiFetch(ep);
+                const ms = Math.round(performance.now() - t0);
+                const row = document.getElementById('svc-' + ep.replace(/\//g, '-'));
+                if (row) {
+                    const ok = !data.error;
+                    row.children[1].innerHTML = ok
+                        ? '<span class="badge badge-green">OK</span>'
+                        : '<span class="badge badge-red">FAIL</span>';
+                    row.children[2].textContent = ms + 'ms';
+                }
+            }
+        }
+
+        // ═══ Health ═══
+        async function loadHealth() {
+            const [ready, full] = await Promise.all([
+                apiFetch('/health/ready'),
+                apiFetch('/health/full'),
+            ]);
+
+            const cards = document.getElementById('health-cards');
+            if (ready && ready.checks) {
+                cards.innerHTML = Object.entries(ready.checks).map(([k, v]) => `
+            <div class="stat-card">
+                <div class="stat-label">${k}</div>
+                <div class="stat-value">
+                    <span class="status-dot ${v.status === 'ok' ? 'green' : v.status === 'warning' ? 'yellow' : 'red'}"></span>
+                    ${v.status}
+                </div>
+                <div class="stat-sub">${Object.entries(v).filter(([a]) => a !== 'status').map(([a, b]) => `${a}: ${b}`).join(', ')}</div>
+            </div>
+        `).join('');
+            } else {
+                cards.innerHTML = '<div class="stat-card"><div class="stat-label">Health</div><div class="stat-value"><span class="status-dot red"></span>Unreachable</div></div>';
+            }
+
+            document.getElementById('health-full').textContent = JSON.stringify(full || { error: 'Unreachable' }, null, 2);
+        }
+
+        // ═══ Brain Chat ═══
+        async function sendChat() {
+            const input = document.getElementById('chat-input');
+            const msg = input.value.trim();
+            if (!msg) return;
+            input.value = '';
+
+            const msgs = document.getElementById('chat-messages');
+            msgs.innerHTML += `<div class="chat-msg user"><div class="bubble">${escHtml(msg)}</div></div>`;
+
+            const loadingId = 'loading-' + Date.now();
+            msgs.innerHTML += `<div class="chat-msg bot" id="${loadingId}"><div class="bubble"><span class="spinner"></span> Thinking...</div></div>`;
+            msgs.scrollTop = msgs.scrollHeight;
+
+            document.getElementById('chat-send').disabled = true;
+
+            const t0 = performance.now();
+            const data = await apiFetch('/api/brain/chat', {
+                method: 'POST',
+                body: JSON.stringify({ message: msg, provider: 'auto' }),
+            });
+            const ms = Math.round(performance.now() - t0);
+
+            const el = document.getElementById(loadingId);
+            if (el) {
+                const response = data?.response || data?.text || data?.error || 'No response';
+                const provider = data?.provider || '—';
+                el.innerHTML = `<div class="bubble">${escHtml(response)}</div><div class="meta">${provider} · ${ms}ms</div>`;
+            }
+
+            msgs.scrollTop = msgs.scrollHeight;
+            document.getElementById('chat-send').disabled = false;
+            document.getElementById('chat-input').focus();
+        }
+
+        // ═══ Vector Memory ═══
+        async function loadVectors() {
+            const data = await apiFetch('/api/vectors/stats');
+            const cards = document.getElementById('vector-cards');
+
+            if (data && !data.error) {
+                cards.innerHTML = `
+            <div class="stat-card">
+                <div class="stat-label">Total Vectors</div>
+                <div class="stat-value">${data.total_vectors ?? data.totalVectors ?? '—'}</div>
+                <div class="stat-sub">Architecture: ${data.architecture || '—'}</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Shards</div>
+                <div class="stat-value">${data.num_shards ?? data.shardCount ?? '—'}</div>
+                <div class="stat-sub">Dimensions: ${data.dimensions || '—'}</div>
+            </div>
+        `;
+            } else {
+                cards.innerHTML = '<div class="stat-card"><div class="stat-label">Vector Memory</div><div class="stat-value">—</div><div class="stat-sub">' + (data?.error || 'Unreachable') + '</div></div>';
+            }
+
+            const recent = await apiFetch('/api/vectors/recent?limit=20');
+            document.getElementById('vector-data').textContent = JSON.stringify(recent || {}, null, 2);
+        }
+
+        // ═══ Telemetry ═══
+        async function loadTelemetry() {
+            const [stats, recent] = await Promise.all([
+                apiFetch('/api/telemetry/stats'),
+                apiFetch('/api/telemetry/recent?limit=30'),
+            ]);
+
+            const cards = document.getElementById('telemetry-cards');
+            if (stats && stats.stats) {
+                const s = stats.stats;
+                cards.innerHTML = `
+            <div class="stat-card">
+                <div class="stat-label">Total Events</div>
+                <div class="stat-value">${s.totalEvents ?? '—'}</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Error Rate (1m)</div>
+                <div class="stat-value">${s.errorRate1m ?? '—'}</div>
+            </div>
+        `;
+            } else {
+                cards.innerHTML = '<div class="stat-card"><div class="stat-label">Telemetry</div><div class="stat-value">—</div></div>';
+            }
+
+            const log = document.getElementById('telemetry-log');
+            if (recent?.entries?.length) {
+                log.innerHTML = recent.entries.map(e =>
+                    `<div class="log-line"><span class="ts">${e.ts || ''}</span> <span class="lvl-${e.level === 'error' ? 'err' : e.level === 'warn' ? 'warn' : 'ok'}">[${e.level || 'info'}]</span> ${escHtml(e.message || JSON.stringify(e))}</div>`
+                ).join('');
+            } else {
+                log.textContent = JSON.stringify(recent || {}, null, 2);
+            }
+        }
+
+        // ═══ Endpoints ═══
+        async function loadEndpoints() {
+            const data = await apiFetch('/api/pulse');
+            const tbody = document.getElementById('endpoints-tbody');
+
+            if (data?.endpoints) {
+                tbody.innerHTML = data.endpoints.map(ep => `
+            <tr>
+                <td style="font-family:monospace;font-size:0.78rem">${ep}</td>
+                <td style="color:var(--text-muted)">GET</td>
+                <td><button class="btn-sm" onclick="testEndpoint(this, '${ep}')">Test</button></td>
+            </tr>
+        `).join('');
+            } else {
+                tbody.innerHTML = '<tr><td colspan="3" style="color:var(--text-muted)">Could not load endpoints</td></tr>';
+            }
+        }
+
+        async function testEndpoint(btn, path) {
+            btn.textContent = '...';
+            const t0 = performance.now();
+            const data = await apiFetch(path);
+            const ms = Math.round(performance.now() - t0);
+            btn.textContent = data.error ? `✗ ${ms}ms` : `✓ ${ms}ms`;
+            btn.style.color = data.error ? 'var(--red)' : 'var(--green)';
+        }
+
+        // ═══ Logs ═══
+        async function loadLogs() {
+            const data = await apiFetch('/api/introspection');
+            const el = document.getElementById('system-logs');
+            el.textContent = JSON.stringify(data || {}, null, 2);
+        }
+
+        // ═══ Refresh All ═══
+        function refreshAll() { loadDashboard(); }
+
+        // ═══ Utils ═══
+        function escHtml(s) { const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
+    </script>
+</body>
+
+</html>

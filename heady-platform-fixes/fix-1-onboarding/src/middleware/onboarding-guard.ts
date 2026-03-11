@@ -1,5 +1,3 @@
-import pino from 'pino';
-const logger = pino();
 /**
  * Heady™ Onboarding Guard Middleware
  * 
@@ -162,7 +160,7 @@ export function onboardingGuard(request: NextRequest): NextResponse | null {
   };
 
   // In production, this goes to structured logger
-  logger.info('[ONBOARDING_GUARD]', JSON.stringify(logEntry));
+  console.log('[ONBOARDING_GUARD]', JSON.stringify(logEntry));
 
   if (redirect) {
     const url = request.nextUrl.clone();

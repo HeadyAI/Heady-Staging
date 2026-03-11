@@ -11,7 +11,6 @@
  */
 
 'use strict';
-const logger = require('../../shared/logger')('monte-carlo-scheduler');
 
 const PHI = 1.618033988749895;
 
@@ -162,18 +161,18 @@ function main() {
         { name: 'Code Analysis', requiresGPU: false, memoryRequired: 4, priority: 'low' },
     ];
 
-    logger.info('═══ Monte Carlo Resource Scheduler ═══');
-    logger.info(`Simulations: 10,000 per task\n`);
+    console.log('═══ Monte Carlo Resource Scheduler ═══');
+    console.log(`Simulations: 10,000 per task\n`);
 
     for (const task of tasks) {
         const result = scheduler.simulate(task);
-        logger.info(`Task: ${task.name}`);
-        logger.info(`  → Optimal: ${result.decision.nodeId} (${(result.decision.winRate * 100).toFixed(1)}% win rate)`);
-        logger.info(`  → Confidence: ${(result.decision.confidence * 100).toFixed(1)}%`);
-        logger.info(`  → Elapsed: ${result.metadata.elapsedMs}ms\n`);
+        console.log(`Task: ${task.name}`);
+        console.log(`  → Optimal: ${result.decision.nodeId} (${(result.decision.winRate * 100).toFixed(1)}% win rate)`);
+        console.log(`  → Confidence: ${(result.decision.confidence * 100).toFixed(1)}%`);
+        console.log(`  → Elapsed: ${result.metadata.elapsedMs}ms\n`);
     }
 
-    logger.info('✅ Monte Carlo scheduler operational');
+    console.log('✅ Monte Carlo scheduler operational');
 }
 
 if (require.main === module) main();

@@ -1,0 +1,37 @@
+name: HF Spaces Projection
+# This workflow is a sub-projection — triggered by the main deploy.yml
+# or independently when HF Space content changes.
+# The monorepo (a projection of 3D vector space) is the source of truth.
+
+on:
+  push:
+    branches: [main, master]
+    paths:
+      - 'heady-hf-spaces/**'
+      - 'scripts/deploy-hf-spaces.js'
+      - 'configs/hf-spaces-config.yaml'
+  workflow_dispatch:
+
+jobs:
+  project-to-hf:
+    name: 🤗 Project HF Spaces
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          lfs: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci
+      - name: Install git-lfs
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq git-lfs
+          git lfs install
+      - name: Build & Project HF Spaces
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: node scripts/deploy-hf-spaces.js

@@ -8,7 +8,7 @@ description: >
   Keywords: Durable Objects, Cloudflare Workers, edge AI, hibernatable WebSocket, agent state,
   state machine, Vectorize, edge inference, workload partitioning, Cloud Run, Heady edge.
 metadata:
-  author: eric-haywood
+  author: eric-head
   version: '2.0'
 ---
 

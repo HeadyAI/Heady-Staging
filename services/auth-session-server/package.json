@@ -1,24 +1,53 @@
 {
   "name": "@heady/auth-session-server",
-  "version": "0.1.0",
-  "private": true,
+  "version": "1.0.0",
+  "description": "Central authentication session service for HEADY platform (auth.headysystems.com)",
+  "main": "dist/index.js",
   "type": "module",
   "scripts": {
-    "build": "tsc -p tsconfig.json",
-    "dev": "tsx src/index.ts",
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc && npm run build:docker",
     "start": "node dist/index.js",
-    "test": "vitest run",
-    "lint": "node -e \"console.log('lint auth-session-server')\"",
-    "typecheck": "tsc -p tsconfig.json --noEmit"
+    "test": "vitest",
+    "test:coverage": "vitest --coverage",
+    "lint": "eslint src --fix",
+    "type-check": "tsc --noEmit",
+    "docker:build": "docker build -t heady/auth-session-server:latest .",
+    "docker:push": "docker push heady/auth-session-server:latest",
+    "clean": "rm -rf dist coverage"
   },
+  "keywords": [
+    "authentication",
+    "session",
+    "firebase",
+    "sso",
+    "cross-domain"
+  ],
+  "author": "HEADY Systems",
+  "license": "MIT",
   "dependencies": {
-    "@heady-ai/service-runtime": "workspace:*",
-    "@heady-ai/contract-types": "workspace:*",
-    "@heady-ai/observability-client": "workspace:*",
-    "@heady-ai/phi-math-foundation": "workspace:*",
+    "express": "^4.21.2",
     "firebase-admin": "^12.0.0",
-    "zod": "^3.23.0",
-    "@fastify/cookie": "^11.0.0",
-    "@fastify/cors": "^10.0.0"
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "uuid": "^9.0.1",
+    "crypto": "^1.0.1"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.21",
+    "@types/node": "^20.10.6",
+    "@types/cors": "^2.8.17",
+    "@types/uuid": "^9.0.7",
+    "typescript": "^5.3.3",
+    "tsx": "^4.7.0",
+    "vitest": "^1.1.0",
+    "supertest": "^6.3.3",
+    "@types/supertest": "^6.0.2",
+    "eslint": "^8.55.0",
+    "@typescript-eslint/eslint-plugin": "^6.14.0",
+    "@typescript-eslint/parser": "^6.14.0"
+  },
+  "engines": {
+    "node": ">=20.0.0"
   }
 }

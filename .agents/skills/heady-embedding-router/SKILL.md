@@ -8,7 +8,7 @@ description: >
   Keywords: embedding router, embedding model, multi-provider, circuit breaker, LRU cache, Nomic,
   Jina, Cohere, Voyage, Ollama, embedding cost, MRL, dimensionality reduction, Heady embedding.
 metadata:
-  author: eric-haywood
+  author: eric-head
   version: '2.0'
 ---
 

@@ -1,0 +1,37 @@
+{
+    "name": "heady-mcp-server",
+    "version": "1.0.0",
+    "description": "Heady MCP Server — 60+ AI tools via Model Context Protocol. Connect any MCP client to the Heady Intelligence Layer.",
+    "keywords": [
+        "mcp",
+        "ai",
+        "heady",
+        "model-context-protocol",
+        "ai-tools",
+        "llm"
+    ],
+    "author": "HeadyAI",
+    "license": "MIT",
+    "homepage": "https://headymcp.com",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/HeadyAI/heady-mcp-server"
+    },
+    "main": "server.js",
+    "bin": {
+        "heady-mcp": "./server.js"
+    },
+    "scripts": {
+        "start": "node server.js",
+        "inspect": "node server.js --inspect"
+    },
+    "engines": {
+        "node": ">=18.0.0"
+    },
+    "files": [
+        "server.js",
+        "tools.js",
+        "README.md",
+        "LICENSE"
+    ]
+}

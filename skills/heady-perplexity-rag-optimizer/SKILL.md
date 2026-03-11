@@ -1,259 +1,169 @@
 ---
 name: heady-perplexity-rag-optimizer
-description: Designs, audits, and optimizes Retrieval-Augmented Generation (RAG) pipelines for the Heady platform including document chunking, embedding strategy, vector store configuration, retrieval tuning, and answer quality improvement. Use when the user asks to improve RAG quality, fix retrieval failures, design a knowledge base, optimize embeddings, tune chunk sizes, or debug RAG pipelines. Triggers on phrases like "RAG pipeline", "improve retrieval", "vector search quality", "knowledge base setup", "chunking strategy", "embedding model", "retrieval not working", "hallucinating from documents", or "RAG optimization".
-license: MIT
+description: Skill for optimizing Retrieval-Augmented Generation quality in the Heady vector memory system. Use when measuring retrieval signal-to-noise ratio, context precision and recall, improving CSL gate thresholds, tuning embedding models, or optimizing pgvector queries. Triggers on "RAG quality", "retrieval precision", "context noise", "embedding quality", "vector search accuracy", "improve retrieval", or any vector retrieval optimization task.
+license: proprietary
 metadata:
-  author: heady-connection
-  version: '1.0'
-  platform: heady
-  category: ai-infrastructure
+  author: HeadySystems Inc.
+  version: '2.1.0'
+  domain: memory
 ---
 
 # Heady Perplexity RAG Optimizer
 
 ## When to Use This Skill
 
-Use this skill when the user asks to:
+Use this skill when:
 
-- Design a new RAG pipeline for Heady's knowledge base or product catalog
-- Diagnose poor retrieval quality (irrelevant chunks, missing context)
-- Optimize chunk size and overlap for better semantic coherence
-- Choose and configure embedding models
-- Tune vector store parameters (similarity threshold, top-k)
-- Implement advanced RAG patterns (HyDE, multi-query, re-ranking)
-- Reduce hallucination by improving grounding quality
-- Set up hybrid search (vector + keyword/BM25)
-- Evaluate and benchmark RAG pipeline performance
+- Retrieval quality is degrading (low precision, high noise)
+- CSL gate thresholds need tuning for a new domain
+- Embedding model performance needs evaluation
+- pgvector query plans need optimization
+- Context window is being filled with irrelevant results
+- AutoContext enrichment quality is below target
 
-## RAG Architecture Overview
+## Retrieval Quality Metrics
 
-```
-[Documents] → [Preprocessing] → [Chunking] → [Embedding] → [Vector Store]
-                                                                    ↑
-[User Query] → [Query Transform] → [Retrieval] → [Re-ranking] → [Context]
-                                                                    ↓
-                                                        [LLM] → [Answer]
-```
-
-## Platform Stack for Heady
-
-| Component | Recommended Option | Alternative |
-|---|---|---|
-| **Vector Store** | Pinecone | Firestore Vector Search, Chroma |
-| **Embeddings** | text-embedding-3-large (OpenAI) | Cohere embed-english-v3.0 |
-| **Reranker** | Cohere Rerank | BGE Reranker |
-| **LLM** | Perplexity Sonar Pro | GPT-4o |
-| **Orchestration** | LangChain | LlamaIndex |
+| Metric | Formula | Target |
+|--------|---------|--------|
+| Context Precision | Relevant retrieved / Total retrieved | ≥ 0.85 |
+| Context Recall | Relevant retrieved / Total relevant | ≥ 0.80 |
+| Signal-to-Noise | Relevant tokens / Total tokens | ≥ 0.70 |
+| CSL Gate Pass Rate | Passed include gate / Total queries | 60-80% |
+| Mean Reciprocal Rank | avg(1 / rank of first relevant) | ≥ 0.75 |
+| Latency P95 | 95th percentile retrieval time | ≤ 50ms |
 
 ## Instructions
 
-### 1. Document Preprocessing
+### Step 1 — Baseline Measurement
 
-Before chunking, clean and normalize source documents:
+```javascript
+// Run a retrieval quality probe across 100 test queries
+async function measureRetrievalQuality(testQueries) {
+  const PHI = 1.618033988749895;
+  const PSI = 1 / PHI; // ≈ 0.618
 
-1. **Format extraction**: Convert PDF/DOCX/HTML to plain text; preserve headings as markers.
-2. **Noise removal**: Strip boilerplate (headers, footers, page numbers, nav menus).
-3. **Normalization**: Decode HTML entities, normalize whitespace, fix encoding issues.
-4. **Metadata extraction**: Capture document title, source URL, author, date, content type.
-5. **Deduplication**: Hash document content; skip if already indexed (compare by SHA-256).
+  const results = [];
+  for (const q of testQueries) {
+    const res = await fetch('http://heady-memory:8106/search', {
+      method: 'POST',
+      body: JSON.stringify({
+        query: q.text,
+        topK: 8,           // fib(6) = 8
+        cslThreshold: PSI, // ≈ 0.618 default include gate
+      }),
+    }).then(r => r.json());
 
-```python
-def preprocess_document(raw_text: str, metadata: dict) -> dict:
-    text = strip_boilerplate(raw_text)
-    text = normalize_whitespace(text)
-    return {
-        "content": text,
-        "metadata": {
-            **metadata,
-            "char_count": len(text),
-            "hash": hashlib.sha256(text.encode()).hexdigest()
-        }
-    }
+    results.push({
+      query:     q.text,
+      retrieved: res.results?.length || 0,
+      relevant:  res.results?.filter(r => q.expectedDomains.includes(r.domain)).length || 0,
+      topScore:  res.results?.[0]?.cslScore || 0,
+      latencyMs: res.latencyMs,
+    });
+  }
+
+  const precision = results.map(r => r.relevant / Math.max(r.retrieved, 1));
+  return {
+    avgPrecision: precision.reduce((a, b) => a + b, 0) / precision.length,
+    p95LatencyMs: results.map(r => r.latencyMs).sort((a, b) => a - b)[Math.floor(results.length * 0.95)],
+  };
+}
 ```
 
-### 2. Chunking Strategy
+### Step 2 — CSL Gate Tuning
 
-**Default recommendation**: Recursive character splitting with semantic boundary awareness.
+The three CSL gates control retrieval quality:
 
-| Content Type | Chunk Size | Overlap | Strategy |
-|---|---|---|---|
-| Product descriptions | 256–512 tokens | 50 tokens | Sentence-aware split |
-| Blog articles | 512–768 tokens | 100 tokens | Paragraph-aware split |
-| FAQs | 1 Q&A per chunk | 0 | Semantic unit (keep Q+A together) |
-| Legal/policy docs | 512 tokens | 128 tokens | Heading-anchored split |
-| Code snippets | Function-level | 0 | AST-aware split |
+```javascript
+// Current defaults (from phi-math.js)
+CSL_GATES = {
+  include: 0.382,  // PSI²   — minimum to consider
+  boost:   0.618,  // PSI    — amplify in context
+  inject:  0.718,  // PSI+0.1 — auto-inject
+};
 
-**Implementation:**
-```python
-from langchain.text_splitter import RecursiveCharacterTextSplitter
-
-splitter = RecursiveCharacterTextSplitter(
-    chunk_size=512,
-    chunk_overlap=100,
-    separators=["\n\n", "\n", ". ", " ", ""],
-    length_function=token_count  # Use tokenizer, not char count
-)
-chunks = splitter.split_text(document_text)
+// Tuning strategy:
+// - Too many noisy results → RAISE include gate (try 0.45)
+// - Too few results / missing relevant context → LOWER include gate (try 0.30)
+// - Context window full with irrelevant content → RAISE boost gate
+// - Not enough context auto-injected → LOWER inject gate
 ```
 
-**Advanced: Semantic chunking** (group by embedding similarity rather than fixed size):
-```python
-from langchain_experimental.text_splitter import SemanticChunker
-from langchain_openai import OpenAIEmbeddings
-
-chunker = SemanticChunker(
-    embeddings=OpenAIEmbeddings(model="text-embedding-3-large"),
-    breakpoint_threshold_type="percentile",
-    breakpoint_threshold_amount=95
-)
+Adjust via environment:
+```
+CSL_GATE_INCLUDE=0.45
+CSL_GATE_BOOST=0.65
+CSL_GATE_INJECT=0.75
 ```
 
-### 3. Embedding Strategy
+### Step 3 — pgvector Query Optimization
 
-Prepend descriptive context to each chunk before embedding to improve retrieval:
+```sql
+-- Baseline: sequential scan (slow for >100K vectors)
+SELECT id, content, 1 - (embedding <=> $1::vector) as csl_score
+FROM heady_memory
+WHERE 1 - (embedding <=> $1::vector) >= 0.382
+ORDER BY embedding <=> $1::vector
+LIMIT 8;
 
-```python
-def embed_chunk(chunk: str, doc_metadata: dict) -> list[float]:
-    # Context prefix improves semantic alignment
-    prefixed = f"Source: {doc_metadata['title']} | Type: {doc_metadata['type']}\n\n{chunk}"
-    return embeddings.embed_query(prefixed)
+-- Optimized: HNSW index (fast approximate nearest neighbor)
+CREATE INDEX heady_memory_hnsw ON heady_memory 
+USING hnsw (embedding vector_cosine_ops)
+WITH (m = 16, ef_construction = 64);
+
+-- With domain filtering (push down domain match for better selectivity)
+SELECT id, content, domain, 1 - (embedding <=> $1::vector) as csl_score
+FROM heady_memory
+WHERE domain = $2  -- pre-filter by domain for better selectivity
+AND 1 - (embedding <=> $1::vector) >= 0.382
+ORDER BY embedding <=> $1::vector
+LIMIT 8;
 ```
 
-**Query embedding**: Use the same model for both indexing and query embedding. Mismatch = poor results.
+### Step 4 — Embedding Model Evaluation
 
-**Batch embedding:**
-```python
-# Embed 100 chunks at a time to stay within API limits
-for batch in chunks_batched(chunks, size=100):
-    vectors = embeddings.embed_documents([c.content for c in batch])
-    upsert_to_vector_store(batch, vectors)
+Compare embedding model quality for Heady content:
+
+| Model | Dimensions | Speed | Quality | Recommendation |
+|-------|-----------|-------|---------|---------------|
+| all-MiniLM-L6-v2 | 384 | Fast | Good | Default (current) |
+| all-mpnet-base-v2 | 768 | Medium | Better | Upgrade candidate |
+| Cloudflare BGE-large | 1024 | Fast (edge) | Best | Use for edge queries |
+
+Test with:
+```bash
+# Compare embedding models on Heady domain queries
+npx promptfoo eval --config embedding-model-comparison.yaml
 ```
 
-### 4. Vector Store Configuration
+### Step 5 — Hybrid Search (BM25 + Dense)
 
-**Pinecone setup:**
-```python
-import pinecone
+For improved recall on sparse queries:
 
-index = pinecone.Index("heady-knowledge")
-# Dimensions: 3072 for text-embedding-3-large; 1536 for text-embedding-3-small
-# Metric: cosine (default and recommended for text)
+```javascript
+// Combine BM25 lexical score with dense cosine score
+async function hybridSearch(query, topK = 8) {
+  const PSI = 0.618;
+  const [dense, sparse] = await Promise.all([
+    denseVectorSearch(query, topK * 2),
+    bm25Search(query, topK * 2),
+  ]);
 
-# Upsert
-index.upsert(vectors=[
-    {
-        "id": chunk.id,
-        "values": vector,
-        "metadata": {
-            "text": chunk.content,
-            "source": chunk.metadata["source"],
-            "type": chunk.metadata["type"],
-            "date": chunk.metadata["date"]
-        }
-    }
-    for chunk, vector in zip(chunks, vectors)
-])
+  // Reciprocal rank fusion
+  const scores = new Map();
+  dense.forEach((r, i) => scores.set(r.id, (scores.get(r.id) || 0) + PSI / (i + 1)));
+  sparse.forEach((r, i) => scores.set(r.id, (scores.get(r.id) || 0) + (1 - PSI) / (i + 1)));
+
+  return [...scores.entries()]
+    .sort(([, a], [, b]) => b - a)
+    .slice(0, topK)
+    .map(([id, score]) => ({ id, fusionScore: score }));
+}
 ```
 
-**Metadata filtering** (restrict retrieval to relevant document types):
-```python
-results = index.query(
-    vector=query_embedding,
-    top_k=10,
-    filter={"type": {"$in": ["product", "faq"]}},
-    include_metadata=True
-)
-```
+## References
 
-### 5. Retrieval Tuning
-
-**Baseline parameters:**
-- `top_k = 5` (retrieve 5 chunks, pass top 3 to LLM after reranking)
-- `similarity_threshold = 0.72` (discard chunks below this score)
-
-**Tuning process:**
-1. Build a test set of 50 representative queries with known-correct answers.
-2. Run retrieval at top_k = 3, 5, 10, 20; measure Recall@k (fraction of queries where correct doc is in top k).
-3. Measure MRR (Mean Reciprocal Rank): higher is better.
-4. Set top_k to the point where Recall@k plateaus (diminishing returns + cost tradeoff).
-5. Adjust similarity_threshold: lower threshold = more recall, lower precision; raise to reduce noise.
-
-### 6. Advanced Retrieval Patterns
-
-**HyDE (Hypothetical Document Embeddings):**
-```python
-# Generate a hypothetical answer to improve query embedding alignment
-hypothetical_doc = llm.generate(f"Write a concise answer to: {user_query}")
-query_embedding = embeddings.embed_query(hypothetical_doc)
-results = vector_store.similarity_search_by_vector(query_embedding, k=5)
-```
-
-**Multi-query retrieval:**
-```python
-# Generate 3 rephrased queries; union results for broader coverage
-queries = llm.generate_variants(user_query, n=3)
-all_results = []
-for q in queries:
-    all_results.extend(vector_store.similarity_search(q, k=3))
-deduplicated = deduplicate_by_content(all_results)
-```
-
-**Re-ranking with Cohere:**
-```python
-import cohere
-co = cohere.Client()
-
-reranked = co.rerank(
-    query=user_query,
-    documents=[r.page_content for r in retrieved_chunks],
-    top_n=3,
-    model="rerank-english-v3.0"
-)
-top_chunks = [retrieved_chunks[r.index] for r in reranked.results]
-```
-
-**Hybrid search (vector + BM25):**
-```python
-from langchain.retrievers import EnsembleRetriever
-
-hybrid = EnsembleRetriever(
-    retrievers=[bm25_retriever, vector_retriever],
-    weights=[0.4, 0.6]  # 60% semantic, 40% keyword
-)
-```
-
-### 7. RAG Quality Evaluation
-
-Run these evaluations periodically:
-
-| Metric | Description | Tool |
-|---|---|---|
-| Context Precision | % of retrieved chunks actually relevant | RAGAs |
-| Context Recall | % of needed context retrieved | RAGAs |
-| Answer Faithfulness | Answer supported by retrieved context | RAGAs |
-| Answer Relevancy | Answer addresses the question | RAGAs |
-| Hallucination Rate | Claims not grounded in context | Custom NLI check |
-
-```python
-from ragas import evaluate
-from ragas.metrics import precision, recall, faithfulness, answer_relevancy
-
-results = evaluate(
-    dataset=eval_dataset,
-    metrics=[precision, recall, faithfulness, answer_relevancy]
-)
-print(results)
-```
-
-### 8. Optimization Checklist
-
-- [ ] Chunk size tuned to content type (not one-size-fits-all)
-- [ ] Chunks include metadata context prefix before embedding
-- [ ] Same embedding model used for indexing and retrieval
-- [ ] top_k tuned using Recall@k analysis on test set
-- [ ] Reranker applied to reduce noise in top_k results
-- [ ] Similarity threshold set to filter irrelevant chunks
-- [ ] Metadata filters applied where document type is known
-- [ ] Hallucination rate measured and tracked
-- [ ] Context window utilization tracked (not overstuffing the LLM)
-- [ ] Index updated on document changes (incremental, not full rebuild)
+- [Heady vector memory service](http://heady-memory:8106)
+- [pgvector documentation](https://github.com/pgvector/pgvector)
+- [HNSW algorithm](https://arxiv.org/abs/1603.09320) — Hierarchical Navigable Small World
+- Heady skill: `heady-hybrid-vector-search` (existing skill)

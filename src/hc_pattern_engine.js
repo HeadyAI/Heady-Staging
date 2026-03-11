@@ -76,7 +76,7 @@ function loadPatternStore() {
     if (fs.existsSync(PATTERN_STORE_PATH)) {
       return JSON.parse(fs.readFileSync(PATTERN_STORE_PATH, "utf8"));
     }
-  } catch (err) { /* structured-logger: emit error */ }
+  } catch (_) {}
   return { patterns: {}, metadata: { created: new Date().toISOString(), version: "1.0.0" } };
 }
 
@@ -85,7 +85,7 @@ async function savePatternStoreAsync(store) {
     const dir = path.dirname(PATTERN_STORE_PATH);
     await fsp.mkdir(dir, { recursive: true });
     await fsp.writeFile(PATTERN_STORE_PATH, JSON.stringify(store, null, 2), "utf8");
-  } catch (err) { /* structured-logger: emit error */ }
+  } catch (_) {}
 }
 
 // Legacy sync version for shutdown hooks
@@ -94,7 +94,7 @@ function savePatternStore(store) {
     const dir = path.dirname(PATTERN_STORE_PATH);
     if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
     fs.writeFileSync(PATTERN_STORE_PATH, JSON.stringify(store, null, 2), "utf8");
-  } catch (err) { /* structured-logger: emit error */ }
+  } catch (_) {}
 }
 
 // ─── STATISTICS HELPERS ──────────────────────────────────────────────

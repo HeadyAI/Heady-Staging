@@ -103,10 +103,10 @@ cloud_me:
     dns: dns.app.headysystems.com
 
 # ═══════════════════════════════════════════════════════════════════════════════
-# RENDER SETUP — Add these as custom domains in Render dashboard
+# CLOUD RUN SETUP — Add these as custom domain mappings in Cloud Run
 # ═══════════════════════════════════════════════════════════════════════════════
 render_setup: |
-  1. Go to https://dashboard.render.com
+  1. Go to https://console.cloud.google.com/run
   2. Select your HeadyManager service
   3. Click "Custom Domains"
   4. Add each subdomain:
@@ -122,7 +122,7 @@ render_setup: |
      app.app.headysystems.com → app.headysystems.com
      ... (all 50+ subdomains)
      
-  5. Render will verify each domain
+  5. Cloud Run will verify each domain mapping
   6. All subdomains will route to your HeadyManager
   7. HeadyManager can route based on Host header
 

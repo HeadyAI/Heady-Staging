@@ -85,17 +85,17 @@ USER heady
 # Environment
 ENV NODE_ENV=production
 ENV HEADY_ENV=production
-ENV PORT=3300
+ENV PORT=3301
 
 # V8 tuning: 512MB heap, optimized for server workload
 ENV NODE_OPTIONS="--max-old-space-size=512 --optimize-for-size"
 
 # Expose port
-EXPOSE 3300
+EXPOSE 3301
 
 # Health check: liveness probe on /health/live
 HEALTHCHECK --interval=13s --timeout=5s --start-period=34s --retries=3 \
-  CMD curl -f http://localhost:3300/health/live || exit 1
+  CMD curl -f http://localhost:3301/health/live || exit 1
 
 # Use tini as PID 1 for proper signal handling
 ENTRYPOINT ["/sbin/tini", "--"]

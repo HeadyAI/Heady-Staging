@@ -20,7 +20,6 @@
  */
 
 'use strict';
-const logger = require('../shared/logger')('dynamic-template-engine');
 
 const path = require('path');
 const fs = require('fs');
@@ -173,7 +172,7 @@ function enhanceSite(domain, opts = {}) {
   const registry = loadRegistry();
   const siteConfig = registry[domain];
   if (!siteConfig) {
-    logger.error(`[dynamic-template-engine] Unknown domain: ${domain}`);
+    console.error(`[dynamic-template-engine] Unknown domain: ${domain}`);
     return null;
   }
 
@@ -181,7 +180,7 @@ function enhanceSite(domain, opts = {}) {
   const slug = domainToSlug(domain, siteConfig);
   const filePath = path.join(SITES_DIR, slug, 'index.html');
   if (!fs.existsSync(filePath)) {
-    logger.error(`[dynamic-template-engine] No existing site file for: ${domain} (${filePath})`);
+    console.error(`[dynamic-template-engine] No existing site file for: ${domain} (${filePath})`);
     return null;
   }
 
@@ -264,35 +263,35 @@ function enhanceAll(opts = {}) {
 if (require.main === module) {
   const mode = process.argv.includes('--scratch') ? 'scratch' : 'enhance';
 
-  logger.info('═══ Dynamic Template Engine ═══\n');
+  console.log('═══ Dynamic Template Engine ═══\n');
 
   if (mode === 'enhance') {
-    logger.info('Enhancing all 9 sites (preserving original designs)...\n');
+    console.log('Enhancing all 9 sites (preserving original designs)...\n');
     const result = enhanceAll();
 
-    logger.info(`✅ Enhanced: ${result.enhanced.length} sites`);
+    console.log(`✅ Enhanced: ${result.enhanced.length} sites`);
     result.enhanced.forEach(d => {
       const kb = (result.bytes[d] / 1024).toFixed(1);
-      logger.info(`   ${d} → ${kb} KB`);
+      console.log(`   ${d} → ${kb} KB`);
     });
     if (result.errors.length) {
-      logger.info(`\n⚠ Errors: ${result.errors.length}`);
-      result.errors.forEach(e => logger.info(`   ${e}`));
+      console.log(`\n⚠ Errors: ${result.errors.length}`);
+      result.errors.forEach(e => console.log(`   ${e}`));
     }
   } else {
-    logger.info('Rendering all sites FROM SCRATCH...\n');
+    console.log('Rendering all sites FROM SCRATCH...\n');
     const registry = loadFactory();
     for (const [domain] of Object.entries(registry)) {
       const html = renderFromScratch(domain);
-      if (html) logger.info(`   ${domain} → ${(Buffer.byteLength(html) / 1024).toFixed(1)} KB`);
+      if (html) console.log(`   ${domain} → ${(Buffer.byteLength(html) / 1024).toFixed(1)} KB`);
     }
   }
 
-  logger.info('\nFeatures injected:');
-  logger.info('   ✓ Auth gate (Google/GitHub/Discord)');
-  logger.info('   ✓ Cross-site navigation (Heady™ Network)');
-  logger.info('   ✓ HeadyBuddy widget');
-  logger.info(`\n   φ = ${PHI}`);
+  console.log('\nFeatures injected:');
+  console.log('   ✓ Auth gate (Google/GitHub/Discord)');
+  console.log('   ✓ Cross-site navigation (Heady™ Network)');
+  console.log('   ✓ HeadyBuddy widget');
+  console.log(`\n   φ = ${PHI}`);
 }
 
 module.exports = {

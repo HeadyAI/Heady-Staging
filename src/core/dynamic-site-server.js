@@ -1,3 +1,15 @@
+// ─── HEADY CORS WHITELIST ────────────────────────────────────────────
+const HEADY_ALLOWED_ORIGINS = new Set([
+    'https://headyme.com', 'https://headysystems.com', 'https://headyconnection.org',
+    'https://headyconnection.com', 'https://headybuddy.org', 'https://headymcp.com',
+    'https://headyapi.com', 'https://headyio.com', 'https://headyos.com',
+    'https://headyweb.com', 'https://headybot.com', 'https://headycloud.com',
+    'https://headybee.co', 'https://heady-ai.com', 'https://headyex.com',
+    'https://headyfinance.com', 'https://admin.headysystems.com',
+    'https://auth.headysystems.com', 'https://api.headysystems.com',
+]);
+const _isHeadyOrigin = (o) => !o ? false : HEADY_ALLOWED_ORIGINS.has(o) || /\.run\.app$/.test(o) || (process.env.NODE_ENV !== 'production' && /^https?:\/\/(localhost|127\.0\.0\.1):/.test(o));
+
 /*
  * © 2026 Heady™Systems Inc..
  * PROPRIETARY AND CONFIDENTIAL.
@@ -681,11 +693,11 @@ function renderSite(site, host) {
 
 // ── HTTP Server ─────────────────────────────────────────────
 const server = http.createServer((req, res) => {
-  const url = new URL(req.url, `http://${req.headers.host || 'localhost:' + PORT}`);
+  const url = new URL(req.url, `http://localhost:${PORT}`);
   const host = req.headers.host || 'headyme.com';
   const site = resolveSite(host);
 
-  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Origin', _isHeadyOrigin(req.headers.origin) ? req.headers.origin : 'null');
   res.setHeader('Access-Control-Allow-Methods', 'GET,POST,OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type,Authorization');
   if (req.method === 'OPTIONS') { res.writeHead(204); res.end(); return; }
@@ -826,21 +838,18 @@ server.listen(PORT, () => {
   }
 });
 
-// ── Graceful Shutdown (canonical module) ────────────────────
-try {
-  const { GracefulShutdown } = require('../lifecycle/graceful-shutdown');
-  new GracefulShutdown({ server, logger }).register();
-} catch {
-  // Fallback for standalone usage
-  process.on('SIGTERM', () => {
-    logger.info('SIGTERM received — draining connections');
-    server.close(() => process.exit(0));
-    setTimeout(() => process.exit(1), 10_000);
+// ── Graceful Shutdown (Cloud Run sends SIGTERM) ─────────────
+process.on('SIGTERM', () => {
+  logger.info('SIGTERM received — draining connections');
+  server.close(() => {
+    logger.info('Server closed cleanly');
+    process.exit(0);
   });
-  process.on('SIGINT', () => {
-    logger.info('SIGINT received — shutting down');
-    server.close(() => process.exit(0));
-  });
-}
+  setTimeout(() => process.exit(1), 10_000); // force after 10s
+});
+process.on('SIGINT', () => {
+  logger.info('SIGINT received — shutting down');
+  server.close(() => process.exit(0));
+});
 
 module.exports = { SITES, AUTH_PROVIDERS, server, resolveSite };

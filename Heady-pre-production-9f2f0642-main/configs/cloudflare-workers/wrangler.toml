@@ -1,0 +1,34 @@
+name = "heady-router"
+main = "heady-router-worker.js"
+compatibility_date = "2024-01-01"
+workers_dev = true
+
+# Workers AI binding for edge chat
+[ai]
+binding = "HEADY_AI"
+
+# Domain routes — headyme.com
+[[routes]]
+pattern = "headyme.com/*"
+zone_name = "headyme.com"
+
+[[routes]]
+pattern = "www.headyme.com/*"
+zone_name = "headyme.com"
+
+# KV for owner sessions, device sync, user auth
+[[kv_namespaces]]
+binding = "HEADY_KV"
+id = "b4b17b3e4c944aafbc39df7fd8ce35e5"
+preview_id = "b4b17b3e4c944aafbc39df7fd8ce35e5"
+
+# Domain routes can be added per-zone once each zone is proxied:
+# [[routes]]
+# pattern = "headyme.com/*"
+# zone_name = "headyme.com"
+
+[env.production]
+vars = { ENVIRONMENT = "production" }
+
+[env.staging]
+vars = { ENVIRONMENT = "staging" }

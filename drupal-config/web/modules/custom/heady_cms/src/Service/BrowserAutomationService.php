@@ -29,7 +29,7 @@ class BrowserAutomationService {
     $this->httpClient = $http_client;
     $this->state = $state;
     $this->logger = $logger_factory->get('heady_cms');
-    $this->browserServiceUrl = getenv('BROWSER_SERVICE_URL') ?: 'https://browser.headysystems.com';
+    $this->browserServiceUrl = getenv('BROWSER_SERVICE_URL') ?: 'http://localhost:3010';
   }
 
   /**

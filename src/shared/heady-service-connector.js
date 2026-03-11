@@ -27,7 +27,6 @@
  */
 
 'use strict';
-const logger = require('../shared/logger')('heady-service-connector');
 
 const PHI = 1.618033988749895;
 
@@ -364,33 +363,33 @@ class HeadyServiceConnector {
 
 if (typeof require !== 'undefined' && require.main === module) {
     (async () => {
-        logger.info(`
+        console.log(`
 ╔═══════════════════════════════════════════════════════╗
 ║  🔌 Heady™ Service Connector v3.2.3                  ║
 ║  Dynamic Service Discovery & Connection               ║
 ╚═══════════════════════════════════════════════════════╝
 `);
         const connector = new HeadyServiceConnector();
-        logger.info('  Discovering services...\n');
+        console.log('  Discovering services...\n');
         const discovery = await connector.discover();
 
         for (const svc of discovery.services) {
             const icon = svc.healthy ? '✓' : '✗';
             const latency = svc.healthy ? `${svc.latencyMs}ms` : svc.error;
-            logger.info(`  ${icon} ${svc.name.padEnd(20)} ${svc.url.padEnd(45)} ${latency}`);
+            console.log(`  ${icon} ${svc.name.padEnd(20)} ${svc.url.padEnd(45)} ${latency}`);
         }
 
-        logger.info(`\n  Preferred: ${discovery.preferred}`);
-        logger.info(`  Healthy:   ${discovery.healthyCount}/${discovery.totalCount}`);
-        logger.info(`\n  Available models:`);
-        MODELS.forEach(m => logger.info(`    ${m.emoji} ${m.id.padEnd(18)} ${m.tier.padEnd(8)} ${m.speed}`));
-        logger.info(`\n  Usage in your code:`);
-        logger.info(`    const { HeadyServiceConnector } = require('./heady-service-connector');`);
-        logger.info(`    const heady = new HeadyServiceConnector({ apiKey: 'hdy_...' });`);
-        logger.info(`    await heady.discover();`);
-        logger.info(`    const reply = await heady.chat('Hello!');`);
-        logger.info(`    const tools = await heady.listTools();`);
-        logger.info('');
+        console.log(`\n  Preferred: ${discovery.preferred}`);
+        console.log(`  Healthy:   ${discovery.healthyCount}/${discovery.totalCount}`);
+        console.log(`\n  Available models:`);
+        MODELS.forEach(m => console.log(`    ${m.emoji} ${m.id.padEnd(18)} ${m.tier.padEnd(8)} ${m.speed}`));
+        console.log(`\n  Usage in your code:`);
+        console.log(`    const { HeadyServiceConnector } = require('./heady-service-connector');`);
+        console.log(`    const heady = new HeadyServiceConnector({ apiKey: 'hdy_...' });`);
+        console.log(`    await heady.discover();`);
+        console.log(`    const reply = await heady.chat('Hello!');`);
+        console.log(`    const tools = await heady.listTools();`);
+        console.log('');
     })();
 }
 

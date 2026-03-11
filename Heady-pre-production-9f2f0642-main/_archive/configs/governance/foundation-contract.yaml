@@ -1,0 +1,244 @@
+# HEADY_BRAND:BEGIN
+# ╔══════════════════════════════════════════════════════════════════╗
+# ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
+# ║  ██║  ██║██╔════╝██╔══██╗██╔══██╗╚██╗ ██╔╝                     ║
+# ║  ███████║█████╗  ███████║██║  ██║ ╚████╔╝                      ║
+# ║  ██╔══██║██╔══╝  ██╔══██║██║  ██║  ╚██╔╝                       ║
+# ║  ██║  ██║███████╗██║  ██║██████╔╝   ██║                        ║
+# ║  ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝    ╚═╝                        ║
+# ║                                                                  ║
+# ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
+# ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
+# ║  FILE: configs/foundation-contract.yaml                                                    ║
+# ║  LAYER: config                                                  ║
+# ╚══════════════════════════════════════════════════════════════════╝
+# HEADY_BRAND:END
+# ═══════════════════════════════════════════════════════════════════════
+# HEADY SYSTEMS — Foundation Platform Contract
+# ═══════════════════════════════════════════════════════════════════════
+#
+# This file defines the minimal, frozen contract that the HeadyStack
+# foundation mono-repo MUST satisfy before any product repos (HeadyMe,
+# HeadyConnection, HeadyWeb, etc.) are built on top.
+#
+# Rule: nothing in a product repo may re-implement logic that belongs
+# in the foundation. Product repos consume the foundation via SDK/API.
+
+version: "1.0.0"
+name: FoundationContract
+
+# ─── CORE SERVICES AND THEIR PORTS ─────────────────────────────────
+# These are the canonical services. Every cloud layer deploys these.
+# Product repos NEVER run their own copies; they call these via API.
+services:
+  heady-manager:
+    description: "MCP host + API gateway + registry API"
+    port: 3301
+    health: "/api/health"
+    pulse: "/api/pulse"
+    required: true
+    criticality: critical
+
+  heady-brain:
+    description: "Per-layer intelligence — MC planner, patterns, self-critique"
+    port: 3400
+    health: "/api/brain/health"
+    plan: "/api/brain/plan"
+    feedback: "/api/brain/feedback"
+    required: true
+    criticality: critical
+
+  hc-pipeline:
+    description: "HCFullPipeline v3 runtime — 9-stage execution engine"
+    port: null
+    note: "Runs in-process inside heady-manager"
+    required: true
+    criticality: critical
+
+  mcp-gateway:
+    description: "MCP tool router — connects to all tool servers"
+    port: 3500
+    health: "/health"
+    required: true
+    criticality: high
+
+  heady-buddy:
+    description: "Companion service — chat, cross-device, share target"
+    port: 3301
+    health: "/api/buddy/health"
+    required: false
+    criticality: high
+
+  model-router:
+    description: "Selects model provider per (layer, task, privacy, cost)"
+    port: null
+    note: "Runs as library inside orchestrator, reads cloud-layers.yaml"
+    required: true
+    criticality: critical
+
+  hc-sys-orchestrator:
+    description: "Global orchestrator — routes tasks to brains and layers"
+    port: 3450
+    health: "/api/orchestrator/health"
+    plan: "/api/orchestrator/route"
+    required: true
+    criticality: critical
+
+# ─── REQUIRED HEALTH ENDPOINTS ────────────────────────────────────
+# docker-compose up (any profile) MUST yield all these green before
+# the stack is considered operational.
+health_contract:
+  endpoints:
+    - url: "/api/health"
+      service: heady-manager
+      expect: 200
+    - url: "/api/pulse"
+      service: heady-manager
+      expect: 200
+    - url: "/api/registry"
+      service: heady-manager
+      expect: 200
+    - url: "/api/brain/health"
+      service: heady-brain
+      expect: 200
+    - url: "/api/orchestrator/health"
+      service: hc-sys-orchestrator
+      expect: 200
+  timeout_ms: 10000
+  retry: 3
+
+# ─── ENVIRONMENT VARIABLES ─────────────────────────────────────────
+# Every deployment MUST set these. Product repos inherit them.
+env_vars:
+  required:
+    - name: HEADY_API_KEY
+      description: "API key for inter-service auth"
+    - name: DATABASE_URL
+      description: "Postgres connection string"
+    - name: NODE_ENV
+      description: "development | staging | production"
+    - name: HEADY_LAYER
+      description: "local | internal | production"
+    - name: HEADY_BRAIN_PROFILE
+      description: "Brain profile ID from brain-profiles.yaml"
+  optional:
+    - name: ADMIN_TOKEN
+      description: "Admin panel auth token"
+    - name: RENDER_API_KEY
+      description: "Render.com deploy key"
+    - name: HF_TOKEN
+      description: "Hugging Face inference token"
+    - name: GITHUB_TOKEN
+      description: "GitHub PAT for sync/deploy"
+    - name: STRIPE_SECRET_KEY
+      description: "Stripe payments key"
+    - name: OLLAMA_HOST
+      description: "Local Ollama endpoint (default: http://api.headysystems.com:11434)"
+    - name: CLOUD_API_URL
+      description: "Override cloud API endpoint (default from cloud-layers.yaml)"
+
+# ─── AUTH MODEL ────────────────────────────────────────────────────
+auth:
+  internal:
+    method: api-key
+    header: "x-heady-api-key"
+    rotation: manual
+  external:
+    method: jwt
+    issuer: "heady.systems"
+    audience: "heady-api"
+    expiry: 3600
+    refresh_expiry: 604800
+  admin:
+    method: bearer-token
+    header: "Authorization"
+    env_var: ADMIN_TOKEN
+
+# ─── PRODUCT REPO INTERFACE ───────────────────────────────────────
+# Product repos (HeadyMe, HeadyConnection, HeadyWeb, etc.) are thin
+# frontends that consume the foundation. They MUST follow these rules.
+product_repo_rules:
+  allowed:
+    - "Marketing sites and product-specific UX (Next.js, landing pages, docs)"
+    - "Tenant configuration (branding, default workspaces, pricing presets)"
+    - "Product-specific static assets and content"
+    - "Environment overrides via env vars"
+  forbidden:
+    - "Re-implementing orchestration or business logic"
+    - "Running their own manager, brain, or pipeline instances"
+    - "Direct database access (must go through foundation API)"
+    - "Hardcoded model provider calls (must use model-router)"
+  integration:
+    sdk: "packages/core-sdk"
+    ui_kit: "packages/ui-kit"
+    env_vars:
+      - "CLOUD_HEADY_API_URL — points to foundation API"
+      - "CLOUD_HEADY_BRAIN_URL — points to foundation brain"
+      - "HEADY_PRODUCT_ID — identifies which product for brain routing"
+
+# ─── DOCKER PROFILES ──────────────────────────────────────────────
+docker_profiles:
+  local-dev:
+    file: "docker-compose.yml"
+    services: [heady-manager, postgres, redis, mcp-gateway]
+    description: "Minimal local stack for development"
+  full-local:
+    file: "docker-compose.full.yml"
+    services: [heady-manager, heady-brain, hc-sys-orchestrator, postgres, redis, mcp-gateway, heady-buddy, imagination-engine]
+    description: "Full local stack with all services"
+  cloud-saas:
+    file: "docker-compose.cloud-saas.yml"
+    services: [heady-manager, heady-brain, hc-sys-orchestrator, mcp-gateway]
+    description: "Cloud deployment — DBs provided externally"
+
+# ─── REBUILD ORDER ─────────────────────────────────────────────────
+# When rebuilding from scratch, build in this exact order.
+# Each tier must be green before the next tier starts.
+rebuild_tiers:
+  tier_1_core:
+    name: "Core Services & Internal APIs"
+    components:
+      - heady-manager
+      - heady-registry
+      - hc-pipeline
+      - heady-brain
+      - hc-sys-orchestrator
+      - model-router
+    validation: "All health endpoints return 200"
+
+  tier_2_io:
+    name: "High-Performance MCP & HTTP APIs"
+    components:
+      - mcp-gateway
+      - mcp-tool-servers
+      - api-gateway-routes
+      - webhook-receiver
+    validation: "MCP tools respond, API routes return correct schemas"
+
+  tier_3_edge:
+    name: "Edge Routing & DNS"
+    components:
+      - cloudflare-workers
+      - cloudflare-dns
+      - ssl-certificates
+    validation: "Edge URLs proxy to origins correctly"
+
+  tier_4_apps:
+    name: "Websites & Frontends"
+    components:
+      - heady-frontend
+      - heady-buddy-desktop
+      - heady-buddy-mobile
+      - browser-extensions
+      - ide-extensions
+    validation: "Apps load, connect to APIs, render correctly"
+
+  tier_5_integrations:
+    name: "Integrations & Partner Services"
+    components:
+      - slack-connector
+      - discord-connector
+      - teams-connector
+      - email-agent
+      - calendar-agent
+    validation: "Connectors authenticate and respond"

@@ -27,7 +27,6 @@
  */
 
 'use strict';
-const logger = require('../../shared/logger')('usage-metering');
 
 // ── Phi-Math Import ───────────────────────────────────────────────────────────
 import {
@@ -159,9 +158,9 @@ class UsageMeter extends EventEmitter {
     // Flush usage to Stripe on a phi-adaptive interval (starts at fib(12) = 144 min)
     this._flushInterval = setInterval(() => this._flushToStripe(), this._flushCurrentIntervalMs);
     this.emit('ready');
-    logger.info(`[UsageMeter] Initialized. Flush interval: ${fib(12)} minutes (phi-harmonic fib(12)).`);
-    logger.info(`[UsageMeter] Alert thresholds (phi-derived):`, ALERT_THRESHOLDS);
-    logger.info(`[UsageMeter] Phi window progression (ms):`, PHI_WINDOW_PROGRESSION);
+    console.log(`[UsageMeter] Initialized. Flush interval: ${fib(12)} minutes (phi-harmonic fib(12)).`);
+    console.log(`[UsageMeter] Alert thresholds (phi-derived):`, ALERT_THRESHOLDS);
+    console.log(`[UsageMeter] Phi window progression (ms):`, PHI_WINDOW_PROGRESSION);
   }
 
   /**
@@ -262,7 +261,7 @@ class UsageMeter extends EventEmitter {
     } catch (err) {
       this.emit('error', err);
       // Fail open: allow the request but log the metering failure
-      logger.error('[UsageMeter] Tracking error (fail-open):', err.message);
+      console.error('[UsageMeter] Tracking error (fail-open):', err.message);
       return { allowed: true, error: err.message };
     }
   }
@@ -516,7 +515,7 @@ class UsageMeter extends EventEmitter {
 
       await batchReportUsage(metrics, items).catch(err => {
         flushSuccess = false;
-        logger.error(`[UsageMeter] Stripe flush failed for org ${orgId}:`, err.message);
+        console.error(`[UsageMeter] Stripe flush failed for org ${orgId}:`, err.message);
         // Re-queue failed reports
         for (const [metric, qty] of Object.entries(metrics)) {
           this._queueStripeReport(orgId, metric, qty);
@@ -538,7 +537,7 @@ class UsageMeter extends EventEmitter {
       this._flushInterval = setInterval(() => this._flushToStripe(), this._flushCurrentIntervalMs);
     }
 
-    logger.info(`[UsageMeter] Flushed usage for ${batch.size} organizations to Stripe.`);
+    console.log(`[UsageMeter] Flushed usage for ${batch.size} organizations to Stripe.`);
   }
 
   /**
@@ -763,7 +762,7 @@ class UsageMeter extends EventEmitter {
       utilization_pct: Math.round(data.utilization * 100),
       overage_usd: data.overage,
       dashboard_url: `https://app.headysystems.com/org/${org.id}/usage`,
-    }).catch(err => logger.error('[UsageMeter] Alert email failed:', err.message));
+    }).catch(err => console.error('[UsageMeter] Alert email failed:', err.message));
   }
 
   _queueStripeReport(orgId, metric, quantity) {
@@ -788,7 +787,7 @@ class UsageMeter extends EventEmitter {
         });
       } catch (err) {
         // Don't let DB failures block requests
-        logger.error('[UsageMeter] Event log write failed:', err.message);
+        console.error('[UsageMeter] Event log write failed:', err.message);
       }
     });
   }

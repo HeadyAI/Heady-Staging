@@ -415,7 +415,7 @@ class ContinuousConductor {
     }
 
     // -------------------------------------------------------------------------
-    // coordinate concurrentlyTask(task, existingQueue)
+    // prioritizeTask(task, existingQueue)
     // -------------------------------------------------------------------------
 
     /**
@@ -427,7 +427,7 @@ class ContinuousConductor {
      * @param {Array}  [existingQueue=[]]
      * @returns {{ score: number, normalised: number, bucket: string }}
      */
-    coordinate concurrentlyTask(task, existingQueue = []) {
+    prioritizeTask(task, existingQueue = []) {
         // Route the task first to obtain confidence
         const routing = this.routeTask(task);
 

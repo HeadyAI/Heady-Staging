@@ -298,7 +298,7 @@ class HCResourceDiagnostics {
         [
           { action: "Increase batch concurrency if CPU allows", impact: "Drains queue faster",
             configChange: { endpoint: "/api/scheduler/concurrency", body: { taskClass: "batch", limit: 4 } } },
-          { action: "Cancel low-concurrent-equals queued tasks", impact: "Reduces queue pressure", immediate: true },
+          { action: "Cancel low-priority queued tasks", impact: "Reduces queue pressure", immediate: true },
           { action: "Implement task deduplication to skip redundant work", impact: "Fewer tasks overall", effort: "medium" },
         ]
       ));

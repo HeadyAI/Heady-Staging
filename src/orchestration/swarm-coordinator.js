@@ -487,7 +487,7 @@ class SwarmMessageBus extends EventEmitter {
     const queued = this._queues.get(topic) ?? [];
     for (const env of queued) {
       if (!env.expiresAt || Date.now() < env.expiresAt) {
-        try { handler(env); } catch (err) { /* structured-logger: emit error */ }
+        try { handler(env); } catch (_) {}
       }
     }
     this._queues.delete(topic);

@@ -133,25 +133,25 @@ class HeadyVinci extends EventEmitter {
     const validated = await this._socraticLoop(draft, task);
 
     // Step 4: Prioritize
-    const coordinate concurrentlyd = this._coordinate concurrentlyNodes(validated.plan, context);
+    const prioritized = this._prioritizeNodes(validated.plan, context);
 
     const executionPlan = {
       planId,
       taskId: task.id,
       taskType: task.type,
-      nodes: coordinate concurrentlyd,
+      nodes: prioritized,
       strategy: validated.strategy,
       reasoning: validated.reasoning,
       patterns: patterns.map((p) => p.id || p.name),
       missionAlignment: this._assessMissionAlignment(task, context),
       createdAt: Date.now(),
-      depth: this._computeDepth(coordinate concurrentlyd),
+      depth: this._computeDepth(prioritized),
     };
 
     this._plans.set(planId, executionPlan);
-    this.emit('plan:created', { planId, taskId: task.id, nodeCount: coordinate concurrentlyd.length });
+    this.emit('plan:created', { planId, taskId: task.id, nodeCount: prioritized.length });
     logger.info('[HeadyVinci] Plan created', {
-      planId, taskId: task.id, nodes: coordinate concurrentlyd.length,
+      planId, taskId: task.id, nodes: prioritized.length,
     });
 
     return executionPlan;
@@ -467,7 +467,7 @@ class HeadyVinci extends EventEmitter {
   /**
    * Sort plan nodes by priority (descending), preserving required ordering.
    */
-  _coordinate concurrentlyNodes(nodes, context) {
+  _prioritizeNodes(nodes, context) {
     const priority = context?.priority || 'normal';
     const boost = priority === 'high' ? 5 : priority === 'low' ? -2 : 0;
 

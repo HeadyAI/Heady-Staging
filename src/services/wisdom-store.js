@@ -369,7 +369,7 @@ export class WisdomStore {
   }
 
   /**
-   * Return the top-N optimizations evaluated as concurrent equals by CSL impact score.
+   * Return the top-N optimizations ranked by CSL impact score.
    *
    * @param {number} [n=DEFAULT_TOP_N] - Number of results to return (default fib(6)=8).
    * @returns {Optimization[]}

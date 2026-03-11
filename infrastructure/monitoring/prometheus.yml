@@ -1,0 +1,344 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+  external_labels:
+    monitor: 'heady-platform'
+    environment: 'production'
+  query_timeout: 1m
+
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets:
+            - localhost:9093
+
+rule_files:
+  - "/etc/prometheus/alerting-rules.yml"
+
+scrape_configs:
+  # Prometheus self-monitoring
+  - job_name: 'prometheus'
+    scrape_interval: 10s
+    static_configs:
+      - targets: ['localhost:9090']
+    metric_path: '/metrics'
+
+  # Envoy proxy metrics
+  - job_name: 'envoy'
+    static_configs:
+      - targets: ['localhost:8001']
+    scrape_interval: 10s
+    metrics_path: '/stats/prometheus'
+
+  # API Gateway
+  - job_name: 'api-gateway'
+    static_configs:
+      - targets: ['api-gateway:3311']
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: instance
+        regex: '([^:]+)(?::\d+)?'
+        replacement: '${1}'
+      - source_labels: [__scheme__, __address__]
+        target_label: __param_target
+        regex: '(.+);(.+)'
+        replacement: '${1}://${2}'
+
+  # Auth Service
+  - job_name: 'auth-service'
+    static_configs:
+      - targets: ['auth:3310']
+
+  # User Service
+  - job_name: 'user-service'
+    static_configs:
+      - targets: ['user-service:3312']
+
+  # Notification Service
+  - job_name: 'notification-service'
+    static_configs:
+      - targets: ['notification-service:3313']
+
+  # Payment Service
+  - job_name: 'payment-service'
+    static_configs:
+      - targets: ['payment-service:3314']
+
+  # Billing Service
+  - job_name: 'billing-service'
+    static_configs:
+      - targets: ['billing-service:3315']
+
+  # Subscription Service
+  - job_name: 'subscription-service'
+    static_configs:
+      - targets: ['subscription-service:3316']
+
+  # Content Service
+  - job_name: 'content-service'
+    static_configs:
+      - targets: ['content-service:3317']
+
+  # Media Service
+  - job_name: 'media-service'
+    static_configs:
+      - targets: ['media-service:3318']
+
+  # Storage Service
+  - job_name: 'storage-service'
+    static_configs:
+      - targets: ['storage-service:3319']
+
+  # Search Service
+  - job_name: 'search-service'
+    static_configs:
+      - targets: ['search-service:3320']
+
+  # Analytics Service
+  - job_name: 'analytics-service'
+    static_configs:
+      - targets: ['analytics-service:3321']
+
+  # Recommendation Service
+  - job_name: 'recommendation-service'
+    static_configs:
+      - targets: ['recommendation-service:3322']
+
+  # Personalization Service
+  - job_name: 'personalization-service'
+    static_configs:
+      - targets: ['personalization-service:3323']
+
+  # Social Service
+  - job_name: 'social-service'
+    static_configs:
+      - targets: ['social-service:3324']
+
+  # Chat Service
+  - job_name: 'chat-service'
+    static_configs:
+      - targets: ['chat-service:3325']
+
+  # Messaging Service
+  - job_name: 'messaging-service'
+    static_configs:
+      - targets: ['messaging-service:3326']
+
+  # Feed Service
+  - job_name: 'feed-service'
+    static_configs:
+      - targets: ['feed-service:3327']
+
+  # Collaboration Service
+  - job_name: 'collaboration-service'
+    static_configs:
+      - targets: ['collaboration-service:3328']
+
+  # Order Service
+  - job_name: 'order-service'
+    static_configs:
+      - targets: ['order-service:3329']
+
+  # Inventory Service
+  - job_name: 'inventory-service'
+    static_configs:
+      - targets: ['inventory-service:3330']
+
+  # Shipping Service
+  - job_name: 'shipping-service'
+    static_configs:
+      - targets: ['shipping-service:3331']
+
+  # Review Service
+  - job_name: 'review-service'
+    static_configs:
+      - targets: ['review-service:3332']
+
+  # Rating Service
+  - job_name: 'rating-service'
+    static_configs:
+      - targets: ['rating-service:3333']
+
+  # Organization Service
+  - job_name: 'organization-service'
+    static_configs:
+      - targets: ['organization-service:3334']
+
+  # Team Service
+  - job_name: 'team-service'
+    static_configs:
+      - targets: ['team-service:3335']
+
+  # Project Service
+  - job_name: 'project-service'
+    static_configs:
+      - targets: ['project-service:3336']
+
+  # Task Service
+  - job_name: 'task-service'
+    static_configs:
+      - targets: ['task-service:3337']
+
+  # Calendar Service
+  - job_name: 'calendar-service'
+    static_configs:
+      - targets: ['calendar-service:3338']
+
+  # Admin Service
+  - job_name: 'admin-service'
+    static_configs:
+      - targets: ['admin-service:3339']
+
+  # Reporting Service
+  - job_name: 'reporting-service'
+    static_configs:
+      - targets: ['reporting-service:3340']
+
+  # Audit Service
+  - job_name: 'audit-service'
+    static_configs:
+      - targets: ['audit-service:3341']
+
+  # Compliance Service
+  - job_name: 'compliance-service'
+    static_configs:
+      - targets: ['compliance-service:3342']
+
+  # Security Service
+  - job_name: 'security-service'
+    static_configs:
+      - targets: ['security-service:3343']
+
+  # Backup Service
+  - job_name: 'backup-service'
+    static_configs:
+      - targets: ['backup-service:3344']
+
+  # Migration Service
+  - job_name: 'migration-service'
+    static_configs:
+      - targets: ['migration-service:3345']
+
+  # Webhook Service
+  - job_name: 'webhook-service'
+    static_configs:
+      - targets: ['webhook-service:3346']
+
+  # Queue Service
+  - job_name: 'queue-service'
+    static_configs:
+      - targets: ['queue-service:3347']
+
+  # Scheduler Service
+  - job_name: 'scheduler-service'
+    static_configs:
+      - targets: ['scheduler-service:3348']
+
+  # Monitoring Service
+  - job_name: 'monitoring-service'
+    static_configs:
+      - targets: ['monitoring-service:3349']
+
+  # Logging Service
+  - job_name: 'logging-service'
+    static_configs:
+      - targets: ['logging-service:3350']
+
+  # Health Service
+  - job_name: 'health-service'
+    static_configs:
+      - targets: ['health-service:3351']
+
+  # Tracing Service
+  - job_name: 'tracing-service'
+    static_configs:
+      - targets: ['tracing-service:3352']
+
+  # Config Service
+  - job_name: 'config-service'
+    static_configs:
+      - targets: ['config-service:3353']
+
+  # Feature Flag Service
+  - job_name: 'feature-flag-service'
+    static_configs:
+      - targets: ['feature-flag-service:3354']
+
+  # Experiment Service
+  - job_name: 'experiment-service'
+    static_configs:
+      - targets: ['experiment-service:3355']
+
+  # Real-time Service
+  - job_name: 'real-time-service'
+    static_configs:
+      - targets: ['real-time-service:3356']
+
+  # Streaming Service
+  - job_name: 'streaming-service'
+    static_configs:
+      - targets: ['streaming-service:3357']
+
+  # Cache Service
+  - job_name: 'cache-service'
+    static_configs:
+      - targets: ['cache-service:3358']
+
+  # Recommendation Engine
+  - job_name: 'recommendation-engine'
+    static_configs:
+      - targets: ['recommendation-engine:3359']
+
+  # ML Pipeline
+  - job_name: 'ml-pipeline'
+    static_configs:
+      - targets: ['ml-pipeline:3360']
+
+  # PostgreSQL exporter
+  - job_name: 'postgres'
+    static_configs:
+      - targets: ['postgres-exporter:9187']
+    scrape_interval: 30s
+
+  # Redis exporter
+  - job_name: 'redis'
+    static_configs:
+      - targets: ['redis-exporter:9121']
+    scrape_interval: 30s
+
+  # NATS exporter
+  - job_name: 'nats'
+    static_configs:
+      - targets: ['nats:8222']
+    scrape_interval: 30s
+    metrics_path: '/metrics'
+
+  # Node exporter for system metrics
+  - job_name: 'node'
+    static_configs:
+      - targets: ['localhost:9100']
+    scrape_interval: 30s
+
+  # cAdvisor for container metrics
+  - job_name: 'cadvisor'
+    static_configs:
+      - targets: ['localhost:8080']
+    scrape_interval: 30s
+
+  # Consul for service discovery
+  - job_name: 'consul'
+    static_configs:
+      - targets: ['consul:8500']
+    scrape_interval: 30s
+
+  # Grafana metrics
+  - job_name: 'grafana'
+    static_configs:
+      - targets: ['grafana:3000']
+    scrape_interval: 30s
+
+  # OpenTelemetry Collector metrics
+  - job_name: 'otel-collector'
+    static_configs:
+      - targets: ['otel-collector:8888']
+    scrape_interval: 15s

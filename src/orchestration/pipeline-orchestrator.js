@@ -495,7 +495,7 @@ class PipelineOrchestrator extends EventEmitter {
   /**
    * Determine whether a stage should be skipped for the current context.
    *
-   * Skip conditions (in concurrent-equals execution order):
+   * Skip conditions (in priority order):
    *   1. Stage already in a terminal state (PASSED or SKIPPED).
    *   2. Stage is optional (required === false) AND the pipeline variant excludes it.
    *   3. Stage has a conditional `enabledWhen` / `requiredWhen` clause that

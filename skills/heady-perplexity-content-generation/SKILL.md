@@ -1,148 +1,115 @@
 ---
 name: heady-perplexity-content-generation
-description: Generates brand-aligned content for the Heady Connection platform including product descriptions, blog posts, social media copy, email campaigns, SEO metadata, and educational cannabis content. Use when the user asks to write, draft, generate, create, or produce any form of text content. Triggers on phrases like "write a blog post", "product description for", "social media post about", "email campaign for", "draft copy for", "create content about", or "write SEO description".
-license: MIT
+description: Skill for mass content generation for all 9 Heady sites using Perplexity's knowledge base. Use when asked to write 2000+ word deep-dive content, hero copy, FAQ sections, use cases, technology stack descriptions, or any substantial web content for headyme.com, headysystems.com, heady-ai.com, headyos.com, headyconnection.org, headyconnection.com, headyex.com, headyfinance.com, or admin.headysystems.com. Triggers on "write content", "generate copy", "create the deep-dive", "build the page content", or any site content creation task.
+license: proprietary
 metadata:
-  author: heady-connection
-  version: '1.0'
-  platform: heady
-  category: content
+  author: HeadySystems Inc.
+  version: '2.1.0'
+  domain: content
 ---
 
 # Heady Perplexity Content Generation
 
 ## When to Use This Skill
 
-Use this skill when the user asks to:
+Use this skill when generating:
 
-- Write product descriptions for cannabis accessories, glass art, or headshop inventory
-- Draft blog posts and educational articles about cannabis culture and science
-- Create social media captions and posts (Instagram, Facebook, X/Twitter)
-- Generate email newsletters and promotional campaigns
-- Produce SEO title tags, meta descriptions, and structured data markup
-- Write customer-facing FAQs and knowledge base articles
-- Generate UX microcopy: button labels, empty states, error messages, tooltips
-- Draft press releases, event announcements, or brand stories
+- Per-site hero sections (tagline + dual CTA)
+- Feature grid cards (4-6 per site)
+- Stats banners (animated counters)
+- Deep-dive content sections (2000+ words)
+- How It Works step-by-step sections
+- Technology stack descriptions
+- Ecosystem maps (how each site connects to all others)
+- Use case scenarios
+- FAQ sections (8-12 questions)
+- Footer cross-navigation copy
 
-## Brand Voice — Heady Connection
+## Site Roster (9 Sites)
 
-Content must consistently reflect these voice attributes:
-
-| Attribute | Meaning |
-|---|---|
-| **Knowledgeable** | Cite accurate cannabis science and culture facts; never guess |
-| **Authentic** | Direct, real language; avoid corporate jargon and puffery |
-| **Community-centered** | Celebrate artisan glass culture; honor the craft and the makers |
-| **Inclusive** | Welcoming to all experience levels; never condescending |
-| **Compliant** | No unverified medical claims; follow applicable advertising standards |
-
-**Tone spectrum**: Informative and warm for educational content; enthusiastic and community-focused for social; professional and clear for transactional content.
+| Domain | Name | Accent | Sacred Geometry |
+|--------|------|--------|----------------|
+| headyme.com | HeadyMe | #00d4aa | Flower of Life |
+| headysystems.com | HeadySystems | #00d4aa | Metatron's Cube |
+| heady-ai.com | HeadyAI | #8b5cf6 | Sri Yantra |
+| headyos.com | HeadyOS | #14b8a6 | Torus |
+| headyconnection.org | HeadyConnection | #f59e0b | Seed of Life |
+| headyconnection.com | HeadyConnection Community | #06b6d4 | Seed of Life |
+| headyex.com | HeadyEX | #10b981 | Fibonacci Spiral |
+| headyfinance.com | HeadyFinance | #a855f7 | Vesica Piscis |
+| admin.headysystems.com | Admin Portal | #06b6d4 | Metatron's Cube |
 
 ## Instructions
 
-### 1. Content Brief Intake
+### Step 1 — Load Site Context
 
-Establish these parameters before writing:
-1. **Content type**: product copy, blog, social, email, SEO, FAQ, UX copy
-2. **Target audience**: new customers, collectors, connoisseurs, gift buyers
-3. **Keyword targets**: primary and secondary SEO terms (if applicable)
-4. **Length target**: character/word range or platform spec
-5. **Tone modifiers**: celebratory, educational, urgency-driven, conversational
-6. **Legal constraints**: no medical claims; age-gating reminder for ads; state-specific language where needed
+Before writing for any site, load:
+- Site-specific purpose and audience from `01-site-registry.json`
+- Brand voice: dark premium, intelligent, forward-thinking, φ-harmonious
+- Sacred geometry theme (informs content metaphors)
+- Accent color (informs emotional tone)
 
-### 2. Product Description Writing
+### Step 2 — Content Standards
 
-For cannabis accessories and glass art:
-1. Lead with the most compelling differentiator (artist, technique, material, function).
-2. Describe form: dimensions, materials, color/finish, unique visual characteristics.
-3. Describe function: what it does, how to use it, maintenance notes.
-4. Include maker/brand story if product is artist-made or limited edition.
-5. Close with availability signal (in stock, limited run, made-to-order).
-6. Append 3–5 SEO-relevant tags.
+Every piece of content must:
 
-**Format:**
-```
-[Headline — 60 chars max]
-[2–3 sentence opening — hook and primary differentiator]
-[Feature paragraph — materials, dimensions, function]
-[Artist/Brand note if applicable]
-[Availability + CTA]
-[SEO Tags: ...]
-```
+- Use the Heady brand voice: **confident, precise, visionary, never hyperbolic**
+- Contain technical depth that respects intelligent audiences
+- Be **unique per site** — no copy-paste between sites
+- Reference the sacred geometry theme in at least one metaphor
+- Include cross-links to all other 8 Heady sites naturally in body copy
+- Be **2000+ words** for deep-dive sections (enforced)
 
-### 3. Blog Post & Educational Article Writing
+### Step 3 — Deep-Dive Structure
 
-1. Research the topic before writing (use heady-perplexity-deep-research if needed).
-2. Structure: Hook → Background → Main Content → Takeaways → CTA.
-3. Use headers (H2, H3) for scannability; aim for one H2 per 300 words.
-4. Incorporate primary keyword naturally in: title, first paragraph, one H2, meta description.
-5. Include at least one internal link suggestion (e.g., "see our [Terpene Guide]").
-6. Target reading level: Grade 8–10 (Flesch-Kincaid).
-7. End with a clear CTA: shop, subscribe, share, or comment.
+```markdown
+## [Site Name]: [Compelling Section Title]
 
-### 4. Social Media Content
+### The Foundation
+[400+ words explaining what problem this site/service solves at a fundamental level]
 
-**Instagram:**
-- Caption: 125–200 words; hook in first line (before "more" fold); 5–8 hashtags
-- Mix: 40% educational, 30% product/promotion, 30% community/culture
+### How It Works
+[400+ words step-by-step technical explanation with real architectural details]
 
-**Facebook:**
-- 40–80 words; question or statement hook; one CTA; 2–3 hashtags max
+### The Architecture
+[300+ words on the actual system design, CSL gates, phi-scaling, swarm topology]
 
-**X/Twitter:**
-- Under 280 chars; punchy; use 1–2 targeted hashtags; link if applicable
+### Real-World Impact
+[300+ words on use cases with specific scenarios and outcomes]
 
-**Content pillars for Heady Connection social:**
-1. Artist Spotlight — feature a glass artist and their work
-2. Terpene/Strain Science — educational snippets
-3. New Arrivals — product showcase with price and link
-4. Community Moments — events, meetups, customer photos
-5. Culture & History — cannabis culture stories and milestones
+### Integration Across the Heady Ecosystem
+[200+ words on how this site connects to all others — include actual domain names]
 
-### 5. Email Campaigns
+### Technical Specifications
+[200+ words on API contracts, data flows, vector dimensions, CSL thresholds]
 
-Structure for promotional emails:
-```
-Subject line: [Benefit/curiosity hook, 40–55 chars] | A/B variant included
-Preview text: [Extends subject, 85–100 chars]
-Header: [Headline — 8 words max]
-Body: [2–3 short paragraphs; personal, conversational]
-CTA button: [Action verb + object — e.g., "Shop New Arrivals"]
-Footer: [Unsubscribe | Address | Legal]
+### The Future
+[200+ words on roadmap, patents, evolution path]
 ```
 
-### 6. SEO Metadata
+### Step 4 — FAQ Requirements
 
-For each page:
-- **Title tag**: 50–60 characters; primary keyword near front; brand name at end
-- **Meta description**: 150–160 characters; include primary keyword; natural CTA; no truncation
-- **OG tags**: title (same as title tag), description (same as meta), image alt text
-- **Schema markup**: suggest appropriate type (Product, Article, FAQPage, LocalBusiness)
+8-12 FAQs per site, each answer 100+ words. Topics must include:
+- Getting started question
+- Technical capability question
+- Integration question
+- Security/privacy question
+- Pricing/access question
+- Use case scenario question
 
-### 7. Compliance Checks
+### Step 5 — SEO Meta Requirements (from Google SEO Starter Guide)
 
-Before delivering any content:
-- [ ] No unqualified medical or therapeutic claims
-- [ ] No statements implying FDA approval or medical treatment
-- [ ] Age-appropriate language; no content targeted at minors
-- [ ] State/jurisdiction-specific claims are accurate and labeled
-- [ ] Artist names and brand names spelled correctly (verify against product catalog)
+Every page must include:
+- `<title>`: 50-60 characters, primary keyword first
+- `<meta name="description">`: 150-160 characters with call to action
+- `<meta property="og:*">` Open Graph tags
+- Structured data (JSON-LD Schema.org) for Organization and WebPage
+- Canonical URL tag
 
 ## Examples
 
-**Input:** "Write a product description for a heady collab piece between artists Banjo and Elbo."
+**Input**: "Write the deep-dive content for headyos.com"
+**Output**: 2000+ word section on HeadyOS as an AI Operating System, covering the Torus geometry metaphor, 17-swarm topology, CSL routing, phi-scaled resource management, and integration with all other Heady sites
 
-**Output:**
-```
-Banjo × Elbo — Limited Collab Rig
-
-Two titans of the heady glass scene came together for this once-in-a-lineup collab rig.
-Banjo's signature honeycomb texture meets Elbo's iconic color work in a piece that's
-as functional as it is collectible. Borosilicate construction, 14mm female joint,
-built-in recycler perc. Approx. 8" tall. Certificate of authenticity included.
-
-Limited to 3 pieces — once they're gone, they're gone.
-[Shop This Piece]
-
-Tags: heady glass, collab rig, Banjo glass, Elbo glass, limited edition dab rig
-```
+**Input**: "Generate FAQ for headyfinance.com"
+**Output**: 10 FAQ pairs covering investment thesis, financial data security, CSL relevance filtering for market signals, integration with HeadyCoin, and WCAG 2.1 accessibility compliance

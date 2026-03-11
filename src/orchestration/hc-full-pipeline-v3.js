@@ -820,10 +820,10 @@ class HCFullPipeline extends EventEmitter {
 
     if (!judgeResult.winner && !judgeResult.clearWinner) {
       // No clear winner — use top ranked candidate
-      judgeResult.winner = judgeResult.concurrent evaluations[0];
+      judgeResult.winner = judgeResult.rankings[0];
       this.emit('judge:no-clear-winner', {
         margin: judgeResult.margin,
-        topScore: judgeResult.concurrent evaluations[0]?.composite,
+        topScore: judgeResult.rankings[0]?.composite,
         runId: this.runId,
       });
     }
@@ -834,7 +834,7 @@ class HCFullPipeline extends EventEmitter {
 
     return {
       winner: judgeResult.winner,
-      concurrent evaluations: judgeResult.concurrent evaluations,
+      rankings: judgeResult.rankings,
       margin: judgeResult.margin,
       clearWinner: judgeResult.clearWinner,
       totalCandidates: judgeResult.totalCandidates,

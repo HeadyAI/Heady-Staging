@@ -1,0 +1,1073 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HEADY System Administration - Control & Monitoring Dashboard</title>
+    <meta name="description" content="HEADY System Administration Portal. Monitor service health, manage infrastructure, control deployments, and secure the HEADY platform.">
+    <meta name="keywords" content="system administration, dashboard, monitoring, infrastructure management, security">
+    <meta name="author" content="Eric Haywood - HeadySystems Inc">
+
+    <!-- Open Graph / Social Media -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://admin.headysystems.com">
+    <meta property="og:title" content="HEADY System Administration">
+    <meta property="og:description" content="Monitor, manage, and control the entire HEADY platform infrastructure.">
+    <meta property="og:image" content="https://admin.headysystems.com/og-image.png">
+    <meta property="og:site_name" content="HEADY Admin Portal">
+
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "HEADY System Administration Portal",
+        "url": "https://admin.headysystems.com",
+        "applicationCategory": "AdministrationApplication",
+        "description": "Enterprise system administration and monitoring platform",
+        "operatingSystem": "Web-based",
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD"
+        }
+    }
+    </script>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'JetBrains Mono', monospace;
+            background-color: #0a0a0f;
+            color: #e0e0e0;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Canvas Background */
+        #canvas-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background-color: #0a0a0f;
+        }
+
+        main {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Typography */
+        h1, h2, h3, h4, h5, h6 {
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: #ffffff;
+            font-family: 'Inter', sans-serif;
+        }
+
+        h1 {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            line-height: 1.2;
+        }
+
+        h2 {
+            font-size: clamp(1.5rem, 3vw, 2.5rem);
+            margin-top: 3rem;
+        }
+
+        h3 {
+            font-size: 1.3rem;
+        }
+
+        p {
+            margin-bottom: 1rem;
+            font-size: 0.95rem;
+        }
+
+        code, pre {
+            background-color: rgba(124, 94, 255, 0.1);
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.85rem;
+        }
+
+        pre {
+            padding: 1rem;
+            overflow-x: auto;
+            border-left: 3px solid #7c5eff;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header / Navigation */
+        header {
+            background-color: rgba(10, 10, 15, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(124, 94, 255, 0.3);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+        }
+
+        .logo {
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: #7c5eff;
+            text-decoration: none;
+            letter-spacing: 2px;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: #b0b0b0;
+            text-decoration: none;
+            transition: color 0.3s ease;
+            font-size: 0.9rem;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .nav-links a:hover {
+            color: #7c5eff;
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-block;
+            padding: 0.6rem 1.2rem;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .btn-primary {
+            background-color: #7c5eff;
+            color: #ffffff;
+        }
+
+        .btn-primary:hover {
+            background-color: #9d7eff;
+            box-shadow: 0 5px 20px rgba(124, 94, 255, 0.4);
+        }
+
+        .btn-secondary {
+            background-color: rgba(124, 94, 255, 0.1);
+            color: #7c5eff;
+            border: 1px solid #7c5eff;
+        }
+
+        .btn-secondary:hover {
+            background-color: rgba(124, 94, 255, 0.2);
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 6rem 0;
+            text-align: center;
+            position: relative;
+        }
+
+        .hero h1 {
+            color: #7c5eff;
+            margin-bottom: 1rem;
+            font-family: 'JetBrains Mono', monospace;
+            letter-spacing: 1px;
+        }
+
+        .hero p {
+            font-size: 1.1rem;
+            color: #b0b0b0;
+            margin-bottom: 2rem;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        /* Section */
+        section {
+            padding: 4rem 0;
+            border-top: 1px solid rgba(124, 94, 255, 0.15);
+        }
+
+        section h2 {
+            margin-bottom: 2rem;
+            text-align: center;
+            font-family: 'JetBrains Mono', monospace;
+            letter-spacing: 1px;
+        }
+
+        /* Login Section */
+        .login-section {
+            background: linear-gradient(135deg, rgba(124, 94, 255, 0.1) 0%, rgba(64, 224, 208, 0.05) 100%);
+            border: 1px solid rgba(124, 94, 255, 0.3);
+            border-radius: 6px;
+            padding: 3rem;
+            max-width: 500px;
+            margin: 3rem auto;
+        }
+
+        .login-section h3 {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: #ffffff;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #b0b0b0;
+            font-size: 0.9rem;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 0.75rem;
+            background-color: rgba(124, 94, 255, 0.1);
+            border: 1px solid rgba(124, 94, 255, 0.3);
+            border-radius: 4px;
+            color: #e0e0e0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #7c5eff;
+            background-color: rgba(124, 94, 255, 0.15);
+            box-shadow: 0 0 10px rgba(124, 94, 255, 0.2);
+        }
+
+        .form-group input::placeholder {
+            color: #707070;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: auto;
+            margin: 0;
+        }
+
+        .login-submit {
+            width: 100%;
+            padding: 0.75rem;
+            background-color: #7c5eff;
+            color: #ffffff;
+            border: none;
+            border-radius: 4px;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .login-submit:hover {
+            background-color: #9d7eff;
+            box-shadow: 0 5px 20px rgba(124, 94, 255, 0.4);
+        }
+
+        /* Dashboard Preview */
+        .dashboard-preview {
+            background: linear-gradient(135deg, rgba(124, 94, 255, 0.08) 0%, rgba(64, 224, 208, 0.05) 100%);
+            border: 1px solid rgba(124, 94, 255, 0.2);
+            border-radius: 6px;
+            padding: 2rem;
+            margin: 2rem 0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .service-item {
+            background-color: rgba(10, 10, 15, 0.6);
+            border: 1px solid rgba(124, 94, 255, 0.15);
+            padding: 1rem;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .status-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: flex-shrink: 0;
+        }
+
+        .status-green {
+            background-color: #40e0d0;
+            box-shadow: 0 0 10px rgba(64, 224, 208, 0.5);
+        }
+
+        .status-yellow {
+            background-color: #f0c040;
+            box-shadow: 0 0 10px rgba(240, 192, 64, 0.5);
+        }
+
+        .status-red {
+            background-color: #ff6464;
+            box-shadow: 0 0 10px rgba(255, 100, 100, 0.5);
+        }
+
+        .service-name {
+            flex: 1;
+            color: #c0c0c0;
+        }
+
+        /* Metrics Section */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .metric-card {
+            background: linear-gradient(135deg, rgba(124, 94, 255, 0.1) 0%, rgba(64, 224, 208, 0.05) 100%);
+            border: 1px solid rgba(124, 94, 255, 0.2);
+            padding: 1.5rem;
+            border-radius: 6px;
+        }
+
+        .metric-label {
+            font-size: 0.85rem;
+            color: #909090;
+            margin-bottom: 0.5rem;
+        }
+
+        .metric-value {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: #40e0d0;
+            margin-bottom: 0.5rem;
+        }
+
+        .metric-unit {
+            font-size: 0.8rem;
+            color: #707070;
+        }
+
+        /* Features Grid */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .feature-card {
+            background: linear-gradient(135deg, rgba(124, 94, 255, 0.1) 0%, rgba(64, 224, 208, 0.05) 100%);
+            border: 1px solid rgba(124, 94, 255, 0.2);
+            padding: 1.5rem;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            border-color: #7c5eff;
+            background: linear-gradient(135deg, rgba(124, 94, 255, 0.15) 0%, rgba(64, 224, 208, 0.1) 100%);
+        }
+
+        .feature-icon {
+            font-size: 2rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .feature-card h3 {
+            color: #7c5eff;
+            margin-bottom: 0.5rem;
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* Quick Links */
+        .quick-links {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .quick-link {
+            background-color: rgba(124, 94, 255, 0.1);
+            border: 1px solid rgba(124, 94, 255, 0.3);
+            padding: 1.2rem;
+            border-radius: 6px;
+            text-align: center;
+            text-decoration: none;
+            color: #7c5eff;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .quick-link:hover {
+            background-color: rgba(124, 94, 255, 0.15);
+            border-color: #40e0d0;
+            color: #40e0d0;
+            transform: translateY(-2px);
+        }
+
+        /* RBAC Section */
+        .rbac-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .rbac-card {
+            background: linear-gradient(135deg, rgba(124, 94, 255, 0.1) 0%, rgba(64, 224, 208, 0.05) 100%);
+            border: 1px solid rgba(124, 94, 255, 0.2);
+            padding: 1.5rem;
+            border-radius: 6px;
+        }
+
+        .rbac-card h4 {
+            color: #40e0d0;
+            margin-bottom: 0.75rem;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .rbac-list {
+            list-style: none;
+            font-size: 0.9rem;
+        }
+
+        .rbac-list li {
+            padding: 0.3rem 0;
+            color: #b0b0b0;
+        }
+
+        .rbac-list li:before {
+            content: "→ ";
+            color: #7c5eff;
+            margin-right: 0.5rem;
+        }
+
+        /* Ecosystem Links */
+        .ecosystem {
+            background: linear-gradient(135deg, rgba(124, 94, 255, 0.05) 0%, rgba(64, 224, 208, 0.05) 100%);
+            border: 1px solid rgba(124, 94, 255, 0.2);
+            border-radius: 6px;
+            padding: 2rem;
+            margin: 3rem 0;
+        }
+
+        .ecosystem h3 {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .ecosystem-links {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 1rem;
+        }
+
+        .ecosystem-link {
+            background-color: rgba(124, 94, 255, 0.1);
+            border: 1px solid rgba(124, 94, 255, 0.3);
+            padding: 0.75rem;
+            border-radius: 4px;
+            text-align: center;
+            text-decoration: none;
+            color: #7c5eff;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            font-size: 0.85rem;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .ecosystem-link:hover {
+            background-color: rgba(124, 94, 255, 0.15);
+            border-color: #40e0d0;
+            color: #40e0d0;
+        }
+
+        /* Footer */
+        footer {
+            background-color: rgba(10, 10, 15, 0.95);
+            border-top: 1px solid rgba(124, 94, 255, 0.2);
+            padding: 2rem 0;
+            margin-top: 4rem;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .footer-section h4 {
+            margin-bottom: 0.75rem;
+            color: #7c5eff;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.95rem;
+        }
+
+        .footer-section a {
+            display: block;
+            color: #909090;
+            text-decoration: none;
+            margin-bottom: 0.4rem;
+            transition: color 0.3s ease;
+            font-size: 0.85rem;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .footer-section a:hover {
+            color: #7c5eff;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(124, 94, 255, 0.1);
+            color: #606060;
+            font-size: 0.8rem;
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* Accessibility */
+        .skip-link {
+            position: absolute;
+            top: -40px;
+            left: 0;
+            background: #7c5eff;
+            color: #0a0a0f;
+            padding: 8px;
+            text-decoration: none;
+            z-index: 100;
+        }
+
+        .skip-link:focus {
+            top: 0;
+        }
+
+        @media (max-width: 768px) {
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .metrics-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .hero-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .btn {
+                width: 100%;
+                max-width: 300px;
+            }
+
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Skip to main content link for accessibility -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
+    <!-- Canvas background -->
+    <canvas id="canvas-bg"></canvas>
+
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <nav>
+                <a href="/" class="logo">HEADY ADMIN</a>
+                <ul class="nav-links">
+                    <li><a href="#dashboard">Dashboard</a></li>
+                    <li><a href="#services">Services</a></li>
+                    <li><a href="#features">Features</a></li>
+                    <li><a href="#rbac">Access Control</a></li>
+                    <li><a href="#ecosystem">Ecosystem</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main id="main-content">
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="container">
+                <h1>HEADY SYSTEM ADMINISTRATION</h1>
+                <p>Monitor, manage, and control the entire HEADY platform infrastructure with enterprise-grade tools</p>
+                <div class="hero-buttons">
+                    <a href="#login" class="btn btn-primary">Login to Console</a>
+                    <a href="#features" class="btn btn-secondary">View Features</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Login Section -->
+        <section id="login">
+            <div class="container">
+                <div class="login-section">
+                    <h3>SYSTEM LOGIN</h3>
+                    <form>
+                        <div class="form-group">
+                            <label for="email">Admin Email</label>
+                            <input type="email" id="email" name="email" placeholder="admin@headysystems.com" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="password">Password</label>
+                            <input type="password" id="password" name="password" placeholder="••••••••" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="mfa">MFA Code (6 digits)</label>
+                            <input type="text" id="mfa" name="mfa" placeholder="000000" pattern="[0-9]{6}" maxlength="6" required>
+                        </div>
+                        <div class="form-group checkbox-group">
+                            <input type="checkbox" id="remember" name="remember">
+                            <label for="remember" style="margin: 0;">Trust this device for 30 days</label>
+                        </div>
+                        <button type="submit" class="login-submit">AUTHENTICATE</button>
+                    </form>
+                    <p style="text-align: center; margin-top: 1rem; font-size: 0.85rem; color: #707070;">
+                        <a href="#" style="color: #7c5eff;">Forgot password?</a> | <a href="#" style="color: #7c5eff;">Security settings</a>
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Dashboard Preview -->
+        <section id="dashboard">
+            <div class="container">
+                <h2>Dashboard Overview</h2>
+                <p style="text-align: center; color: #b0b0b0; margin-bottom: 2rem; font-family: 'Inter', sans-serif;">Real-time system monitoring and resource utilization metrics</p>
+
+                <h3 style="margin-top: 2rem; margin-bottom: 1rem; font-family: 'Inter', sans-serif;">Service Health Status (50 Services)</h3>
+                <div class="dashboard-preview">
+                    <div class="dashboard-grid">
+                        <div class="service-item"><div class="status-dot status-green"></div><div class="service-name">api-gateway-01</div></div>
+                        <div class="service-item"><div class="status-dot status-green"></div><div class="service-name">auth-service</div></div>
+                        <div class="service-item"><div class="status-dot status-green"></div><div class="service-name">user-service</div></div>
+                        <div class="service-item"><div class="status-dot status-green"></div><div class="service-name">data-pipeline</div></div>
+                        <div class="service-item"><div class="status-dot status-yellow"></div><div class="service-name">cache-layer</div></div>
+                        <div class="service-item"><div class="status-dot status-green"></div><div class="service-name">database-primary</div></div>
+                        <div class="service-item"><div class="status-dot status-green"></div><div class="service-name">database-replica</div></div>
+                        <div class="service-item"><div class="status-dot status-green"></div><div class="service-name">message-queue</div></div>
+                        <div class="service-item"><div class="status-dot status-green"></div><div class="service-name">storage-layer</div></div>
+                        <div class="service-item"><div class="status-dot status-yellow"></div><div class="service-name">ml-inference</div></div>
+                        <div class="service-item"><div class="status-dot status-green"></div><div class="service-name">analytics-engine</div></div>
+                        <div class="service-item"><div class="status-dot status-green"></div><div class="service-name">search-index</div></div>
+                        <div class="service-item"><div class="status-dot status-green"></div><div class="service-name">logging-service</div></div>
+                        <div class="service-item"><div class="status-dot status-green"></div><div class="service-name">monitoring-stack</div></div>
+                        <div class="service-item"><div class="status-dot status-red"></div><div class="service-name">legacy-api</div></div>
+                        <div class="service-item"><div class="status-dot status-green"></div><div class="service-name">cdn-edge</div></div>
+                        <div class="service-item"><div class="status-dot status-green"></div><div class="service-name">websocket-server</div></div>
+                        <div class="service-item"><div class="status-dot status-green"></div><div class="service-name">payment-gateway</div></div>
+                        <div class="service-item"><div class="status-dot status-green"></div><div class="service-name">backup-service</div></div>
+                        <div class="service-item"><div class="status-dot status-green"></div><div class="service-name">security-scanner</div></div>
+                    </div>
+                    <div style="color: #909090; font-size: 0.85rem; margin-top: 1rem;">
+                        Status: <span style="color: #40e0d0;">●</span> Healthy | <span style="color: #f0c040;">●</span> Degraded | <span style="color: #ff6464;">●</span> Critical
+                    </div>
+                </div>
+
+                <h3 style="margin-top: 2rem; margin-bottom: 1rem; font-family: 'Inter', sans-serif;">Resource Utilization</h3>
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <div class="metric-label">CPU Usage</div>
+                        <div class="metric-value">67.3%</div>
+                        <div class="metric-unit">Avg across 256 cores</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">Memory Usage</div>
+                        <div class="metric-value">81.2%</div>
+                        <div class="metric-unit">2.4 TB / 2.9 TB</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">Network I/O</div>
+                        <div class="metric-value">8.7 Gbps</div>
+                        <div class="metric-unit">In: 4.2 | Out: 4.5</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">Storage Usage</div>
+                        <div class="metric-value">59.1%</div>
+                        <div class="metric-unit">47.3 TB / 80 TB</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">Active Users</div>
+                        <div class="metric-value">287,459</div>
+                        <div class="metric-unit">Connected sessions</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">Request Throughput</div>
+                        <div class="metric-value">1.2M/sec</div>
+                        <div class="metric-unit">P50 latency: 23ms</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">Error Rate</div>
+                        <div class="metric-value">0.04%</div>
+                        <div class="metric-unit">5xx errors: 487/sec</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">Top Service Latency</div>
+                        <div class="metric-value">142ms</div>
+                        <div class="metric-unit">ml-inference service</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Services Section -->
+        <section id="services">
+            <div class="container">
+                <h2>Management Features</h2>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">⚙️</div>
+                        <h3>Service Management</h3>
+                        <p>Start, stop, restart, and scale services. View logs, metrics, and dependencies in real-time</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">👥</div>
+                        <h3>User Management</h3>
+                        <p>Create, modify, and delete admin accounts. Manage roles, permissions, and access levels</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">📊</div>
+                        <h3>Analytics Dashboard</h3>
+                        <p>Historical metrics, performance trends, capacity planning, and usage reports</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🔐</div>
+                        <h3>Security Audit Logs</h3>
+                        <p>Complete audit trail of all administrative actions. Compliance reports and access logs</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🚀</div>
+                        <h3>Deployment Controls</h3>
+                        <p>Manage releases, rollbacks, and canary deployments. Blue-green deployment strategies</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🔧</div>
+                        <h3>Configuration Management</h3>
+                        <p>Environment variables, secrets, feature flags, and configuration rollout controls</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🔒</div>
+                        <h3>Certificate Rotation</h3>
+                        <p>Automated SSL/TLS certificate management and renewal across all services</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🗝️</div>
+                        <h3>Secret Management</h3>
+                        <p>Encrypted secret storage, rotation policies, and access control for credentials</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section id="features">
+            <div class="container">
+                <h2>Quick Links & Tools</h2>
+                <p style="text-align: center; color: #b0b0b0; margin-bottom: 2rem; font-family: 'Inter', sans-serif;">Direct access to monitoring and management systems</p>
+                <div class="quick-links">
+                    <a href="#" class="quick-link">📊 Grafana</a>
+                    <a href="#" class="quick-link">🔍 Prometheus</a>
+                    <a href="#" class="quick-link">🔄 NATS Dashboard</a>
+                    <a href="#" class="quick-link">🗄️ pgvector Admin</a>
+                    <a href="#" class="quick-link">🗺️ Consul UI</a>
+                    <a href="#" class="quick-link">🔌 Envoy Dashboard</a>
+                    <a href="#" class="quick-link">🔥 Firebase Console</a>
+                    <a href="#" class="quick-link">☁️ Cloudflare Dashboard</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- RBAC Section -->
+        <section id="rbac">
+            <div class="container">
+                <h2>Role-Based Access Control</h2>
+                <p style="text-align: center; color: #b0b0b0; margin-bottom: 2rem; font-family: 'Inter', sans-serif;">Fine-grained permissions and access levels for system administration</p>
+                <div class="rbac-grid">
+                    <div class="rbac-card">
+                        <h4>Super Admin</h4>
+                        <ul class="rbac-list">
+                            <li>All system access</li>
+                            <li>User management</li>
+                            <li>Role assignment</li>
+                            <li>Configuration</li>
+                            <li>Security policies</li>
+                            <li>Billing & compliance</li>
+                        </ul>
+                    </div>
+                    <div class="rbac-card">
+                        <h4>Admin</h4>
+                        <ul class="rbac-list">
+                            <li>Service management</li>
+                            <li>Deployments</li>
+                            <li>Configuration</li>
+                            <li>User support</li>
+                            <li>Audit logs</li>
+                            <li>No access control</li>
+                        </ul>
+                    </div>
+                    <div class="rbac-card">
+                        <h4>Operator</h4>
+                        <ul class="rbac-list">
+                            <li>Service monitoring</li>
+                            <li>View logs</li>
+                            <li>Restart services</li>
+                            <li>Incident response</li>
+                            <li>Read-only config</li>
+                            <li>No deployments</li>
+                        </ul>
+                    </div>
+                    <div class="rbac-card">
+                        <h4>Viewer</h4>
+                        <ul class="rbac-list">
+                            <li>View dashboards</li>
+                            <li>View metrics</li>
+                            <li>View audit logs</li>
+                            <li>Reports only</li>
+                            <li>No modifications</li>
+                            <li>Read-only access</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Ecosystem Links -->
+        <section id="ecosystem" class="ecosystem">
+            <div class="container">
+                <h3>HEADY Ecosystem</h3>
+                <div class="ecosystem-links">
+                    <a href="https://headysystems.com" class="ecosystem-link">🏠 HeadySystems.com</a>
+                    <a href="https://headyme.com" class="ecosystem-link">👤 HeadyMe.com</a>
+                    <a href="https://heady-ai.com" class="ecosystem-link">🤖 Heady-AI.com</a>
+                    <a href="https://headyos.com" class="ecosystem-link">🖥️ HeadyOS.com</a>
+                    <a href="https://headyconnection.org" class="ecosystem-link">🌐 Connection.org</a>
+                    <a href="https://headyconnection.com" class="ecosystem-link">👥 Connection.com</a>
+                    <a href="https://headyfinance.com" class="ecosystem-link">💰 Finance.com</a>
+                    <a href="https://headyex.com" class="ecosystem-link">📊 HeadyEx.com</a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>Admin</h4>
+                    <a href="#login">Login</a>
+                    <a href="#dashboard">Dashboard</a>
+                    <a href="#services">Services</a>
+                    <a href="#rbac">Access Control</a>
+                </div>
+                <div class="footer-section">
+                    <h4>Resources</h4>
+                    <a href="#">Documentation</a>
+                    <a href="#">API Docs</a>
+                    <a href="#">Support</a>
+                    <a href="#">Status Page</a>
+                </div>
+                <div class="footer-section">
+                    <h4>Security</h4>
+                    <a href="#">Security Policy</a>
+                    <a href="#">Audit Logs</a>
+                    <a href="#">Compliance</a>
+                    <a href="#">Incident Report</a>
+                </div>
+                <div class="footer-section">
+                    <h4>Company</h4>
+                    <a href="https://headysystems.com">About HEADY</a>
+                    <a href="#">Blog</a>
+                    <a href="#">Contact</a>
+                    <a href="#">Careers</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>Founded by Eric Haywood | 51 Provisional Patents | © 2026 HeadySystems Inc. All rights reserved. System restricted to authorized personnel only.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Canvas animation with grid pattern
+        const canvas = document.getElementById('canvas-bg');
+        const ctx = canvas.getContext('2d');
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+
+        // Grid background
+        function drawGrid() {
+            const gridSize = 40;
+            ctx.strokeStyle = 'rgba(124, 94, 255, 0.08)';
+            ctx.lineWidth = 0.5;
+
+            for (let x = 0; x < canvas.width; x += gridSize) {
+                ctx.beginPath();
+                ctx.moveTo(x, 0);
+                ctx.lineTo(x, canvas.height);
+                ctx.stroke();
+            }
+
+            for (let y = 0; y < canvas.height; y += gridSize) {
+                ctx.beginPath();
+                ctx.moveTo(0, y);
+                ctx.lineTo(canvas.width, y);
+                ctx.stroke();
+            }
+        }
+
+        // Particle animation
+        const particles = [];
+        const particleCount = 40;
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 1.5 + 0.5;
+                this.speedX = Math.random() * 0.2 - 0.1;
+                this.speedY = Math.random() * 0.2 - 0.1;
+                this.opacity = Math.random() * 0.2 + 0.05;
+            }
+
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+
+                if (this.x > canvas.width) this.x = 0;
+                if (this.x < 0) this.x = canvas.width;
+                if (this.y > canvas.height) this.y = 0;
+                if (this.y < 0) this.y = canvas.height;
+            }
+
+            draw() {
+                ctx.fillStyle = `rgba(124, 94, 255, ${this.opacity})`;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        for (let i = 0; i < particleCount; i++) {
+            particles.push(new Particle());
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            drawGrid();
+
+            for (let particle of particles) {
+                particle.update();
+                particle.draw();
+            }
+
+            // Draw connecting lines
+            for (let i = 0; i < particles.length; i++) {
+                for (let j = i; j < particles.length; j++) {
+                    const dx = particles[i].x - particles[j].x;
+                    const dy = particles[i].y - particles[j].y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+
+                    if (distance < 120) {
+                        ctx.strokeStyle = `rgba(124, 94, 255, ${0.08 * (1 - distance / 120)})`;
+                        ctx.lineWidth = 0.3;
+                        ctx.beginPath();
+                        ctx.moveTo(particles[i].x, particles[i].y);
+                        ctx.lineTo(particles[j].x, particles[j].y);
+                        ctx.stroke();
+                    }
+                }
+            }
+
+            requestAnimationFrame(animate);
+        }
+
+        animate();
+    </script>
+</body>
+</html>

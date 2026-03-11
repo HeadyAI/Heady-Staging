@@ -15,7 +15,7 @@
         "manager": {
           "url": "https://manager.headysystems.com",
           "service": "heady-manager",
-          "port": 3300,
+          "port": 3301,
           "health": "https://manager.headysystems.com/health/live",
           "ready": "https://manager.headysystems.com/health/ready",
           "description": "Primary orchestration manager"
@@ -23,7 +23,7 @@
         "api": {
           "url": "https://api.headysystems.com",
           "service": "heady-manager",
-          "port": 3300,
+          "port": 3301,
           "health": "https://api.headysystems.com/health/live",
           "ready": "https://api.headysystems.com/health/ready",
           "description": "Public REST API"
@@ -31,7 +31,7 @@
         "conductor": {
           "url": "https://conductor.headysystems.com",
           "service": "heady-manager",
-          "port": 3300,
+          "port": 3301,
           "health": "https://conductor.headysystems.com/health/live",
           "ready": "https://conductor.headysystems.com/health/ready",
           "description": "HeadyConductor routing endpoint"
@@ -39,7 +39,7 @@
         "web": {
           "url": "https://web.headysystems.com",
           "service": "heady-manager",
-          "port": 3300,
+          "port": 3301,
           "health": "https://web.headysystems.com/health/live",
           "description": "Dashboard and web interface"
         }
@@ -52,7 +52,7 @@
         "mcp": {
           "url": "https://mcp.headymcp.com",
           "service": "heady-manager",
-          "port": 3300,
+          "port": 3301,
           "health": "https://mcp.headymcp.com/health/live",
           "description": "MCP server — 31 registered tools",
           "protocol": "MCP/stdio+HTTP"
@@ -66,7 +66,7 @@
         "buddy": {
           "url": "https://buddy.headybuddy.org",
           "service": "heady-manager",
-          "port": 3300,
+          "port": 3301,
           "health": "https://buddy.headybuddy.org/health/live",
           "description": "Always-on companion system"
         }
@@ -133,9 +133,6 @@
       }
     }
   },
-
-  "nodeBaseUrl": "https://manager.headysystems.com",
-  "nodeBaseUrlDev": "http://manager.dev.local.heady.internal:3300",
 
   "nodes": {
     "HeadySoul": {

@@ -25,7 +25,7 @@ services:
   - name: HeadyMCP
     endpoint: https://tools.headyme.com/mcp
     weight: 0.8
-  - name: HeadyRender
+  - name: HeadyCloudRun
     endpoint: https://api.headyme.com/render
     weight: 0.7
   - name: HeadyLens
@@ -38,7 +38,7 @@ services:
 task_types:
   analysis: HeadyBrain
   deployment: HeadyMCP
-  build: HeadyRender
+  build: HeadyCloudRun
   maintenance: HeadyBrain
   security_audit: HeadyBrain
   backup: HeadyMCP

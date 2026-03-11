@@ -139,7 +139,6 @@ module.exports = (env = {}, argv = {}) => {
       alias: {
         '@heady-ai/shell': path.resolve(__dirname, 'src/shell'),
         '@heady-ai/services': path.resolve(__dirname, 'src/services'),
-        'shared': path.resolve(__dirname, '../../shared'),
       },
     },
 

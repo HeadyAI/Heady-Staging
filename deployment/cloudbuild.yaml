@@ -307,7 +307,7 @@ steps:
           while [ $attempt -lt $RETRIES ]; do
             echo "Checking https://${domain}/health/live (attempt $((attempt+1))/${RETRIES})"
             if curl --fail --silent --max-time "${TIMEOUT}" \
-                "https://${domain}/health/ready"; then
+                "https://${domain}/health/live"; then
               echo "  OK: ${domain}"
               break
             fi

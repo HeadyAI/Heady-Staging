@@ -1,0 +1,56 @@
+/*
+ * © 2026 Heady Systems LLC.
+ * PROPRIETARY AND CONFIDENTIAL.
+ * Unauthorized copying, modification, or distribution is strictly prohibited.
+ *
+ * GitHub Action: Branding Enforcement CI
+ * Fails any PR that contains competitor AI provider names in user-facing views.
+ */
+name: Heady Branding Enforcement
+
+on:
+  pull_request:
+    branches: [main, master]
+
+jobs:
+  branding-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Scan for Competitor Provider Names
+        run: |
+          echo "🛡️ [Heady CI] Scanning for unauthorized competitor branding..."
+          
+          VIOLATIONS=0
+          BANNED_TERMS="Claude|Gemini|OpenAI|Anthropic|Groq|Vertex AI|HuggingFace|Mistral|Cohere"
+          
+          # Only scan user-facing files (HTML, JSX, CSS, MD in sites/docs)
+          SCAN_DIRS="sites/ docs/ heady-hf-space/ heady-hf-space-systems/ heady-hf-space-connection/"
+          
+          for dir in $SCAN_DIRS; do
+            if [ -d "$dir" ]; then
+              FOUND=$(grep -rniE "$BANNED_TERMS" "$dir" \
+                --include="*.html" --include="*.jsx" --include="*.js" \
+                --include="*.css" --include="*.md" \
+                --exclude-dir=node_modules --exclude-dir=.git || true)
+              
+              if [ -n "$FOUND" ]; then
+                echo "❌ VIOLATIONS FOUND in $dir:"
+                echo "$FOUND"
+                VIOLATIONS=$((VIOLATIONS + 1))
+              fi
+            fi
+          done
+          
+          if [ $VIOLATIONS -gt 0 ]; then
+            echo ""
+            echo "🚨 BRANDING CHECK FAILED"
+            echo "Replace competitor names with Heady service names:"
+            echo "  Claude/Gemini/OpenAI → HeadyBrain"
+            echo "  HuggingFace → HeadyModels"
+            echo "  Vertex AI → HeadyCloud"
+            exit 1
+          fi
+          
+          echo "✅ Branding check passed. No competitor names detected."

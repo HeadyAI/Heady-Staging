@@ -8,7 +8,7 @@ description: >
   Keywords: task decomposition, subtask, DAG, dependency graph, CSL scoring, topological sort,
   parallel execution, task routing, swarm assignment, Heady task engine, divide and conquer.
 metadata:
-  author: eric-haywood
+  author: eric-head
   version: '2.0'
 ---
 

@@ -17,7 +17,6 @@
  */
 
 'use strict';
-const logger = require('../../shared/logger')(require('path').basename('services/heady-ui/generative-engine.js', '.js'));
 
 // ─── Sacred Geometry Constants ──────────────────────────────────
 const PHI = 1.6180339887498948;
@@ -292,7 +291,7 @@ class GenerativeUIEngine {
 if (require.main === module) {
     const engine = new GenerativeUIEngine();
 
-    logger.info('═══ Generative UI Engine ═══\n');
+    console.log('═══ Generative UI Engine ═══\n');
 
     Promise.all([
         engine.generate('agent status dashboard with live metrics'),
@@ -300,10 +299,10 @@ if (require.main === module) {
         engine.generate('user login form with email and password'),
     ]).then(results => {
         results.forEach(r => {
-            logger.info(`${r.type}: ${r.id} (${r.html.length} chars HTML, ${r.css.length} chars CSS)`);
+            console.log(`${r.type}: ${r.id} (${r.html.length} chars HTML, ${r.css.length} chars CSS)`);
         });
-        logger.info(`\nCache: ${engine.componentCache.size} components`);
-        logger.info('✅ Generative UI Engine operational');
+        console.log(`\nCache: ${engine.componentCache.size} components`);
+        console.log('✅ Generative UI Engine operational');
     });
 }
 

@@ -2,22 +2,1281 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>headyex.com | HeadySystems</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data:; script-src 'self'; style-src 'self' 'unsafe-inline'; frame-ancestors 'none';">
+    <meta name="description" content="HeadyEX: The Agent Marketplace. Discover, deploy, and monetize AI agents and skills. 80/20 revenue share for creators. Thousands of agents ready to use.">
+    <meta name="keywords" content="AI agents, marketplace, skills, AI tools, automation, agent deployment, AI economy, monetization">
+    <meta name="author" content="Eric Haywood, HeadySystems Inc.">
+    <meta name="robots" content="index, follow">
+    <meta name="language" content="English">
+    <meta name="revisit-after" content="7 days">
+
+    <!-- Open Graph Tags -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="HeadyEX - The Agent Marketplace">
+    <meta property="og:description" content="Discover and deploy AI agents. Creators earn 80% revenue. Thousands of agents ready to solve your problems.">
+    <meta property="og:url" content="https://headyex.com">
+    <meta property="og:site_name" content="HeadyEX">
+    <meta property="og:image" content="https://headyex.com/og-image.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+
+    <!-- Twitter Card Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="HeadyEX - The Agent Marketplace">
+    <meta name="twitter:description" content="Discover, deploy, and earn with AI agents">
+    <meta name="twitter:image" content="https://headyex.com/og-image.jpg">
+
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Marketplace",
+        "name": "HeadyEX",
+        "url": "https://headyex.com",
+        "description": "Marketplace for AI agents and skills",
+        "provider": {
+            "@type": "Organization",
+            "name": "HeadySystems Inc.",
+            "founder": {
+                "@type": "Person",
+                "name": "Eric Haywood"
+            }
+        },
+        "categories": ["Productivity", "Research", "Creative", "Developer Tools", "Finance", "Healthcare", "Education", "Enterprise"]
+    }
+    </script>
+
+    <title>HeadyEX - Agent Marketplace | Discover & Deploy AI Agents</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-dark: #0a0a0f;
+            --accent: #7c5eff;
+            --gold: #f0c040;
+            --cyan: #40e0d0;
+            --green: #00e676;
+            --text-primary: #ffffff;
+            --text-secondary: #b0b0c0;
+            --border-color: #2a2a3f;
+            --card-bg: #1a1a25;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        #canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        h1 {
+            font-size: clamp(2.5rem, 8vw, 4rem);
+            line-height: 1.1;
+            background: linear-gradient(135deg, var(--gold) 0%, var(--cyan) 50%, var(--accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1.5rem;
+        }
+
+        h2 {
+            font-size: clamp(1.75rem, 5vw, 2.5rem);
+            color: var(--text-primary);
+            margin-bottom: 1.5rem;
+        }
+
+        h3 {
+            font-size: 1.5rem;
+            color: var(--cyan);
+            margin-bottom: 1rem;
+        }
+
+        p {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+            line-height: 1.8;
+        }
+
+        a {
+            color: var(--cyan);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        a:hover {
+            color: var(--gold);
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .section {
+            padding: 6rem 0;
+            position: relative;
+            z-index: 1;
+        }
+
+        .section.alt {
+            background: rgba(26, 26, 37, 0.3);
+        }
+
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 70px;
+            background: rgba(10, 10, 15, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        nav .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--gold) 0%, var(--cyan) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: 0.1em;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        nav a {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            transition: color 0.3s ease;
+        }
+
+        nav a:hover {
+            color: var(--cyan);
+        }
+
+        .cta-button {
+            background: linear-gradient(135deg, var(--accent) 0%, var(--cyan) 100%);
+            color: var(--bg-dark);
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(124, 94, 255, 0.3);
+        }
+
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding-top: 70px;
+        }
+
+        .hero-content h1 {
+            font-size: clamp(3rem, 10vw, 5rem);
+            margin-bottom: 1.5rem;
+            animation: fadeInUp 1s ease 0.2s backwards;
+        }
+
+        .hero-content p {
+            font-size: 1.3rem;
+            max-width: 600px;
+            margin: 0 auto 3rem;
+            animation: fadeInUp 1s ease 0.4s backwards;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            animation: fadeInUp 1s ease 0.6s backwards;
+        }
+
+        .btn {
+            padding: 1rem 2.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1rem;
+            border: 2px solid transparent;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent) 0%, var(--cyan) 100%);
+            color: var(--bg-dark);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(124, 94, 255, 0.4);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--cyan);
+            border: 2px solid var(--cyan);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(64, 224, 208, 0.1);
+            transform: translateY(-3px);
+        }
+
+        .grid {
+            display: grid;
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .grid-2 {
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        }
+
+        .grid-3 {
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        }
+
+        .agent-card {
+            background: linear-gradient(135deg, var(--card-bg) 0%, rgba(124, 94, 255, 0.05) 100%);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 2rem;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .agent-card:hover {
+            border-color: var(--accent);
+            box-shadow: 0 20px 50px rgba(124, 94, 255, 0.2);
+            transform: translateY(-5px);
+        }
+
+        .agent-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 1rem;
+        }
+
+        .agent-icon {
+            font-size: 2.5rem;
+        }
+
+        .agent-rating {
+            display: flex;
+            gap: 0.25rem;
+            color: var(--gold);
+            font-size: 0.9rem;
+        }
+
+        .agent-rating span {
+            color: var(--text-secondary);
+            margin-left: 0.5rem;
+        }
+
+        .agent-card h3 {
+            margin-top: 0;
+            margin-bottom: 0.5rem;
+            font-size: 1.3rem;
+        }
+
+        .agent-desc {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            flex-grow: 1;
+        }
+
+        .agent-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .agent-tag {
+            background: rgba(124, 94, 255, 0.2);
+            color: var(--accent);
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .agent-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid var(--border-color);
+            padding-top: 1rem;
+        }
+
+        .agent-price {
+            font-weight: 600;
+            color: var(--green);
+        }
+
+        .agent-deploy {
+            background: transparent;
+            color: var(--cyan);
+            border: 1px solid var(--cyan);
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .agent-deploy:hover {
+            background: rgba(64, 224, 208, 0.1);
+        }
+
+        .category-filter {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-bottom: 2rem;
+        }
+
+        .category-btn {
+            padding: 0.75rem 1.5rem;
+            border: 2px solid var(--border-color);
+            background: transparent;
+            color: var(--text-secondary);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .category-btn:hover,
+        .category-btn.active {
+            border-color: var(--cyan);
+            color: var(--cyan);
+            background: rgba(64, 224, 208, 0.1);
+        }
+
+        .feature-list {
+            list-style: none;
+        }
+
+        .feature-list li {
+            padding: 0.75rem 0;
+            padding-left: 2rem;
+            position: relative;
+            color: var(--text-secondary);
+        }
+
+        .feature-list li:before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: var(--cyan);
+            font-weight: bold;
+        }
+
+        .badge {
+            display: inline-block;
+            background: rgba(124, 94, 255, 0.2);
+            color: var(--accent);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            border: 1px solid var(--accent);
+            margin: 0.25rem;
+        }
+
+        .pricing-card {
+            background: linear-gradient(135deg, var(--card-bg) 0%, rgba(124, 94, 255, 0.05) 100%);
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .pricing-card:hover {
+            border-color: var(--accent);
+            box-shadow: 0 20px 50px rgba(124, 94, 255, 0.2);
+        }
+
+        .pricing-card h3 {
+            margin-top: 0;
+            font-size: 1.3rem;
+        }
+
+        .pricing-value {
+            font-size: 2.5rem;
+            color: var(--gold);
+            font-weight: 800;
+            margin: 1rem 0;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        footer {
+            background: rgba(10, 10, 15, 0.8);
+            border-top: 1px solid var(--border-color);
+            padding: 3rem 0;
+            margin-top: 6rem;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section h4 {
+            color: var(--cyan);
+            margin-bottom: 1rem;
+            font-size: 1rem;
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section ul li {
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-section a {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .footer-bottom {
+            border-top: 1px solid var(--border-color);
+            padding-top: 2rem;
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+        }
+
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border-width: 0;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.8s ease forwards;
+        }
+
+        @media (max-width: 768px) {
+            nav ul {
+                gap: 1rem;
+            }
+
+            nav a {
+                font-size: 0.8rem;
+            }
+
+            .container {
+                padding: 0 1rem;
+            }
+
+            .section {
+                padding: 4rem 0;
+            }
+
+            .hero-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .btn {
+                width: 100%;
+                max-width: 300px;
+            }
+
+            .category-filter {
+                flex-direction: column;
+            }
+
+            .category-btn {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 2rem;
+            }
+
+            h2 {
+                font-size: 1.5rem;
+            }
+
+            .hero-content p {
+                font-size: 1rem;
+            }
+        }
+    </style>
 </head>
 <body>
-    <header>
-        <h1>headyex.com</h1>
-        <nav aria-label="Main Navigation">
-            <a href="/">Home</a>
-            <a href="/status">Status</a>
-        </nav>
-    </header>
-    <main>
-        <h2>Welcome to headyex.com</h2>
-        <p>Powered by Heady Sovereign Node v4.0.</p>
-        <p>Concurrent-Equals Architecture.</p>
-    </main>
+    <canvas id="canvas"></canvas>
+
+    <nav aria-label="Main navigation">
+        <div class="container">
+            <div class="logo">HEADY EX</div>
+            <ul>
+                <li><a href="#featured">Featured Agents</a></li>
+                <li><a href="#categories">Categories</a></li>
+                <li><a href="#for-creators">For Creators</a></li>
+                <li><a href="#sdk" class="cta-button">Build Agent</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1>THE AGENT MARKETPLACE</h1>
+                <p>Discover, deploy, and monetize AI agents and skills. Thousands of agents ready to solve your problems. Creators earn 80% revenue.</p>
+                <div class="hero-buttons">
+                    <a href="#featured" class="btn btn-primary">Browse Agents</a>
+                    <a href="#for-creators" class="btn btn-secondary">Start Creating</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section alt" id="featured">
+        <div class="container">
+            <h2>Featured Agents</h2>
+            <p style="max-width: 800px; margin-bottom: 2rem;">Discover top-rated agents built by expert creators. Deploy instantly with HeadyEX SDK.</p>
+
+            <div class="grid grid-3">
+                <div class="agent-card">
+                    <div class="agent-header">
+                        <span class="agent-icon">📊</span>
+                        <div class="agent-rating">
+                            ★★★★★
+                            <span>(2,847)</span>
+                        </div>
+                    </div>
+                    <h3>Research Agent</h3>
+                    <p class="agent-desc">Deep web research with real-time data synthesis. Crawls sources, extracts insights, and synthesizes comprehensive reports in minutes.</p>
+                    <div class="agent-tags">
+                        <span class="agent-tag">Research</span>
+                        <span class="agent-tag">Data</span>
+                        <span class="agent-tag">Analysis</span>
+                    </div>
+                    <div class="agent-footer">
+                        <span class="agent-price">$2.99/use</span>
+                        <button class="agent-deploy">Deploy</button>
+                    </div>
+                </div>
+
+                <div class="agent-card">
+                    <div class="agent-header">
+                        <span class="agent-icon">✍️</span>
+                        <div class="agent-rating">
+                            ★★★★★
+                            <span>(3,102)</span>
+                        </div>
+                    </div>
+                    <h3>Writing Agent</h3>
+                    <p class="agent-desc">Professional content creation with style adaptation. Writes blogs, emails, scripts, and creative content matching your brand voice.</p>
+                    <div class="agent-tags">
+                        <span class="agent-tag">Creative</span>
+                        <span class="agent-tag">Writing</span>
+                        <span class="agent-tag">Content</span>
+                    </div>
+                    <div class="agent-footer">
+                        <span class="agent-price">$1.49/use</span>
+                        <button class="agent-deploy">Deploy</button>
+                    </div>
+                </div>
+
+                <div class="agent-card">
+                    <div class="agent-header">
+                        <span class="agent-icon">💻</span>
+                        <div class="agent-rating">
+                            ★★★★★
+                            <span>(4,521)</span>
+                        </div>
+                    </div>
+                    <h3>Code Agent</h3>
+                    <p class="agent-desc">Full-stack development from requirements. Generates, reviews, tests, and deploys code across 50+ languages and frameworks.</p>
+                    <div class="agent-tags">
+                        <span class="agent-tag">Developer</span>
+                        <span class="agent-tag">Code</span>
+                        <span class="agent-tag">Automation</span>
+                    </div>
+                    <div class="agent-footer">
+                        <span class="agent-price">$4.99/use</span>
+                        <button class="agent-deploy">Deploy</button>
+                    </div>
+                </div>
+
+                <div class="agent-card">
+                    <div class="agent-header">
+                        <span class="agent-icon">📈</span>
+                        <div class="agent-rating">
+                            ★★★★★
+                            <span>(1,923)</span>
+                        </div>
+                    </div>
+                    <h3>Data Agent</h3>
+                    <p class="agent-desc">Advanced data processing and visualization. Cleans, transforms, analyzes datasets and generates interactive dashboards automatically.</p>
+                    <div class="agent-tags">
+                        <span class="agent-tag">Data</span>
+                        <span class="agent-tag">Analytics</span>
+                        <span class="agent-tag">Visualization</span>
+                    </div>
+                    <div class="agent-footer">
+                        <span class="agent-price">$3.49/use</span>
+                        <button class="agent-deploy">Deploy</button>
+                    </div>
+                </div>
+
+                <div class="agent-card">
+                    <div class="agent-header">
+                        <span class="agent-icon">💰</span>
+                        <div class="agent-rating">
+                            ★★★★★
+                            <span>(2,156)</span>
+                        </div>
+                    </div>
+                    <h3>Finance Agent</h3>
+                    <p class="agent-desc">Portfolio analysis and investment insights. Real-time market data, risk assessment, and personalized financial recommendations.</p>
+                    <div class="agent-tags">
+                        <span class="agent-tag">Finance</span>
+                        <span class="agent-tag">Investment</span>
+                        <span class="agent-tag">Analysis</span>
+                    </div>
+                    <div class="agent-footer">
+                        <span class="agent-price">$5.99/use</span>
+                        <button class="agent-deploy">Deploy</button>
+                    </div>
+                </div>
+
+                <div class="agent-card">
+                    <div class="agent-header">
+                        <span class="agent-icon">🎨</span>
+                        <div class="agent-rating">
+                            ★★★★★
+                            <span>(2,834)</span>
+                        </div>
+                    </div>
+                    <h3>Creative Agent</h3>
+                    <p class="agent-desc">Multimodal AI creativity. Generates images, music, videos, and designs based on text prompts and artistic direction.</p>
+                    <div class="agent-tags">
+                        <span class="agent-tag">Creative</span>
+                        <span class="agent-tag">Design</span>
+                        <span class="agent-tag">Media</span>
+                    </div>
+                    <div class="agent-footer">
+                        <span class="agent-price">$3.99/use</span>
+                        <button class="agent-deploy">Deploy</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section" id="categories">
+        <div class="container">
+            <h2>Browse by Category</h2>
+            <p style="max-width: 800px; margin-bottom: 2rem;">8 major categories with thousands of specialized agents. Find exactly what you need.</p>
+
+            <div class="category-filter">
+                <button class="category-btn active">All Categories</button>
+                <button class="category-btn">Productivity</button>
+                <button class="category-btn">Research</button>
+                <button class="category-btn">Creative</button>
+                <button class="category-btn">Developer</button>
+                <button class="category-btn">Finance</button>
+                <button class="category-btn">Healthcare</button>
+                <button class="category-btn">Education</button>
+                <button class="category-btn">Enterprise</button>
+            </div>
+
+            <div class="grid grid-3">
+                <div style="padding: 2rem; background: rgba(124, 94, 255, 0.1); border-radius: 12px; border: 2px solid var(--border-color); transition: all 0.3s ease; cursor: pointer;" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='var(--border-color)'">
+                    <h3 style="font-size: 1.2rem; margin-top: 0;">📱 Productivity</h3>
+                    <p style="font-size: 0.9rem;">Task automation, scheduling, email management, and workflow optimization.</p>
+                    <p style="color: var(--accent); font-weight: 600; margin-top: 1rem;">234 agents</p>
+                </div>
+
+                <div style="padding: 2rem; background: rgba(64, 224, 208, 0.1); border-radius: 12px; border: 2px solid var(--border-color); transition: all 0.3s ease; cursor: pointer;" onmouseover="this.style.borderColor='var(--cyan)'" onmouseout="this.style.borderColor='var(--border-color)'">
+                    <h3 style="font-size: 1.2rem; margin-top: 0;">🔬 Research</h3>
+                    <p style="font-size: 0.9rem;">Web research, literature review, data synthesis, and academic support.</p>
+                    <p style="color: var(--cyan); font-weight: 600; margin-top: 1rem;">189 agents</p>
+                </div>
+
+                <div style="padding: 2rem; background: rgba(0, 230, 118, 0.1); border-radius: 12px; border: 2px solid var(--border-color); transition: all 0.3s ease; cursor: pointer;" onmouseover="this.style.borderColor='var(--green)'" onmouseout="this.style.borderColor='var(--border-color)'">
+                    <h3 style="font-size: 1.2rem; margin-top: 0;">🎨 Creative</h3>
+                    <p style="font-size: 0.9rem;">Writing, design, music, video, and artistic content generation.</p>
+                    <p style="color: var(--green); font-weight: 600; margin-top: 1rem;">267 agents</p>
+                </div>
+
+                <div style="padding: 2rem; background: rgba(240, 192, 64, 0.1); border-radius: 12px; border: 2px solid var(--border-color); transition: all 0.3s ease; cursor: pointer;" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='var(--border-color)'">
+                    <h3 style="font-size: 1.2rem; margin-top: 0;">💻 Developer Tools</h3>
+                    <p style="font-size: 0.9rem;">Code generation, debugging, testing, and DevOps automation.</p>
+                    <p style="color: var(--gold); font-weight: 600; margin-top: 1rem;">312 agents</p>
+                </div>
+
+                <div style="padding: 2rem; background: rgba(124, 94, 255, 0.1); border-radius: 12px; border: 2px solid var(--border-color); transition: all 0.3s ease; cursor: pointer;" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='var(--border-color)'">
+                    <h3 style="font-size: 1.2rem; margin-top: 0;">💰 Finance</h3>
+                    <p style="font-size: 0.9rem;">Portfolio analysis, investment research, and financial planning.</p>
+                    <p style="color: var(--accent); font-weight: 600; margin-top: 1rem;">156 agents</p>
+                </div>
+
+                <div style="padding: 2rem; background: rgba(64, 224, 208, 0.1); border-radius: 12px; border: 2px solid var(--border-color); transition: all 0.3s ease; cursor: pointer;" onmouseover="this.style.borderColor='var(--cyan)'" onmouseout="this.style.borderColor='var(--border-color)'">
+                    <h3 style="font-size: 1.2rem; margin-top: 0;">🏥 Healthcare</h3>
+                    <p style="font-size: 0.9rem;">Medical research, patient education, and wellness support.</p>
+                    <p style="color: var(--cyan); font-weight: 600; margin-top: 1rem;">143 agents</p>
+                </div>
+
+                <div style="padding: 2rem; background: rgba(0, 230, 118, 0.1); border-radius: 12px; border: 2px solid var(--border-color); transition: all 0.3s ease; cursor: pointer;" onmouseover="this.style.borderColor='var(--green)'" onmouseout="this.style.borderColor='var(--border-color)'">
+                    <h3 style="font-size: 1.2rem; margin-top: 0;">📚 Education</h3>
+                    <p style="font-size: 0.9rem;">Tutoring, course creation, assessment, and student support.</p>
+                    <p style="color: var(--green); font-weight: 600; margin-top: 1rem;">198 agents</p>
+                </div>
+
+                <div style="padding: 2rem; background: rgba(240, 192, 64, 0.1); border-radius: 12px; border: 2px solid var(--border-color); transition: all 0.3s ease; cursor: pointer;" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='var(--border-color)'">
+                    <h3 style="font-size: 1.2rem; margin-top: 0;">🏢 Enterprise</h3>
+                    <p style="font-size: 0.9rem;">Custom integrations, compliance, and large-scale automation.</p>
+                    <p style="color: var(--gold); font-weight: 600; margin-top: 1rem;">87 agents</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section alt" id="for-creators">
+        <div class="container">
+            <h2>For Creators</h2>
+            <p style="max-width: 900px; margin-bottom: 2rem;">Build and sell your agents on HeadyEX. Earn 80% revenue with access to millions of users.</p>
+
+            <div class="grid grid-2">
+                <div style="padding: 2rem; background: linear-gradient(135deg, var(--card-bg) 0%, rgba(0, 230, 118, 0.05) 100%); border: 1px solid var(--border-color); border-radius: 12px;">
+                    <h3 style="color: var(--green); margin-top: 0;">80/20 Revenue Share</h3>
+                    <p>You keep 80% of revenue. HeadyEX takes 20% to cover platform costs, payments, support, and marketing.</p>
+                    <ul class="feature-list">
+                        <li>Best-in-class creator earnings</li>
+                        <li>Monthly payouts to your account</li>
+                        <li>No hidden fees or deductions</li>
+                        <li>Transparent dashboard</li>
+                    </ul>
+                </div>
+
+                <div style="padding: 2rem; background: linear-gradient(135deg, var(--card-bg) 0%, rgba(124, 94, 255, 0.05) 100%); border: 1px solid var(--border-color); border-radius: 12px;">
+                    <h3 style="color: var(--accent); margin-top: 0;">Complete Support</h3>
+                    <p>We handle infrastructure, payments, and customer support. You focus on building great agents.</p>
+                    <ul class="feature-list">
+                        <li>Free hosting and infrastructure</li>
+                        <li>Automated payment processing</li>
+                        <li>Customer support included</li>
+                        <li>Marketing amplification</li>
+                    </ul>
+                </div>
+
+                <div style="padding: 2rem; background: linear-gradient(135deg, var(--card-bg) 0%, rgba(64, 224, 208, 0.05) 100%); border: 1px solid var(--border-color); border-radius: 12px;">
+                    <h3 style="color: var(--cyan); margin-top: 0;">Developer Tools</h3>
+                    <p>Powerful SDK and APIs to build production-grade agents quickly and reliably.</p>
+                    <ul class="feature-list">
+                        <li>Comprehensive SDK documentation</li>
+                        <li>Code examples and templates</li>
+                        <li>API testing tools</li>
+                        <li>Version control and rollbacks</li>
+                    </ul>
+                </div>
+
+                <div style="padding: 2rem; background: linear-gradient(135deg, var(--card-bg) 0%, rgba(240, 192, 64, 0.05) 100%); border: 1px solid var(--border-color); border-radius: 12px;">
+                    <h3 style="color: var(--gold); margin-top: 0;">Scale Your Business</h3>
+                    <p>Reach millions of users globally. Marketplace features help your agents get discovered.</p>
+                    <ul class="feature-list">
+                        <li>Featured placement opportunities</li>
+                        <li>Cross-promotion with other agents</li>
+                        <li>Analytics and insights</li>
+                        <li>Community ratings and reviews</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div style="margin-top: 3rem; padding: 2rem; background: rgba(0, 230, 118, 0.1); border-radius: 12px; border: 2px solid var(--green);">
+                <h3 style="color: var(--green); margin-top: 0;">Getting Started</h3>
+                <div class="grid grid-3" style="margin-top: 1.5rem;">
+                    <div>
+                        <p style="color: var(--green); font-weight: 600; font-size: 1.2rem; margin-bottom: 0.5rem;">1. Build</p>
+                        <p style="font-size: 0.9rem;">Create an agent using our SDK. Documentation and templates included.</p>
+                    </div>
+                    <div>
+                        <p style="color: var(--green); font-weight: 600; font-size: 1.2rem; margin-bottom: 0.5rem;">2. Test</p>
+                        <p style="font-size: 0.9rem;">Deploy to sandbox. Test with real users. Get feedback and iterate.</p>
+                    </div>
+                    <div>
+                        <p style="color: var(--green); font-weight: 600; font-size: 1.2rem; margin-bottom: 0.5rem;">3. Monetize</p>
+                        <p style="font-size: 0.9rem;">Launch on marketplace. Start earning. Grow with our community.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section" id="how-it-works">
+        <div class="container">
+            <h2>How It Works</h2>
+
+            <div class="grid grid-2">
+                <div style="padding: 2rem; background: rgba(124, 94, 255, 0.1); border-radius: 12px;">
+                    <h3 style="color: var(--accent); margin-top: 0;">For Users</h3>
+                    <ol style="padding-left: 1.5rem; color: var(--text-secondary); line-height: 2;">
+                        <li><strong style="color: var(--cyan);">Browse</strong> – Search agents by category and rating</li>
+                        <li><strong style="color: var(--cyan);">Compare</strong> – Read reviews, pricing, and capabilities</li>
+                        <li><strong style="color: var(--cyan);">Deploy</strong> – Click to instantly deploy an agent</li>
+                        <li><strong style="color: var(--cyan);">Customize</strong> – Configure parameters and integrations</li>
+                        <li><strong style="color: var(--cyan);">Rate & Review</strong> – Share your experience with community</li>
+                    </ol>
+                </div>
+
+                <div style="padding: 2rem; background: rgba(64, 224, 208, 0.1); border-radius: 12px;">
+                    <h3 style="color: var(--cyan); margin-top: 0;">For Creators</h3>
+                    <ol style="padding-left: 1.5rem; color: var(--text-secondary); line-height: 2;">
+                        <li><strong style="color: var(--green);">Develop</strong> – Build with SDK, test thoroughly</li>
+                        <li><strong style="color: var(--green);">Submit</strong> – List on marketplace with details</li>
+                        <li><strong style="color: var(--green);">Review</strong> – Our team ensures quality standards</li>
+                        <li><strong style="color: var(--green);">Launch</strong> – Go live and start earning</li>
+                        <li><strong style="color: var(--green);">Grow</strong> – Iterate based on user feedback</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section alt" id="pricing">
+        <div class="container">
+            <h2>Creator Economics</h2>
+            <p style="max-width: 800px; margin-bottom: 2rem;">Transparent pricing that rewards creators. The more users love your agent, the more you earn.</p>
+
+            <div class="grid grid-2">
+                <div class="pricing-card">
+                    <h3>Per-Use Pricing</h3>
+                    <p style="color: var(--text-secondary); font-size: 0.9rem;">Set your price per use. You earn 80%.</p>
+                    <div class="pricing-value">80%</div>
+                    <p style="color: var(--text-secondary); font-size: 0.85rem;">Your earnings on each transaction</p>
+                    <div style="margin-top: 1.5rem; padding: 1rem; background: rgba(124, 94, 255, 0.1); border-radius: 8px;">
+                        <p style="font-size: 0.85rem; color: var(--accent); margin: 0;"><strong>Example:</strong> $1.00 per use = $0.80 to you</p>
+                    </div>
+                </div>
+
+                <div class="pricing-card">
+                    <h3>Subscription Pricing</h3>
+                    <p style="color: var(--text-secondary); font-size: 0.9rem;">Monthly subscriptions for unlimited use. 80/20 split on revenue.</p>
+                    <div class="pricing-value">80%</div>
+                    <p style="color: var(--text-secondary); font-size: 0.85rem;">Your earnings on subscriptions</p>
+                    <div style="margin-top: 1.5rem; padding: 1rem; background: rgba(124, 94, 255, 0.1); border-radius: 8px;">
+                        <p style="font-size: 0.85rem; color: var(--accent); margin: 0;"><strong>Example:</strong> $9.99/mo = $7.99 to you/mo per user</p>
+                    </div>
+                </div>
+            </div>
+
+            <div style="margin-top: 3rem; padding: 2rem; background: rgba(124, 94, 255, 0.1); border-radius: 12px;">
+                <h3 style="color: var(--accent); margin-top: 0;">Top Creators (Monthly)</h3>
+                <div class="grid grid-3" style="margin-top: 1.5rem;">
+                    <div style="text-align: center;">
+                        <p style="font-size: 2rem; color: var(--gold); font-weight: 800; margin: 0;">$12,450</p>
+                        <p style="font-size: 0.9rem; color: var(--text-secondary);">1st Place - Research Agent Pro</p>
+                    </div>
+                    <div style="text-align: center;">
+                        <p style="font-size: 2rem; color: var(--gold); font-weight: 800; margin: 0;">$8,920</p>
+                        <p style="font-size: 0.9rem; color: var(--text-secondary);">2nd Place - Code Assistant</p>
+                    </div>
+                    <div style="text-align: center;">
+                        <p style="font-size: 2rem; color: var(--gold); font-weight: 800; margin: 0;">$7,340</p>
+                        <p style="font-size: 0.9rem; color: var(--text-secondary);">3rd Place - Writing Suite</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section" id="sdk">
+        <div class="container">
+            <h2>Developer Portal & SDK</h2>
+
+            <div class="grid grid-2">
+                <div>
+                    <h3>Get Started with HeadyEX SDK</h3>
+                    <p>Build production-grade agents in minutes. Comprehensive documentation and examples included.</p>
+                    <div style="margin: 2rem 0; padding: 1.5rem; background: rgba(0, 0, 0, 0.5); border-radius: 8px; border: 1px solid var(--border-color); font-family: 'JetBrains Mono', monospace; font-size: 0.9rem; overflow-x: auto;">
+                        <div style="color: var(--text-secondary);"># Install SDK</div>
+                        <div style="color: var(--cyan); margin: 0.5rem 0;">npm install @heady/ex-sdk</div>
+                        <div style="color: var(--text-secondary); margin-top: 1rem;"># Create Agent</div>
+                        <div style="color: var(--cyan); margin: 0.5rem 0;">heady-ex create-agent my-agent</div>
+                        <div style="color: var(--text-secondary); margin-top: 1rem;"># Test & Deploy</div>
+                        <div style="color: var(--cyan); margin: 0.5rem 0;">heady-ex test && heady-ex deploy</div>
+                    </div>
+                    <a href="https://headysystems.com/sdk" class="btn btn-primary">Access SDK & Docs</a>
+                </div>
+
+                <div>
+                    <h3>API Reference</h3>
+                    <p>Complete API documentation for building custom agents and integrations.</p>
+                    <ul class="feature-list" style="margin: 2rem 0;">
+                        <li><strong>/agent/create</strong> – Deploy a new agent</li>
+                        <li><strong>/agent/invoke</strong> – Call agent with input</li>
+                        <li><strong>/agent/status</strong> – Check execution status</li>
+                        <li><strong>/agent/logs</strong> – Access execution logs</li>
+                        <li><strong>/marketplace/list</strong> – List your agents</li>
+                        <li><strong>/earnings/report</strong> – View earnings data</li>
+                    </ul>
+                    <a href="https://headysystems.com/api/ex" class="btn btn-secondary">Full API Docs</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section alt">
+        <div class="container">
+            <h2>Top Rated Leaderboard</h2>
+            <p style="max-width: 800px; margin-bottom: 2rem;">Most-loved agents by the community. Featured placement and growth opportunities for top performers.</p>
+
+            <div style="overflow-x: auto;">
+                <table style="width: 100%; border-collapse: collapse;">
+                    <thead>
+                        <tr style="border-bottom: 2px solid var(--border-color);">
+                            <th style="padding: 1rem; text-align: left; color: var(--text-secondary); font-weight: 600;">Rank</th>
+                            <th style="padding: 1rem; text-align: left; color: var(--text-secondary); font-weight: 600;">Agent</th>
+                            <th style="padding: 1rem; text-align: left; color: var(--text-secondary); font-weight: 600;">Creator</th>
+                            <th style="padding: 1rem; text-align: left; color: var(--text-secondary); font-weight: 600;">Rating</th>
+                            <th style="padding: 1rem; text-align: left; color: var(--text-secondary); font-weight: 600;">Uses</th>
+                            <th style="padding: 1rem; text-align: left; color: var(--text-secondary); font-weight: 600;">Price</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr style="border-bottom: 1px solid var(--border-color);">
+                            <td style="padding: 1rem; color: var(--gold); font-weight: 800;">🥇 1</td>
+                            <td style="padding: 1rem; color: var(--text-primary);">Research Agent Pro</td>
+                            <td style="padding: 1rem; color: var(--cyan);">@research_labs</td>
+                            <td style="padding: 1rem; color: var(--gold);">★★★★★ (4,821)</td>
+                            <td style="padding: 1rem; color: var(--green);">847,293</td>
+                            <td style="padding: 1rem; color: var(--green); font-weight: 600;">$2.99</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid var(--border-color);">
+                            <td style="padding: 1rem; color: var(--gold); font-weight: 800;">🥈 2</td>
+                            <td style="padding: 1rem; color: var(--text-primary);">Code Assistant</td>
+                            <td style="padding: 1rem; color: var(--cyan);">@dev_studio</td>
+                            <td style="padding: 1rem; color: var(--gold);">★★★★★ (4,512)</td>
+                            <td style="padding: 1rem; color: var(--green);">612,847</td>
+                            <td style="padding: 1rem; color: var(--green); font-weight: 600;">$4.99</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid var(--border-color);">
+                            <td style="padding: 1rem; color: var(--gold); font-weight: 800;">🥉 3</td>
+                            <td style="padding: 1rem; color: var(--text-primary);">Writing Suite</td>
+                            <td style="padding: 1rem; color: var(--cyan);">@creative_minds</td>
+                            <td style="padding: 1rem; color: var(--gold);">★★★★★ (4,398)</td>
+                            <td style="padding: 1rem; color: var(--green);">521,634</td>
+                            <td style="padding: 1rem; color: var(--green); font-weight: 600;">$1.99</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid var(--border-color);">
+                            <td style="padding: 1rem; color: var(--text-secondary);">4</td>
+                            <td style="padding: 1rem; color: var(--text-primary);">Data Analyzer</td>
+                            <td style="padding: 1rem; color: var(--cyan);">@data_nexus</td>
+                            <td style="padding: 1rem; color: var(--gold);">★★★★★ (4,156)</td>
+                            <td style="padding: 1rem; color: var(--green);">456,298</td>
+                            <td style="padding: 1rem; color: var(--green); font-weight: 600;">$3.49</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 1rem; color: var(--text-secondary);">5</td>
+                            <td style="padding: 1rem; color: var(--text-primary);">Finance Insights</td>
+                            <td style="padding: 1rem; color: var(--cyan);">@market_watch</td>
+                            <td style="padding: 1rem; color: var(--gold);">★★★★★ (3,945)</td>
+                            <td style="padding: 1rem; color: var(--green);">389,501</td>
+                            <td style="padding: 1rem; color: var(--green); font-weight: 600;">$5.99</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container">
+            <h2>The HEADY Ecosystem</h2>
+            <p style="max-width: 900px; margin-bottom: 2rem;">HeadyEX is the marketplace layer of the HEADY ecosystem. Agents built here deploy on HeadyOS and powered by HEADY AI.</p>
+
+            <div class="grid grid-3">
+                <div style="padding: 2rem; background: linear-gradient(135deg, var(--card-bg) 0%, rgba(124, 94, 255, 0.05) 100%); border: 1px solid var(--border-color); border-radius: 12px;">
+                    <h3>HEADY AI</h3>
+                    <p>The research-first AI engine powering all agents on HeadyEX.</p>
+                    <a href="https://heady-ai.com" style="color: var(--cyan); font-weight: 600;">Learn About AI →</a>
+                </div>
+
+                <div style="padding: 2rem; background: linear-gradient(135deg, var(--card-bg) 0%, rgba(124, 94, 255, 0.05) 100%); border: 1px solid var(--border-color); border-radius: 12px;">
+                    <h3>HeadyOS</h3>
+                    <p>The latent OS managing agent orchestration and execution.</p>
+                    <a href="https://headyos.com" style="color: var(--cyan); font-weight: 600;">Explore OS →</a>
+                </div>
+
+                <div style="padding: 2rem; background: linear-gradient(135deg, var(--card-bg) 0%, rgba(124, 94, 255, 0.05) 100%); border: 1px solid var(--border-color); border-radius: 12px;">
+                    <h3>HeadySystems</h3>
+                    <p>Central hub for all HEADY platforms and services.</p>
+                    <a href="https://headysystems.com" style="color: var(--cyan); font-weight: 600;">Visit Hub →</a>
+                </div>
+
+                <div style="padding: 2rem; background: linear-gradient(135deg, var(--card-bg) 0%, rgba(124, 94, 255, 0.05) 100%); border: 1px solid var(--border-color); border-radius: 12px;">
+                    <h3>HeadyME</h3>
+                    <p>Personal AI agents deployed from HeadyEX marketplace.</p>
+                    <a href="https://headyme.com" style="color: var(--cyan); font-weight: 600;">Try HeadyME →</a>
+                </div>
+
+                <div style="padding: 2rem; background: linear-gradient(135deg, var(--card-bg) 0%, rgba(124, 94, 255, 0.05) 100%); border: 1px solid var(--border-color); border-radius: 12px;">
+                    <h3>HeadyFinance</h3>
+                    <p>Financial platform featuring specialized agents.</p>
+                    <a href="https://headyfinance.com" style="color: var(--cyan); font-weight: 600;">Access Finance →</a>
+                </div>
+
+                <div style="padding: 2rem; background: linear-gradient(135deg, var(--card-bg) 0%, rgba(124, 94, 255, 0.05) 100%); border: 1px solid var(--border-color); border-radius: 12px;">
+                    <h3>HeadyConnection</h3>
+                    <p>Nonprofit ensuring equitable AI access worldwide.</p>
+                    <a href="https://headyconnection.org" style="color: var(--cyan); font-weight: 600;">Join Movement →</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>Marketplace</h4>
+                    <ul>
+                        <li><a href="#featured">Featured Agents</a></li>
+                        <li><a href="#categories">Categories</a></li>
+                        <li><a href="#top-rated">Top Rated</a></li>
+                        <li><a href="https://headysystems.com/search">Search</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-section">
+                    <h4>For Creators</h4>
+                    <ul>
+                        <li><a href="#for-creators">Build Agents</a></li>
+                        <li><a href="#sdk">SDK & Docs</a></li>
+                        <li><a href="#pricing">Pricing & Earnings</a></li>
+                        <li><a href="https://headysystems.com/creator-support">Creator Support</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-section">
+                    <h4>Resources</h4>
+                    <ul>
+                        <li><a href="https://headysystems.com/documentation">Documentation</a></li>
+                        <li><a href="https://headysystems.com/blog">Blog</a></li>
+                        <li><a href="https://headysystems.com/community">Community</a></li>
+                        <li><a href="https://headysystems.com/support">Support</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-section">
+                    <h4>Company</h4>
+                    <ul>
+                        <li><a href="https://headysystems.com/about">About</a></li>
+                        <li><a href="https://headysystems.com/privacy">Privacy Policy</a></li>
+                        <li><a href="https://headysystems.com/terms">Terms of Service</a></li>
+                        <li><a href="https://headyconnection.org">HeadyConnection</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p style="margin: 0;">Founded by Eric Haywood | 51 Provisional Patents | © 2026 HeadySystems Inc. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        const particles = [];
+        const particleCount = 30;
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.vx = (Math.random() - 0.5) * 0.5;
+                this.vy = (Math.random() - 0.5) * 0.5;
+                this.radius = Math.random() * 2 + 1;
+                this.color = ['rgba(124, 94, 255, 0.3)', 'rgba(64, 224, 208, 0.3)', 'rgba(240, 192, 64, 0.2)'][Math.floor(Math.random() * 3)];
+            }
+
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+
+                if (this.x < 0) this.x = canvas.width;
+                if (this.x > canvas.width) this.x = 0;
+                if (this.y < 0) this.y = canvas.height;
+                if (this.y > canvas.height) this.y = 0;
+            }
+
+            draw() {
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        for (let i = 0; i < particleCount; i++) {
+            particles.push(new Particle());
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            ctx.strokeStyle = 'rgba(124, 94, 255, 0.05)';
+            ctx.lineWidth = 1;
+            const gridSize = 100;
+            for (let x = 0; x < canvas.width; x += gridSize) {
+                ctx.beginPath();
+                ctx.moveTo(x, 0);
+                ctx.lineTo(x, canvas.height);
+                ctx.stroke();
+            }
+            for (let y = 0; y < canvas.height; y += gridSize) {
+                ctx.beginPath();
+                ctx.moveTo(0, y);
+                ctx.lineTo(canvas.width, y);
+                ctx.stroke();
+            }
+
+            particles.forEach(particle => {
+                particle.update();
+                particle.draw();
+            });
+
+            ctx.strokeStyle = 'rgba(64, 224, 208, 0.1)';
+            ctx.lineWidth = 0.5;
+            for (let i = 0; i < particles.length; i++) {
+                for (let j = i + 1; j < particles.length; j++) {
+                    const dx = particles[i].x - particles[j].x;
+                    const dy = particles[i].y - particles[j].y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+
+                    if (distance < 200) {
+                        ctx.beginPath();
+                        ctx.moveTo(particles[i].x, particles[i].y);
+                        ctx.lineTo(particles[j].x, particles[j].y);
+                        ctx.stroke();
+                    }
+                }
+            }
+
+            requestAnimationFrame(animate);
+        }
+
+        animate();
+
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -100px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('fade-in');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.agent-card').forEach(card => {
+            observer.observe(card);
+        });
+    </script>
 </body>
 </html>

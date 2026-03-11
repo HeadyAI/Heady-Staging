@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HeadyOS — The Runtime Layer</title>
+  <meta name="description" content="HeadyOS: Kernel, runtime, scheduler, and memory management for the Heady™ AI platform.">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+    :root{--bg:#0a0a1a;--surface:rgba(20,20,50,0.6);--border:rgba(255,255,255,0.08);--brand:#10b981;--accent:#34d399;--text:#e8e8f0;--dim:#8888aa;--phi:1.6180339887}
+    body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+    .bg-grid{position:fixed;inset:0;background-image:linear-gradient(rgba(255,255,255,0.02) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.02) 1px,transparent 1px);background-size:61.8px 61.8px;z-index:0}
+    .bg-glow{position:fixed;top:-30%;left:-10%;width:60%;height:60%;background:radial-gradient(circle,color-mix(in srgb,var(--brand) 10%,transparent),transparent 60%);z-index:0;animation:drift 20s ease-in-out infinite alternate}
+    @keyframes drift{to{transform:translate(20%,10%)}}
+    .container{max-width:900px;margin:0 auto;padding:4rem 2rem;position:relative;z-index:1}
+    .logo{width:64px;height:64px;margin-bottom:2rem;color:var(--brand)}
+    h1{font-size:3rem;font-weight:800;background:linear-gradient(135deg,var(--brand),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:1rem}
+    .subtitle{color:var(--dim);font-size:1.25rem;margin-bottom:3rem;max-width:600px;line-height:1.6}
+    .capabilities{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1.5rem;margin-bottom:3rem}
+    .cap{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:2rem;backdrop-filter:blur(20px);transition:border-color 0.3s}
+    .cap:hover{border-color:rgba(16,185,129,0.3)}
+    .cap h3{color:var(--brand);font-size:0.875rem;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:0.75rem}
+    .cap p{color:var(--dim);font-size:0.875rem;line-height:1.6}
+    .endpoints{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:2rem;backdrop-filter:blur(20px);margin-bottom:2rem}
+    .endpoints h2{font-size:1.25rem;margin-bottom:1rem}
+    .endpoint-list{list-style:none}
+    .endpoint-list li{padding:0.5rem 0;border-bottom:1px solid var(--border);font-family:'JetBrains Mono',monospace;font-size:0.85rem;display:flex;gap:1rem;align-items:center}
+    .endpoint-list li:last-child{border-bottom:none}
+    .method{color:var(--brand);font-weight:600;min-width:50px}
+    .path{color:var(--text)}
+    .desc{color:var(--dim);margin-left:auto;font-family:'Inter',sans-serif;font-size:0.8rem}
+    .ecosystem{display:flex;flex-wrap:wrap;gap:0.75rem}
+    .eco-link{padding:0.5rem 1rem;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--dim);text-decoration:none;font-size:0.85rem;transition:all 0.2s}
+    .eco-link:hover{border-color:var(--brand);color:var(--text)}
+  </style>
+</head>
+<body>
+  <div class="bg-grid"></div>
+  <div class="bg-glow"></div>
+  <div class="container">
+    <svg class="logo" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+      <polygon points="12 2 22 8.5 22 15.5 12 22 2 15.5 2 8.5 12 2"/>
+      <line x1="12" y1="22" x2="12" y2="12"/>
+      <line x1="22" y1="8.5" x2="12" y2="12"/>
+      <line x1="2" y1="8.5" x2="12" y2="12"/>
+    </svg>
+    <h1>HeadyOS</h1>
+    <p class="subtitle">The runtime layer for the Heady™ AI platform. Kernel services, process scheduling, memory management, and device-to-cloud orchestration powered by Sacred Geometry.</p>
+    
+    <div class="capabilities">
+      <div class="cap">
+        <h3>Kernel</h3>
+        <p>Core service lifecycle management, process isolation, and phi-scaled resource allocation across cloud and edge.</p>
+      </div>
+      <div class="cap">
+        <h3>Runtime</h3>
+        <p>Node.js >=20 execution environment with circuit breakers, bulkhead isolation, and self-healing mesh.</p>
+      </div>
+      <div class="cap">
+        <h3>Scheduler</h3>
+        <p>Autonomous task scheduling with golden-ratio weighted priority queues and HCFP pipeline orchestration.</p>
+      </div>
+      <div class="cap">
+        <h3>Memory</h3>
+        <p>384-dimensional vector memory with 3D spatial projection, GPU acceleration, and pgvector persistence.</p>
+      </div>
+    </div>
+
+    <div class="endpoints">
+      <h2>API Endpoints</h2>
+      <ul class="endpoint-list">
+        <li><span class="method">GET</span><span class="path">/health</span><span class="desc">Service health check</span></li>
+        <li><span class="method">GET</span><span class="path">/api/status</span><span class="desc">Runtime status</span></li>
+        <li><span class="method">POST</span><span class="path">/api/schedule</span><span class="desc">Schedule task</span></li>
+        <li><span class="method">GET</span><span class="path">/mcp/tools</span><span class="desc">MCP tool registry</span></li>
+        <li><span class="method">POST</span><span class="path">/mcp/tools/call</span><span class="desc">Execute MCP tool</span></li>
+      </ul>
+    </div>
+
+    <div class="ecosystem">
+      <a href="https://headyme.com" class="eco-link">HeadyMe</a>
+      <a href="https://headysystems.com" class="eco-link">HeadySystems</a>
+      <a href="https://headyconnection.org" class="eco-link">HeadyConnection</a>
+      <a href="https://headyapi.com" class="eco-link">HeadyAPI</a>
+      <a href="https://headycloud.com" class="eco-link">HeadyCloud</a>
+      <a href="https://heady-ai.com" class="eco-link">HeadyAI</a>
+      <a href="https://headybuddy.org" class="eco-link">HeadyBuddy</a>
+      <a href="https://headymcp.com" class="eco-link">HeadyMCP</a>
+      <a href="https://headyio.com" class="eco-link">HeadyIO</a>
+    </div>
+  </div>
+</body>
+</html>

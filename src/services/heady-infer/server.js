@@ -1,5 +1,4 @@
 'use strict';
-const logger = require('../../shared/logger')('server');
 
 /**
  * HeadyInfer Standalone Server
@@ -24,14 +23,14 @@ function createApp(cfg = config) {
 
   // ─── Security / Perf Middleware ──────────────────────────────────────────
   app.use(helmet());
-  app.use(require('../../shared/security-headers').securityHeaders());
+  app.use(cors());
   app.use(compression());
   app.use(express.json({ limit: '10mb' }));
 
   // Request logging middleware
   app.use((req, _res, next) => {
     if (cfg.logging.level !== 'silent') {
-      logger.info(`[HeadyInfer] ${req.method} ${req.path} ${new Date().toISOString()}`);
+      console.log(`[HeadyInfer] ${req.method} ${req.path} ${new Date().toISOString()}`);
     }
     next();
   });
@@ -69,17 +68,17 @@ if (require.main === module) {
   const port = config.port;
 
   const server = app.listen(port, '0.0.0.0', () => {
-    logger.info(`[HeadyInfer] Server listening on port ${port} (${config.env})`);
-    logger.info(`[HeadyInfer] Health: http://localhost:${port}/health`);
-    logger.info(`[HeadyInfer] API:    http://localhost:${port}/api/v1/infer`);
+    console.log(`[HeadyInfer] Server listening on port ${port} (${config.env})`);
+    console.log(`[HeadyInfer] Health: http://localhost:${port}/health`);
+    console.log(`[HeadyInfer] API:    http://localhost:${port}/api/v1/infer`);
   });
 
   // ─── Graceful Shutdown ─────────────────────────────────────────────────────
   const shutdown = async (signal) => {
-    logger.info(`[HeadyInfer] ${signal} received. Shutting down...`);
+    console.log(`[HeadyInfer] ${signal} received. Shutting down...`);
     server.close(async () => {
       await gateway.shutdown();
-      logger.info('[HeadyInfer] Server closed');
+      console.log('[HeadyInfer] Server closed');
       process.exit(0);
     });
     // Force-quit after 10s
@@ -90,7 +89,7 @@ if (require.main === module) {
   process.on('SIGINT',  () => shutdown('SIGINT'));
 
   process.on('unhandledRejection', (reason) => {
-    logger.error('[HeadyInfer] Unhandled rejection:', reason);
+    console.error('[HeadyInfer] Unhandled rejection:', reason);
   });
 }
 

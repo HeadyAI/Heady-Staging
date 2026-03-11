@@ -1,0 +1,265 @@
+# HEADY_BRAND:BEGIN
+# ╔══════════════════════════════════════════════════════════════════╗
+# ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
+# ║  ██║  ██║██╔════╝██╔══██╗██╔══██╗╚██╗ ██╔╝                     ║
+# ║  ███████║█████╗  ███████║██║  ██║ ╚████╔╝                      ║
+# ║  ██╔══██║██╔══╝  ██╔══██║██║  ██║  ╚██╔╝                       ║
+# ║  ██║  ██║███████╗██║  ██║██████╔╝   ██║                        ║
+# ║  ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝    ╚═╝                        ║
+# ║                                                                  ║
+# ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
+# ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
+# ║  FILE: configs/service-discovery.yaml                                                    ║
+# ║  LAYER: config                                                  ║
+# ╚══════════════════════════════════════════════════════════════════╝
+# HEADY_BRAND:END
+# Heady Service Discovery & Domain Architecture
+# Replaces all api.headysystems.com references with branded domains
+# Root Domain: headysystems.com
+
+root_domain: internal.headyio.com
+environment: dev  # dev, staging, prod
+region: local
+
+# Core Heady Services - Primary Nodes
+services:
+  # Manager/Orchestrator
+  manager:
+    host: manager.dev.local.headyio.com
+    port: 3300
+    protocol: http
+    aliases:
+      - api.dev.local.headyio.com
+      - orchestrator.dev.local.headyio.com
+    purpose: Central API and orchestration hub
+    security_level: internal
+    
+  # Database Layer
+  postgres:
+    host: db-postgres.dev.local.headyio.com
+    port: 5432
+    protocol: postgresql
+    purpose: Primary PostgreSQL with pgvector
+    security_level: database
+    
+  redis:
+    host: db-redis.dev.local.headyio.com
+    port: 6379
+    protocol: redis
+    purpose: Caching and session storage
+    security_level: database
+    
+  # AI/ML Services
+  ollama:
+    host: ai-ollama.dev.local.headyio.com
+    port: 11434
+    protocol: http
+    purpose: Local LLM inference (Llama, Mistral)
+    security_level: internal
+    
+  # RAG/Vector Services
+  rag:
+    host: ai-rag.dev.local.headyio.com
+    port: 8080
+    protocol: http
+    purpose: Retrieval Augmented Generation service
+    security_level: internal
+    
+  # MCP Gateway
+  mcp-gateway:
+    host: mcp.headysystems.comheadyio.com
+    port: 3001
+    protocol: http
+    purpose: Model Context Protocol tool gateway
+    security_level: internal
+    
+  # Web Frontend
+  web:
+    host: app-web.dev.local.headyio.com
+    port: 3000
+    protocol: http
+    purpose: Heady web dashboard
+    security_level: external
+    
+  # HeadyBuddy Desktop
+  buddy:
+    host: app-buddy.dev.local.headyio.com
+    port: 3301
+    protocol: http
+    purpose: Desktop overlay assistant
+    security_level: internal
+    
+  # Browser Extension Bridge
+  browser-bridge:
+    host: bridge-browser.dev.local.headyio.com
+    port: 3302
+    protocol: http
+    purpose: Browser extension communication
+    security_level: internal
+    
+  # Voice I/O Service
+  voice:
+    host: io-voice.dev.local.headyio.com
+    port: 3303
+    protocol: http
+    purpose: Voice input/output processing
+    security_level: internal
+    
+  # Billing/Telemetry
+  billing:
+    host: svc-billing.dev.local.headyio.com
+    port: 3304
+    protocol: http
+    purpose: Payment and usage tracking
+    security_level: internal
+    
+  telemetry:
+    host: svc-telemetry.dev.local.headyio.com
+    port: 3305
+    protocol: http
+    purpose: Metrics and observability
+    security_level: internal
+
+# Admin/Debug Interfaces (Restricted Access)
+admin:
+  postgres-admin:
+    host: admin-postgres.dev.local.headyio.com
+    port: 8080
+    protocol: http
+    purpose: PostgreSQL admin interface
+    security_level: admin
+    
+  redis-admin:
+    host: admin-redis.dev.local.headyio.com
+    port: 8081
+    protocol: http
+    purpose: Redis management UI
+    security_level: admin
+    
+  manager-debug:
+    host: debug-manager.dev.local.headyio.com
+    port: 9090
+    protocol: http
+    purpose: Debug and profiling endpoints
+    security_level: admin
+
+# Service Mesh / Discovery
+discovery:
+  registry:
+    host: discovery.dev.local.headyio.com
+    port: 8600
+    protocol: http
+    purpose: Service registry and health checks
+    security_level: internal
+    
+  dns-internal:
+    host: dns.dev.local.headyio.com
+    port: 53
+    protocol: dns
+    purpose: Internal DNS resolution
+    security_level: infrastructure
+
+# External Integrations
+integrations:
+  # Cloud Render deployments
+  render-me:
+    host: cloud-me.heady.io
+    port: 443
+    protocol: https
+    purpose: HeadyMe cloud deployment
+    security_level: external-cloud
+    
+  render-sys:
+    host: cloud-sys.heady.io
+    port: 443
+    protocol: https
+    purpose: HeadySystems cloud deployment
+    security_level: external-cloud
+    
+  render-conn:
+    host: cloud-conn.heady.io
+    port: 443
+    protocol: https
+    purpose: HeadyConnection cloud deployment
+    security_level: external-cloud
+
+# Reverse Proxy / Gateway Routes
+gateway:
+  domain: gateway.dev.local.headyio.com
+  port: 80
+  routes:
+    - path: /api
+      upstream: manager.dev.local.headyio.com:3300
+      
+    - path: /app
+      upstream: app-web.dev.local.headyio.com:3000
+      
+    - path: /mcp
+      upstream: tools-mcp.dev.local.headyio.com:3001
+      
+    - path: /ai
+      upstream: ai-ollama.dev.local.headyio.com:11434
+      
+    - path: /db
+      upstream: admin-postgres.dev.local.headyio.com:8080
+      restrict: admin-only
+
+# mTLS and Security
+security:
+  mtls:
+    enabled: true
+    ca_cert: /etc/heady/certs/ca.crt
+    cert_dir: /etc/heady/certs/
+    
+  network_policies:
+    default_deny: true
+    allow_rules:
+      - from: app-web.dev.local.headyio.com
+        to: manager.dev.local.headyio.com
+        ports: [3300]
+        
+      - from: bridge-browser.dev.local.headyio.com
+        to: manager.dev.local.headyio.com
+        ports: [3300]
+        
+      - from: manager.dev.local.headyio.com
+        to: db-postgres.dev.local.headyio.com
+        ports: [5432]
+        
+      - from: manager.dev.local.headyio.com
+        to: db-redis.dev.local.headyio.com
+        ports: [6379]
+        
+      - from: tools-mcp.dev.local.headyio.com
+        to: ai-ollama.dev.local.headyio.com
+        ports: [11434]
+        
+      - from: ai-rag.dev.local.headyio.com
+        to: db-postgres.dev.local.headyio.com
+        ports: [5432]
+
+# All services resolve via cloud domains — no api.headysystems.com/api.headysystems.com references permitted
+# See configs/api.headysystems.com-elimination-protocol.yaml for enforcement policy
+
+# Environment-specific overrides
+environments:
+  dev:
+    suffix: dev.local.headyio.com
+    tls: false
+    auth: basic
+    
+  staging:
+    suffix: staging.heady.io
+    tls: true
+    auth: mtls
+    
+  prod:
+    suffix: prod.heady.io
+    tls: true
+    auth: mtls+oauth
+    
+  local-offline:
+    suffix: headysystems.com
+    tls: true
+    auth: basic
+    api.headysystems.com_fallback: false

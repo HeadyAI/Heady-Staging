@@ -1,5 +1,4 @@
 'use strict';
-const logger = require('../../shared/logger')(require('path').basename('services/heady-guard/index.js', '.js'));
 
 /**
  * HeadyGuard — Main Pipeline Entry Point
@@ -50,10 +49,10 @@ function _openAuditStream() {
   try {
     _auditStream = fs.createWriteStream(config.auditLogPath, { flags: 'a' });
     _auditStream.on('error', err => {
-      logger.error(`[HeadyGuard] Audit log write error: ${err.message}`);
+      console.error(`[HeadyGuard] Audit log write error: ${err.message}`);
     });
   } catch (err) {
-    logger.error(`[HeadyGuard] Cannot open audit log "${config.auditLogPath}": ${err.message}`);
+    console.error(`[HeadyGuard] Cannot open audit log "${config.auditLogPath}": ${err.message}`);
   }
 }
 
@@ -303,7 +302,7 @@ async function initialize(opts = {}) {
     try {
       rules.loadFromFile(config.rulesPath);
     } catch (err) {
-      logger.warn(`[HeadyGuard] Rules file error: ${err.message}. Using defaults.`);
+      console.warn(`[HeadyGuard] Rules file error: ${err.message}. Using defaults.`);
     }
   }
 
@@ -321,7 +320,7 @@ async function initialize(opts = {}) {
   }
 
   _initialized = true;
-  logger.info(`[HeadyGuard] Initialized — stages: [${pipeline.getStageNames().join(', ')}]`);
+  console.log(`[HeadyGuard] Initialized — stages: [${pipeline.getStageNames().join(', ')}]`);
 }
 
 /**
@@ -367,7 +366,7 @@ function middleware(opts = {}) {
       return next();
     } catch (err) {
       // Guard failure should not block the request — log and pass through
-      logger.error(`[HeadyGuard] Middleware error: ${err.message}`);
+      console.error(`[HeadyGuard] Middleware error: ${err.message}`);
       req.guardResult = null;
       return next();
     }

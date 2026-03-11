@@ -1,4 +1,3 @@
-const logger = require('../shared/logger')('heady-edge-daemon');
 #!/usr/bin/env node
 /*
  * © 2026 Heady™Systems Inc..
@@ -56,8 +55,8 @@ function initMIDI() {
         const inputs = midi.getInputs();
         const outputs = midi.getOutputs();
 
-        logger.info(`  🎹 MIDI Inputs:  [${inputs.join(', ')}]`);
-        logger.info(`  🎹 MIDI Outputs: [${outputs.join(', ')}]`);
+        console.log(`  🎹 MIDI Inputs:  [${inputs.join(', ')}]`);
+        console.log(`  🎹 MIDI Outputs: [${outputs.join(', ')}]`);
 
         if (inputs.length > 0) {
             midiInput = new midi.Input(inputs[0]);
@@ -65,15 +64,15 @@ function initMIDI() {
             midiInput.on('cc', handleCC);
             midiInput.on('noteon', handleNoteOn);
             state.midiConnected = true;
-            logger.info(`  ✅ MIDI connected: ${inputs[0]}`);
+            console.log(`  ✅ MIDI connected: ${inputs[0]}`);
         }
 
         if (outputs.length > 0) {
             midiOutput = new midi.Output(outputs[0]);
         }
     } catch (err) {
-        logger.info('  ⚠️  easymidi not installed — MIDI bridge disabled');
-        logger.info('     Install with: npm install easymidi');
+        console.log('  ⚠️  easymidi not installed — MIDI bridge disabled');
+        console.log('     Install with: npm install easymidi');
     }
 }
 
@@ -86,7 +85,7 @@ function handleSysEx(msg) {
         const commandByte = data[2];
         const payload = Buffer.from(data.slice(3, -1)).toString('utf8');
 
-        logger.info(`  🎵 SysEx command: 0x${commandByte.toString(16)} payload: ${payload}`);
+        console.log(`  🎵 SysEx command: 0x${commandByte.toString(16)} payload: ${payload}`);
 
         // Route to Heady™ cloud
         sendToCloud({
@@ -174,7 +173,7 @@ async function sendToCloud(event) {
 function initFileWatcher() {
     const srcDir = path.join(MONOREPO_ROOT, 'src');
     if (!fs.existsSync(srcDir)) {
-        logger.info(`  ⚠️  Source directory not found: ${srcDir}`);
+        console.log(`  ⚠️  Source directory not found: ${srcDir}`);
         return;
     }
 
@@ -193,13 +192,13 @@ function initFileWatcher() {
         });
 
         watcher.on('error', (err) => {
-            logger.error(`  ❌ File watcher error: ${err.message}`);
+            console.error(`  ❌ File watcher error: ${err.message}`);
         });
 
         state.fileWatcherActive = true;
-        logger.info(`  👁️  File watcher active on: ${srcDir}`);
+        console.log(`  👁️  File watcher active on: ${srcDir}`);
     } catch (err) {
-        logger.info(`  ⚠️  File watcher failed: ${err.message}`);
+        console.log(`  ⚠️  File watcher failed: ${err.message}`);
     }
 }
 
@@ -259,21 +258,21 @@ function startServer() {
     server.listen(PORT, () => {
         state.running = true;
         state.startedAt = new Date().toISOString();
-        logger.info(`\n  ═══════════════════════════════════════════`);
-        logger.info(`  ⚡ Heady™ Edge Daemon running on port ${PORT}`);
-        logger.info(`  ═══════════════════════════════════════════`);
-        logger.info(`  Cloud:   ${HEADY_CLOUD_URL}`);
-        logger.info(`  Auth:    ${EDGE_DAEMON_TOKEN ? '✅ Token set' : '⚠️  No token'}`);
-        logger.info(`  MIDI:    ${state.midiConnected ? '✅ Connected' : '⚠️  Not available'}`);
-        logger.info(`  Watcher: ${state.fileWatcherActive ? '✅ Active' : '⚠️  Inactive'}`);
-        logger.info(`  ═══════════════════════════════════════════\n`);
+        console.log(`\n  ═══════════════════════════════════════════`);
+        console.log(`  ⚡ Heady™ Edge Daemon running on port ${PORT}`);
+        console.log(`  ═══════════════════════════════════════════`);
+        console.log(`  Cloud:   ${HEADY_CLOUD_URL}`);
+        console.log(`  Auth:    ${EDGE_DAEMON_TOKEN ? '✅ Token set' : '⚠️  No token'}`);
+        console.log(`  MIDI:    ${state.midiConnected ? '✅ Connected' : '⚠️  Not available'}`);
+        console.log(`  Watcher: ${state.fileWatcherActive ? '✅ Active' : '⚠️  Inactive'}`);
+        console.log(`  ═══════════════════════════════════════════\n`);
     });
 }
 
 // ── Boot ─────────────────────────────────────────────────────────
 
 function boot() {
-    logger.info('\n  🚀 Booting Heady™ Edge Daemon...\n');
+    console.log('\n  🚀 Booting Heady™ Edge Daemon...\n');
     initMIDI();
     initFileWatcher();
     startServer();

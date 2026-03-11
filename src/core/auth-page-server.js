@@ -1,4 +1,15 @@
-const logger = require('../shared/logger')('auth-page-server');
+// ─── HEADY CORS WHITELIST ────────────────────────────────────────────
+const HEADY_ALLOWED_ORIGINS = new Set([
+    'https://headyme.com', 'https://headysystems.com', 'https://headyconnection.org',
+    'https://headyconnection.com', 'https://headybuddy.org', 'https://headymcp.com',
+    'https://headyapi.com', 'https://headyio.com', 'https://headyos.com',
+    'https://headyweb.com', 'https://headybot.com', 'https://headycloud.com',
+    'https://headybee.co', 'https://heady-ai.com', 'https://headyex.com',
+    'https://headyfinance.com', 'https://admin.headysystems.com',
+    'https://auth.headysystems.com', 'https://api.headysystems.com',
+]);
+const _isHeadyOrigin = (o) => !o ? false : HEADY_ALLOWED_ORIGINS.has(o) || /\.run\.app$/.test(o) || (process.env.NODE_ENV !== 'production' && /^https?:\/\/(localhost|127\.0\.0\.1):/.test(o));
+
 /*
  * © 2026 Heady™Systems Inc.. PROPRIETARY AND CONFIDENTIAL.
  *
@@ -31,12 +42,6 @@ const PROVIDERS = {
         { id: 'twitter', name: 'X (Twitter)', icon: '✖️', color: '#000000' },
         { id: 'spotify', name: 'Spotify', icon: '🟢', color: '#1DB954' },
         { id: 'huggingface', name: 'Hugging Face', icon: '🤗', color: '#FFD21E' },
-        { id: 'twitch', name: 'Twitch', icon: '🎮', color: '#9146FF' },
-        { id: 'figma', name: 'Figma', icon: '🎨', color: '#F24E1E' },
-        { id: 'notion', name: 'Notion', icon: '📝', color: '#000000' },
-        { id: 'gitlab', name: 'GitLab', icon: '🦊', color: '#FC6D26' },
-        { id: 'bitbucket', name: 'Bitbucket', icon: '🪣', color: '#0052CC' },
-        { id: 'reddit', name: 'Reddit', icon: '🔴', color: '#FF4500' },
     ],
     // AI API Key Providers
     apikey: [
@@ -53,7 +58,6 @@ const PROVIDERS = {
         { id: 'deepseek', name: 'DeepSeek', icon: '🔬', color: '#0066FF', prefix: 'sk-' },
         { id: 'xai', name: 'xAI (Grok)', icon: '❌', color: '#000000', prefix: 'xai-' },
         { id: 'anthropic', name: 'Anthropic', icon: '🟤', color: '#C96442', prefix: 'sk-ant-' },
-        { id: 'stripe', name: 'Stripe', icon: '💳', color: '#635BFF', prefix: 'sk_' },
     ],
 };
 
@@ -175,12 +179,12 @@ function renderAuthPage() {
         </div>
 
         <div class="auth-card" id="authCard">
-            <div class="section-label">Sign in with <span class="provider-count">18 providers</span></div>
+            <div class="section-label">Sign in with <span class="provider-count">12 providers</span></div>
             <div class="provider-grid">${oauthButtons}</div>
 
             <div class="divider">or connect your AI key</div>
 
-            <div class="section-label">AI API Keys <span class="provider-count">14 providers</span></div>
+            <div class="section-label">AI API Keys <span class="provider-count">13 providers</span></div>
             <div class="provider-grid">${apikeyButtons}</div>
 
             <div class="divider">or use email</div>
@@ -313,8 +317,8 @@ function renderAuthPage() {
 
 // ── API ─────────────────────────────────────────────────────
 const server = http.createServer((req, res) => {
-    const url = new URL(req.url, `http://${req.headers.host || 'localhost:' + PORT}`);
-    // CORS handled by securityHeaders middleware
+    const url = new URL(req.url, `http://localhost:${PORT}`);
+    res.setHeader('Access-Control-Allow-Origin', _isHeadyOrigin(req.headers.origin) ? req.headers.origin : 'null');
     res.setHeader('Access-Control-Allow-Methods', 'GET,POST,OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type,Authorization');
     if (req.method === 'OPTIONS') { res.writeHead(204); res.end(); return; }
@@ -375,8 +379,8 @@ const server = http.createServer((req, res) => {
 });
 
 server.listen(PORT, () => {
-    logger.info(`\n  🔐 Heady Universal Auth — http://${process.env.HEADY_AUTH_HOST || 'localhost'}:${PORT}`);
-    logger.info(`     ${PROVIDERS.oauth.length} OAuth + ${PROVIDERS.apikey.length} API Key = ${PROVIDERS.oauth.length + PROVIDERS.apikey.length} providers\n`);
+    console.log(`\n  🔐 Heady Universal Auth — http://localhost:${PORT}`);
+    console.log(`     ${PROVIDERS.oauth.length} OAuth + ${PROVIDERS.apikey.length} API Key = ${PROVIDERS.oauth.length + PROVIDERS.apikey.length} providers\n`);
 });
 
 module.exports = { PROVIDERS, server };

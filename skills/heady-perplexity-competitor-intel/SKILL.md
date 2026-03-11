@@ -1,155 +1,107 @@
 ---
 name: heady-perplexity-competitor-intel
-description: Gathers, analyzes, and synthesizes competitive intelligence for the Heady Connection platform including pricing, product assortment, marketing strategies, SEO positioning, social presence, and market positioning of cannabis accessory and headshop competitors. Use when the user asks about competitors, market positioning, pricing benchmarks, or competitive landscape. Triggers on phrases like "what are competitors doing", "competitor analysis", "how does X compare", "competitive pricing", "market landscape", "who else sells", or "benchmark against".
-license: MIT
+description: Skill for competitive intelligence gathering on AI platforms, agent frameworks, and developer tools competing with HeadySystems. Use when asked to research competitors, compare platforms, analyze market positioning, track competitor releases, or build competitive battlecards. Triggers on "competitor", "vs", "compare", "market analysis", "competitive landscape", "what does OpenAI/Anthropic/Google do", or any competitive research task.
+license: proprietary
 metadata:
-  author: heady-connection
-  version: '1.0'
-  platform: heady
-  category: strategy
+  author: HeadySystems Inc.
+  version: '2.1.0'
+  domain: strategy
 ---
 
 # Heady Perplexity Competitor Intel
 
 ## When to Use This Skill
 
-Use this skill when the user asks to:
+Use this skill when:
 
-- Identify and profile key competitors in the cannabis accessories/headshop market
-- Compare product assortments and pricing strategies
-- Analyze competitor SEO and organic search positioning
-- Monitor social media presence and engagement metrics
-- Track competitor promotions, launches, and campaigns
-- Identify market gaps and differentiation opportunities
-- Produce SWOT analyses relative to named competitors
-- Build competitive battlecards for sales or positioning use
+- Building competitive battlecards for investor presentations
+- Tracking competitor product launches and pricing changes
+- Analyzing OpenAI, Anthropic, Google DeepMind, Mistral, Cohere positioning
+- Researching AI agent framework competitors (AutoGen, CrewAI, LangGraph)
+- Monitoring MCP ecosystem competitors
+- Tracking vector database market (Pinecone, Weaviate, Qdrant vs HeadyMemory)
 
-## Competitor Categories
+## Competitor Landscape (Heady's Primary Markets)
 
-### Direct Competitors (Heady Glass / Artist Market)
-Platforms primarily focused on heady and artist glass: DankStop, Smoke Cartel, Grasscity, Hemper, Fat Buddha Glass, Everything for 420, MJ Arsenal.
-
-### Indirect Competitors (Broad Headshop)
-General headshop e-commerce with glass categories: Smoke City, SmokeSmith Gear, Badass Glass, PuffingBird.
-
-### Marketplace Platforms
-eBay (glass section), Etsy (borosilicate art), Instagram (direct artist sales).
-
-### Local / Regional
-Brick-and-mortar stores in target markets competing for local search.
+| Market | Key Competitors |
+|--------|----------------|
+| AI Agent Platforms | AutoGen, CrewAI, LangGraph, Bee Agent Framework |
+| Vector Memory | Pinecone, Weaviate, Qdrant, pgvector |
+| AI Gateway/Routing | LiteLLM, OpenRouter, Portkey |
+| MCP Servers | Anthropic MCP registry, npm @modelcontextprotocol |
+| Edge AI | Cloudflare Workers AI, Vercel AI SDK |
+| Headless CMS | Contentful, Sanity, Drupal (co-opted as partner) |
 
 ## Instructions
 
-### 1. Define Intelligence Requirements
+### Step 1 — Define Intel Objective
 
-Before researching:
-1. Name the specific competitor(s) or category to analyze.
-2. Identify the intelligence focus area(s): pricing | product | SEO | social | UX | promotions | brand | all.
-3. Establish the use case: strategic planning | pricing decision | campaign response | product launch | annual review.
-4. Set freshness requirement: real-time (today's prices/promos) vs. trend (last 3–6 months).
+Specify:
+- Which competitor(s) to analyze
+- Which market segment (agent orchestration, vector memory, gateway, etc.)
+- Time window (last 30/90/180 days for recent activity)
+- Intel depth (feature list vs deep architecture analysis)
 
-### 2. Company Profile
+### Step 2 — Data Collection
 
-For each competitor, collect:
-- Company overview: founding, HQ, ownership (private/public/VC-backed), size estimates
-- Revenue and GMV estimates (from public filings, Crunchbase, or press coverage)
-- Primary customer segment: beginner, mid-market, heady collector, B2B
-- Key differentiators as marketed
-- Recent news: funding, partnerships, lawsuits, product launches, leadership changes
+Search across:
+1. Competitor product pages and documentation
+2. GitHub repos (stars, recent commits, issues)
+3. Hacker News, Reddit r/MachineLearning for community sentiment
+4. LinkedIn for team size and hiring signals
+5. Crunchbase for funding and growth signals
+6. ArXiv for technical papers backing competitor claims
 
-### 3. Product & Pricing Intelligence
+### Step 3 — Competitive Matrix
 
-1. Identify the 10 highest-ranked products in each competitor's catalog.
-2. For each product category (rigs, pipes, vaporizers, accessories):
-   - Record price range: entry, mid, premium
-   - Note brand mix: house brand vs. third-party vs. artist glass
-   - Identify exclusive or proprietary products
-3. Map price position vs. Heady Connection:
-   - Below (budget play), At parity, Premium (higher ASP)
-4. Note promotion patterns: discount frequency, coupon codes, loyalty programs, clearance cadence.
+Build a scoring matrix for each competitor vs HeadySystems:
 
-**Pricing matrix format:**
-```
-| Category | Heady Low | Heady High | [Competitor] Low | [Competitor] High | Position |
-```
+| Dimension | HeadySystems | Competitor | Winner |
+|-----------|-------------|-----------|--------|
+| Agent concurrency model | Concurrent equal-status (no ranking) | {their model} | |
+| Context injection | HeadyAutoContext (mandatory everywhere) | {their approach} | |
+| Vector memory | 384-dim pgvector + 3D octree | {their storage} | |
+| Routing mechanism | CSL cosine similarity | {their routing} | |
+| Sacred geometry | Yes (phi-scaling throughout) | No | Heady |
+| Multi-model council | Yes (7+ providers) | Limited | |
+| MCP integration | Full (8+ MCP servers) | Partial | |
+| Open source | Core open, enterprise closed | {their model} | |
 
-### 4. SEO & Content Analysis
+### Step 4 — Battlecard Format
 
-1. Identify top organic keywords using public SERP observation and tool-assisted research.
-2. Record estimated organic traffic (from SEMrush/Ahrefs public estimates if available).
-3. Assess content strategy: blog, buying guides, strain guides, video, UGC.
-4. Note backlink patterns: are they earning links from cannabis media, forums, or print?
-5. Compare to Heady Connection on: domain authority estimate, keyword overlap, content gap.
+```markdown
+## Competitive Battlecard: HeadySystems vs {Competitor}
 
-### 5. Social & Community Intelligence
+### Why We Win
+- {3-5 specific technical advantages}
 
-For each major platform (Instagram, Facebook, TikTok, YouTube):
-1. Record follower/subscriber count.
-2. Estimate average engagement rate on recent posts.
-3. Identify content themes and posting frequency.
-4. Note influencer or artist collaboration activity.
-5. Flag viral or breakout content.
+### Where They Win
+- {honest assessment of competitor strengths}
 
-**Social benchmark table:**
-```
-| Platform | Heady Followers | [Comp] Followers | Heady Eng% | [Comp] Eng% |
-```
+### Objection Handlers
+| Objection | Response |
+|-----------|----------|
 
-### 6. UX & Conversion Benchmarking
+### When to Mention This Competitor
+- {scenarios where this comparison arises}
 
-Observe the competitor's website or app:
-1. Homepage clarity: Is the value proposition immediately clear?
-2. Navigation: how many clicks to reach a product?
-3. Product page quality: photo count, description depth, reviews, specs
-4. Checkout friction: guest checkout, payment methods, shipping transparency
-5. Trust signals: SSL, reviews count, return policy visibility
-6. Mobile experience: responsive, page speed (estimate via PageSpeed Insights)
-
-### 7. Competitive Battlecard Format
-
-For each named competitor:
-```
-## [Competitor Name] Battlecard
-**Overview:** [2 sentences]
-**Strengths:** [3 bullet points]
-**Weaknesses:** [3 bullet points]
-**Their pitch:** "[How they position themselves]"
-**Our advantage:** "[How Heady Connection wins against them]"
-**Watch for:** [1–2 threats or moves to monitor]
-**Price position:** [Below / At parity / Premium vs. Heady]
-**Social strength:** [Weak / Moderate / Strong]
-**SEO strength:** [Weak / Moderate / Strong]
+### Deal Intelligence
+- Pricing signal: {what we know about their pricing}
+- Enterprise readiness: {their enterprise capabilities}
 ```
 
-### 8. SWOT Relative to Competitor
+### Step 5 — Monitoring Cadence
 
-Map Heady Connection against a specific competitor:
-- **Strengths**: Where Heady clearly outperforms
-- **Weaknesses**: Where Heady lags or has coverage gaps
-- **Opportunities**: Market areas competitor is under-serving
-- **Threats**: Competitor moves that could erode Heady's position
-
-### 9. Market Gap Analysis
-
-1. List product categories or price tiers no major competitor owns well.
-2. Identify audience segments underserved (e.g., collectors, medical users, corporate gifting).
-3. Flag geographic markets where competitors have thin presence.
-4. Surface content topics with search demand and no dominant competitor content.
-
-## Output Options
-
-- **Single competitor profile**: Full analysis of one competitor
-- **Landscape map**: Top 5–8 competitors compared across all dimensions in tables
-- **Battlecard deck**: One-page summaries for each key competitor
-- **Pricing benchmark report**: Price matrices across product categories
-- **Social benchmark report**: Platform-by-platform comparison
+Set up ongoing monitoring for:
+- GitHub release tags on key repos
+- Product changelog pages (weekly)
+- Pricing page changes (monthly)
+- Funding announcements (on-demand via X/LinkedIn)
 
 ## Examples
 
-**Input:** "How does Smoke Cartel compare to us on SEO and product mix?"
+**Input**: "Compare HeadySystems to Microsoft AutoGen"
+**Output**: Full competitive analysis with architectural comparison, feature matrix, battlecard, and HeadySystems differentiation narrative
 
-**Output:** Side-by-side SEO metrics, keyword overlap analysis, product category coverage matrix, identified content gaps and pricing position.
-
-**Input:** "Build competitive battlecards for our top 5 competitors."
-
-**Output:** Five formatted battlecards covering DankStop, Smoke Cartel, Grasscity, Hemper, and MJ Arsenal.
+**Input**: "What is Anthropic's MCP ecosystem status as of 2026?"
+**Output**: Current MCP registry size, server count, popular integrations, and gap analysis vs HeadyMCP

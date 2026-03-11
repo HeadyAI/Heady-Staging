@@ -1,246 +1,192 @@
 ---
 name: heady-perplexity-feedback-loop
-description: Implements structured feedback collection, analysis, and continuous improvement loops for AI-generated outputs and agent pipelines in the Heady platform. Use when the user asks to collect feedback on AI outputs, set up user rating systems, analyze quality signals, improve models from feedback, or close the loop between output quality and system improvement. Triggers on phrases like "collect feedback", "feedback loop", "improve from ratings", "thumbs up down system", "output quality signals", "user feedback on AI", "close the loop", or "learn from corrections".
-license: MIT
+description: Skill for tracking user satisfaction, CSAT scores, NPS, containment rates, and productivity gains across the Heady platform. Use when implementing user feedback collection, measuring conversation quality, tracking HeadyBuddy satisfaction, analyzing containment rates, or building user sentiment dashboards. Triggers on "user feedback", "CSAT", "NPS", "satisfaction score", "containment rate", "user sentiment", or any user satisfaction measurement task.
+license: proprietary
 metadata:
-  author: heady-connection
-  version: '1.0'
-  platform: heady
-  category: ai-quality
+  author: HeadySystems Inc.
+  version: '2.1.0'
+  domain: analytics
 ---
 
 # Heady Perplexity Feedback Loop
 
 ## When to Use This Skill
 
-Use this skill when the user asks to:
+Use this skill when:
 
-- Design a feedback collection system for AI-generated content or agent outputs
-- Implement user rating interfaces (thumbs up/down, star ratings, corrections)
-- Analyze feedback signals to identify systematic output failures
-- Build retraining datasets from user corrections
-- Set up automated quality monitors triggered by feedback trends
-- Produce feedback-driven improvement reports
-- Close the loop: feedback → analysis → prompt/system improvement → re-evaluation
+- Collecting post-interaction CSAT ratings from HeadyBuddy sessions
+- Computing NPS scores from HeadyConnection.org community members
+- Tracking containment rates (% of queries fully resolved without human escalation)
+- Measuring productivity gains for pilot program users
+- Building the feedback dashboard at admin.headysystems.com
+- Indexing user sentiment into AutoContext for personalization learning
 
-## Feedback Loop Architecture
+## Key Metrics
 
-```
-[AI Output] → [User Sees Output]
-                    ↓
-            [Feedback Capture]
-            (explicit + implicit)
-                    ↓
-            [Signal Storage] → Firestore
-                    ↓
-            [Analysis Pipeline]
-            (aggregate + classify)
-                    ↓
-            [Improvement Actions]
-            (prompt tuning, RAG update, training data)
-                    ↓
-            [Regression Eval] → [Deploy if passed]
-```
-
-## Feedback Signal Types
-
-| Type | Collection Method | Signal Strength |
-|---|---|---|
-| **Explicit thumbs up/down** | UI button click | Medium |
-| **Star rating (1–5)** | Post-output rating prompt | Medium-High |
-| **Correction submission** | "Suggest a correction" form | Very High |
-| **Copy/share action** | Implicit positive signal | Low |
-| **Regenerate request** | Implicit negative signal | Medium |
-| **Time-on-output** | Dwell time analytics | Low |
-| **Expert review** | Human annotator score | Very High |
+| Metric | Target | Description |
+|--------|--------|-------------|
+| CSAT | ≥ 4.2/5.0 | Post-interaction customer satisfaction |
+| NPS | ≥ 40 | Net Promoter Score (Promoters - Detractors) |
+| Containment Rate | ≥ 85% | % of queries resolved without human handoff |
+| Avg Session Length | 8-21 min | Ideal engagement window |
+| Return Rate | ≥ 60% | Users returning within 7 days |
+| Productivity Gain | ≥ 3x | Self-reported time saved vs baseline |
 
 ## Instructions
 
-### 1. Feedback Schema Design
+### Step 1 — CSAT Collection
 
-Define the Firestore schema for feedback records:
+```javascript
+// HeadyBuddy post-session CSAT widget
+class HeadyCsatWidget extends HTMLElement {
+  connectedCallback() {
+    const sessionId = this.getAttribute('session-id');
+    this.innerHTML = `
+      <div class="csat-widget glass">
+        <p>How helpful was this session?</p>
+        <div class="star-rating" role="radiogroup" aria-label="Rate this session">
+          ${[1,2,3,4,5].map(n => `
+            <button role="radio" aria-label="${n} star${n > 1 ? 's' : ''}" 
+                    data-score="${n}" class="star-btn">
+              <span aria-hidden="true">★</span>
+            </button>
+          `).join('')}
+        </div>
+        <textarea stand-in marker="What could be better? (optional)" 
+                  id="csat-comment" aria-label="Feedback comment"></textarea>
+        <button id="csat-submit">Submit Feedback</button>
+      </div>
+    `;
 
-```typescript
-interface FeedbackRecord {
-  id: string;                        // Auto-generated
-  timestamp: Timestamp;
-  pipeline_id: string;               // e.g., "blog-generation", "product-description"
-  output_id: string;                 // Reference to the AI output
-  session_id: string;                // User session (anonymized if needed)
-  user_id?: string;                  // Authenticated user UID (optional)
-  
-  // Explicit feedback
-  rating?: 1 | 2 | 3 | 4 | 5;      // Star rating
-  thumbs?: 'up' | 'down';
-  correction?: string;               // User's corrected version
-  comment?: string;                  // Free-text comment
-  categories?: FeedbackCategory[];   // Classified issue types
-  
-  // Implicit signals
-  regenerated: boolean;              // User clicked regenerate
-  copied: boolean;
-  dwell_seconds?: number;
-  
-  // Metadata
-  prompt_version: string;            // Which prompt template was used
-  model: string;                     // Which model generated the output
-  context_length: number;
-}
+    this.querySelector('#csat-submit')?.addEventListener('click', async () => {
+      const score   = parseInt(this.querySelector('.star-btn.selected')?.dataset.score || '0');
+      const comment = this.querySelector('#csat-comment')?.value || '';
 
-type FeedbackCategory = 
-  | 'factual_error' 
-  | 'wrong_tone' 
-  | 'off_topic'
-  | 'too_long'
-  | 'too_short'
-  | 'missing_info'
-  | 'formatting'
-  | 'brand_voice';
-```
-
-### 2. UI Feedback Component (React)
-
-```jsx
-function FeedbackWidget({ outputId, pipelineId }) {
-  const [rating, setRating] = useState(null);
-  const [showCorrection, setShowCorrection] = useState(false);
-  const [correction, setCorrection] = useState('');
-
-  const submitFeedback = async (data) => {
-    await addDoc(collection(db, 'feedback'), {
-      output_id: outputId,
-      pipeline_id: pipelineId,
-      timestamp: serverTimestamp(),
-      ...data
+      await this.submitCsat({ sessionId, score, comment });
+      this.remove();
     });
-  };
+  }
 
-  return (
-    <div className="feedback-widget">
-      <button onClick={() => { setRating('up'); submitFeedback({ thumbs: 'up' }); }}>
-        👍
-      </button>
-      <button onClick={() => { setRating('down'); setShowCorrection(true); submitFeedback({ thumbs: 'down' }); }}>
-        👎
-      </button>
-      {showCorrection && (
-        <form onSubmit={() => submitFeedback({ correction })}>
-          <textarea
-            placeholder="How could this be improved?"
-            value={correction}
-            onChange={e => setCorrection(e.target.value)}
-          />
-          <button type="submit">Submit correction</button>
-        </form>
-      )}
-    </div>
-  );
+  async submitCsat({ sessionId, score, comment }) {
+    await fetch('/api/feedback/csat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ sessionId, score, comment, timestamp: new Date().toISOString() }),
+    });
+
+    // Index sentiment into AutoContext for personalization learning
+    if (score <= 2 || comment) {
+      await fetch(`${AUTOCONTEXT_URL}/context/index`, {
+        method: 'POST',
+        body: JSON.stringify({
+          source: 'user-feedback',
+          content: `Session ${sessionId}: score ${score}/5. ${comment}`,
+          tags: ['feedback', 'csat', score <= 2 ? 'negative' : 'positive'],
+        }),
+      });
+    }
+  }
+}
+customElements.define('heady-csat', HeadyCsatWidget);
+```
+
+### Step 2 — NPS Survey
+
+```javascript
+// NPS survey — send to users after 30 days of usage
+async function sendNpsSurvey(userId) {
+  const PHI = 1.618033988749895;
+  const surveyKey = `nps:${userId}:${new Date().getFullYear()}-Q${Math.ceil(new Date().getMonth() / 3)}`;
+  
+  // Check if survey already sent this quarter
+  const sent = await redis.get(surveyKey);
+  if (sent) return;
+  
+  // Send via HeadyBuddy in-app or email
+  await notificationService.send(userId, {
+    type: 'nps-survey',
+    message: 'How likely are you to recommend Heady to a colleague? (0-10)',
+    expiresInHours: Math.round(24 * PHI), // ~39 hours
+  });
+  
+  await redis.setex(surveyKey, 60 * 60 * 24 * 90, '1'); // Cooldown: 90 days
+}
+
+// Compute NPS from response data
+function computeNPS(responses) {
+  const promoters   = responses.filter(r => r.score >= 9).length;
+  const detractors  = responses.filter(r => r.score <= 6).length;
+  return Math.round(((promoters - detractors) / responses.length) * 100);
 }
 ```
 
-### 3. Feedback Analysis Pipeline
+### Step 3 — Containment Rate Tracking
 
-Run analysis weekly (or on-demand after significant feedback volume):
+```javascript
+// Track whether a conversation was contained (resolved without escalation)
+async function recordSessionOutcome(sessionId, outcome) {
+  const outcomes = {
+    RESOLVED:    { contained: true,  escalated: false },
+    ESCALATED:   { contained: false, escalated: true  },
+    ABANDONED:   { contained: false, escalated: false },
+  };
+  
+  await db.collection('session_outcomes').doc(sessionId).set({
+    ...outcomes[outcome],
+    sessionId,
+    timestamp: new Date().toISOString(),
+    userId: session.userId,
+  });
+}
 
-**Step 1: Aggregate signals**
-```python
-def aggregate_feedback(pipeline_id: str, date_range: tuple) -> dict:
-    records = fetch_feedback(pipeline_id, date_range)
-    return {
-        "total": len(records),
-        "thumbs_up_rate": sum(1 for r in records if r.thumbs == 'up') / len(records),
-        "avg_rating": mean(r.rating for r in records if r.rating),
-        "regeneration_rate": sum(1 for r in records if r.regenerated) / len(records),
-        "correction_rate": sum(1 for r in records if r.correction) / len(records),
-        "top_categories": Counter(
-            cat for r in records for cat in (r.categories or [])
-        ).most_common(5)
-    }
+// Compute containment rate
+async function computeContainmentRate(startDate, endDate) {
+  const sessions = await db.collection('session_outcomes')
+    .where('timestamp', '>=', startDate)
+    .where('timestamp', '<=', endDate)
+    .get();
+  
+  const total    = sessions.size;
+  const contained = sessions.docs.filter(d => d.data().contained).length;
+  
+  return { total, contained, rate: contained / total };
+}
 ```
 
-**Step 2: Classify free-text feedback**
-```python
-# Use LLM to classify correction text into categories
-def classify_feedback(correction_text: str) -> list[str]:
-    prompt = f"""Classify this feedback into categories from: 
-    [factual_error, wrong_tone, off_topic, too_long, too_short, missing_info, formatting, brand_voice]
-    
-    Feedback: "{correction_text}"
-    
-    Return JSON array of matching categories."""
-    return llm.classify(prompt)
+### Step 4 — Feedback Dashboard Schema
+
+Stored in Firestore `/feedback/summary`:
+
+```json
+{
+  "period": "2026-Q1",
+  "csat": {
+    "avg": 4.3,
+    "count": 1823,
+    "distribution": { "1": 23, "2": 41, "3": 112, "4": 523, "5": 1124 }
+  },
+  "nps": {
+    "score": 47,
+    "promoters": 312,
+    "passives": 198,
+    "detractors": 89
+  },
+  "containmentRate": 0.887,
+  "avgSessionMinutes": 13.2,
+  "returnRate7Day": 0.621,
+  "topIssues": ["slow response", "missing integrations", "onboarding unclear"]
+}
 ```
 
-**Step 3: Identify failure clusters**
-- Group low-rated outputs by: prompt_version, model, context type.
-- Find the prompt version or model with below-threshold performance.
-- Surface the 10 worst-rated outputs with their corrections for human review.
+### Step 5 — Sentiment → AutoContext Loop
 
-### 4. Improvement Action Types
+All negative feedback (score ≤ 2) triggers:
+1. AutoContext indexing with tag `negative-feedback`
+2. HeadyVinci pattern matching for recurring themes
+3. Alert to heady-governance for human review if containment dips below 80%
 
-Based on analysis results, trigger the appropriate action:
+## References
 
-| Finding | Action |
-|---|---|
-| Thumbs-down rate > 25% | Immediate prompt audit; escalate to human review |
-| Category "factual_error" > 10% | Trigger RAG knowledge base review (heady-perplexity-rag-optimizer) |
-| Category "wrong_tone" > 15% | Update brand voice instructions in prompt |
-| Category "too_long" > 20% | Add output length constraint to prompt |
-| Regeneration rate > 20% | A/B test new prompt variant |
-| Model X consistently lower | Switch default model for this pipeline |
-
-### 5. Few-Shot Training Data Collection
-
-When corrections are submitted:
-1. Validate correction quality (minimum 20 chars; categorized by human or LLM).
-2. Create a few-shot example pair: `{prompt, bad_output, good_output}`.
-3. Store in Firestore `training_examples/{pipeline_id}` collection.
-4. After collecting 50+ examples per pipeline, format as JSONL for fine-tuning or few-shot prompt injection.
-
-```python
-def build_few_shot_examples(pipeline_id: str, min_quality: float = 4.0) -> list:
-    corrections = fetch_corrections(pipeline_id, min_quality)
-    return [
-        {
-            "prompt": c.original_prompt,
-            "bad_output": c.original_output,
-            "correction": c.correction,
-            "categories": c.categories
-        }
-        for c in corrections
-    ]
-```
-
-### 6. Feedback Dashboard Metrics
-
-Track these KPIs per pipeline:
-
-| Metric | Target | Alert Threshold |
-|---|---|---|
-| Thumbs-up rate | ≥ 80% | < 65% |
-| Average star rating | ≥ 4.0 | < 3.0 |
-| Correction rate | < 5% | > 15% |
-| Regeneration rate | < 10% | > 25% |
-| Factual error rate | < 2% | > 8% |
-
-### 7. Feedback Loop Closure Checklist
-
-Each improvement cycle must document:
-- [ ] Feedback window analyzed: [date range]
-- [ ] Total feedback records reviewed: N
-- [ ] Root causes identified: [list]
-- [ ] Prompt changes made: [description or diff]
-- [ ] RAG updates made: [if applicable]
-- [ ] Post-change eval score: [before vs. after]
-- [ ] Deployed to production: [date]
-- [ ] Monitoring period set: [N days post-deploy watch period]
-
-## Examples
-
-**Input:** "Set up a feedback system for our blog post generator — I want to see when users are unhappy."
-
-**Output:** Firestore schema, React feedback widget component, Cloud Function to trigger alert when thumbs-down rate exceeds 25% in any 24-hour window, weekly analysis script.
-
-**Input:** "Analyze last month's feedback on product descriptions. What's broken?"
-
-**Output:** Aggregated metrics report, top failure categories, 5 sample worst-rated outputs with corrections, and 3 specific prompt improvement recommendations.
+- [Firebase Extensions for Analytics](https://firebase.google.com/docs/extensions)
+- Feedback API: `POST /api/feedback/csat` on heady-web service (port 8500)
+- Dashboard: admin.headysystems.com/feedback

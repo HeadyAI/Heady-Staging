@@ -30,7 +30,7 @@ layers:
     dns_zone: "*.headysystems.com"
     providers:
       compute: [HeadyDocker, HeadyNative]
-      models: [HeadyBrain]
+      models: [HeadyBrain, VertexAI, AIStudio]
       storage: [HeadyStorage, HeadyCache]
     defaults:
       privacy: strict
@@ -51,8 +51,8 @@ layers:
     description: "Team/staging layer — shared knowledge bases, team MCP connectors"
     dns_zone: "*.staging.headysystems.comheady.systems"
     providers:
-      compute: [HeadyRender, HeadyDocker]
-      models: [HeadyBrain]
+      compute: [HeadyCloudRun, HeadyDocker]
+      models: [HeadyBrain, VertexAI, AIStudio]
       storage: [HeadyStorage, HeadyCache]
     defaults:
       privacy: team
@@ -73,8 +73,8 @@ layers:
     description: "Public production layer — customer-facing, full PQ mTLS, multi-tenant"
     dns_zone: "*.heady.systems"
     providers:
-      compute: [HeadyRender, HeadyWorkers]
-      models: [HeadyBrain]
+      compute: [HeadyCloudRun, HeadyWorkers]
+      models: [HeadyBrain, VertexAI, AIStudio]
       storage: [HeadyStorage, HeadyCache, HeadyR2]
     defaults:
       privacy: per-tenant
@@ -104,35 +104,35 @@ product_layers:
     layer: production
     brain_profile: sys-ops
     domain: headysystems.com
-    render_service: heady-manager-headysystems
+    cloud_run_service: heady-edge-gateway
     description: "Developer/ops brains — coding agent, OS automation, infra MCP tools"
 
   HeadyMe:
     layer: production
     brain_profile: personal-wellbeing
     domain: headyme.com
-    render_service: heady-manager-headyme
+    cloud_run_service: heady-manager
     description: "Personal workspace — wellbeing coach, teaching mentor, wealth redistribution"
 
   HeadyConnection:
     layer: production
     brain_profile: community-impact
     domain: headyconnection.org
-    render_service: heady-manager-headyconnection
+    cloud_run_service: heady-onboarding
     description: "Team/community — BD agent, grant writer, ethics checker, shared RAG"
 
   HeadyWeb:
     layer: production
     brain_profile: web-platform
     domain: headycloud.com
-    render_service: heady-manager-headyweb
+    cloud_run_service: headyweb-ide
     description: "Public web platform — marketing, docs, onboarding"
 
   HeadyBuddy:
     layer: local
     brain_profile: companion
     domain: null
-    render_service: null
+    cloud_run_service: heady-admin-ui
     description: "Desktop/mobile companion — always-on, cross-device, local-first"
 
 # ─── SECURITY PER LAYER ───────────────────────────────────────────────
@@ -155,32 +155,53 @@ security:
     cert_hierarchy: separate-intermediates-per-zone
 
 # ─── MODEL ROUTER DECISION MATRIX ─────────────────────────────────────
+# Liquid Nodes: GCloud (Cloud Run), Cloudflare (Workers/Pages), Vertex AI, AI Studio
 model_routing:
   decision_keys: [layer, task_type, privacy, cost_sensitivity]
+  liquid_nodes:
+    vertex_ai:
+      provider: google-cloud
+      endpoint: "https://us-central1-aiplatform.googleapis.com/v1"
+      project: gen-lang-client-0920560496
+      region: us-central1
+      models: [gemini-2.5-pro, gemini-2.5-flash, gemini-2.0-flash]
+    ai_studio:
+      provider: google-ai-studio
+      endpoint: "https://generativelanguage.googleapis.com/v1beta"
+      models: [gemini-2.5-pro, gemini-2.5-flash, gemini-2.0-flash-lite]
+    cloud_run:
+      provider: google-cloud
+      endpoint: "https://run.googleapis.com/v2"
+      project: gen-lang-client-0920560496
+      region: us-central1
+    cloudflare:
+      provider: cloudflare
+      account_id: 8b1fa38f282c691423c6399247d53323
+      services: [Workers, Pages, KV, D1, R2]
   matrix:
     - when: { layer: local, privacy: strict }
       use: ollama
       fallback: null
     - when: { layer: local, privacy: normal }
       use: ollama
-      fallback: gpt-4o-mini
+      fallback: gemini-2.5-flash  # AI Studio
     - when: { layer: internal, task_type: CODE }
-      use: claude-3.5-sonnet
-      fallback: gpt-4o
+      use: gemini-2.5-pro  # Vertex AI
+      fallback: claude-sonnet-4
     - when: { layer: internal, task_type: RESEARCH }
-      use: gpt-4o
-      fallback: gemini-pro
+      use: gemini-2.5-pro  # Vertex AI
+      fallback: gpt-4o
     - when: { layer: production, task_type: CODE }
-      use: claude-3.5-sonnet
-      fallback: gpt-4o
+      use: gemini-2.5-pro  # Vertex AI
+      fallback: claude-sonnet-4
     - when: { layer: production, task_type: VOICE }
-      use: gpt-4o-realtime
-      fallback: gpt-4o
+      use: gemini-2.5-flash  # Vertex AI (low latency)
+      fallback: gpt-4o-realtime
     - when: { layer: production, task_type: RESEARCH }
-      use: gpt-4o
-      fallback: gemini-pro
+      use: gemini-2.5-pro  # Vertex AI
+      fallback: gpt-4o
     - when: { layer: production, cost_sensitivity: high }
-      use: gpt-4o-mini
+      use: gemini-2.0-flash-lite  # AI Studio (free tier)
       fallback: ollama
     - when: { layer: production, privacy: strict }
       use: ollama

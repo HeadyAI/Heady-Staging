@@ -10,7 +10,7 @@
  *   - Sacred Geometry scaling (PHI = 1.618) for retry backoff and dimension normalization
  *   - 384-dim (default) and 768-dim embedding support
  *   - LRU cache with bloom filter, TTL, and JSONL persistence
- *   - Dynamic batch processing with concurrent-equals queue and deduplication
+ *   - Dynamic batch processing with priority queue and deduplication
  *   - Event emitter lifecycle: ready | embedding | cached | error | shutdown
  */
 

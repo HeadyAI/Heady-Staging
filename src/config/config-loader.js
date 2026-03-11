@@ -271,7 +271,7 @@ class ConfigLoader extends EventEmitter {
   // ── Loading ──
 
   /**
-   * Load configuration from all sources in concurrent-equals execution order.
+   * Load configuration from all sources in priority order.
    * @returns {Promise<object>} Fully resolved config
    */
   async load() {
@@ -285,7 +285,7 @@ class ConfigLoader extends EventEmitter {
     const registryConfig = await this._loadRegistry();
     if (registryConfig) this._config = deepMerge(this._config, registryConfig);
 
-    // Layer 1: Environment variables (concurrent-equal weight)
+    // Layer 1: Environment variables (highest priority)
     const envConfig = this._loadEnv();
     this._config = deepMerge(this._config, envConfig);
 

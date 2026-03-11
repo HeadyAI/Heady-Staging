@@ -11,13 +11,8 @@
 4. The AutoContext service enriches requests using indexed source material and CSL-style relevance scoring.
 5. Domain services respond with operational metadata, dependency fanout, and context summaries.
 
-## Key boundaries
+## Critical boundaries
 - Central auth runs on `auth.headysystems.com` and issues signed, httpOnly, Secure, SameSite=Strict cookies.
 - Redirects are constrained by `ALLOWED_REDIRECT_HOSTS`.
 - OAuth provider launch and callback handling stays inside `services/user-facing/heady-auth/index.js`.
 - Drupal content indexing relies on the AutoContext API routes used by `services/external-integrations/drupal-sync/drupal-vector-sync.js`.
-## Expanded support surfaces
-- Added support surfaces for pricing, developer portal, status, API docs, and build journal.
-
-## Expanded service layer
-- Added platform foundation services for notifications, analytics, billing, search, scheduling, migrations, assets, and session runtime checks.

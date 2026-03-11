@@ -38,11 +38,11 @@ const { getAllTools, executeTool } = require('./mcp-tools');
 const JSONRPC_VERSION = '2.0';
 
 const JSON_RPC_ERRORS = {
-  PARSE_ERROR:      { code: -32700, message: 'Parse error' },
-  INVALID_REQUEST:  { code: -32600, message: 'Invalid Request' },
+  PARSE_ERROR: { code: -32700, message: 'Parse error' },
+  INVALID_REQUEST: { code: -32600, message: 'Invalid Request' },
   METHOD_NOT_FOUND: { code: -32601, message: 'Method not found' },
-  INVALID_PARAMS:   { code: -32602, message: 'Invalid params' },
-  INTERNAL_ERROR:   { code: -32603, message: 'Internal error' },
+  INVALID_PARAMS: { code: -32602, message: 'Invalid params' },
+  INTERNAL_ERROR: { code: -32603, message: 'Internal error' },
 };
 
 /**
@@ -79,7 +79,11 @@ class MCPTransport extends EventEmitter {
     res.setHeader('Cache-Control', 'no-cache, no-transform');
     res.setHeader('Connection', 'keep-alive');
     res.setHeader('X-Accel-Buffering', 'no'); // Disable nginx buffering
-    // CORS handled by securityHeaders middleware
+    const origin = req.headers.origin || '';
+    const allowedOrigins = (process.env.CORS_ORIGINS || '').split(',').map(s => s.trim()).filter(Boolean);
+    const corsOrigin = allowedOrigins.includes(origin) ? origin : (allowedOrigins[0] || 'https://headyme.com');
+    res.setHeader('Access-Control-Allow-Origin', corsOrigin);
+    res.setHeader('Access-Control-Allow-Credentials', 'true');
     res.flushHeaders();
 
     const client = { id: clientId, res, connectedAt: new Date(), eventCount: 0 };

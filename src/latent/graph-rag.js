@@ -376,7 +376,7 @@ class GraphRAG extends EventEmitter {
    * @param {number} [options.topK=10] - Vector recall candidates.
    * @param {number} [options.expansionDepth=2] - BFS depth from candidates.
    * @param {number} [options.tokenBudget=4096] - Context window token budget.
-   * @param {number} [options.centralityWeight=0.3] - Blend of graph centrality in concurrent evaluation.
+   * @param {number} [options.centralityWeight=0.3] - Blend of graph centrality in ranking.
    */
   constructor(options) {
     super();

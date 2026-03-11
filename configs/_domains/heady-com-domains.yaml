@@ -404,7 +404,7 @@ setup:
     Proxy: Enabled (orange cloud)
     
   render_custom_domains: |
-    In Render dashboard:
+    In Cloud Run console:
     1. Add custom domain to your service
     2. Enter: headysystems.com
     3. Verify DNS with CNAME or A record

@@ -82,7 +82,7 @@ function _auditWrite(record) {
         if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
         const line = JSON.stringify({ ...record, _ts: new Date().toISOString() }) + '\n';
         fs.appendFileSync(AUDIT_PATH, line, 'utf8');
-    } catch (err) { /* structured-logger: emit error */ }
+    } catch (_) {}
 }
 
 // ─── Pub/Sub Message Decoder ─────────────────────────────────────────────────

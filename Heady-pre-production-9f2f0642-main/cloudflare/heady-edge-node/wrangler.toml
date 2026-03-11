@@ -1,0 +1,33 @@
+name = "heady-edge-node"
+main = "src/index.js"
+compatibility_date = "2024-02-23"
+
+# [vars]
+# HEADY_API_KEY = "example"
+
+# KV Namespace for Manager Cache
+[[kv_namespaces]]
+binding = "HEADY_KV_CACHE"
+id = "238f7a3f1c5c4060bfc07dccb78bd1ee"
+
+# Vectorize DB for HeadyMemory
+[[vectorize]]
+binding = "HEADY_MEMORY_VECS"
+index_name = "heady-memory-idx"
+
+# D1 Database for Leaderboard/Registry (Token lacks permission, skipped for now)
+# [[d1_databases]]
+# binding = "HEADY_D1_DB"
+# database_name = "heady_db"
+# database_id = "PENDING_ID"
+
+# Workers AI
+[ai]
+binding = "HEADY_AI"
+
+# Queues for Swarm (Blocked on permissions for now)
+# [[queues.producers]]
+# binding = "SWARM_QUEUE"
+# queue = "heady-swarm-queue"
+# [[queues.consumers]]
+# queue = "heady-swarm-queue"

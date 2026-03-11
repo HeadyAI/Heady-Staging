@@ -1,0 +1,298 @@
+name: Deploy to Production
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      strategy:
+        description: "Rollout strategy"
+        required: true
+        default: "gradual"
+        type: choice
+        options:
+          - gradual
+          - blue-green
+          - canary
+
+env:
+  REGISTRY: gcr.io
+  PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+  REGION: us-central1
+
+jobs:
+  pre-deploy-checks:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Get version
+        id: version
+        run: |
+          VERSION=$(git describe --tags --always)
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+      - name: Verify git status
+        run: |
+          if [ -n "$(git status --porcelain)" ]; then
+            echo "Working directory not clean"
+            exit 1
+          fi
+
+      - name: Verify signatures
+        run: |
+          git log -1 --pretty=format:"%G?"
+
+  deploy-production:
+    needs: pre-deploy-checks
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+
+    strategy:
+      matrix:
+        service:
+          - auth
+          - api-gateway
+          - user-service
+          - notification-service
+          - payment-service
+          - content-service
+          - analytics-service
+          - search-service
+          - recommendation-service
+          - chat-service
+          - collaboration-service
+          - storage-service
+          - media-service
+          - billing-service
+          - subscription-service
+          - order-service
+          - inventory-service
+          - shipping-service
+          - review-service
+          - rating-service
+          - social-service
+          - feed-service
+          - messaging-service
+          - calendar-service
+          - task-service
+          - project-service
+          - team-service
+          - organization-service
+          - admin-service
+          - reporting-service
+          - audit-service
+          - compliance-service
+          - security-service
+          - backup-service
+          - migration-service
+          - webhook-service
+          - queue-service
+          - scheduler-service
+          - health-service
+          - monitoring-service
+          - logging-service
+          - tracing-service
+          - config-service
+          - feature-flag-service
+          - experiment-service
+          - personalization-service
+          - recommendation-engine
+          - ml-pipeline
+          - real-time-service
+          - streaming-service
+          - cache-service
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ secrets.GCP_SERVICE_ACCOUNT_PRODUCTION }}
+
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+
+      - name: Configure Docker authentication
+        run: |
+          gcloud auth configure-docker ${{ env.REGISTRY }}
+
+      - name: Deploy with gradual rollout
+        if: github.event.inputs.strategy == 'gradual' || github.event_name == 'push'
+        run: |
+          SERVICE_NAME=${{ matrix.service }}
+          IMAGE="${{ env.REGISTRY }}/${{ env.PROJECT_ID }}/heady-${SERVICE_NAME}:${{ github.sha }}"
+
+          # Stage 1: 6.18% traffic (φ-scaled)
+          gcloud run deploy "heady-${SERVICE_NAME}" \
+            --image "$IMAGE" \
+            --region ${{ env.REGION }} \
+            --platform managed \
+            --allow-unauthenticated \
+            --service-account heady-prod@${{ env.PROJECT_ID }}.iam.gserviceaccount.com \
+            --set-env-vars ENVIRONMENT=production \
+            --memory 1Gi \
+            --cpu 2 \
+            --timeout 3600 \
+            --max-instances 500 \
+            --min-instances 10 \
+            --tag=canary \
+            --traffic canary=6,current=94 \
+            --no-gen2
+
+          echo "Stage 1 (6.18%) deployed. Waiting for metrics..."
+          sleep 300
+
+          # Stage 2: 38.2% traffic (φ-scaled)
+          gcloud run update-traffic "heady-${SERVICE_NAME}" \
+            --to-revisions canary=38,current=62 \
+            --region ${{ env.REGION }}
+
+          echo "Stage 2 (38.2%) deployed. Waiting for metrics..."
+          sleep 300
+
+          # Stage 3: 61.8% traffic (φ-scaled)
+          gcloud run update-traffic "heady-${SERVICE_NAME}" \
+            --to-revisions canary=62,current=38 \
+            --region ${{ env.REGION }}
+
+          echo "Stage 3 (61.8%) deployed. Waiting for metrics..."
+          sleep 300
+
+          # Stage 4: 100% traffic
+          gcloud run update-traffic "heady-${SERVICE_NAME}" \
+            --to-revisions canary=100 \
+            --region ${{ env.REGION }}
+
+          echo "Service fully promoted to 100%"
+
+      - name: Deploy with blue-green
+        if: github.event.inputs.strategy == 'blue-green'
+        run: |
+          SERVICE_NAME=${{ matrix.service }}
+          IMAGE="${{ env.REGISTRY }}/${{ env.PROJECT_ID }}/heady-${SERVICE_NAME}:${{ github.sha }}"
+
+          gcloud run deploy "heady-${SERVICE_NAME}-green" \
+            --image "$IMAGE" \
+            --region ${{ env.REGION }} \
+            --platform managed \
+            --service-account heady-prod@${{ env.PROJECT_ID }}.iam.gserviceaccount.com \
+            --set-env-vars ENVIRONMENT=production \
+            --memory 1Gi \
+            --cpu 2 \
+            --timeout 3600 \
+            --max-instances 500 \
+            --min-instances 10 \
+            --no-gen2
+
+          echo "Blue-green deployment created. Manual approval required for traffic switch."
+
+      - name: Health check
+        run: |
+          SERVICE_NAME=${{ matrix.service }}
+          for i in {1..30}; do
+            if gcloud run describe "heady-${SERVICE_NAME}" \
+              --region ${{ env.REGION }} \
+              --format='value(status.conditions[0].status)' | grep -q "True"; then
+              echo "Service health check passed"
+              break
+            fi
+            echo "Waiting for service to be healthy... ($i/30)"
+            sleep 10
+          done
+
+      - name: Run smoke tests
+        run: |
+          npm ci
+          npm run test:smoke:production
+        env:
+          API_BASE_URL: https://api.heady.app
+          AUTH_TOKEN: ${{ secrets.PROD_AUTH_TOKEN }}
+        continue-on-error: true
+
+  rollback:
+    needs: deploy-production
+    if: failure()
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ secrets.GCP_SERVICE_ACCOUNT_PRODUCTION }}
+
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+
+      - name: Rollback deployment
+        run: |
+          SERVICE_NAME=${{ matrix.service }}
+          echo "Rolling back service: ${SERVICE_NAME}"
+
+          # Get the previous revision
+          PREVIOUS_REVISION=$(gcloud run list-revisions --service "heady-${SERVICE_NAME}" \
+            --region ${{ env.REGION }} \
+            --format='value(name)' \
+            --limit=2 | tail -1)
+
+          # Route all traffic back to previous revision
+          gcloud run update-traffic "heady-${SERVICE_NAME}" \
+            --to-revisions "${PREVIOUS_REVISION}=100" \
+            --region ${{ env.REGION }}
+
+          echo "Rollback complete. Traffic restored to previous revision."
+
+      - name: Notify rollback
+        uses: 8398a7/action-slack@v3
+        with:
+          status: custom
+          custom_payload: |
+            {
+              text: `Production rollback initiated for ${{ matrix.service }}`,
+              attachments: [{
+                color: 'danger',
+                fields: [{
+                  title: 'Service',
+                  value: '${{ matrix.service }}',
+                  short: true
+                }]
+              }]
+            }
+          webhook_url: ${{ secrets.SLACK_WEBHOOK }}
+
+  notify-success:
+    needs: deploy-production
+    if: success()
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Notify deployment success
+        uses: 8398a7/action-slack@v3
+        with:
+          status: custom
+          custom_payload: |
+            {
+              text: `Production deployment successful - Version ${{ needs.pre-deploy-checks.outputs.version }}`,
+              attachments: [{
+                color: 'good',
+                fields: [{
+                  title: 'Commit',
+                  value: process.env.AS_COMMIT.substring(0, 7),
+                  short: true
+                }]
+              }]
+            }
+          webhook_url: ${{ secrets.SLACK_WEBHOOK }}

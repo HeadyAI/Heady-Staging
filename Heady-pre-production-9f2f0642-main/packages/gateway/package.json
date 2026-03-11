@@ -1,0 +1,57 @@
+{
+  "name": "@heady-ai/gateway",
+  "version": "3.2.2",
+  "description": "API gateway with cross-domain auth, token-bucket rate limiting, and domain-to-service routing for the Heady AI Platform.",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "files": [
+    "dist/",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "test": "jest",
+    "clean": "rm -rf dist",
+    "prepublishOnly": "npm run clean && npm run build"
+  },
+  "dependencies": {
+    "@heady-ai/core": "workspace:*"
+  },
+  "license": "UNLICENSED",
+  "author": {
+    "name": "HeadySystems Inc.",
+    "email": "eric@headyconnection.org",
+    "url": "https://headyme.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/HeadyMe/heady-production.git",
+    "directory": "packages/gateway"
+  },
+  "homepage": "https://headysystems.com",
+  "bugs": {
+    "url": "https://github.com/HeadyMe/heady-production/issues"
+  },
+  "keywords": [
+    "heady",
+    "ai",
+    "gateway",
+    "api-gateway",
+    "rate-limiting",
+    "auth",
+    "cors"
+  ],
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

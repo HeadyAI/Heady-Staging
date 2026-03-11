@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Heady Instant — Try Heady™ AI Now</title>
+    <meta name="description"
+        content="Try Heady™ AI instantly — no signup required. Chat with Heady™Brain, explore the API, and see what autonomous AI can do.">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400&display=swap"
+        rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box
+        }
+
+        :root {
+            --primary: #7c3aed;
+            --accent: #06b6d4;
+            --bg: #030014;
+            --surface: #0a0a2e;
+            --surface2: #12123a;
+            --border: rgba(124, 58, 237, .15);
+            --text: #e0e0ff;
+            --dim: #6b7280;
+            --white: #fff;
+            --success: #22c55e
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Inter', system-ui, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column
+        }
+
+        a {
+            color: var(--accent);
+            text-decoration: none
+        }
+
+        .top {
+            padding: 16px 32px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border)
+        }
+
+        .top .brand {
+            font-weight: 800;
+            font-size: 1.1rem
+        }
+
+        .top .brand span {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent
+        }
+
+        .top .links a {
+            margin-left: 16px;
+            font-size: .85rem;
+            color: var(--dim)
+        }
+
+        .top .links a:hover {
+            color: var(--white)
+        }
+
+        .main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            max-width: 800px;
+            margin: 0 auto;
+            width: 100%;
+            padding: 40px 24px
+        }
+
+        .main h1 {
+            font-size: 1.8rem;
+            font-weight: 800;
+            text-align: center;
+            margin-bottom: 4px
+        }
+
+        .main h1 em {
+            font-style: normal;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent
+        }
+
+        .main .sub {
+            text-align: center;
+            color: var(--dim);
+            font-size: .9rem;
+            margin-bottom: 32px
+        }
+
+        .chat {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            overflow: hidden
+        }
+
+        .messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            min-height: 300px
+        }
+
+        .msg {
+            max-width: 80%;
+            padding: 12px 16px;
+            border-radius: 14px;
+            font-size: .9rem;
+            line-height: 1.7;
+            animation: fadeIn .3s ease
+        }
+
+        .msg.user {
+            align-self: flex-end;
+            background: linear-gradient(135deg, var(--primary), rgba(124, 58, 237, .8));
+            color: var(--white);
+            border-bottom-right-radius: 4px
+        }
+
+        .msg.ai {
+            align-self: flex-start;
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-bottom-left-radius: 4px
+        }
+
+        .msg.ai .label {
+            font-size: .7rem;
+            font-weight: 600;
+            color: var(--accent);
+            margin-bottom: 4px
+        }
+
+        .msg.typing .dots::after {
+            content: '...';
+            animation: dots 1.5s infinite
+        }
+
+        @keyframes dots {
+            0% {
+                content: '.'
+            }
+
+            33% {
+                content: '..'
+            }
+
+            66% {
+                content: '...'
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(8px)
+            }
+
+            to {
+                opacity: 1;
+                transform: none
+            }
+        }
+
+        .input-bar {
+            display: flex;
+            gap: 8px;
+            padding: 12px 16px;
+            border-top: 1px solid var(--border);
+            background: rgba(0, 0, 0, .2)
+        }
+
+        .input-bar input {
+            flex: 1;
+            padding: 12px 16px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            background: var(--bg);
+            color: var(--text);
+            font-size: .9rem;
+            font-family: 'Inter', sans-serif;
+            outline: none;
+            transition: border .2s
+        }
+
+        .input-bar input:focus {
+            border-color: var(--primary)
+        }
+
+        .input-bar input::placeholder {
+            color: var(--dim)
+        }
+
+        .input-bar button {
+            padding: 12px 24px;
+            border-radius: 12px;
+            border: none;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: var(--white);
+            font-weight: 600;
+            font-size: .88rem;
+            cursor: pointer;
+            transition: all .3s
+        }
+
+        .input-bar button:hover {
+            transform: scale(1.03);
+            box-shadow: 0 4px 20px rgba(124, 58, 237, .4)
+        }
+
+        .input-bar button:disabled {
+            opacity: .5;
+            cursor: not-allowed;
+            transform: none
+        }
+
+        .suggestions {
+            display: flex;
+            gap: 8px;
+            padding: 8px 16px;
+            flex-wrap: wrap
+        }
+
+        .sug {
+            padding: 6px 12px;
+            border-radius: 8px;
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            font-size: .78rem;
+            color: var(--dim);
+            cursor: pointer;
+            transition: all .2s
+        }
+
+        .sug:hover {
+            border-color: var(--primary);
+            color: var(--text)
+        }
+
+        footer {
+            text-align: center;
+            padding: 16px;
+            font-size: .75rem;
+            color: var(--dim)
+        }
+
+        @media(max-width:600px) {
+            .main {
+                padding: 20px 12px
+            }
+
+            .msg {
+                max-width: 90%
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="top">
+        <div class="brand">⚡ <span>Heady Instant</span></div>
+        <div class="links"><a href="https://headysystems.com">Home</a><a href="https://api.headysystems.com">API</a><a
+                href="https://headybuddy.org">HeadyBuddy</a></div>
+    </div>
+    <div class="main">
+        <h1>Try Heady <em>Instantly</em></h1>
+        <p class="sub">No signup. No API key. Just start chatting with Heady™Brain AI.</p>
+        <div class="chat">
+            <div class="messages" id="messages">
+                <div class="msg ai">
+                    <div class="label">⚡ HeadyBrain</div>Hey! I'm HeadyBrain — the AI behind Heady™ Systems. Ask me
+                    anything about AI, code, architecture, or just say hi. I'm powered by 20 specialized AI nodes
+                    working together.
+                </div>
+            </div>
+            <div class="suggestions" id="suggestions">
+                <div class="sug" onclick="sendMsg('What are the 20 AI nodes?')">🤖 What are the 20 AI nodes?</div>
+                <div class="sug" onclick="sendMsg('Explain HeadyBuddy')">💜 Explain HeadyBuddy</div>
+                <div class="sug" onclick="sendMsg('Write a Python hello world')">🐍 Python hello world</div>
+                <div class="sug" onclick="sendMsg('What makes Heady different?')">✨ What makes Heady different?</div>
+            </div>
+            <div class="input-bar">
+                <input type="text" id="input" placeholder="Type a message…" autocomplete="off">
+                <button onclick="sendMsg()" id="send-btn">Send</button>
+            </div>
+        </div>
+    </div>
+    <footer>© 2026 HeadySystems Inc · <a href="https://headysystems.com">headysystems.com</a></footer>
+    <script>
+        const API = 'https://api.headysystems.com', msgs = document.getElementById('messages'), inp = document.getElementById('input'), btn = document.getElementById('send-btn');
+        inp.addEventListener('keydown', e => { if (e.key === 'Enter' && !btn.disabled) sendMsg() });
+        async function sendMsg(text) {
+            const q = text || inp.value.trim(); if (!q) return; inp.value = '';
+            document.getElementById('suggestions').style.display = 'none';
+            addMsg(q, 'user'); btn.disabled = true;
+            const ai = addMsg('<div class="label">⚡ HeadyBrain</div><span class="typing"><span class="dots"></span></span>', 'ai', true);
+            try { const r = await fetch(API + '/api/brain/chat', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ message: q }) }); const d = await r.json(); const a = d.response || d.reply || d.message || d.text || JSON.stringify(d); ai.textContent = ''; const lbl = document.createElement('div'); lbl.className = 'label'; lbl.textContent = '⚡ HeadyBrain'; ai.appendChild(lbl); const txt = document.createTextNode(a); ai.appendChild(txt) }
+            catch (e) { ai.textContent = ''; const lbl = document.createElement('div'); lbl.className = 'label'; lbl.textContent = '⚡ HeadyBrain'; ai.appendChild(lbl); ai.appendChild(document.createTextNode("I'm warming up — the API may need a moment. Try again!")) }
+            btn.disabled = false; inp.focus(); msgs.scrollTop = msgs.scrollHeight
+        }
+        function addMsg(content, type, isHtml) { const d = document.createElement('div'); d.className = 'msg ' + type; if (isHtml) d.innerHTML = content; else d.textContent = content; msgs.appendChild(d); msgs.scrollTop = msgs.scrollHeight; return d }
+    </script>
+</body>
+
+</html>

@@ -243,7 +243,7 @@ module.exports = [
         desc: "Load configs/pipeline.yaml, define canonical pipeline stage order"
     },
     {
-        id: "cfg-045", name: "Wire priority-tasks.yaml task concurrent-equals queue",
+        id: "cfg-045", name: "Wire priority-tasks.yaml task priority queue",
         cat: "ops", pool: "hot", w: 5,
         desc: "Load configs/priority-tasks.yaml, seed auto-success task queue with priority items"
     },

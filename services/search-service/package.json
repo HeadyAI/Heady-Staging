@@ -1,24 +1,36 @@
 {
-    "name": "@heady/search-service",
-    "version": "4.0.0",
-    "private": true,
-    "description": "Heady™ Hybrid Search — BM25 + pgvector cosine + Reciprocal Rank Fusion",
-    "main": "index.js",
-    "scripts": {
-        "dev": "node --watch index.js",
-        "start": "node index.js",
-        "test": "node --test __tests__/search-service.test.js",
-        "lint": "eslint ."
-    },
-    "dependencies": {
-        "express": "^5.2.1",
-        "pg": "^8.13.0",
-        "pino": "^9.6.0"
-    },
-    "devDependencies": {
-        "pino-pretty": "^13.0.0"
-    },
-    "engines": {
-        "node": ">=20.0.0"
-    }
+  "name": "@heady/search-service",
+  "version": "1.0.0",
+  "description": "Full-text and vector hybrid search service for HEADY platform",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "tsx watch src/index.ts",
+    "test": "jest",
+    "lint": "eslint src --ext .ts"
+  },
+  "dependencies": {
+    "express": "^4.21.2",
+    "pg": "^8.10.0",
+    "pino": "^8.16.1",
+    "pino-http": "^8.4.1",
+    "dotenv": "^16.3.1"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.20",
+    "@types/node": "^20.8.0",
+    "@types/pg": "^8.10.7",
+    "typescript": "^5.2.2",
+    "tsx": "^3.13.0",
+    "jest": "^29.7.0",
+    "@types/jest": "^29.5.5",
+    "ts-jest": "^29.1.1",
+    "eslint": "^8.51.0",
+    "@typescript-eslint/eslint-plugin": "^6.7.0",
+    "@typescript-eslint/parser": "^6.7.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
 }

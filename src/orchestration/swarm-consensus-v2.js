@@ -431,7 +431,7 @@ class SwarmConsensus extends EventEmitter {
             const queue = this.waitQueues.get(filePath);
             queue.push(waiter);
 
-            // Re-sort: concurrent-equal weight first, then by enqueue time (FIFO within tier)
+            // Re-sort: highest priority first, then by enqueue time (FIFO within tier)
             queue.sort((a, b) => {
                 if (b.priority !== a.priority) return b.priority - a.priority;
                 return a.enqueuedAt - b.enqueuedAt;

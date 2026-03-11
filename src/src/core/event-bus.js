@@ -6,7 +6,7 @@
  *   - Namespaced channels: task | lifecycle | health | drift | alert | learning
  *   - Octant indexing maps events to spatial coordinates (8 octants = 2³)
  *   - Ring buffer of fib(12)=144 events for history replay
- *   - Phi-weighted concurrent-equals queue for processing order
+ *   - Phi-weighted priority queue for processing order
  *
  * © 2026-2026 HeadySystems Inc. All Rights Reserved. 60+ Provisional Patents.
  */

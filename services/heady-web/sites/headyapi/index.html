@@ -1,1 +1,212 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>HeadyAPI™ — Liquid Intelligence Gateway</title><meta name="description" content="Unified AI gateway that races providers, caches responses, and auto-fails-over. One endpoint, every model."><link rel="canonical" href="https://headyapi.com/"><meta property="og:title" content="HeadyAPI™ — Liquid Intelligence Gateway"><meta property="og:description" content="Unified AI gateway that races providers, caches responses, and auto-fails-over. One endpoint, every model."><meta name="twitter:card" content="summary_large_image"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"><style>*{box-sizing:border-box;margin:0;padding:0}html{scroll-behavior:smooth}body{background:#0a0e17;color:#f0f4ff;font-family:'Inter',sans-serif;line-height:1.618;overflow-x:hidden;-webkit-font-smoothing:antialiased}::selection{background:#f59e0b22;color:#f59e0b}a{color:inherit;text-decoration:none}.nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:21px 55px;display:flex;align-items:center;justify-content:space-between;backdrop-filter:blur(20px);background:rgba(10,14,23,0.8);border-bottom:1px solid rgba(255,255,255,0.08)}.nav-logo{display:flex;align-items:center;gap:13px;font-family:'Outfit',sans-serif;font-weight:700;font-size:1.25rem}.icon{width:32px;height:32px;background:#f59e0b;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;color:#0a0e17;font-weight:800}.nav-links{display:flex;gap:55px;list-style:none}.nav-links a{font-size:.875rem;font-weight:500;color:#8b98b8;transition:color .2s}.nav-links a:hover{color:#f0f4ff}.btn{display:inline-flex;align-items:center;gap:8px;padding:13px 34px;border-radius:8px;font-size:.875rem;font-weight:600;cursor:pointer;border:none;transition:all .2s;text-decoration:none;font-family:'Inter',sans-serif}.btn-p{background:#f59e0b;color:#0a0e17}.btn-p:hover{transform:translateY(-1px);box-shadow:0 8px 24px #f59e0b40}.btn-g{background:transparent;color:#8b98b8;border:1px solid rgba(255,255,255,0.08)}.btn-g:hover{color:#f0f4ff;border-color:rgba(255,255,255,0.2)}.hero{position:relative;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:144px 55px 89px}#sacred-geo-canvas{position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:0;pointer-events:none}.hero-content{position:relative;z-index:2;text-align:center;max-width:880px}.badge{display:inline-flex;align-items:center;gap:8px;padding:8px 21px;border:1px solid #f59e0b40;border-radius:100px;background:#f59e0b15;font-size:.875rem;font-weight:500;color:#f59e0b;margin-bottom:34px;backdrop-filter:blur(10px)}.badge-dot{width:6px;height:6px;border-radius:50%;background:#f59e0b;animation:p 2s infinite}@keyframes p{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.8)}}.hero-title{font-family:'Outfit',sans-serif;font-size:clamp(2.25rem,8vw,4.5rem);font-weight:800;line-height:1.05;letter-spacing:-.03em;margin-bottom:34px}.accent{color:#f59e0b}.hero-sub{font-size:clamp(1.125rem,2.5vw,1.5rem);color:#8b98b8;line-height:1.618;margin-bottom:55px;max-width:640px;margin-left:auto;margin-right:auto}.hero-cta{display:flex;justify-content:center;gap:21px;flex-wrap:wrap;margin-bottom:89px}.hero-cta .btn{padding:21px 55px;font-size:1rem}.stats{display:flex;justify-content:center;gap:89px;flex-wrap:wrap}.stat{text-align:center}.stat-v{font-family:'Outfit',sans-serif;font-size:1.875rem;font-weight:700;color:#f59e0b;line-height:1}.stat-l{font-size:.875rem;color:#4a5568;margin-top:4px}.hero::after{content:'';position:absolute;bottom:0;left:0;right:0;height:200px;background:linear-gradient(to bottom,transparent,#0a0e17);z-index:1}.section{padding:144px 55px;max-width:1200px;margin:0 auto}.sh{text-align:center;margin-bottom:89px}.sl{font-size:.875rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#f59e0b;margin-bottom:13px}.st{font-family:'Outfit',sans-serif;font-size:clamp(1.875rem,4vw,3rem);font-weight:700;line-height:1.15;margin-bottom:21px}.sd{font-size:1.125rem;color:#8b98b8;max-width:560px;margin:0 auto}.fg{display:grid;grid-template-columns:repeat(3,1fr);gap:21px}.fc{background:rgba(13,18,33,0.7);border:1px solid rgba(255,255,255,0.08);border-radius:21px;padding:55px;backdrop-filter:blur(16px);transition:all .3s;position:relative;overflow:hidden}.fc::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,#f59e0b22,transparent);opacity:0;transition:opacity .3s}.fc:hover{border-color:#f59e0b40;transform:translateY(-4px);box-shadow:0 20px 60px #f59e0b14}.fc:hover::before{opacity:1}.fi{width:48px;height:48px;border-radius:8px;background:#f59e0b22;display:flex;align-items:center;justify-content:center;margin-bottom:21px;font-size:22px}.ft{font-family:'Outfit',sans-serif;font-size:1.25rem;font-weight:600;margin-bottom:13px}.fd{font-size:.875rem;color:#8b98b8;line-height:1.618}.ss{background:#0d1221;border-top:1px solid rgba(255,255,255,0.08);border-bottom:1px solid rgba(255,255,255,0.08);padding:89px 55px}.sg{display:grid;grid-template-columns:repeat(4,1fr);gap:21px;max-width:1000px;margin:0 auto}.si{text-align:center;padding:34px}.sn{font-family:'Outfit',sans-serif;font-size:clamp(1.875rem,4vw,3rem);font-weight:800;color:#f59e0b;line-height:1}.sll{font-size:.875rem;color:#4a5568;margin-top:8px}.eg{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:13px}.ec{background:rgba(13,18,33,0.7);border:1px solid rgba(255,255,255,0.08);border-radius:13px;padding:21px;text-align:center;transition:all .2s;color:#f0f4ff}.ec:hover{border-color:#f59e0b40;transform:translateY(-2px)}.ec h4{font-family:'Outfit',sans-serif;font-size:.875rem;font-weight:600;margin-bottom:4px}.ec p{font-size:.75rem;color:#4a5568}.cs{text-align:center;padding:144px 55px;position:relative}.cs::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:600px;height:600px;border-radius:50%;background:radial-gradient(circle,#f59e0b08,transparent 70%);pointer-events:none}.ct{font-family:'Outfit',sans-serif;font-size:clamp(1.875rem,5vw,3.75rem);font-weight:800;margin-bottom:21px;position:relative}.cd2{font-size:1.125rem;color:#8b98b8;margin-bottom:55px;max-width:500px;margin-left:auto;margin-right:auto;position:relative}.cb{display:flex;justify-content:center;gap:21px;flex-wrap:wrap;position:relative}.cb .btn{padding:21px 55px;font-size:1rem}.footer{border-top:1px solid rgba(255,255,255,0.08);padding:89px 55px;text-align:center}.fl{display:flex;justify-content:center;gap:55px;flex-wrap:wrap;margin-bottom:34px}.fl a{font-size:.875rem;color:#8b98b8;transition:color .2s}.fl a:hover{color:#f59e0b}.fc2{font-size:.75rem;color:#4a5568}@media(max-width:768px){.fg{grid-template-columns:1fr}.sg{grid-template-columns:repeat(2,1fr)}.nav-links{display:none}.stats{gap:34px}}</style></head><body><canvas id="sacred-geo-canvas"></canvas><nav class="nav"><a href="https://headyapi.com/" class="nav-logo"><span class="icon">◆</span><span>HeadyAPI™</span></a><ul class="nav-links"><li><a href="#features">Features</a></li><li><a href="#eco">Ecosystem</a></li><li><a href="https://headyio.com/docs">Docs</a></li></ul><div style="display:flex;gap:13px"><a href="https://heady-onboarding-bf4q4zywhq-ue.a.run.app" class="btn btn-g">Sign In</a><a href="https://heady-onboarding-bf4q4zywhq-ue.a.run.app" class="btn btn-p">Start Free</a></div></nav><section class="hero"><div class="hero-content"><div class="badge"><span class="badge-dot"></span>HeadySystems Inc. — 60+ Patents</div><h1 class="hero-title"><span class="accent">HeadyAPI</span>™<br>Liquid Intelligence Gateway</h1><p class="hero-sub">Unified AI gateway that races providers, caches responses, and auto-fails-over. One endpoint, every model.</p><div class="hero-cta"><a href="https://heady-onboarding-bf4q4zywhq-ue.a.run.app" class="btn btn-p">Start Free →</a><a href="https://headyio.com/docs" class="btn btn-g">API Reference</a></div><div class="stats"><div class="stat"><span class="stat-v">4+</span><span class="stat-l">AI Providers</span></div><div class="stat"><span class="stat-v"><200ms</span><span class="stat-l">Edge Latency</span></div><div class="stat"><span class="stat-v">100K+</span><span class="stat-l">Req/Day Capacity</span></div><div class="stat"><span class="stat-v">3x</span><span class="stat-l">Cost Reduction</span></div></div></div></section><section class="section" id="features"><div class="sh"><p class="sl">Capabilities</p><h2 class="st">Built Different</h2><p class="sd">Every component engineered with Sacred Geometry mathematics and Continuous Semantic Logic.</p></div><div class="fg"><div class="fc"><div class="fi">🏁</div><h3 class="ft">Provider Racing</h3><p class="fd">Send your prompt to multiple models simultaneously. First quality response wins. Determinism-proven answers.</p></div><div class="fc"><div class="fi">💾</div><h3 class="ft">Semantic Cache</h3><p class="fd">Proven answers are cached and recalled by similarity. Cache hits are instant — zero model calls.</p></div><div class="fc"><div class="fi">🔄</div><h3 class="ft">Auto-Failover</h3><p class="fd">If OpenAI is down, Gemini takes over. If Gemini is slow, Groq responds. Zero downtime, always.</p></div><div class="fc"><div class="fi">🔑</div><h3 class="ft">BYOK Support</h3><p class="fd">Bring your own API keys for any provider. Use your existing contracts and billing.</p></div><div class="fc"><div class="fi">📈</div><h3 class="ft">Usage Analytics</h3><p class="fd">Per-model cost tracking, latency histograms, cache hit rates, and provider reliability scores.</p></div><div class="fc"><div class="fi">🛡️</div><h3 class="ft">Model Armor</h3><p class="fd">Output filtering, prompt injection detection, PII scrubbing, and compliance enforcement built in.</p></div></div></section><section class="ss"><div class="sg"><div class="si"><span class="sn">60+</span><span class="sll">Patents Filed</span></div><div class="si"><span class="sn">21</span><span class="sll">Microservices</span></div><div class="si"><span class="sn">17</span><span class="sll">AI Swarms</span></div><div class="si"><span class="sn">φ</span><span class="sll">Sacred Geometry</span></div></div></section><section class="section" id="eco"><div class="sh"><p class="sl">Platform</p><h2 class="st">The Heady™ Ecosystem</h2><p class="sd">A unified intelligence platform spanning every domain of AI.</p></div><div class="eg"><a class="ec" href="https://headyme.com"><h4>HeadyMe</h4><p>AI Operating System</p></a><a class="ec" href="https://headysystems.com"><h4>HeadySystems</h4><p>Infrastructure</p></a><a class="ec" href="https://headyio.com"><h4>Heady I/O</h4><p>Developer SDK</p></a><a class="ec" href="https://headyapi.com"><h4>HeadyAPI</h4><p>AI Gateway</p></a><a class="ec" href="https://headymcp.com"><h4>HeadyMCP</h4><p>MCP Server</p></a><a class="ec" href="https://headyos.com"><h4>HeadyOS</h4><p>Latent OS</p></a><a class="ec" href="https://headybuddy.org"><h4>HeadyBuddy</h4><p>AI Companion</p></a><a class="ec" href="https://heady-ai.com"><h4>Heady AI</h4><p>Intelligence Hub</p></a><a class="ec" href="https://headycloud.com"><h4>HeadyCloud</h4><p>Sovereign Infra</p></a><a class="ec" href="https://headybot.com"><h4>HeadyBot</h4><p>Agents</p></a><a class="ec" href="https://headystore.com"><h4>HeadyStore</h4><p>Marketplace</p></a><a class="ec" href="https://headyconnection.org"><h4>HeadyConnection</h4><p>AI for Good</p></a></div></section><section class="cs"><h2 class="ct">Ready to <span class="accent">Start</span>?</h2><p class="cd2">Join the Heady platform. Experience intelligence without boundaries.</p><div class="cb"><a href="https://heady-onboarding-bf4q4zywhq-ue.a.run.app" class="btn btn-p">Start Free →</a><a href="https://headyio.com/docs" class="btn btn-g">API Reference</a></div></section><footer class="footer"><div class="fl"><a href="https://headysystems.com">HeadySystems</a><a href="https://headyio.com/docs">Docs</a><a href="https://headyconnection.com">Community</a><a href="https://github.com/HeadyMe">GitHub</a><a href="mailto:eric@headyconnection.org">Contact</a></div><p class="fc2">© 2026 HeadySystems Inc. — Sacred Geometry · CSL · 60+ Patents</p></footer><script>var ACCENT="#f59e0b";(function(){var c=document.getElementById('sacred-geo-canvas');if(const PHI='1.6180339887';)return;var x=c.getContext('2d'),w,h,t=0;function R(){w=c.width=innerWidth;h=c.height=innerHeight}addEventListener('resize',R);R();function D(){x.clearRect(0,0,w,h);x.globalAlpha=0.06;var cx=w/2,cy=h/2,r=Math.min(w,h)*0.35;for(var i=0;i<6;i++){var a=Math.PI/3*i+t*0.1,px=cx+Math.cos(a)*r*0.618,py=cy+Math.sin(a)*r*0.618;x.beginPath();x.arc(px,py,r*0.618,0,Math.PI*2);x.strokeStyle=ACCENT;x.lineWidth=0.8;x.stroke()}x.beginPath();x.arc(cx,cy,r*0.618,0,Math.PI*2);x.strokeStyle=ACCENT;x.lineWidth=1;x.stroke();for(var i=0;i<12;i++){var a=Math.PI/6*i+t*0.05;x.beginPath();x.arc(cx+Math.cos(a)*r,cy+Math.sin(a)*r,4,0,Math.PI*2);x.fillStyle=ACCENT;x.globalAlpha=0.12;x.fill()}t+=0.008;requestAnimationFrame(D)}D()})()</script></body></html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HeadyAPI™ — Unified AI Gateway</title>
+  <meta name="description" content="HeadyAPI™ — Unified AI Gateway. Part of the Heady™ AI ecosystem by HeadySystems Inc.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --primary: #636E72;
+      --bg: #0a0a0f;
+      --surface: #13131a;
+      --border: #1e1e2a;
+      --text: #e8e8f0;
+      --text-dim: #8888a0;
+      --glow: #636E7240;
+    }
+    body {
+      font-family: 'Inter', -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Sacred Geometry Background */
+    .sacred-bg {
+      position: fixed; inset: 0; z-index: 0;
+      background:
+        radial-gradient(ellipse at 20% 50%, #636E7208 0%, transparent 60%),
+        radial-gradient(ellipse at 80% 20%, #636E7205 0%, transparent 50%),
+        radial-gradient(ellipse at 50% 80%, #6C5CE708 0%, transparent 40%);
+    }
+    .sacred-bg::before {
+      content: ''; position: absolute; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='30' cy='30' r='28' fill='none' stroke='%23ffffff' stroke-opacity='0.015' stroke-width='0.5'/%3E%3C/svg%3E");
+      background-size: 60px 60px;
+    }
+
+    /* Navigation */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+      background: rgba(10, 10, 15, 0.8);
+      border-bottom: 1px solid var(--border);
+      padding: 0.75rem 2rem;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .nav-brand { display: flex; align-items: center; gap: 0.75rem; text-decoration: none; }
+    .nav-icon { font-size: 1.5rem; }
+    .nav-name { font-weight: 700; font-size: 1.1rem; color: var(--text); }
+    .nav-tm { font-size: 0.6rem; vertical-align: super; color: var(--text-dim); }
+    .nav-links { display: flex; gap: 1.5rem; align-items: center; }
+    .nav-links a { color: var(--text-dim); text-decoration: none; font-size: 0.9rem; font-weight: 500; transition: color 0.2s; }
+    .nav-links a:hover { color: var(--text); }
+    .nav-cta {
+      background: var(--primary); color: #fff !important; padding: 0.5rem 1.25rem;
+      border-radius: 8px; font-weight: 600; transition: all 0.3s;
+    }
+    .nav-cta:hover { transform: translateY(-1px); box-shadow: 0 4px 20px var(--glow); }
+
+    /* Hero */
+    .hero {
+      position: relative; z-index: 1;
+      min-height: 100vh; display: flex; flex-direction: column;
+      align-items: center; justify-content: center; text-align: center;
+      padding: 6rem 2rem 4rem;
+    }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      background: var(--surface); border: 1px solid var(--border);
+      padding: 0.4rem 1rem; border-radius: 100px;
+      font-size: 0.8rem; color: var(--text-dim); margin-bottom: 2rem;
+    }
+    .hero-badge-dot { width: 6px; height: 6px; background: #2ECC71; border-radius: 50%; animation: pulse 2s infinite; }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+    .hero-icon { font-size: 4rem; margin-bottom: 1.5rem; filter: drop-shadow(0 0 30px var(--glow)); }
+    h1 {
+      font-size: clamp(2.5rem, 6vw, 4.5rem); font-weight: 900;
+      line-height: 1.1; margin-bottom: 1.5rem;
+      background: linear-gradient(135deg, var(--text) 30%, var(--primary) 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .hero-sub {
+      font-size: clamp(1.1rem, 2.5vw, 1.4rem); color: var(--text-dim);
+      max-width: 600px; line-height: 1.6; margin-bottom: 2.5rem;
+    }
+    .hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center; }
+    .btn {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      padding: 0.85rem 2rem; border-radius: 12px; font-weight: 600;
+      font-size: 1rem; text-decoration: none; transition: all 0.3s;
+      cursor: pointer; border: none;
+    }
+    .btn-primary { background: var(--primary); color: #fff; }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 30px var(--glow); }
+    .btn-ghost { background: transparent; border: 1px solid var(--border); color: var(--text); }
+    .btn-ghost:hover { border-color: var(--primary); background: #636E7210; }
+
+    /* Features */
+    .features {
+      position: relative; z-index: 1;
+      max-width: 1200px; margin: 0 auto; padding: 4rem 2rem 6rem;
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem;
+    }
+    .feature-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 16px; padding: 2rem; transition: all 0.3s;
+    }
+    .feature-card:hover { border-color: #636E7240; transform: translateY(-4px); box-shadow: 0 8px 40px #636E7210; }
+    .feature-icon { font-size: 2rem; margin-bottom: 1rem; }
+    .feature-title { font-weight: 700; font-size: 1.1rem; margin-bottom: 0.5rem; }
+    .feature-desc { color: var(--text-dim); line-height: 1.6; font-size: 0.9rem; }
+
+    /* Footer */
+    footer {
+      position: relative; z-index: 1;
+      border-top: 1px solid var(--border); padding: 3rem 2rem;
+      text-align: center; color: var(--text-dim); font-size: 0.85rem;
+    }
+    .footer-links { display: flex; gap: 2rem; justify-content: center; margin-bottom: 1.5rem; flex-wrap: wrap; }
+    .footer-links a { color: var(--text-dim); text-decoration: none; transition: color 0.2s; }
+    .footer-links a:hover { color: var(--text); }
+
+    @media (max-width: 640px) {
+      nav { padding: 0.75rem 1rem; }
+      .nav-links { display: none; }
+      .hero { padding: 5rem 1.5rem 3rem; }
+    }
+  </style>
+
+  <!-- Firebase Auth -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+  <script>
+    firebase.initializeApp({
+      apiKey: "AIzaSyBpPClFwr0VDxl_D1SLe2dtvq2MX05QL6g",
+      authDomain: "heady-ai.firebaseapp.com",
+      projectId: "heady-ai",
+      storageBucket: "heady-ai.firebasestorage.app",
+      messagingSenderId: "1003436179562",
+      appId: "1:1003436179562:web:1ab30825a7119a82578a13",
+      measurementId: "G-M1M5SZ6WFY"
+    });
+  </script>
+</head>
+<body>
+  <div class="sacred-bg"></div>
+
+  <nav>
+    <a class="nav-brand" href="/">
+      <span class="nav-icon">🔗</span>
+      <span class="nav-name">HeadyAPI<span class="nav-tm">™</span></span>
+    </a>
+    <div class="nav-links">
+      <a href="https://headyio.com">Developers</a>
+      <a href="https://headyapi.com">API</a>
+      <a href="https://headysystems.com">Enterprise</a>
+      <a href="https://headyme.com" class="nav-cta">Get Started</a>
+    </div>
+  </nav>
+
+  <main class="hero">
+    <div class="hero-badge">
+      <span class="hero-badge-dot"></span>
+      Heady™ Ecosystem · Tetrahedron
+    </div>
+    <div class="hero-icon">🔗</div>
+    <h1>Unified AI Gateway</h1>
+    <p class="hero-sub">HeadyAPI™ is part of the Heady™ AI ecosystem — powered by Continuous Semantic Logic, Sacred Geometry, and 60+ proprietary patents.</p>
+    <div class="hero-actions">
+      <a href="https://headyme.com" class="btn btn-primary">Get Started →</a>
+      <a href="https://headyio.com" class="btn btn-ghost">Documentation</a>
+    </div>
+  </main>
+
+  <section class="features">
+    <div class="feature-card">
+      <div class="feature-icon">🧠</div>
+      <div class="feature-title">AI-First Architecture</div>
+      <div class="feature-desc">Built on the Heady™ latent OS with vector-native memory, CSL logic gates, and phi-scaled parameters.</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🔐</div>
+      <div class="feature-title">Enterprise Security</div>
+      <div class="feature-desc">Zero-trust edge gateway, OAuth 2.0, encrypted vector vault, and SOC 2 ready compliance.</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">⚡</div>
+      <div class="feature-title">Edge-First Performance</div>
+      <div class="feature-desc">Cloudflare Workers edge routing with sub-50ms latency worldwide. Cloud Run auto-scaling backend.</div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="footer-links">
+      <a href="https://headyme.com">HeadyMe™</a>
+      <a href="https://headysystems.com">HeadySystems™</a>
+      <a href="https://heady-ai.com">HeadyAI™</a>
+      <a href="https://headyconnection.org">HeadyConnection™</a>
+      <a href="https://headybuddy.org">HeadyBuddy™</a>
+      <a href="https://headyio.com">HeadyIO™</a>
+    </div>
+    <p>© 2026 HeadySystems Inc. All rights reserved. Heady™ is a trademark of HeadySystems Inc.</p>
+    <p style="margin-top:0.5rem;">Sacred Geometry: Tetrahedron · 60+ Provisional Patents · Continuous Semantic Logic</p>
+  </footer>
+</body>
+</html>

@@ -425,7 +425,7 @@ function isSemanticDuplicate(a, b, threshold = CSL_THRESHOLDS.CRITICAL) {
 
 /**
  * Multi-criteria CSL scoring with phi-weighted factors.
- * Used by JUDGE stage, Arena Battle, and optimization concurrent evaluation.
+ * Used by JUDGE stage, Arena Battle, and optimization ranking.
  *
  * Default weights (5 criteria): [0.387, 0.239, 0.148, 0.092, 0.057]
  * Maps to: correctness (34%), safety (21%), performance (21%), quality (13%), elegance (11%)

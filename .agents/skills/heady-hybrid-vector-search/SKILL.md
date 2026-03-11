@@ -8,7 +8,7 @@ description: >
   Keywords: hybrid search, BM25, dense vector, SPLADE, RRF, pgvector, HNSW, IVFFlat, vector search,
   embedding search, semantic search, Heady vector memory, halfvec, quantization.
 metadata:
-  author: eric-haywood
+  author: eric-head
   version: '2.0'
 ---
 

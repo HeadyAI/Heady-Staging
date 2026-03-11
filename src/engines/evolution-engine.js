@@ -1,4 +1,3 @@
-const logger = require('../shared/logger')('evolution-engine');
 /**
  * @file evolution-engine.js
  * @module heady-latent-os/engines/evolution-engine
@@ -264,24 +263,24 @@ export class EvolutionEngine {
     const generationId = `gen-${this._generation + 1}-${Date.now()}`;
     const startedAt = new Date().toISOString();
 
-    logger.info(`[EvolutionEngine] ── Generation ${this._generation + 1} starting ──`);
-    logger.info(`[EvolutionEngine] ID: ${generationId}`);
-    logger.info(`[EvolutionEngine] Population: ${this.populationSize} (fib(6)=${FIB[6]})`);
-    logger.info(`[EvolutionEngine] Mutation rate: ${this.mutationRate} (PSI/10=${(PSI/10).toFixed(4)})`);
+    console.log(`[EvolutionEngine] ── Generation ${this._generation + 1} starting ──`);
+    console.log(`[EvolutionEngine] ID: ${generationId}`);
+    console.log(`[EvolutionEngine] Population: ${this.populationSize} (fib(6)=${FIB[6]})`);
+    console.log(`[EvolutionEngine] Mutation rate: ${this.mutationRate} (PSI/10=${(PSI/10).toFixed(4)})`);
 
     try {
       // Step 1: Identify mutable parameters
       const candidates = await this.analyzeEvolutionCandidates(pipelineConfig);
-      logger.info(`[EvolutionEngine] Candidates identified: ${candidates.length}`);
+      console.log(`[EvolutionEngine] Candidates identified: ${candidates.length}`);
 
       // Step 2: Generate mutated population
       const mutations = this.generateMutations(candidates);
-      logger.info(`[EvolutionEngine] Mutations generated: ${mutations.length}`);
+      console.log(`[EvolutionEngine] Mutations generated: ${mutations.length}`);
 
       // Step 3: Monte Carlo simulation on each mutation
       const baseline = this._computeBaselineFitness(pipelineConfig);
       const simResults = await this.simulateMutations(mutations, baseline);
-      logger.info(`[EvolutionEngine] Simulations complete: ${simResults.length}`);
+      console.log(`[EvolutionEngine] Simulations complete: ${simResults.length}`);
 
       // Step 4: Measure composite fitness for each simulation
       const fitnessResults = simResults.map(sim => ({
@@ -291,7 +290,7 @@ export class EvolutionEngine {
 
       // Step 5: Select only mutations with genuine improvement
       const beneficial = this.selectBeneficial(fitnessResults);
-      logger.info(`[EvolutionEngine] Beneficial mutations: ${beneficial.length}`);
+      console.log(`[EvolutionEngine] Beneficial mutations: ${beneficial.length}`);
 
       // Step 6: Promote winners to config (with safety gates)
       const promotionResult = await this.promoteToConfig(beneficial);
@@ -333,7 +332,7 @@ export class EvolutionEngine {
         status:       'complete',
       };
     } catch (err) {
-      logger.error(`[EvolutionEngine] Generation ${this._generation + 1} failed:`, err.message);
+      console.error(`[EvolutionEngine] Generation ${this._generation + 1} failed:`, err.message);
 
       // Record failed generation
       this._history.push({
@@ -635,7 +634,7 @@ export class EvolutionEngine {
           blockedParams: protectedChanges.map(c => c.path),
           reason: 'neverMutate violation',
         });
-        logger.warn(
+        console.warn(
           `[EvolutionEngine] BLOCKED mutation ${mutation.id}: ` +
           `touches protected params: ${protectedChanges.map(c => c.path).join(', ')}`
         );
@@ -655,7 +654,7 @@ export class EvolutionEngine {
           reason:         `Max magnitude ${maxDeltaPct.toFixed(2)}% > ${(this.approvalThreshold * 100).toFixed(0)}% approval threshold`,
         });
         pendingApproval.push(mutation.id);
-        logger.info(
+        console.log(
           `[EvolutionEngine] Queued for approval: ${mutation.id} ` +
           `(magnitude ${maxDeltaPct.toFixed(2)}% > ${(this.approvalThreshold * 100).toFixed(0)}%)`
         );
@@ -675,7 +674,7 @@ export class EvolutionEngine {
             regression:  applicationResult.regression,
             reason:      `Fitness regression ${(applicationResult.regression * 100).toFixed(2)}% > ${(this.rollbackThreshold * 100).toFixed(0)}% threshold`,
           });
-          logger.warn(
+          console.warn(
             `[EvolutionEngine] AUTO-ROLLBACK: ${mutation.id} ` +
             `regressed ${(applicationResult.regression * 100).toFixed(2)}%`
           );
@@ -688,14 +687,14 @@ export class EvolutionEngine {
             maxDeltaPct,
             appliedAt:   new Date().toISOString(),
           });
-          logger.info(
+          console.log(
             `[EvolutionEngine] PROMOTED: ${mutation.id} ` +
             `(+${(winner.improvement * 100).toFixed(2)}% fitness, ` +
             `${winner.mutation.changes.length} changes)`
           );
         }
       } catch (err) {
-        logger.error(`[EvolutionEngine] Promotion error for ${mutation.id}:`, err.message);
+        console.error(`[EvolutionEngine] Promotion error for ${mutation.id}:`, err.message);
         rolledBack.push({
           mutationId: mutation.id,
           reason:     `Promotion error: ${err.message}`,
@@ -736,7 +735,7 @@ export class EvolutionEngine {
 
     // Async write to JSONL log (non-blocking — fire and forget with error logging)
     this._writeHistoryLog(record).catch(err =>
-      logger.error('[EvolutionEngine] History log write failed:', err.message)
+      console.error('[EvolutionEngine] History log write failed:', err.message)
     );
 
     return record;
@@ -772,7 +771,7 @@ export class EvolutionEngine {
       prev.currentMagnitude = Math.min(this.maxMagnitude, prev.currentMagnitude * (1 + PSI ** 3)); // +23.6%
       prev.successStreak++;
       prev.failStreak = 0;
-      logger.info(`[EvolutionEngine] Strategy: success streak ${prev.successStreak}, rate→${prev.currentRate.toFixed(4)}`);
+      console.log(`[EvolutionEngine] Strategy: success streak ${prev.successStreak}, rate→${prev.currentRate.toFixed(4)}`);
     }
 
     // Fail streak → converge more cautiously
@@ -781,7 +780,7 @@ export class EvolutionEngine {
       prev.currentMagnitude = Math.max(0.01, prev.currentMagnitude * (1 - PSI ** 3));   // shrink magnitude
       prev.failStreak++;
       prev.successStreak = 0;
-      logger.info(`[EvolutionEngine] Strategy: fail streak ${prev.failStreak}, rate→${prev.currentRate.toFixed(4)}`);
+      console.log(`[EvolutionEngine] Strategy: fail streak ${prev.failStreak}, rate→${prev.currentRate.toFixed(4)}`);
     }
 
     prev.lastAdjustedAt = new Date().toISOString();
@@ -1146,7 +1145,7 @@ export class EvolutionEngine {
    */
   async _rollbackMutation(winner, applicationResult) {
     // In production: restores config to pre-mutation snapshot.
-    logger.warn(
+    console.warn(
       `[EvolutionEngine] Rolling back ${winner.mutation.id}: ` +
       `regression=${(applicationResult.regression * 100).toFixed(2)}%`
     );

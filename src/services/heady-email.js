@@ -11,8 +11,8 @@ const logger = require('../utils/logger');
 let nodemailer = null;
 let imaps = null;
 
-try { nodemailer = require('nodemailer'); } catch (err) { /* structured-logger: emit error */ }
-try { imaps = require('imap-simple'); } catch (err) { /* structured-logger: emit error */ }
+try { nodemailer = require('nodemailer'); } catch (_e) {}
+try { imaps = require('imap-simple'); } catch (_e) {}
 
 // ── Configuration ──────────────────────────────────────────────
 

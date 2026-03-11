@@ -1,6 +1,18 @@
 /* © 2026-2026 HeadySystems Inc. All Rights Reserved. PROPRIETARY AND CONFIDENTIAL. */
 
 'use strict';
+// ─── HEADY CORS WHITELIST ────────────────────────────────────────────
+const HEADY_ALLOWED_ORIGINS = new Set([
+    'https://headyme.com', 'https://headysystems.com', 'https://headyconnection.org',
+    'https://headyconnection.com', 'https://headybuddy.org', 'https://headymcp.com',
+    'https://headyapi.com', 'https://headyio.com', 'https://headyos.com',
+    'https://headyweb.com', 'https://headybot.com', 'https://headycloud.com',
+    'https://headybee.co', 'https://heady-ai.com', 'https://headyex.com',
+    'https://headyfinance.com', 'https://admin.headysystems.com',
+    'https://auth.headysystems.com', 'https://api.headysystems.com',
+]);
+const _isHeadyOrigin = (o) => !o ? false : HEADY_ALLOWED_ORIGINS.has(o) || /\.run\.app$/.test(o) || (process.env.NODE_ENV !== 'production' && /^https?:\/\/(localhost|127\.0\.0\.1):/.test(o));
+
 
 /**
  * projection-sse.js — SSE Streaming for the Autonomous Projection System
@@ -302,7 +314,7 @@ class SSEManager extends EventEmitter {
             try {
                 client.stopHeartbeat();
                 client.res.end();
-            } catch (err) { /* structured-logger: emit error */ }
+            } catch (_) {}
         }
         this._clients.clear();
         logger.info('[SSE] All clients closed');
@@ -353,7 +365,7 @@ function createSSERouter(projectionManager) {
         res.setHeader('Cache-Control', 'no-cache, no-store');
         res.setHeader('Connection', 'keep-alive');
         res.setHeader('X-Accel-Buffering', 'no');  // Disable nginx buffering
-        // CORS handled by securityHeaders middleware
+        res.setHeader('Access-Control-Allow-Origin', _isHeadyOrigin(req.headers.origin) ? req.headers.origin : 'null');
 
         // Flush headers immediately
         if (typeof res.flushHeaders === 'function') res.flushHeaders();
@@ -380,7 +392,7 @@ function createSSERouter(projectionManager) {
                         res.write(_formatSSEEvent(version, t, all[t]));
                     }
                 }
-            } catch (err) { /* structured-logger: emit error */ }
+            } catch (_) {}
         }
 
         logger.info({ clientId, types }, '[SSE] Client connected');

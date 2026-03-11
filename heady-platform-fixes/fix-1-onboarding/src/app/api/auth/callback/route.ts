@@ -1,5 +1,3 @@
-import pino from 'pino';
-const logger = pino();
 /**
  * Heady™ Auth Callback API Route
  * 
@@ -43,7 +41,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
     // Verify token with Firebase Admin (in production)
     // For now, trust the client-side Firebase Auth verification
-    // NOTE: Add firebase-admin verification for production hardening
+    // TODO: Add firebase-admin verification for production hardening
     const sessionToken = generateSessionToken(body.uid);
 
     // Check if user exists in database
@@ -102,7 +100,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     }
 
     // Log the decision
-    logger.info('[AUTH_CALLBACK]', JSON.stringify({
+    console.log('[AUTH_CALLBACK]', JSON.stringify({
       timestamp: new Date().toISOString(),
       uid: body.uid,
       provider: body.provider,
@@ -113,7 +111,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
     return response;
   } catch (error) {
-    logger.error('[AUTH_CALLBACK_ERROR]', error);
+    console.error('[AUTH_CALLBACK_ERROR]', error);
     return NextResponse.json(
       { error: 'Authentication failed' },
       { status: 500 }
@@ -199,6 +197,6 @@ async function upsertUser(data: {
       }
     );
   } catch (error) {
-    logger.error('[UPSERT_USER_ERROR]', error);
+    console.error('[UPSERT_USER_ERROR]', error);
   }
 }

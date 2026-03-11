@@ -33,7 +33,7 @@ const SERVICE_CATALOG = {
 
     // ─── Core Engines ────────────────────────────────────────────────
     soul: { endpoint: "/api/soul/analyze", method: "POST", caps: ["reflection", "introspection", "quality-eval"], component: "soul" },
-    battle: { endpoint: "/api/battle/session", method: "POST", caps: ["competition", "concurrent evaluation", "multi-model-eval"], component: "battle" },
+    battle: { endpoint: "/api/battle/session", method: "POST", caps: ["competition", "ranking", "multi-model-eval"], component: "battle" },
     patterns: { endpoint: "/api/patterns/analyze", method: "POST", caps: ["pattern-detection", "code-analysis", "design"], component: "patterns" },
     risks: { endpoint: "/api/risks/assess", method: "POST", caps: ["vulnerability-scan", "risk-assessment", "security"], component: "patterns" },
     vinci: { endpoint: "/api/vinci/predict", method: "POST", caps: ["prediction", "creative-learning", "recognition"], component: "vinci" },

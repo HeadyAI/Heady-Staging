@@ -11,6 +11,9 @@ const HEADY_DOMAINS = [
     'headyme.com', 'headysystems.com', 'headyconnection.org',
     'headymcp.com', 'headyio.com', 'headybuddy.org',
     'headybot.com', 'headyos.com', 'headyapi.com',
+    'heady-ai.com', 'headysense.com', 'headyex.com',
+    'headyfinance.com', 'headyconnection.com', 'perfecttrader.com',
+    'headyai.me',
 ];
 
 const INTERNAL_ENDPOINTS = [

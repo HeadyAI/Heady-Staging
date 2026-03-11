@@ -275,7 +275,7 @@ class Swarm {
     }
     this._stats.received++;
     this._queue.push(t);
-    this._queue.sort((a, b) => b.priority - a.priority); // concurrent-equal weight first
+    this._queue.sort((a, b) => b.priority - a.priority); // highest priority first
     this._drain();
     return t;
   }

@@ -8,21 +8,17 @@ use Drupal\Core\Form\FormStateInterface;
 /**
  * CMS settings — configure content delivery, clipboard, liquid nodes, browser service.
  */
-class HeadyCmsSettingsForm extends ConfigFormBase
-{
+class HeadyCmsSettingsForm extends ConfigFormBase {
 
-  protected function getEditableConfigNames()
-  {
+  protected function getEditableConfigNames() {
     return ['heady_cms.settings'];
   }
 
-  public function getFormId()
-  {
+  public function getFormId() {
     return 'heady_cms_settings_form';
   }
 
-  public function buildForm(array $form, FormStateInterface $form_state)
-  {
+  public function buildForm(array $form, FormStateInterface $form_state) {
     $config = $this->config('heady_cms.settings');
 
     $form['gateway'] = [
@@ -66,7 +62,7 @@ class HeadyCmsSettingsForm extends ConfigFormBase
     $form['browser']['browser_service_url'] = [
       '#type' => 'url',
       '#title' => $this->t('Task Browser Service URL'),
-      '#default_value' => $config->get('browser_service_url') ?: 'https://browser.headysystems.com',
+      '#default_value' => $config->get('browser_service_url') ?: 'http://localhost:3010',
     ];
 
     $form['colab'] = [
@@ -86,8 +82,7 @@ class HeadyCmsSettingsForm extends ConfigFormBase
     return parent::buildForm($form, $form_state);
   }
 
-  public function submitForm(array &$form, FormStateInterface $form_state)
-  {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->config('heady_cms.settings')
       ->set('gateway_url', $form_state->getValue('gateway_url'))
       ->set('backend_origin', $form_state->getValue('backend_origin'))

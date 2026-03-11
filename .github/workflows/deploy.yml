@@ -183,14 +183,11 @@ jobs:
       - name: Set up Cloud SDK
         uses: google-github-actions/setup-gcloud@v2
 
-      - name: Deploy with φ-Scaled Rollout
+      - name: Deploy
         run: |
           IMAGE="${{ env.GCP_REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/${{ env.DOCKER_REPO }}/${{ env.SERVICE_NAME }}"
           SHORT_SHA=$(echo "${{ github.sha }}" | cut -c1-7)
           CANARY="${{ github.event.inputs.canary_percent || '0' }}"
-
-          # φ-scaled rollout percentages: 6.18% → 38.2% → 61.8% → 100%
-          PHI_ROLLOUT_STAGES=(6.18 38.2 61.8 100)
 
           if [ "$CANARY" != "0" ] && [ -n "$CANARY" ]; then
             echo "Canary deploy: ${CANARY}% traffic"
@@ -207,9 +204,7 @@ jobs:
               --to-tags "canary=${CANARY}" \
               --quiet
           else
-            echo "Full φ-scaled rollout deploy: 6.18% → 38.2% → 61.8% → 100%"
-
-            # Deploy new image
+            echo "Full deploy: 100% traffic"
             gcloud run deploy ${{ env.SERVICE_NAME }} \
               --image "${IMAGE}:${SHORT_SHA}" \
               --region ${{ env.GCP_REGION }} \
@@ -225,25 +220,7 @@ jobs:
               --execution-environment gen2 \
               --set-env-vars "NODE_ENV=production,HEADY_SERVICE_NAME=${{ env.SERVICE_NAME }},HEADY_VERSION=3.1.0" \
               --update-secrets "DATABASE_URL=DATABASE_URL:latest,HEADY_API_KEY=HEADY_API_KEY:latest,PERPLEXITY_API_KEY=PERPLEXITY_API_KEY:latest,GEMINI_API_KEY=GEMINI_API_KEY:latest,OPENAI_API_KEY=OPENAI_API_KEY:latest,CLAUDE_API_KEY=CLAUDE_API_KEY:latest,GROQ_API_KEY=GROQ_API_KEY:latest,GITHUB_TOKEN=GITHUB_TOKEN:latest,CLOUDFLARE_API_TOKEN=CLOUDFLARE_API_TOKEN:latest,SENTRY_DSN=SENTRY_DSN:latest,JWT_SECRET=JWT_SECRET:latest,SESSION_SECRET=SESSION_SECRET:latest" \
-              --tag v${SHORT_SHA} \
-              --no-traffic \
               --quiet
-
-            # φ-scaled gradual rollout: 6.18% → 38.2% → 61.8% → 100%
-            for stage in "${PHI_ROLLOUT_STAGES[@]}"; do
-              echo "Ramping to ${stage}% traffic..."
-              gcloud run services update-traffic ${{ env.SERVICE_NAME }} \
-                --region ${{ env.GCP_REGION }} \
-                --to-tags "v${SHORT_SHA}=${stage}" \
-                --quiet
-
-              if [ "$stage" != "100" ]; then
-                echo "Monitoring metrics at ${stage}%..."
-                sleep 30
-              fi
-            done
-
-            echo "Rollout complete: 100% traffic on new version"
           fi
 
       - name: Verify Health

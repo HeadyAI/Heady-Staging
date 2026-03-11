@@ -67,7 +67,7 @@ const COGNITIVE_CONFIG = (function() { try { return require("../../configs/heady
 // ─────────────────────────────────────────────────────────────────────────────
 
 /**
- * Canonical concurrent-equals execution ordering for the 7 cognitive layers, highest first.
+ * Canonical priority ordering for the 7 cognitive layers, highest first.
  * OWL leads because strategic wisdom gates all lower cognition; OCTOPUS is
  * second due to its multi-modal adaptive coverage; ANT is last as pure
  * execution-plane parallelism.
@@ -144,7 +144,7 @@ const TIMEOUTS = {
 /**
  * Generate a deterministic 384-dimensional mock capability embedding for a
  * cognitive layer. The seed value is derived from the layer's index in the
- * concurrent-equals execution order, producing maximally distinct vectors. Each dimension is
+ * priority order, producing maximally distinct vectors. Each dimension is
  * computed as sin(seed × φ × d) + cos(seed × d / φ) then normalised so the
  * resulting vector has unit length — identical to how real sentence-transformer
  * embeddings would be normalised before cosine comparison.
@@ -184,7 +184,7 @@ const LAYER_EMBEDDINGS = {
 /**
  * Phi-geometric resource weights across the 7 layers, ordered by priority.
  * phiResourceWeights(7) yields descending PSI-geometric shares summing to 1.0.
- * Index 0 → OWL (concurrent-equal weight, largest share), index 6 → ANT (lowest).
+ * Index 0 → OWL (highest priority, largest share), index 6 → ANT (lowest).
  * @constant {number[]}
  */
 const RESOURCE_WEIGHTS = phiResourceWeights(7);
@@ -821,7 +821,7 @@ class CognitiveLayers extends EventEmitter {
   // ───────────────────────────────────────────────────────────────────────────
 
   /**
-   * Run a task through the appropriate cognitive layers in concurrent-equals execution order.
+   * Run a task through the appropriate cognitive layers in priority order.
    * Classification determines which layers to activate; if multiple layers
    * clear the ACTIVATION_THRESHOLD their outputs are blended via
    * phiFusionWeights. If no layer clears the threshold the task is escalated
@@ -861,7 +861,7 @@ class CognitiveLayers extends EventEmitter {
       const singleResult = this.activateLayer(matches[0].layerName, task);
       result = singleResult.output;
     } else {
-      // Multiple layers match — activate all in concurrent-equals execution order then blend
+      // Multiple layers match — activate all in priority order then blend
       activatedLayers = matches.map(m => m.layerName);
 
       // Sort matches by LAYER_PRIORITY_ORDER to ensure phi-weight assignment
@@ -1139,8 +1139,8 @@ class CognitiveLayers extends EventEmitter {
   // ───────────────────────────────────────────────────────────────────────────
 
   /**
-   * Return the canonical concurrent-equals execution order of the 7 cognitive layers as a
-   * read-only array (concurrent-equal weight first).
+   * Return the canonical priority order of the 7 cognitive layers as a
+   * read-only array (highest priority first).
    *
    * @returns {string[]} Copy of LAYER_PRIORITY_ORDER.
    */

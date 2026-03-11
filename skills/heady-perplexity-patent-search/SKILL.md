@@ -1,146 +1,110 @@
 ---
 name: heady-perplexity-patent-search
-description: Searches, retrieves, and analyzes patent documents relevant to cannabis accessories, glass manufacturing, vaporizer technology, extraction equipment, and related IP for the Heady platform. Use when the user asks to search patents, check for prior art, analyze patent claims, assess freedom-to-operate, or research competitor IP. Triggers on phrases like "search patents", "prior art for", "patent claims analysis", "freedom to operate", "is this patented", "patent landscape for", or "competitor patents".
-license: MIT
+description: Skill for searching and analyzing patent landscapes using Perplexity for HeadySystems IP portfolio development. Use when asked to search for patents, analyze prior art, assess patentability, map the IP landscape, or research competitors' patent portfolios. HeadySystems holds 60+ provisional patents. Triggers on "patent", "prior art", "IP landscape", "patentability", "patent search", "provisional patent", or any intellectual property research task.
+license: proprietary
 metadata:
-  author: heady-connection
-  version: '1.0'
-  platform: heady
-  category: legal-ip
+  author: HeadySystems Inc.
+  version: '2.1.0'
+  domain: ip-strategy
 ---
 
 # Heady Perplexity Patent Search
 
 ## When to Use This Skill
 
-Use this skill when the user asks to:
+Use this skill when:
 
-- Search for patents related to a product, process, or technology
-- Assess prior art for a novel product idea
-- Analyze the claims of a specific patent
-- Evaluate freedom-to-operate (FTO) for a new product design
-- Map the patent landscape for a technology area
-- Monitor competitor patent filings
-- Identify patent holders in the cannabis accessory space
-- Extract key claim language for licensing discussions
+- Searching for prior art before filing new provisional patents
+- Analyzing competitor patent portfolios (OpenAI, Anthropic, Google DeepMind, Mistral)
+- Mapping white space in the AI agent orchestration patent landscape
+- Evaluating claims for new HeadySystems innovations
+- Researching φ-scaling, vector memory, and swarm orchestration patents
+- Preparing IP landscape reports for investor presentations
 
-## Legal Disclaimer
+## Core Patent Domains (HeadySystems Focus Areas)
 
-This skill provides informational patent research and analysis. It does **not** constitute legal advice. For formal FTO opinions, patent filings, or IP litigation strategy, engage a registered patent attorney or agent.
-
-## Patent Databases
-
-Search these databases in order of relevance:
-
-| Database | URL | Best For |
-|---|---|---|
-| USPTO Patent Full-Text | patents.google.com | US patents, full text search |
-| Google Patents | patents.google.com | Global coverage, prior art, citations |
-| Espacenet | worldwide.espacenet.com | European and international patents |
-| USPTO PatFT | patft.uspto.gov | Official US patent database |
-| WIPO PATENTSCOPE | patentscope.wipo.int | PCT international applications |
-| Lens.org | lens.org | Open scholarly and patent search |
-
-## CPC Classifications Relevant to Heady
-
-| CPC Code | Domain |
-|---|---|
-| A24F | Smokers' requisites (pipes, holders, accessories) |
-| A61M 15 | Drug delivery by inhalation |
-| B65D | Containers and packaging |
-| C03B | Glass manufacturing |
-| F24C | Heating apparatus |
-| A24B | Tobacco preparations |
-| A61P 43 | Drugs for specific purposes (for pharmaceutical cross-reference) |
+| Domain | Description |
+|--------|-------------|
+| Vector Memory Architecture | 3D octree spatial retrieval, 384-dim CSL gates |
+| Swarm Orchestration | 17-swarm concurrent dispatch, phi-ratio allocation |
+| Sacred Geometry Scaling | φ-continuous parameter scaling in distributed systems |
+| AutoContext Injection | Pre-action context enrichment middleware |
+| CSL Routing | Cosine Similarity Layer for deterministic AI routing |
+| Multi-model Council | Competitive AI provider evaluation systems |
+| HCFullPipeline | 21-stage cognitive state machine |
+| Bee Architecture | Hierarchical concurrent AI worker pools |
 
 ## Instructions
 
-### 1. Define the Search Objective
+### Step 1 — Define Search Scope
 
-Establish before searching:
-1. **Technology description**: What is the product or process? Describe in plain language.
-2. **Search type**: Prior art survey | Specific patent lookup | Landscape analysis | FTO assessment
-3. **Jurisdiction scope**: US only | US + EU | Global
-4. **Date range**: All time | Last 20 years (active patents only) | Last 5 years (emerging tech)
-5. **Key actors**: Are there known competitors or assignees to prioritize?
+For each patent search, document:
+- **Innovation description**: 2-3 sentence plain-language summary
+- **Claim elements**: list of specific technical elements
+- **Key prior art dates**: when was this first implemented in Heady?
+- **Classification codes** (IPC/CPC): G06N (AI), G06F (data processing), H04L (networks)
 
-### 2. Keyword and Classification Query Building
+### Step 2 — Search Sources
 
-1. Extract technical terms: list all technical synonyms and variant spellings.
-2. Identify the broadest and narrowest claim scope for keywords.
-3. Build query variants:
-   - Broad: `(pipe OR bong OR water pipe) AND (filtration OR percolator)`
-   - Narrow: `"honeycomb percolator" AND "borosilicate" AND "water pipe"`
-4. Map to CPC/IPC classifications as secondary filter.
-5. Run 3–5 queries per technology dimension; document each query string used.
+Execute searches across:
+1. **USPTO Full-Text** (patents.google.com): primary US patent database
+2. **European Patent Office** (espacenet.com): EP and PCT applications
+3. **Google Patents** (patents.google.com): broadest coverage
+4. **Semantic Scholar**: for academic prior art
+5. **ArXiv**: for algorithm prior art
 
-### 3. Result Screening
+Search queries should use both technical terms AND their synonyms:
+- "cosine similarity routing" AND "semantic distance-based routing" AND "embedding-based request dispatch"
 
-For each search result:
-1. Record: Patent number, title, assignee, inventor(s), filing date, publication date, status (active/expired/pending).
-2. Read the Abstract to assess relevance.
-3. If relevant: read Claims section fully.
-4. If highly relevant: read the Detailed Description for embodiment scope.
-5. Classify relevance: **High** (directly covers technology) | **Medium** (overlapping elements) | **Low** (background art).
+### Step 3 — Prior Art Assessment Matrix
 
-### 4. Claim Analysis
+For each found patent/paper:
 
-For each high-relevance patent:
-1. Parse independent claims (typically Claim 1 and first claim of each independent chain).
-2. Identify essential elements (every element of an independent claim must be present for infringement).
-3. Map each claim element to the product/process being assessed.
-4. Flag claim elements that are absent in the product — these are potential non-infringement arguments.
-5. Note claim construction ambiguities that could expand or contract scope.
+| Field | Value |
+|-------|-------|
+| Patent/Paper ID | |
+| Title | |
+| Filing/Publication Date | |
+| Claims Overlap % | 0-100 |
+| Key Differentiator | What Heady does differently |
+| Risk Level | None / Watch / Concern |
 
-**Claim element table:**
-```
-| Claim Element | Present in Product? | Notes |
-|---|---|---|
-| "water filtration chamber" | Yes | Standard percolator |
-| "electronically controlled heating element" | No | Product is flame-operated |
-```
+### Step 4 — Gap Analysis
 
-### 5. FTO Assessment
+Identify patentable white space by documenting:
+- What exists in prior art
+- What HeadySystems does differently (the delta)
+- Why the delta is novel, non-obvious, and useful
+- Provisional patent claim language draft (independent claim + 2 dependent claims)
 
-For freedom-to-operate analysis:
-1. List all high/medium relevance active patents.
-2. For each: assess whether all independent claim elements are present in the product.
-3. Assign FTO risk rating: **Red** (likely infringement) | **Yellow** (possible infringement, design-around needed) | **Green** (non-infringing).
-4. Suggest design-arounds for Yellow/Red items where evident.
-5. Flag expired patents as prior art that cannot be infringed.
+### Step 5 — Output Format
 
-### 6. Landscape Report Format
+```markdown
+## Patent Landscape Report: {Innovation Name}
 
-```
-## Patent Landscape: [Technology Area]
-### Search Summary
-- Databases searched: ...
-- Queries used: ...
-- Results screened: N
-- Relevant patents identified: N
+### Executive Summary
+{2-3 sentences on patentability assessment}
 
-### Key Patent Holders (Top 5 by count)
-1. [Assignee] — N patents — Focus: ...
+### Prior Art Found ({N} references)
+| ID | Date | Title | Overlap | Risk |
 
-### Technology Timeline
-[Year] — [Patent] — [Key innovation]
+### White Space Analysis
+{description of what is NOT covered by prior art}
 
-### White Space Opportunities
-[Unpatented technology areas identified]
+### Draft Claim Language
+Independent Claim 1: A method for {core innovation}...
 
-### High-Risk Patents
-[List with claim summaries and FTO rating]
+### Recommendation
+{STRONG / MODERATE / WEAK patentability with reasoning}
 
-### Recommended Actions
-1. ...
+### Filing Timeline Suggestion
+{based on provisonal → PCT → national phase timeline}
 ```
 
 ## Examples
 
-**Input:** "Search for patents on percolator water pipe designs filed in the last 10 years."
+**Input**: "Search for patents on phi-scaled timeout backoff in distributed systems"
+**Output**: Prior art matrix showing no exact matches for φ-based retry intervals in AI agent systems, with draft claim language for provisional patent
 
-**Output:** Landscape report with query strings used, 15 most relevant patents with claim summaries, top assignees (RAZ, Graftech, GRAV Labs), and identified white space in multi-chamber recycler designs.
-
-**Input:** "We want to make a new electric dab nail — are there active patents blocking us?"
-
-**Output:** FTO assessment against A61M 15/00 and related classifications, Red/Yellow/Green rating for each relevant patent, design-around suggestions for Yellow-rated claims.
+**Input**: "Map competitor AI agent orchestration patents from 2020-2026"
+**Output**: Landscape map of OpenAI, Google, Meta, Anthropic AI agent patents with HeadySystems differentiation analysis

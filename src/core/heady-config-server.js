@@ -52,13 +52,12 @@
  *   await cfg.start();
  *
  *   const maxBees = cfg.get('conductor.maxBees');    // → 50
- *   cfg.watch('buddy.maxLog', (newVal) => logger.info('maxLog changed:', newVal));
+ *   cfg.watch('buddy.maxLog', (newVal) => console.log('maxLog changed:', newVal));
  *
  * ════════════════════════════════════════════════════════════════════
  */
 
 'use strict';
-const logger = require('../../shared/logger')('heady-config-server');
 
 const { PHI_TIMING } = require('../shared/phi-math');
 const EventEmitter = require('events');
@@ -371,7 +370,7 @@ const DEFAULTS = Object.freeze({
     sourceLine: 44,
   },
   'infra.redisUrl': {
-    value: process.env.REDIS_URL || 'redis://heady-redis:6379',
+    value: process.env.REDIS_URL || 'redis://localhost:6379',
     type: 'string',
     secret: true,
     description: 'Redis connection URL (Cloud Memorystore in production).',
@@ -379,7 +378,7 @@ const DEFAULTS = Object.freeze({
     sourceLine: 180,
   },
   'infra.postgresUrl': {
-    value: process.env.DATABASE_URL || 'postgresql://heady-pgbouncer:5432/heady',
+    value: process.env.DATABASE_URL || 'postgresql://localhost:5432/heady',
     type: 'string',
     secret: true,
     description: 'PostgreSQL connection URL (Cloud SQL in production).',
@@ -937,23 +936,23 @@ if (require.main === module) {
     const cfg = getConfigServer({ configFile: '/tmp/heady-test-config.json' });
     await cfg.start();
 
-    logger.info('=== HeadyConfigServer self-test ===');
-    logger.info('buddy.maxLog         :', cfg.get('buddy.maxLog'));
-    logger.info('conductor.maxBees    :', cfg.get('conductor.maxBees'));
-    logger.info('selfAwareness.drift  :', cfg.get('selfAwareness.driftThreshold'));
-    logger.info('phi (readonly)       :', cfg.get('phi'));
+    console.log('=== HeadyConfigServer self-test ===');
+    console.log('buddy.maxLog         :', cfg.get('buddy.maxLog'));
+    console.log('conductor.maxBees    :', cfg.get('conductor.maxBees'));
+    console.log('selfAwareness.drift  :', cfg.get('selfAwareness.driftThreshold'));
+    console.log('phi (readonly)       :', cfg.get('phi'));
 
-    cfg.watch('buddy.maxLog', (nv, ov) => logger.info(`buddy.maxLog changed: ${ov} → ${nv}`));
+    cfg.watch('buddy.maxLog', (nv, ov) => console.log(`buddy.maxLog changed: ${ov} → ${nv}`));
     cfg.set('buddy.maxLog', 400);
-    logger.info('After runtime set    :', cfg.get('buddy.maxLog'));
+    console.log('After runtime set    :', cfg.get('buddy.maxLog'));
 
     try {
       cfg.set('phi', 3.14);
     } catch (err) {
-      logger.info('Readonly guard OK    :', err.message);
+      console.log('Readonly guard OK    :', err.message);
     }
 
-    logger.info('Diff vs defaults     :', cfg.diff());
+    console.log('Diff vs defaults     :', cfg.diff());
     cfg.stop();
   })().catch(console.error);
 }

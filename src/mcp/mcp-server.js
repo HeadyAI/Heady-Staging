@@ -1,4 +1,3 @@
-const logger = require('../shared/logger')('mcp-server');
 /**
  * © 2026-2026 HeadySystems Inc. All Rights Reserved.
  * PROPRIETARY AND CONFIDENTIAL.
@@ -477,10 +476,10 @@ class HeadyMCPServer {
 
   _buildDefaultLogger() {
     return {
-      info:  (...a) => logger.error('[MCP:INFO]',  ...a),
-      warn:  (...a) => logger.error('[MCP:WARN]',  ...a),
-      error: (...a) => logger.error('[MCP:ERROR]', ...a),
-      debug: (...a) => process.env.LOG_LEVEL === 'debug' && logger.error('[MCP:DEBUG]', ...a),
+      info:  (...a) => console.error('[MCP:INFO]',  ...a),
+      warn:  (...a) => console.error('[MCP:WARN]',  ...a),
+      error: (...a) => console.error('[MCP:ERROR]', ...a),
+      debug: (...a) => process.env.LOG_LEVEL === 'debug' && console.error('[MCP:DEBUG]', ...a),
     };
   }
 
@@ -658,7 +657,7 @@ if (require.main === module) {
   process.on('SIGTERM', async () => { await server.stop(); process.exit(0); });
 
   server.start().catch((err) => {
-    logger.error('[HeadyMCP] Fatal startup error:', err);
+    console.error('[HeadyMCP] Fatal startup error:', err);
     process.exit(1);
   });
 }

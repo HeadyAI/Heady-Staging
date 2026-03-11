@@ -105,8 +105,8 @@ class HeadyOrchestrator {
       modelTier: 'medium'
     });
 
-    this.agentPool.set('grant-coordinate concurrentlyr', {
-      endpoint: '/api/agents/grant-coordinate concurrentlyr',
+    this.agentPool.set('grant-prioritizer', {
+      endpoint: '/api/agents/grant-prioritizer',
       maxConcurrent: 2,
       averageLatency: 2000,
       successRate: 0.96,

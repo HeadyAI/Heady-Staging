@@ -1,0 +1,24 @@
+# HeadyCloud Worker — headycloud.com
+# Fixes 403 Forbidden by providing Worker-based origin
+
+name = "heady-cloud-worker"
+main = "worker.js"
+compatibility_date = "2024-12-01"
+
+routes = [
+  { pattern = "headycloud.com/*", zone_name = "headycloud.com" },
+  { pattern = "*.headycloud.com/*", zone_name = "headycloud.com" },
+]
+
+[vars]
+HEADY_SERVICE = "heady-cloud"
+HEADY_VERSION = "2.0.0"
+
+[env.production]
+routes = [
+  { pattern = "headycloud.com/*", zone_name = "headycloud.com" },
+  { pattern = "orchestrator.headycloud.com/*", zone_name = "headycloud.com" },
+  { pattern = "deploy.headycloud.com/*", zone_name = "headycloud.com" },
+  { pattern = "console.headycloud.com/*", zone_name = "headycloud.com" },
+  { pattern = "monitor.headycloud.com/*", zone_name = "headycloud.com" },
+]

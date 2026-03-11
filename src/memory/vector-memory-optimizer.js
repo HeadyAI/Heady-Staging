@@ -584,7 +584,7 @@ export class VectorMemoryOptimizer extends EventEmitter {
         actions.push(`CREATE INDEX CONCURRENTLY IF NOT EXISTS ${tableName}_hnsw_binary
   ON ${fqTable} USING hnsw (embedding_binary bit_hamming_ops)
   WITH (m = ${hnswParams.m}, ef_construction = ${hnswParams.ef_construction});`);
-        actions.push(`-- Example re-concurrent evaluation query:
+        actions.push(`-- Example re-ranking query:
 -- WITH candidates AS (
 --   SELECT id FROM ${fqTable}
 --   ORDER BY embedding_binary <~> binary_quantize($1)::bit(384) LIMIT 40
@@ -641,7 +641,7 @@ export class VectorMemoryOptimizer extends EventEmitter {
       rationale      = `halfvec (scalar quantization) reduces index to ${halfvecIndexGB.toFixed(2)} GiB (${Math.round((1 - halfvecIndexGB / float32IndexGB) * 100)}% savings) with near-zero recall impact.`;
     } else if (binaryIndexGB <= availableRAM * 0.6) {
       recommendation = 'binary_with_rerank';
-      rationale      = `Binary quantization reduces index to ${binaryIndexGB.toFixed(2)} GiB. Must use re-concurrent evaluation (4× oversample) to recover recall.`;
+      rationale      = `Binary quantization reduces index to ${binaryIndexGB.toFixed(2)} GiB. Must use re-ranking (4× oversample) to recover recall.`;
     } else {
       recommendation = 'pgvectorscale';
       rationale      = `Collection (${vectorCount.toLocaleString()} × ${dims}d) requires ${float32IndexGB.toFixed(1)} GiB for float32 HNSW — exceeds available RAM. Use pgvectorscale StreamingDiskANN (disk-resident) or shard the collection.`;

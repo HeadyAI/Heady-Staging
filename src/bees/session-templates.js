@@ -268,7 +268,7 @@ const serviceConnectionRacer = createBee('service-connection-racer', {
         fn: async (ctx = {}) => {
             const endpoints = ctx.endpoints || [
                 { name: 'cloud-run', url: 'https://heady-manager-609590223909.us-central1.run.app/health' },
-                { name: 'local', url: process.env.HEADY_HEALTH_URL || 'http://localhost:8420/health' },
+                { name: 'local', url: 'http://localhost:8420/health' },
                 { name: 'colab', url: process.env.HEADY_EMBEDDING_URL ? `${process.env.HEADY_EMBEDDING_URL}/health` : null },
             ].filter(e => e.url);
 
@@ -452,7 +452,7 @@ const testerBee = createBee('tester-bee', {
             const endpoints = ctx.endpoints || [
                 { name: 'cloud-run', url: 'https://heady-manager-609590223909.us-central1.run.app/health' },
                 { name: 'edge', url: 'https://heady.headyme.com/health' },
-                { name: 'local', url: process.env.HEADY_HEALTH_URL || 'http://localhost:8420/health' },
+                { name: 'local', url: 'http://localhost:8420/health' },
             ];
 
             logger.info(`tester-bee: sweeping ${endpoints.length} endpoints`);

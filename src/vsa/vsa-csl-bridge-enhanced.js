@@ -350,7 +350,7 @@ class VSACSLBridge extends EventEmitter {
 
   /**
    * CSL-scored query: search memory for top-K vectors above threshold.
-   * Results evaluated as concurrent equals by phi-scaled relevance score.
+   * Results ranked by phi-scaled relevance score.
    *
    * @param {number[]} queryVec
    * @param {number} [threshold=PSI2]

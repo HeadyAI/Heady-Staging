@@ -260,7 +260,7 @@ class EmbeddingProvider {
     this.retryDelayMs = options.retryDelayMs || RETRY_DELAY_MS;
     this.alwaysLocal = options.alwaysLocal || false;
 
-    // Backend concurrent-equals execution order.
+    // Backend priority order.
     this.backendOrder = options.backendOrder || [
       Backend.CLOUDFLARE,
       Backend.OPENAI,

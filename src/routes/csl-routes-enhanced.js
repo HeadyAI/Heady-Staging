@@ -2,7 +2,7 @@
  * @file csl-routes-enhanced.js
  * @description Express-style route handler factory exposing the CSL analytics API.
  *   Routes are registered via `registerCSLRoutes(app, gateway)` and cover gate
- *   evaluation, scoring, consensus, decision concurrent evaluation, and risk gating.
+ *   evaluation, scoring, consensus, decision ranking, and risk gating.
  *
  * @module CSLRoutesEnhanced
  * @version 2.0.0

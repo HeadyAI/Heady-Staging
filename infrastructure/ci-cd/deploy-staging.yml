@@ -1,0 +1,100 @@
+name: Deploy to Staging
+
+on:
+  push:
+    branches: [develop]
+
+env:
+  REGISTRY: gcr.io
+  PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+  REGION: us-central1
+
+jobs:
+  deploy-staging:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ secrets.GCP_SERVICE_ACCOUNT_STAGING }}
+
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+
+      - name: Configure Docker authentication
+        run: |
+          gcloud auth configure-docker ${{ env.REGISTRY }}
+
+      - name: Deploy services to Cloud Run
+        run: |
+          for service in services/*/; do
+            SERVICE_NAME=$(basename "$service")
+            IMAGE="${{ env.REGISTRY }}/${{ env.PROJECT_ID }}/heady-${SERVICE_NAME}:${{ github.sha }}"
+
+            gcloud run deploy "heady-${SERVICE_NAME}-staging" \
+              --image "$IMAGE" \
+              --region ${{ env.REGION }} \
+              --platform managed \
+              --allow-unauthenticated \
+              --service-account heady-staging@${{ env.PROJECT_ID }}.iam.gserviceaccount.com \
+              --set-env-vars ENVIRONMENT=staging \
+              --memory 512Mi \
+              --cpu 1 \
+              --timeout 3600 \
+              --max-instances 100 \
+              --min-instances 1 \
+              --no-gen2
+          done
+
+      - name: Run smoke tests
+        run: |
+          npm ci
+          npm run test:smoke:staging
+        env:
+          API_BASE_URL: https://api-staging.heady.app
+          AUTH_TOKEN: ${{ secrets.STAGING_AUTH_TOKEN }}
+
+      - name: Notify deployment
+        if: success()
+        uses: 8398a7/action-slack@v3
+        with:
+          status: custom
+          custom_payload: |
+            {
+              text: `Staging deployment successful for ${process.env.AS_COMMIT}`,
+              attachments: [{
+                color: 'good',
+                fields: [{
+                  title: 'Commit',
+                  value: process.env.AS_COMMIT.substring(0, 7),
+                  short: true
+                }]
+              }]
+            }
+          webhook_url: ${{ secrets.SLACK_WEBHOOK }}
+
+      - name: Notify deployment failure
+        if: failure()
+        uses: 8398a7/action-slack@v3
+        with:
+          status: custom
+          custom_payload: |
+            {
+              text: `Staging deployment failed for ${process.env.AS_COMMIT}`,
+              attachments: [{
+                color: 'danger',
+                fields: [{
+                  title: 'Commit',
+                  value: process.env.AS_COMMIT.substring(0, 7),
+                  short: true
+                }]
+              }]
+            }
+          webhook_url: ${{ secrets.SLACK_WEBHOOK }}

@@ -1,0 +1,255 @@
+# HEADY_BRAND:BEGIN
+# ╔══════════════════════════════════════════════════════════════════╗
+# ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
+# ║  ██║  ██║██╔════╝██╔══██╗██╔══██╗╚██╗ ██╔╝                     ║
+# ║  ███████║█████╗  ███████║██║  ██║ ╚████╔╝                      ║
+# ║  ██╔══██║██╔══╝  ██╔══██║██║  ██║  ╚██╔╝                       ║
+# ║  ██║  ██║███████╗██║  ██║██████╔╝   ██║                        ║
+# ║  ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝    ╚═╝                        ║
+# ║                                                                  ║
+# ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
+# ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
+# ║  FILE: configs/product-repos.yaml                                                    ║
+# ║  LAYER: config                                                  ║
+# ╚══════════════════════════════════════════════════════════════════╝
+# HEADY_BRAND:END
+# ═══════════════════════════════════════════════════════════════════════
+# HEADY SYSTEMS — Product Repos Configuration
+# ═══════════════════════════════════════════════════════════════════════
+# Defines all product repos as thin overlays consuming the foundation.
+# Each product repo imports SDKs from core, points to shared cloud
+# services, and adds only product-specific UX and configuration.
+
+version: "1.0.0"
+name: ProductRepos
+
+# ─── FOUNDATION REPO ──────────────────────────────────────────────────
+foundation:
+  name: Heady
+  repo: HeadySystems/Heady
+  description: >
+    Single source of truth for all Heady services. Contains MCP gateway,
+    API gateway, orchestrator, HeadyBrains, model router, billing, voice,
+    shared SDKs, UI kit, agent catalog, distribution scripts, and all
+    Docker/Render deployment configs.
+  always_functional:
+    - MCP server (services/mcp-gateway)
+    - API server (services/api-gateway)
+    - HeadyBrain per layer (services/orchestrator/hc-sys-orchestrator.js)
+    - Health endpoints (/api/health, /api/brain/health)
+    - Registry (/api/registry)
+    - Buddy backend (services/buddy-service)
+  shared_packages:
+    - packages/core-sdk
+    - packages/ui-kit
+    - packages/agents
+    - packages/connectors
+  env_contract:
+    required:
+      - HEADY_TARGET         # local | staging | production
+      - DATABASE_URL         # Postgres connection
+      - HEADY_API_KEY        # Auto-generated API key
+    per_product:
+      - CLOUD_HEADYME_URL
+      - CLOUD_HEADYCONNECTION_URL
+      - CLOUD_HEADYWEB_URL
+      - CLOUD_HEADYSYSTEMS_URL
+
+# ─── PRODUCT REPOS ────────────────────────────────────────────────────
+products:
+
+  HeadyMe:
+    repo: HeadyMe/Heady
+    domain: headyme.com
+    type: thin-frontend
+    brain_profile: personal-wellbeing
+    cloud_layer: production
+    description: >
+      Personal wellbeing, teaching, wealth redistribution.
+      Consumes foundation SDK for all backend logic.
+    stack:
+      framework: next.js
+      styling: tailwind
+      ui_kit: "@heady/ui-kit"
+      sdk: "@heady/core-sdk"
+    pages:
+      - /           # Landing + personal dashboard
+      - /coach      # Wellbeing coach chat
+      - /learn      # Teaching mentor
+      - /wealth     # Wealth redistribution tools
+      - /settings   # User preferences
+    env_vars:
+      CLOUD_HEADYME_URL: https://headyme.com
+      NEXT_PUBLIC_API_URL: https://api.heady.systems/me
+      NEXT_PUBLIC_BRAIN_PROFILE: personal-wellbeing
+    deploy:
+      provider: render
+      service: heady-me-web
+      build_command: "npm run build"
+      publish_directory: ".next"
+    dns:
+      cloudflare_zone: headyme.com
+      records:
+        # DNS CNAME targets are infrastructure-only (Cloudflare proxied)
+        - type: CNAME
+          name: "@"
+          target: me.headysystems.com
+        - type: CNAME
+          name: www
+          target: me.headysystems.com
+
+  HeadyConnection:
+    repo: HeadyConnection/HeadyConnection
+    domain: headyconnection.org
+    type: thin-frontend
+    brain_profile: community-impact
+    cloud_layer: production
+    description: >
+      Community/nonprofit platform. Team workspaces, grant writing,
+      BD, ethics oversight, wealth redistribution analytics.
+    stack:
+      framework: next.js
+      styling: tailwind
+      ui_kit: "@heady/ui-kit"
+      sdk: "@heady/core-sdk"
+    pages:
+      - /               # Community landing
+      - /teams          # Team workspace management
+      - /grants         # Grant writing tools
+      - /impact         # Social impact dashboard
+      - /donate         # Donation planning
+      - /ethics         # Ethics oversight
+    env_vars:
+      CLOUD_HEADYCONNECTION_URL: https://headyconnection.org
+      NEXT_PUBLIC_API_URL: https://api.heady.systems/conn
+      NEXT_PUBLIC_BRAIN_PROFILE: community-impact
+    deploy:
+      provider: render
+      service: heady-connection-web
+    dns:
+      cloudflare_zone: headyconnection.org
+      records:
+        # DNS CNAME target is infrastructure-only (Cloudflare proxied)
+        - type: CNAME
+          name: "@"
+          target: api.headyconnection.org
+
+  HeadyWeb:
+    repo: HeadySystems/HeadyWeb
+    domain: headyweb.com
+    type: marketing-site
+    brain_profile: web-platform
+    cloud_layer: production
+    description: >
+      Public marketing site, docs, demos, onboarding flows.
+      Mostly static with dynamic API-powered sections.
+    stack:
+      framework: next.js
+      styling: tailwind
+      ui_kit: "@heady/ui-kit"
+      sdk: "@heady/core-sdk"
+    pages:
+      - /               # Marketing landing
+      - /docs           # Documentation
+      - /pricing        # Pricing with PPP
+      - /demo           # Interactive demo
+      - /about          # Mission and team
+      - /blog           # Blog / updates
+    env_vars:
+      CLOUD_HEADYWEB_URL: https://headyweb.com
+      NEXT_PUBLIC_API_URL: https://api.heady.systems
+      NEXT_PUBLIC_BRAIN_PROFILE: web-platform
+    deploy:
+      provider: cloudflare-pages
+      project: heady-web
+    dns:
+      cloudflare_zone: headyweb.com
+
+  HeadySystems:
+    repo: HeadySystems/HeadySystems-Web
+    domain: headysystems.com
+    type: developer-portal
+    brain_profile: sys-ops
+    cloud_layer: production
+    description: >
+      Developer portal, API docs, system admin, infrastructure dashboard.
+    stack:
+      framework: next.js
+      styling: tailwind
+      ui_kit: "@heady/ui-kit"
+      sdk: "@heady/core-sdk"
+    pages:
+      - /               # Developer landing
+      - /admin          # System admin dashboard
+      - /api-docs       # OpenAPI/Swagger docs
+      - /status         # System status page
+      - /infra          # Infrastructure management
+    env_vars:
+      CLOUD_HEADYSYSTEMS_URL: https://headysystems.com
+      NEXT_PUBLIC_API_URL: https://api.heady.systems
+      NEXT_PUBLIC_BRAIN_PROFILE: sys-ops
+    deploy:
+      provider: render
+      service: heady-systems-web
+    dns:
+      cloudflare_zone: headysystems.com
+
+  HeadyBuddy:
+    repo: HeadySystems/Heady
+    domain: null
+    type: desktop-app
+    brain_profile: companion
+    cloud_layer: local
+    description: >
+      Always-on desktop/mobile companion. Ships as Electron (desktop)
+      and React Native (mobile). Local-first with cloud sync.
+    stack:
+      framework: electron + react
+      styling: tailwind
+      ui_kit: "@heady/ui-kit"
+      sdk: "@heady/core-sdk"
+    platforms:
+      - windows (Electron)
+      - linux (Electron)
+      - android (React Native)
+      - ios (React Native)
+    env_vars:
+      HEADY_TARGET: local
+      BUDDY_ENDPOINT: http://buddy.headysystems.com:3301
+      MANAGER_ENDPOINT: http://manager.headysystems.com:3300
+    deploy:
+      desktop: electron-builder
+      mobile: expo
+
+# ─── REPO BOUNDARIES ──────────────────────────────────────────────────
+boundaries:
+  foundation_rules:
+    - "No product branding — only generic HeadyOS + services"
+    - "All business logic lives here"
+    - "All MCP tools and agent catalog live here"
+    - "All Docker/Render/K8s deployment configs live here"
+    - "Exposes shared packages: core-sdk, ui-kit, agents, connectors"
+
+  product_rules:
+    - "No duplicated orchestration or business logic"
+    - "Import from foundation via SDK/API only"
+    - "Product-specific UX, branding, and page routing only"
+    - "Tenant/workspace configuration overlays only"
+    - "Point to shared cloud services via env vars"
+
+# ─── REBUILD ORDER ─────────────────────────────────────────────────────
+rebuild_order:
+  description: >
+    When rebuilding the system, follow this order strictly.
+    Each layer must be 100% functional before proceeding.
+  steps:
+    1: "Foundation core services (manager, registry, HCFullPipeline, HeadyBrains)"
+    2: "High-performance MCP and HTTP APIs (internal and external)"
+    3: "Edge routing (Cloudflare Workers, tunnels, DNS)"
+    4: "HeadySystems developer portal (first product repo)"
+    5: "HeadyMe personal platform"
+    6: "HeadyConnection community platform"
+    7: "HeadyWeb marketing site"
+    8: "HeadyBuddy companion app"
+    9: "Integrations and partner services"
+

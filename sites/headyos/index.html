@@ -2,22 +2,1127 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>headyos.com | HeadySystems</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data:; script-src 'self'; style-src 'self' 'unsafe-inline'; frame-ancestors 'none';">
+    <meta name="description" content="HeadyOS: The Latent Operating System for continuous AI reasoning. Cognitive OS architecture for intelligent agents with kernel, scheduler, and memory management.">
+    <meta name="keywords" content="operating system, AI agent, latent OS, cognitive computing, distributed systems, kernel, scheduler, memory management">
+    <meta name="author" content="Eric Haywood, HeadySystems Inc.">
+    <meta name="robots" content="index, follow">
+    <meta name="language" content="English">
+    <meta name="revisit-after" content="7 days">
+
+    <!-- Open Graph Tags -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="HeadyOS - The Latent Operating System">
+    <meta property="og:description" content="Cognitive operating system for continuous AI reasoning. Kernel, scheduler, memory manager, and process orchestration.">
+    <meta property="og:url" content="https://headyos.com">
+    <meta property="og:site_name" content="HeadyOS">
+    <meta property="og:image" content="https://headyos.com/og-image.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+
+    <!-- Twitter Card Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="HeadyOS - The Latent Operating System">
+    <meta name="twitter:description" content="Cognitive OS for continuous AI reasoning and agent orchestration">
+    <meta name="twitter:image" content="https://headyos.com/og-image.jpg">
+
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "HeadyOS",
+        "url": "https://headyos.com",
+        "description": "Latent operating system for continuous AI reasoning and cognitive computing",
+        "applicationCategory": "DeveloperApplication",
+        "operatingSystem": "Cloud-Native, GCP Cloud Run",
+        "author": {
+            "@type": "Organization",
+            "name": "HeadySystems Inc."
+        },
+        "creator": {
+            "@type": "Person",
+            "name": "Eric Haywood"
+        },
+        "version": "4.0"
+    }
+    </script>
+
+    <title>HeadyOS - The Latent Operating System | Cognitive AI Architecture</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-dark: #0a0a0f;
+            --accent: #7c5eff;
+            --gold: #f0c040;
+            --cyan: #40e0d0;
+            --green: #00e676;
+            --text-primary: #ffffff;
+            --text-secondary: #b0b0c0;
+            --border-color: #2a2a3f;
+            --card-bg: #1a1a25;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        #canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        h1 {
+            font-size: clamp(2.5rem, 8vw, 4rem);
+            line-height: 1.1;
+            background: linear-gradient(135deg, var(--cyan) 0%, var(--accent) 50%, var(--gold) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1.5rem;
+        }
+
+        h2 {
+            font-size: clamp(1.75rem, 5vw, 2.5rem);
+            color: var(--text-primary);
+            margin-bottom: 1.5rem;
+        }
+
+        h3 {
+            font-size: 1.5rem;
+            color: var(--cyan);
+            margin-bottom: 1rem;
+        }
+
+        p {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+            line-height: 1.8;
+        }
+
+        a {
+            color: var(--cyan);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        a:hover {
+            color: var(--gold);
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .section {
+            padding: 6rem 0;
+            position: relative;
+            z-index: 1;
+        }
+
+        .section.alt {
+            background: rgba(26, 26, 37, 0.3);
+        }
+
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 70px;
+            background: rgba(10, 10, 15, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        nav .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--cyan) 0%, var(--accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: 0.1em;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        nav a {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            transition: color 0.3s ease;
+        }
+
+        nav a:hover {
+            color: var(--cyan);
+        }
+
+        .cta-button {
+            background: linear-gradient(135deg, var(--accent) 0%, var(--cyan) 100%);
+            color: var(--bg-dark);
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(124, 94, 255, 0.3);
+        }
+
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding-top: 70px;
+        }
+
+        .hero-content h1 {
+            font-size: clamp(3rem, 10vw, 5rem);
+            margin-bottom: 1.5rem;
+            animation: fadeInUp 1s ease 0.2s backwards;
+        }
+
+        .hero-content p {
+            font-size: 1.3rem;
+            max-width: 600px;
+            margin: 0 auto 3rem;
+            animation: fadeInUp 1s ease 0.4s backwards;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            animation: fadeInUp 1s ease 0.6s backwards;
+        }
+
+        .btn {
+            padding: 1rem 2.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1rem;
+            border: 2px solid transparent;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent) 0%, var(--cyan) 100%);
+            color: var(--bg-dark);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(124, 94, 255, 0.4);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--cyan);
+            border: 2px solid var(--cyan);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(64, 224, 208, 0.1);
+            transform: translateY(-3px);
+        }
+
+        .grid {
+            display: grid;
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .grid-2 {
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        }
+
+        .grid-3 {
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        }
+
+        .card {
+            background: linear-gradient(135deg, var(--card-bg) 0%, rgba(124, 94, 255, 0.05) 100%);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 2rem;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .card:hover {
+            border-color: var(--accent);
+            box-shadow: 0 20px 50px rgba(124, 94, 255, 0.2);
+            transform: translateY(-5px);
+        }
+
+        .card h3 {
+            margin-top: 0;
+        }
+
+        .card-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .feature-list {
+            list-style: none;
+        }
+
+        .feature-list li {
+            padding: 0.75rem 0;
+            padding-left: 2rem;
+            position: relative;
+            color: var(--text-secondary);
+        }
+
+        .feature-list li:before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: var(--cyan);
+            font-weight: bold;
+        }
+
+        .badge {
+            display: inline-block;
+            background: rgba(124, 94, 255, 0.2);
+            color: var(--accent);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            border: 1px solid var(--accent);
+            margin: 0.25rem;
+        }
+
+        .code-block {
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.5rem;
+            overflow-x: auto;
+            margin: 1.5rem 0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        .architecture-diagram {
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 2rem 0;
+            overflow-x: auto;
+        }
+
+        footer {
+            background: rgba(10, 10, 15, 0.8);
+            border-top: 1px solid var(--border-color);
+            padding: 3rem 0;
+            margin-top: 6rem;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section h4 {
+            color: var(--cyan);
+            margin-bottom: 1rem;
+            font-size: 1rem;
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section ul li {
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-section a {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .footer-bottom {
+            border-top: 1px solid var(--border-color);
+            padding-top: 2rem;
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+        }
+
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border-width: 0;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.8s ease forwards;
+        }
+
+        @media (max-width: 768px) {
+            nav ul {
+                gap: 1rem;
+            }
+
+            nav a {
+                font-size: 0.8rem;
+            }
+
+            .container {
+                padding: 0 1rem;
+            }
+
+            .section {
+                padding: 4rem 0;
+            }
+
+            .hero-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .btn {
+                width: 100%;
+                max-width: 300px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 2rem;
+            }
+
+            h2 {
+                font-size: 1.5rem;
+            }
+
+            .hero-content p {
+                font-size: 1rem;
+            }
+        }
+    </style>
 </head>
 <body>
-    <header>
-        <h1>headyos.com</h1>
-        <nav aria-label="Main Navigation">
-            <a href="/">Home</a>
-            <a href="/status">Status</a>
-        </nav>
-    </header>
-    <main>
-        <h2>Welcome to headyos.com</h2>
-        <p>Powered by Heady Sovereign Node v4.0.</p>
-        <p>Concurrent-Equals Architecture.</p>
-    </main>
+    <canvas id="canvas"></canvas>
+
+    <nav aria-label="Main navigation">
+        <div class="container">
+            <div class="logo">HEADY OS</div>
+            <ul>
+                <li><a href="#what-is">What is HeadyOS</a></li>
+                <li><a href="#components">Components</a></li>
+                <li><a href="#architecture">Architecture</a></li>
+                <li><a href="#developer" class="cta-button">Developer Guide</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1>THE LATENT OPERATING SYSTEM</h1>
+                <p>The invisible OS that powers continuous AI reasoning. A cognitive operating system for intelligent agents and distributed systems.</p>
+                <div class="hero-buttons">
+                    <a href="#what-is" class="btn btn-primary">Learn More</a>
+                    <a href="#developer" class="btn btn-secondary">Developer Docs</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section alt" id="what-is">
+        <div class="container">
+            <h2>What is HeadyOS?</h2>
+            <p style="font-size: 1.1rem; max-width: 900px;">HeadyOS is not a traditional operating system. It's a cognitive operating system—a metaphorical but functionally complete OS architecture for AI agents and distributed intelligence systems. While traditional OSes manage hardware resources, HeadyOS manages cognitive resources: context, memory, computation, and reasoning flow.</p>
+
+            <div class="grid grid-2">
+                <div style="margin-top: 2rem;">
+                    <h3>Traditional OS vs Cognitive OS</h3>
+                    <table style="width: 100%; margin-top: 1.5rem;">
+                        <tr style="border-bottom: 1px solid var(--border-color);">
+                            <td style="padding: 1rem; color: var(--text-secondary);">Traditional OS</td>
+                            <td style="padding: 1rem; color: var(--text-secondary);">Manages hardware resources</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid var(--border-color);">
+                            <td style="padding: 1rem; color: var(--cyan); font-weight: 600;">HeadyOS</td>
+                            <td style="padding: 1rem; color: var(--cyan);">Manages cognitive resources</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid var(--border-color);">
+                            <td style="padding: 1rem; color: var(--text-secondary);">Process scheduling</td>
+                            <td style="padding: 1rem; color: var(--text-secondary);">Agent orchestration</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid var(--border-color);">
+                            <td style="padding: 1rem; color: var(--text-secondary);">Memory management</td>
+                            <td style="padding: 1rem; color: var(--text-secondary);">Context windowing</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 1rem; color: var(--text-secondary);">I/O devices</td>
+                            <td style="padding: 1rem; color: var(--text-secondary);">LLM inference engines</td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div style="margin-top: 2rem;">
+                    <h3>Core Principles</h3>
+                    <ul class="feature-list">
+                        <li><strong>Abstraction:</strong> Hide complexity of underlying systems</li>
+                        <li><strong>Resource Management:</strong> Allocate cognitive resources efficiently</li>
+                        <li><strong>Concurrency:</strong> Execute multiple reasoning streams</li>
+                        <li><strong>Isolation:</strong> Separate concerns and contexts</li>
+                        <li><strong>Scheduling:</strong> Prioritize computation dynamically</li>
+                        <li><strong>Persistence:</strong> Maintain state across invocations</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section" id="components">
+        <div class="container">
+            <h2>Core Components</h2>
+            <p style="max-width: 900px;">HeadyOS is built on six fundamental subsystems, each handling critical functions in the cognitive architecture.</p>
+
+            <div class="grid grid-3">
+                <div class="card">
+                    <div class="card-icon">⚙️</div>
+                    <h3>Kernel (heady-soul)</h3>
+                    <p>The core execution engine. Manages process lifecycles, system calls, and fundamental operations. The soul of the system.</p>
+                    <ul class="feature-list" style="font-size: 0.9rem;">
+                        <li>Process lifecycle management</li>
+                        <li>System call interface</li>
+                        <li>Error handling and recovery</li>
+                        <li>Security primitives</li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <div class="card-icon">🎵</div>
+                    <h3>Scheduler (heady-conductor)</h3>
+                    <p>Orchestrates execution flow. Determines which agents run, when, and how resources are allocated. The conductor of reasoning.</p>
+                    <ul class="feature-list" style="font-size: 0.9rem;">
+                        <li>Task scheduling algorithms</li>
+                        <li>Priority management</li>
+                        <li>Load balancing</li>
+                        <li>Concurrent execution</li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <div class="card-icon">🧠</div>
+                    <h3>Memory Manager (heady-memory)</h3>
+                    <p>Manages context, embeddings, and persistent state. Maintains continuity across reasoning steps and sessions.</p>
+                    <ul class="feature-list" style="font-size: 0.9rem;">
+                        <li>Context window management</li>
+                        <li>Vector store integration</li>
+                        <li>Garbage collection</li>
+                        <li>Cache optimization</li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <div class="card-icon">🔄</div>
+                    <h3>Process Manager (heady-orchestration)</h3>
+                    <p>Manages agent lifecycle and inter-agent communication. Enables multi-agent coordination and composition.</p>
+                    <ul class="feature-list" style="font-size: 0.9rem;">
+                        <li>Agent spawning/termination</li>
+                        <li>Message passing</li>
+                        <li>State synchronization</li>
+                        <li>Dependency resolution</li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <div class="card-icon">🔐</div>
+                    <h3>Security Layer (heady-guard)</h3>
+                    <p>Enforces access controls and safety boundaries. Protects against adversarial inputs and ensures policy compliance.</p>
+                    <ul class="feature-list" style="font-size: 0.9rem;">
+                        <li>Authentication/authorization</li>
+                        <li>Input validation</li>
+                        <li>Rate limiting</li>
+                        <li>Audit logging</li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <div class="card-icon">📁</div>
+                    <h3>Vector File System (heady-vector)</h3>
+                    <p>Semantic file system for embeddings and knowledge. Enables similarity-based retrieval and semantic operations.</p>
+                    <ul class="feature-list" style="font-size: 0.9rem;">
+                        <li>Vector indexing</li>
+                        <li>Similarity search</li>
+                        <li>Semantic clustering</li>
+                        <li>Knowledge graphs</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section alt" id="architecture">
+        <div class="container">
+            <h2>System Architecture</h2>
+
+            <div class="architecture-diagram">
+                <div style="color: var(--cyan); margin-bottom: 1.5rem; font-weight: 600; font-family: 'JetBrains Mono', monospace;">HeadyOS Layered Architecture</div>
+
+                <pre style="color: var(--text-secondary); font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; margin: 0;">
+┌────────────────────────────────────────────────────┐
+│         Application Layer                          │
+│    (User Agents, Services, Workloads)             │
+└──────────────────┬─────────────────────────────────┘
+                   │
+┌──────────────────▼─────────────────────────────────┐
+│    Process & Agent Management                      │
+│  heady-orchestration | Agent Lifecycle             │
+└──────────────────┬─────────────────────────────────┘
+                   │
+┌──────────────────▼─────────────────────────────────┐
+│    Scheduler & Conductor                           │
+│  heady-conductor | Task Scheduling & Routing       │
+└──────────────────┬─────────────────────────────────┘
+                   │
+┌──────────────────▼─────────────────────────────────┐
+│         Kernel Core                                │
+│    heady-soul | Execution Engine                  │
+└──────────────────┬─────────────────────────────────┘
+                   │
+        ┌──────────┼──────────┐
+        │          │          │
+        ▼          ▼          ▼
+    ┌────────┐ ┌────────┐ ┌────────┐
+    │Memory  │ │Security│ │Vector  │
+    │Manager │ │Layer   │ │FS      │
+    │        │ │        │ │        │
+    │heady-  │ │heady-  │ │heady-  │
+    │memory  │ │guard   │ │vector  │
+    └────────┘ └────────┘ └────────┘
+        │          │          │
+        └──────────┼──────────┘
+                   │
+        ┌──────────┼──────────┐
+        │          │          │
+        ▼          ▼          ▼
+    ┌────────────────────────────┐
+    │   Infrastructure Layer      │
+    │  GCP Cloud Run, Vector DB   │
+    └────────────────────────────┘
+                </pre>
+            </div>
+
+            <div class="grid grid-2">
+                <div class="card">
+                    <h3>Agent Lifecycle</h3>
+                    <ol style="padding-left: 1.5rem; color: var(--text-secondary);">
+                        <li style="margin-bottom: 1rem;">
+                            <strong style="color: var(--cyan);">Spawn:</strong> Agent instantiated with initial context
+                        </li>
+                        <li style="margin-bottom: 1rem;">
+                            <strong style="color: var(--cyan);">Initialize:</strong> Load model, configure parameters
+                        </li>
+                        <li style="margin-bottom: 1rem;">
+                            <strong style="color: var(--cyan);">Reason:</strong> Execute inference, generate outputs
+                        </li>
+                        <li style="margin-bottom: 1rem;">
+                            <strong style="color: var(--cyan);">Communicate:</strong> Send messages to other agents
+                        </li>
+                        <li>
+                            <strong style="color: var(--cyan);">Terminate:</strong> Cleanup resources, persist state
+                        </li>
+                    </ol>
+                </div>
+
+                <div class="card">
+                    <h3>Context Windowing</h3>
+                    <p>Dynamic context management with intelligent compression:</p>
+                    <ul class="feature-list">
+                        <li>Sliding window over conversation history</li>
+                        <li>Importance-based token filtering</li>
+                        <li>Hierarchical summarization</li>
+                        <li>Semantic deduplification</li>
+                        <li>Supports 200k+ token windows</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section" id="subsystems">
+        <div class="container">
+            <h2>Advanced Subsystems</h2>
+
+            <div class="grid grid-2">
+                <div>
+                    <h3>Model Routing</h3>
+                    <p>Intelligent selection of models based on:</p>
+                    <ul class="feature-list">
+                        <li>Task complexity and type</li>
+                        <li>Latency requirements (p50, p99)</li>
+                        <li>Cost optimization targets</li>
+                        <li>Model specialization scores</li>
+                        <li>Fallback chain strategies</li>
+                        <li>A/B testing and canary deployments</li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h3>Event Processing</h3>
+                    <p>Real-time event streaming and handling:</p>
+                    <ul class="feature-list">
+                        <li>Asynchronous event queues</li>
+                        <li>Event filtering and routing</li>
+                        <li>Workflow orchestration</li>
+                        <li>Retry and backoff logic</li>
+                        <li>Dead letter queues</li>
+                        <li>Event audit trail</li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h3>Memory Persistence</h3>
+                    <p>Durable state management across sessions:</p>
+                    <ul class="feature-list">
+                        <li>Session snapshots and checkpoints</li>
+                        <li>Vector embeddings cache</li>
+                        <li>Conversation history archival</li>
+                        <li>Knowledge base synchronization</li>
+                        <li>Replication and backups</li>
+                        <li>Point-in-time recovery</li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h3>Observability & Monitoring</h3>
+                    <p>Comprehensive system visibility:</p>
+                    <ul class="feature-list">
+                        <li>Structured logging</li>
+                        <li>Distributed tracing</li>
+                        <li>Metrics and time-series</li>
+                        <li>Performance profiling</li>
+                        <li>Anomaly detection</li>
+                        <li>Real-time dashboards</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section alt" id="developer">
+        <div class="container">
+            <h2>Developer Guide</h2>
+
+            <div style="margin: 2rem 0;">
+                <h3>Building on HeadyOS</h3>
+                <p>Create agents and services on top of HeadyOS using our SDK and APIs.</p>
+            </div>
+
+            <div class="grid grid-2">
+                <div>
+                    <h3>Installation</h3>
+                    <div class="code-block">
+# Install HeadyOS SDK
+npm install @heady/os-sdk
+
+# Python SDK
+pip install heady-os-sdk
+
+# Create new agent
+heady-os init my-agent</div>
+                </div>
+
+                <div>
+                    <h3>Basic Agent Example</h3>
+                    <div class="code-block">
+import { HeadyAgent } from '@heady/os-sdk';
+
+const agent = new HeadyAgent({
+  name: 'research-agent',
+  model: 'claude-3.5',
+  systemPrompt: 'You are a research assistant'
+});
+
+agent.on('message', async (msg) => {
+  const response = await agent.reason(msg);
+  console.log(response);
+});
+
+await agent.start();</div>
+                </div>
+            </div>
+
+            <div style="margin-top: 3rem;">
+                <h3>Available APIs</h3>
+                <div class="grid grid-3">
+                    <div class="card">
+                        <h3 style="font-size: 1.1rem;">Process API</h3>
+                        <ul class="feature-list" style="font-size: 0.9rem;">
+                            <li>spawn(config)</li>
+                            <li>terminate(processId)</li>
+                            <li>signal(processId, signal)</li>
+                            <li>getStatus(processId)</li>
+                        </ul>
+                    </div>
+
+                    <div class="card">
+                        <h3 style="font-size: 1.1rem;">Memory API</h3>
+                        <ul class="feature-list" style="font-size: 0.9rem;">
+                            <li>storeVector(embedding)</li>
+                            <li>search(query, k)</li>
+                            <li>getContext(sessionId)</li>
+                            <li>clearMemory()</li>
+                        </ul>
+                    </div>
+
+                    <div class="card">
+                        <h3 style="font-size: 1.1rem;">Scheduler API</h3>
+                        <ul class="feature-list" style="font-size: 0.9rem;">
+                            <li>schedule(task, time)</li>
+                            <li>cancel(taskId)</li>
+                            <li>setPriority(taskId, p)</li>
+                            <li>getQueue()</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div style="margin-top: 2rem; padding: 2rem; background: rgba(0, 230, 118, 0.1); border-radius: 12px; border-left: 4px solid var(--green);">
+                <h3 style="color: var(--green); margin-top: 0;">System Requirements</h3>
+                <ul class="feature-list">
+                    <li><strong>Runtime:</strong> Cloud-native, runs on GCP Cloud Run, AWS Lambda, or on-premises</li>
+                    <li><strong>Storage:</strong> Vector database (Pinecone, Weaviate, Milvus)</li>
+                    <li><strong>Models:</strong> LLM provider access (OpenAI, Anthropic, Google)</li>
+                    <li><strong>Networking:</strong> Outbound HTTPS for model APIs</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <section class="section" id="version">
+        <div class="container">
+            <h2>Version History</h2>
+
+            <div class="grid grid-2">
+                <div class="card">
+                    <h3>v4.0 - Sacred Geometry Era</h3>
+                    <p><strong style="color: var(--gold);">Current Version</strong></p>
+                    <ul class="feature-list" style="font-size: 0.9rem;">
+                        <li>φ-scaling mathematics throughout</li>
+                        <li>Confidence Signal Logic gates</li>
+                        <li>200k+ token context windows</li>
+                        <li>Multi-agent coordination</li>
+                        <li>Vector-native architecture</li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <h3>v3.0 - Orchestration</h3>
+                    <p><strong style="color: var(--cyan);">Previous Release</strong></p>
+                    <ul class="feature-list" style="font-size: 0.9rem;">
+                        <li>Agent lifecycle management</li>
+                        <li>Basic scheduler implementation</li>
+                        <li>Memory persistence</li>
+                        <li>Event processing</li>
+                        <li>Security layer foundation</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div style="margin-top: 2rem; padding: 2rem; background: rgba(124, 94, 255, 0.1); border-radius: 12px;">
+                <h3 style="color: var(--accent); margin-top: 0;">Roadmap</h3>
+                <ul class="feature-list">
+                    <li>v4.1: Hardware acceleration support (GPU/TPU optimization)</li>
+                    <li>v4.2: Federated agent networks (peer-to-peer coordination)</li>
+                    <li>v5.0: Quantum-ready architecture (post-classical computing)</li>
+                    <li>OpenHeadyOS: Community fork with governance</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <section class="section alt">
+        <div class="container">
+            <h2>The HEADY Ecosystem</h2>
+            <p style="max-width: 900px; margin-bottom: 2rem;">HeadyOS is the foundational layer of the HEADY ecosystem. It powers all cognitive agents and services across the platform.</p>
+
+            <div class="grid grid-3">
+                <div class="card">
+                    <h3>HEADY AI</h3>
+                    <p>Research-first AI platform utilizing HeadyOS for orchestration and reasoning.</p>
+                    <a href="https://heady-ai.com" style="color: var(--cyan); font-weight: 600;">Explore AI →</a>
+                </div>
+
+                <div class="card">
+                    <h3>HeadyME</h3>
+                    <p>Personal AI agents running on HeadyOS kernel for individual users.</p>
+                    <a href="https://headyme.com" style="color: var(--cyan); font-weight: 600;">Try HeadyME →</a>
+                </div>
+
+                <div class="card">
+                    <h3>HeadyEX</h3>
+                    <p>Marketplace for agents deployed on HeadyOS with standardized interfaces.</p>
+                    <a href="https://headyex.com" style="color: var(--cyan); font-weight: 600;">Browse Agents →</a>
+                </div>
+
+                <div class="card">
+                    <h3>HeadySystems</h3>
+                    <p>Central hub managing all HeadyOS infrastructure and services.</p>
+                    <a href="https://headysystems.com" style="color: var(--cyan); font-weight: 600;">Go to Hub →</a>
+                </div>
+
+                <div class="card">
+                    <h3>HeadyConnection</h3>
+                    <p>Nonprofit ensuring HeadyOS access for all communities worldwide.</p>
+                    <a href="https://headyconnection.org" style="color: var(--cyan); font-weight: 600;">Learn More →</a>
+                </div>
+
+                <div class="card">
+                    <h3>HeadyFinance</h3>
+                    <p>Financial platform with specialized agents on HeadyOS.</p>
+                    <a href="https://headyfinance.com" style="color: var(--cyan); font-weight: 600;">Access Platform →</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>Platform</h4>
+                    <ul>
+                        <li><a href="#what-is">What is HeadyOS</a></li>
+                        <li><a href="#components">Components</a></li>
+                        <li><a href="#developer">Developer Guide</a></li>
+                        <li><a href="https://headysystems.com/docs">Documentation</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-section">
+                    <h4>Ecosystem</h4>
+                    <ul>
+                        <li><a href="https://headysystems.com">HeadySystems</a></li>
+                        <li><a href="https://heady-ai.com">HEADY AI</a></li>
+                        <li><a href="https://headyme.com">HeadyME</a></li>
+                        <li><a href="https://headyex.com">HeadyEX</a></li>
+                        <li><a href="https://headyfinance.com">HeadyFinance</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-section">
+                    <h4>Resources</h4>
+                    <ul>
+                        <li><a href="https://headysystems.com/api">API Reference</a></li>
+                        <li><a href="https://headysystems.com/sdk">SDK Downloads</a></li>
+                        <li><a href="https://headysystems.com/blog">Blog</a></li>
+                        <li><a href="https://headysystems.com/community">Community</a></li>
+                        <li><a href="https://headysystems.com/support">Support</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-section">
+                    <h4>Company</h4>
+                    <ul>
+                        <li><a href="https://headysystems.com/about">About</a></li>
+                        <li><a href="https://headysystems.com/privacy">Privacy Policy</a></li>
+                        <li><a href="https://headysystems.com/terms">Terms of Service</a></li>
+                        <li><a href="https://headyconnection.org">HeadyConnection</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p style="margin: 0;">Founded by Eric Haywood | 51 Provisional Patents | © 2026 HeadySystems Inc. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        const particles = [];
+        const particleCount = 30;
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.vx = (Math.random() - 0.5) * 0.5;
+                this.vy = (Math.random() - 0.5) * 0.5;
+                this.radius = Math.random() * 2 + 1;
+                this.color = ['rgba(124, 94, 255, 0.3)', 'rgba(64, 224, 208, 0.3)', 'rgba(240, 192, 64, 0.2)'][Math.floor(Math.random() * 3)];
+            }
+
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+
+                if (this.x < 0) this.x = canvas.width;
+                if (this.x > canvas.width) this.x = 0;
+                if (this.y < 0) this.y = canvas.height;
+                if (this.y > canvas.height) this.y = 0;
+            }
+
+            draw() {
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        for (let i = 0; i < particleCount; i++) {
+            particles.push(new Particle());
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            ctx.strokeStyle = 'rgba(124, 94, 255, 0.05)';
+            ctx.lineWidth = 1;
+            const gridSize = 100;
+            for (let x = 0; x < canvas.width; x += gridSize) {
+                ctx.beginPath();
+                ctx.moveTo(x, 0);
+                ctx.lineTo(x, canvas.height);
+                ctx.stroke();
+            }
+            for (let y = 0; y < canvas.height; y += gridSize) {
+                ctx.beginPath();
+                ctx.moveTo(0, y);
+                ctx.lineTo(canvas.width, y);
+                ctx.stroke();
+            }
+
+            particles.forEach(particle => {
+                particle.update();
+                particle.draw();
+            });
+
+            ctx.strokeStyle = 'rgba(64, 224, 208, 0.1)';
+            ctx.lineWidth = 0.5;
+            for (let i = 0; i < particles.length; i++) {
+                for (let j = i + 1; j < particles.length; j++) {
+                    const dx = particles[i].x - particles[j].x;
+                    const dy = particles[i].y - particles[j].y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+
+                    if (distance < 200) {
+                        ctx.beginPath();
+                        ctx.moveTo(particles[i].x, particles[i].y);
+                        ctx.lineTo(particles[j].x, particles[j].y);
+                        ctx.stroke();
+                    }
+                }
+            }
+
+            requestAnimationFrame(animate);
+        }
+
+        animate();
+
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -100px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('fade-in');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.card').forEach(card => {
+            observer.observe(card);
+        });
+    </script>
 </body>
 </html>

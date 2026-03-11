@@ -74,7 +74,7 @@ class BattleSimTaskOrchestrator extends EventEmitter {
             try {
                 const { HeadyBattleService } = require('../services/HeadyBattle-service.js');
                 this.battleService = new HeadyBattleService({ gateway: this._gateway });
-            } catch (err) { /* structured-logger: emit error */ }
+            } catch (_) { }
         }
     }
 

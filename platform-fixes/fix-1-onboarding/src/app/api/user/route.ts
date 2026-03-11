@@ -1,5 +1,3 @@
-import pino from 'pino';
-const logger = pino();
 /**
  * Heady™ User API Route
  * 
@@ -50,7 +48,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
       createdAt: user.createdAt,
     });
   } catch (error) {
-    logger.error('[USER_GET_ERROR]', error);
+    console.error('[USER_GET_ERROR]', error);
     return NextResponse.json(
       { error: 'Failed to fetch user' },
       { status: 500 }
@@ -100,7 +98,7 @@ export async function PATCH(request: NextRequest): Promise<NextResponse> {
 
     return NextResponse.json({ success: true, updated: Object.keys(filtered) });
   } catch (error) {
-    logger.error('[USER_PATCH_ERROR]', error);
+    console.error('[USER_PATCH_ERROR]', error);
     return NextResponse.json(
       { error: 'Failed to update user' },
       { status: 500 }

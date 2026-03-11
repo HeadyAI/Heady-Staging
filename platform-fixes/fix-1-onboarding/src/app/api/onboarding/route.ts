@@ -1,5 +1,3 @@
-import pino from 'pino';
-const logger = pino();
 /**
  * Heady™ Onboarding API Routes
  * 
@@ -84,7 +82,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     });
 
     // Log progression
-    logger.info('[ONBOARDING_ADVANCE]', JSON.stringify({
+    console.log('[ONBOARDING_ADVANCE]', JSON.stringify({
       timestamp: new Date().toISOString(),
       userId: currentState?.userId,
       from: stage,
@@ -93,7 +91,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
     return response;
   } catch (error) {
-    logger.error('[ONBOARDING_ERROR]', error);
+    console.error('[ONBOARDING_ERROR]', error);
     return NextResponse.json(
       { error: 'Onboarding step failed' },
       { status: 500 }
@@ -187,7 +185,7 @@ async function processCreateAccount(
     }
   } catch {
     // If API is down, allow username (will be validated on final submit)
-    logger.warn('[CREATE_ACCOUNT] Username check API unreachable, allowing provisionally');
+    console.warn('[CREATE_ACCOUNT] Username check API unreachable, allowing provisionally');
   }
 
   return {
@@ -229,7 +227,7 @@ async function processEmailConfig(
       }
     );
   } catch {
-    logger.warn('[EMAIL_CONFIG] Email routing API unreachable');
+    console.warn('[EMAIL_CONFIG] Email routing API unreachable');
   }
 
   return {
@@ -287,7 +285,7 @@ async function processBuddySetup(
       }
     );
   } catch {
-    logger.warn('[BUDDY_SETUP] HeadyBuddy API unreachable');
+    console.warn('[BUDDY_SETUP] HeadyBuddy API unreachable');
   }
 
   return {
@@ -332,7 +330,7 @@ async function processComplete(
       };
     }
   } catch {
-    logger.warn('[COMPLETE] API key generation unreachable');
+    console.warn('[COMPLETE] API key generation unreachable');
   }
 
   return {

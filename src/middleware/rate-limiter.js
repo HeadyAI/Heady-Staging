@@ -117,8 +117,8 @@ const DEFAULT_SLIDING_WINDOW_BUCKETS = fib(9); // F(9) = 34
 // ─── Priority Queue ───────────────────────────────────────────────────────────
 
 /**
- * Min-heap concurrent-equals queue for rate-limited requests.
- * Lower priority value = served first (0 = concurrent-equal weight).
+ * Min-heap priority queue for rate-limited requests.
+ * Lower priority value = served first (0 = highest priority).
  *
  * @private
  */

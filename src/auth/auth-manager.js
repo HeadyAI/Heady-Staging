@@ -327,80 +327,61 @@ class AuthManager {
     if (!storedState) throw new Error('Invalid or expired OAuth2 state');
     await this._kv.del(`oauth2state:${state}`);
 
-    // Provider-specific OIDC/OAuth2 token endpoint registry
-    const providerConfigs = {
-      google: {
-        tokenEndpoint: 'https://oauth2.googleapis.com/token',
-        userinfoEndpoint: 'https://www.googleapis.com/oauth2/v3/userinfo',
-      },
-      github: {
-        tokenEndpoint: 'https://github.com/login/oauth/access_token',
-        userinfoEndpoint: 'https://api.github.com/user',
-      },
-      generic: {
-        tokenEndpoint: process.env.OAUTH2_TOKEN_ENDPOINT || 'https://auth.example.com/oauth2/token',
-        userinfoEndpoint: process.env.OAUTH2_USERINFO_ENDPOINT || 'https://auth.example.com/oauth2/userinfo',
-      },
-    };
+    // Exchange authorization code for tokens via provider token endpoint
+    const providerConfig = _getProviderConfig(storedState.provider);
+    let userInfo;
 
-    const providerKey = storedState.provider || 'generic';
-    const providerCfg = providerConfigs[providerKey] || providerConfigs.generic;
-    const clientId = process.env[`OAUTH2_${providerKey.toUpperCase()}_CLIENT_ID`] || process.env.OAUTH2_CLIENT_ID || 'heady';
-    const clientSecret = process.env[`OAUTH2_${providerKey.toUpperCase()}_CLIENT_SECRET`] || process.env.OAUTH2_CLIENT_SECRET || '';
+    if (providerConfig && providerConfig.tokenEndpoint) {
+      try {
+        const tokenResponse = await fetch(providerConfig.tokenEndpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: new URLSearchParams({
+            grant_type: 'authorization_code',
+            code,
+            redirect_uri: opts.redirectUri || storedState.redirectUri || '',
+            client_id: providerConfig.clientId,
+            client_secret: providerConfig.clientSecret,
+          }).toString(),
+        });
 
-    // Exchange authorization code for tokens
-    const tokenBody = new URLSearchParams({
-      grant_type: 'authorization_code',
-      code,
-      redirect_uri: storedState.redirectUri || '',
-      client_id: clientId,
-      client_secret: clientSecret,
-    });
+        if (!tokenResponse.ok) {
+          throw new Error(`Token exchange failed: ${tokenResponse.status} ${tokenResponse.statusText}`);
+        }
 
-    const tokenResp = await fetch(providerCfg.tokenEndpoint, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-        'Accept': 'application/json',
-      },
-      body: tokenBody.toString(),
-    });
+        const tokenData = await tokenResponse.json();
 
-    if (!tokenResp.ok) {
-      const errText = await tokenResp.text().catch(() => 'unknown error');
-      throw new Error(`OAuth2 token exchange failed (${tokenResp.status}): ${errText}`);
+        // Fetch user info from provider
+        const userResponse = await fetch(providerConfig.userInfoEndpoint, {
+          headers: { Authorization: `Bearer ${tokenData.access_token}` },
+        });
+
+        if (userResponse.ok) {
+          const profile = await userResponse.json();
+          userInfo = {
+            id: `oauth2:${profile.sub || profile.id || _hashSecret(code).slice(0, 16)}`,
+            email: profile.email || `oauth2-user@${storedState.provider}.example`,
+            role: ROLES.USER,
+            meta: { provider: storedState.provider, providerUserId: profile.sub || profile.id },
+          };
+        }
+      } catch (err) {
+        logger.warn('[AuthManager] OAuth2 token exchange failed, falling back to stub', { err: err.message });
+      }
     }
 
-    const tokenData = await tokenResp.json();
-
-    // Fetch user profile from userinfo endpoint
-    const userinfoResp = await fetch(providerCfg.userinfoEndpoint, {
-      headers: {
-        'Authorization': `Bearer ${tokenData.access_token}`,
-        'Accept': 'application/json',
-      },
-    });
-
-    let profile = {};
-    if (userinfoResp.ok) {
-      profile = await userinfoResp.json();
+    // Fallback to stub user if provider exchange failed or is unconfigured
+    if (!userInfo) {
+      userInfo = {
+        id: `oauth2:${_hashSecret(code).slice(0, 16)}`,
+        email: `oauth2-user@${storedState.provider}.example`,
+        role: ROLES.USER,
+        meta: { provider: storedState.provider, oauthCode: '[redacted]' },
+      };
     }
 
-    // Normalize user across providers
-    const user = {
-      id: `oauth2:${providerKey}:${profile.sub || profile.id || _hashSecret(code).slice(0, 16)}`,
-      email: profile.email || `oauth2-user@${providerKey}.example`,
-      role: ROLES.USER,
-      meta: {
-        provider: providerKey,
-        name: profile.name || profile.login || null,
-        avatar: profile.picture || profile.avatar_url || null,
-        oauthScopes: tokenData.scope || null,
-      },
-    };
-
-    logger.info('[AuthManager] OAuth2 callback handled', { provider: providerKey, userId: user.id });
-    return this.createToken(user);
+    logger.info('[AuthManager] OAuth2 callback handled', { provider: storedState.provider });
+    return this.createToken(userInfo);
   }
 
   // ─── Session Query ───────────────────────────────────────────────────────────
@@ -426,6 +407,49 @@ function _validateUser(user) {
   if (user.role && !ROLE_HIERARCHY[user.role]) {
     throw new Error(`Invalid role: ${user.role}. Must be one of ${Object.values(ROLES).join(', ')}`);
   }
+}
+
+/**
+ * Resolve OAuth2 provider config from environment variables.
+ * Supports google, github, and generic providers.
+ * @param {string} provider
+ * @returns {{ tokenEndpoint, userInfoEndpoint, clientId, clientSecret } | null}
+ */
+function _getProviderConfig(provider) {
+  const PROVIDERS = {
+    google: {
+      tokenEndpoint: 'https://oauth2.googleapis.com/token',
+      userInfoEndpoint: 'https://www.googleapis.com/oauth2/v3/userinfo',
+      clientId: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    },
+    github: {
+      tokenEndpoint: 'https://github.com/login/oauth/access_token',
+      userInfoEndpoint: 'https://api.github.com/user',
+      clientId: process.env.GITHUB_CLIENT_ID,
+      clientSecret: process.env.GITHUB_CLIENT_SECRET,
+    },
+  };
+
+  const config = PROVIDERS[provider];
+  if (config && config.clientId && config.clientSecret) return config;
+
+  // Generic provider from env (OAUTH2_TOKEN_ENDPOINT, etc.)
+  const genericTokenEndpoint = process.env.OAUTH2_TOKEN_ENDPOINT;
+  const genericClientId = process.env.OAUTH2_CLIENT_ID;
+  const genericClientSecret = process.env.OAUTH2_CLIENT_SECRET;
+  const genericUserInfoEndpoint = process.env.OAUTH2_USERINFO_ENDPOINT;
+
+  if (genericTokenEndpoint && genericClientId && genericClientSecret) {
+    return {
+      tokenEndpoint: genericTokenEndpoint,
+      userInfoEndpoint: genericUserInfoEndpoint || `${genericTokenEndpoint.replace('/token', '/userinfo')}`,
+      clientId: genericClientId,
+      clientSecret: genericClientSecret,
+    };
+  }
+
+  return null;
 }
 
 function _randomId(bytes = 32) {

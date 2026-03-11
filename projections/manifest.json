@@ -1,0 +1,111 @@
+{
+  "version": "2.0.0",
+  "phi_scale": 1.618033988749895,
+  "generated": "2026-03-09T00:00:00Z",
+  "nodes": [
+    {
+      "id": "headysystems",
+      "domain": "headysystems.com",
+      "aliases": ["www.headysystems.com"],
+      "source": "sites/headysystems",
+      "route_prefix": "/systems",
+      "type": "platform-hub",
+      "priority": "primary",
+      "deploy_target": "cloudflare-pages",
+      "build": { "command": "echo 'static'", "output": "." }
+    },
+    {
+      "id": "headyme",
+      "domain": "headyme.com",
+      "aliases": ["www.headyme.com", "app.headyme.com"],
+      "source": "sites/headyme",
+      "route_prefix": "/app",
+      "type": "consumer-app",
+      "priority": "primary",
+      "deploy_target": "cloudflare-pages",
+      "build": { "command": "echo 'static'", "output": "." }
+    },
+    {
+      "id": "heady-ai",
+      "domain": "heady-ai.com",
+      "aliases": ["www.heady-ai.com"],
+      "source": "sites/heady-ai",
+      "route_prefix": "/ai",
+      "type": "research",
+      "priority": "primary",
+      "deploy_target": "cloudflare-pages",
+      "build": { "command": "echo 'static'", "output": "." }
+    },
+    {
+      "id": "headyos",
+      "domain": "headyos.com",
+      "aliases": ["www.headyos.com"],
+      "source": "sites/headyos",
+      "route_prefix": "/os",
+      "type": "documentation",
+      "priority": "primary",
+      "deploy_target": "cloudflare-pages",
+      "build": { "command": "echo 'static'", "output": "." }
+    },
+    {
+      "id": "headyconnection-org",
+      "domain": "headyconnection.org",
+      "aliases": ["www.headyconnection.org"],
+      "source": "sites/headyconnection-org",
+      "route_prefix": "/org",
+      "type": "nonprofit",
+      "priority": "primary",
+      "deploy_target": "cloudflare-pages",
+      "build": { "command": "echo 'static'", "output": "." }
+    },
+    {
+      "id": "headyconnection-com",
+      "domain": "headyconnection.com",
+      "aliases": ["www.headyconnection.com"],
+      "source": "sites/headyconnection-com",
+      "route_prefix": "/community",
+      "type": "community",
+      "priority": "secondary",
+      "deploy_target": "cloudflare-pages",
+      "build": { "command": "echo 'static'", "output": "." }
+    },
+    {
+      "id": "headyex",
+      "domain": "headyex.com",
+      "aliases": ["www.headyex.com", "marketplace.headysystems.com"],
+      "source": "sites/headyex",
+      "route_prefix": "/exchange",
+      "type": "marketplace",
+      "priority": "primary",
+      "deploy_target": "cloudflare-pages",
+      "build": { "command": "echo 'static'", "output": "." }
+    },
+    {
+      "id": "headyfinance",
+      "domain": "headyfinance.com",
+      "aliases": ["www.headyfinance.com"],
+      "source": "sites/headyfinance",
+      "route_prefix": "/finance",
+      "type": "fintech",
+      "priority": "secondary",
+      "deploy_target": "cloudflare-pages",
+      "build": { "command": "echo 'static'", "output": "." }
+    },
+    {
+      "id": "admin",
+      "domain": "admin.headysystems.com",
+      "aliases": [],
+      "source": "sites/admin",
+      "route_prefix": "/admin",
+      "type": "internal",
+      "priority": "primary",
+      "deploy_target": "cloudflare-pages",
+      "build": { "command": "echo 'static'", "output": "." }
+    }
+  ],
+  "routing": {
+    "worker": "cloudflare/worker.js",
+    "origin": "heady-pre-production-XXXXX.run.app",
+    "fallback": "headysystems.com"
+  }
+}

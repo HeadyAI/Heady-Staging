@@ -503,7 +503,7 @@ class LiquidOrchestrator extends EventEmitter {
 
   // ─── Queue ───────────────────────────────────────────────────────────────────
   _enqueue(task, priorityScore) {
-    // Insert in concurrent-equals execution order (highest score first)
+    // Insert in priority order (highest score first)
     task._priorityScore = priorityScore;
     task._enqueuedAt    = Date.now();
 

@@ -8,7 +8,7 @@ description: >
   Keywords: phi, golden ratio, Fibonacci, Sacred Geometry, CSL thresholds, phi-math, continuous scaling,
   no magic numbers, phi-backoff, phi-threshold, Heady constants, phi-continuous.
 metadata:
-  author: eric-haywood
+  author: eric-head
   version: '2.0'
 ---
 

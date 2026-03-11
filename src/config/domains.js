@@ -47,7 +47,7 @@ const HEADY_DOMAINS = [
     tunnel: {
       enabled: true,
       hostname: 'headyme.com',
-      service: process.env.HEADY_TUNNEL_SERVICE || 'http://localhost:3301',
+      service: 'http://localhost:3301',
       tunnelId: process.env.HEADY_TUNNEL_ID_HEADYME || '',
       protocol: 'https',
     },
@@ -73,7 +73,7 @@ const HEADY_DOMAINS = [
     tunnel: {
       enabled: true,
       hostname: 'headysystems.com',
-      service: process.env.HEADY_TUNNEL_SERVICE || 'http://localhost:3301',
+      service: 'http://localhost:3301',
       tunnelId: process.env.HEADY_TUNNEL_ID_HEADYSYSTEMS || '',
       protocol: 'https',
     },
@@ -98,7 +98,7 @@ const HEADY_DOMAINS = [
     tunnel: {
       enabled: true,
       hostname: 'headyconnection.org',
-      service: process.env.HEADY_TUNNEL_SERVICE || 'http://localhost:3301',
+      service: 'http://localhost:3301',
       tunnelId: process.env.HEADY_TUNNEL_ID_HEADYCONNECTION || '',
       protocol: 'https',
     },
@@ -123,7 +123,7 @@ const HEADY_DOMAINS = [
     tunnel: {
       enabled: true,
       hostname: 'headymcp.com',
-      service: process.env.HEADY_TUNNEL_SERVICE || 'http://localhost:3301',
+      service: 'http://localhost:3301',
       tunnelId: process.env.HEADY_TUNNEL_ID_HEADYMCP || '',
       protocol: 'https',
     },
@@ -149,7 +149,7 @@ const HEADY_DOMAINS = [
     tunnel: {
       enabled: true,
       hostname: 'headyapi.com',
-      service: process.env.HEADY_TUNNEL_SERVICE || 'http://localhost:3301',
+      service: 'http://localhost:3301',
       tunnelId: process.env.HEADY_TUNNEL_ID_HEADYAPI || '',
       protocol: 'https',
     },
@@ -175,7 +175,7 @@ const HEADY_DOMAINS = [
     tunnel: {
       enabled: true,
       hostname: 'headyio.com',
-      service: process.env.HEADY_TUNNEL_SERVICE || 'http://localhost:3301',
+      service: 'http://localhost:3301',
       tunnelId: process.env.HEADY_TUNNEL_ID_HEADYIO || '',
       protocol: 'https',
     },
@@ -200,7 +200,7 @@ const HEADY_DOMAINS = [
     tunnel: {
       enabled: true,
       hostname: 'headybuddy.org',
-      service: process.env.HEADY_TUNNEL_SERVICE || 'http://localhost:3301',
+      service: 'http://localhost:3301',
       tunnelId: process.env.HEADY_TUNNEL_ID_HEADYBUDDY || '',
       protocol: 'https',
     },
@@ -225,7 +225,7 @@ const HEADY_DOMAINS = [
     tunnel: {
       enabled: true,
       hostname: 'headybot.com',
-      service: process.env.HEADY_TUNNEL_SERVICE || 'http://localhost:3301',
+      service: 'http://localhost:3301',
       tunnelId: process.env.HEADY_TUNNEL_ID_HEADYBOT || '',
       protocol: 'https',
     },
@@ -251,7 +251,7 @@ const HEADY_DOMAINS = [
     tunnel: {
       enabled: true,
       hostname: 'heady-ai.com',
-      service: process.env.HEADY_TUNNEL_SERVICE || 'http://localhost:3301',
+      service: 'http://localhost:3301',
       tunnelId: process.env.HEADY_TUNNEL_ID_HEADYAI || '',
       protocol: 'https',
     },

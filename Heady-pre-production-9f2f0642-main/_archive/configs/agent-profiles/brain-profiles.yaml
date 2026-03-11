@@ -1,0 +1,271 @@
+# HEADY_BRAND:BEGIN
+# ╔══════════════════════════════════════════════════════════════════╗
+# ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
+# ║  ██║  ██║██╔════╝██╔══██╗██╔══██╗╚██╗ ██╔╝                     ║
+# ║  ███████║█████╗  ███████║██║  ██║ ╚████╔╝                      ║
+# ║  ██╔══██║██╔══╝  ██╔══██║██║  ██║  ╚██╔╝                       ║
+# ║  ██║  ██║███████╗██║  ██║██████╔╝   ██║                        ║
+# ║  ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝    ╚═╝                        ║
+# ║                                                                  ║
+# ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
+# ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
+# ║  FILE: configs/brain-profiles.yaml                                                    ║
+# ║  LAYER: config                                                  ║
+# ╚══════════════════════════════════════════════════════════════════╝
+# HEADY_BRAND:END
+# ═══════════════════════════════════════════════════════════════════════
+# HEADY SYSTEMS — Brain Profiles Configuration
+# ═══════════════════════════════════════════════════════════════════════
+# Each "brain" is a (workspace x agent-catalog x model-policy x memory)
+# combination. The orchestrator resolves brain_profile_id per request
+# and assembles the correct agents, tools, model policy, and RAG handle.
+
+version: "1.0.0"
+name: BrainProfiles
+
+# ─── BRAIN PROFILE DEFINITIONS ────────────────────────────────────────
+profiles:
+
+  # ── Personal / HeadyMe ────────────────────────────────────────────
+  personal-wellbeing:
+    id: personal-wellbeing
+    product: HeadyMe
+    workspace_type: personal
+    description: "Personal workspace — wellbeing, teaching, wealth redistribution"
+    agents:
+      - role: wellbeing-coach
+        tools: [calendar, drive, email, browser]
+        priority: high
+      - role: teaching-mentor
+        tools: [filesystem, browser, terminal]
+        priority: high
+      - role: wealth-redistribution-helper
+        tools: [browser, drive]
+        priority: medium
+      - role: personal-organizer
+        tools: [calendar, email, drive, notion]
+        priority: medium
+    model_policy:
+      preference: HeadyBrain-only
+      allowed: [HeadyBrain]
+      privacy: strict
+      cost_limit_daily: 0.00  # Free with HeadyBrain
+    rag:
+      indices: [personal-docs, personal-notes]
+      isolation: strict
+      shared_access: none
+    memory:
+      type: per-user
+      retention: permanent
+      cross_device: true
+
+  # ── Community / HeadyConnection ───────────────────────────────────
+  community-impact:
+    id: community-impact
+    product: HeadyConnection
+    workspace_type: team
+    description: "Team/community — BD, grants, ethics, shared knowledge"
+    agents:
+      - role: bd-agent
+        tools: [github, slack, notion, browser, email]
+        priority: high
+      - role: grant-writer
+        tools: [drive, browser, notion]
+        priority: high
+      - role: ethics-checker
+        tools: [browser]
+        priority: critical
+      - role: wealth-redistribution-analyst
+        tools: [browser, drive]
+        priority: high
+      - role: donation-planner
+        tools: [calendar, email, drive]
+        priority: medium
+    model_policy:
+      preference: hybrid
+      allowed: [HeadyBrain]
+      privacy: team
+      cost_limit_daily: 20.00
+    rag:
+      indices: [team-knowledge, grants-corpus, social-impact-data]
+      isolation: team-scoped
+      shared_access: team-members
+    memory:
+      type: per-team
+      retention: permanent
+      cross_device: true
+
+  # ── Developer/Ops / HeadySystems ──────────────────────────────────
+  sys-ops:
+    id: sys-ops
+    product: HeadySystems
+    workspace_type: developer
+    description: "Developer/ops — coding, automation, infra management"
+    agents:
+      - role: coding-agent
+        tools: [github, filesystem, terminal, browser]
+        priority: critical
+      - role: os-automation
+        tools: [terminal, filesystem, docker]
+        priority: high
+      - role: infra-manager
+        tools: [docker, github, terminal]
+        priority: high
+      - role: summarizer
+        tools: [filesystem, browser, drive]
+        priority: medium
+      - role: security-auditor
+        tools: [terminal, filesystem, github]
+        priority: high
+    model_policy:
+      preference: quality-first
+      allowed: [HeadyBrain]
+      privacy: normal
+      cost_limit_daily: 50.00
+    rag:
+      indices: [code-repos, docs, infra-logs]
+      isolation: project-scoped
+      shared_access: org-members
+    memory:
+      type: per-project
+      retention: permanent
+      cross_device: true
+
+  # ── Web Platform / HeadyWeb ───────────────────────────────────────
+  web-platform:
+    id: web-platform
+    product: HeadyWeb
+    workspace_type: public
+    description: "Public web — marketing, docs, onboarding, demos"
+    agents:
+      - role: content-writer
+        tools: [browser, drive, notion]
+        priority: high
+      - role: onboarding-guide
+        tools: [browser]
+        priority: high
+      - role: demo-runner
+        tools: [browser, terminal]
+        priority: medium
+    model_policy:
+      preference: cost-aware
+      allowed: [HeadyBrain]
+      privacy: public
+      cost_limit_daily: 10.00
+    rag:
+      indices: [public-docs, marketing-content]
+      isolation: public
+      shared_access: anyone
+    memory:
+      type: per-session
+      retention: session
+      cross_device: false
+
+  # ── Companion / HeadyBuddy ────────────────────────────────────────
+  companion:
+    id: companion
+    product: HeadyBuddy
+    workspace_type: personal
+    description: "Always-on companion — cross-device, local-first, quick actions"
+    agents:
+      - role: quick-assistant
+        tools: [filesystem, terminal, browser, calendar]
+        priority: critical
+      - role: context-keeper
+        tools: [filesystem, drive]
+        priority: high
+    model_policy:
+      preference: local-first
+      allowed: [HeadyBrain]
+      privacy: strict
+      cost_limit_daily: 2.00
+    rag:
+      indices: [personal-docs, active-project]
+      isolation: strict
+      shared_access: none
+    memory:
+      type: per-user
+      retention: permanent
+      cross_device: true
+
+  # ── Production Default ────────────────────────────────────────────
+  production:
+    id: production
+    product: HeadySystems
+    workspace_type: multi-tenant
+    description: "Production default — balanced, multi-tenant aware"
+    agents:
+      - role: general-assistant
+        tools: [browser, filesystem, terminal]
+        priority: high
+    model_policy:
+      preference: quality-first
+      allowed: [HeadyBrain]
+      privacy: per-tenant
+      cost_limit_daily: 50.00
+    rag:
+      indices: [tenant-specific]
+      isolation: tenant-scoped
+      shared_access: tenant-members
+    memory:
+      type: per-tenant
+      retention: permanent
+      cross_device: true
+
+  # ── Team Default ──────────────────────────────────────────────────
+  team:
+    id: team
+    product: HeadySystems
+    workspace_type: team
+    description: "Team staging default"
+    agents:
+      - role: general-assistant
+        tools: [github, slack, filesystem, terminal, browser]
+        priority: high
+    model_policy:
+      preference: hybrid
+      allowed: [HeadyBrain]
+      privacy: team
+      cost_limit_daily: 30.00
+    rag:
+      indices: [team-knowledge]
+      isolation: team-scoped
+      shared_access: team-members
+    memory:
+      type: per-team
+      retention: permanent
+      cross_device: true
+
+# ─── ORCHESTRATOR ROUTING RULES ────────────────────────────────────────
+routing:
+  resolve_order:
+    - from: request.brain_profile_id
+    - from: request.workspace_id
+    - from: request.domain
+    - fallback: production
+
+  domain_to_brain:
+    headyme.com: personal-wellbeing
+    headyconnection.org: community-impact
+    headysystems.com: sys-ops
+    headyweb.com: web-platform
+    buddy.headysystems.com: companion
+
+  workspace_type_to_brain:
+    personal: personal-wellbeing
+    team: community-impact
+    developer: sys-ops
+    public: web-platform
+
+# ─── ARENA MODE ────────────────────────────────────────────────────────
+arena:
+  enabled: true
+  description: "Fan same task to multiple brains, compare and squash-merge results"
+  max_parallel_brains: 3
+  comparison_criteria:
+    - quality
+    - latency
+    - cost
+    - user_preference
+  transparency: true
+  attribution: true

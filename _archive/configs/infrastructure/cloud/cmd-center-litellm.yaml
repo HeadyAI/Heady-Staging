@@ -1,0 +1,28 @@
+model_list:
+  # -----------------------------------------------------------------------
+  # TIER 1: PRIMARY (Your Colab Pro+ Nodes)
+  # Routes to the "Muscle" in the cloud.
+  # -----------------------------------------------------------------------
+  - model_name: "heady-logic-v1"
+    litellm_params:
+      model: "openai/heady-logic-v1"
+      api_base: "https://colab-node-01.headysystems.com/v1" # Tunnel to Colab
+      api_key: "sk-hive-node-01"
+      metadata: { source: "colab-gpu" }
+
+  # -----------------------------------------------------------------------
+  # TIER 2: FAILOVER (External API)
+  # If Colab is dead (timeout/error), traffic instantly routes here.
+  # Uses Groq for speed or TogetherAI for Llama-3 models.
+  # -----------------------------------------------------------------------
+  - model_name: "heady-logic-v1"
+    litellm_params:
+      model: "groq/llama-3-70b-8192" # Fast, cheap, reliable backup
+      api_key: "os.environ/GROQ_API_KEY"
+      metadata: { source: "external-fallback" }
+
+router_settings:
+  routing_strategy: "latency-based-routing"
+  redis_host: "redis"
+  redis_port: 6379
+  timeout: 10 # If Colab doesn't answer in 10s, switch to Groq

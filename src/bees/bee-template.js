@@ -53,7 +53,7 @@ class TaskQueue {
       enqueuedAt: Date.now(),
     };
     this._queue.push(item);
-    // Sort by priority (ascending = concurrent-equal weight first)
+    // Sort by priority (ascending = highest priority first)
     this._queue.sort((a, b) => a.priority - b.priority || a.enqueuedAt - b.enqueuedAt);
     return item.id;
   }

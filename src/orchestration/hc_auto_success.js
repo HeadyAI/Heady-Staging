@@ -107,21 +107,21 @@ const POOL_PRIORITY = { hot: 0, warm: 1, cold: 2 };
 
 // ─── TASK CATALOG (fib(12) = 144 tasks × fib(7) = 13 categories) ────────────
 let extraTasks = [];
-try { extraTasks = require('./auto-flow-200-tasks.json'); } catch (err) { /* structured-logger: emit error */ }
+try { extraTasks = require('./auto-flow-200-tasks.json'); } catch (e) { }
 let nonprofitTasks = [];
-try { nonprofitTasks = require('./nonprofit-tasks.json'); } catch (err) { /* structured-logger: emit error */ }
+try { nonprofitTasks = require('./nonprofit-tasks.json'); } catch (e) { }
 let buddyTasks = [];
-try { buddyTasks = require('./buddy-tasks.json'); } catch (err) { /* structured-logger: emit error */ }
+try { buddyTasks = require('./buddy-tasks.json'); } catch (e) { }
 let long814Tasks = [];
-try { long814Tasks = require('./long814-tasks.json'); } catch (err) { /* structured-logger: emit error */ }
+try { long814Tasks = require('./long814-tasks.json'); } catch (e) { }
 let headyosTasks = [];
-try { headyosTasks = require('./headyos-tasks.json'); } catch (err) { /* structured-logger: emit error */ }
+try { headyosTasks = require('./headyos-tasks.json'); } catch (e) { }
 let orchProtocolTasks = [];
-try { orchProtocolTasks = require('./orchestration-protocol-tasks.json'); } catch (err) { /* structured-logger: emit error */ }
+try { orchProtocolTasks = require('./orchestration-protocol-tasks.json'); } catch (e) { }
 let phase5Tasks = [];
-try { phase5Tasks = require('./phase5-hardening-tasks.json'); } catch (err) { /* structured-logger: emit error */ }
+try { phase5Tasks = require('./phase5-hardening-tasks.json'); } catch (e) { }
 let downloadsTasks = [];
-try { downloadsTasks = require('./downloads-extracted-tasks.json').tasks || []; } catch (err) { /* structured-logger: emit error */ }
+try { downloadsTasks = require('./downloads-extracted-tasks.json').tasks || []; } catch (e) { }
 const TASK_CATALOG = [
     ...extraTasks,
     ...nonprofitTasks,

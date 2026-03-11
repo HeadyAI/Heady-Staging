@@ -1,4 +1,3 @@
-const logger = require('../../shared/logger')('recon');
 // HEADY_BRAND:BEGIN
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
@@ -131,22 +130,22 @@ function generateReport() {
 }
 
 function printReport(report) {
-  logger.info('\n=== Heady System Recon Report ===');
-  logger.info(`Timestamp: ${report.timestamp}`);
-  logger.info(`Node: ${report.system.nodeVersion} | ${report.system.platform}`);
+  console.log('\n=== Heady System Recon Report ===');
+  console.log(`Timestamp: ${report.timestamp}`);
+  console.log(`Node: ${report.system.nodeVersion} | ${report.system.platform}`);
   
   if (report.repository.error) {
-    logger.info(`Git: ${report.repository.error}`);
+    console.log(`Git: ${report.repository.error}`);
   } else {
-    logger.info(`Git: ${report.repository.branch} @ ${report.repository.commit}`);
-    logger.info(`Modified: ${report.repository.modifiedFiles} files`);
+    console.log(`Git: ${report.repository.branch} @ ${report.repository.commit}`);
+    console.log(`Modified: ${report.repository.modifiedFiles} files`);
   }
   
   if (report.package) {
-    logger.info(`Package: ${report.package.name} v${report.package.version}`);
+    console.log(`Package: ${report.package.name} v${report.package.version}`);
   }
   
-  logger.info('================================\n');
+  console.log('================================\n');
   
   return report;
 }

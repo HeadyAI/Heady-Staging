@@ -3,96 +3,24 @@ main = "src/index.ts"
 compatibility_date = "2026-03-08"
 account_id = "8b1fa38f282c691423c6399247d53323"
 
-# Routes MUST be at top level (before any [section]) for wrangler to wire them
+[vars]
+HEADY_ENV = "production"
+WORKER_NAME = "liquid-gateway-worker"
+HEADY_VERSION = "4.0.0"
+BACKEND_ORIGIN = "https://manager.headysystems.com"
+FIREBASE_API_KEY = "AIzaSyBLTu0h9Q09Cr05_3_Zj_3yent5cO3iaHE"
+
+[env.production]
 routes = [
-  # headysystems.com subdomains
   { pattern = "api.headysystems.com/*", zone_name = "headysystems.com" },
   { pattern = "gateway.headysystems.com/*", zone_name = "headysystems.com" },
   { pattern = "app.headysystems.com/*", zone_name = "headysystems.com" },
   { pattern = "admin.headysystems.com/*", zone_name = "headysystems.com" },
   { pattern = "metrics.headysystems.com/*", zone_name = "headysystems.com" },
   { pattern = "ai.headysystems.com/*", zone_name = "headysystems.com" },
-  { pattern = "instant.headysystems.com/*", zone_name = "headysystems.com" },
-  { pattern = "critique.headysystems.com/*", zone_name = "headysystems.com" },
-  { pattern = "pythia.headysystems.com/*", zone_name = "headysystems.com" },
-  { pattern = "vinci.headysystems.com/*", zone_name = "headysystems.com" },
-  { pattern = "montecarlo.headysystems.com/*", zone_name = "headysystems.com" },
-  { pattern = "kinetics.headysystems.com/*", zone_name = "headysystems.com" },
-  { pattern = "maestro.headysystems.com/*", zone_name = "headysystems.com" },
-  { pattern = "builder.headysystems.com/*", zone_name = "headysystems.com" },
-  { pattern = "stories.headysystems.com/*", zone_name = "headysystems.com" },
-  { pattern = "sentinel.headysystems.com/*", zone_name = "headysystems.com" },
-  { pattern = "observer.headysystems.com/*", zone_name = "headysystems.com" },
-  { pattern = "patterns.headysystems.com/*", zone_name = "headysystems.com" },
-  { pattern = "logs.headysystems.com/*", zone_name = "headysystems.com" },
-  { pattern = "traces.headysystems.com/*", zone_name = "headysystems.com" },
-  { pattern = "headysystems.com/*", zone_name = "headysystems.com" },
-  { pattern = "www.headysystems.com/*", zone_name = "headysystems.com" },
-  # Standalone domains
-  { pattern = "1ime1.com/*", zone_name = "1ime1.com" },
-  { pattern = "1imi1.com/*", zone_name = "1imi1.com" },
-  { pattern = "heady-ai.com/*", zone_name = "heady-ai.com" },
-  { pattern = "headyadvisor.com/*", zone_name = "headyadvisor.com" },
-  { pattern = "headyagent.com/*", zone_name = "headyagent.com" },
-  { pattern = "headyaid.com/*", zone_name = "headyaid.com" },
-  { pattern = "headyapi.com/*", zone_name = "headyapi.com" },
-  { pattern = "headyarchive.com/*", zone_name = "headyarchive.com" },
-  { pattern = "headyassist.com/*", zone_name = "headyassist.com" },
-  { pattern = "headyassure.com/*", zone_name = "headyassure.com" },
-  { pattern = "headybare.com/*", zone_name = "headybare.com" },
-  { pattern = "headybet.com/*", zone_name = "headybet.com" },
-  { pattern = "headybio.com/*", zone_name = "headybio.com" },
-  { pattern = "headybot.com/*", zone_name = "headybot.com" },
-  { pattern = "headybuddy.org/*", zone_name = "headybuddy.org" },
-  { pattern = "headycheck.com/*", zone_name = "headycheck.com" },
-  { pattern = "headycloud.com/*", zone_name = "headycloud.com" },
-  { pattern = "headyconnection.com/*", zone_name = "headyconnection.com" },
-  { pattern = "headyconnection.org/*", zone_name = "headyconnection.org" },
-  { pattern = "headycore.com/*", zone_name = "headycore.com" },
-  { pattern = "headycorrections.com/*", zone_name = "headycorrections.com" },
-  { pattern = "headycreator.com/*", zone_name = "headycreator.com" },
-  { pattern = "headycrypt.com/*", zone_name = "headycrypt.com" },
-  { pattern = "headydb.com/*", zone_name = "headydb.com" },
-  { pattern = "headyex.com/*", zone_name = "headyex.com" },
-  { pattern = "headyfed.com/*", zone_name = "headyfed.com" },
-  { pattern = "headyfield.com/*", zone_name = "headyfield.com" },
-  { pattern = "headyfinance.com/*", zone_name = "headyfinance.com" },
-  { pattern = "headygov.com/*", zone_name = "headygov.com" },
-  { pattern = "headyhome.com/*", zone_name = "headyhome.com" },
-  { pattern = "headyio.com/*", zone_name = "headyio.com" },
-  { pattern = "headykey.com/*", zone_name = "headykey.com" },
-  { pattern = "headykiosk.com/*", zone_name = "headykiosk.com" },
-  { pattern = "headylegal.com/*", zone_name = "headylegal.com" },
-  { pattern = "headylibrary.com/*", zone_name = "headylibrary.com" },
-  { pattern = "headymanufacturing.com/*", zone_name = "headymanufacturing.com" },
-  { pattern = "headymcp.com/*", zone_name = "headymcp.com" },
-  { pattern = "headymd.com/*", zone_name = "headymd.com" },
-  { pattern = "headyme.com/*", zone_name = "headyme.com" },
-  { pattern = "headymusic.com/*", zone_name = "headymusic.com" },
-  { pattern = "headymx.com/*", zone_name = "headymx.com" },
-  { pattern = "headyos.com/*", zone_name = "headyos.com" },
-  { pattern = "headyplus.com/*", zone_name = "headyplus.com" },
-  { pattern = "headyrx.com/*", zone_name = "headyrx.com" },
-  { pattern = "headysafe.com/*", zone_name = "headysafe.com" },
-  { pattern = "headysecure.com/*", zone_name = "headysecure.com" },
-  { pattern = "headysense.com/*", zone_name = "headysense.com" },
-  { pattern = "headyship.com/*", zone_name = "headyship.com" },
-  { pattern = "headystate.com/*", zone_name = "headystate.com" },
-  { pattern = "headystore.com/*", zone_name = "headystore.com" },
-  { pattern = "headystudio.com/*", zone_name = "headystudio.com" },
-  { pattern = "headytube.com/*", zone_name = "headytube.com" },
-  { pattern = "headytxt.com/*", zone_name = "headytxt.com" },
-  { pattern = "headyu.com/*", zone_name = "headyu.com" },
-  { pattern = "headyusa.com/*", zone_name = "headyusa.com" },
-  { pattern = "headyvault.com/*", zone_name = "headyvault.com" },
-  { pattern = "headyweb.com/*", zone_name = "headyweb.com" },
-  { pattern = "openmindsplace.com/*", zone_name = "openmindsplace.com" },
-  { pattern = "openmindstop.com/*", zone_name = "openmindstop.com" },
 ]
 
-[vars]
+[env.production.vars]
 HEADY_ENV = "production"
-WORKER_NAME = "liquid-gateway-worker"
-HEADY_VERSION = "4.0.0"
-BACKEND_ORIGIN = "https://headyme-site-bf4q4zywhq-uc.a.run.app"
-FIREBASE_API_KEY = "AIzaSyBLTu0h9Q09Cr05_3_Zj_3yent5cO3iaHE"
+BACKEND_ORIGIN = "https://manager.headysystems.com"
+LOG_LEVEL = "info"

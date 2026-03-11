@@ -9,7 +9,6 @@
  */
 
 'use strict';
-const logger = require('../../shared/logger')(require('path').basename('services/heady-health/probe-orchestrator.js', '.js'));
 
 const http = require('http');
 const https = require('https');
@@ -229,11 +228,11 @@ class ProbeOrchestrator {
      * Run all probe levels for all domains
      */
     async fullSweep() {
-        logger.info('═══ Heady 5-Level Health Probe System ═══\n');
+        console.log('═══ Heady 5-Level Health Probe System ═══\n');
         const allResults = [];
 
         for (const domain of this.domains) {
-            logger.info(`Probing: ${domain}`);
+            console.log(`Probing: ${domain}`);
             const probes = [
                 await this.probePing(domain),
                 await this.probeFunctional(domain),
@@ -244,11 +243,11 @@ class ProbeOrchestrator {
 
             for (const probe of probes) {
                 const icon = probe.status === 'pass' ? '✅' : probe.status === 'degraded' ? '⚠️' : '❌';
-                logger.info(`  L${probe.level} ${probe.name}: ${icon} ${probe.status} (${probe.latency}ms)`);
+                console.log(`  L${probe.level} ${probe.name}: ${icon} ${probe.status} (${probe.latency}ms)`);
             }
 
             allResults.push({ domain, probes });
-            logger.info('');
+            console.log('');
         }
 
         const summary = {
@@ -259,7 +258,7 @@ class ProbeOrchestrator {
             timestamp: new Date().toISOString(),
         };
 
-        logger.info(`Summary: ${summary.healthy} healthy, ${summary.degraded} degraded, ${summary.failing} failing`);
+        console.log(`Summary: ${summary.healthy} healthy, ${summary.degraded} degraded, ${summary.failing} failing`);
         return { results: allResults, summary };
     }
 
@@ -304,12 +303,12 @@ if (require.main === module) {
     if (args.includes('--full-sweep') || args.includes('--dry-run')) {
         orchestrator.fullSweep()
             .then(r => {
-                logger.info('\n✅ Probe sweep complete');
+                console.log('\n✅ Probe sweep complete');
                 process.exit(r.summary.failing > 0 ? 1 : 0);
             })
-            .catch(err => { logger.error(err); process.exit(1); });
+            .catch(err => { console.error(err); process.exit(1); });
     } else {
-        logger.info('Usage: node probe-orchestrator.js --full-sweep | --dry-run');
+        console.log('Usage: node probe-orchestrator.js --full-sweep | --dry-run');
     }
 }
 

@@ -1,5 +1,3 @@
-import pino from 'pino';
-const logger = pino();
 import ws from 'k6/ws';
 import { check } from 'k6';
 import { Trend, Rate, Counter, Gauge } from 'k6/metrics';
@@ -57,7 +55,7 @@ export default function () {
 
     // Set up message handlers
     socket.on('open', () => {
-      logger.info(`WebSocket connected from VU ${__VU}`);
+      console.log(`WebSocket connected from VU ${__VU}`);
     });
 
     socket.on('message', (data) => {
@@ -67,17 +65,17 @@ export default function () {
         messagesReceived.add(1);
       } catch (e) {
         messageErrors.add(1);
-        logger.error(`Failed to parse message: ${e}`);
+        console.error(`Failed to parse message: ${e}`);
       }
     });
 
     socket.on('close', () => {
-      logger.info(`WebSocket closed for VU ${__VU}`);
+      console.log(`WebSocket closed for VU ${__VU}`);
     });
 
     socket.on('error', (e) => {
       connectionErrors.add(1);
-      logger.error(`WebSocket error: ${e}`);
+      console.error(`WebSocket error: ${e}`);
     });
 
     // Simulate user activity
@@ -162,7 +160,7 @@ function handleMessage(socket, message) {
       break;
     case 'error':
       messageErrors.add(1);
-      logger.error(`Server error: ${message.message}`);
+      console.error(`Server error: ${message.message}`);
       break;
     case 'ping':
       // Respond to ping with pong

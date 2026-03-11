@@ -12,11 +12,15 @@ module.exports = function mountSSEStreaming(app) {
     const sseClients = new Set();
 
     app.get("/api/stream/connect", (req, res) => {
+        const origin = req.headers.origin || '';
+        const allowedOrigins = (process.env.CORS_ORIGINS || '').split(',').map(s => s.trim()).filter(Boolean);
+        const corsOrigin = allowedOrigins.includes(origin) ? origin : (allowedOrigins[0] || 'https://headyme.com');
         res.writeHead(200, {
             "Content-Type": "text/event-stream",
             "Cache-Control": "no-cache",
             Connection: "keep-alive",
-            "Access-Control-Allow-Origin": "https://headyme.com",
+            "Access-Control-Allow-Origin": corsOrigin,
+            "Access-Control-Allow-Credentials": "true",
         });
         res.write("data: {\"type\":\"connected\",\"ts\":\"" + new Date().toISOString() + "\"}\n\n");
         sseClients.add(res);

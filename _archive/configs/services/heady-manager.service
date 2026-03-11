@@ -1,0 +1,26 @@
+[Unit]
+Description=Heady Manager — API Gateway & Service Hub
+After=network.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=headyme
+WorkingDirectory=/home/headyme/Heady
+ExecStart=/usr/bin/node heady-manager.js
+Restart=on-failure
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=heady-manager
+Environment=NODE_ENV=production
+Environment=NODE_OPTIONS=--max-old-space-size=6144
+
+# Security hardening
+NoNewPrivileges=true
+ProtectSystem=strict
+ReadWritePaths=/home/headyme/Heady/data
+ProtectHome=read-only
+
+[Install]
+WantedBy=multi-user.target

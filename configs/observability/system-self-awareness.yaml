@@ -33,7 +33,7 @@ selfKnowledge:
     frontend: "React CDN with Sacred Geometry aesthetics"
     scheduler: "HeadySims UCB1 task planner with speed priority"
     patterns: "Continuous pattern recognition engine"
-    deployment: "Render.com Blueprint"
+    deployment: "Cloud Run Managed Service"
 
   strengths:
     - "Multi-agent orchestration and pipeline execution"
@@ -566,7 +566,7 @@ headyVMSwitch:
     - "Run full health check: all /api/health endpoints return 200"
     - "Verify all configs load without error"
     - "Test orchestrator route with each brain profile"
-    - "Confirm edge proxy routes to correct Render origins"
+    - "Confirm edge proxy routes to correct Cloud Run origins"
     - "Run checkpoint protocol and HeadySync"
   post_switch_actions:
     - "Update DNS to point to VM IP"

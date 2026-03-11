@@ -1,0 +1,425 @@
+version: "3.9"
+
+services:
+  postgres:
+    environment:
+      POSTGRES_INITDB_ARGS: -c max_connections=233 -c shared_buffers=256MB
+    volumes:
+      - ./init-db.sql:/docker-entrypoint-initdb.d/init.sql
+      - postgres-data:/var/lib/postgresql/data
+    command: postgres -c log_statement=all -c log_duration=on
+
+  redis:
+    command: redis-server --appendonly yes --loglevel debug
+
+  # Development service configurations with hot reload and debug ports
+  auth:
+    image: ${REGISTRY}/heady-auth:${IMAGE_TAG:-latest}
+    volumes:
+      - ../../../services/auth/src:/app/src
+      - ../../../services/auth/package.json:/app/package.json
+    environment:
+      NODE_ENV: development
+      DEBUG: heady:*
+      ENABLE_PROFILING: "true"
+    ports:
+      - "3310:3310"
+      - "9229:9229"  # Node debugger
+      - "6310:6310"  # Profiler port
+    command: npm run dev
+    stdin_open: true
+    tty: true
+
+  api-gateway:
+    image: ${REGISTRY}/heady-api-gateway:${IMAGE_TAG:-latest}
+    volumes:
+      - ../../../services/api-gateway/src:/app/src
+      - ../../../services/api-gateway/package.json:/app/package.json
+    environment:
+      NODE_ENV: development
+      DEBUG: heady:*
+      ENABLE_PROFILING: "true"
+    ports:
+      - "3311:3311"
+      - "9230:9230"
+      - "6311:6311"
+    command: npm run dev
+    stdin_open: true
+    tty: true
+
+  user-service:
+    image: ${REGISTRY}/heady-user-service:${IMAGE_TAG:-latest}
+    volumes:
+      - ../../../services/user-service/src:/app/src
+      - ../../../services/user-service/package.json:/app/package.json
+    environment:
+      NODE_ENV: development
+      DEBUG: heady:*
+      ENABLE_PROFILING: "true"
+    ports:
+      - "3312:3312"
+      - "9231:9231"
+      - "6312:6312"
+    command: npm run dev
+    stdin_open: true
+    tty: true
+
+  notification-service:
+    image: ${REGISTRY}/heady-notification-service:${IMAGE_TAG:-latest}
+    volumes:
+      - ../../../services/notification-service/src:/app/src
+      - ../../../services/notification-service/package.json:/app/package.json
+    environment:
+      NODE_ENV: development
+      DEBUG: heady:*
+      ENABLE_PROFILING: "true"
+    ports:
+      - "3313:3313"
+      - "9232:9232"
+      - "6313:6313"
+    command: npm run dev
+    stdin_open: true
+    tty: true
+
+  payment-service:
+    image: ${REGISTRY}/heady-payment-service:${IMAGE_TAG:-latest}
+    volumes:
+      - ../../../services/payment-service/src:/app/src
+      - ../../../services/payment-service/package.json:/app/package.json
+    environment:
+      NODE_ENV: development
+      DEBUG: heady:*
+      ENABLE_PROFILING: "true"
+      STRIPE_API_KEY: ${STRIPE_API_KEY:-sk_test_}
+      STRIPE_WEBHOOK_SECRET: ${STRIPE_WEBHOOK_SECRET:-whsec_test_}
+    ports:
+      - "3314:3314"
+      - "9233:9233"
+      - "6314:6314"
+    command: npm run dev
+    stdin_open: true
+    tty: true
+
+  billing-service:
+    image: ${REGISTRY}/heady-billing-service:${IMAGE_TAG:-latest}
+    volumes:
+      - ../../../services/billing-service/src:/app/src
+      - ../../../services/billing-service/package.json:/app/package.json
+    environment:
+      NODE_ENV: development
+      DEBUG: heady:*
+      ENABLE_PROFILING: "true"
+    ports:
+      - "3315:3315"
+      - "9234:9234"
+      - "6315:6315"
+    command: npm run dev
+    stdin_open: true
+    tty: true
+
+  subscription-service:
+    image: ${REGISTRY}/heady-subscription-service:${IMAGE_TAG:-latest}
+    volumes:
+      - ../../../services/subscription-service/src:/app/src
+      - ../../../services/subscription-service/package.json:/app/package.json
+    environment:
+      NODE_ENV: development
+      DEBUG: heady:*
+      ENABLE_PROFILING: "true"
+    ports:
+      - "3316:3316"
+      - "9235:9235"
+      - "6316:6316"
+    command: npm run dev
+    stdin_open: true
+    tty: true
+
+  content-service:
+    image: ${REGISTRY}/heady-content-service:${IMAGE_TAG:-latest}
+    volumes:
+      - ../../../services/content-service/src:/app/src
+      - ../../../services/content-service/package.json:/app/package.json
+    environment:
+      NODE_ENV: development
+      DEBUG: heady:*
+      ENABLE_PROFILING: "true"
+    ports:
+      - "3317:3317"
+      - "9236:9236"
+      - "6317:6317"
+    command: npm run dev
+    stdin_open: true
+    tty: true
+
+  media-service:
+    image: ${REGISTRY}/heady-media-service:${IMAGE_TAG:-latest}
+    volumes:
+      - ../../../services/media-service/src:/app/src
+      - ../../../services/media-service/package.json:/app/package.json
+    environment:
+      NODE_ENV: development
+      DEBUG: heady:*
+      ENABLE_PROFILING: "true"
+    ports:
+      - "3318:3318"
+      - "9237:9237"
+      - "6318:6318"
+    command: npm run dev
+    stdin_open: true
+    tty: true
+
+  storage-service:
+    image: ${REGISTRY}/heady-storage-service:${IMAGE_TAG:-latest}
+    volumes:
+      - ../../../services/storage-service/src:/app/src
+      - ../../../services/storage-service/package.json:/app/package.json
+      - ./local-storage:/mnt/storage
+    environment:
+      NODE_ENV: development
+      DEBUG: heady:*
+      ENABLE_PROFILING: "true"
+    ports:
+      - "3319:3319"
+      - "9238:9238"
+      - "6319:6319"
+    command: npm run dev
+    stdin_open: true
+    tty: true
+
+  search-service:
+    image: ${REGISTRY}/heady-search-service:${IMAGE_TAG:-latest}
+    volumes:
+      - ../../../services/search-service/src:/app/src
+      - ../../../services/search-service/package.json:/app/package.json
+    environment:
+      NODE_ENV: development
+      DEBUG: heady:*
+      ENABLE_PROFILING: "true"
+    ports:
+      - "3320:3320"
+      - "9239:9239"
+      - "6320:6320"
+    command: npm run dev
+    stdin_open: true
+    tty: true
+
+  analytics-service:
+    image: ${REGISTRY}/heady-analytics-service:${IMAGE_TAG:-latest}
+    volumes:
+      - ../../../services/analytics-service/src:/app/src
+      - ../../../services/analytics-service/package.json:/app/package.json
+    environment:
+      NODE_ENV: development
+      DEBUG: heady:*
+      ENABLE_PROFILING: "true"
+    ports:
+      - "3321:3321"
+      - "9240:9240"
+      - "6321:6321"
+    command: npm run dev
+    stdin_open: true
+    tty: true
+
+  recommendation-service:
+    image: ${REGISTRY}/heady-recommendation-service:${IMAGE_TAG:-latest}
+    volumes:
+      - ../../../services/recommendation-service/src:/app/src
+      - ../../../services/recommendation-service/package.json:/app/package.json
+    environment:
+      NODE_ENV: development
+      DEBUG: heady:*
+      ENABLE_PROFILING: "true"
+    ports:
+      - "3322:3322"
+      - "9241:9241"
+      - "6322:6322"
+    command: npm run dev
+    stdin_open: true
+    tty: true
+
+  personalization-service:
+    image: ${REGISTRY}/heady-personalization-service:${IMAGE_TAG:-latest}
+    volumes:
+      - ../../../services/personalization-service/src:/app/src
+      - ../../../services/personalization-service/package.json:/app/package.json
+    environment:
+      NODE_ENV: development
+      DEBUG: heady:*
+      ENABLE_PROFILING: "true"
+    ports:
+      - "3323:3323"
+      - "9242:9242"
+      - "6323:6323"
+    command: npm run dev
+    stdin_open: true
+    tty: true
+
+  social-service:
+    image: ${REGISTRY}/heady-social-service:${IMAGE_TAG:-latest}
+    volumes:
+      - ../../../services/social-service/src:/app/src
+      - ../../../services/social-service/package.json:/app/package.json
+    environment:
+      NODE_ENV: development
+      DEBUG: heady:*
+      ENABLE_PROFILING: "true"
+    ports:
+      - "3324:3324"
+      - "9243:9243"
+      - "6324:6324"
+    command: npm run dev
+    stdin_open: true
+    tty: true
+
+  chat-service:
+    image: ${REGISTRY}/heady-chat-service:${IMAGE_TAG:-latest}
+    volumes:
+      - ../../../services/chat-service/src:/app/src
+      - ../../../services/chat-service/package.json:/app/package.json
+    environment:
+      NODE_ENV: development
+      DEBUG: heady:*
+      ENABLE_PROFILING: "true"
+    ports:
+      - "3325:3325"
+      - "9244:9244"
+      - "6325:6325"
+    command: npm run dev
+    stdin_open: true
+    tty: true
+
+  messaging-service:
+    image: ${REGISTRY}/heady-messaging-service:${IMAGE_TAG:-latest}
+    volumes:
+      - ../../../services/messaging-service/src:/app/src
+      - ../../../services/messaging-service/package.json:/app/package.json
+    environment:
+      NODE_ENV: development
+      DEBUG: heady:*
+      ENABLE_PROFILING: "true"
+    ports:
+      - "3326:3326"
+      - "9245:9245"
+      - "6326:6326"
+    command: npm run dev
+    stdin_open: true
+    tty: true
+
+  feed-service:
+    image: ${REGISTRY}/heady-feed-service:${IMAGE_TAG:-latest}
+    volumes:
+      - ../../../services/feed-service/src:/app/src
+      - ../../../services/feed-service/package.json:/app/package.json
+    environment:
+      NODE_ENV: development
+      DEBUG: heady:*
+      ENABLE_PROFILING: "true"
+    ports:
+      - "3327:3327"
+      - "9246:9246"
+      - "6327:6327"
+    command: npm run dev
+    stdin_open: true
+    tty: true
+
+  collaboration-service:
+    image: ${REGISTRY}/heady-collaboration-service:${IMAGE_TAG:-latest}
+    volumes:
+      - ../../../services/collaboration-service/src:/app/src
+      - ../../../services/collaboration-service/package.json:/app/package.json
+    environment:
+      NODE_ENV: development
+      DEBUG: heady:*
+      ENABLE_PROFILING: "true"
+    ports:
+      - "3328:3328"
+      - "9247:9247"
+      - "6328:6328"
+    command: npm run dev
+    stdin_open: true
+    tty: true
+
+  order-service:
+    image: ${REGISTRY}/heady-order-service:${IMAGE_TAG:-latest}
+    volumes:
+      - ../../../services/order-service/src:/app/src
+      - ../../../services/order-service/package.json:/app/package.json
+    environment:
+      NODE_ENV: development
+      DEBUG: heady:*
+      ENABLE_PROFILING: "true"
+    ports:
+      - "3329:3329"
+      - "9248:9248"
+      - "6329:6329"
+    command: npm run dev
+    stdin_open: true
+    tty: true
+
+  inventory-service:
+    image: ${REGISTRY}/heady-inventory-service:${IMAGE_TAG:-latest}
+    volumes:
+      - ../../../services/inventory-service/src:/app/src
+      - ../../../services/inventory-service/package.json:/app/package.json
+    environment:
+      NODE_ENV: development
+      DEBUG: heady:*
+      ENABLE_PROFILING: "true"
+    ports:
+      - "3330:3330"
+      - "9249:9249"
+      - "6330:6330"
+    command: npm run dev
+    stdin_open: true
+    tty: true
+
+  organization-service:
+    image: ${REGISTRY}/heady-organization-service:${IMAGE_TAG:-latest}
+    volumes:
+      - ../../../services/organization-service/src:/app/src
+      - ../../../services/organization-service/package.json:/app/package.json
+    environment:
+      NODE_ENV: development
+      DEBUG: heady:*
+      ENABLE_PROFILING: "true"
+    ports:
+      - "3334:3334"
+      - "9254:9254"
+      - "6334:6334"
+    command: npm run dev
+    stdin_open: true
+    tty: true
+
+  real-time-service:
+    image: ${REGISTRY}/heady-real-time-service:${IMAGE_TAG:-latest}
+    volumes:
+      - ../../../services/real-time-service/src:/app/src
+      - ../../../services/real-time-service/package.json:/app/package.json
+    environment:
+      NODE_ENV: development
+      DEBUG: heady:*
+      ENABLE_PROFILING: "true"
+    ports:
+      - "3356:3356"
+      - "9265:9265"
+      - "6356:6356"
+    command: npm run dev
+    stdin_open: true
+    tty: true
+
+  ml-pipeline:
+    image: ${REGISTRY}/heady-ml-pipeline:${IMAGE_TAG:-latest}
+    volumes:
+      - ../../../services/ml-pipeline/src:/app/src
+      - ../../../services/ml-pipeline/package.json:/app/package.json
+    environment:
+      NODE_ENV: development
+      DEBUG: heady:*
+      ENABLE_PROFILING: "true"
+    ports:
+      - "3360:3360"
+      - "9269:9269"
+      - "6360:6360"
+    command: npm run dev
+    stdin_open: true
+    tty: true

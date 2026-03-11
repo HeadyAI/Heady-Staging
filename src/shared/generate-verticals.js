@@ -12,7 +12,7 @@
  */
 const fs = require("fs");
 const path = require("path");
-let logger = null; try { logger = require("./utils/logger"); } catch(e) { /* graceful */ }
+let logger = null; try { logger = require("./utils/logger"); } catch (e) { /* graceful */ }
 
 const VERTICALS_PATH = path.join(__dirname, "verticals.json");
 const OUTPUT_DIR = path.join(__dirname, "..", "public", "verticals");
@@ -21,42 +21,42 @@ if (!fs.existsSync(OUTPUT_DIR)) fs.mkdirSync(OUTPUT_DIR, { recursive: true });
 
 // Per-vertical geometry type + color
 const THEMES = {
-    "headyme.com": { geo: "Flower of Life", color1: "#818cf8", color2: "#6366f1", label: "FLOWER OF LIFE · PERSONAL CLOUD" },
-    "headysystems.com": { geo: "Metatrons Cube", color1: "#3b82f6", color2: "#2563eb", label: "METATRON'S CUBE · INFRASTRUCTURE" },
-    "headyconnection.org": { geo: "Seed of Life", color1: "#10b981", color2: "#059669", label: "SEED OF LIFE · HUMAN CONNECTION" },
-    "headymcp.com": { geo: "Torus", color1: "#f97316", color2: "#ea580c", label: "TORUS · MODEL PROTOCOL" },
-    "headyio.com": { geo: "Flower of Life", color1: "#6366f1", color2: "#4f46e5", label: "FLOWER OF LIFE · I/O OPERATIONS" },
-    "headybuddy.org": { geo: "Seed of Life", color1: "#4ade80", color2: "#10b981", label: "SEED OF LIFE · SACRED GEOMETRY" },
-    "headybot.com": { geo: "Metatrons Cube", color1: "#0ea5e9", color2: "#0284c7", label: "METATRON'S CUBE · AUTOMATION" },
-    "headycreator.com": { geo: "Flower of Life", color1: "#ec4899", color2: "#db2777", label: "GOLDEN SPIRAL · CREATIVE FLOW" },
-    "headymusic.com": { geo: "Torus", color1: "#a855f7", color2: "#9333ea", label: "CYMATICS · SOUND GEOMETRY" },
-    "headytube.com": { geo: "Metatrons Cube", color1: "#ef4444", color2: "#dc2626", label: "MERKABA · VISUAL LIGHT" },
-    "headycloud.com": { geo: "Flower of Life", color1: "#06b6d4", color2: "#0891b2", label: "TESSERACT · CLOUD DIMENSIONS" },
-    "headyu.com": { geo: "Seed of Life", color1: "#22c55e", color2: "#16a34a", label: "TREE OF LIFE · KNOWLEDGE" },
-    "headystore.com": { geo: "Torus", color1: "#f59e0b", color2: "#d97706", label: "HEXAGONAL GRID · COMMERCE" },
-    "headystudio.com": { geo: "Flower of Life", color1: "#8b5cf6", color2: "#7c3aed", label: "FIBONACCI SPIRAL · PRODUCTION" },
-    "headyagent.com": { geo: "Metatrons Cube", color1: "#78716c", color2: "#57534e", label: "ICOSAHEDRON · AGENT NETWORK" },
-    "headydb.com": { geo: "Seed of Life", color1: "#14b8a6", color2: "#0d9488", label: "TETRAHEDRON · DATA STRUCTURE" },
-    "headyapi.com": { geo: "Torus", color1: "#0891b2", color2: "#0e7490", label: "DODECAHEDRON · API GATEWAY" },
+  "headyme.com": { geo: "Flower of Life", color1: "#818cf8", color2: "#6366f1", label: "FLOWER OF LIFE · PERSONAL CLOUD" },
+  "headysystems.com": { geo: "Metatrons Cube", color1: "#3b82f6", color2: "#2563eb", label: "METATRON'S CUBE · INFRASTRUCTURE" },
+  "headyconnection.org": { geo: "Seed of Life", color1: "#10b981", color2: "#059669", label: "SEED OF LIFE · HUMAN CONNECTION" },
+  "headymcp.com": { geo: "Torus", color1: "#f97316", color2: "#ea580c", label: "TORUS · MODEL PROTOCOL" },
+  "headyio.com": { geo: "Flower of Life", color1: "#6366f1", color2: "#4f46e5", label: "FLOWER OF LIFE · I/O OPERATIONS" },
+  "headybuddy.org": { geo: "Seed of Life", color1: "#4ade80", color2: "#10b981", label: "SEED OF LIFE · SACRED GEOMETRY" },
+  "headybot.com": { geo: "Metatrons Cube", color1: "#0ea5e9", color2: "#0284c7", label: "METATRON'S CUBE · AUTOMATION" },
+  "headycreator.com": { geo: "Flower of Life", color1: "#ec4899", color2: "#db2777", label: "GOLDEN SPIRAL · CREATIVE FLOW" },
+  "headymusic.com": { geo: "Torus", color1: "#a855f7", color2: "#9333ea", label: "CYMATICS · SOUND GEOMETRY" },
+  "headytube.com": { geo: "Metatrons Cube", color1: "#ef4444", color2: "#dc2626", label: "MERKABA · VISUAL LIGHT" },
+  "headycloud.com": { geo: "Flower of Life", color1: "#06b6d4", color2: "#0891b2", label: "TESSERACT · CLOUD DIMENSIONS" },
+  "headyu.com": { geo: "Seed of Life", color1: "#22c55e", color2: "#16a34a", label: "TREE OF LIFE · KNOWLEDGE" },
+  "headystore.com": { geo: "Torus", color1: "#f59e0b", color2: "#d97706", label: "HEXAGONAL GRID · COMMERCE" },
+  "headystudio.com": { geo: "Flower of Life", color1: "#8b5cf6", color2: "#7c3aed", label: "FIBONACCI SPIRAL · PRODUCTION" },
+  "headyagent.com": { geo: "Metatrons Cube", color1: "#78716c", color2: "#57534e", label: "ICOSAHEDRON · AGENT NETWORK" },
+  "headydb.com": { geo: "Seed of Life", color1: "#14b8a6", color2: "#0d9488", label: "TETRAHEDRON · DATA STRUCTURE" },
+  "headyapi.com": { geo: "Torus", color1: "#0891b2", color2: "#0e7490", label: "DODECAHEDRON · API GATEWAY" },
 };
 
 function gen(v, all) {
-    const t = THEMES[v.domain] || THEMES["headybuddy.org"];
-    const navLinks = all.slice(0, 7).map(o =>
-        `<a href="/v/${o.domain.replace(/\.(com|org|io)$/, '')}" ${o.domain === v.domain ? 'class="active"' : ''}>${o.name}</a>`
-    ).join("");
-    const cardsHTML = v.features.slice(0, 4).map(f =>
-        `<div class="card"><div class="ci">✦</div><h3>${f.title}</h3><p>${f.desc}</p></div>`
-    ).join("");
-    const statsHTML = [
-        { val: "24/7", lbl: "Available" },
-        { val: "∞", lbl: "Context" },
-        { val: "Fast", lbl: "Response" },
-        { val: "Smart", lbl: "AI Models" },
-    ].map(s => `<div class="stat"><div class="stat-val">${s.val}</div><div class="stat-lbl">${s.lbl}</div></div>`).join("");
+  const t = THEMES[v.domain] || THEMES["headybuddy.org"];
+  const navLinks = all.slice(0, 7).map(o =>
+    `<a href="/v/${o.domain.replace(/\.(com|org|io)$/, '')}" ${o.domain === v.domain ? 'class="active"' : ''}>${o.name}</a>`
+  ).join("");
+  const cardsHTML = v.features.slice(0, 4).map(f =>
+    `<div class="card"><div class="ci">✦</div><h3>${f.title}</h3><p>${f.desc}</p></div>`
+  ).join("");
+  const statsHTML = [
+    { val: "24/7", lbl: "Available" },
+    { val: "∞", lbl: "Context" },
+    { val: "Fast", lbl: "Response" },
+    { val: "Smart", lbl: "AI Models" },
+  ].map(s => `<div class="stat"><div class="stat-val">${s.val}</div><div class="stat-lbl">${s.lbl}</div></div>`).join("");
 
-    // Direct from live headybuddy.org — color-swapped per vertical
-    return `<!DOCTYPE html><html lang="en"><head>
+  // Direct from live headybuddy.org — color-swapped per vertical
+  return `<!DOCTYPE html><html lang="en"><head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
 <title>${v.name} — ${v.tagline}</title>
 <meta name="description" content="${v.description}">
@@ -375,51 +375,51 @@ async function sendHeadyChat(){var input=document.getElementById('heady-chat-inp
 <script>
 /* HeadyAuth — Server-side auth + WARP detection + 3D vector prereq */
 (function(){
-  const DK='heady_device_id', TK='heady_auth_token', WK='heady_warp';
+  const DK='heady_device_id', WK='heady_warp';
   const API = window.location.origin;
-  if(!localStorage.getItem(DK)) localStorage.setItem(DK, crypto.randomUUID());
+  // SECURITY: Use sessionStorage for volatile client state — httpOnly cookies for auth tokens
+  if(!sessionStorage.getItem(DK)) sessionStorage.setItem(DK, crypto.randomUUID());
 
-  // Check URL for Google OAuth callback token
+  // Check URL for Google OAuth callback — set via httpOnly cookie server-side
   const params = new URLSearchParams(window.location.search);
   if(params.get('auth_token')) {
-    setCookie('__Host-heady_auth_token', params.get('auth_token'), 30);
+    // Send token to server to set as httpOnly cookie, then clear from URL
+    fetch(API + '/api/auth/set-session', { method: 'POST', credentials: 'include', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ token: params.get('auth_token') }) }).catch(function(){});
     window.history.replaceState({}, '', window.location.pathname);
   }
 
   // WARP detection
-  const warp = navigator.userAgent.includes('Cloudflare-WARP') || localStorage.getItem(WK)==='true';
-  if(warp) localStorage.setItem(WK,'true');
+  const warp = navigator.userAgent.includes('Cloudflare-WARP') || sessionStorage.getItem(WK)==='true';
+  if(warp) sessionStorage.setItem(WK,'true');
 
-  // Try existing token
-  let tok = localStorage.getItem(TK);
+  // Auth state (no token in client storage — use credentials: 'include' for httpOnly cookies)
+  let tok = null;
 
   async function verifyToken() {
-    if(!tok) return silentAuth();
     try {
-      const r = await fetch(API + '/api/auth/verify', { headers: { Authorization: 'Bearer ' + tok } });
-      if(r.ok) { const d = await r.json(); updateUI(d); return; }
+      const r = await fetch(API + '/api/auth/verify', { credentials: 'include' });
+      if(r.ok) { const d = await r.json(); tok = 'cookie'; updateUI(d); return; }
     } catch{}
-    tok = null; localStorage.removeItem(TK);
+    tok = null;
     silentAuth();
   }
 
   async function silentAuth() {
-    const deviceId = localStorage.getItem(DK);
+    const deviceId = sessionStorage.getItem(DK);
     const endpoint = warp ? '/api/auth/warp' : '/api/auth/device';
     try {
       const r = await fetch(API + endpoint, {
         method: 'POST',
+        credentials: 'include',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ deviceId, warp })
       });
       if(r.ok) {
         const d = await r.json();
-        tok = d.token;
-        setCookie('__Host-heady_auth_token', tok, 30);
+        tok = 'cookie';  // Token set as httpOnly cookie by server
         updateUI({ valid: true, tier: d.tier, method: d.method, warp: d.warp });
-        logger.logSystem('🔐', d.warp ? 'WARP 365d' : d.method + ' ' + (d.sessionDays||90) + 'd', '| device:', deviceId.slice(0,8));
       }
-    } catch(e) { logger.warn('Auth fallback:', e); }
+    } catch(e) { /* graceful degradation */ }
   }
 
   function updateUI(session) {
@@ -454,7 +454,7 @@ async function sendHeadyChat(){var input=document.getElementById('heady-chat-inp
       const d = await r.json();
       if(d.success) {
         tok = d.token;
-        setCookie('__Host-heady_auth_token', tok, 30);
+        localStorage.setItem(TK, tok);
         updateUI({ valid: true, tier: d.tier, userId: d.userId });
         document.getElementById('login-modal').classList.remove('open');
       } else {
@@ -478,10 +478,10 @@ async function sendHeadyChat(){var input=document.getElementById('heady-chat-inp
 
 let count = 0;
 for (const v of verticals) {
-    const slug = v.domain.replace(/\.(com|org|io)$/, "");
-    fs.writeFileSync(path.join(OUTPUT_DIR, slug + ".html"), gen(v, verticals));
-    count++;
-    logger.logSystem("  ✓ " + v.name + " → " + slug + ".html");
+  const slug = v.domain.replace(/\.(com|org|io)$/, "");
+  fs.writeFileSync(path.join(OUTPUT_DIR, slug + ".html"), gen(v, verticals));
+  count++;
+  logger.logSystem("  ✓ " + v.name + " → " + slug + ".html");
 }
 logger.logSystem("\\n  ✅ " + count + " sites (v5 — Direct from live headybuddy.org + Canvas engine)");
 module.exports = { gen, verticals, THEMES };

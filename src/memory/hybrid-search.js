@@ -14,7 +14,7 @@
  * Search pipeline:
  *   1. Parallel: BM25 (tsvector GIN) + Dense HNSW + optional SPLADE sparse
  *   2. RRF fusion (k=60, scale-invariant across score domains)
- *   3. Deduplication + optional re-concurrent evaluation
+ *   3. Deduplication + optional re-ranking
  *
  * @example
  * import { HybridSearchEngine } from './hybrid-search.js';
@@ -60,7 +60,7 @@ const [PHI_3W_DENSE, PHI_3W_BM25, PHI_3W_SPARSE] = phiFusionWeights(3);
 const PHI_EF_SEARCH = fib(11);  // 89
 
 /**
- * Phi-scaled binary oversampling factor for two-stage re-concurrent evaluation.
+ * Phi-scaled binary oversampling factor for two-stage re-ranking.
  * fib(7) = 13 — replaces arbitrary 4× oversample.
  * Larger Fibonacci number → more candidates → better recall recovery.
  */
@@ -100,7 +100,7 @@ const DEFAULT_OPTIONS = {
   workspaceId: null,
   sessionId: null,
   tags: null,
-  rerank: false,                // Enable ColBERT-style re-concurrent evaluation (placeholder)
+  rerank: false,                // Enable ColBERT-style re-ranking (placeholder)
   /** @see PHI_RERANK_TOP_K — fib(8) = 21, nearest Fibonacci to old 20 */
   rerankTopK: PHI_RERANK_TOP_K,
 };
@@ -373,7 +373,7 @@ export class HybridSearchEngine extends EventEmitter {
 
     if (opts.useBinaryPrefilter) {
       // Two-stage: binary Hamming pre-filter → float32 re-rank
-      // ~67x faster than full HNSW with ~95%+ recall after re-concurrent evaluation
+      // ~67x faster than full HNSW with ~95%+ recall after re-ranking
       sql = this._buildBinaryRerankSql(dim, opts);
       params = this._buildDenseParams(embeddingStr, opts);
     } else if (opts.useQuantized) {

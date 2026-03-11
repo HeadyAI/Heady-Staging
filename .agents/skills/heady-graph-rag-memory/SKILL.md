@@ -8,7 +8,7 @@ description: >
   Keywords: graph RAG, GraphRAG, LightRAG, knowledge graph, entity extraction, multi-hop reasoning,
   community detection, Louvain, graph traversal, vector memory, Heady memory, NER, relationship graph.
 metadata:
-  author: eric-haywood
+  author: eric-head
   version: '2.0'
 ---
 

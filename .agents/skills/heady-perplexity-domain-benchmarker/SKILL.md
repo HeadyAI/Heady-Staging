@@ -1,263 +1,219 @@
 ---
 name: heady-perplexity-domain-benchmarker
-description: Designs and runs domain-specific AI benchmarks for the Heady platform, measuring model performance on cannabis industry knowledge, product catalog expertise, brand voice adherence, and platform-specific tasks. Use when the user asks to benchmark AI models, test domain knowledge, compare models for a specific use case, or build evaluation datasets. Triggers on phrases like "benchmark models", "which model is best for", "test domain knowledge", "evaluate on our use case", "build eval dataset", "model comparison for cannabis", or "performance benchmark".
-license: MIT
+description: Skill for domain-specific KPI evaluation across Heady verticals. Use when measuring fintech trading accuracy (95%+ target), nonprofit impact metrics for headyconnection.org grants, security scanning accuracy, or any vertical-specific performance benchmarking. Triggers on "domain benchmark", "fintech accuracy", "nonprofit KPI", "vertical performance", "domain-specific eval", or any specialized domain measurement task.
+license: proprietary
 metadata:
-  author: heady-connection
-  version: '1.0'
-  platform: heady
-  category: evaluation
+  author: HeadySystems Inc.
+  version: '2.1.0'
+  domain: evaluation
 ---
 
 # Heady Perplexity Domain Benchmarker
 
 ## When to Use This Skill
 
-Use this skill when the user asks to:
+Use this skill when:
 
-- Benchmark AI models on Heady-specific domain tasks
-- Build evaluation datasets from the Heady product catalog and content
-- Compare model performance across cannabis industry knowledge tasks
-- Test brand voice adherence across different models or prompt variants
-- Measure task-specific performance: product description quality, research accuracy, code correctness
-- Produce model selection recommendations backed by benchmark data
-- Create regression benchmarks to catch quality degradation after model updates
+- Measuring HeadyFinance trading signal accuracy
+- Evaluating HeadyConnection.org grant program impact
+- Benchmarking security scanning detection rates
+- Assessing HeadyEX marketplace agent quality
+- Measuring documentation coverage for HeadyIO
 
-## Domain Benchmark Categories
+## Domain-Specific KPI Targets
 
-### Category 1: Cannabis Industry Knowledge
-Tests factual accuracy on cannabis science, culture, regulations, and terminology.
-
-### Category 2: Product Catalog Expertise
-Tests correct identification of products, artists, techniques, and materials from the Heady catalog.
-
-### Category 3: Brand Voice Fidelity
-Tests alignment with Heady's voice: authentic, knowledgeable, community-centered, compliant.
-
-### Category 4: Platform Task Performance
-Tests practical task execution: content generation, code review, data extraction, research synthesis.
-
-### Category 5: Compliance Awareness
-Tests avoidance of unverified medical claims, age-inappropriate content, and regulatory violations.
+| Domain | Heady Site | Key KPI | Target |
+|--------|-----------|---------|--------|
+| Fintech | headyfinance.com | Trading signal accuracy | ≥ 95% |
+| Nonprofit | headyconnection.org | Grant application success rate | ≥ 70% |
+| Security | headysystems.com | Vulnerability detection rate | ≥ 98% |
+| Agent Marketplace | headyex.com | Agent task completion rate | ≥ 90% |
+| Documentation | headyio.com | Doc coverage (% endpoints) | ≥ 95% |
+| Enterprise | headysystems.com | Uptime SLA | 99.9% |
+| Research | heady-ai.com | Citation accuracy | ≥ 90% |
+| Community | headyconnection.com | Response time to queries | ≤ 2hr |
 
 ## Instructions
 
-### 1. Benchmark Design
+### Step 1 — Fintech Domain Benchmarking
 
-Before building a benchmark:
-1. **Define the target task**: What specific capability needs measurement?
-2. **Select task categories**: Choose 1–5 from the domain categories above.
-3. **Decide evaluation type**:
-   - **Closed-form**: Questions with single correct answers (factual Q&A, classification)
-   - **Open-ended**: Outputs evaluated by rubric or judge model
-   - **Adversarial**: Designed to catch failure modes (trick questions, edge cases)
-4. **Set benchmark size**: 50 items minimum for meaningful statistics; 200+ for production benchmarks.
-5. **Establish baseline**: Run at least 2 models as reference points.
+```javascript
+// Measure trading signal quality for headyfinance.com / trade-wind swarm
+async function benchmarkFintechAccuracy(testSignals) {
+  const results = await Promise.all(
+    testSignals.map(async signal => {
+      const prediction = await fetch('http://heady-brain:8100/process', {
+        method: 'POST',
+        body: JSON.stringify({
+          query: signal.description,
+          domain: 'fintech',
+          context: signal.marketContext,
+        }),
+      }).then(r => r.json());
 
-### 2. Dataset Construction
+      return {
+        signal: signal.id,
+        predicted: prediction.result?.direction,
+        actual:    signal.actualDirection,
+        correct:   prediction.result?.direction === signal.actualDirection,
+        confidence: prediction.cslScore,
+      };
+    })
+  );
 
-**Closed-form question templates:**
+  const accuracy = results.filter(r => r.correct).length / results.length;
+  const highConfidenceAccuracy = results
+    .filter(r => r.confidence >= 0.618) // Only high-CSL-score signals
+    .filter(r => r.correct).length /
+    results.filter(r => r.confidence >= 0.618).length;
 
-```
-# Factual accuracy (cannabis science)
-Q: What is the approximate boiling point of myrcene?
-A: 167°C (332°F)
-Difficulty: medium
-Category: cannabis_science
-
-# Product identification
-Q: Which glass artist is known for the "honeycomb" texture technique and is based in Portland, OR?
-A: Banjo
-Difficulty: hard
-Category: product_knowledge
-
-# Terminology
-Q: What does "worked" mean in heady glass terminology?
-A: Glass that has been manipulated with additional color, shape, or texture applied during the blowing process; opposite of "scientific" or "clear" glass.
-Difficulty: medium
-Category: terminology
-
-# Compliance
-Q: A customer asks if a specific terpene blend can cure their anxiety. How should Heady's AI respond?
-A: [Should acknowledge interest, redirect to general educational info, avoid medical claims, suggest consulting a healthcare professional]
-Evaluation: rubric (not exact match)
-Category: compliance
-```
-
-**JSONL format:**
-```jsonl
-{"id": "can_sci_001", "category": "cannabis_science", "type": "factual", "difficulty": "medium", "question": "What is the approximate boiling point of myrcene?", "answer": "167°C (332°F)", "scoring": "exact_or_close"}
-{"id": "prod_001", "category": "product_knowledge", "type": "identification", "difficulty": "hard", "question": "Which artist is known for the honeycomb texture technique?", "answer": "Banjo", "scoring": "exact"}
+  return {
+    accuracy,
+    highConfidenceAccuracy,
+    target: 0.95,
+    passing: accuracy >= 0.95,
+    totalSignals: testSignals.length,
+  };
+}
 ```
 
-### 3. Benchmark Execution
+### Step 2 — Nonprofit Impact Metrics
 
-```python
-import json
-from dataclasses import dataclass
-from typing import Optional
+```javascript
+// Track grant program outcomes for headyconnection.org
+async function measureNonprofitImpact(period) {
+  const grants = await fetchDrupalContent('grant_program', {
+    'filter[field_period]': period,
+  });
 
-@dataclass
-class BenchmarkResult:
-    item_id: str
-    model: str
-    question: str
-    expected: str
-    actual: str
-    score: float  # 0.0 to 1.0
-    latency_ms: int
-    tokens_used: int
-    error: Optional[str] = None
-
-def run_benchmark(
-    dataset_path: str,
-    models: list[str],
-    max_items: Optional[int] = None
-) -> list[BenchmarkResult]:
-    items = load_jsonl(dataset_path)[:max_items]
-    results = []
+  const metrics = {
+    // Program reach
+    totalApplications: 0,
+    approved:          0,
+    rejected:          0,
+    pending:           0,
     
-    for item in items:
-        for model in models:
-            start = time.time()
-            response = call_model(model, item['question'])
-            latency = int((time.time() - start) * 1000)
-            score = evaluate_response(response, item)
-            
-            results.append(BenchmarkResult(
-                item_id=item['id'],
-                model=model,
-                question=item['question'],
-                expected=item['answer'],
-                actual=response,
-                score=score,
-                latency_ms=latency,
-                tokens_used=count_tokens(response)
-            ))
+    // Impact measurement
+    communitiesServed: new Set(),
+    totalFunding:      0,
+    avgGrantSize:      0,
     
-    return results
+    // Heady platform usage
+    contentIndexed:    0,
+    queriesAnswered:   0,
+    containmentRate:   0,
+  };
+
+  for (const grant of grants) {
+    const a = grant.attributes;
+    metrics.totalApplications++;
+    metrics[a.field_status?.toLowerCase() || 'pending']++;
+    if (a.field_community) metrics.communitiesServed.add(a.field_community);
+    metrics.totalFunding += parseFloat(a.field_amount || '0');
+  }
+
+  metrics.communitiesServed = metrics.communitiesServed.size;
+  metrics.avgGrantSize      = metrics.totalFunding / Math.max(metrics.approved, 1);
+  metrics.successRate       = metrics.approved / Math.max(metrics.totalApplications, 1);
+
+  return { period, metrics, target: { successRate: 0.70 } };
+}
 ```
 
-### 4. Scoring Methods
+### Step 3 — Security Scanning Benchmarks
 
-**Exact match (factual Q&A):**
-```python
-def score_exact(response: str, expected: str) -> float:
-    return 1.0 if normalize(response) == normalize(expected) else 0.0
+```javascript
+// Measure heady-guard and heady-security detection rates
+async function benchmarkSecurityScanning(testVectors) {
+  const categories = {
+    sqli:   { tests: 0, detected: 0 },  // SQL injection
+    xss:    { tests: 0, detected: 0 },  // Cross-site scripting
+    ssrf:   { tests: 0, detected: 0 },  // Server-side request forgery
+    path:   { tests: 0, detected: 0 },  // Path traversal
+    secrets:{ tests: 0, detected: 0 },  // Secret/token leakage
+  };
 
-def score_contains(response: str, expected: str) -> float:
-    return 1.0 if normalize(expected) in normalize(response) else 0.0
-```
+  for (const vector of testVectors) {
+    categories[vector.type].tests++;
+    const result = await fetch('http://heady-guard:8300/scan', {
+      method: 'POST',
+      body: JSON.stringify({ payload: vector.payload }),
+    }).then(r => r.json());
 
-**Semantic similarity:**
-```python
-from sentence_transformers import SentenceTransformer, util
-
-model = SentenceTransformer('all-MiniLM-L6-v2')
-
-def score_semantic(response: str, expected: str, threshold: float = 0.85) -> float:
-    emb_r = model.encode(response)
-    emb_e = model.encode(expected)
-    similarity = float(util.cos_sim(emb_r, emb_e))
-    return similarity
-```
-
-**Rubric scoring (open-ended):**
-```python
-def score_with_rubric(response: str, rubric: dict) -> float:
-    # Use heady-perplexity-eval-orchestrator FACTS rubric
-    judge_prompt = build_judge_prompt(response, rubric)
-    scores = judge_model.evaluate(judge_prompt)
-    return compute_weighted_total(scores, rubric['weights'])
-```
-
-### 5. Analysis and Reporting
-
-**Per-model aggregate metrics:**
-```python
-def analyze_results(results: list[BenchmarkResult]) -> dict:
-    by_model = group_by(results, 'model')
-    return {
-        model: {
-            "accuracy": mean(r.score for r in items),
-            "accuracy_by_category": {
-                cat: mean(r.score for r in items if item_category(r) == cat)
-                for cat in CATEGORIES
-            },
-            "accuracy_by_difficulty": {
-                d: mean(r.score for r in items if item_difficulty(r) == d)
-                for d in ['easy', 'medium', 'hard']
-            },
-            "avg_latency_ms": mean(r.latency_ms for r in items),
-            "p95_latency_ms": percentile([r.latency_ms for r in items], 95),
-            "avg_tokens": mean(r.tokens_used for r in items),
-            "failure_rate": sum(1 for r in items if r.error) / len(items)
-        }
-        for model, items in by_model.items()
+    if (result.blocked || result.threat) {
+      categories[vector.type].detected++;
     }
+  }
+
+  const overall = Object.values(categories).reduce(
+    (acc, c) => ({
+      tests:    acc.tests    + c.tests,
+      detected: acc.detected + c.detected,
+    }), { tests: 0, detected: 0 }
+  );
+
+  return {
+    overall: {
+      detectionRate: overall.detected / overall.tests,
+      target:        0.98,
+      passing:       overall.detected / overall.tests >= 0.98,
+    },
+    byCategory: Object.fromEntries(
+      Object.entries(categories).map(([k, v]) => [k, {
+        detectionRate: v.detected / Math.max(v.tests, 1),
+        tests: v.tests,
+        detected: v.detected,
+      }])
+    ),
+  };
+}
 ```
 
-### 6. Benchmark Report Format
+### Step 4 — Cross-Domain KPI Dashboard
 
-```
-## Heady Domain Benchmark Report
-Date: {date}
-Dataset: {dataset_name} ({N} items)
-Models Evaluated: {model list}
+Output format for admin.headysystems.com:
 
-### Overall Rankings
-| Rank | Model | Accuracy | Avg Latency | Cost/1k |
-|---|---|---|---|---|
-| 1 | perplexity-sonar-pro | 87.4% | 1240ms | $0.003 |
-| 2 | gpt-4o | 84.1% | 890ms | $0.005 |
-| 3 | claude-3-5-sonnet | 82.7% | 1050ms | $0.004 |
-
-### By Category
-| Category | [Model A] | [Model B] | [Model C] | Winner |
-|---|---|---|---|---|
-| Cannabis Science | 91% | 88% | 85% | A |
-| Product Knowledge | 79% | 76% | 73% | A |
-| Brand Voice | 88% | 82% | 90% | C |
-| Compliance | 96% | 94% | 92% | A |
-| Task Performance | 83% | 85% | 81% | B |
-
-### By Difficulty
-| Difficulty | [Model A] | [Model B] |
-|---|---|---|
-| Easy | 98% | 97% |
-| Medium | 89% | 86% |
-| Hard | 71% | 65% |
-
-### Failure Analysis
-**Most common failure types for [Model]:**
-1. [Category] — [N failures] — Pattern: [description]
-
-### Recommendation
-For Heady's primary use cases, [Model A] offers the best balance of domain accuracy 
-and compliance safety, despite [Model B]'s lower latency advantage on easy tasks.
-
-**Recommended**: [Model A] for production use.
-**Use [Model B] for**: [specific task where it wins].
-
-### Items for Human Review (failed by all models)
-[List of IDs where all models scored < 0.5 — may indicate dataset errors or 
-genuinely hard domain knowledge gaps]
+```json
+{
+  "period": "2026-03",
+  "domains": {
+    "fintech": {
+      "tradingAccuracy": 0.962,
+      "target": 0.95,
+      "passing": true
+    },
+    "nonprofit": {
+      "grantSuccessRate": 0.73,
+      "target": 0.70,
+      "communitiesServed": 847,
+      "passing": true
+    },
+    "security": {
+      "detectionRate": 0.991,
+      "target": 0.98,
+      "passing": true
+    },
+    "marketplace": {
+      "agentCompletionRate": 0.923,
+      "target": 0.90,
+      "passing": true
+    }
+  },
+  "overallHealth": "PASSING",
+  "generatedAt": "2026-03-09T..."
+}
 ```
 
-### 7. Maintaining the Benchmark
+### Step 5 — Schedule and Alerting
 
-- **Quarterly refresh**: Add 20–30 new items from recent product catalog, news, and user queries.
-- **Adversarial expansion**: After each model update, add items targeting observed failure modes.
-- **Contamination check**: Verify benchmark questions haven't appeared in model training data (check for verbatim matches).
-- **Human validation**: Re-score 10% of items by human domain expert per quarter; update ground truth as needed.
-- **Version control**: Store dataset versions in Git; tag each benchmark run with dataset version + model versions.
+- Run benchmarks every fib(10) hours = 55 hours
+- Alert to heady-governance if any domain falls below target
+- Store results in Firestore `/benchmarks/{domain}/{period}`
+- Display at admin.headysystems.com/benchmarks
 
-## Examples
+## References
 
-**Input:** "Which model handles cannabis product knowledge better — Perplexity Sonar or GPT-4o?"
-
-**Output:** 50-item product knowledge benchmark run, side-by-side accuracy report by difficulty tier, failure analysis, and cost-per-correct-answer comparison.
-
-**Input:** "Build us a benchmark dataset for testing brand voice compliance."
-
-**Output:** 100-item JSONL dataset with brand voice rubric, mix of on-brand and off-brand examples, scoring rubric definitions, and baseline results against 2 models.
+- [Google SEO Starter Guide](https://developers.google.com/search/docs/fundamentals/seo-starter-guide) — for documentation coverage measurement
+- [WCAG 2.1](https://www.w3.org/TR/WCAG21/) — accessibility benchmark
+- Heady eval service: `heady-eval` port 8401
+- Domain benchmarks stored in Firestore under `/benchmarks/`

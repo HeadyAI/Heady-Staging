@@ -22,7 +22,6 @@
  */
 
 'use strict';
-const logger = require('../../shared/logger')('health-monitor');
 
 const { PHI_TIMING } = require('../shared/phi-math');
 const EventEmitter = require('events');
@@ -246,7 +245,7 @@ class HealthMonitor extends EventEmitter {
     // Trigger self-healing if needed
     if (state !== STATE.HEALTHY && !this._healingLock) {
       this._triggerHealing(result).catch(err => {
-        logger.error('[HealthMonitor] Self-healing error:', err.message);
+        console.error('[HealthMonitor] Self-healing error:', err.message);
       });
     }
 
@@ -592,7 +591,7 @@ class HealthMonitor extends EventEmitter {
 
       // DB healing: release idle connections
       if (result.checks.database.score < 50 && this._pgPool) {
-        logger.warn('[HealthMonitor] DB degraded — releasing idle pool connections');
+        console.warn('[HealthMonitor] DB degraded — releasing idle pool connections');
         // Force idle connections to be recycled
         this._pgPool._clients
           .filter(c => c._idle)
@@ -602,7 +601,7 @@ class HealthMonitor extends EventEmitter {
 
       // Redis healing: reconnect if disconnected
       if (result.checks.redis.score < 30 && this._redisClient) {
-        logger.warn('[HealthMonitor] Redis degraded — attempting reconnect');
+        console.warn('[HealthMonitor] Redis degraded — attempting reconnect');
         await this._redisClient.connect().catch(() => {});
         actions.push('redis-reconnect');
       }
@@ -619,7 +618,7 @@ class HealthMonitor extends EventEmitter {
       this.emit('healing', { actions, result });
 
       if (actions.length > 0) {
-        logger.info('[HealthMonitor] Self-healing actions applied:', actions);
+        console.log('[HealthMonitor] Self-healing actions applied:', actions);
         await this._sendAlert({
           level:   result.status,
           message: `Self-healing triggered. Score: ${result.score}. Actions: ${actions.join(', ')}`,
@@ -660,7 +659,7 @@ class HealthMonitor extends EventEmitter {
               { title: 'Timestamp', value: payload.timestamp, short: true },
             ],
           }],
-        }).catch(err => logger.error('[HealthMonitor] Slack alert failed:', err.message))
+        }).catch(err => console.error('[HealthMonitor] Slack alert failed:', err.message))
       );
     }
 
@@ -668,7 +667,7 @@ class HealthMonitor extends EventEmitter {
     if (this.config.alerts.webhookUrl && axios) {
       tasks.push(
         axios.post(this.config.alerts.webhookUrl, payload)
-          .catch(err => logger.error('[HealthMonitor] Webhook alert failed:', err.message))
+          .catch(err => console.error('[HealthMonitor] Webhook alert failed:', err.message))
       );
     }
 
@@ -684,7 +683,7 @@ class HealthMonitor extends EventEmitter {
       try {
         await this.check();
       } catch (err) {
-        logger.error('[HealthMonitor] Background check error:', err.message);
+        console.error('[HealthMonitor] Background check error:', err.message);
       }
     }, this.config.checkInterval);
 

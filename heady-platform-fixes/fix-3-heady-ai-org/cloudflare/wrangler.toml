@@ -1,0 +1,16 @@
+# Heady-AI.org Worker
+# Fixes DNS failure / no zone by providing Worker-based origin
+# PREREQUISITE: Run dns/setup-zone.sh first to create the Cloudflare zone
+
+name = "heady-ai-org-worker"
+main = "worker.js"
+compatibility_date = "2024-12-01"
+
+routes = [
+  { pattern = "heady-ai.com/*", zone_name = "heady-ai.com" },
+  { pattern = "*.heady-ai.com/*", zone_name = "heady-ai.com" },
+]
+
+[vars]
+HEADY_SERVICE = "heady-ai-org"
+HEADY_VERSION = "2.0.0"

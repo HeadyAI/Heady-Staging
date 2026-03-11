@@ -1,5 +1,5 @@
 {
-  "name": "@heady-ai/heady-web-service",
+  "name": "@heady/heady-web-shell",
   "version": "3.1.0",
   "description": "HeadyWeb Universal Shell — Module Federation host and micro-frontend portal for HeadySystems Inc.",
   "private": true,
@@ -39,8 +39,12 @@
   "turbo": {
     "pipeline": {
       "build": {
-        "dependsOn": ["^build"],
-        "outputs": ["dist/**"]
+        "dependsOn": [
+          "^build"
+        ],
+        "outputs": [
+          "dist/**"
+        ]
       }
     }
   }

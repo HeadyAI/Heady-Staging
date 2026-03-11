@@ -58,21 +58,21 @@ const {
  */
 const TIMEOUTS = {
   /** PHI^1 × 1000 ≈ 1618 ms — fast provider quick-task cutoff */
-  FAST: Math.round(Math.pow(PHI, 1) * 1000),   // 1618
+  FAST:       Math.round(Math.pow(PHI, 1) * 1000),   // 1618
   /** PHI^2 × 1000 ≈ 2618 ms — standard generation timeout */
-  STANDARD: Math.round(Math.pow(PHI, 2) * 1000),   // 2618
+  STANDARD:   Math.round(Math.pow(PHI, 2) * 1000),   // 2618
   /** PHI^3 × 1000 ≈ 4236 ms — extended for mid-complexity tasks */
-  EXTENDED: Math.round(Math.pow(PHI, 3) * 1000),   // 4236
+  EXTENDED:   Math.round(Math.pow(PHI, 3) * 1000),   // 4236
   /** PHI^4 × 1000 ≈ 6854 ms — deep reasoning / architecture */
-  DEEP: Math.round(Math.pow(PHI, 4) * 1000),   // 6854
+  DEEP:       Math.round(Math.pow(PHI, 4) * 1000),   // 6854
   /** PHI^5 × 1000 ≈ 11090 ms — research + large-context generation */
-  RESEARCH: Math.round(Math.pow(PHI, 5) * 1000),   // 11090
+  RESEARCH:   Math.round(Math.pow(PHI, 5) * 1000),   // 11090
   /** PHI^6 × 1000 ≈ 17944 ms — embedding batch timeout */
-  EMBED: Math.round(Math.pow(PHI, 6) * 1000),   // 17944
+  EMBED:      Math.round(Math.pow(PHI, 6) * 1000),   // 17944
   /** PHI^7 × 1000 ≈ phiMath.PHI_TIMING.CYCLE ms — long creative / security audit */
-  LONG: Math.round(Math.pow(PHI, 7) * 1000),   // phiMath.PHI_TIMING.CYCLE
+  LONG:       Math.round(Math.pow(PHI, 7) * 1000),   // phiMath.PHI_TIMING.CYCLE
   /** PHI^8 × 1000 ≈ 46979 ms — architecture / deep creative */
-  MAX: Math.round(Math.pow(PHI, 8) * 1000),   // 46979
+  MAX:        Math.round(Math.pow(PHI, 8) * 1000),   // 46979
 };
 
 /** Circuit-breaker failure threshold = fib(5) = 5 failures */
@@ -102,12 +102,12 @@ const LATENCY_CEIL_MS = TIMEOUTS.RESEARCH;   // 11090 ms
  * @enum {string}
  */
 const PROVIDERS = {
-  ANTHROPIC: 'anthropic',
-  OPENAI: 'openai',
-  GOOGLE: 'google',
-  GROQ: 'groq',
-  PERPLEXITY: 'perplexity',
-  LOCAL: 'local',
+  ANTHROPIC:   'anthropic',
+  OPENAI:      'openai',
+  GOOGLE:      'google',
+  GROQ:        'groq',
+  PERPLEXITY:  'perplexity',
+  LOCAL:       'local',
 };
 
 /**
@@ -115,15 +115,15 @@ const PROVIDERS = {
  * @enum {string}
  */
 const TASK_TYPES = {
-  CODE_GENERATION: 'code_generation',
-  CODE_REVIEW: 'code_review',
-  ARCHITECTURE: 'architecture',
-  RESEARCH: 'research',
-  QUICK_TASKS: 'quick_tasks',
-  CREATIVE: 'creative',
-  SECURITY_AUDIT: 'security_audit',
-  DOCUMENTATION: 'documentation',
-  EMBEDDINGS: 'embeddings',
+  CODE_GENERATION:  'code_generation',
+  CODE_REVIEW:      'code_review',
+  ARCHITECTURE:     'architecture',
+  RESEARCH:         'research',
+  QUICK_TASKS:      'quick_tasks',
+  CREATIVE:         'creative',
+  SECURITY_AUDIT:   'security_audit',
+  DOCUMENTATION:    'documentation',
+  EMBEDDINGS:       'embeddings',
 };
 
 /**
@@ -143,63 +143,63 @@ const TASK_TYPES = {
  */
 const PROVIDER_CATALOGUE = {
   [PROVIDERS.ANTHROPIC]: {
-    id: PROVIDERS.ANTHROPIC,
-    name: 'Anthropic Claude',
-    defaultModel: 'claude-3-5-sonnet-20241022',
-    fastModel: 'claude-3-haiku-20240307',
-    embedModel: null,
+    id:             PROVIDERS.ANTHROPIC,
+    name:           'Anthropic Claude',
+    defaultModel:   'claude-3-5-sonnet-20241022',
+    fastModel:      'claude-3-haiku-20240307',
+    embedModel:     null,
     costPerKTokens: 0.015,
-    timeout: TIMEOUTS.DEEP,
+    timeout:        TIMEOUTS.DEEP,
     dailyBudgetUsd: 50,
   },
   [PROVIDERS.OPENAI]: {
-    id: PROVIDERS.OPENAI,
-    name: 'OpenAI GPT-4o',
-    defaultModel: 'gpt-4o',
-    fastModel: 'gpt-4o-mini',
-    embedModel: 'text-embedding-3-small',
+    id:             PROVIDERS.OPENAI,
+    name:           'OpenAI GPT-4o',
+    defaultModel:   'gpt-4o',
+    fastModel:      'gpt-4o-mini',
+    embedModel:     'text-embedding-3-small',
     costPerKTokens: 0.010,
-    timeout: TIMEOUTS.DEEP,
+    timeout:        TIMEOUTS.DEEP,
     dailyBudgetUsd: 50,
   },
   [PROVIDERS.GOOGLE]: {
-    id: PROVIDERS.GOOGLE,
-    name: 'Google Gemini',
-    defaultModel: 'gemini-2.0-flash',
-    fastModel: 'gemini-2.0-flash',
-    embedModel: 'text-embedding-004',
+    id:             PROVIDERS.GOOGLE,
+    name:           'Google Gemini',
+    defaultModel:   'gemini-2.0-flash',
+    fastModel:      'gemini-2.0-flash',
+    embedModel:     'text-embedding-004',
     costPerKTokens: 0.007,
-    timeout: TIMEOUTS.EXTENDED,
+    timeout:        TIMEOUTS.EXTENDED,
     dailyBudgetUsd: 30,
   },
   [PROVIDERS.GROQ]: {
-    id: PROVIDERS.GROQ,
-    name: 'Groq Llama',
-    defaultModel: 'llama-3.1-70b-versatile',
-    fastModel: 'llama-3.1-8b-instant',
-    embedModel: null,
+    id:             PROVIDERS.GROQ,
+    name:           'Groq Llama',
+    defaultModel:   'llama-3.1-70b-versatile',
+    fastModel:      'llama-3.1-8b-instant',
+    embedModel:     null,
     costPerKTokens: 0.001,
-    timeout: TIMEOUTS.FAST,
+    timeout:        TIMEOUTS.FAST,
     dailyBudgetUsd: 20,
   },
   [PROVIDERS.PERPLEXITY]: {
-    id: PROVIDERS.PERPLEXITY,
-    name: 'Perplexity Sonar',
-    defaultModel: 'sonar-pro',
-    fastModel: 'sonar',
-    embedModel: null,
+    id:             PROVIDERS.PERPLEXITY,
+    name:           'Perplexity Sonar',
+    defaultModel:   'sonar-pro',
+    fastModel:      'sonar',
+    embedModel:     null,
     costPerKTokens: 0.008,
-    timeout: TIMEOUTS.RESEARCH,
+    timeout:        TIMEOUTS.RESEARCH,
     dailyBudgetUsd: 25,
   },
   [PROVIDERS.LOCAL]: {
-    id: PROVIDERS.LOCAL,
-    name: 'Local Ollama',
-    defaultModel: 'llama3.1',
-    fastModel: 'llama3.1',
-    embedModel: 'nomic-embed-text',
+    id:             PROVIDERS.LOCAL,
+    name:           'Local Ollama',
+    defaultModel:   'llama3.1',
+    fastModel:      'llama3.1',
+    embedModel:     'nomic-embed-text',
     costPerKTokens: 0.0,
-    timeout: TIMEOUTS.LONG,
+    timeout:        TIMEOUTS.LONG,
     dailyBudgetUsd: Infinity,
   },
 };
@@ -223,66 +223,66 @@ const PROVIDER_CATALOGUE = {
  */
 const ROUTING_MATRIX = {
   [TASK_TYPES.CODE_GENERATION]: {
-    primary: PROVIDERS.ANTHROPIC,
-    fallback1: PROVIDERS.OPENAI,
-    fallback2: PROVIDERS.GROQ,
-    timeout: TIMEOUTS.DEEP,
+    primary:           PROVIDERS.ANTHROPIC,
+    fallback1:         PROVIDERS.OPENAI,
+    fallback2:         PROVIDERS.GROQ,
+    timeout:           TIMEOUTS.DEEP,
     useFastOnFallback: false,
   },
   [TASK_TYPES.CODE_REVIEW]: {
-    primary: PROVIDERS.ANTHROPIC,
-    fallback1: PROVIDERS.OPENAI,
-    fallback2: PROVIDERS.GOOGLE,
-    timeout: TIMEOUTS.DEEP,
+    primary:           PROVIDERS.ANTHROPIC,
+    fallback1:         PROVIDERS.OPENAI,
+    fallback2:         PROVIDERS.GOOGLE,
+    timeout:           TIMEOUTS.DEEP,
     useFastOnFallback: false,
   },
   [TASK_TYPES.ARCHITECTURE]: {
-    primary: PROVIDERS.ANTHROPIC,   // claude-3-opus equivalent path
-    fallback1: PROVIDERS.OPENAI,
-    fallback2: PROVIDERS.ANTHROPIC,   // retry with sonnet on fb2
-    timeout: TIMEOUTS.MAX,
+    primary:           PROVIDERS.ANTHROPIC,   // claude-3-opus equivalent path
+    fallback1:         PROVIDERS.OPENAI,
+    fallback2:         PROVIDERS.ANTHROPIC,   // retry with sonnet on fb2
+    timeout:           TIMEOUTS.MAX,
     useFastOnFallback: false,
   },
   [TASK_TYPES.RESEARCH]: {
-    primary: PROVIDERS.PERPLEXITY,
-    fallback1: PROVIDERS.ANTHROPIC,
-    fallback2: PROVIDERS.OPENAI,
-    timeout: TIMEOUTS.RESEARCH,
+    primary:           PROVIDERS.PERPLEXITY,
+    fallback1:         PROVIDERS.ANTHROPIC,
+    fallback2:         PROVIDERS.OPENAI,
+    timeout:           TIMEOUTS.RESEARCH,
     useFastOnFallback: false,
   },
   [TASK_TYPES.QUICK_TASKS]: {
-    primary: PROVIDERS.GROQ,
-    fallback1: PROVIDERS.OPENAI,
-    fallback2: PROVIDERS.GOOGLE,
-    timeout: TIMEOUTS.FAST,
+    primary:           PROVIDERS.GROQ,
+    fallback1:         PROVIDERS.OPENAI,
+    fallback2:         PROVIDERS.GOOGLE,
+    timeout:           TIMEOUTS.FAST,
     useFastOnFallback: true,
   },
   [TASK_TYPES.CREATIVE]: {
-    primary: PROVIDERS.ANTHROPIC,
-    fallback1: PROVIDERS.OPENAI,
-    fallback2: PROVIDERS.GOOGLE,
-    timeout: TIMEOUTS.LONG,
+    primary:           PROVIDERS.ANTHROPIC,
+    fallback1:         PROVIDERS.OPENAI,
+    fallback2:         PROVIDERS.GOOGLE,
+    timeout:           TIMEOUTS.LONG,
     useFastOnFallback: false,
   },
   [TASK_TYPES.SECURITY_AUDIT]: {
-    primary: PROVIDERS.ANTHROPIC,
-    fallback1: PROVIDERS.OPENAI,
-    fallback2: PROVIDERS.ANTHROPIC,   // retry opus-class on fb2
-    timeout: TIMEOUTS.MAX,
+    primary:           PROVIDERS.ANTHROPIC,
+    fallback1:         PROVIDERS.OPENAI,
+    fallback2:         PROVIDERS.ANTHROPIC,   // retry opus-class on fb2
+    timeout:           TIMEOUTS.MAX,
     useFastOnFallback: false,
   },
   [TASK_TYPES.DOCUMENTATION]: {
-    primary: PROVIDERS.OPENAI,
-    fallback1: PROVIDERS.ANTHROPIC,
-    fallback2: PROVIDERS.GOOGLE,
-    timeout: TIMEOUTS.EXTENDED,
+    primary:           PROVIDERS.OPENAI,
+    fallback1:         PROVIDERS.ANTHROPIC,
+    fallback2:         PROVIDERS.GOOGLE,
+    timeout:           TIMEOUTS.EXTENDED,
     useFastOnFallback: false,
   },
   [TASK_TYPES.EMBEDDINGS]: {
-    primary: PROVIDERS.OPENAI,
-    fallback1: PROVIDERS.GOOGLE,
-    fallback2: PROVIDERS.LOCAL,
-    timeout: TIMEOUTS.EMBED,
+    primary:           PROVIDERS.OPENAI,
+    fallback1:         PROVIDERS.GOOGLE,
+    fallback2:         PROVIDERS.LOCAL,
+    timeout:           TIMEOUTS.EMBED,
     useFastOnFallback: false,
   },
 };
@@ -301,8 +301,8 @@ class LRUCache {
    * @param {number} [capacity=CACHE_CAPACITY] - Max number of entries.
    */
   constructor(capacity = CACHE_CAPACITY) {
-    this._cap = capacity;
-    this._map = new Map();
+    this._cap  = capacity;
+    this._map  = new Map();
     // Sentinel head / tail nodes
     this._head = { key: null, value: null, prev: null, next: null };
     this._tail = { key: null, value: null, prev: null, next: null };
@@ -382,21 +382,21 @@ class CircuitBreaker {
    * @param {string} providerId - Provider this breaker guards.
    */
   constructor(providerId) {
-    this.providerId = providerId;
-    this.state = 'CLOSED';
-    this.failureCount = 0;
-    this.successCount = 0;
-    this.lastFailureAt = null;
+    this.providerId      = providerId;
+    this.state           = 'CLOSED';
+    this.failureCount    = 0;
+    this.successCount    = 0;
+    this.lastFailureAt   = null;
     this.recoveryAttempt = 0;
-    this._nextProbeAt = null;
+    this._nextProbeAt    = null;
   }
 
   /**
    * Record a successful call — resets counts and closes the circuit.
    */
   onSuccess() {
-    this.failureCount = 0;
-    this.successCount += 1;
+    this.failureCount    = 0;
+    this.successCount   += 1;
     this.recoveryAttempt = 0;
     if (this.state !== 'CLOSED') {
       this.state = 'CLOSED';
@@ -407,9 +407,9 @@ class CircuitBreaker {
    * Record a failed call.  Opens the circuit after fib(5) consecutive failures.
    */
   onFailure() {
-    this.failureCount += 1;
-    this.lastFailureAt = Date.now();
-    this.successCount = 0;
+    this.failureCount  += 1;
+    this.lastFailureAt  = Date.now();
+    this.successCount   = 0;
     if (this.failureCount >= CB_FAILURE_THRESHOLD && this.state === 'CLOSED') {
       this._open();
     } else if (this.state === 'HALF') {
@@ -424,7 +424,7 @@ class CircuitBreaker {
    */
   allowRequest() {
     if (this.state === 'CLOSED') return true;
-    if (this.state === 'HALF') return true; // one probe in-flight
+    if (this.state === 'HALF')   return true; // one probe in-flight
     // OPEN — check if phi-backoff window has elapsed
     if (Date.now() >= this._nextProbeAt) {
       this.state = 'HALF';
@@ -435,11 +435,11 @@ class CircuitBreaker {
 
   /** @private */
   _open() {
-    this.state = 'OPEN';
-    this.failureCount = 0;
+    this.state         = 'OPEN';
+    this.failureCount  = 0;
     // Schedule next probe using phi-backoff
-    const delay = phiBackoff(this.recoveryAttempt, 1000, 60000);
-    this._nextProbeAt = Date.now() + delay;
+    const delay        = phiBackoff(this.recoveryAttempt, 1000, 60000);
+    this._nextProbeAt  = Date.now() + delay;
     this.recoveryAttempt += 1;
   }
 
@@ -449,10 +449,10 @@ class CircuitBreaker {
    */
   toJSON() {
     return {
-      state: this.state,
-      failureCount: this.failureCount,
+      state:           this.state,
+      failureCount:    this.failureCount,
       recoveryAttempt: this.recoveryAttempt,
-      nextProbeAt: this._nextProbeAt,
+      nextProbeAt:     this._nextProbeAt,
     };
   }
 }
@@ -475,13 +475,13 @@ class ProviderHealthTracker {
    * @param {number} costPerKTokens - Provider cost tier for relative scoring.
    */
   constructor(providerId, costPerKTokens) {
-    this.providerId = providerId;
-    this.costPerKTokens = costPerKTokens;
+    this.providerId       = providerId;
+    this.costPerKTokens   = costPerKTokens;
     /** @type {Array<{success: boolean, latencyMs: number, ts: number}>} */
-    this._window = [];
-    this._totalCalls = 0;
-    this._totalSuccess = 0;
-    this._totalLatencyMs = 0;
+    this._window          = [];
+    this._totalCalls      = 0;
+    this._totalSuccess    = 0;
+    this._totalLatencyMs  = 0;
   }
 
   /**
@@ -495,7 +495,7 @@ class ProviderHealthTracker {
     if (this._window.length > HEALTH_WINDOW) {
       this._window.shift();
     }
-    this._totalCalls += 1;
+    this._totalCalls   += 1;
     this._totalSuccess += success ? 1 : 0;
     this._totalLatencyMs += latencyMs;
   }
@@ -513,15 +513,15 @@ class ProviderHealthTracker {
   getScore() {
     if (this._window.length === 0) return PSI; // ≈ 0.618 — neutral seed
 
-    const successes = this._window.filter(e => e.success).length;
-    const successRate = successes / this._window.length;
+    const successes    = this._window.filter(e => e.success).length;
+    const successRate  = successes / this._window.length;
 
-    const avgLatency = this._window.reduce((s, e) => s + e.latencyMs, 0) / this._window.length;
+    const avgLatency   = this._window.reduce((s, e) => s + e.latencyMs, 0) / this._window.length;
     const latencyScore = 1 - Math.min(1, avgLatency / LATENCY_CEIL_MS);
 
     // Max realistic cost per K tokens across all providers ≈ 0.030 USD
     const MAX_COST_PER_K = Math.round(PHI * 18) / 1000; // ≈ 0.029 USD
-    const costScore = 1 - Math.min(1, this.costPerKTokens / MAX_COST_PER_K);
+    const costScore      = 1 - Math.min(1, this.costPerKTokens / MAX_COST_PER_K);
 
     const [w0, w1, w2] = HEALTH_WEIGHTS;
     return w0 * successRate + w1 * latencyScore + w2 * costScore;
@@ -531,17 +531,17 @@ class ProviderHealthTracker {
    * @returns {{ totalCalls: number, successRate: number, avgLatencyMs: number, windowSize: number }}
    */
   getStats() {
-    const wLen = this._window.length;
-    const successes = this._window.filter(e => e.success).length;
+    const wLen        = this._window.length;
+    const successes   = this._window.filter(e => e.success).length;
     const successRate = wLen > 0 ? successes / wLen : 0;
-    const avgLatency = wLen > 0
+    const avgLatency  = wLen > 0
       ? this._window.reduce((s, e) => s + e.latencyMs, 0) / wLen
       : 0;
     return {
-      totalCalls: this._totalCalls,
-      successRate: parseFloat(successRate.toFixed(4)),
-      avgLatencyMs: parseFloat(avgLatency.toFixed(2)),
-      windowSize: wLen,
+      totalCalls:    this._totalCalls,
+      successRate:   parseFloat(successRate.toFixed(4)),
+      avgLatencyMs:  parseFloat(avgLatency.toFixed(2)),
+      windowSize:    wLen,
     };
   }
 }
@@ -567,14 +567,14 @@ class BudgetTracker {
    */
   constructor(config = {}) {
     this._globalMonthlyCapUsd = config.globalMonthlyCapUsd || 500;
-    this._providerDailyCaps = config.providerDailyCaps || {};
+    this._providerDailyCaps   = config.providerDailyCaps   || {};
 
     /** @type {Object.<string, number>} today's spend per provider */
-    this._dailySpend = {};
+    this._dailySpend  = {};
     /** @type {number} this month's total spend */
     this._monthlySpend = 0;
     /** @type {string} date string for daily reset */
-    this._today = new Date().toISOString().slice(0, 10);
+    this._today        = new Date().toISOString().slice(0, 10);
   }
 
   /** @private — roll over daily counters at midnight */
@@ -582,7 +582,7 @@ class BudgetTracker {
     const today = new Date().toISOString().slice(0, 10);
     if (today !== this._today) {
       this._dailySpend = {};
-      this._today = today;
+      this._today      = today;
     }
   }
 
@@ -593,8 +593,8 @@ class BudgetTracker {
    */
   record(providerId, costUsd) {
     this._maybeReset();
-    this._dailySpend[providerId] = (this._dailySpend[providerId] || 0) + costUsd;
-    this._monthlySpend += costUsd;
+    this._dailySpend[providerId]  = (this._dailySpend[providerId]  || 0) + costUsd;
+    this._monthlySpend            += costUsd;
   }
 
   /**
@@ -604,14 +604,14 @@ class BudgetTracker {
    */
   check(providerId) {
     this._maybeReset();
-    const dailyCap = this._providerDailyCaps[providerId] || PROVIDER_CATALOGUE[providerId]?.dailyBudgetUsd || Infinity;
-    const dailySpend = this._dailySpend[providerId] || 0;
+    const dailyCap      = this._providerDailyCaps[providerId] || PROVIDER_CATALOGUE[providerId]?.dailyBudgetUsd || Infinity;
+    const dailySpend    = this._dailySpend[providerId] || 0;
     const dailyPressure = dailyCap === Infinity ? 0 : dailySpend / dailyCap;
 
     const globalPressure = this._monthlySpend / this._globalMonthlyCapUsd;
-    const pressure = Math.max(dailyPressure, globalPressure);
+    const pressure       = Math.max(dailyPressure, globalPressure);
 
-    const allowed = pressure < ALERT_THRESHOLDS.exceeded;  // < 0.854
+    const allowed  = pressure < ALERT_THRESHOLDS.exceeded;  // < 0.854
     const downgrade = pressure >= ALERT_THRESHOLDS.caution;  // >= 0.764
 
     return { allowed, pressure, downgrade };
@@ -633,9 +633,9 @@ class BudgetTracker {
   getStatus() {
     this._maybeReset();
     return {
-      monthlySpend: parseFloat(this._monthlySpend.toFixed(6)),
-      dailySpend: { ...this._dailySpend },
-      globalPressure: parseFloat((this._monthlySpend / this._globalMonthlyCapUsd).toFixed(4)),
+      monthlySpend:    parseFloat(this._monthlySpend.toFixed(6)),
+      dailySpend:      { ...this._dailySpend },
+      globalPressure:  parseFloat((this._monthlySpend / this._globalMonthlyCapUsd).toFixed(4)),
     };
   }
 }
@@ -668,12 +668,12 @@ class LLMRouter {
    */
   constructor(config = {}) {
     this._config = Object.assign({
-      globalMonthlyCapUsd: 500,
-      providerDailyCaps: {},
-      cacheEnabled: true,
-      localFallbackEnabled: true,
-      apiKeys: {},
-      providerOverrides: {},
+      globalMonthlyCapUsd:    500,
+      providerDailyCaps:      {},
+      cacheEnabled:           true,
+      localFallbackEnabled:   true,
+      apiKeys:                {},
+      providerOverrides:      {},
     }, config);
 
     // Merge provider catalogue with any caller overrides
@@ -687,16 +687,16 @@ class LLMRouter {
 
     // Per-provider subsystems
     this._circuitBreakers = {};
-    this._healthTrackers = {};
+    this._healthTrackers  = {};
     for (const id of Object.keys(this._providers)) {
       this._circuitBreakers[id] = new CircuitBreaker(id);
-      this._healthTrackers[id] = new ProviderHealthTracker(id, this._providers[id].costPerKTokens);
+      this._healthTrackers[id]  = new ProviderHealthTracker(id, this._providers[id].costPerKTokens);
     }
 
     // Budget tracker
     this._budget = new BudgetTracker({
       globalMonthlyCapUsd: this._config.globalMonthlyCapUsd,
-      providerDailyCaps: this._config.providerDailyCaps,
+      providerDailyCaps:   this._config.providerDailyCaps,
     });
 
     // LRU response cache
@@ -725,14 +725,14 @@ class LLMRouter {
    */
   route(task) {
     const taskType = task.type || TASK_TYPES.QUICK_TASKS;
-    const tokens = task.estimatedTokens || 1000;
+    const tokens   = task.estimatedTokens || 1000;
 
     // Forced provider override
     if (task.forceProvider && this._providers[task.forceProvider]) {
       return {
-        providerId: task.forceProvider,
-        model: this._providers[task.forceProvider].defaultModel,
-        useFast: false,
+        providerId:  task.forceProvider,
+        model:       this._providers[task.forceProvider].defaultModel,
+        useFast:     false,
         routeReason: 'forced_override',
       };
     }
@@ -744,13 +744,13 @@ class LLMRouter {
     const candidates = [];
     for (let i = 0; i < chain.length; i++) {
       const pid = chain[i];
-      const cb = this._circuitBreakers[pid];
+      const cb  = this._circuitBreakers[pid];
       const bud = this._budget.check(pid);
 
       if (!cb.allowRequest()) continue;
-      if (!bud.allowed) continue;
+      if (!bud.allowed)       continue;
 
-      const health = this.getProviderHealth(pid);
+      const health   = this.getProviderHealth(pid);
       const priority = phiPriorityScore(
         health,
         (i === 0 ? 1.0 : i === 1 ? PSI : PSI * PSI), // position preference
@@ -758,9 +758,9 @@ class LLMRouter {
       );
 
       candidates.push({
-        providerId: pid,
+        providerId:  pid,
         priority,
-        position: i,
+        position:    i,
         bud,
       });
     }
@@ -772,13 +772,13 @@ class LLMRouter {
 
     // Sort descending by phi-priority score
     candidates.sort((a, b) => b.priority - a.priority);
-    const best = candidates[0];
-    const pid = best.providerId;
+    const best    = candidates[0];
+    const pid     = best.providerId;
     const useFast = (best.position === 2 && route.useFastOnFallback) || best.bud.downgrade;
 
     return {
-      providerId: pid,
-      model: useFast ? this._providers[pid].fastModel : this._providers[pid].defaultModel,
+      providerId:  pid,
+      model:       useFast ? this._providers[pid].fastModel : this._providers[pid].defaultModel,
       useFast,
       routeReason: best.position === 0 ? 'primary' : `fallback${best.position}`,
     };
@@ -798,18 +798,18 @@ class LLMRouter {
     for (const p of sorted) {
       if (this._circuitBreakers[p.id].allowRequest()) {
         return {
-          providerId: p.id,
-          model: p.fastModel || p.defaultModel,
-          useFast: true,
+          providerId:  p.id,
+          model:       p.fastModel || p.defaultModel,
+          useFast:     true,
           routeReason: 'emergency',
         };
       }
     }
     // Absolute last resort — local ollama (never has a rate limit)
     return {
-      providerId: PROVIDERS.LOCAL,
-      model: this._providers[PROVIDERS.LOCAL].defaultModel,
-      useFast: false,
+      providerId:  PROVIDERS.LOCAL,
+      model:       this._providers[PROVIDERS.LOCAL].defaultModel,
+      useFast:     false,
       routeReason: 'absolute_emergency',
     };
   }
@@ -843,16 +843,16 @@ class LLMRouter {
    */
   async execute(task) {
     const taskType = task.type || TASK_TYPES.QUICK_TASKS;
-    const route = this._routingMatrix[taskType] || this._routingMatrix[TASK_TYPES.QUICK_TASKS];
-    const chain = [route.primary, route.fallback1, route.fallback2];
-    const timeout = route.timeout;
-    const tokens = task.estimatedTokens || 1000;
-    const opts = task.options || {};
+    const route    = this._routingMatrix[taskType] || this._routingMatrix[TASK_TYPES.QUICK_TASKS];
+    const chain    = [route.primary, route.fallback1, route.fallback2];
+    const timeout  = route.timeout;
+    const tokens   = task.estimatedTokens || 1000;
+    const opts     = task.options || {};
 
     // Cache check
     if (this._config.cacheEnabled && !task.noCache) {
       const cacheKey = this._cacheKey(task.prompt, taskType, opts);
-      const cached = this._cache.get(cacheKey);
+      const cached   = this._cache.get(cacheKey);
       if (cached) {
         return Object.assign({}, cached, { fromCache: true });
       }
@@ -861,9 +861,9 @@ class LLMRouter {
     const errors = [];
 
     for (let i = 0; i < chain.length; i++) {
-      const pid = chain[i];
-      const cb = this._circuitBreakers[pid];
-      const bud = this._budget.check(pid);
+      const pid     = chain[i];
+      const cb      = this._circuitBreakers[pid];
+      const bud     = this._budget.check(pid);
 
       // Budget exceeded → skip to next in chain
       if (!bud.allowed) {
@@ -878,7 +878,7 @@ class LLMRouter {
       }
 
       const useFast = (i === 2 && route.useFastOnFallback) || bud.downgrade;
-      const model = useFast
+      const model   = useFast
         ? this._providers[pid].fastModel
         : this._providers[pid].defaultModel;
 
@@ -900,12 +900,12 @@ class LLMRouter {
           this._budget.record(pid, costUsd);
 
           const response = {
-            text: result.text,
-            providerId: pid,
+            text:        result.text,
+            providerId:  pid,
             model,
             latencyMs,
-            tokensUsed: result.tokensUsed || tokens,
-            fromCache: false,
+            tokensUsed:  result.tokensUsed || tokens,
+            fromCache:   false,
             routeReason: i === 0 ? 'primary' : `fallback${i}`,
             costUsd,
           };
@@ -952,7 +952,7 @@ class LLMRouter {
       `LLMRouter: all providers failed for taskType="${taskType}". Errors: ` +
       errors.map(e => `${e.providerId}(${e.reason})`).join(', ')
     );
-    err.code = 'ALL_PROVIDERS_FAILED';
+    err.code   = 'ALL_PROVIDERS_FAILED';
     err.errors = errors;
     throw err;
   }
@@ -974,15 +974,15 @@ class LLMRouter {
    */
   async generate(prompt, options = {}) {
     const task = {
-      type: options.taskType || TASK_TYPES.QUICK_TASKS,
+      type:             options.taskType        || TASK_TYPES.QUICK_TASKS,
       prompt,
-      estimatedTokens: options.estimatedTokens || 1000,
-      noCache: options.noCache || false,
-      forceProvider: options.forceProvider || null,
+      estimatedTokens:  options.estimatedTokens || 1000,
+      noCache:          options.noCache         || false,
+      forceProvider:    options.forceProvider   || null,
       options: {
-        maxTokens: options.maxTokens || null,
-        temperature: options.temperature || null,
-        stream: options.stream || false,
+        maxTokens:    options.maxTokens   || null,
+        temperature:  options.temperature || null,
+        stream:       options.stream      || false,
       },
     };
     return this.execute(task);
@@ -1004,24 +1004,24 @@ class LLMRouter {
    */
   async embed(text, options = {}) {
     const texts = Array.isArray(text) ? text : [text];
-    const task = {
-      type: TASK_TYPES.EMBEDDINGS,
-      prompt: texts.join('\n'),
+    const task  = {
+      type:            TASK_TYPES.EMBEDDINGS,
+      prompt:          texts.join('\n'),
       estimatedTokens: texts.reduce((s, t) => s + Math.ceil(t.length / 4), 0),
-      noCache: false,
-      forceProvider: options.forceProvider || null,
+      noCache:         false,
+      forceProvider:   options.forceProvider || null,
       options: { embed: true, texts },
     };
 
     const route = this._routingMatrix[TASK_TYPES.EMBEDDINGS];
     const chain = [route.primary, route.fallback1, route.fallback2];
     const timeout = route.timeout;
-    const errors = [];
+    const errors  = [];
 
     for (const pid of chain) {
-      const cb = this._circuitBreakers[pid];
+      const cb  = this._circuitBreakers[pid];
       const bud = this._budget.check(pid);
-      const p = this._providers[pid];
+      const p   = this._providers[pid];
 
       if (!bud.allowed || !cb.allowRequest()) continue;
       if (!p.embedModel) continue; // provider does not support embeddings
@@ -1037,11 +1037,11 @@ class LLMRouter {
         const costUsd = this._budget.estimateCost(pid, result.tokensUsed || task.estimatedTokens);
         this._budget.record(pid, costUsd);
         return {
-          embeddings: result.embeddings,
-          providerId: pid,
-          model: p.embedModel,
+          embeddings:  result.embeddings,
+          providerId:  pid,
+          model:       p.embedModel,
           latencyMs,
-          tokensUsed: result.tokensUsed || task.estimatedTokens,
+          tokensUsed:  result.tokensUsed || task.estimatedTokens,
         };
       } catch (err) {
         const latencyMs = Date.now() - t0;
@@ -1051,8 +1051,8 @@ class LLMRouter {
       }
     }
 
-    const e = new Error('LLMRouter.embed: all embedding providers failed — ' + errors.map(e => e.providerId).join(', '));
-    e.code = 'EMBED_ALL_FAILED';
+    const e  = new Error('LLMRouter.embed: all embedding providers failed — ' + errors.map(e => e.providerId).join(', '));
+    e.code   = 'EMBED_ALL_FAILED';
     e.errors = errors;
     throw e;
   }
@@ -1100,10 +1100,10 @@ class LLMRouter {
     const report = {};
     for (const pid of Object.keys(this._providers)) {
       report[pid] = {
-        score: parseFloat(this.getProviderHealth(pid).toFixed(4)),
-        stats: this._healthTrackers[pid].getStats(),
+        score:         parseFloat(this.getProviderHealth(pid).toFixed(4)),
+        stats:         this._healthTrackers[pid].getStats(),
         circuitBreaker: this._circuitBreakers[pid].toJSON(),
-        budget: this._budget.check(pid),
+        budget:        this._budget.check(pid),
       };
     }
     return report;
@@ -1198,23 +1198,12 @@ class LLMRouter {
   async _callAnthropic(model, prompt, opts) {
     const apiKey = this._config.apiKeys[PROVIDERS.ANTHROPIC];
     if (!apiKey) throw Object.assign(new Error('Anthropic API key not configured'), { code: 'AUTH_ERROR' });
-    try {
-      const Anthropic = require('@anthropic-ai/sdk');
-      const client = new Anthropic({ apiKey });
-      const msg = await client.messages.create({
-        model,
-        max_tokens: opts.maxTokens || 4096,
-        messages: [{ role: 'user', content: prompt }],
-        ...(opts.temperature != null ? { temperature: opts.temperature } : {}),
-      });
-      return {
-        text: msg.content[0].text,
-        tokensUsed: (msg.usage.input_tokens || 0) + (msg.usage.output_tokens || 0),
-      };
-    } catch (err) {
-      if (err.status === 429) throw Object.assign(new Error(err.message), { code: 'RATE_LIMITED' });
-      throw err;
-    }
+    // SDK call placeholder — swap in production:
+    // const client = new Anthropic({ apiKey });
+    // const msg = await client.messages.create({ model, max_tokens: opts.maxTokens || 4096,
+    //   messages: [{ role: 'user', content: prompt }] });
+    // return { text: msg.content[0].text, tokensUsed: msg.usage.input_tokens + msg.usage.output_tokens };
+    throw Object.assign(new Error('Anthropic adapter not yet wired — replace stub with SDK call'), { code: 'STUB' });
   }
 
   /**
@@ -1225,24 +1214,13 @@ class LLMRouter {
   async _callOpenAI(model, prompt, opts) {
     const apiKey = this._config.apiKeys[PROVIDERS.OPENAI];
     if (!apiKey) throw Object.assign(new Error('OpenAI API key not configured'), { code: 'AUTH_ERROR' });
-    try {
-      const OpenAI = require('openai');
-      const client = new OpenAI({ apiKey });
-      const resp = await client.chat.completions.create({
-        model,
-        messages: [{ role: 'user', content: prompt }],
-        max_tokens: opts.maxTokens || 4096,
-        ...(opts.temperature != null ? { temperature: opts.temperature } : {}),
-      });
-      const choice = resp.choices[0];
-      return {
-        text: choice.message.content,
-        tokensUsed: resp.usage ? resp.usage.total_tokens : 0,
-      };
-    } catch (err) {
-      if (err.status === 429) throw Object.assign(new Error(err.message), { code: 'RATE_LIMITED' });
-      throw err;
-    }
+    // const client = new OpenAI({ apiKey });
+    // const resp = await client.chat.completions.create({
+    //   model, messages: [{ role: 'user', content: prompt }],
+    //   max_tokens: opts.maxTokens || 4096, temperature: opts.temperature || 1.0 });
+    // const choice = resp.choices[0];
+    // return { text: choice.message.content, tokensUsed: resp.usage.total_tokens };
+    throw Object.assign(new Error('OpenAI adapter not yet wired — replace stub with SDK call'), { code: 'STUB' });
   }
 
   /**
@@ -1253,22 +1231,12 @@ class LLMRouter {
   async _callGoogle(model, prompt, opts) {
     const apiKey = this._config.apiKeys[PROVIDERS.GOOGLE];
     if (!apiKey) throw Object.assign(new Error('Google API key not configured'), { code: 'AUTH_ERROR' });
-    try {
-      const { GoogleGenerativeAI } = require('@google/generative-ai');
-      const genAI = new GoogleGenerativeAI(apiKey);
-      const genModel = genAI.getGenerativeModel({ model });
-      const result = await genModel.generateContent(prompt);
-      const text = result.response.text();
-      return {
-        text,
-        tokensUsed: result.response.usageMetadata?.totalTokenCount || 0,
-      };
-    } catch (err) {
-      if (err.status === 429 || err.message?.includes('RESOURCE_EXHAUSTED')) {
-        throw Object.assign(new Error(err.message), { code: 'RATE_LIMITED' });
-      }
-      throw err;
-    }
+    // const genAI = new GoogleGenerativeAI(apiKey);
+    // const genModel = genAI.getGenerativeModel({ model });
+    // const result = await genModel.generateContent(prompt);
+    // const text = result.response.text();
+    // return { text, tokensUsed: result.response.usageMetadata?.totalTokenCount || 0 };
+    throw Object.assign(new Error('Google adapter not yet wired — replace stub with SDK call'), { code: 'STUB' });
   }
 
   /**
@@ -1279,23 +1247,12 @@ class LLMRouter {
   async _callGroq(model, prompt, opts) {
     const apiKey = this._config.apiKeys[PROVIDERS.GROQ];
     if (!apiKey) throw Object.assign(new Error('Groq API key not configured'), { code: 'AUTH_ERROR' });
-    try {
-      const Groq = require('groq-sdk');
-      const client = new Groq({ apiKey });
-      const resp = await client.chat.completions.create({
-        model,
-        messages: [{ role: 'user', content: prompt }],
-        max_tokens: opts.maxTokens || 4096,
-        ...(opts.temperature != null ? { temperature: opts.temperature } : {}),
-      });
-      return {
-        text: resp.choices[0].message.content,
-        tokensUsed: resp.usage ? resp.usage.total_tokens : 0,
-      };
-    } catch (err) {
-      if (err.status === 429) throw Object.assign(new Error(err.message), { code: 'RATE_LIMITED' });
-      throw err;
-    }
+    // const client = new Groq({ apiKey });
+    // const resp = await client.chat.completions.create({
+    //   model, messages: [{ role: 'user', content: prompt }],
+    //   max_tokens: opts.maxTokens || 4096 });
+    // return { text: resp.choices[0].message.content, tokensUsed: resp.usage.total_tokens };
+    throw Object.assign(new Error('Groq adapter not yet wired — replace stub with SDK call'), { code: 'STUB' });
   }
 
   /**
@@ -1306,32 +1263,11 @@ class LLMRouter {
   async _callPerplexity(model, prompt, opts) {
     const apiKey = this._config.apiKeys[PROVIDERS.PERPLEXITY];
     if (!apiKey) throw Object.assign(new Error('Perplexity API key not configured'), { code: 'AUTH_ERROR' });
-    const body = JSON.stringify({
-      model,
-      messages: [{ role: 'user', content: prompt }],
-      ...(opts.maxTokens ? { max_tokens: opts.maxTokens } : {}),
-      ...(opts.temperature != null ? { temperature: opts.temperature } : {}),
-    });
-    const resp = await fetch('https://api.perplexity.ai/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${apiKey}`,
-      },
-      body,
-    });
-    if (resp.status === 429) {
-      throw Object.assign(new Error('Perplexity rate limited'), { code: 'RATE_LIMITED' });
-    }
-    if (!resp.ok) {
-      const errText = await resp.text().catch(() => 'unknown error');
-      throw new Error(`Perplexity API error ${resp.status}: ${errText}`);
-    }
-    const json = await resp.json();
-    return {
-      text: json.choices[0].message.content,
-      tokensUsed: json.usage ? json.usage.total_tokens : 0,
-    };
+    // const https = require('https');  — or fetch / axios
+    // POST https://api.perplexity.ai/chat/completions
+    //   Authorization: Bearer ${apiKey}
+    //   { model, messages: [{ role: 'user', content: prompt }] }
+    throw Object.assign(new Error('Perplexity adapter not yet wired — replace stub with HTTP call'), { code: 'STUB' });
   }
 
   /**
@@ -1340,21 +1276,14 @@ class LLMRouter {
    * @private
    */
   async _callLocal(model, prompt, opts) {
-    const ollamaBase = process.env.OLLAMA_HOST || 'http://localhost:11434';
-    const resp = await fetch(`${ollamaBase}/api/generate`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ model, prompt, stream: false }),
-    });
-    if (!resp.ok) {
-      const errText = await resp.text().catch(() => 'unknown error');
-      throw new Error(`Ollama API error ${resp.status}: ${errText}`);
-    }
-    const json = await resp.json();
-    return {
-      text: json.response,
-      tokensUsed: json.eval_count || 0,
-    };
+    // const resp = await fetch(`http://localhost:11434/api/generate`, {
+    //   method: 'POST',
+    //   headers: { 'Content-Type': 'application/json' },
+    //   body: JSON.stringify({ model, prompt, stream: false })
+    // });
+    // const json = await resp.json();
+    // return { text: json.response, tokensUsed: json.eval_count || 0 };
+    throw Object.assign(new Error('Local Ollama adapter not yet wired — replace stub with fetch call'), { code: 'STUB' });
   }
 
   /**
@@ -1364,18 +1293,10 @@ class LLMRouter {
   async _embedOpenAI(model, texts) {
     const apiKey = this._config.apiKeys[PROVIDERS.OPENAI];
     if (!apiKey) throw Object.assign(new Error('OpenAI API key not configured'), { code: 'AUTH_ERROR' });
-    try {
-      const OpenAI = require('openai');
-      const client = new OpenAI({ apiKey });
-      const resp = await client.embeddings.create({ model, input: texts });
-      return {
-        embeddings: resp.data.map(d => d.embedding),
-        tokensUsed: resp.usage ? resp.usage.total_tokens : 0,
-      };
-    } catch (err) {
-      if (err.status === 429) throw Object.assign(new Error(err.message), { code: 'RATE_LIMITED' });
-      throw err;
-    }
+    // const client = new OpenAI({ apiKey });
+    // const resp = await client.embeddings.create({ model, input: texts });
+    // return { embeddings: resp.data.map(d => d.embedding), tokensUsed: resp.usage.total_tokens };
+    throw Object.assign(new Error('OpenAI embed adapter not yet wired'), { code: 'STUB' });
   }
 
   /**
@@ -1385,21 +1306,11 @@ class LLMRouter {
   async _embedGoogle(model, texts) {
     const apiKey = this._config.apiKeys[PROVIDERS.GOOGLE];
     if (!apiKey) throw Object.assign(new Error('Google API key not configured'), { code: 'AUTH_ERROR' });
-    try {
-      const { GoogleGenerativeAI } = require('@google/generative-ai');
-      const genAI = new GoogleGenerativeAI(apiKey);
-      const genModel = genAI.getGenerativeModel({ model });
-      const results = await Promise.all(texts.map(t => genModel.embedContent(t)));
-      return {
-        embeddings: results.map(r => r.embedding.values),
-        tokensUsed: texts.length * 50,
-      };
-    } catch (err) {
-      if (err.status === 429 || err.message?.includes('RESOURCE_EXHAUSTED')) {
-        throw Object.assign(new Error(err.message), { code: 'RATE_LIMITED' });
-      }
-      throw err;
-    }
+    // const genAI = new GoogleGenerativeAI(apiKey);
+    // const genModel = genAI.getGenerativeModel({ model });
+    // const results = await Promise.all(texts.map(t => genModel.embedContent(t)));
+    // return { embeddings: results.map(r => r.embedding.values), tokensUsed: texts.length * 50 };
+    throw Object.assign(new Error('Google embed adapter not yet wired'), { code: 'STUB' });
   }
 
   /**
@@ -1407,24 +1318,15 @@ class LLMRouter {
    * @private
    */
   async _embedLocal(model, texts) {
-    const ollamaBase = process.env.OLLAMA_HOST || 'http://localhost:11434';
-    const results = await Promise.all(texts.map(async t => {
-      const resp = await fetch(`${ollamaBase}/api/embeddings`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ model, prompt: t }),
-      });
-      if (!resp.ok) {
-        const errText = await resp.text().catch(() => 'unknown error');
-        throw new Error(`Ollama embed error ${resp.status}: ${errText}`);
-      }
-      const json = await resp.json();
-      return json.embedding;
-    }));
-    return {
-      embeddings: results,
-      tokensUsed: texts.length * 10,
-    };
+    // const results = await Promise.all(texts.map(async t => {
+    //   const resp = await fetch('http://localhost:11434/api/embeddings', {
+    //     method: 'POST', headers: { 'Content-Type': 'application/json' },
+    //     body: JSON.stringify({ model, prompt: t }) });
+    //   const json = await resp.json();
+    //   return json.embedding;
+    // }));
+    // return { embeddings: results, tokensUsed: texts.length * 10 };
+    throw Object.assign(new Error('Local embed adapter not yet wired'), { code: 'STUB' });
   }
 
   // ── 8.7  UTILITY HELPERS ─────────────────────────────────────────────────
@@ -1439,9 +1341,9 @@ class LLMRouter {
    */
   _cacheKey(prompt, taskType, opts) {
     const payload = JSON.stringify({
-      p: prompt,
-      t: taskType,
-      mt: opts.maxTokens || null,
+      p:  prompt,
+      t:  taskType,
+      mt: opts.maxTokens   || null,
       tp: opts.temperature || null,
     });
     return crypto.createHash('sha256').update(payload).digest('hex').slice(0, 32);
@@ -1457,7 +1359,7 @@ class LLMRouter {
     return new Promise((_, reject) => {
       setTimeout(() => {
         const err = new Error(`LLMRouter: request timed out after ${ms}ms`);
-        err.code = 'TIMEOUT';
+        err.code  = 'TIMEOUT';
         reject(err);
       }, ms);
     });
@@ -1483,19 +1385,19 @@ class LLMRouter {
   diagnostics() {
     const [w0, w1, w2] = HEALTH_WEIGHTS;
     return {
-      version: '3.2.3',
-      requestSeq: this._requestSeq,
-      cacheSize: this._cache.size,
+      version:       '3.2.3',
+      requestSeq:    this._requestSeq,
+      cacheSize:     this._cache.size,
       cacheCapacity: CACHE_CAPACITY,          // fib(16) = 987
-      healthWindow: HEALTH_WINDOW,           // fib(11) = 89
-      cbThreshold: CB_FAILURE_THRESHOLD,    // fib(5)  = 5
+      healthWindow:  HEALTH_WINDOW,           // fib(11) = 89
+      cbThreshold:   CB_FAILURE_THRESHOLD,    // fib(5)  = 5
       healthWeights: { successRate: parseFloat(w0.toFixed(4)), latency: parseFloat(w1.toFixed(4)), cost: parseFloat(w2.toFixed(4)) },
-      timeouts: TIMEOUTS,
-      budget: this._budget.getStatus(),
-      providers: this.getAllHealth(),
+      timeouts:      TIMEOUTS,
+      budget:        this._budget.getStatus(),
+      providers:     this.getAllHealth(),
       cslThresholds: CSL_THRESHOLDS,
       alertThresholds: ALERT_THRESHOLDS,
-      pressureLevels: PRESSURE_LEVELS,
+      pressureLevels:  PRESSURE_LEVELS,
     };
   }
 }

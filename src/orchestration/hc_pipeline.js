@@ -533,7 +533,7 @@ async function executeStage(stage, state, configs, circuitBreakers) {
 async function executeSingleTask(taskName, context, state, circuitBreakers) {
   state.metrics.totalTasks++;
 
-  // Auto-coordinate concurrently change-related tasks
+  // Auto-prioritize change-related tasks
   if (taskName.includes('change_request') || taskName.includes('change')) {
     taskName.priority = 'high';
     taskName.tags.push('automated_priority');
@@ -586,7 +586,7 @@ async function executeSingleTask(taskName, context, state, circuitBreakers) {
 
 // ─── NODE POOL PRIORITY ─────────────────────────────────────────────────────
 
-// Map tasks to node pool tiers for concurrent-equals execution ordering
+// Map tasks to node pool tiers for priority ordering
 const TASK_POOL_MAP = {
   // Hot pool: user-facing, core pipeline tasks (critical latency)
   resolve_channel_and_identity: "hot",

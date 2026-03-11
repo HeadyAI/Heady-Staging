@@ -2,22 +2,1274 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>headyme.com | HeadySystems</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data:; script-src 'self'; style-src 'self' 'unsafe-inline'; frame-ancestors 'none';">
+    <meta name="description" content="HeadyMe - Your Personal AI Cloud. An AI that remembers everything, learns continuously, and works for you 24/7.">
+    <meta name="keywords" content="personal AI, AI assistant, memory, agents, cloud AI, HEADY">
+    <meta name="author" content="HeadySystems Inc">
+    <meta name="copyright" content="© 2026 HeadySystems Inc">
+
+    <!-- Open Graph Tags -->
+    <meta property="og:title" content="HeadyMe - Your Personal AI Cloud">
+    <meta property="og:description" content="An AI that remembers everything, learns continuously, and works for you 24/7.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://headyme.com">
+    <meta property="og:image" content="https://headyme.com/og-image.png">
+    <meta property="og:site_name" content="HeadyMe">
+
+    <!-- Twitter Card Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="HeadyMe - Your Personal AI Cloud">
+    <meta name="twitter:description" content="An AI that remembers everything, learns continuously, and works for you 24/7.">
+    <meta name="twitter:image" content="https://headyme.com/twitter-image.png">
+
+    <title>HeadyMe - Your Personal AI Cloud | HEADY</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #12121a;
+            --bg-tertiary: #1a1a24;
+            --accent: #7c5eff;
+            --accent-light: #9b7fff;
+            --accent-dark: #5d3fcc;
+            --gold: #f0c040;
+            --gold-light: #f5d676;
+            --gold-dark: #d4a820;
+            --cyan: #40e0d0;
+            --cyan-light: #5fffe8;
+            --cyan-dark: #20c4a8;
+            --text-primary: #ffffff;
+            --text-secondary: #b0b0c0;
+            --text-tertiary: #808090;
+            --border: #2a2a3a;
+            --success: #4ade80;
+            --warning: #facc15;
+            --error: #ef4444;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Typography */
+        h1, h2, h3, h4, h5, h6 {
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 1rem;
+        }
+
+        h1 {
+            font-size: clamp(2.5rem, 8vw, 4.5rem);
+        }
+
+        h2 {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+        }
+
+        h3 {
+            font-size: clamp(1.5rem, 3vw, 2rem);
+        }
+
+        p {
+            margin-bottom: 1rem;
+            color: var(--text-secondary);
+            font-size: 1.05rem;
+        }
+
+        a {
+            color: var(--accent);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        a:hover {
+            color: var(--accent-light);
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            padding: 0.875rem 2rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            font-size: 1rem;
+            font-family: 'Inter', sans-serif;
+            border: 2px solid transparent;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 100%);
+            color: #fff;
+            border-color: var(--accent);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(124, 94, 255, 0.3);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--accent);
+            border-color: var(--accent);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(124, 94, 255, 0.1);
+        }
+
+        .btn-gold {
+            background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 100%);
+            color: var(--bg-primary);
+            border-color: var(--gold);
+        }
+
+        .btn-gold:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(240, 192, 64, 0.3);
+        }
+
+        .btn-small {
+            padding: 0.5rem 1.25rem;
+            font-size: 0.875rem;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 1.5rem;
+            }
+        }
+
+        /* Navigation */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: rgba(10, 10, 15, 0.8);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border);
+        }
+
+        nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem 0;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding-left: 2rem;
+            padding-right: 2rem;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent) 0%, var(--cyan) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            white-space: nowrap;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+            list-style: none;
+            align-items: center;
+        }
+
+        .nav-links a {
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent);
+        }
+
+        .nav-auth {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            gap: 0.5rem;
+            cursor: pointer;
+        }
+
+        .hamburger span {
+            width: 24px;
+            height: 2px;
+            background: var(--text-primary);
+            border-radius: 1px;
+        }
+
+        @media (max-width: 968px) {
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 70px;
+                left: 0;
+                right: 0;
+                flex-direction: column;
+                gap: 1rem;
+                background: var(--bg-secondary);
+                padding: 2rem;
+                border-bottom: 1px solid var(--border);
+            }
+
+            .nav-links.active {
+                display: flex;
+            }
+
+            .hamburger {
+                display: flex;
+            }
+        }
+
+        /* Hero Section */
+        .hero {
+            padding-top: 150px;
+            padding-bottom: 100px;
+            position: relative;
+            overflow: hidden;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 20% 50%, rgba(124, 94, 255, 0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 80%, rgba(64, 224, 208, 0.1) 0%, transparent 50%);
+            z-index: 0;
+        }
+
+        .hero-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 1;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .hero h1 {
+            background: linear-gradient(135deg, var(--accent) 0%, var(--cyan) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1.5rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+        }
+
+        .hero-subtitle {
+            font-size: 1.4rem;
+            color: var(--text-secondary);
+            margin-bottom: 2.5rem;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .hero-cta {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 2rem;
+        }
+
+        .hero-features {
+            display: flex;
+            gap: 3rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 3rem;
+            font-size: 0.95rem;
+            color: var(--text-tertiary);
+        }
+
+        .hero-feature {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .hero-feature-icon {
+            width: 8px;
+            height: 8px;
+            background: var(--cyan);
+            border-radius: 50%;
+        }
+
+        @media (max-width: 768px) {
+            .hero {
+                padding-top: 100px;
+                padding-bottom: 60px;
+                min-height: auto;
+            }
+
+            .hero-cta {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+        }
+
+        /* Section */
+        section {
+            padding: 5rem 0;
+        }
+
+        section h2 {
+            text-align: center;
+            margin-bottom: 3rem;
+            background: linear-gradient(135deg, var(--accent) 0%, var(--cyan) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Features Section */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .feature-card {
+            background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-tertiary) 100%);
+            border: 1px solid var(--border);
+            border-radius: 0.75rem;
+            padding: 2.5rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--accent) 0%, var(--cyan) 100%);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.3s ease;
+        }
+
+        .feature-card:hover {
+            border-color: var(--accent);
+            transform: translateY(-8px);
+            box-shadow: 0 16px 48px rgba(124, 94, 255, 0.15);
+        }
+
+        .feature-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .feature-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .feature-card h3 {
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .feature-card p {
+            color: var(--text-secondary);
+            margin-bottom: 0;
+        }
+
+        /* How It Works */
+        .how-it-works {
+            background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-tertiary) 100%);
+            border-radius: 1rem;
+            padding: 4rem 3rem;
+            margin-top: 3rem;
+        }
+
+        .steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .step {
+            text-align: center;
+            position: relative;
+        }
+
+        .step-number {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--accent) 0%, var(--cyan) 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.5rem;
+            margin: 0 auto 1.5rem;
+            color: #fff;
+        }
+
+        .step h4 {
+            margin-bottom: 0.75rem;
+            color: var(--text-primary);
+        }
+
+        .step p {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+        }
+
+        .step::after {
+            content: '';
+            position: absolute;
+            right: -1rem;
+            top: 30px;
+            width: 2rem;
+            height: 2px;
+            background: linear-gradient(90deg, var(--accent) 0%, transparent 100%);
+        }
+
+        .step:last-child::after {
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .steps {
+                grid-template-columns: 1fr;
+            }
+
+            .step::after {
+                display: none;
+            }
+        }
+
+        /* Memory Architecture */
+        .memory-section {
+            background: linear-gradient(135deg, rgba(124, 94, 255, 0.05) 0%, rgba(64, 224, 208, 0.05) 100%);
+            border: 1px solid var(--border);
+            border-radius: 1rem;
+            padding: 4rem 3rem;
+            margin-top: 3rem;
+        }
+
+        .memory-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .memory-item {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 0.75rem;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .memory-item h4 {
+            color: var(--accent);
+            margin-bottom: 1rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+        }
+
+        .memory-item p {
+            font-size: 0.95rem;
+        }
+
+        /* Pricing Section */
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .pricing-card {
+            background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-tertiary) 100%);
+            border: 1px solid var(--border);
+            border-radius: 0.75rem;
+            padding: 2.5rem;
+            position: relative;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .pricing-card.featured {
+            border-color: var(--accent);
+            transform: scale(1.05);
+            box-shadow: 0 20px 60px rgba(124, 94, 255, 0.2);
+        }
+
+        .pricing-badge {
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, var(--accent) 0%, var(--cyan) 100%);
+            color: #fff;
+            padding: 0.4rem 1.2rem;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .pricing-card h3 {
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .pricing-price {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--accent);
+            margin: 1rem 0;
+        }
+
+        .pricing-price span {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            font-weight: 400;
+        }
+
+        .pricing-description {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: 2rem;
+        }
+
+        .pricing-features {
+            list-style: none;
+            margin-bottom: 2rem;
+            flex-grow: 1;
+        }
+
+        .pricing-features li {
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--border);
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .pricing-features li::before {
+            content: '✓';
+            color: var(--cyan);
+            font-weight: 700;
+            min-width: 1rem;
+        }
+
+        .pricing-features li:last-child {
+            border-bottom: none;
+        }
+
+        .pricing-cta {
+            width: 100%;
+            margin-top: auto;
+        }
+
+        /* Ecosystem Section */
+        .ecosystem-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .ecosystem-item {
+            background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-tertiary) 100%);
+            border: 1px solid var(--border);
+            border-radius: 0.75rem;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .ecosystem-item:hover {
+            border-color: var(--accent);
+            transform: translateY(-4px);
+        }
+
+        .ecosystem-item h4 {
+            font-size: 1rem;
+            color: var(--accent);
+            margin-bottom: 0.5rem;
+        }
+
+        .ecosystem-item p {
+            font-size: 0.85rem;
+            margin-bottom: 0;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--bg-secondary);
+            border-top: 1px solid var(--border);
+            padding: 4rem 0 2rem;
+            margin-top: 6rem;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        .footer-section h4 {
+            margin-bottom: 1.5rem;
+            color: var(--text-primary);
+            font-size: 0.95rem;
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section li {
+            margin-bottom: 0.75rem;
+        }
+
+        .footer-section a {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .footer-bottom {
+            border-top: 1px solid var(--border);
+            padding-top: 2rem;
+            text-align: center;
+            color: var(--text-tertiary);
+            font-size: 0.85rem;
+        }
+
+        .footer-bottom p {
+            margin-bottom: 1rem;
+        }
+
+        /* Utilities */
+        .text-center {
+            text-align: center;
+        }
+
+        .mt-4 {
+            margin-top: 2rem;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, var(--accent) 0%, var(--cyan) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Accessibility */
+        .skip-link {
+            position: absolute;
+            top: -40px;
+            left: 0;
+            background: var(--accent);
+            color: white;
+            padding: 8px;
+            z-index: 100;
+        }
+
+        .skip-link:focus {
+            top: 0;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
 </head>
 <body>
+    <a href="#main" class="skip-link">Skip to main content</a>
+
+    <!-- Navigation -->
     <header>
-        <h1>headyme.com</h1>
-        <nav aria-label="Main Navigation">
-            <a href="/">Home</a>
-            <a href="/status">Status</a>
+        <nav>
+            <div class="logo">HeadyMe</div>
+            <ul class="nav-links">
+                <li><a href="#features">Features</a></li>
+                <li><a href="#memory">Memory</a></li>
+                <li><a href="#agents">Agents</a></li>
+                <li><a href="#pricing">Pricing</a></li>
+                <li><a href="#docs">Docs</a></li>
+            </ul>
+            <div class="nav-auth">
+                <a href="https://docs.heady.ai" class="btn btn-secondary btn-small">Docs</a>
+                <a href="https://app.headyme.com/signin" class="btn btn-secondary btn-small">Sign In</a>
+                <a href="https://app.headyme.com/create" class="btn btn-primary btn-small">Create Your Heady</a>
+            </div>
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
         </nav>
     </header>
-    <main>
-        <h2>Welcome to headyme.com</h2>
-        <p>Powered by Heady Sovereign Node v4.0.</p>
-        <p>Concurrent-Equals Architecture.</p>
+
+    <main id="main">
+        <!-- Hero Section -->
+        <section class="hero">
+            <canvas id="heroCanvas" class="hero-canvas"></canvas>
+            <div class="hero-content">
+                <h1>YOUR PERSONAL AI CLOUD</h1>
+                <p class="hero-subtitle">An AI that remembers everything, learns continuously, and works for you 24/7</p>
+                <div class="hero-cta">
+                    <a href="https://app.headyme.com/create" class="btn btn-primary">Create Your Heady (Free)</a>
+                    <a href="https://demo.headyme.com" class="btn btn-secondary">Watch Demo</a>
+                </div>
+                <div class="hero-features">
+                    <div class="hero-feature">
+                        <div class="hero-feature-icon"></div>
+                        <span>Zero Privacy Concerns</span>
+                    </div>
+                    <div class="hero-feature">
+                        <div class="hero-feature-icon"></div>
+                        <span>384-D Vector Memory</span>
+                    </div>
+                    <div class="hero-feature">
+                        <div class="hero-feature-icon"></div>
+                        <span>Deploy Agents Instantly</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section id="features" class="container">
+            <h2>Superpowers for Your AI</h2>
+            <div class="features-grid">
+                <div class="feature-card fade-in">
+                    <div class="feature-icon">🧠</div>
+                    <h3>Persistent Memory</h3>
+                    <p>Your Heady remembers every conversation, preference, and context. Built on 384-dimensional vector memory with φ-scaled retrieval for perfect recall.</p>
+                </div>
+
+                <div class="feature-card fade-in">
+                    <div class="feature-icon">🐝</div>
+                    <h3>Personal Agents</h3>
+                    <p>Deploy your own bee swarm. Each agent specializes in tasks you define — research, scheduling, writing, coding, analysis, and more.</p>
+                </div>
+
+                <div class="feature-card fade-in">
+                    <div class="feature-icon">🧬</div>
+                    <h3>Multi-Model Intelligence</h3>
+                    <p>Access GPT-4, Claude, Gemini, Llama, Mistral through a single interface. CSL gates automatically route requests to the best model for each task.</p>
+                </div>
+
+                <div class="feature-card fade-in">
+                    <div class="feature-icon">🔐</div>
+                    <h3>Privacy-First Architecture</h3>
+                    <p>Your data lives in YOUR sovereign space. Zero-trust security, end-to-end encryption, httpOnly session cookies. We never train on your data.</p>
+                </div>
+
+                <div class="feature-card fade-in">
+                    <div class="feature-icon">📱</div>
+                    <h3>Cross-Platform Access</h3>
+                    <p>Access from web, mobile, desktop, Discord, Slack, or API. Your context follows you everywhere. One Heady, infinite possibilities.</p>
+                </div>
+
+                <div class="feature-card fade-in">
+                    <div class="feature-icon">🎨</div>
+                    <h3>Creative Tools</h3>
+                    <p>MIDI composition, image generation, document creation, code generation. Your Heady is not just intelligent—it's creative and expressive.</p>
+                </div>
+
+                <div class="feature-card fade-in">
+                    <div class="feature-icon">🌱</div>
+                    <h3>Continuous Learning</h3>
+                    <p>Your Heady evolves with you. φ-scaled memory consolidation strengthens important memories over time. Growth is automatic and persistent.</p>
+                </div>
+
+                <div class="feature-card fade-in">
+                    <div class="feature-icon">👋</div>
+                    <h3>Heady Buddy</h3>
+                    <p>Your AI companion that proactively helps, suggests, and anticipates your needs. More than a tool—a true digital partner and collaborator.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- How It Works -->
+        <section id="agents" class="container">
+            <h2>How It Works</h2>
+            <div class="how-it-works">
+                <div class="steps">
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <h4>Create Your Heady</h4>
+                        <p>Start anonymous or authenticated. Takes 30 seconds.</p>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <h4>Talk Naturally</h4>
+                        <p>Your Heady learns your style, preferences, and personality.</p>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <h4>Deploy Agents</h4>
+                        <p>Create specialized agents to handle tasks autonomously.</p>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">4</div>
+                        <h4>Memory Grows</h4>
+                        <p>Each interaction strengthens your Heady's understanding and capabilities.</p>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">5</div>
+                        <h4>Access Everywhere</h4>
+                        <p>Use your Heady from any device, any platform, any time.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Memory Architecture -->
+        <section id="memory" class="container">
+            <h2>Memory Architecture</h2>
+            <div class="memory-section">
+                <p style="text-align: center; margin-bottom: 2rem;">HeadyMe's memory engine is powered by cutting-edge vector technology and confidence-scaled retrieval. Your memories are embedded in a 384-dimensional space, optimized for semantic understanding and perfect recall.</p>
+                <div class="memory-grid">
+                    <div class="memory-item">
+                        <h4>384-DIMENSIONAL VECTORS</h4>
+                        <p>Each memory is embedded in a rich semantic space, capturing nuance and context with precision.</p>
+                    </div>
+                    <div class="memory-item">
+                        <h4>CSL CONFIDENCE GATES</h4>
+                        <p>Confidence-Scaled Lookup ensures only the most relevant memories are retrieved at the right time.</p>
+                    </div>
+                    <div class="memory-item">
+                        <h4>φ-SCALED CONSOLIDATION</h4>
+                        <p>Golden ratio memory consolidation strengthens important memories over time while pruning noise.</p>
+                    </div>
+                    <div class="memory-item">
+                        <h4>ZERO-KNOWLEDGE PRIVACY</h4>
+                        <p>Your memories are encrypted end-to-end. We never decrypt, access, or train on your data.</p>
+                    </div>
+                    <div class="memory-item">
+                        <h4>SEMANTIC SEARCH</h4>
+                        <p>Find memories by meaning, not keywords. Ask your Heady natural questions about your past.</p>
+                    </div>
+                    <div class="memory-item">
+                        <h4>INFINITE RETENTION</h4>
+                        <p>Never lose a conversation, insight, or important detail. Your memory grows indefinitely.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Pricing Section -->
+        <section id="pricing" class="container">
+            <h2>Simple, Transparent Pricing</h2>
+            <div class="pricing-grid">
+                <div class="pricing-card">
+                    <h3>Free</h3>
+                    <div class="pricing-price">$0<span>/month</span></div>
+                    <p class="pricing-description">Perfect for exploring HeadyMe</p>
+                    <ul class="pricing-features">
+                        <li>34 messages per day</li>
+                        <li>Basic memory (30 days)</li>
+                        <li>1 Personal Agent</li>
+                        <li>Web access only</li>
+                    </ul>
+                    <a href="https://app.headyme.com/create" class="btn btn-secondary pricing-cta">Get Started</a>
+                </div>
+
+                <div class="pricing-card featured">
+                    <div class="pricing-badge">MOST POPULAR</div>
+                    <h3>Personal</h3>
+                    <div class="pricing-price">$55<span>/month</span></div>
+                    <p class="pricing-description">For individuals and creators</p>
+                    <ul class="pricing-features">
+                        <li>Unlimited messages</li>
+                        <li>Full memory (lifetime)</li>
+                        <li>5 Personal Agents</li>
+                        <li>Web + mobile access</li>
+                        <li>Priority support</li>
+                    </ul>
+                    <a href="https://app.headyme.com/create" class="btn btn-primary pricing-cta">Start Trial</a>
+                </div>
+
+                <div class="pricing-card">
+                    <h3>Pro</h3>
+                    <div class="pricing-price">$89<span>/month</span></div>
+                    <p class="pricing-description">For power users</p>
+                    <ul class="pricing-features">
+                        <li>Unlimited everything</li>
+                        <li>Multi-model access</li>
+                        <li>13 Personal Agents</li>
+                        <li>All platforms</li>
+                        <li>Custom integrations</li>
+                    </ul>
+                    <a href="https://app.headyme.com/create" class="btn btn-secondary pricing-cta">Start Trial</a>
+                </div>
+
+                <div class="pricing-card">
+                    <h3>Unlimited</h3>
+                    <div class="pricing-price">$233<span>/month</span></div>
+                    <p class="pricing-description">Enterprise & researchers</p>
+                    <ul class="pricing-features">
+                        <li>Everything included</li>
+                        <li>API access</li>
+                        <li>Custom models</li>
+                        <li>Dedicated support</li>
+                        <li>SLA guarantee</li>
+                    </ul>
+                    <a href="https://app.headyme.com/enterprise" class="btn btn-secondary pricing-cta">Contact Sales</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Ecosystem Section -->
+        <section class="container">
+            <h2>The HEADY Ecosystem</h2>
+            <p style="text-align: center; margin-bottom: 2rem;">HeadyMe is one of 9 platforms in the HEADY system. Cross-platform integration creates a seamless intelligence layer across your entire digital life.</p>
+            <div class="ecosystem-grid">
+                <div class="ecosystem-item">
+                    <h4>HeadyMe</h4>
+                    <p>Personal AI Cloud</p>
+                </div>
+                <div class="ecosystem-item">
+                    <h4>HeadyAPI</h4>
+                    <p>Developer Tools</p>
+                </div>
+                <div class="ecosystem-item">
+                    <h4>HeadyAI</h4>
+                    <p>Enterprise Suite</p>
+                </div>
+                <div class="ecosystem-item">
+                    <h4>HeadyChat</h4>
+                    <p>Real-time Collaboration</p>
+                </div>
+                <div class="ecosystem-item">
+                    <h4>HeadyCode</h4>
+                    <p>AI-Powered Development</p>
+                </div>
+                <div class="ecosystem-item">
+                    <h4>HeadyBiz</h4>
+                    <p>Business Intelligence</p>
+                </div>
+                <div class="ecosystem-item">
+                    <h4>HeadyX</h4>
+                    <p>Advanced Research</p>
+                </div>
+                <div class="ecosystem-item">
+                    <h4>HeadyLabs</h4>
+                    <p>Experimental Features</p>
+                </div>
+                <div class="ecosystem-item">
+                    <h4>HeadyDocs</h4>
+                    <p>Knowledge Base</p>
+                </div>
+            </div>
+        </section>
     </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>PRODUCT</h4>
+                    <ul>
+                        <li><a href="https://headyme.com">HeadyMe</a></li>
+                        <li><a href="https://api.heady.ai">HeadyAPI</a></li>
+                        <li><a href="https://enterprise.heady.ai">HeadyAI</a></li>
+                        <li><a href="https://chat.heady.ai">HeadyChat</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>DEVELOPERS</h4>
+                    <ul>
+                        <li><a href="https://docs.heady.ai">Documentation</a></li>
+                        <li><a href="https://api.heady.ai/docs">API Reference</a></li>
+                        <li><a href="https://github.com/headysystems">GitHub</a></li>
+                        <li><a href="https://community.heady.ai">Community</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>COMPANY</h4>
+                    <ul>
+                        <li><a href="https://heady.ai/about">About Us</a></li>
+                        <li><a href="https://heady.ai/careers">Careers</a></li>
+                        <li><a href="https://heady.ai/blog">Blog</a></li>
+                        <li><a href="https://heady.ai/press">Press</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>LEGAL</h4>
+                    <ul>
+                        <li><a href="https://heady.ai/privacy">Privacy Policy</a></li>
+                        <li><a href="https://heady.ai/terms">Terms of Service</a></li>
+                        <li><a href="https://heady.ai/cookies">Cookie Policy</a></li>
+                        <li><a href="https://heady.ai/contact">Contact</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 HeadySystems Inc. | Founded by Eric Haywood | 51 Patents Pending</p>
+                <p>HeadyMe: Your Personal AI Cloud. An intelligent companion built for your unique needs.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JSON-LD Schema -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "HeadyMe",
+        "description": "HeadyMe - Your Personal AI Cloud. An AI that remembers everything, learns continuously, and works for you 24/7.",
+        "url": "https://headyme.com",
+        "applicationCategory": "UtilitiesApplication",
+        "offers": {
+            "@type": "AggregateOffer",
+            "priceCurrency": "USD",
+            "lowPrice": "0",
+            "highPrice": "233"
+        },
+        "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue": "4.9",
+            "ratingCount": "2847"
+        },
+        "author": {
+            "@type": "Organization",
+            "name": "HeadySystems Inc",
+            "url": "https://heady.ai"
+        }
+    }
+    </script>
+
+    <!-- Animated Canvas Background -->
+    <script>
+        // Particle animation for hero section
+        const canvas = document.getElementById('heroCanvas');
+        const ctx = canvas.getContext('2d');
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+
+        const particles = [];
+        const particleCount = 60;
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 1.5 + 0.5;
+                this.speedX = (Math.random() - 0.5) * 1.5;
+                this.speedY = (Math.random() - 0.5) * 1.5;
+                this.opacity = Math.random() * 0.5 + 0.3;
+                this.color = Math.random() > 0.5 ? '#7c5eff' : '#40e0d0';
+            }
+
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+
+                if (this.x < 0) this.x = canvas.width;
+                if (this.x > canvas.width) this.x = 0;
+                if (this.y < 0) this.y = canvas.height;
+                if (this.y > canvas.height) this.y = 0;
+            }
+
+            draw() {
+                ctx.fillStyle = this.color;
+                ctx.globalAlpha = this.opacity;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.globalAlpha = 1;
+            }
+        }
+
+        function initParticles() {
+            for (let i = 0; i < particleCount; i++) {
+                particles.push(new Particle());
+            }
+        }
+
+        function drawConnections() {
+            for (let i = 0; i < particles.length; i++) {
+                for (let j = i + 1; j < particles.length; j++) {
+                    const dx = particles[i].x - particles[j].x;
+                    const dy = particles[i].y - particles[j].y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+
+                    if (distance < 150) {
+                        ctx.strokeStyle = particles[i].color;
+                        ctx.globalAlpha = 0.1 * (1 - distance / 150);
+                        ctx.lineWidth = 0.5;
+                        ctx.beginPath();
+                        ctx.moveTo(particles[i].x, particles[i].y);
+                        ctx.lineTo(particles[j].x, particles[j].y);
+                        ctx.stroke();
+                        ctx.globalAlpha = 1;
+                    }
+                }
+            }
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            for (let particle of particles) {
+                particle.update();
+                particle.draw();
+            }
+
+            drawConnections();
+            requestAnimationFrame(animate);
+        }
+
+        initParticles();
+        animate();
+
+        // Mobile menu toggle
+        const hamburger = document.querySelector('.hamburger');
+        const navLinks = document.querySelector('.nav-links');
+
+        hamburger.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+        });
+
+        // Close menu when link is clicked
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('active');
+            });
+        });
+
+        // Smooth scroll offset for fixed header
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                const href = this.getAttribute('href');
+                if (href !== '#' && href !== '#main') {
+                    e.preventDefault();
+                    const target = document.querySelector(href);
+                    if (target) {
+                        const offsetTop = target.offsetTop - 80;
+                        window.scrollTo({
+                            top: offsetTop,
+                            behavior: 'smooth'
+                        });
+                    }
+                }
+            });
+        });
+
+        // Intersection Observer for fade-in animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('fade-in');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.feature-card').forEach(card => {
+            observer.observe(card);
+        });
+    </script>
 </body>
 </html>

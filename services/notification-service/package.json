@@ -1,36 +1,27 @@
 {
   "name": "@heady/notification-service",
-  "version": "2.0.0",
-  "private": true,
-  "type": "module",
-  "description": "Heady notification service - real-time notifications via WebSocket + SSE with phi-scaled parameters",
+  "version": "1.0.0",
+  "description": "HEADY notification service with WebSocket, SSE, and push channels",
+  "main": "dist/index.js",
   "scripts": {
-    "build": "tsc -p tsconfig.json",
-    "dev": "tsx --watch src/index.ts",
+    "build": "tsc",
     "start": "node dist/index.js",
-    "lint": "node -e \"console.log('lint notification-service')\"",
-    "test": "vitest run",
-    "typecheck": "tsc -p tsconfig.json --noEmit"
+    "dev": "tsx watch src/index.ts",
+    "lint": "eslint src/**/*.ts",
+    "type-check": "tsc --noEmit"
   },
   "dependencies": {
-    "@heady-ai/phi-math-foundation": "workspace:*",
-    "@heady-ai/service-runtime": "workspace:*",
-    "@heady-ai/contract-types": "workspace:*",
-    "@heady-ai/observability-client": "workspace:*",
-    "fastify": "^5.2.0",
-    "@fastify/websocket": "^11.0.0",
-    "@fastify/rate-limit": "^10.2.0",
-    "pino": "^9.6.0",
-    "ws": "^8.18.0"
+    "express": "^4.21.2",
+    "ws": "^8.18.1",
+    "pino": "8.16.2",
+    "uuid": "9.0.1",
+    "jsonwebtoken": "9.1.2"
   },
   "devDependencies": {
-    "@types/node": "^22.0.0",
-    "@types/ws": "^8.5.0",
-    "tsx": "^4.19.0",
-    "typescript": "^5.7.0",
-    "vitest": "^3.0.0"
-  },
-  "engines": {
-    "node": ">=22"
+    "@types/express": "4.17.21",
+    "@types/node": "20.10.6",
+    "@types/ws": "8.5.10",
+    "typescript": "5.3.3",
+    "tsx": "4.7.0"
   }
 }

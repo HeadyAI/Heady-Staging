@@ -177,7 +177,7 @@ class DynamicWeightManager {
             epoch: this.epoch,
             totalAgents: this.agents.size,
             masterAgent: this.masterAgentId,
-            concurrent evaluation: this.getRanking().slice(0, 10),
+            ranking: this.getRanking().slice(0, 10),
             reweightIntervalMs: REWEIGHT_INTERVAL_MS,
         };
     }
@@ -198,8 +198,8 @@ function registerDynamicWeightRoutes(app) {
         res.json({ ok: true });
     });
 
-    app.get('/api/geometry/concurrent evaluation', (req, res) => {
-        res.json({ ok: true, concurrent evaluation: dynamicWeights.getRanking() });
+    app.get('/api/geometry/ranking', (req, res) => {
+        res.json({ ok: true, ranking: dynamicWeights.getRanking() });
     });
 
     app.get('/api/geometry/best', (req, res) => {

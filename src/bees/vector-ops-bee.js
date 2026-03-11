@@ -34,6 +34,9 @@ const HEADY_DOMAINS = [
     "headyme.com", "headybuddy.org", "headysystems.com",
     "headyconnection.org", "headymcp.com", "headyio.com",
     "headybot.com", "headyos.com", "headyapi.com",
+    "heady-ai.com", "headysense.com", "headyex.com",
+    "headyfinance.com", "headyconnection.com", "perfecttrader.com",
+    "headyai.me",
 ];
 
 // ─── Safe fetch helper ──────────────────────────────────────────────

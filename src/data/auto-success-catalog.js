@@ -6,13 +6,13 @@
 
 // ─── EXTERNAL TASK SOURCES ──────────────────────────────────────────────────
 let extraTasks = [];
-try { extraTasks = require('../auto-flow-tasks.json'); } catch (err) { /* structured-logger: emit error */ }
+try { extraTasks = require('../auto-flow-tasks.json'); } catch (e) { }
 let nonprofitTasks = [];
-try { nonprofitTasks = require('../nonprofit-tasks.json'); } catch (err) { /* structured-logger: emit error */ }
+try { nonprofitTasks = require('../nonprofit-tasks.json'); } catch (e) { }
 let buddyTasks = [];
-try { buddyTasks = require('../buddy-tasks.json'); } catch (err) { /* structured-logger: emit error */ }
+try { buddyTasks = require('../buddy-tasks.json'); } catch (e) { }
 let prodOptTasks = [];
-try { prodOptTasks = require('./production-optimization-tasks.json'); } catch (err) { /* structured-logger: emit error */ }
+try { prodOptTasks = require('./production-optimization-tasks.json'); } catch (e) { }
 
 const TASK_CATALOG = [
     ...extraTasks,

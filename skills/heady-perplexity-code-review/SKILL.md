@@ -1,140 +1,118 @@
 ---
 name: heady-perplexity-code-review
-description: Reviews code for bugs, security vulnerabilities, performance issues, and best practices in the Heady platform context (Drupal, Firebase, JavaScript, PHP, Python, CSS). Use when the user asks to review, audit, check, refactor, QA, or improve code. Triggers on phrases like "review this code", "check my function", "audit this module", "find bugs in", "is this secure", "refactor this", "code review", or when code is pasted/attached.
-license: MIT
+description: Skill for Perplexity to review generated code against all 8 Heady Unbreakable Laws, the 10 Master Directives, and the no-ranking architecture principle. Use when asked to review, audit, check, verify, validate, or critique any code file in the Heady ecosystem. Triggers on phrases like "review this code", "check this file", "audit the service", "does this follow the laws", or "is this production ready".
+license: proprietary
 metadata:
-  author: heady-connection
-  version: '1.0'
-  platform: heady
-  category: engineering
+  author: HeadySystems Inc.
+  version: '2.1.0'
+  domain: quality
 ---
 
 # Heady Perplexity Code Review
 
 ## When to Use This Skill
 
-Use this skill when the user asks to:
+Use this skill when:
 
-- Review code files, functions, or modules for correctness
-- Audit code for security vulnerabilities
-- Identify performance bottlenecks
-- Check adherence to project coding standards
-- Suggest refactoring improvements
-- Validate Drupal module architecture or Firebase rules
-- Review CSS/SCSS for correctness and specificity issues
-- Pre-merge code review for pull/merge requests
-
-## Review Dimensions
-
-Every review covers these dimensions, scaled to the code's complexity and risk:
-
-| Dimension | Focus |
-|---|---|
-| **Correctness** | Logic errors, off-by-one, null handling, type mismatches |
-| **Security** | Injection, XSS, CSRF, insecure deserialization, over-exposure |
-| **Performance** | N+1 queries, unnecessary re-renders, blocking calls, memory leaks |
-| **Maintainability** | Naming, comments, function size, duplication, complexity |
-| **Standards** | Project conventions, framework idioms, style guide compliance |
-| **Test Coverage** | Missing edge cases, no error path tests, stubs vs. real assertions |
+- Reviewing any generated service implementation
+- Auditing orchestration files for priority/ranking language
+- Checking that AutoContext middleware is properly wired
+- Verifying health endpoints are correctly implemented
+- Ensuring phi-scaled constants are used (not magic numbers)
+- Confirming no hardcoded loopback contamination in production code
+- Validating error handling and typed error classes
 
 ## Instructions
 
-### 1. Intake
+### Review Pass 1 — Ranking Language Audit (CRITICAL)
 
-1. Identify the language(s) and framework(s) in the submitted code.
-2. Ask (or infer) the intended purpose of the code if not obvious.
-3. Note the Heady platform context: Drupal 10+, Firebase, React/JS front-end, PHP backend, or Python scripts.
-4. Confirm whether this is a new feature, bug fix, or refactor — each has different risk profiles.
+Search for and flag any occurrence of:
 
-### 2. Static Analysis Pass
-
-Read through the entire code before writing feedback:
-1. Trace all data flows: where data enters, how it's transformed, where it exits.
-2. Identify all external calls: DB queries, API requests, file I/O, cache reads/writes.
-3. Map error handling: are exceptions caught? Are errors surfaced or swallowed?
-4. Note all user-controlled inputs and how they're sanitized.
-
-### 3. Security Audit
-
-Check for:
-- **SQL Injection**: parameterized queries used? No string concatenation in queries.
-- **XSS**: all output properly escaped? `#markup` in Drupal uses `Xss::filter()`?
-- **CSRF**: state-modifying routes protected with tokens?
-- **Auth/Authz**: permission checks present before privileged operations?
-- **Secrets**: no hardcoded API keys, passwords, or tokens in code.
-- **Firebase Rules**: rules are not open (`allow read, write: if true`)? User-scoped access?
-- **Dependency Risk**: no known-vulnerable package versions referenced.
-
-### 4. Performance Review
-
-- Drupal: avoid `\Drupal::entityQuery()` inside loops; use bulk loads with `loadMultiple()`.
-- Firebase: avoid unbounded reads; use queries with `.limit()`; prefer Firestore over RTDB for complex queries.
-- JavaScript: check for synchronous blocking in async contexts; avoid `document.querySelector` inside render loops.
-- CSS: avoid deeply nested selectors (>3 levels); check for forced layout reflows (reading `offsetWidth` after style change).
-
-### 5. Feedback Format
-
-Organize feedback by severity:
-
-**CRITICAL** — Must fix before merge; security or data integrity risk
-**WARNING** — Should fix; functional correctness or significant performance impact
-**SUGGESTION** — Recommended improvement; maintainability, readability, or minor performance
-**PRAISE** — Note well-written patterns worth keeping
-
-Each item includes:
 ```
-[SEVERITY] Line N — Short title
-Description of the issue.
-Recommended fix:
-```code
-// corrected example
-```
+❌ FORBIDDEN TERMS (in task/work classification context):
+- "priority" (as a field name or enum value)
+- "CRITICAL", "HIGH", "MEDIUM", "LOW" (as task importance levels)
+- "EMERGENCY", "URGENT", "NORMAL" (as task classifications)
+- "priorityQueue", "sortByPriority", "priorityScore"
+- "HIGH_RISK", "LOW_RISK" (as work classifiers)
+- "Tier 1", "Tier 2", "Tier 3" (for categorizing work)
+- SLA strings like "< 60s for MEDIUM, < 300s for HIGH"
+
+✅ PERMITTED (these are NOT ranking):
+- "cslScore" (geometric relevance)
+- "phi", "PHI", "fibonacci" (math constants)
+- "domain" matching scores
+- pressure levels for ADAPTIVE THROTTLING (not work ranking)
 ```
 
-### 6. Summary
+### Review Pass 2 — 8 Unbreakable Laws Compliance
 
-End every review with:
-- Total issues by severity
-- Overall code health score (1–10)
-- Top 3 highest-priority actions
-- Any follow-up questions needed for full review
+| Law | Check |
+|-----|-------|
+| 1. Thoroughness | Every function has error handling with typed error classes |
+| 2. Solutions Only | No `// DEFERRED_WORK_MARKER: fix later`, no `catch(e) { console.log(e) }` |
+| 3. Context Maximization | `autoContextMiddleware` imported and applied to routes |
+| 4. Deployable | No hardcoded loopback literals, no stand-in marker functions, no scaffold markerbed imports |
+| 5. Cross-Env Purity | All URLs use `process.env.*`, never hardcoded |
+| 6. 10K-Bee Scale | Fibonacci pool sizes, phi-scaled timeouts |
+| 7. Auto-Success Integrity | Phi-heartbeat present if service manages lifecycle |
+| 8. Arena Mode | At least one alternative approach considered |
 
-## Platform-Specific Checklists
+### Review Pass 3 — Service Structure Checklist
 
-### Drupal
-- [ ] Hook implementations follow naming convention `MODULE_hookname()`
-- [ ] User input sanitized with `Html::escape()`, `Xss::filter()`, or Form API
-- [ ] Cache tags and contexts set correctly
-- [ ] Services injected via DI container, not `\Drupal::service()`
-- [ ] Database queries use DBTNG (not raw SQL)
+```
+[ ] /health endpoint returns { status, service, uptime, version }
+[ ] /healthz endpoint present (alias)
+[ ] SIGTERM handler for graceful shutdown
+[ ] Correlation ID attached to every log entry
+[ ] emitSpan() called for all significant operations
+[ ] Consul registration on startup
+[ ] Bulkhead semaphore for per-service concurrency limits
+[ ] All environment variables validated at startup
+[ ] JSDoc on every exported function
+```
 
-### Firebase
-- [ ] Firestore security rules tested via Firebase Emulator
-- [ ] Cloud Functions use typed input validation
-- [ ] Auth tokens verified server-side before privileged actions
-- [ ] Indexes defined for all composite queries
+### Review Pass 4 — CSL Routing Verification
 
-### JavaScript / React
-- [ ] No direct DOM manipulation in React components
-- [ ] `useEffect` dependencies array complete
-- [ ] Error boundaries present for async data fetching
-- [ ] No `console.log` left in production paths
+```
+[ ] Tasks routed by domain match, not by importance
+[ ] cslGate() function used for threshold checks
+[ ] CSL_GATES.include / CSL_GATES.boost / CSL_GATES.inject used correctly
+[ ] No priority constants imported from phi-math.js (they don't exist there)
+[ ] routeTaskByDomain() used in orchestrators, not sortByPriority()
+```
+
+### Output Format
+
+```markdown
+## Code Review: {filename}
+
+### PASS / FAIL
+
+### Critical Issues (must fix before merge)
+- Issue: {description}
+  Location: line {N}
+  Fix: {specific fix}
+
+### Warnings (should fix)
+- ...
+
+### Law Compliance
+| Law | Status | Notes |
+|-----|--------|-------|
+
+### Ranking Language Found
+{list of found instances with line numbers, or "None found — PASS"}
+
+### Summary
+Score: {0-100}
+Recommendation: {APPROVE / REQUEST_CHANGES / BLOCK}
+```
 
 ## Examples
 
-**Input:** PHP function that queries Drupal database
+**Input**: swarm-coordinator.js with priority constants
+**Output**: Code review flagging all `PRIORITY.HIGH` usages with line numbers, specific replacement code using CSL routing
 
-**Output:**
-```
-[CRITICAL] Line 14 — SQL Injection Risk
-$query uses direct string concatenation with user input `$_GET['uid']`.
-Recommended fix: Use \Drupal::database()->select() with condition() and typed arguments.
-
-[WARNING] Line 28 — Missing Cache Tags
-Entity data loaded without cache tags; stale data may be served after entity updates.
-
-[SUGGESTION] Line 8 — Use Dependency Injection
-Replace \Drupal::service('entity_type.manager') with constructor injection.
-
-Summary: 1 Critical, 1 Warning, 1 Suggestion. Code health: 5/10.
-```
+**Input**: New service index.js
+**Output**: Full 4-pass review with compliance score and any missing health endpoints or AutoContext wiring flagged

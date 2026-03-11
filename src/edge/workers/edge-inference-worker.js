@@ -1,4 +1,3 @@
-const logger = require('../../shared/logger')('edge-inference-worker');
 /**
  * edge-inference-worker.js
  * Heady™ Latent OS — Edge Inference Worker
@@ -12,7 +11,7 @@ const logger = require('../../shared/logger')('edge-inference-worker');
  *   - @cf/baai/bge-base-en-v1.5                (embeddings, 768-dim)
  *   - @cf/baai/bge-small-en-v1.5               (fast embeddings, 384-dim)
  *   - @cf/huggingface/distilbert-sst-2-int8    (classification)
- *   - @cf/baai/bge-reranker-base               (reconcurrent evaluation)
+ *   - @cf/baai/bge-reranker-base               (reranking)
  *   - @cf/meta/llama-guard-3-8b               (safety)
  *
  * Sacred Geometry resource allocation: Fibonacci ratios govern cache TTL tiers
@@ -421,7 +420,7 @@ async function handleChat(request, env, ctx) {
       return new Response(JSON.stringify(responsePayload), { headers });
     }
   } catch (err) {
-    logger.error('[chat] inference error:', err);
+    console.error('[chat] inference error:', err);
     return errorResponse('Edge inference failed', 502, request, 'INFERENCE_FAILED');
   }
 }
@@ -505,7 +504,7 @@ async function handleEmbed(request, env, ctx) {
     headers.set('X-RateLimit-Remaining', String(rl.remaining));
     return new Response(JSON.stringify(responsePayload), { headers });
   } catch (err) {
-    logger.error('[embed] inference error:', err);
+    console.error('[embed] inference error:', err);
     return errorResponse('Embedding generation failed', 502, request, 'INFERENCE_FAILED');
   }
 }
@@ -589,7 +588,7 @@ async function handleClassify(request, env, ctx) {
     headers.set('X-RateLimit-Remaining', String(rl.remaining));
     return new Response(JSON.stringify(responsePayload), { headers });
   } catch (err) {
-    logger.error('[classify] inference error:', err);
+    console.error('[classify] inference error:', err);
     return errorResponse('Classification failed', 502, request, 'INFERENCE_FAILED');
   }
 }
@@ -687,8 +686,8 @@ async function handleRerank(request, env, ctx) {
     headers.set('X-RateLimit-Remaining', String(rl.remaining));
     return new Response(JSON.stringify(responsePayload), { headers });
   } catch (err) {
-    logger.error('[rerank] inference error:', err);
-    return errorResponse('Reconcurrent evaluation failed', 502, request, 'INFERENCE_FAILED');
+    console.error('[rerank] inference error:', err);
+    return errorResponse('Reranking failed', 502, request, 'INFERENCE_FAILED');
   }
 }
 
@@ -778,7 +777,7 @@ export default {
       // 404 for unknown paths
       return errorResponse(`Path ${path} not found`, 404, request, 'NOT_FOUND');
     } catch (err) {
-      logger.error(`[${requestId}] unhandled error:`, err);
+      console.error(`[${requestId}] unhandled error:`, err);
       return errorResponse('Internal server error', 500, request, 'INTERNAL_ERROR');
     }
   },
@@ -792,7 +791,7 @@ export default {
    * @param {ExecutionContext} ctx
    */
   async scheduled(event, env, ctx) {
-    logger.info('[scheduled] cron fired:', event.cron);
+    console.log('[scheduled] cron fired:', event.cron);
     // Placeholder for cache warm-up logic
     // In production, pre-embed common queries and store in EDGE_CACHE_KV
   },

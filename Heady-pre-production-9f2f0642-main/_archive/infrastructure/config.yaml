@@ -1,0 +1,75 @@
+# ═══════════════════════════════════════════════════════════════
+# HeadySystems — LiteLLM Routing Configuration
+# Primary: Colab Pro+ nodes via CF Tunnel
+# Fallback: Groq (fast, cheap) → OpenAI (reliable)
+# ═══════════════════════════════════════════════════════════════
+
+general_settings:
+  master_key: "os.environ/LITELLM_MASTER_KEY"
+  alerting: ["slack"]
+
+model_list:
+  # ─── TIER 1: ENTERPRISE (HeadySystems Commercial) ───
+  # Routes to Colab Pro+ GPU via Cloudflare Tunnel
+  - model_name: "heady-logic-v1"
+    litellm_params:
+      model: "openai/heady-logic-v1"
+      api_base: "https://colab-node-01.headysystems.com/v1"
+      api_key: "os.environ/COLAB_NODE_01_KEY"
+      tpm: 100000
+      rpm: 1000
+      metadata:
+        tier: "enterprise"
+        source: "colab-gpu"
+
+  # ─── TIER 2: COMMUNITY (HeadyConnection Non-Profit) ───
+  # Secondary Colab node with lower limits
+  - model_name: "heady-logic-v1"
+    litellm_params:
+      model: "openai/heady-logic-v1"
+      api_base: "https://colab-node-02.headysystems.com/v1"
+      api_key: "os.environ/COLAB_NODE_02_KEY"
+      tpm: 20000
+      rpm: 100
+      metadata:
+        tier: "community"
+        source: "colab-gpu"
+
+  # ─── TIER 3: FAST FALLBACK (Groq) ───
+  # If all Colab nodes are down, route to Groq
+  - model_name: "heady-logic-v1"
+    litellm_params:
+      model: "groq/llama-3.1-70b-versatile"
+      api_key: "os.environ/GROQ_API_KEY"
+      metadata:
+        tier: "fallback"
+        source: "groq-external"
+
+  # ─── TIER 4: RELIABLE FALLBACK (OpenAI) ───
+  # Last resort — always available
+  - model_name: "heady-logic-v1"
+    litellm_params:
+      model: "gpt-4o-mini"
+      api_key: "os.environ/OPENAI_API_KEY"
+      metadata:
+        tier: "fallback"
+        source: "openai-external"
+
+  # ─── HeadyBrain Direct (for internal tools) ───
+  - model_name: "heady-brain"
+    litellm_params:
+      model: "openai/heady-brain"
+      api_base: "http://localhost:3301/v1"
+      api_key: "EMPTY"
+      metadata:
+        tier: "internal"
+        source: "local-brain"
+
+router_settings:
+  routing_strategy: "latency-based-routing"
+  redis_host: "redis"
+  redis_port: 6379
+  timeout: 10
+  enable_pre_call_checks: true
+  num_retries: 2
+  retry_after: 5

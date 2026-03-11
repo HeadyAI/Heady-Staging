@@ -1,274 +1,178 @@
 ---
 name: heady-perplexity-multi-agent-eval
-description: Designs, runs, and interprets multi-agent evaluation frameworks where multiple AI agents cross-evaluate each other's outputs or collaborate on quality assessment for the Heady platform. Use when the user asks to run multi-agent evaluations, have agents judge each other, build consensus scoring, or use adversarial agent setups. Triggers on phrases like "multi-agent eval", "agents judge each other", "consensus scoring", "adversarial evaluation", "panel of judges", "cross-agent review", "LLM-as-judge multi-agent", or "agent debate".
-license: MIT
+description: Skill for evaluating orchestration quality in concurrent agent systems. Use when measuring multi-agent step completion rates, utility scoring for swarm tasks, latency distribution across 17 swarms, or benchmarking HeadyBee concurrent execution against single-agent baselines. References microsoft/autogen benchmarks. Triggers on "multi-agent eval", "swarm performance", "concurrent agent", "AutoGen benchmark", "step completion", "utility score", or any multi-agent evaluation task.
+license: proprietary
 metadata:
-  author: heady-connection
-  version: '1.0'
-  platform: heady
-  category: evaluation
+  author: HeadySystems Inc.
+  version: '2.1.0'
+  domain: evaluation
 ---
 
 # Heady Perplexity Multi-Agent Eval
 
 ## When to Use This Skill
 
-Use this skill when the user asks to:
+Use this skill when:
 
-- Run evaluations where multiple AI agents score or critique outputs
-- Implement panel-of-judges scoring for high-stakes outputs
-- Set up adversarial evaluation (one agent argues for, one against)
-- Build debate-style evaluation to surface output weaknesses
-- Aggregate scores from diverse agent perspectives for robust quality signals
-- Identify evaluation blind spots that single-judge evals miss
-- Benchmark outputs using specialized domain-expert agent personas
-- Generate consensus or dissent reports from multi-agent review
+- Benchmarking Heady's 17-swarm concurrent architecture
+- Comparing HeadyBee performance against single-agent approaches
+- Measuring step completion across multi-hop agent tasks
+- Computing utility scores for bee task outputs
+- Evaluating swarm coordination quality
+- Testing that no swarm has implicit ranking/priority over others
 
-## Multi-Agent Eval Patterns
+## Evaluation Framework
 
-### Pattern 1: Panel of Judges
-N independent agents score the same output on shared rubric → aggregate scores → consensus report.
+Reference architectures:
+- [microsoft/autogen](https://github.com/microsoft/autogen) — multi-agent conversation benchmarks
+- [langchain-ai/agent-evals](https://github.com/langchain-ai/agent-evals) — trajectory evaluation
 
-### Pattern 2: Adversarial Debate
-Agent A defends the output; Agent B attacks it. Moderator agent summarizes strengths and fatal flaws.
+## Key Metrics
 
-### Pattern 3: Specialization Panel
-Each agent has a domain specialization (factual accuracy expert, tone expert, legal/compliance expert) → combine specialized scores.
-
-### Pattern 4: Cascading Review
-Agent A reviews the output → Agent B reviews Agent A's review (meta-review) → final score incorporates both levels.
-
-### Pattern 5: Tournament Ranking
-Multiple outputs compete in pairwise comparisons → Elo-style ranking emerges from agent vote counts.
+| Metric | Definition | Target |
+|--------|-----------|--------|
+| Step Completion Rate | % of agent steps completing without timeout | ≥ 90% |
+| Swarm Concurrency Factor | avg parallel swarms per task | ≥ 3 of 17 |
+| Equal-Status Verification | No swarm completes > 2x faster than others (drift indicator) | Variance < 20% |
+| Utility Score | Relevance × Accuracy × Efficiency (0..1) | ≥ 0.75 |
+| CSL Domain Match Rate | % of tasks routed to correct swarm | ≥ 95% |
+| No-Ranking Compliance | 0 priority-related delays | 100% |
 
 ## Instructions
 
-### 1. Panel Configuration
+### Step 1 — AutoGen Benchmark Adaptation
 
-Define the evaluation panel before running:
+```python
+# Adapt AutoGen's math/coding benchmarks for Heady swarm evaluation
+# Reference: https://github.com/microsoft/autogen
 
-```yaml
-panel_config:
-  pipeline_id: "product-description-eval"
-  task_description: "Evaluate product descriptions for heady glass accessories"
-  
-  agents:
-    - id: judge_factual
-      role: "Factual Accuracy Expert"
-      persona: "You are a cannabis accessories industry expert with deep knowledge of glass art, materials, and technical terminology."
-      dimensions: [factual_accuracy, specificity]
-      weight: 0.35
-      
-    - id: judge_brand
-      role: "Brand Voice Specialist"
-      persona: "You are Heady Connection's brand guardian. You know the platform voice deeply: authentic, knowledgeable, community-centered."
-      dimensions: [tone_style, alignment]
-      weight: 0.35
-      
-    - id: judge_ux
-      role: "Conversion Copywriter"
-      persona: "You optimize copy for clarity, persuasion, and conversion. You judge whether this text would make a customer want to buy."
-      dimensions: [cohesion, specificity]
-      weight: 0.30
-      
-  aggregation: weighted_mean  # Options: mean, weighted_mean, median, majority_vote
-  min_agreement_threshold: 0.70  # Below this = flag for human review
+import asyncio
+import httpx
+
+HEADY_ORCHESTRATION = "http://heady-orchestration:8202"
+
+async def run_heady_swarm_task(task: dict) -> dict:
+    """Send a task to Heady orchestration and measure execution."""
+    start = asyncio.get_event_loop().time()
+    async with httpx.AsyncClient(timeout=120) as client:
+        response = await client.post(
+            f"{HEADY_ORCHESTRATION}/dispatch",
+            json=task,
+        )
+    elapsed = asyncio.get_event_loop().time() - start
+    result = response.json()
+    return {
+        "task_id": result.get("taskId"),
+        "swarm_id": result.get("routedSwarmId"),
+        "domain": result.get("routedDomain"),
+        "csl_score": result.get("cslScore", 0),
+        "dispatched": result.get("dispatched", False),
+        "elapsed_ms": elapsed * 1000,
+    }
+
+async def run_concurrency_benchmark(num_tasks: int = 17) -> dict:
+    """Run N tasks simultaneously — verify all dispatch concurrently."""
+    tasks = [
+        {"type": "research", "domain": d, "payload": {"query": f"test {d}"}}
+        for d in ["security", "inference", "memory", "context", "deployment",
+                  "data", "research", "monitoring", "edge", "integration",
+                  "analysis", "reliability", "fintech", "documentation",
+                  "testing", "governance", "orchestration"][:num_tasks]
+    ]
+    
+    start = asyncio.get_event_loop().time()
+    results = await asyncio.gather(*[run_heady_swarm_task(t) for t in tasks])
+    total_ms = (asyncio.get_event_loop().time() - start) * 1000
+    
+    # Verify concurrent execution (all tasks should complete within 2× of the fastest)
+    latencies = [r["elapsed_ms"] for r in results if r["dispatched"]]
+    min_ms = min(latencies)
+    max_ms = max(latencies)
+    concurrency_ok = (max_ms / min_ms) < 2.0  # No task > 2x slower than fastest
+    
+    return {
+        "total_dispatched":   sum(1 for r in results if r["dispatched"]),
+        "total_tasks":        num_tasks,
+        "concurrency_factor": len(set(r["swarm_id"] for r in results if r["dispatched"])),
+        "min_ms":             min_ms,
+        "max_ms":             max_ms,
+        "concurrent_ok":      concurrency_ok,
+        "avg_csl_score":      sum(r["csl_score"] for r in results) / len(results),
+    }
+
+asyncio.run(run_concurrency_benchmark())
 ```
 
-### 2. Agent Prompt Templates
+### Step 2 — Utility Scoring
 
-**Judge prompt structure:**
-```
-You are {agent.persona}
+```javascript
+// Compute utility score for a bee task output
+function computeUtilityScore(output, expected) {
+  const PHI = 1.618033988749895;
+  const PSI = 1 / PHI;
 
-Your task: Evaluate the following AI-generated {task_type} on these dimensions:
-{dimensions_with_rubric}
+  // Relevance: CSL score of output vs expected domain
+  const relevance = output.cslScore || 0;
 
-## Content to Evaluate
----
-{output_text}
----
+  // Accuracy: % of expected fields present in output
+  const expectedKeys = Object.keys(expected || {});
+  const presentKeys  = expectedKeys.filter(k => output.result?.[k] !== undefined);
+  const accuracy     = expectedKeys.length > 0 ? presentKeys.length / expectedKeys.length : 1;
 
-## Original Prompt / Brief
----
-{original_prompt}
----
+  // Efficiency: inverse of normalized latency (faster = more efficient)
+  const latencyMs    = output.ms || 0;
+  const maxExpectedMs = 30_000; // 30s ceiling
+  const efficiency   = Math.max(0, 1 - (latencyMs / maxExpectedMs));
 
-## Your Evaluation
-Provide scores for each dimension (1-5 scale) and a brief justification (2-3 sentences each).
-Also provide an OVERALL SCORE (1-5) and 2-3 specific improvement recommendations.
+  // Phi-weighted fusion: relevance carries PSI weight, accuracy and efficiency split remainder
+  const utility = (relevance * PSI) + (accuracy * PSI * PSI) + (efficiency * (1 - PSI - PSI * PSI));
 
-Respond in this exact JSON format:
-{
-  "agent_id": "{agent.id}",
-  "dimension_scores": {
-    "dimension_name": {"score": N, "justification": "..."}
-  },
-  "overall_score": N,
-  "recommendations": ["...", "...", "..."],
-  "fatal_flaws": ["..." | empty array],
-  "standout_strengths": ["...", "...", "..."]
+  return { utility, relevance, accuracy, efficiency };
 }
 ```
 
-### 3. Adversarial Debate Setup
+### Step 3 — Equal-Status Compliance Test
 
-```python
-ADVOCATE_PROMPT = """
-You are a defender of this output. Your job is to make the strongest possible case 
-for why this output is high quality and meets the brief. Identify its strengths,
-explain why potential weaknesses are actually acceptable trade-offs, and argue 
-why it should be approved.
+```javascript
+// Verify no swarm has systemic timing advantage over others
+async function testEqualStatusCompliance() {
+  const PHI = 1.618033988749895;
+  const swarmDomains = [
+    'orchestration', 'inference', 'memory', 'context', 'security',
+    'deployment', 'data', 'research', 'monitoring', 'edge',
+    'integration', 'analysis', 'reliability', 'fintech',
+    'documentation', 'testing', 'governance',
+  ];
 
-Output to defend:
-{output_text}
+  const timings = {};
+  await Promise.all(swarmDomains.map(async domain => {
+    const t0 = Date.now();
+    await fetch('http://heady-orchestration:8202/dispatch', {
+      method: 'POST',
+      body: JSON.stringify({ type: 'probe', domain, payload: {} }),
+    });
+    timings[domain] = Date.now() - t0;
+  }));
 
-Provide a structured defense in under 300 words.
-"""
+  const times = Object.values(timings);
+  const mean  = times.reduce((a, b) => a + b, 0) / times.length;
+  const variance = times.reduce((s, t) => s + (t - mean) ** 2, 0) / times.length;
+  const stdDev = Math.sqrt(variance);
+  const cv     = stdDev / mean; // Coefficient of variation
 
-CRITIC_PROMPT = """
-You are a rigorous quality critic. Your job is to find every flaw, risk, and 
-shortcoming in this output. Be specific and cite exact passages. Focus on:
-- Factual errors or unverified claims
-- Brand voice violations
-- Missing information the user needs
-- Logical inconsistencies
-- Any compliance or legal risks
-
-Output to critique:
-{output_text}
-
-Provide a structured critique in under 300 words.
-"""
-
-MODERATOR_PROMPT = """
-You have read both a defense and a critique of the same AI output. 
-Your job is to produce a final balanced verdict.
-
-Defense: {defense}
-Critique: {critique}
-
-Provide:
-1. Which arguments were most compelling (defense vs. critique)
-2. Net quality score (1-5)
-3. Pass/Fail/Conditional decision
-4. If Conditional: exactly what must be fixed
-"""
+  return {
+    mean: mean.toFixed(1),
+    stdDev: stdDev.toFixed(1),
+    cv: cv.toFixed(3),
+    compliant: cv < 0.20, // < 20% variation → equal status achieved
+    timings,
+  };
+}
 ```
 
-### 4. Aggregation Methods
+## References
 
-**Weighted mean:**
-```python
-def aggregate_weighted_mean(agent_results: list, panel_config: dict) -> float:
-    agent_weights = {a['id']: a['weight'] for a in panel_config['agents']}
-    total_weight = sum(agent_weights.values())
-    weighted_sum = sum(
-        r['overall_score'] * agent_weights[r['agent_id']]
-        for r in agent_results
-    )
-    return weighted_sum / total_weight
-```
-
-**Agreement measurement:**
-```python
-def measure_agreement(scores: list[float]) -> float:
-    """Returns 1.0 if all scores identical, lower as scores diverge."""
-    max_possible_range = 4.0  # 5 - 1
-    actual_range = max(scores) - min(scores)
-    return 1.0 - (actual_range / max_possible_range)
-```
-
-**Majority vote (for categorical decisions):**
-```python
-def majority_vote(decisions: list[str]) -> str:
-    """For pass/fail/conditional decisions."""
-    return Counter(decisions).most_common(1)[0][0]
-```
-
-### 5. Dissent Handling
-
-When agents significantly disagree (agreement < 0.70):
-1. Log the dissent with agent IDs and scores.
-2. Extract the specific claims causing disagreement.
-3. Either:
-   - **Auto-resolve**: Add a tie-breaker agent with broader domain knowledge
-   - **Escalate**: Flag for human review with full agent justifications surfaced
-4. Never silently average-out a major disagreement — it hides signal.
-
-```python
-def handle_dissent(results: list, threshold: float = 0.70) -> dict:
-    scores = [r['overall_score'] for r in results]
-    agreement = measure_agreement(scores)
-    if agreement < threshold:
-        return {
-            "status": "DISSENT",
-            "agreement_score": agreement,
-            "agent_scores": {r['agent_id']: r['overall_score'] for r in results},
-            "dissenting_agent": min(results, key=lambda r: r['overall_score'])['agent_id'],
-            "dissent_reasons": extract_dissent_reasons(results),
-            "action": "human_review"
-        }
-```
-
-### 6. Tournament Ranking (Multi-Output)
-
-For ranking N outputs against each other:
-
-```python
-def run_tournament(outputs: list[str], judge_agent, n_rounds: int = 3) -> dict:
-    """Pairwise comparisons → Elo rating."""
-    elo_ratings = {i: 1500 for i in range(len(outputs))}
-    
-    for round_num in range(n_rounds):
-        pairs = generate_random_pairs(len(outputs))
-        for i, j in pairs:
-            winner = judge_agent.compare(outputs[i], outputs[j])
-            elo_ratings[i], elo_ratings[j] = update_elo(
-                elo_ratings[i], elo_ratings[j], 
-                k=32, won=(winner == i)
-            )
-    
-    ranked = sorted(elo_ratings.items(), key=lambda x: x[1], reverse=True)
-    return {"rankings": ranked, "ratings": elo_ratings}
-```
-
-### 7. Multi-Agent Eval Report Format
-
-```
-## Multi-Agent Evaluation Report
-Pipeline: {pipeline_id}
-Evaluation Date: {date}
-Output ID: {output_id}
-
-### Panel Summary
-| Agent | Role | Score | Top Concern |
-|---|---|---|---|
-| judge_factual | Factual Expert | 4.2 | Unverified stat in para 2 |
-| judge_brand | Brand Voice | 3.8 | Slightly too formal |
-| judge_ux | Conversion Expert | 4.5 | Strong CTA |
-
-**Aggregate Score: 4.15 / 5.0**
-**Agreement: 0.82 (High)**
-**Decision: PASS — minor revisions suggested**
-
-### Consensus Strengths
-1. ...
-2. ...
-
-### Required Fixes (before publish)
-1. ...
-
-### Optional Improvements
-1. ...
-```
-
-## Examples
-
-**Input:** "Run a 3-judge evaluation on these 5 product descriptions and pick the best one."
-
-**Output:** Panel configuration for 3 specialized judges, 5 scored outputs, aggregate rankings, tournament Elo results, and narrative recommendation for the winner.
-
-**Input:** "Set up an adversarial eval for our AI blog posts before we publish them."
-
-**Output:** Advocate + Critic + Moderator agent configuration, integration spec for blog pipeline, sample evaluation report with pass/fail decision logic.
+- [microsoft/autogen](https://github.com/microsoft/autogen)
+- [langchain-ai/agentevals](https://github.com/langchain-ai/agentevals)
+- Heady orchestration: `heady-orchestration` port 8202
+- Heady eval service: `heady-eval` port 8401

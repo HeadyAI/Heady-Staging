@@ -10,24 +10,21 @@
     "start:sse": "HEADY_MCP_TRANSPORT=sse node src/index.js",
     "dev": "node --watch src/index.js",
     "test": "node --test src/__tests__/*.test.js",
-    "health": "curl -s http://localhost:3310/health | node -e \"process.stdin.pipe(process.stdout)\"",
-    "lint": "node --check src/**/*.js",
-    "validate": "node src/__tests__/validate-registry.js"
+    "health": "curl -s http://localhost:3310/health | node -e \"process.stdin.pipe(process.stdout)\""
   },
-  "engines": {
-    "node": ">=20.0.0"
-  },
+  "engines": { "node": ">=20.0.0" },
   "dependencies": {
-    "compression": "^1.7.4",
+    "express": "^4.21.2",
     "cors": "^2.8.5",
-    "express": "^5.2.1",
-    "express-rate-limit": "^8.3.1",
     "helmet": "^7.1.0",
-    "pino": "^8.21.0",
-    "pino-pretty": "^11.3.0",
+    "compression": "^1.7.4",
+    "express-rate-limit": "^7.4.0",
     "uuid": "^9.0.1",
-    "ws": "^8.18.1"
+    "ws": "^8.18.1",
+    "pino": "^8.21.0",
+    "pino-pretty": "^11.3.0"
   },
+  "devDependencies": {},
   "author": "HeadySystems Inc. <eric@headyconnection.org>",
   "license": "SEE LICENSE IN LICENSE",
   "repository": {
@@ -36,12 +33,5 @@
     "directory": "services/heady-mcp-server"
   },
   "homepage": "https://headymcp.com",
-  "keywords": [
-    "heady",
-    "mcp",
-    "model-context-protocol",
-    "ai",
-    "tools",
-    "phi-scaled"
-  ]
+  "keywords": ["heady", "mcp", "model-context-protocol", "ai", "tools", "phi-scaled"]
 }

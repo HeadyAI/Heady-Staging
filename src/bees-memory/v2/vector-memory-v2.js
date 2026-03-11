@@ -720,7 +720,7 @@ class VectorMemoryV2 {
   }
 
   /**
-   * Hybrid search combining cosine similarity (NSW) and BM25 keyword concurrent evaluation.
+   * Hybrid search combining cosine similarity (NSW) and BM25 keyword ranking.
    *
    * CHANGE FROM V1: This is entirely new.
    *

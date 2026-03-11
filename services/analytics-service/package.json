@@ -1,24 +1,26 @@
 {
-    "name": "@heady/analytics-service",
-    "version": "4.0.0",
-    "private": true,
-    "description": "Heady™ Privacy-First Analytics — self-hosted usage tracking with pgvector",
-    "main": "index.js",
-    "scripts": {
-        "dev": "node --watch index.js",
-        "start": "node index.js",
-        "test": "node --test __tests__/analytics-service.test.js",
-        "lint": "eslint ."
-    },
-    "dependencies": {
-        "express": "^5.2.1",
-        "pg": "^8.13.0",
-        "pino": "^9.6.0"
-    },
-    "devDependencies": {
-        "pino-pretty": "^13.0.0"
-    },
-    "engines": {
-        "node": ">=20.0.0"
-    }
+  "name": "@heady/analytics-service",
+  "version": "1.0.0",
+  "description": "HEADY privacy-first analytics service with φ-scaled batch processing",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "tsx watch src/index.ts",
+    "lint": "eslint src/**/*.ts",
+    "type-check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "express": "^4.21.2",
+    "pino": "8.16.2",
+    "uuid": "9.0.1",
+    "node-cache": "5.1.2"
+  },
+  "devDependencies": {
+    "@types/express": "4.17.21",
+    "@types/node": "20.10.6",
+    "@types/node-cache": "4.2.5",
+    "typescript": "5.3.3",
+    "tsx": "4.7.0"
+  }
 }

@@ -365,7 +365,7 @@ class UnifiedEnterpriseAutonomyService {
             mode: 'unified-living-intelligence-system',
             alive,
             selfHealPlan,
-            autonomyDirective: alive.healthy ? 'maintain-max-autonomy-and-proactive-optimization' : 'coordinate concurrently-self-heal-then-resume-max-autonomy',
+            autonomyDirective: alive.healthy ? 'maintain-max-autonomy-and-proactive-optimization' : 'prioritize-self-heal-then-resume-max-autonomy',
             deterministicReceipt: createDeterministicReceipt({ vitalityScore: alive.vitalityScore, healthy: alive.healthy, selfHealActions: selfHealPlan.actionCount }),
         };
     }

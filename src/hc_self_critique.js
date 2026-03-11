@@ -65,7 +65,7 @@ function saveCritiqueStore(data) {
     const dir = path.dirname(CRITIQUE_STORE_PATH);
     if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
     fs.writeFileSync(CRITIQUE_STORE_PATH, JSON.stringify(data, null, 2), "utf8");
-  } catch (err) { /* structured-logger: emit error */ }
+  } catch (_) {}
 }
 
 // ═══════════════════════════════════════════════════════════════════════

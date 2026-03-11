@@ -38,7 +38,7 @@ class HeadyCloudConductor {
    * Initialize resource profiles for different workflow types and tiers
    */
   initializeResourceProfiles() {
-    // Impact tier - concurrent-equal weight, generous resources
+    // Impact tier - high priority, generous resources
     this.resourceProfiles.set('impact', {
       modelTiers: ['small', 'medium', 'large'],
       maxTokens: 32000,

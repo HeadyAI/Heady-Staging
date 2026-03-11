@@ -305,7 +305,7 @@ class ContextWindowManager {
    * Prioritizes emotional state > error summary > recent decisions.
    *
    * CHANGE FROM V1: V1 prepended the full contextStr unconditionally.
-   * This version truncates and coordinate concurrentlys to stay within budget.
+   * This version truncates and prioritizes to stay within budget.
    *
    * @param {object} components - { emotionalState, errorSummary, recentErrors, confidence }
    * @param {object} [task] - Current task for tailoring context

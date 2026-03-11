@@ -1,4 +1,3 @@
-const logger = require('../../shared/logger')('indexes');
 'use strict';
 
 /**
@@ -94,10 +93,10 @@ class IndexManager {
     try {
       await this.pool.query(sql);
       this._indexCache.delete(id);
-      logger.info(`[indexes] Created HNSW index "${indexName}" for collection ${id} (m=${hnsw_m}, ef_construction=${hnsw_ef_construction})`);
+      console.log(`[indexes] Created HNSW index "${indexName}" for collection ${id} (m=${hnsw_m}, ef_construction=${hnsw_ef_construction})`);
     } catch (err) {
       if (err.message.includes('already exists')) {
-        logger.info(`[indexes] HNSW index "${indexName}" already exists, skipping`);
+        console.log(`[indexes] HNSW index "${indexName}" already exists, skipping`);
         return;
       }
       throw err;
@@ -128,10 +127,10 @@ class IndexManager {
     try {
       await this.pool.query(sql);
       this._indexCache.delete(id);
-      logger.info(`[indexes] Created IVFFlat index "${indexName}" for collection ${id} (lists=${nLists})`);
+      console.log(`[indexes] Created IVFFlat index "${indexName}" for collection ${id} (lists=${nLists})`);
     } catch (err) {
       if (err.message.includes('already exists')) {
-        logger.info(`[indexes] IVFFlat index "${indexName}" already exists, skipping`);
+        console.log(`[indexes] IVFFlat index "${indexName}" already exists, skipping`);
         return;
       }
       throw err;
@@ -171,7 +170,7 @@ class IndexManager {
 
     for (const row of result.rows) {
       await this.pool.query(`DROP INDEX CONCURRENTLY IF EXISTS "${row.indexname}"`);
-      logger.info(`[indexes] Dropped index "${row.indexname}"`);
+      console.log(`[indexes] Dropped index "${row.indexname}"`);
     }
 
     this._indexCache.delete(collectionId);
@@ -265,7 +264,7 @@ class IndexManager {
     try {
       await client.query('VACUUM ANALYZE heady_vectors');
       await client.query('VACUUM ANALYZE heady_graph_nodes');
-      logger.info('[indexes] VACUUM ANALYZE complete');
+      console.log('[indexes] VACUUM ANALYZE complete');
     } finally {
       client.release();
     }

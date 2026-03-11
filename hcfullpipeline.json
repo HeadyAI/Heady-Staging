@@ -1,17 +1,11 @@
 {
   "_meta": {
     "name": "HCFullPipeline",
-    "version": "4.5.0",
-    "description": "Heady™ AI Platform 21-Stage (fib(8)) Cognitive Pipeline — φ-scaled throughout, zero magic numbers. v5.4: Maximum Potential Autonomous Audit — security hardening, scaling infrastructure, anti-pattern remediation, documentation",
+    "version": "4.0.0",
+    "description": "Heady™ AI Platform 21-Stage (fib(8)) Cognitive Pipeline — φ-scaled throughout, zero magic numbers",
     "copyright": "© 2026-2026 HeadySystems Inc. All Rights Reserved.",
-    "updatedAt": "2026-03-10T04:06:32.954Z",
-    "audit": "All constants φ-derived per FIXED-VALUE-AUDIT and phi-math-foundation",
-    "v4.1_source": "Tasks extracted from Heady/in/ inbox: ai-accuracy-research-report.docx, ai-agent-effectiveness-report.docx, heady-system-build.zip, heady_bounded_security_pass.zip",
-    "v4_2_source": "Tasks extracted from in/ folder scan: 14 ZIPs, GAPS_FOUND.md (16 remaining gaps), NEXT_STEPS_FOR_HEADY.md (5 priorities), repo audit (8 code quality categories)",
-    "v5_4_source": "Maximum Potential Autonomous Audit: 14 new files (4 security, 4 scaling, 6 docs), 4 anti-pattern fixes, 10 follow-up tasks extracted",
-    "v4_3_source": "Wave 3/4 modules from updated heady-max-potential(1).zip: 101 JS modules, 28 docs, 12 ADRs extracted 2026-03-10T03:54:51.428Z",
-    "v4_4_source": "Full in/ folder deep scan: sacred-projections genesis (19), full-rebuild-context (12), maximum-potential audit (3), autonomy-v4.1.0 (3), bounded-security (1), DOCX reports (2), state-diff (1)",
-    "v4_5_source": "126MB heady_bounded_security_pass(2).zip: HEADY_NEXT_ACTIONS (23 critical tasks), genesis pre-production (20 integration tasks), CLI/swarm-coordinator, new docs (8)"
+    "updatedAt": "2026-03-08T00:00:00Z",
+    "audit": "All constants φ-derived per FIXED-VALUE-AUDIT and phi-math-foundation"
   },
   "pipeline": {
     "id": "hcfullpipeline",
@@ -39,7 +33,7 @@
     "description": "When enabled, pipeline executes all stages autonomously without human checkpoints",
     "envOverride": "PIPELINE_FULL_AUTO",
     "requiresGovernancePass": true,
-    "maxBudgetUSD": 5,
+    "maxBudgetUSD": 5.00,
     "allowedScopes": [
       "read",
       "analyze",
@@ -132,27 +126,6 @@
           }
         },
         {
-          "id": "verify_mtls",
-          "name": "Verify mTLS certificates and connection security",
-          "node": "HeadyGuard",
-          "action": "verifyMTLS",
-          "source": "heady_bounded_security_pass.zip → src/security/mtls.js",
-          "params": {
-            "checkExpiry": true,
-            "minKeyBits": 2048
-          }
-        },
-        {
-          "id": "health_monitor_baseline",
-          "name": "Establish health monitoring baseline",
-          "node": "HeadyHealth",
-          "action": "baseline",
-          "source": "heady_bounded_security_pass.zip → src/monitoring/health-monitor.js",
-          "params": {
-            "captureMetrics": true
-          }
-        },
-        {
           "id": "build_env_map",
           "name": "Build unified environment map",
           "node": "HeadyConductor",
@@ -208,34 +181,14 @@
       "parallel": true,
       "steps": [
         {
-          "id": "hybrid_search",
-          "name": "Hybrid semantic + keyword search (BM25 + vector)",
+          "id": "vector_search",
+          "name": "Semantic memory search",
           "node": "HeadyMemory",
-          "action": "hybridSearch",
-          "source": "ai-accuracy-research-report.docx → Rec #3: Advanced RAG",
+          "action": "search",
           "params": {
             "limit": 13,
             "limit_source": "fib(7)",
-            "minScore": 0.618,
-            "bm25Weight": 0.382,
-            "vectorWeight": 0.618,
-            "rerankerEnabled": true
-          }
-        },
-        {
-          "id": "source_quality_scoring",
-          "name": "Score source reliability, recency, authority",
-          "node": "HeadyMemory",
-          "action": "scoreSourceQuality",
-          "source": "ai-accuracy-research-report.docx → Rec #5: Citation & Grounding",
-          "params": {
-            "dimensions": [
-              "authority",
-              "recency",
-              "consistency",
-              "domain_relevance"
-            ],
-            "minQuality": 0.382
+            "minScore": 0.618
           }
         },
         {
@@ -280,47 +233,6 @@
               "HIGH",
               "CRITICAL"
             ]
-          }
-        },
-        {
-          "id": "multi_model_route",
-          "name": "Route to optimal model tier (fast/balanced/max)",
-          "node": "HeadyConductor",
-          "action": "routeModel",
-          "source": "ai-accuracy-research-report.docx → Rec #1: Multi-Model Orchestration",
-          "params": {
-            "tiers": [
-              {
-                "id": "fast",
-                "models": [
-                  "gemini-flash",
-                  "claude-haiku"
-                ],
-                "maxTokens": 4000,
-                "costCap": 0.01
-              },
-              {
-                "id": "balanced",
-                "models": [
-                  "gemini-pro",
-                  "claude-sonnet"
-                ],
-                "maxTokens": 16000,
-                "costCap": 0.1
-              },
-              {
-                "id": "max",
-                "models": [
-                  "gemini-ultra",
-                  "claude-opus",
-                  "gpt-4o"
-                ],
-                "maxTokens": 32000,
-                "costCap": 1
-              }
-            ],
-            "routingStrategy": "complexity_and_cost",
-            "fallbackTier": "balanced"
           }
         },
         {
@@ -472,7 +384,7 @@
           "params": {
             "iterations": 987,
             "iterations_source": "fib(16)",
-            "passThreshold": 0.8
+            "passThreshold": 0.80
           }
         }
       ]
@@ -567,7 +479,7 @@
           "node": "HeadyBuddy",
           "action": "assessConfidence",
           "params": {
-            "minConfidence": 0.2
+            "minConfidence": 0.20
           }
         },
         {
@@ -598,45 +510,6 @@
           "name": "Validate all assertions pass",
           "node": "HeadyAssure",
           "action": "certify"
-        },
-        {
-          "id": "citation_verification",
-          "name": "Verify all claims traceable to source documents",
-          "node": "HeadyAssure",
-          "action": "verifyCitations",
-          "source": "ai-accuracy-research-report.docx → Rec #5: Citation & Grounding",
-          "params": {
-            "requireSourceChunk": true,
-            "requireTimestamp": true,
-            "minTraceability": 0.8
-          }
-        },
-        {
-          "id": "hallucination_check",
-          "name": "Self-RAG hallucination risk scoring",
-          "node": "HeadyArena",
-          "action": "detectHallucination",
-          "source": "ai-accuracy-research-report.docx → Rec #7: Continuous Evaluation",
-          "params": {
-            "method": "self_rag_support_scoring",
-            "maxRiskScore": 0.2,
-            "flagForReview": true
-          }
-        },
-        {
-          "id": "llm_as_judge",
-          "name": "LLM-as-judge faithfulness evaluation",
-          "node": "HeadyArena",
-          "action": "judgeFaithfulness",
-          "source": "ai-accuracy-research-report.docx → Rec #5: LLM-as-judge",
-          "params": {
-            "separateModel": true,
-            "groundingScale": [
-              0,
-              1
-            ],
-            "minFaithfulness": 0.618
-          }
         }
       ]
     },
@@ -682,55 +555,6 @@
           "params": {
             "lookbackRuns": 21,
             "lookbackRuns_source": "fib(8)"
-          }
-        },
-        {
-          "id": "ragas_evaluation",
-          "name": "RAGAS framework: retrieval accuracy + context grounding",
-          "node": "HeadyArena",
-          "action": "ragasEvaluate",
-          "source": "ai-accuracy-research-report.docx → Rec #7: RAGAS integration",
-          "params": {
-            "metrics": [
-              "faithfulness",
-              "answer_relevancy",
-              "context_precision",
-              "context_recall"
-            ],
-            "alertOnDrop": true,
-            "dropThreshold": 0.05
-          }
-        },
-        {
-          "id": "hallucination_rate_tracking",
-          "name": "Track hallucination rates by model, task type, domain",
-          "node": "HeadyHealth",
-          "action": "trackHallucinationRates",
-          "source": "ai-accuracy-research-report.docx → Rec #7: Hallucination monitoring",
-          "params": {
-            "dimensions": [
-              "model",
-              "task_type",
-              "knowledge_domain"
-            ],
-            "windowRuns": 89,
-            "windowRuns_source": "fib(11)"
-          }
-        },
-        {
-          "id": "benchmark_regression",
-          "name": "Run benchmark regression tests (SWE-bench, SimpleQA, custom)",
-          "node": "HeadyCheck",
-          "action": "benchmarkRegression",
-          "source": "ai-accuracy-research-report.docx → Rec #7: Benchmark regression testing",
-          "params": {
-            "suites": [
-              "swe_bench_subset",
-              "simple_qa",
-              "domain_specific"
-            ],
-            "rotateTestSets": true,
-            "failOnRegression": true
           }
         }
       ]
@@ -1118,9 +942,9 @@
     },
     "cost_usd": {
       "description": "Max cost per pipeline run in USD",
-      "default": 1,
-      "max": 10,
-      "fullAutoMax": 5,
+      "default": 1.00,
+      "max": 10.00,
+      "fullAutoMax": 5.00,
       "trackingEnabled": true
     }
   },
@@ -1190,2693 +1014,898 @@
     ]
   },
   "taskQueuePolicy": {
-    "law": "LAW 9: ALL tasks MUST go through HCFullPipeline",
-    "enforce": true,
-    "autoRegisterNewTasks": true,
-    "rejectBypass": true
+    "rule": "LAW_9_ALL_TASKS_THROUGH_PIPELINE",
+    "description": "Every task — discovered, extracted, generated, assigned, or manually created — MUST be registered in this taskQueue and processed through the 21-stage pipeline. No task may bypass the pipeline. No exceptions.",
+    "enforcement": "ABSOLUTE_IMMUTABLE",
+    "sources": [
+      "in/ folder zip extractions",
+      "IMPROVEMENTS.md",
+      "GAPS_FOUND.md",
+      "CHANGES.md",
+      "deep-scan discoveries",
+      "drift detection findings",
+      "optimization ops recommendations",
+      "agent/bee/swarm generated tasks",
+      "human direction",
+      "continuous search discoveries"
+    ],
+    "onNewTaskDiscovered": "auto_register_to_taskQueue",
+    "onTaskComplete": "emit_trust_receipt",
+    "onTaskFailed": "retry_phi_backoff_then_escalate"
   },
-  "taskQueue": [
-    {
-      "id": "expansion-pricing-app",
-      "category": "apps",
-      "description": "Create apps/pricing/index.html",
-      "priority": "high",
-      "status": "completed",
-      "completedAt": "2026-03-10T03:03:25.950Z"
-    },
-    {
-      "id": "expansion-developer-portal",
-      "category": "apps",
-      "description": "Create apps/developer-portal/index.html",
-      "priority": "high",
-      "status": "completed",
-      "completedAt": "2026-03-10T03:03:25.951Z"
-    },
-    {
-      "id": "expansion-status-page",
-      "category": "apps",
-      "description": "Create apps/status/index.html",
-      "priority": "high",
-      "status": "completed",
-      "completedAt": "2026-03-10T03:03:25.951Z"
-    },
-    {
-      "id": "expansion-api-docs",
-      "category": "apps",
-      "description": "Create apps/api-docs/index.html",
-      "priority": "high",
-      "status": "completed",
-      "completedAt": "2026-03-10T03:03:25.951Z"
-    },
-    {
-      "id": "expansion-blog",
-      "category": "apps",
-      "description": "Create apps/blog/index.html",
-      "priority": "medium",
-      "status": "completed",
-      "completedAt": "2026-03-10T03:03:25.951Z"
-    },
-    {
-      "id": "expansion-nats-jetstream",
-      "category": "infra",
-      "description": "Create infra/nats/jetstream.conf",
-      "priority": "medium",
-      "status": "completed",
-      "completedAt": "2026-03-10T03:03:25.951Z"
-    },
-    {
-      "id": "expansion-pgbouncer",
-      "category": "infra",
-      "description": "Create infra/pgbouncer/pgbouncer.ini",
-      "priority": "medium",
-      "status": "completed",
-      "completedAt": "2026-03-10T03:03:25.951Z"
-    },
-    {
-      "id": "expansion-proto-search",
-      "category": "proto",
-      "description": "Create proto/search.proto",
-      "priority": "medium",
-      "status": "completed",
-      "completedAt": "2026-03-10T03:03:25.951Z"
-    },
-    {
-      "id": "expansion-proto-notifications",
-      "category": "proto",
-      "description": "Create proto/notifications.proto",
-      "priority": "medium",
-      "status": "completed",
-      "completedAt": "2026-03-10T03:03:25.951Z"
-    },
-    {
-      "id": "expansion-c4-context",
-      "category": "docs",
-      "description": "Create docs/architecture/c4-context.md",
-      "priority": "medium",
-      "status": "completed",
-      "completedAt": "2026-03-10T03:03:25.951Z"
-    },
-    {
-      "id": "expansion-c4-container",
-      "category": "docs",
-      "description": "Create docs/architecture/c4-container.md",
-      "priority": "medium",
-      "status": "completed",
-      "completedAt": "2026-03-10T03:03:25.951Z"
-    },
-    {
-      "id": "expansion-error-codes",
-      "category": "docs",
-      "description": "Create docs/operations/ERROR_CODES.md",
-      "priority": "medium",
-      "status": "completed",
-      "completedAt": "2026-03-10T03:03:25.951Z"
-    },
-    {
-      "id": "gap-oauth-provider-creds",
-      "category": "auth",
-      "description": "Register OAuth callback URLs in Google and GitHub consoles, configure provider credentials",
-      "priority": "critical",
-      "status": "pending"
-    },
-    {
-      "id": "gap-firebase-api-key",
-      "category": "auth",
-      "description": "Configure FIREBASE_API_KEY and project for password/anonymous auth flows",
-      "priority": "critical",
-      "status": "pending"
-    },
-    {
-      "id": "gap-docker-compose-secrets",
-      "category": "infra",
-      "description": "Configure Docker Compose secrets: POSTGRES_PASSWORD, DRUPAL_WEBHOOK_SECRET, provider creds",
-      "priority": "high",
-      "status": "pending"
-    },
-    {
-      "id": "gap-cross-domain-cookies",
-      "category": "infra",
-      "description": "Configure cross-domain cookie exchange for production domains (DNS, TLS, edge routing)",
-      "priority": "high",
-      "status": "pending"
-    },
-    {
-      "id": "security-mtls-phi-math-align",
-      "category": "security",
-      "description": "Align mtls.js phi-math imports with repo logger pattern",
-      "priority": "low",
-      "status": "pending"
-    },
-    {
-      "id": "security-hardening-test-integration",
-      "category": "testing",
-      "description": "Integrate security-hardening-pass.test.js into test suite",
-      "priority": "medium",
-      "status": "pending"
-    },
-    {
-      "id": "service-heady-auto-context-endpoints",
-      "category": "services",
-      "description": "Wire HeadyAutoContext /context/enrich, /context/index-batch, /context/remove endpoints",
-      "priority": "high",
-      "status": "pending"
-    },
-    {
-      "id": "service-auth-oauth-routes",
-      "category": "auth",
-      "description": "Implement /oauth/google and /oauth/github routes in auth service",
-      "priority": "critical",
-      "status": "pending"
-    },
-    {
-      "id": "service-site-gen-legacy-cleanup",
-      "category": "sites",
-      "description": "Remove legacy browser-storage behavior and alert-driven OAuth placeholders from site generator",
-      "priority": "medium",
-      "status": "pending"
-    },
-    {
-      "id": "site-headyme-deploy",
-      "category": "sites",
-      "description": "Deploy headyme.com to Cloud Run production",
-      "priority": "high",
-      "status": "pending"
-    },
-    {
-      "id": "site-headysystems-deploy",
-      "category": "sites",
-      "description": "Deploy headysystems.com to Cloud Run production",
-      "priority": "high",
-      "status": "pending"
-    },
-    {
-      "id": "site-headyconnection-deploy",
-      "category": "sites",
-      "description": "Deploy headyconnection.org to Cloud Run production",
-      "priority": "high",
-      "status": "pending"
-    },
-    {
-      "id": "site-headymcp-deploy",
-      "category": "sites",
-      "description": "Deploy headymcp.com to Cloud Run production",
-      "priority": "high",
-      "status": "pending"
-    },
-    {
-      "id": "site-headyio-deploy",
-      "category": "sites",
-      "description": "Deploy headyio.com to Cloud Run production",
-      "priority": "high",
-      "status": "pending"
-    },
-    {
-      "id": "site-headybuddy-deploy",
-      "category": "sites",
-      "description": "Deploy headybuddy.org to Cloud Run production",
-      "priority": "high",
-      "status": "pending"
-    },
-    {
-      "id": "site-headybot-deploy",
-      "category": "sites",
-      "description": "Deploy headybot.com to Cloud Run production",
-      "priority": "medium",
-      "status": "pending"
-    },
-    {
-      "id": "site-headyapi-deploy",
-      "category": "sites",
-      "description": "Deploy headyapi.com to Cloud Run production",
-      "priority": "high",
-      "status": "pending"
-    },
-    {
-      "id": "site-heady-ai-deploy",
-      "category": "sites",
-      "description": "Deploy heady-ai.com to Cloud Run production",
-      "priority": "high",
-      "status": "pending"
-    },
-    {
-      "id": "site-headyos-deploy",
-      "category": "sites",
-      "description": "Deploy headyos.com to Cloud Run production",
-      "priority": "medium",
-      "status": "pending"
-    },
-    {
-      "id": "site-headysense-deploy",
-      "category": "sites",
-      "description": "Deploy headysense.com to Cloud Run production",
-      "priority": "medium",
-      "status": "pending"
-    },
-    {
-      "id": "site-headyex-deploy",
-      "category": "sites",
-      "description": "Deploy headyex.com to Cloud Run production",
-      "priority": "medium",
-      "status": "pending"
-    },
-    {
-      "id": "site-headyfinance-deploy",
-      "category": "sites",
-      "description": "Deploy headyfinance.com to Cloud Run production",
-      "priority": "medium",
-      "status": "pending"
-    },
-    {
-      "id": "site-headyconnection-com-deploy",
-      "category": "sites",
-      "description": "Deploy headyconnection.com to Cloud Run production",
-      "priority": "medium",
-      "status": "pending"
-    },
-    {
-      "id": "site-perfecttrader-deploy",
-      "category": "sites",
-      "description": "Deploy perfecttrader.com to Cloud Run production",
-      "priority": "medium",
-      "status": "pending"
-    },
-    {
-      "id": "site-headyai-me-deploy",
-      "category": "sites",
-      "description": "Deploy headyai.me to Cloud Run production",
-      "priority": "medium",
-      "status": "pending"
-    },
-    {
-      "id": "infra-cloudflare-edge-workers",
-      "category": "infra",
-      "description": "Deploy Cloudflare edge workers for all 16 domains",
-      "priority": "high",
-      "status": "pending"
-    },
-    {
-      "id": "infra-cloud-run-staging",
-      "category": "infra",
-      "description": "Set up Cloud Run staging project for Heady-Staging promotion gate",
-      "priority": "high",
-      "status": "pending"
-    },
-    {
-      "id": "infra-postgres-pgvector-prod",
-      "category": "infra",
-      "description": "Provision production PostgreSQL + pgvector for vector memory",
-      "priority": "critical",
-      "status": "pending"
-    },
-    {
-      "id": "infra-redis-prod",
-      "category": "infra",
-      "description": "Provision production Redis instance",
-      "priority": "high",
-      "status": "pending"
-    },
-    {
-      "id": "test-contract-auth-runtime",
-      "category": "testing",
-      "description": "Run auth_runtime_contract.test.js and fix failures",
-      "priority": "high",
-      "status": "pending"
-    },
-    {
-      "id": "test-contract-auto-context",
-      "category": "testing",
-      "description": "Run auto_context_contract.test.js and fix failures",
-      "priority": "high",
-      "status": "pending"
-    },
-    {
-      "id": "test-docs-presence",
-      "category": "testing",
-      "description": "Run docs_presence.test.js and fix failures",
-      "priority": "medium",
-      "status": "pending"
-    },
-    {
-      "id": "test-storage-policy",
-      "category": "testing",
-      "description": "Run storage_policy.test.js and fix failures",
-      "priority": "medium",
-      "status": "pending"
-    },
-    {
-      "id": "test-expansion-assets",
-      "category": "testing",
-      "description": "Run expansion_assets_presence.test.js and fix failures",
-      "priority": "medium",
-      "status": "pending"
-    },
-    {
-      "id": "test-hcfullpipeline",
-      "category": "testing",
-      "description": "Run hc-full-pipeline.test.js end-to-end",
-      "priority": "high",
-      "status": "pending"
-    },
-    {
-      "id": "orch-graceful-shutdown-dedup",
-      "category": "orchestration",
-      "description": "Deduplicate gracefulShutdown implementations to single class-based version",
-      "priority": "medium",
-      "status": "completed",
-      "completedAt": "2026-03-10T03:03:25.951Z"
-    },
-    {
-      "id": "orch-cors-single-source",
-      "category": "orchestration",
-      "description": "Refactor CORS origins to import from security-headers.js single source of truth",
-      "priority": "medium",
-      "status": "completed",
-      "completedAt": "2026-03-10T03:07:26.787Z"
-    },
-    {
-      "id": "orch-domain-router-upstream-env",
-      "category": "orchestration",
-      "description": "Replace domain-router.js hardcoded upstream localhost with env vars",
-      "priority": "medium",
-      "status": "completed",
-      "completedAt": "2026-03-10T03:03:25.951Z"
-    },
-    {
-      "id": "orch-domains-tunnel-env",
-      "category": "orchestration",
-      "description": "Replace domains.js tunnel service hardcoded localhost with per-domain env vars",
-      "priority": "medium",
-      "status": "completed",
-      "completedAt": "2026-03-10T03:03:25.951Z"
-    },
-    {
-      "id": "pkg-chrome-extension-publish",
-      "category": "packages",
-      "description": "Publish Chrome extension v3.1.0 to Chrome Web Store",
-      "priority": "high",
-      "status": "pending"
-    },
-    {
-      "id": "pkg-vscode-extension-publish",
-      "category": "packages",
-      "description": "Publish VS Code extension to marketplace",
-      "priority": "high",
-      "status": "pending"
-    },
-    {
-      "id": "pkg-desktop-app-build",
-      "category": "packages",
-      "description": "Build and package HeadyBuddy desktop app (Electron)",
-      "priority": "medium",
-      "status": "pending"
-    },
-    {
-      "id": "pkg-mobile-app-build",
-      "category": "packages",
-      "description": "Build and package HeadyBuddy mobile app",
-      "priority": "medium",
-      "status": "pending"
-    },
-    {
-      "id": "connector-discord-deploy",
-      "category": "connectors",
-      "description": "Deploy heady-discord-connector to production",
-      "priority": "medium",
-      "status": "pending"
-    },
-    {
-      "id": "connector-slack-deploy",
-      "category": "connectors",
-      "description": "Deploy heady-slack connector to production",
-      "priority": "medium",
-      "status": "pending"
-    },
-    {
-      "id": "connector-github-deploy",
-      "category": "connectors",
-      "description": "Deploy heady-github-integration to production",
-      "priority": "medium",
-      "status": "pending"
-    },
-    {
-      "id": "docs-readme-update",
-      "category": "docs",
-      "description": "Update root README.md with current architecture, promotion pipeline, and getting started",
-      "priority": "medium",
-      "status": "pending"
-    },
-    {
-      "id": "docs-deployment-guide",
-      "category": "docs",
-      "description": "Write deployment guide covering Testing->Staging->Production pipeline",
-      "priority": "medium",
-      "status": "completed",
-      "completedAt": "2026-03-10T03:07:26.787Z"
-    },
-    {
-      "id": "docs-api-reference",
-      "category": "docs",
-      "description": "Generate API reference documentation from route definitions",
-      "priority": "medium",
-      "status": "pending"
-    },
-    {
-      "id": "research-ai-accuracy-ingest",
-      "category": "research",
-      "description": "Ingest ai-accuracy-research-report.docx into knowledge base",
-      "priority": "low",
-      "status": "pending"
-    },
-    {
-      "id": "research-ai-agent-effectiveness-ingest",
-      "category": "research",
-      "description": "Ingest ai-agent-effectiveness-report.docx into knowledge base",
-      "priority": "low",
-      "status": "pending"
-    },
-    {
-      "id": "git-rename-testing-repo",
-      "category": "git",
-      "description": "Rename Heady-pre-production-9f2f0642 to Heady-Testing on GitHub",
-      "priority": "medium",
-      "status": "pending"
-    },
-    {
-      "id": "git-promote-staging-to-prod",
-      "category": "git",
-      "description": "Promote Heady-Staging to heady-production after full verification",
-      "priority": "high",
-      "status": "pending"
-    },
-    {
-      "id": "git-dependabot-cleanup",
-      "category": "git",
-      "description": "Review and merge/close 8+ dependabot PRs on testing repo",
-      "priority": "low",
-      "status": "pending"
-    },
-    {
-      "id": "integrate-compression-middleware",
-      "category": "middleware",
-      "description": "Integrate compression.js middleware",
-      "priority": "medium",
-      "status": "completed",
-      "completedAt": "2026-03-10T03:07:26.787Z"
-    },
-    {
-      "id": "integrate-seo-engine",
-      "category": "sites",
-      "description": "Integrate seo-engine.js for all Heady sites",
-      "priority": "medium",
-      "status": "completed",
-      "completedAt": "2026-03-10T03:07:26.787Z"
-    },
-    {
-      "id": "integrate-openapi-generator",
-      "category": "docs",
-      "description": "Integrate openapi-generator.js",
-      "priority": "medium",
-      "status": "completed",
-      "completedAt": "2026-03-10T03:07:26.787Z"
-    },
-    {
-      "id": "integrate-docker-compose",
-      "category": "infra",
-      "description": "Integrate docker-compose.yml",
-      "priority": "high",
-      "status": "completed",
-      "completedAt": "2026-03-10T03:07:26.787Z"
-    },
-    {
-      "id": "integrate-ci-workflows",
-      "category": "infra",
-      "description": "Integrate CI/CD workflows",
-      "priority": "high",
-      "status": "completed",
-      "completedAt": "2026-03-10T03:07:26.787Z"
-    },
-    {
-      "id": "integrate-grafana-dashboards",
-      "category": "monitoring",
-      "description": "Integrate Grafana dashboards",
-      "priority": "medium",
-      "status": "completed",
-      "completedAt": "2026-03-10T03:07:26.787Z"
-    },
-    {
-      "id": "integrate-prometheus-config",
-      "category": "monitoring",
-      "description": "Integrate prometheus.yml",
-      "priority": "medium",
-      "status": "completed",
-      "completedAt": "2026-03-10T03:07:26.787Z"
-    },
-    {
-      "id": "integrate-otel-config",
-      "category": "monitoring",
-      "description": "Integrate OpenTelemetry config",
-      "priority": "medium",
-      "status": "completed",
-      "completedAt": "2026-03-10T03:07:26.787Z"
-    },
-    {
-      "id": "integrate-envoy-proxy",
-      "category": "infra",
-      "description": "Integrate envoy.yaml proxy",
-      "priority": "medium",
-      "status": "completed",
-      "completedAt": "2026-03-10T03:07:26.787Z"
-    },
-    {
-      "id": "integrate-init-sql",
-      "category": "infra",
-      "description": "Integrate init.sql db setup",
-      "priority": "high",
-      "status": "completed",
-      "completedAt": "2026-03-10T03:07:26.787Z"
-    },
-    {
-      "id": "integrate-chaos-tests",
-      "category": "testing",
-      "description": "Integrate chaos + k6 load tests",
-      "priority": "medium",
-      "status": "completed",
-      "completedAt": "2026-03-10T03:07:26.787Z"
-    },
-    {
-      "id": "integrate-test-vector-ops",
-      "category": "testing",
-      "description": "Integrate vector-ops.test.js",
-      "priority": "medium",
-      "status": "completed",
-      "completedAt": "2026-03-10T03:07:26.787Z"
-    },
-    {
-      "id": "integrate-test-auth-flow",
-      "category": "testing",
-      "description": "Integrate auth-flow.test.js",
-      "priority": "medium",
-      "status": "completed",
-      "completedAt": "2026-03-10T03:07:26.787Z"
-    },
-    {
-      "id": "integrate-test-csl-engine",
-      "category": "testing",
-      "description": "Integrate csl-engine.test.js",
-      "priority": "medium",
-      "status": "completed",
-      "completedAt": "2026-03-10T03:07:26.787Z"
-    },
-    {
-      "id": "integrate-husky-commitlint",
-      "category": "devtools",
-      "description": "Integrate husky+commitlint configs",
-      "priority": "low",
-      "status": "completed",
-      "completedAt": "2026-03-10T03:07:26.787Z"
-    },
-    {
-      "id": "integrate-turbo-config",
-      "category": "devtools",
-      "description": "Integrate turbo.json monorepo",
-      "priority": "low",
-      "status": "completed",
-      "completedAt": "2026-03-10T03:07:26.787Z"
-    },
-    {
-      "id": "integrate-setup-dev-script",
-      "category": "devtools",
-      "description": "Integrate setup-dev.sh",
-      "priority": "medium",
-      "status": "completed",
-      "completedAt": "2026-03-10T03:07:26.787Z"
-    },
-    {
-      "id": "service-asset-pipeline",
-      "category": "services",
-      "description": "Integrate asset-pipeline service",
-      "priority": "medium",
-      "status": "pending"
-    },
-    {
-      "id": "service-migration",
-      "category": "services",
-      "description": "Integrate migration-service",
-      "priority": "high",
-      "status": "pending"
-    },
-    {
-      "id": "service-scheduler",
-      "category": "services",
-      "description": "Integrate scheduler-service",
-      "priority": "medium",
-      "status": "pending"
-    },
-    {
-      "id": "service-search",
-      "category": "services",
-      "description": "Integrate search-service",
-      "priority": "high",
-      "status": "pending"
-    },
-    {
-      "id": "service-billing",
-      "category": "services",
-      "description": "Integrate billing-service",
-      "priority": "high",
-      "status": "pending"
-    },
-    {
-      "id": "service-auth-session",
-      "category": "auth",
-      "description": "Integrate auth-session-server",
-      "priority": "critical",
-      "status": "pending"
-    },
-    {
-      "id": "service-notification",
-      "category": "services",
-      "description": "Integrate notification-service+WS",
-      "priority": "high",
-      "status": "pending"
-    },
-    {
-      "id": "service-analytics",
-      "category": "services",
-      "description": "Integrate analytics-service",
-      "priority": "medium",
-      "status": "pending"
-    },
-    {
-      "id": "integrate-migration-sql",
-      "category": "infra",
-      "description": "Integrate migration SQL files",
-      "priority": "high",
-      "status": "pending"
-    },
-    {
-      "id": "skill-perplexity-domain-benchmarker",
-      "category": "skills",
-      "description": "Integrate perplexity-domain-benchmarker skill",
-      "priority": "medium",
-      "status": "pending"
-    },
-    {
-      "id": "skill-perplexity-multi-agent-eval",
-      "category": "skills",
-      "description": "Integrate perplexity-multi-agent-eval skill",
-      "priority": "medium",
-      "status": "pending"
-    },
-    {
-      "id": "skill-perplexity-feedback-loop",
-      "category": "skills",
-      "description": "Integrate perplexity-feedback-loop skill",
-      "priority": "medium",
-      "status": "pending"
-    },
-    {
-      "id": "skill-perplexity-rag-optimizer",
-      "category": "skills",
-      "description": "Integrate perplexity-rag-optimizer skill",
-      "priority": "medium",
-      "status": "pending"
-    },
-    {
-      "id": "skill-perplexity-eval-orchestrator",
-      "category": "skills",
-      "description": "Integrate perplexity-eval-orchestrator skill",
-      "priority": "medium",
-      "status": "pending"
-    },
-    {
-      "id": "skill-sacred-geometry-css",
-      "category": "skills",
-      "description": "Integrate sacred-geometry-css-generator",
-      "priority": "medium",
-      "status": "pending"
-    },
-    {
-      "id": "skill-firebase-auth-orchestrator",
-      "category": "skills",
-      "description": "Integrate firebase-auth-orchestrator skill",
-      "priority": "high",
-      "status": "pending"
-    },
-    {
-      "id": "skill-drupal-content-sync",
-      "category": "skills",
-      "description": "Integrate drupal-content-sync skill",
-      "priority": "medium",
-      "status": "pending"
-    },
-    {
-      "id": "skill-perplexity-competitor-intel",
-      "category": "skills",
-      "description": "Integrate competitor-intel skill",
-      "priority": "low",
-      "status": "pending"
-    },
-    {
-      "id": "skill-perplexity-patent-search",
-      "category": "skills",
-      "description": "Integrate patent-search skill",
-      "priority": "low",
-      "status": "pending"
-    },
-    {
-      "id": "skill-perplexity-content-generation",
-      "category": "skills",
-      "description": "Integrate content-generation skill",
-      "priority": "medium",
-      "status": "pending"
-    },
-    {
-      "id": "skill-perplexity-code-review",
-      "category": "skills",
-      "description": "Integrate code-review skill",
-      "priority": "medium",
-      "status": "pending"
-    },
-    {
-      "id": "skill-perplexity-deep-research",
-      "category": "skills",
-      "description": "Integrate deep-research skill",
-      "priority": "medium",
-      "status": "pending"
-    },
-    {
-      "id": "skill-perplexity-computer-use",
-      "category": "skills",
-      "description": "Integrate computer-use skill",
-      "priority": "medium",
-      "status": "pending"
-    },
-    {
-      "id": "service-heady-cache",
-      "category": "services",
-      "description": "Integrate heady-cache service",
-      "priority": "high",
-      "status": "pending"
-    },
-    {
-      "id": "service-heady-auto-success",
-      "category": "services",
-      "description": "Integrate heady-auto-success service",
-      "priority": "high",
-      "status": "pending"
-    },
-    {
-      "id": "service-heady-csl-judge",
-      "category": "services",
-      "description": "Integrate heady-csl-judge service",
-      "priority": "medium",
-      "status": "pending"
-    },
-    {
-      "id": "service-heady-pipeline-core",
-      "category": "services",
-      "description": "Integrate heady-pipeline-core service",
-      "priority": "high",
-      "status": "pending"
-    },
-    {
-      "id": "service-heady-sandbox",
-      "category": "services",
-      "description": "Integrate heady-sandbox service",
-      "priority": "medium",
-      "status": "pending"
-    },
-    {
-      "id": "service-heady-snapshot",
-      "category": "services",
-      "description": "Integrate heady-snapshot service",
-      "priority": "medium",
-      "status": "pending"
-    },
-    {
-      "id": "asset-service-debug-guide",
-      "category": "docs",
-      "description": "Verify docs/SERVICE_DEBUG_GUIDE.md covers all 60 services",
-      "status": "pending",
-      "source": "in/heady-platform-v3.zip"
-    },
-    {
-      "id": "asset-grafana-dashboard",
-      "category": "monitoring",
-      "description": "Configure infrastructure/grafana-dashboard.json for production",
-      "status": "pending",
-      "source": "in/heady-platform-v3.zip"
-    },
-    {
-      "id": "asset-nats-config",
-      "category": "infra",
-      "description": "Deploy infrastructure/nats-config.json to NATS JetStream",
-      "status": "pending",
-      "source": "in/heady-platform-v3.zip"
-    },
-    {
-      "id": "asset-pgbouncer-config",
-      "category": "infra",
-      "description": "Deploy infrastructure/pgbouncer.ini connection pooler",
-      "status": "completed",
-      "completedAt": "2026-03-10T03:30:31.000Z",
-      "completedBy": "v5.4.0 — config/pgbouncer.ini with Fibonacci pool sizes",
-      "source": "in/heady-platform-v3.zip"
-    },
-    {
-      "id": "asset-health-check-script",
-      "category": "devtools",
-      "description": "Wire scripts/health-check-all.sh into CI pipeline",
-      "status": "pending",
-      "source": "in/heady-platform-v3.zip"
-    },
-    {
-      "id": "asset-eslint-config",
-      "category": "devtools",
-      "description": "Enforce .eslintrc.json across all services via turbo lint",
-      "status": "pending",
-      "source": "in/heady-platform-v3.zip"
-    },
-    {
-      "id": "asset-prettier-config",
-      "category": "devtools",
-      "description": "Enforce .prettierrc.json across all services",
-      "status": "pending",
-      "source": "in/heady-platform-v3.zip"
-    },
-    {
-      "id": "asset-grpc-proto",
-      "category": "infra",
-      "description": "Generate TypeScript/Go clients from shared/proto/heady-common.proto",
-      "status": "pending",
-      "source": "in/heady-platform-v3.zip"
-    },
-    {
-      "id": "gap-json-ld-structured-data",
-      "category": "seo",
-      "description": "Add JSON-LD structured data to all 9 Heady sites",
-      "status": "pending",
-      "source": "in/GAPS_FOUND.md #32"
-    },
-    {
-      "id": "gap-wcag-compliance-audit",
-      "category": "accessibility",
-      "description": "Run WCAG 2.1 AA compliance audit (axe-core) on all sites",
-      "status": "pending",
-      "source": "in/GAPS_FOUND.md #33"
-    },
-    {
-      "id": "gap-i18n-preparation",
-      "category": "sites",
-      "description": "Prepare i18n framework (i18next) and extract strings",
-      "status": "pending",
-      "source": "in/GAPS_FOUND.md #34"
-    },
-    {
-      "id": "gap-sitemap-robots",
-      "category": "seo",
-      "description": "Generate sitemap.xml and robots.txt for all 9 sites",
-      "status": "pending",
-      "source": "in/GAPS_FOUND.md #35"
-    },
-    {
-      "id": "gap-saga-coordinator",
-      "category": "architecture",
-      "description": "Build lightweight saga coordinator for distributed transactions",
-      "status": "completed",
-      "completedAt": "2026-03-10T03:30:31.000Z",
-      "completedBy": "v5.4.0 — src/scaling/saga-coordinator.js",
-      "source": "in/GAPS_FOUND.md #36"
-    },
-    {
-      "id": "gap-cqrs-separation",
-      "category": "architecture",
-      "description": "Separate read/write models for vector memory (CQRS)",
-      "status": "pending",
-      "source": "in/GAPS_FOUND.md #37"
-    },
-    {
-      "id": "gap-feature-flags",
-      "category": "architecture",
-      "description": "Implement phi-scaled feature flag system (6.18%/38.2%/61.8%/100%)",
-      "status": "completed",
-      "completedAt": "2026-03-10T03:30:31.000Z",
-      "completedBy": "v5.4.0 — src/scaling/feature-flags.js",
-      "source": "in/GAPS_FOUND.md #38"
-    },
-    {
-      "id": "gap-edge-kv-caching",
-      "category": "architecture",
-      "description": "Add Cloudflare Workers KV edge caching layer",
-      "status": "pending",
-      "source": "in/GAPS_FOUND.md #39"
-    },
-    {
-      "id": "gap-load-testing",
-      "category": "testing",
-      "description": "Create k6/Artillery load test scripts for every service endpoint",
-      "status": "pending",
-      "source": "in/GAPS_FOUND.md #40"
-    },
-    {
-      "id": "gap-chaos-engineering",
-      "category": "testing",
-      "description": "Create chaos engineering scripts (network partition, latency)",
-      "status": "pending",
-      "source": "in/GAPS_FOUND.md #41"
-    },
-    {
-      "id": "gap-integration-test-suite",
-      "category": "testing",
-      "description": "Build end-to-end integration test harness",
-      "status": "pending",
-      "source": "in/GAPS_FOUND.md #42"
-    },
-    {
-      "id": "gap-contract-tests",
-      "category": "testing",
-      "description": "Add Pact consumer-driven contract tests between services",
-      "status": "pending",
-      "source": "in/GAPS_FOUND.md #43"
-    },
-    {
-      "id": "gap-c4-diagrams",
-      "category": "docs",
-      "description": "Create C4 architecture diagrams at all 4 levels",
-      "status": "pending",
-      "source": "in/GAPS_FOUND.md #44"
-    },
-    {
-      "id": "gap-service-dependency-graph",
-      "category": "docs",
-      "description": "Auto-generate service dependency graph SVG",
-      "status": "pending",
-      "source": "in/GAPS_FOUND.md #45"
-    },
-    {
-      "id": "gap-per-service-debug-md",
-      "category": "docs",
-      "description": "Create per-service DEBUG.md for all 60 services",
-      "status": "pending",
-      "source": "in/GAPS_FOUND.md #46"
-    },
-    {
-      "id": "gap-container-signing-sbom",
-      "category": "security",
-      "description": "Add container signing (cosign) + SBOM (syft) to CI/CD",
-      "status": "pending",
-      "source": "in/GAPS_FOUND.md #47"
-    },
-    {
-      "id": "nextstep-repair-gen-services",
-      "category": "orchestration",
-      "description": "Repair scripts/gen-services.py — remove ranking language",
-      "status": "pending",
-      "source": "in/NEXT_STEPS_FOR_HEADY.md #1"
-    },
-    {
-      "id": "nextstep-sanitize-shared-outputs",
-      "category": "orchestration",
-      "description": "Sanitize packages/platform, web-shared, skills for forbidden terms",
-      "status": "pending",
-      "source": "in/NEXT_STEPS_FOR_HEADY.md #2"
-    },
-    {
-      "id": "nextstep-regenerate-sites-services",
-      "category": "orchestration",
-      "description": "Regenerate sites and services after cleanup",
-      "status": "pending",
-      "source": "in/NEXT_STEPS_FOR_HEADY.md #3"
-    },
-    {
-      "id": "nextstep-audit-before-release",
-      "category": "orchestration",
-      "description": "Audit wording, naming, auth guidance (httpOnly cookies)",
-      "status": "pending",
-      "source": "in/NEXT_STEPS_FOR_HEADY.md #4"
-    },
-    {
-      "id": "nextstep-final-packaging",
-      "category": "orchestration",
-      "description": "Inspect visual quality, create final release ZIP",
-      "status": "pending",
-      "source": "in/NEXT_STEPS_FOR_HEADY.md #5"
-    },
-    {
-      "id": "cq-cors-wildcard-removal",
-      "category": "security",
-      "description": "Fix 10 files with CORS Allow-Origin: * to domain allowlist",
-      "status": "pending",
-      "source": "repo audit"
-    },
-    {
-      "id": "cq-localstorage-elimination",
-      "category": "security",
-      "description": "Fix 4 files using localStorage to httpOnly cookie pattern",
-      "status": "completed",
-      "completedAt": "2026-03-10T03:30:31.000Z",
-      "completedBy": "v5.4.0 — template-bee.js + site-renderer.js migrated to cookies",
-      "source": "repo audit"
-    },
-    {
-      "id": "cq-console-log-migration",
-      "category": "code-quality",
-      "description": "Migrate 80 files from console.log to shared/logger.js",
-      "status": "pending",
-      "source": "repo audit"
-    },
-    {
-      "id": "cq-localhost-references",
-      "category": "code-quality",
-      "description": "Fix 67 files with localhost refs to cloud URLs or env vars",
-      "status": "pending",
-      "source": "repo audit"
-    },
-    {
-      "id": "cq-empty-catch-blocks",
-      "category": "code-quality",
-      "description": "Fix 10+ empty catch blocks with proper error handling",
-      "status": "pending",
-      "source": "repo audit"
-    },
-    {
-      "id": "cq-hardcoded-timeouts",
-      "category": "code-quality",
-      "description": "Replace 10+ hardcoded timeouts with phi-scaled FIB constants",
-      "status": "pending",
-      "source": "repo audit"
-    },
-    {
-      "id": "cq-missing-package-json",
-      "category": "services",
-      "description": "Generate package.json for 15 services missing it",
-      "status": "pending",
-      "source": "repo audit"
-    },
-    {
-      "id": "cq-missing-entry-files",
-      "category": "services",
-      "description": "Create entry files for 38 services missing index.js/server.js",
-      "status": "pending",
-      "source": "repo audit"
-    },
-    {
-      "id": "v54-csp-headers",
-      "category": "security",
-      "description": "Create strict CSP middleware with nonce-based scripts, OWASP headers, frame-ancestors for 9 domains",
-      "priority": "critical",
-      "status": "completed",
-      "completedAt": "2026-03-10T03:30:31.000Z",
-      "source": "v5.4.0 — src/middleware/security/csp-headers.js"
-    },
-    {
-      "id": "v54-prompt-injection-defense",
-      "category": "security",
-      "description": "Create prompt injection defense middleware (21 OWASP AI patterns, CSL-gated blocking)",
-      "priority": "critical",
-      "status": "completed",
-      "completedAt": "2026-03-10T03:30:31.000Z",
-      "source": "v5.4.0 — src/middleware/security/prompt-injection-defense.js"
-    },
-    {
-      "id": "v54-websocket-auth",
-      "category": "security",
-      "description": "Create WebSocket auth middleware (per-frame token validation, Fibonacci heartbeats)",
-      "priority": "critical",
-      "status": "completed",
-      "completedAt": "2026-03-10T03:30:31.000Z",
-      "source": "v5.4.0 — src/middleware/security/websocket-auth.js"
-    },
-    {
-      "id": "v54-autonomy-guardrails",
-      "category": "security",
-      "description": "Create autonomy guardrails (20-op allowlist, 14-op denylist, CSL confidence gating)",
-      "priority": "critical",
-      "status": "completed",
-      "completedAt": "2026-03-10T03:30:31.000Z",
-      "source": "v5.4.0 — src/security/autonomy-guardrails.js"
-    },
-    {
-      "id": "v54-nats-jetstream-bus",
-      "category": "infra",
-      "description": "Create NATS JetStream event bus module (10 domains, φ-exponential backoff, DLQ)",
-      "priority": "high",
-      "status": "completed",
-      "completedAt": "2026-03-10T03:30:31.000Z",
-      "source": "v5.4.0 — src/scaling/nats-jetstream-bus.js"
-    },
-    {
-      "id": "v54-error-codes-doc",
-      "category": "docs",
-      "description": "Create ERROR_CODES.md with 44 error codes across 8 service domains",
-      "priority": "medium",
-      "status": "completed",
-      "completedAt": "2026-03-10T03:30:31.000Z",
-      "source": "v5.4.0 — ERROR_CODES.md"
-    },
-    {
-      "id": "v54-setup-dev-script",
-      "category": "devtools",
-      "description": "Create developer onboarding script with prerequisite validation and syntax checks",
-      "priority": "medium",
-      "status": "completed",
-      "completedAt": "2026-03-10T03:30:31.000Z",
-      "source": "v5.4.0 — scripts/setup-dev.sh"
-    },
-    {
-      "id": "v54-adr-firebase-auth",
-      "category": "docs",
-      "description": "Create ADR-006: Firebase Auth choice rationale (vs Auth0, Keycloak)",
-      "priority": "medium",
-      "status": "completed",
-      "completedAt": "2026-03-10T03:30:31.000Z",
-      "source": "v5.4.0 — docs/adr/0006-firebase-auth.md"
-    },
-    {
-      "id": "v54-adr-sacred-geometry",
-      "category": "docs",
-      "description": "Create ADR-007: φ-derived constants replace magic numbers rationale",
-      "priority": "medium",
-      "status": "completed",
-      "completedAt": "2026-03-10T03:30:31.000Z",
-      "source": "v5.4.0 — docs/adr/0007-sacred-geometry-constants.md"
-    },
-    {
-      "id": "v54-adr-zero-trust",
-      "category": "docs",
-      "description": "Create ADR-008: 10-layer Zero Trust security model",
-      "priority": "medium",
-      "status": "completed",
-      "completedAt": "2026-03-10T03:30:31.000Z",
-      "source": "v5.4.0 — docs/adr/0008-zero-trust-security.md"
-    },
-    {
-      "id": "v54-incident-playbook",
-      "category": "docs",
-      "description": "Create incident playbook for 7 common failure scenarios",
-      "priority": "medium",
-      "status": "completed",
-      "completedAt": "2026-03-10T03:30:31.000Z",
-      "source": "v5.4.0 — docs/runbooks/incident-playbook.md"
-    },
-    {
-      "id": "v54-oauth2-exchange-impl",
-      "category": "auth",
-      "description": "Replace OAuth2 TODO stub with functional OIDC exchange (Google/GitHub/Microsoft)",
-      "priority": "critical",
-      "status": "completed",
-      "completedAt": "2026-03-10T03:30:31.000Z",
-      "source": "v5.4.0 — src/07-auth-manager.js"
-    },
-    {
-      "id": "v54-founder-name-fix",
-      "category": "code-quality",
-      "description": "Correct 'Eric Head' → 'Eric Haywood' across all files",
-      "priority": "high",
-      "status": "completed",
-      "completedAt": "2026-03-10T03:30:31.000Z",
-      "source": "v5.4.0 — heady-improvements.py"
-    },
-    {
-      "id": "v54-auth-cookies-migration",
-      "category": "security",
-      "description": "Migrate auth token storage from localStorage to Secure SameSite cookies",
-      "priority": "critical",
-      "status": "completed",
-      "completedAt": "2026-03-10T03:30:31.000Z",
-      "source": "v5.4.0 — template-bee.js + site-renderer.js"
-    },
-    {
-      "id": "integrate-csp-middleware",
-      "category": "security",
-      "description": "Wire CSP headers middleware into Express app stack for all services",
-      "priority": "high",
-      "status": "pending",
-      "source": "v5.4.0 follow-up"
-    },
-    {
-      "id": "integrate-prompt-injection-defense",
-      "category": "security",
-      "description": "Wire prompt injection defense into all LLM-facing endpoints",
-      "priority": "high",
-      "status": "pending",
-      "source": "v5.4.0 follow-up"
-    },
-    {
-      "id": "integrate-websocket-auth",
-      "category": "security",
-      "description": "Wire WebSocket auth middleware into HeadyBuddy and notification live connections",
-      "priority": "high",
-      "status": "pending",
-      "source": "v5.4.0 follow-up"
-    },
-    {
-      "id": "integrate-autonomy-guardrails",
-      "category": "security",
-      "description": "Wire autonomy guardrails into HeadyConductor pipeline execution",
-      "priority": "high",
-      "status": "pending",
-      "source": "v5.4.0 follow-up"
-    },
-    {
-      "id": "deploy-nats-jetstream-prod",
-      "category": "infra",
-      "description": "Deploy NATS JetStream cluster and wire event bus to all services",
-      "priority": "high",
-      "status": "pending",
-      "source": "v5.4.0 follow-up"
-    },
-    {
-      "id": "integrate-saga-coordinator",
-      "category": "architecture",
-      "description": "Wire saga coordinator into user-signup and billing flows",
-      "priority": "medium",
-      "status": "pending",
-      "source": "v5.4.0 follow-up"
-    },
-    {
-      "id": "integrate-feature-flags-rollout",
-      "category": "architecture",
-      "description": "Wire feature flags into service startup and deploy progressive rollout for HeadyBuddy",
-      "priority": "medium",
-      "status": "pending",
-      "source": "v5.4.0 follow-up"
-    },
-    {
-      "id": "deploy-pgbouncer-prod",
-      "category": "infra",
-      "description": "Deploy PgBouncer connection pooler in front of production PostgreSQL",
-      "priority": "high",
-      "status": "pending",
-      "source": "v5.4.0 follow-up"
-    },
-    {
-      "id": "skill-manifest-validation",
-      "category": "skills",
-      "description": "Validate all 26 skill SKILL.md files have correct frontmatter and imports",
-      "priority": "medium",
-      "status": "pending",
-      "source": "git diff — 26 .agents/skills modified"
-    },
-    {
-      "id": "ci-workflow-hardening",
-      "category": "infra",
-      "description": "Review and fix CI/CD workflows (.github/workflows/) for secret-scan and deploy",
-      "priority": "high",
-      "status": "pending",
-      "source": "git diff — ci.yml, deploy.yml, secret-scan.yml modified"
-    },
-    {
-      "id": "w3-bee-factory",
-      "category": "agents",
-      "description": "Integrate agents/bee-factory.js — 12 bee specializations with CSL-gated spawn",
-      "status": "pending",
-      "source": "in/heady-max-potential(1) wave3"
-    },
-    {
-      "id": "w3-hive-coordinator",
-      "category": "agents",
-      "description": "Integrate agents/hive-coordinator.js — DAG task decomposition with topological sort",
-      "status": "pending",
-      "source": "in/heady-max-potential(1) wave3"
-    },
-    {
-      "id": "w3-federation-manager",
-      "category": "agents",
-      "description": "Integrate agents/federation-manager.js — multi-region hive routing",
-      "status": "pending",
-      "source": "in/heady-max-potential(1) wave3"
-    },
-    {
-      "id": "w3-vector-store",
-      "category": "memory",
-      "description": "Integrate memory/vector-store.js — RAM-first HNSW with φ-scored eviction",
-      "status": "pending",
-      "source": "in/heady-max-potential(1) wave3"
-    },
-    {
-      "id": "w3-embedding-pipeline",
-      "category": "memory",
-      "description": "Integrate memory/embedding-pipeline.js — 7-provider routing with circuit breaker",
-      "status": "pending",
-      "source": "in/heady-max-potential(1) wave3"
-    },
-    {
-      "id": "w3-projection-engine",
-      "category": "memory",
-      "description": "Integrate memory/projection-engine.js — 5 domain projectors with coherence gating",
-      "status": "pending",
-      "source": "in/heady-max-potential(1) wave3"
-    },
-    {
-      "id": "w3-memory-cache",
-      "category": "memory",
-      "description": "Integrate memory/memory-cache.js — 4-tier φ-geometric token budgets",
-      "status": "pending",
-      "source": "in/heady-max-potential(1) wave3"
-    },
-    {
-      "id": "w3-owasp-ai-defense",
-      "category": "security",
-      "description": "Integrate security/owasp-ai-defense.js — ML01-ML09 threat coverage",
-      "status": "pending",
-      "source": "in/heady-max-potential(1) wave3"
-    },
-    {
-      "id": "w3-structured-logger",
-      "category": "security",
-      "description": "Integrate security/structured-logger.js — SHA-256 hash chain, ring buffer",
-      "status": "pending",
-      "source": "in/heady-max-potential(1) wave3"
-    },
-    {
-      "id": "w3-request-signer",
-      "category": "security",
-      "description": "Integrate security/request-signer.js — HMAC-SHA256 with key rotation",
-      "status": "pending",
-      "source": "in/heady-max-potential(1) wave3"
-    },
-    {
-      "id": "w3-cors-strict",
-      "category": "security",
-      "description": "Integrate security/cors-strict.js — 15 Heady domain allowlist",
-      "status": "pending",
-      "source": "in/heady-max-potential(1) wave3"
-    },
-    {
-      "id": "w3-event-bus-nats",
-      "category": "scaling",
-      "description": "Integrate scaling/event-bus-nats.js — 13 NATS event subjects",
-      "status": "pending",
-      "source": "in/heady-max-potential(1) wave3"
-    },
-    {
-      "id": "w3-pgbouncer-pool",
-      "category": "scaling",
-      "description": "Integrate scaling/pgbouncer-pool.js — 3-tier connection pooling",
-      "status": "pending",
-      "source": "in/heady-max-potential(1) wave3"
-    },
-    {
-      "id": "w3-hnsw-tuner",
-      "category": "scaling",
-      "description": "Integrate scaling/hnsw-tuner.js — 4 profiles for pgvector tuning",
-      "status": "pending",
-      "source": "in/heady-max-potential(1) wave3"
-    },
-    {
-      "id": "w3-cloud-run-optimizer",
-      "category": "scaling",
-      "description": "Integrate scaling/cloud-run-optimizer.js — 5 deployment profiles",
-      "status": "pending",
-      "source": "in/heady-max-potential(1) wave3"
-    },
-    {
-      "id": "w3-grpc-bridge",
-      "category": "scaling",
-      "description": "Integrate scaling/grpc-bridge.js — full gRPC-HTTP mapping",
-      "status": "pending",
-      "source": "in/heady-max-potential(1) wave3"
-    },
-    {
-      "id": "w4-auto-context-mw",
-      "category": "middleware",
-      "description": "Integrate middleware/heady-auto-context.js — request enrichment with CSL context",
-      "status": "pending",
-      "source": "in/heady-max-potential(1) wave4"
-    },
-    {
-      "id": "w4-rate-limiter",
-      "category": "middleware",
-      "description": "Integrate middleware/rate-limiter.js — sliding-window token bucket, Fibonacci windows",
-      "status": "pending",
-      "source": "in/heady-max-potential(1) wave4"
-    },
-    {
-      "id": "w4-bulkhead",
-      "category": "middleware",
-      "description": "Integrate middleware/bulkhead.js — concurrent request isolation, φ-scaled limits",
-      "status": "pending",
-      "source": "in/heady-max-potential(1) wave4"
-    },
-    {
-      "id": "w4-compression",
-      "category": "middleware",
-      "description": "Integrate middleware/compression.js — Brotli/gzip with CSL-gated threshold",
-      "status": "pending",
-      "source": "in/heady-max-potential(1) wave4"
-    },
-    {
-      "id": "w4-graceful-shutdown",
-      "category": "middleware",
-      "description": "Integrate middleware/graceful-shutdown.js — LIFO cleanup, connection draining",
-      "status": "pending",
-      "source": "in/heady-max-potential(1) wave4"
-    },
-    {
-      "id": "w4-response-cache",
-      "category": "scaling",
-      "description": "Integrate scaling/response-cache.js — LRU 987-entry with stale-while-revalidate",
-      "status": "pending",
-      "source": "in/heady-max-potential(1) wave4"
-    },
-    {
-      "id": "w4-distributed-tracer",
-      "category": "scaling",
-      "description": "Integrate scaling/distributed-tracer.js — W3C Trace Context, OTLP export",
-      "status": "pending",
-      "source": "in/heady-max-potential(1) wave4"
-    },
-    {
-      "id": "w4-api-versioning",
-      "category": "scaling",
-      "description": "Integrate scaling/api-versioning.js — URL/header/query strategies, sunset periods",
-      "status": "pending",
-      "source": "in/heady-max-potential(1) wave4"
-    },
-    {
-      "id": "w4-html-sanitizer",
-      "category": "security",
-      "description": "Integrate security/html-sanitizer.js — CSL-gated tag scoring, nesting depth 13",
-      "status": "pending",
-      "source": "in/heady-max-potential(1) wave4"
-    },
-    {
-      "id": "w4-ip-anomaly-detector",
-      "category": "security",
-      "description": "Integrate security/ip-anomaly-detector.js — φ-weighted 5-level threat classification",
-      "status": "pending",
-      "source": "in/heady-max-potential(1) wave4"
-    },
-    {
-      "id": "w4-session-binder",
-      "category": "security",
-      "description": "Integrate security/session-binder.js — device fingerprint, httpOnly cookies only",
-      "status": "pending",
-      "source": "in/heady-max-potential(1) wave4"
-    },
-    {
-      "id": "w4-seo-engine",
-      "category": "web",
-      "description": "Integrate web/seo-engine.js — JSON-LD, Open Graph, sitemap for all 9 domains",
-      "status": "pending",
-      "source": "in/heady-max-potential(1) wave4"
-    },
-    {
-      "id": "w4-openapi-generator",
-      "category": "web",
-      "description": "Integrate web/openapi-generator.js — OpenAPI 3.1 spec from route definitions",
-      "status": "pending",
-      "source": "in/heady-max-potential(1) wave4"
-    },
-    {
-      "id": "w4-load-test-k6",
-      "category": "testing",
-      "description": "Integrate tests/load-test-k6.js — Fibonacci VU ramps, φ-scaled thresholds",
-      "status": "pending",
-      "source": "in/heady-max-potential(1) wave4"
-    },
-    {
-      "id": "w4-chaos-engineering",
-      "category": "testing",
-      "description": "Integrate tests/chaos-engineering.js — 5 experiment types, CSL safety gates",
-      "status": "pending",
-      "source": "in/heady-max-potential(1) wave4"
-    },
-    {
-      "id": "w-core-auto-success",
-      "category": "core",
-      "description": "Integrate core/auto-success-engine.js into pipeline runner",
-      "status": "pending",
-      "source": "in/heady-max-potential(1)"
-    },
-    {
-      "id": "w-core-evolution-engine",
-      "category": "core",
-      "description": "Integrate core/evolution-engine.js — mutation/selection for self-improvement",
-      "status": "pending",
-      "source": "in/heady-max-potential(1)"
-    },
-    {
-      "id": "w-core-council-mode",
-      "category": "core",
-      "description": "Integrate core/council-mode.js — multi-model consensus",
-      "status": "pending",
-      "source": "in/heady-max-potential(1)"
-    },
-    {
-      "id": "w-core-persona-router",
-      "category": "core",
-      "description": "Integrate core/persona-router.js — persona-based response routing",
-      "status": "pending",
-      "source": "in/heady-max-potential(1)"
-    },
-    {
-      "id": "w-core-wisdom-store",
-      "category": "core",
-      "description": "Integrate core/wisdom-store.js — learned pattern repository",
-      "status": "pending",
-      "source": "in/heady-max-potential(1)"
-    },
-    {
-      "id": "w-core-heady-lens",
-      "category": "core",
-      "description": "Integrate core/heady-lens.js — focused analysis views",
-      "status": "pending",
-      "source": "in/heady-max-potential(1)"
-    },
-    {
-      "id": "w-core-heady-brains",
-      "category": "core",
-      "description": "Integrate core/heady-brains.js — multi-brain orchestration",
-      "status": "pending",
-      "source": "in/heady-max-potential(1)"
-    },
-    {
-      "id": "w-core-budget-tracker",
-      "category": "core",
-      "description": "Integrate core/budget-tracker.js — compute/token spend tracking",
-      "status": "pending",
-      "source": "in/heady-max-potential(1)"
-    },
-    {
-      "id": "w-core-autobiographer",
-      "category": "core",
-      "description": "Integrate core/heady-autobiographer.js — system self-documentation",
-      "status": "pending",
-      "source": "in/heady-max-potential(1)"
-    },
-    {
-      "id": "w-svc-analytics",
-      "category": "services",
-      "description": "Integrate services/analytics-service.js — usage analytics pipeline",
-      "status": "pending",
-      "source": "in/heady-max-potential(1)"
-    },
-    {
-      "id": "w-svc-billing",
-      "category": "services",
-      "description": "Integrate services/billing-service.js — subscription and usage billing",
-      "status": "pending",
-      "source": "in/heady-max-potential(1)"
-    },
-    {
-      "id": "w-svc-notification",
-      "category": "services",
-      "description": "Integrate services/notification-service.js — multi-channel notifications",
-      "status": "pending",
-      "source": "in/heady-max-potential(1)"
-    },
-    {
-      "id": "w-svc-scheduler",
-      "category": "services",
-      "description": "Integrate services/scheduler-service.js — cron and delayed task execution",
-      "status": "pending",
-      "source": "in/heady-max-potential(1)"
-    },
-    {
-      "id": "w-svc-search",
-      "category": "services",
-      "description": "Integrate services/search-service.js — unified search across all data",
-      "status": "pending",
-      "source": "in/heady-max-potential(1)"
-    },
-    {
-      "id": "w-svc-migration",
-      "category": "services",
-      "description": "Integrate services/migration-service.js — schema/data migration runner",
-      "status": "pending",
-      "source": "in/heady-max-potential(1)"
-    },
-    {
-      "id": "w-svc-mesh",
-      "category": "services",
-      "description": "Integrate services/service-mesh.js — service discovery and routing mesh",
-      "status": "pending",
-      "source": "in/heady-max-potential(1)"
-    },
-    {
-      "id": "w-svc-registry",
-      "category": "services",
-      "description": "Integrate services/service-registry.js — centralized service catalog",
-      "status": "pending",
-      "source": "in/heady-max-potential(1)"
-    },
-    {
-      "id": "w-svc-asset-pipeline",
-      "category": "services",
-      "description": "Integrate services/asset-pipeline.js — static asset processing",
-      "status": "pending",
-      "source": "in/heady-max-potential(1)"
-    },
-    {
-      "id": "w-svc-auth-session",
-      "category": "auth",
-      "description": "Integrate services/auth-session-server.js — httpOnly session server",
-      "status": "pending",
-      "source": "in/heady-max-potential(1)"
-    },
-    {
-      "id": "w-deploy-cloudflare",
-      "category": "deploy",
-      "description": "Integrate deploy/cloudflare-deployer.js — Workers/Pages deployment",
-      "status": "pending",
-      "source": "in/heady-max-potential(1)"
-    },
-    {
-      "id": "w-deploy-cloudrun",
-      "category": "deploy",
-      "description": "Integrate deploy/cloud-run-deployer.js — Cloud Run service deployment",
-      "status": "pending",
-      "source": "in/heady-max-potential(1)"
-    },
-    {
-      "id": "w-deploy-container",
-      "category": "deploy",
-      "description": "Integrate deploy/universal-container.js — unified container builder",
-      "status": "pending",
-      "source": "in/heady-max-potential(1)"
-    },
-    {
-      "id": "w-config-env",
-      "category": "config",
-      "description": "Integrate config/environment-config.js — env-based configuration",
-      "status": "pending",
-      "source": "in/heady-max-potential(1)"
-    },
-    {
-      "id": "w-config-pipeline",
-      "category": "config",
-      "description": "Integrate config/pipeline-canonical.js — canonical pipeline configuration",
-      "status": "pending",
-      "source": "in/heady-max-potential(1)"
-    },
-    {
-      "id": "w-mon-drift-detector",
-      "category": "monitoring",
-      "description": "Integrate monitoring/drift-detector.js — semantic drift detection",
-      "status": "pending",
-      "source": "in/heady-max-potential(1)"
-    },
-    {
-      "id": "w-mon-health-probe",
-      "category": "monitoring",
-      "description": "Integrate monitoring/health-probe-system.js — deep health probing",
-      "status": "pending",
-      "source": "in/heady-max-potential(1)"
-    },
-    {
-      "id": "w-mon-incident",
-      "category": "monitoring",
-      "description": "Integrate monitoring/incident-responder.js — automated incident response",
-      "status": "pending",
-      "source": "in/heady-max-potential(1)"
-    },
-    {
-      "id": "w-mon-telemetry",
-      "category": "monitoring",
-      "description": "Integrate monitoring/telemetry-collector.js — metrics collection and export",
-      "status": "pending",
-      "source": "in/heady-max-potential(1)"
-    },
-    {
-      "id": "w-shared-csl-v2",
-      "category": "shared",
-      "description": "Integrate shared/csl-engine-v2.js — upgraded CSL engine",
-      "status": "pending",
-      "source": "in/heady-max-potential(1)"
-    },
-    {
-      "id": "w-shared-phi-v2",
-      "category": "shared",
-      "description": "Integrate shared/phi-math-v2.js — upgraded φ-math foundation",
-      "status": "pending",
-      "source": "in/heady-max-potential(1)"
-    },
-    {
-      "id": "w-shared-sacred-v2",
-      "category": "shared",
-      "description": "Integrate shared/sacred-geometry-v2.js — upgraded sacred geometry utils",
-      "status": "pending",
-      "source": "in/heady-max-potential(1)"
-    },
-    {
-      "id": "w-orch-arena-enhanced",
-      "category": "orchestration",
-      "description": "Integrate orchestration/arena-mode-enhanced.js — competitive eval upgrade",
-      "status": "pending",
-      "source": "in/heady-max-potential(1)"
-    },
-    {
-      "id": "w-orch-hcfp-runner",
-      "category": "orchestration",
-      "description": "Integrate orchestration/hcfp-runner.js — pipeline execution runner",
-      "status": "pending",
-      "source": "in/heady-max-potential(1)"
-    },
-    {
-      "id": "w-orch-socratic-loop",
-      "category": "orchestration",
-      "description": "Integrate orchestration/socratic-loop.js — Socratic questioning loop",
-      "status": "pending",
-      "source": "in/heady-max-potential(1)"
-    },
-    {
-      "id": "w-orch-swarm-defs",
-      "category": "orchestration",
-      "description": "Integrate orchestration/swarm-definitions.js — canonical swarm taxonomy",
-      "status": "pending",
-      "source": "in/heady-max-potential(1)"
-    },
-    {
-      "id": "w-sec-autonomy-guardrails",
-      "category": "security",
-      "description": "Integrate security/autonomy-guardrails.js — AI autonomy safety limits",
-      "status": "pending",
-      "source": "in/heady-max-potential(1)"
-    },
-    {
-      "id": "w-sec-crypto-audit",
-      "category": "security",
-      "description": "Integrate security/crypto-audit-trail.js — cryptographic audit log",
-      "status": "pending",
-      "source": "in/heady-max-potential(1)"
-    },
-    {
-      "id": "w-sec-csp-middleware",
-      "category": "security",
-      "description": "Integrate security/csp-middleware.js — Content Security Policy headers",
-      "status": "pending",
-      "source": "in/heady-max-potential(1)"
-    },
-    {
-      "id": "w-sec-prompt-injection",
-      "category": "security",
-      "description": "Integrate security/prompt-injection-guard.js — prompt injection detection",
-      "status": "pending",
-      "source": "in/heady-max-potential(1)"
-    },
-    {
-      "id": "w-sec-rbac",
-      "category": "security",
-      "description": "Integrate security/rbac-engine.js — role-based access control",
-      "status": "pending",
-      "source": "in/heady-max-potential(1)"
-    },
-    {
-      "id": "w-sec-secret-manager",
-      "category": "security",
-      "description": "Integrate security/secret-manager.js — secret rotation and storage",
-      "status": "pending",
-      "source": "in/heady-max-potential(1)"
-    },
-    {
-      "id": "w-sec-sbom-generator",
-      "category": "security",
-      "description": "Integrate security/sbom-generator.js — SBOM generation",
-      "status": "pending",
-      "source": "in/heady-max-potential(1)"
-    },
-    {
-      "id": "w-sec-websocket-auth",
-      "category": "security",
-      "description": "Integrate security/websocket-auth.js — WebSocket authentication",
-      "status": "pending",
-      "source": "in/heady-max-potential(1)"
-    },
-    {
-      "id": "w-scale-api-contracts",
-      "category": "scaling",
-      "description": "Integrate scaling/api-contracts.js — API contract definitions",
-      "status": "pending",
-      "source": "in/heady-max-potential(1)"
-    },
-    {
-      "id": "w-scale-auto-scaler",
-      "category": "scaling",
-      "description": "Integrate scaling/auto-scaler.js — metrics-driven auto-scaling",
-      "status": "pending",
-      "source": "in/heady-max-potential(1)"
-    },
-    {
-      "id": "w-scale-cqrs",
-      "category": "scaling",
-      "description": "Integrate scaling/cqrs-manager.js — command/query responsibility separation",
-      "status": "pending",
-      "source": "in/heady-max-potential(1)"
-    },
-    {
-      "id": "w-scale-dlq",
-      "category": "scaling",
-      "description": "Integrate scaling/dead-letter-queue.js — failed message processing",
-      "status": "pending",
-      "source": "in/heady-max-potential(1)"
-    },
-    {
-      "id": "w-scale-error-codes",
-      "category": "scaling",
-      "description": "Integrate scaling/error-codes.js — standardized error code catalog",
-      "status": "pending",
-      "source": "in/heady-max-potential(1)"
-    },
-    {
-      "id": "w-scale-feature-flags",
-      "category": "scaling",
-      "description": "Integrate scaling/feature-flags.js — Fibonacci rollout percentages",
-      "status": "pending",
-      "source": "in/heady-max-potential(1)"
-    },
-    {
-      "id": "w-scale-jit-loader",
-      "category": "scaling",
-      "description": "Integrate scaling/jit-loader.js — just-in-time module loading",
-      "status": "pending",
-      "source": "in/heady-max-potential(1)"
-    },
-    {
-      "id": "w-scale-resource-alloc",
-      "category": "scaling",
-      "description": "Integrate scaling/resource-allocator.js — compute resource allocation",
-      "status": "pending",
-      "source": "in/heady-max-potential(1)"
-    },
-    {
-      "id": "w-scale-saga",
-      "category": "scaling",
-      "description": "Integrate scaling/saga-coordinator.js — distributed transaction sagas",
-      "status": "pending",
-      "source": "in/heady-max-potential(1)"
-    },
-    {
-      "id": "w-doc-12-adrs",
-      "category": "docs",
-      "description": "Copy 12 ADRs from in/ archive to docs/adrs/ (phi-math, CSL, httpOnly, ESM, etc.)",
-      "status": "pending",
-      "source": "in/heady-max-potential(1) docs/adrs/"
-    },
-    {
-      "id": "w-doc-c4-arch",
-      "category": "docs",
-      "description": "Copy docs/C4_ARCHITECTURE.md — 3-level C4 model with ASCII diagrams",
-      "status": "pending",
-      "source": "in/heady-max-potential(1)"
-    },
-    {
-      "id": "w-doc-dependency-graph",
-      "category": "docs",
-      "description": "Copy docs/DEPENDENCY_GRAPH.md + dependency-graph.json",
-      "status": "pending",
-      "source": "in/heady-max-potential(1)"
-    },
-    {
-      "id": "w-doc-error-codes",
-      "category": "docs",
-      "description": "Copy docs/ERROR_CODES.md — standardized error catalog",
-      "status": "pending",
-      "source": "in/heady-max-potential(1)"
-    },
-    {
-      "id": "w-doc-security-model",
-      "category": "docs",
-      "description": "Copy docs/SECURITY_MODEL.md — comprehensive security architecture",
-      "status": "pending",
-      "source": "in/heady-max-potential(1)"
-    },
-    {
-      "id": "w-doc-patent-map",
-      "category": "docs",
-      "description": "Copy docs/PATENT_MAP.md — 51 patents mapped to implementation files",
-      "status": "pending",
-      "source": "in/heady-max-potential(1)"
-    },
-    {
-      "id": "w-doc-onboarding",
-      "category": "docs",
-      "description": "Copy docs/ONBOARDING.md — developer onboarding guide",
-      "status": "pending",
-      "source": "in/heady-max-potential(1)"
-    },
-    {
-      "id": "w-doc-backup-strategy",
-      "category": "docs",
-      "description": "Copy docs/backup-strategy.md — 3-tier Fibonacci backup schedules",
-      "status": "pending",
-      "source": "in/heady-max-potential(1)"
-    },
-    {
-      "id": "w-doc-runbooks",
-      "category": "docs",
-      "description": "Copy 3 runbooks (deployment-rollback, security-incident, service-failure)",
-      "status": "pending",
-      "source": "in/heady-max-potential(1) docs/runbooks/"
-    },
-    {
-      "id": "w-doc-postman",
-      "category": "docs",
-      "description": "Copy docs/postman-collection.json — 6 API groups, 15 endpoints",
-      "status": "pending",
-      "source": "in/heady-max-potential(1)"
-    },
-    {
-      "id": "w-doc-debug-guide",
-      "category": "docs",
-      "description": "Copy docs/guides/DEBUG.md — comprehensive debug guide",
-      "status": "pending",
-      "source": "in/heady-max-potential(1)"
-    },
-    {
-      "id": "w-test-compliance",
-      "category": "testing",
-      "description": "Integrate tests/compliance.test.js — compliance verification",
-      "status": "pending",
-      "source": "in/heady-max-potential(1)"
-    },
-    {
-      "id": "w-test-integration",
-      "category": "testing",
-      "description": "Integrate tests/integration.test.js — end-to-end integration tests",
-      "status": "pending",
-      "source": "in/heady-max-potential(1)"
-    },
-    {
-      "id": "w-test-scaling",
-      "category": "testing",
-      "description": "Integrate tests/scaling.test.js — scaling behavior validation",
-      "status": "pending",
-      "source": "in/heady-max-potential(1)"
-    },
-    {
-      "id": "w-test-security",
-      "category": "testing",
-      "description": "Integrate tests/security.test.js — security controls validation",
-      "status": "pending",
-      "source": "in/heady-max-potential(1)"
-    },
-    {
-      "id": "w-test-services",
-      "category": "testing",
-      "description": "Integrate tests/services.test.js — service unit tests",
-      "status": "pending",
-      "source": "in/heady-max-potential(1)"
-    },
-    {
-      "id": "w-test-shared",
-      "category": "testing",
-      "description": "Integrate tests/shared.test.js — shared module tests",
-      "status": "pending",
-      "source": "in/heady-max-potential(1)"
-    },
-    {
-      "id": "w-infra-turbo-json",
-      "category": "infra",
-      "description": "Integrate scripts/turbo.json — Turborepo pipeline configuration",
-      "status": "pending",
-      "source": "in/heady-max-potential(1)"
-    },
-    {
-      "id": "w-web-site-registry",
-      "category": "web",
-      "description": "Integrate websites/website-registry.js — 9-site canonical registry",
-      "status": "pending",
-      "source": "in/heady-max-potential(1)"
-    },
-    {
-      "id": "w-auth-gateway",
-      "category": "auth",
-      "description": "Integrate auth/auth-gateway.js — centralized auth gateway",
-      "status": "pending",
-      "source": "in/heady-max-potential(1)"
-    },
-    {
-      "id": "sp-genesis-manager",
-      "category": "core",
-      "description": "Integrate heady-sacred-genesis heady-manager.js core kernel",
-      "status": "pending",
-      "source": "in/heady-sacred-projections-v4.0.0"
-    },
-    {
-      "id": "sp-genesis-csl-engine",
-      "category": "shared",
-      "description": "Compare/merge heady-sacred-genesis shared/csl-engine.js with main CSL",
-      "status": "pending",
-      "source": "in/heady-sacred-projections-v4.0.0"
-    },
-    {
-      "id": "sp-genesis-phi-math",
-      "category": "shared",
-      "description": "Compare/merge heady-sacred-genesis shared/phi-math.js with main phi-math",
-      "status": "pending",
-      "source": "in/heady-sacred-projections-v4.0.0"
-    },
-    {
-      "id": "sp-genesis-sacred-geometry",
-      "category": "shared",
-      "description": "Compare/merge heady-sacred-genesis shared/sacred-geometry.js",
-      "status": "pending",
-      "source": "in/heady-sacred-projections-v4.0.0"
-    },
-    {
-      "id": "sp-genesis-bee-factory",
-      "category": "agents",
-      "description": "Compare/merge heady-sacred-genesis bee-factory.js with main",
-      "status": "pending",
-      "source": "in/heady-sacred-projections-v4.0.0"
-    },
-    {
-      "id": "sp-genesis-event-bus",
-      "category": "core",
-      "description": "Integrate genesis src/core/event-bus.js event system",
-      "status": "pending",
-      "source": "in/heady-sacred-projections-v4.0.0"
-    },
-    {
-      "id": "sp-genesis-vector-memory",
-      "category": "memory",
-      "description": "Compare/merge genesis src/memory/vector-memory.js",
-      "status": "pending",
-      "source": "in/heady-sacred-projections-v4.0.0"
-    },
-    {
-      "id": "sp-genesis-logger",
-      "category": "core",
-      "description": "Integrate genesis src/core/heady-logger.js structured logger",
-      "status": "pending",
-      "source": "in/heady-sacred-projections-v4.0.0"
-    },
-    {
-      "id": "sp-genesis-ed25519",
-      "category": "security",
-      "description": "Integrate genesis src/crypto/ed25519-receipt-signer.js",
-      "status": "pending",
-      "source": "in/heady-sacred-projections-v4.0.0"
-    },
-    {
-      "id": "sp-genesis-health-svc",
-      "category": "monitoring",
-      "description": "Integrate genesis src/monitoring/health-service.js",
-      "status": "pending",
-      "source": "in/heady-sacred-projections-v4.0.0"
-    },
-    {
-      "id": "sp-genesis-hcfp-v4",
-      "category": "orchestration",
-      "description": "Compare/merge genesis hc-full-pipeline-v4.js with main pipeline",
-      "status": "pending",
-      "source": "in/heady-sacred-projections-v4.0.0"
-    },
-    {
-      "id": "sp-genesis-liquid-orch",
-      "category": "orchestration",
-      "description": "Integrate genesis liquid-orchestrator.js",
-      "status": "pending",
-      "source": "in/heady-sacred-projections-v4.0.0"
-    },
-    {
-      "id": "sp-genesis-circuit-breaker",
-      "category": "resilience",
-      "description": "Integrate genesis src/resilience/circuit-breaker.js",
-      "status": "pending",
-      "source": "in/heady-sacred-projections-v4.0.0"
-    },
-    {
-      "id": "sp-genesis-saga-orch",
-      "category": "resilience",
-      "description": "Integrate genesis src/resilience/saga-orchestrator.js",
-      "status": "pending",
-      "source": "in/heady-sacred-projections-v4.0.0"
-    },
-    {
-      "id": "sp-genesis-tests",
-      "category": "testing",
-      "description": "Integrate 3 genesis test suites (circuit-breaker, phi-math, pipeline)",
-      "status": "pending",
-      "source": "in/heady-sacred-projections-v4.0.0"
-    },
-    {
-      "id": "sp-projection-host",
-      "category": "sites",
-      "description": "Integrate headyweb-projection-host app shell",
-      "status": "pending",
-      "source": "in/heady-sacred-projections-v4.0.0"
-    },
-    {
-      "id": "sp-projection-map-gen",
-      "category": "sites",
-      "description": "Integrate generate-projection-map.js for 9-site projection",
-      "status": "pending",
-      "source": "in/heady-sacred-projections-v4.0.0"
-    },
-    {
-      "id": "sp-domain-remotes",
-      "category": "sites",
-      "description": "Integrate domain-remotes.js for micro-frontend federation",
-      "status": "pending",
-      "source": "in/heady-sacred-projections-v4.0.0"
-    },
-    {
-      "id": "sp-9-site-projections",
-      "category": "sites",
-      "description": "Validate 9 projection cores (headyme, headyapi, headybot, headybuddy, headyconnection, headyio, headymcp, headyos, headysystems)",
-      "status": "pending",
-      "source": "in/heady-sacred-projections-v4.0.0"
-    },
-    {
-      "id": "frc-archetypes",
-      "category": "docs",
-      "description": "Copy 5 archetypes (Owl/Eagle/Dolphin/Rabbit-Ant-Elephant-Beaver/Fox-Lion-Bee) to docs/",
-      "status": "pending",
-      "source": "in/heady-full-rebuild-context"
-    },
-    {
-      "id": "frc-directives",
-      "category": "docs",
-      "description": "Copy 4 directive docs (awareness-gen-security, orchestration-lifecycle, persona-pipeline-learning, multimodel-sacred-geometry)",
-      "status": "pending",
-      "source": "in/heady-full-rebuild-context"
-    },
-    {
-      "id": "frc-laws",
-      "category": "governance",
-      "description": "Copy 7+ law docs (thoroughness, solutions-only, context-max, implementation-completeness, env-purity, bee-scale, auto-success)",
-      "status": "pending",
-      "source": "in/heady-full-rebuild-context"
-    },
-    {
-      "id": "frc-enforcement",
-      "category": "governance",
-      "description": "Copy enforcement docs (anti-shortcut-no-placeholder)",
-      "status": "pending",
-      "source": "in/heady-full-rebuild-context"
-    },
-    {
-      "id": "frc-audit-deep-scan",
-      "category": "docs",
-      "description": "Copy audit/DEEP-SCAN-AUDIT-REPORT.md + HEADY_DEEP_SCAN_ANALYSIS.md",
-      "status": "pending",
-      "source": "in/heady-full-rebuild-context"
-    },
-    {
-      "id": "frc-reconciliation",
-      "category": "docs",
-      "description": "Copy audit/RECONCILIATION-MATRIX.md — gap tracking",
-      "status": "pending",
-      "source": "in/heady-full-rebuild-context"
-    },
-    {
-      "id": "frc-unimplemented-audit",
-      "category": "docs",
-      "description": "Copy audit/UNIMPLEMENTED_SERVICES_AUDIT.md — missing services list",
-      "status": "pending",
-      "source": "in/heady-full-rebuild-context"
-    },
-    {
-      "id": "frc-cognition-readme",
-      "category": "docs",
-      "description": "Copy docs/COGNITION-README.md — cognitive architecture overview",
-      "status": "pending",
-      "source": "in/heady-full-rebuild-context"
-    },
-    {
-      "id": "frc-migration-guide",
-      "category": "docs",
-      "description": "Copy docs/MIGRATION-GUIDE.md — version migration steps",
-      "status": "pending",
-      "source": "in/heady-full-rebuild-context"
-    },
-    {
-      "id": "frc-phi-scorecard",
-      "category": "docs",
-      "description": "Copy docs/PHI_COMPLIANCE_SCORECARD.md — φ-scaling compliance",
-      "status": "pending",
-      "source": "in/heady-full-rebuild-context"
-    },
-    {
-      "id": "frc-wiring-guide",
-      "category": "docs",
-      "description": "Copy docs/WIRING_GUIDE.md — service wiring instructions",
-      "status": "pending",
-      "source": "in/heady-full-rebuild-context"
-    },
-    {
-      "id": "frc-full-rebuild-prompt",
-      "category": "orchestration",
-      "description": "Copy 00-HEADY-FULL-REBUILD-PROMPT.md master prompt",
-      "status": "pending",
-      "source": "in/heady-full-rebuild-context"
-    },
-    {
-      "id": "auto-v41-config-sync",
-      "category": "config",
-      "description": "Integrate v4.1.0 autonomy config overlay and sync logic",
-      "status": "pending",
-      "source": "in/heady-maximum-potential-autonomy-v4.1.0"
-    },
-    {
-      "id": "auto-v41-csl-gates",
-      "category": "orchestration",
-      "description": "Integrate v4.1.0 enhanced CSL gate definitions",
-      "status": "pending",
-      "source": "in/heady-maximum-potential-autonomy-v4.1.0"
-    },
-    {
-      "id": "auto-v41-wave-scripts",
-      "category": "orchestration",
-      "description": "Integrate v4.1.0 wave generation scripts (dedup with max-potential)",
-      "status": "pending",
-      "source": "in/heady-maximum-potential-autonomy-v4.1.0"
-    },
-    {
-      "id": "bsp-security-scan",
-      "category": "security",
-      "description": "Integrate bounded security pass JS modules (4 files)",
-      "status": "pending",
-      "source": "in/heady_bounded_security_pass"
-    },
-    {
-      "id": "mp-full-service-audit",
-      "category": "services",
-      "description": "Cross-reference 146 JS modules from heady-maximum-potential vs repo — copy missing",
-      "status": "pending",
-      "source": "in/heady-maximum-potential"
-    },
-    {
-      "id": "mp-132-docs-audit",
-      "category": "docs",
-      "description": "Cross-reference 132 MD docs from heady-maximum-potential vs repo — copy missing",
-      "status": "pending",
-      "source": "in/heady-maximum-potential"
-    },
-    {
-      "id": "mp-73-configs-audit",
-      "category": "infra",
-      "description": "Cross-reference 73 JSON configs from heady-maximum-potential vs repo — merge missing",
-      "status": "pending",
-      "source": "in/heady-maximum-potential"
-    },
-    {
-      "id": "docx-ai-accuracy",
-      "category": "research",
-      "description": "Extract actionable items from ai-accuracy-research-report.docx",
-      "status": "pending",
-      "source": "in/ai-accuracy-research-report.docx"
-    },
-    {
-      "id": "docx-ai-effectiveness",
-      "category": "research",
-      "description": "Extract actionable items from ai-agent-effectiveness-report.docx",
-      "status": "pending",
-      "source": "in/ai-agent-effectiveness-report.docx"
-    },
-    {
-      "id": "sbc-state-diff",
-      "category": "orchestration",
-      "description": "Diff system-build-current-state vs main repo — identify drifted configs",
-      "status": "pending",
-      "source": "in/heady-system-build-current-state"
-    },
-    {
-      "id": "na-rotate-secrets",
-      "category": "security",
-      "description": "Rotate all committed .env contents, JWT secrets, DB credentials — treat as compromised",
-      "status": "pending",
-      "source": "in/heady_bounded_security_pass(2)",
-      "priority": "critical"
-    },
-    {
-      "id": "na-remove-secrets-history",
-      "category": "security",
-      "description": "Remove exposed secrets from git history via history-rewrite",
-      "status": "pending",
-      "source": "in/heady_bounded_security_pass(2)",
-      "priority": "critical"
-    },
-    {
-      "id": "na-secret-manager-migration",
-      "category": "security",
-      "description": "Move all runtime secrets to Google Secret Manager or HashiCorp Vault",
-      "status": "pending",
-      "source": "in/heady_bounded_security_pass(2)",
-      "priority": "critical"
-    },
-    {
-      "id": "na-ci-secret-guard",
-      "category": "infra",
-      "description": "Add CI rules that fail on .env, *.key, *.pem, and known secret patterns",
-      "status": "pending",
-      "source": "in/heady_bounded_security_pass(2)"
-    },
-    {
-      "id": "na-canonical-tree-reduction",
-      "category": "infra",
-      "description": "Inventory duplicate trees (_archive, Heady-pre-production, heady-monorepo, heady-enterprise) — archive/delete/promote",
-      "status": "pending",
-      "source": "in/heady_bounded_security_pass(2)"
-    },
-    {
-      "id": "na-founder-name-normalize",
-      "category": "governance",
-      "description": "Repo-wide replace Eric Head/Eric Headington → Eric Haywood in all docs, legal, generated content",
-      "status": "pending",
-      "source": "in/heady_bounded_security_pass(2)"
-    },
-    {
-      "id": "na-svc-smoke-suite",
-      "category": "testing",
-      "description": "Run npx jest tests/security-hardening-pass.test.js + validate-no-localhost + smoke-test with real URL",
-      "status": "pending",
-      "source": "in/heady_bounded_security_pass(2)"
-    },
-    {
-      "id": "na-svc-manifests",
-      "category": "infra",
-      "description": "Run generate-service-manifests.mjs and validate output",
-      "status": "pending",
-      "source": "in/heady_bounded_security_pass(2)"
-    },
-    {
-      "id": "na-infra-env-driven-config",
-      "category": "infra",
-      "description": "Replace remaining localhost/dev defaults in configs with env-driven endpoints",
-      "status": "pending",
-      "source": "in/heady_bounded_security_pass(2)"
-    },
-    {
-      "id": "na-nginx-upstream-validate",
-      "category": "infra",
-      "description": "Validate nginx upstream naming against actual deployed upstream blocks",
-      "status": "pending",
-      "source": "in/heady_bounded_security_pass(2)"
-    },
-    {
-      "id": "na-otel-endpoint-validate",
-      "category": "monitoring",
-      "description": "Validate OpenTelemetry exporters against real collector endpoint",
-      "status": "pending",
-      "source": "in/heady_bounded_security_pass(2)"
-    },
-    {
-      "id": "na-cloudrun-workers-targets",
-      "category": "deploy",
-      "description": "Confirm Cloud Run, Workers, site deployment wrappers target production projects",
-      "status": "pending",
-      "source": "in/heady_bounded_security_pass(2)"
-    },
-    {
-      "id": "na-cross-domain-auth",
-      "category": "auth",
-      "description": "Verify cross-domain auth propagation on real hosted domains",
-      "status": "pending",
-      "source": "in/heady_bounded_security_pass(2)"
-    },
-    {
-      "id": "na-cookie-scope-validate",
-      "category": "auth",
-      "description": "Validate cookie scope, __Host- usage, iframe relay origin, logout propagation",
-      "status": "pending",
-      "source": "in/heady_bounded_security_pass(2)"
-    },
-    {
-      "id": "na-drupal-hooks-validate",
-      "category": "services",
-      "description": "Validate Drupal content types, vector indexing hooks, CMS clipboard integrations",
-      "status": "pending",
-      "source": "in/heady_bounded_security_pass(2)"
-    },
-    {
-      "id": "na-sites-a11y-seo",
-      "category": "sites",
-      "description": "Run accessibility, responsive, SEO, structured-data checks on each active site",
-      "status": "pending",
-      "source": "in/heady_bounded_security_pass(2)"
-    },
-    {
-      "id": "na-cf-522-triage",
-      "category": "infra",
-      "description": "Resolve Cloudflare 522 on 8 domains (headyme, headysystems, headyos, headyconnection x2, headyfinance, headyex, admin.headysystems)",
-      "status": "pending",
-      "source": "in/heady_bounded_security_pass(2)",
-      "priority": "critical"
-    },
-    {
-      "id": "na-cors-nginx-webpack",
-      "category": "security",
-      "description": "Fix wildcard CORS in headyweb nginx.conf, 3 webpack.config.js files",
-      "status": "pending",
-      "source": "in/heady_bounded_security_pass(2)"
-    },
-    {
-      "id": "na-cors-policy-dedup",
-      "category": "security",
-      "description": "Remove duplicate src/middleware/cors-policy.js (byte-identical to security/ version)",
-      "status": "pending",
-      "source": "in/heady_bounded_security_pass(2)"
-    },
-    {
-      "id": "na-structured-logging-30",
-      "category": "code-quality",
-      "description": "Convert ~30 service files from console.log to structured logger (prioritize vector-federation, heady-orchestration)",
-      "status": "pending",
-      "source": "in/heady_bounded_security_pass(2)"
-    },
-    {
-      "id": "na-shared-logger-util",
-      "category": "shared",
-      "description": "Create shared lightweight logger utility for services without one",
-      "status": "pending",
-      "source": "in/heady_bounded_security_pass(2)"
-    },
-    {
-      "id": "na-generate-bee-todos",
-      "category": "services",
-      "description": "Wire 10+ TODO placeholder functions in services/heady-projection/src/generate-bee.js",
-      "status": "pending",
-      "source": "in/heady_bounded_security_pass(2)"
-    },
-    {
-      "id": "na-firebase-admin-wire",
-      "category": "auth",
-      "description": "Wire firebase-admin SDK integration for onboarding auth callback (HEADY_REQUIRE_FIREBASE_ADMIN gate)",
-      "status": "pending",
-      "source": "in/heady_bounded_security_pass(2)"
-    },
-    {
-      "id": "bsp2-heady-cli",
-      "category": "devtools",
-      "description": "Integrate bin/heady-cli.js — Heady CLI entrypoint",
-      "status": "pending",
-      "source": "in/heady_bounded_security_pass(2)"
-    },
-    {
-      "id": "bsp2-cli-auth",
-      "category": "auth",
-      "description": "Integrate bin/cli-auth.js — CLI authentication module",
-      "status": "pending",
-      "source": "in/heady_bounded_security_pass(2)"
-    },
-    {
-      "id": "bsp2-swarm-coordinator",
-      "category": "orchestration",
-      "description": "Integrate swarm-coordinator.js (44K) — major orchestration module",
-      "status": "pending",
-      "source": "in/heady_bounded_security_pass(2)"
-    },
-    {
-      "id": "bsp2-genesis-battle-arena",
-      "category": "orchestration",
-      "description": "Integrate genesis battle-arena-protocol.js + battle-sim-orchestrator",
-      "status": "pending",
-      "source": "in/heady_bounded_security_pass(2)"
-    },
-    {
-      "id": "bsp2-genesis-csl-modules",
-      "category": "core",
-      "description": "Integrate genesis csl-engine.js, csl-confidence-gate.js, csl-service-integration.js",
-      "status": "pending",
-      "source": "in/heady_bounded_security_pass(2)"
-    },
-    {
-      "id": "bsp2-genesis-deterministic",
-      "category": "core",
-      "description": "Integrate genesis deterministic-prompt-executor.js + test",
-      "status": "pending",
-      "source": "in/heady_bounded_security_pass(2)"
-    },
-    {
-      "id": "bsp2-genesis-connection-pool",
-      "category": "scaling",
-      "description": "Integrate genesis connection-pool.js",
-      "status": "pending",
-      "source": "in/heady_bounded_security_pass(2)"
-    },
-    {
-      "id": "bsp2-genesis-continuous-action",
-      "category": "monitoring",
-      "description": "Integrate genesis continuous-action-analyzer.js",
-      "status": "pending",
-      "source": "in/heady_bounded_security_pass(2)"
-    },
-    {
-      "id": "bsp2-genesis-credential-rotation",
-      "category": "security",
-      "description": "Integrate genesis credential-rotation module",
-      "status": "pending",
-      "source": "in/heady_bounded_security_pass(2)"
-    },
-    {
-      "id": "bsp2-genesis-circuit-breaker",
-      "category": "resilience",
-      "description": "Integrate genesis circuit-breaker module and standalone JS",
-      "status": "pending",
-      "source": "in/heady_bounded_security_pass(2)"
-    },
-    {
-      "id": "bsp2-genesis-docker-compose",
-      "category": "infra",
-      "description": "Merge genesis docker-compose variants (full, production, rebuild, default)",
-      "status": "pending",
-      "source": "in/heady_bounded_security_pass(2)"
-    },
-    {
-      "id": "bsp2-genesis-dockerfiles",
-      "category": "infra",
-      "description": "Merge genesis Dockerfiles (standard, monorepo, production, universal)",
-      "status": "pending",
-      "source": "in/heady_bounded_security_pass(2)"
-    },
-    {
-      "id": "bsp2-genesis-cloudbuild",
-      "category": "infra",
-      "description": "Integrate genesis cloudbuild.yaml for CI/CD",
-      "status": "pending",
-      "source": "in/heady_bounded_security_pass(2)"
-    },
-    {
-      "id": "bsp2-genesis-cloudflare",
-      "category": "deploy",
-      "description": "Integrate genesis cloudflare/ worker configs",
-      "status": "pending",
-      "source": "in/heady_bounded_security_pass(2)"
-    },
-    {
-      "id": "bsp2-genesis-ci-pipelines",
-      "category": "infra",
-      "description": "Integrate genesis ci-pipelines/ automation",
-      "status": "pending",
-      "source": "in/heady_bounded_security_pass(2)"
-    },
-    {
-      "id": "bsp2-genesis-compliance",
-      "category": "governance",
-      "description": "Integrate genesis compliance-templates/ for regulatory compliance",
-      "status": "pending",
-      "source": "in/heady_bounded_security_pass(2)"
-    },
-    {
-      "id": "bsp2-genesis-benchmarks",
-      "category": "testing",
-      "description": "Integrate genesis benchmarks/ performance suites",
-      "status": "pending",
-      "source": "in/heady_bounded_security_pass(2)"
-    },
-    {
-      "id": "bsp2-genesis-adapters",
-      "category": "services",
-      "description": "Integrate genesis adapters/ for external service integration",
-      "status": "pending",
-      "source": "in/heady_bounded_security_pass(2)"
-    },
-    {
-      "id": "bsp2-genesis-desktop-overlay",
-      "category": "apps",
-      "description": "Integrate genesis desktop-overlay/ app module",
-      "status": "pending",
-      "source": "in/heady_bounded_security_pass(2)"
-    },
-    {
-      "id": "bsp2-genesis-colab",
-      "category": "apps",
-      "description": "Integrate genesis colab/ notebook integration",
-      "status": "pending",
-      "source": "in/heady_bounded_security_pass(2)"
-    },
-    {
-      "id": "bsp2-genesis-branch-protection",
-      "category": "governance",
-      "description": "Integrate genesis branch-protection/ rules config",
-      "status": "pending",
-      "source": "in/heady_bounded_security_pass(2)"
-    },
-    {
-      "id": "bsp2-genesis-certs",
-      "category": "security",
-      "description": "Audit genesis certs/ — DO NOT commit, move to secret manager",
-      "status": "pending",
-      "source": "in/heady_bounded_security_pass(2)",
-      "priority": "critical"
-    },
-    {
-      "id": "bsp2-genesis-distribution",
-      "category": "packages",
-      "description": "Integrate genesis distribution/ packaging configs",
-      "status": "pending",
-      "source": "in/heady_bounded_security_pass(2)"
-    },
-    {
-      "id": "bsp2-genesis-auto-success-ts",
-      "category": "core",
-      "description": "Integrate genesis auto-success-engine.ts (TypeScript version)",
-      "status": "pending",
-      "source": "in/heady_bounded_security_pass(2)"
-    },
-    {
-      "id": "bsp2-doc-next-actions",
-      "category": "docs",
-      "description": "Copy HEADY_NEXT_ACTIONS.md (12 critical action items) to main repo",
-      "status": "pending",
-      "source": "in/heady_bounded_security_pass(2)"
-    },
-    {
-      "id": "bsp2-doc-live-site-audit",
-      "category": "docs",
-      "description": "Copy LIVE_SITE_AUDIT_NOTES.md (Cloudflare 522 findings)",
-      "status": "pending",
-      "source": "in/heady_bounded_security_pass(2)"
-    },
-    {
-      "id": "bsp2-doc-continuation-briefs",
-      "category": "docs",
-      "description": "Copy CONTINUATION_BRIEF.md + CONTINUATION_BRIEF_2.md",
-      "status": "pending",
-      "source": "in/heady_bounded_security_pass(2)"
-    },
-    {
-      "id": "bsp2-genesis-build-manifest",
-      "category": "docs",
-      "description": "Copy genesis BUILD_MANIFEST.md + BUNDLE_MANIFEST.json",
-      "status": "pending",
-      "source": "in/heady_bounded_security_pass(2)"
-    },
-    {
-      "id": "bsp2-genesis-claude-doc",
-      "category": "docs",
-      "description": "Copy genesis CLAUDE.md (AI assistant instructions)",
-      "status": "pending",
-      "source": "in/heady_bounded_security_pass(2)"
-    },
-    {
-      "id": "bsp2-genesis-contributing",
-      "category": "docs",
-      "description": "Copy genesis CONTRIBUTING.md",
-      "status": "pending",
-      "source": "in/heady_bounded_security_pass(2)"
-    },
-    {
-      "id": "bsp2-genesis-agents-doc",
-      "category": "docs",
-      "description": "Copy genesis AGENTS.md (agent catalog)",
-      "status": "pending",
-      "source": "in/heady_bounded_security_pass(2)"
-    }
-  ]
+  "taskQueue": {
+    "_meta": {
+      "loadedAt": "2026-03-09T19:38:00Z",
+      "source": "in/heady-system-build.zip + in/heady-perplexity-full-system-context.zip",
+      "totalTasks": 109,
+      "law": "LAW 9 — ALL TASKS THROUGH HCFULLPIPELINE"
+    },
+    "tasks": [
+      {
+        "id": "BUNDLE-001",
+        "domain": "deployment",
+        "name": "Copy 53 service implementations from bundle into monorepo services/",
+        "status": "pending",
+        "swarm": "deploy-forge",
+        "subtasks": 53
+      },
+      {
+        "id": "BUNDLE-002",
+        "domain": "deployment",
+        "name": "Copy 14 skill files from bundle into .agents/skills/",
+        "status": "pending",
+        "swarm": "deploy-forge",
+        "subtasks": 14
+      },
+      {
+        "id": "BUNDLE-003",
+        "domain": "deployment",
+        "name": "Copy 10 app HTML surfaces from bundle into services/heady-web/sites/",
+        "status": "pending",
+        "swarm": "deploy-forge",
+        "subtasks": 10
+      },
+      {
+        "id": "BUNDLE-004",
+        "domain": "deployment",
+        "name": "Copy 6 shared packages from bundle into packages/",
+        "status": "pending",
+        "swarm": "deploy-forge",
+        "subtasks": 6
+      },
+      {
+        "id": "BUNDLE-005",
+        "domain": "deployment",
+        "name": "Copy 3 shared service libs (phi-math.js, auto-context-middleware.js, service-base.js) into shared/",
+        "status": "pending",
+        "swarm": "deploy-forge"
+      },
+      {
+        "id": "BUNDLE-006",
+        "domain": "documentation",
+        "name": "Copy docs/ tree (architecture, ADRs, runbooks, onboarding, security) into docs/",
+        "status": "pending",
+        "swarm": "doc-scribe"
+      },
+      {
+        "id": "BUNDLE-007",
+        "domain": "deployment",
+        "name": "Copy infra/ configs (Envoy, Consul, OTel, K8s) into infra/",
+        "status": "pending",
+        "swarm": "deploy-forge"
+      },
+      {
+        "id": "BUNDLE-008",
+        "domain": "testing",
+        "name": "Copy 4 contract tests into tests/",
+        "status": "pending",
+        "swarm": "test-prover"
+      },
+      {
+        "id": "BUNDLE-009",
+        "domain": "deployment",
+        "name": "Copy validation script (validate_bundle.py) into scripts/",
+        "status": "pending",
+        "swarm": "deploy-forge"
+      },
+      {
+        "id": "BUNDLE-010",
+        "domain": "documentation",
+        "name": "Copy reports/ into reports/",
+        "status": "pending",
+        "swarm": "doc-scribe"
+      },
+      {
+        "id": "SVC-001",
+        "domain": "orchestration",
+        "name": "Wire heady-brain (port 8100) — central AI reasoning engine",
+        "status": "pending",
+        "swarm": "csl-gateway"
+      },
+      {
+        "id": "SVC-002",
+        "domain": "orchestration",
+        "name": "Wire heady-brains (port 8101) — multi-brain federation",
+        "status": "pending",
+        "swarm": "csl-gateway"
+      },
+      {
+        "id": "SVC-003",
+        "domain": "orchestration",
+        "name": "Wire heady-soul (port 8102) — orchestration core",
+        "status": "pending",
+        "swarm": "heady-soul"
+      },
+      {
+        "id": "SVC-004",
+        "domain": "orchestration",
+        "name": "Wire heady-conductor (port 8103) — pipeline conductor",
+        "status": "pending",
+        "swarm": "heady-soul"
+      },
+      {
+        "id": "SVC-005",
+        "domain": "inference",
+        "name": "Wire heady-infer (port 8104) — inference engine",
+        "status": "pending",
+        "swarm": "csl-gateway"
+      },
+      {
+        "id": "SVC-006",
+        "domain": "inference",
+        "name": "Wire heady-embed (port 8105) — 384-dim embedding service",
+        "status": "pending",
+        "swarm": "vector-weaver"
+      },
+      {
+        "id": "SVC-007",
+        "domain": "memory",
+        "name": "Wire heady-memory (port 8106) — pgvector long-term storage",
+        "status": "pending",
+        "swarm": "vector-weaver"
+      },
+      {
+        "id": "SVC-008",
+        "domain": "memory",
+        "name": "Wire heady-vector (port 8107) — vector operations + octree",
+        "status": "pending",
+        "swarm": "vector-weaver"
+      },
+      {
+        "id": "SVC-009",
+        "domain": "memory",
+        "name": "Wire heady-projection (port 8108) — VALU tensor bridge",
+        "status": "pending",
+        "swarm": "vector-weaver"
+      },
+      {
+        "id": "SVC-010",
+        "domain": "orchestration",
+        "name": "Wire heady-bee-factory (port 8200) — dynamic bee creation",
+        "status": "pending",
+        "swarm": "heady-soul"
+      },
+      {
+        "id": "SVC-011",
+        "domain": "orchestration",
+        "name": "Wire heady-hive (port 8201) — bee coordination hub",
+        "status": "pending",
+        "swarm": "heady-soul"
+      },
+      {
+        "id": "SVC-012",
+        "domain": "orchestration",
+        "name": "Wire heady-orchestration (port 8202) — 17-swarm coordinator",
+        "status": "pending",
+        "swarm": "heady-soul"
+      },
+      {
+        "id": "SVC-013",
+        "domain": "orchestration",
+        "name": "Wire heady-federation (port 8203) — agent capability federation",
+        "status": "pending",
+        "swarm": "bridge-keeper"
+      },
+      {
+        "id": "SVC-014",
+        "domain": "security",
+        "name": "Wire heady-guard (port 8300) — zero-trust sanitization",
+        "status": "pending",
+        "swarm": "security-hive"
+      },
+      {
+        "id": "SVC-015",
+        "domain": "security",
+        "name": "Wire heady-security (port 8301) — vuln scanning + TruffleHog",
+        "status": "pending",
+        "swarm": "security-hive"
+      },
+      {
+        "id": "SVC-016",
+        "domain": "governance",
+        "name": "Wire heady-governance (port 8302) — policy + Ed25519 receipts",
+        "status": "pending",
+        "swarm": "policy-sentinel"
+      },
+      {
+        "id": "SVC-017",
+        "domain": "monitoring",
+        "name": "Wire heady-health (port 8400) — aggregate health monitoring",
+        "status": "pending",
+        "swarm": "monitor-pulse"
+      },
+      {
+        "id": "SVC-018",
+        "domain": "monitoring",
+        "name": "Wire heady-eval (port 8401) — agent evaluation metrics",
+        "status": "pending",
+        "swarm": "monitor-pulse"
+      },
+      {
+        "id": "SVC-019",
+        "domain": "reliability",
+        "name": "Wire heady-maintenance (port 8402) — self-healing + drift recovery",
+        "status": "pending",
+        "swarm": "heal-smith"
+      },
+      {
+        "id": "SVC-020",
+        "domain": "testing",
+        "name": "Wire heady-testing (port 8403) — integration tests + Arena Mode",
+        "status": "pending",
+        "swarm": "test-prover"
+      },
+      {
+        "id": "SVC-021",
+        "domain": "deployment",
+        "name": "Wire heady-web (port 8500) — web platform SSR",
+        "status": "pending",
+        "swarm": "deploy-forge"
+      },
+      {
+        "id": "SVC-022",
+        "domain": "context",
+        "name": "Wire heady-buddy (port 8501) — companion widget",
+        "status": "pending",
+        "swarm": "context-shepherd"
+      },
+      {
+        "id": "SVC-023",
+        "domain": "deployment",
+        "name": "Wire heady-ui (port 8502) — UI component library",
+        "status": "pending",
+        "swarm": "deploy-forge"
+      },
+      {
+        "id": "SVC-024",
+        "domain": "deployment",
+        "name": "Wire heady-onboarding (port 8503) — user onboarding",
+        "status": "pending",
+        "swarm": "deploy-forge"
+      },
+      {
+        "id": "SVC-025",
+        "domain": "deployment",
+        "name": "Wire heady-pilot-onboarding (port 8504) — pilot program",
+        "status": "pending",
+        "swarm": "deploy-forge"
+      },
+      {
+        "id": "SVC-026",
+        "domain": "deployment",
+        "name": "Wire heady-task-browser (port 8505) — task management UI",
+        "status": "pending",
+        "swarm": "deploy-forge"
+      },
+      {
+        "id": "SVC-027",
+        "domain": "security",
+        "name": "Wire heady-auth (port 8510) — central auth relay + signed cookies",
+        "status": "pending",
+        "swarm": "security-hive"
+      },
+      {
+        "id": "SVC-028",
+        "domain": "orchestration",
+        "name": "Wire auto-success-engine (port 8600) — φ-scaled resource allocation",
+        "status": "pending",
+        "swarm": "heady-soul"
+      },
+      {
+        "id": "SVC-029",
+        "domain": "orchestration",
+        "name": "Wire hcfullpipeline-executor (port 8601) — 21-stage state machine",
+        "status": "pending",
+        "swarm": "heady-soul"
+      },
+      {
+        "id": "SVC-030",
+        "domain": "orchestration",
+        "name": "Wire heady-chain (port 8602) — DAG subtask chaining",
+        "status": "pending",
+        "swarm": "heady-soul"
+      },
+      {
+        "id": "SVC-031",
+        "domain": "orchestration",
+        "name": "Wire heady-cache (port 8603) — hot-cold cache + Fibonacci TTL",
+        "status": "pending",
+        "swarm": "heady-soul"
+      },
+      {
+        "id": "SVC-032",
+        "domain": "inference",
+        "name": "Wire ai-router (port 8700) — CSL-scored multi-provider routing",
+        "status": "pending",
+        "swarm": "csl-gateway"
+      },
+      {
+        "id": "SVC-033",
+        "domain": "inference",
+        "name": "Wire api-gateway (port 8701) — request routing + rate limiting",
+        "status": "pending",
+        "swarm": "csl-gateway"
+      },
+      {
+        "id": "SVC-034",
+        "domain": "inference",
+        "name": "Wire model-gateway (port 8702) — capability vector matching",
+        "status": "pending",
+        "swarm": "csl-gateway"
+      },
+      {
+        "id": "SVC-035",
+        "domain": "inference",
+        "name": "Wire domain-router (port 8703) — 9-site + aliases resolver",
+        "status": "pending",
+        "swarm": "csl-gateway"
+      },
+      {
+        "id": "SVC-036",
+        "domain": "integration",
+        "name": "Wire mcp-server (port 8800) — JSON-RPC 2.0 over SSE/stdio",
+        "status": "pending",
+        "swarm": "bridge-keeper"
+      },
+      {
+        "id": "SVC-037",
+        "domain": "integration",
+        "name": "Wire google-mcp (port 8801) — Google Workspace tool adapters",
+        "status": "pending",
+        "swarm": "bridge-keeper"
+      },
+      {
+        "id": "SVC-038",
+        "domain": "integration",
+        "name": "Wire memory-mcp (port 8802) — vector memory as MCP endpoints",
+        "status": "pending",
+        "swarm": "bridge-keeper"
+      },
+      {
+        "id": "SVC-039",
+        "domain": "integration",
+        "name": "Wire perplexity-mcp (port 8803) — Sonar Pro research via MCP",
+        "status": "pending",
+        "swarm": "bridge-keeper"
+      },
+      {
+        "id": "SVC-040",
+        "domain": "integration",
+        "name": "Wire jules-mcp (port 8804) — Jules AI async code delegation",
+        "status": "pending",
+        "swarm": "bridge-keeper"
+      },
+      {
+        "id": "SVC-041",
+        "domain": "integration",
+        "name": "Wire huggingface-gateway (port 8805) — HuggingFace inference",
+        "status": "pending",
+        "swarm": "bridge-keeper"
+      },
+      {
+        "id": "SVC-042",
+        "domain": "integration",
+        "name": "Wire colab-gateway (port 8806) — notebook execution dispatch",
+        "status": "pending",
+        "swarm": "bridge-keeper"
+      },
+      {
+        "id": "SVC-043",
+        "domain": "edge",
+        "name": "Wire silicon-bridge (port 8807) — Cloudflare Workers AI edge routing",
+        "status": "pending",
+        "swarm": "edge-runner"
+      },
+      {
+        "id": "SVC-044",
+        "domain": "integration",
+        "name": "Wire discord-bot (port 8808) — Discord slash commands + webhooks",
+        "status": "pending",
+        "swarm": "bridge-keeper"
+      },
+      {
+        "id": "SVC-045",
+        "domain": "data",
+        "name": "Wire drupal-sync (port 8809) — Drupal webhook/polling vector sync",
+        "status": "pending",
+        "swarm": "data-sculptor"
+      },
+      {
+        "id": "SVC-046",
+        "domain": "analysis",
+        "name": "Wire heady-vinci (port 8900) — pattern learning engine",
+        "status": "pending",
+        "swarm": "pattern-scout"
+      },
+      {
+        "id": "SVC-047",
+        "domain": "documentation",
+        "name": "Wire heady-autobiographer (port 8901) — auto-documentation",
+        "status": "pending",
+        "swarm": "doc-scribe"
+      },
+      {
+        "id": "SVC-048",
+        "domain": "integration",
+        "name": "Wire heady-midi (port 8902) — MIDI/creative CC→MCP bridge",
+        "status": "pending",
+        "swarm": "bridge-keeper"
+      },
+      {
+        "id": "SVC-049",
+        "domain": "fintech",
+        "name": "Wire budget-tracker (port 8903) — AI provider spend metering",
+        "status": "pending",
+        "swarm": "trade-wind"
+      },
+      {
+        "id": "SVC-050",
+        "domain": "deployment",
+        "name": "Wire cli-service (port 8904) — interactive OAuth CLI",
+        "status": "pending",
+        "swarm": "deploy-forge"
+      },
+      {
+        "id": "SVC-051",
+        "domain": "orchestration",
+        "name": "Wire prompt-manager (port 8905) — 64-prompt catalogue",
+        "status": "pending",
+        "swarm": "heady-soul"
+      },
+      {
+        "id": "SVC-052",
+        "domain": "security",
+        "name": "Wire secret-gateway (port 8906) — Vault-backed secret management",
+        "status": "pending",
+        "swarm": "security-hive"
+      },
+      {
+        "id": "SVC-053",
+        "domain": "context",
+        "name": "Wire heady-auto-context (port 8907) — AutoContext primary service",
+        "status": "pending",
+        "swarm": "context-shepherd"
+      },
+      {
+        "id": "SITE-001",
+        "domain": "deployment",
+        "name": "Deploy headyme.com — Cloudflare Pages + sacred geometry (Flower of Life)",
+        "status": "pending",
+        "swarm": "deploy-forge"
+      },
+      {
+        "id": "SITE-002",
+        "domain": "deployment",
+        "name": "Deploy headysystems.com — Cloudflare Pages + sacred geometry (Metatron's Cube)",
+        "status": "pending",
+        "swarm": "deploy-forge"
+      },
+      {
+        "id": "SITE-003",
+        "domain": "deployment",
+        "name": "Deploy heady-ai.com — Cloudflare Pages + sacred geometry (Sri Yantra)",
+        "status": "pending",
+        "swarm": "deploy-forge"
+      },
+      {
+        "id": "SITE-004",
+        "domain": "deployment",
+        "name": "Deploy headyos.com — Cloudflare Pages + sacred geometry (Torus)",
+        "status": "pending",
+        "swarm": "deploy-forge"
+      },
+      {
+        "id": "SITE-005",
+        "domain": "deployment",
+        "name": "Deploy headyconnection.org — Cloudflare Pages + Drupal sync",
+        "status": "pending",
+        "swarm": "deploy-forge"
+      },
+      {
+        "id": "SITE-006",
+        "domain": "deployment",
+        "name": "Deploy headyconnection.com — Cloudflare Pages + community portal",
+        "status": "pending",
+        "swarm": "deploy-forge"
+      },
+      {
+        "id": "SITE-007",
+        "domain": "deployment",
+        "name": "Deploy headyex.com — Cloudflare Pages + marketplace (Fibonacci Spiral)",
+        "status": "pending",
+        "swarm": "deploy-forge"
+      },
+      {
+        "id": "SITE-008",
+        "domain": "deployment",
+        "name": "Deploy headyfinance.com — Cloudflare Pages + investor relations",
+        "status": "pending",
+        "swarm": "deploy-forge"
+      },
+      {
+        "id": "SITE-009",
+        "domain": "deployment",
+        "name": "Deploy admin.headysystems.com — protected admin portal",
+        "status": "pending",
+        "swarm": "deploy-forge"
+      },
+      {
+        "id": "SITE-010",
+        "domain": "security",
+        "name": "Deploy auth.headysystems.com — Cloud Run central auth relay",
+        "status": "pending",
+        "swarm": "security-hive"
+      },
+      {
+        "id": "AUTH-001",
+        "domain": "security",
+        "name": "Register OAuth callback URLs in Google developer console",
+        "status": "pending",
+        "swarm": "security-hive"
+      },
+      {
+        "id": "AUTH-002",
+        "domain": "security",
+        "name": "Register OAuth callback URLs in GitHub developer console",
+        "status": "pending",
+        "swarm": "security-hive"
+      },
+      {
+        "id": "AUTH-003",
+        "domain": "security",
+        "name": "Configure Firebase project with valid FIREBASE_API_KEY",
+        "status": "pending",
+        "swarm": "security-hive"
+      },
+      {
+        "id": "AUTH-004",
+        "domain": "security",
+        "name": "Finalize cross-domain cookie exchange pattern for production DNS/TLS",
+        "status": "pending",
+        "swarm": "security-hive"
+      },
+      {
+        "id": "GAP-001",
+        "domain": "documentation",
+        "name": "Verify CHANGES.md, GAPS_FOUND.md, IMPROVEMENTS.md exist at repo root",
+        "status": "pending",
+        "swarm": "doc-scribe"
+      },
+      {
+        "id": "GAP-002",
+        "domain": "documentation",
+        "name": "Verify docs/ hierarchy: architecture, ADRs, runbooks, onboarding, security",
+        "status": "pending",
+        "swarm": "doc-scribe"
+      },
+      {
+        "id": "GAP-003",
+        "domain": "context",
+        "name": "Verify heady-auto-context exposes /context/enrich, /index-batch, /remove, /query",
+        "status": "pending",
+        "swarm": "context-shepherd"
+      },
+      {
+        "id": "GAP-004",
+        "domain": "security",
+        "name": "Verify auth service implements /oauth/google and /oauth/github routes",
+        "status": "pending",
+        "swarm": "security-hive"
+      },
+      {
+        "id": "GAP-005",
+        "domain": "deployment",
+        "name": "Verify site generator has no legacy browser-storage or alert-driven OAuth",
+        "status": "pending",
+        "swarm": "deploy-forge"
+      },
+      {
+        "id": "INFRA-001",
+        "domain": "deployment",
+        "name": "Deploy Envoy config — mTLS, φ-circuit breakers, EDS→Consul",
+        "status": "pending",
+        "swarm": "deploy-forge"
+      },
+      {
+        "id": "INFRA-002",
+        "domain": "deployment",
+        "name": "Deploy Consul config — 3-node bootstrap, ACL, Connect mesh",
+        "status": "pending",
+        "swarm": "deploy-forge"
+      },
+      {
+        "id": "INFRA-003",
+        "domain": "monitoring",
+        "name": "Deploy OpenTelemetry collector — traces → Google Cloud Trace",
+        "status": "pending",
+        "swarm": "monitor-pulse"
+      },
+      {
+        "id": "INFRA-004",
+        "domain": "deployment",
+        "name": "Deploy Kubernetes manifests — 54 manifests, phi-scaled HPA, PDB",
+        "status": "pending",
+        "swarm": "deploy-forge"
+      },
+      {
+        "id": "INFRA-005",
+        "domain": "deployment",
+        "name": "Configure Docker Compose dev stack — Consul, PostgreSQL/pgvector, OTel",
+        "status": "pending",
+        "swarm": "deploy-forge"
+      },
+      {
+        "id": "SKILL-001",
+        "domain": "orchestration",
+        "name": "Install skill: heady-perplexity-computer-use",
+        "status": "pending",
+        "swarm": "heady-soul"
+      },
+      {
+        "id": "SKILL-002",
+        "domain": "research",
+        "name": "Install skill: heady-perplexity-deep-research",
+        "status": "pending",
+        "swarm": "research-herald"
+      },
+      {
+        "id": "SKILL-003",
+        "domain": "governance",
+        "name": "Install skill: heady-perplexity-code-review",
+        "status": "pending",
+        "swarm": "policy-sentinel"
+      },
+      {
+        "id": "SKILL-004",
+        "domain": "deployment",
+        "name": "Install skill: heady-perplexity-content-generation",
+        "status": "pending",
+        "swarm": "deploy-forge"
+      },
+      {
+        "id": "SKILL-005",
+        "domain": "research",
+        "name": "Install skill: heady-perplexity-patent-search",
+        "status": "pending",
+        "swarm": "research-herald"
+      },
+      {
+        "id": "SKILL-006",
+        "domain": "research",
+        "name": "Install skill: heady-perplexity-competitor-intel",
+        "status": "pending",
+        "swarm": "research-herald"
+      },
+      {
+        "id": "SKILL-007",
+        "domain": "data",
+        "name": "Install skill: heady-drupal-content-sync",
+        "status": "pending",
+        "swarm": "data-sculptor"
+      },
+      {
+        "id": "SKILL-008",
+        "domain": "security",
+        "name": "Install skill: heady-firebase-auth-orchestrator",
+        "status": "pending",
+        "swarm": "security-hive"
+      },
+      {
+        "id": "SKILL-009",
+        "domain": "deployment",
+        "name": "Install skill: heady-sacred-geometry-css-generator",
+        "status": "pending",
+        "swarm": "deploy-forge"
+      },
+      {
+        "id": "SKILL-010",
+        "domain": "monitoring",
+        "name": "Install skill: heady-perplexity-eval-orchestrator",
+        "status": "pending",
+        "swarm": "monitor-pulse"
+      },
+      {
+        "id": "SKILL-011",
+        "domain": "analysis",
+        "name": "Install skill: heady-perplexity-rag-optimizer",
+        "status": "pending",
+        "swarm": "pattern-scout"
+      },
+      {
+        "id": "SKILL-012",
+        "domain": "monitoring",
+        "name": "Install skill: heady-perplexity-feedback-loop",
+        "status": "pending",
+        "swarm": "monitor-pulse"
+      },
+      {
+        "id": "SKILL-013",
+        "domain": "testing",
+        "name": "Install skill: heady-perplexity-multi-agent-eval",
+        "status": "pending",
+        "swarm": "test-prover"
+      },
+      {
+        "id": "SKILL-014",
+        "domain": "monitoring",
+        "name": "Install skill: heady-perplexity-domain-benchmarker",
+        "status": "pending",
+        "swarm": "monitor-pulse"
+      },
+      {
+        "id": "ORCH-001",
+        "domain": "orchestration",
+        "name": "Verify swarm-coordinator-refactored.js merged — CSL domain routing replaces priority queues",
+        "status": "pending",
+        "swarm": "heady-soul"
+      },
+      {
+        "id": "ORCH-002",
+        "domain": "orchestration",
+        "name": "Verify bee-factory-refactored.js merged — concurrent equal-status bees",
+        "status": "pending",
+        "swarm": "heady-soul"
+      },
+      {
+        "id": "ORCH-003",
+        "domain": "orchestration",
+        "name": "Verify hcfullpipeline-stage4-refactored.js merged — TRIAGE by CSL domain only",
+        "status": "pending",
+        "swarm": "heady-soul"
+      },
+      {
+        "id": "EXT-001",
+        "domain": "testing",
+        "name": "Integrate promptfoo — LLM eval + hallucination detection",
+        "status": "pending",
+        "swarm": "test-prover"
+      },
+      {
+        "id": "EXT-002",
+        "domain": "monitoring",
+        "name": "Integrate wandb/weave — agent metrics dashboard",
+        "status": "pending",
+        "swarm": "monitor-pulse"
+      },
+      {
+        "id": "EXT-003",
+        "domain": "testing",
+        "name": "Integrate langchain-ai/agentevals — trajectory evaluation",
+        "status": "pending",
+        "swarm": "test-prover"
+      },
+      {
+        "id": "EXT-004",
+        "domain": "testing",
+        "name": "Integrate microsoft/autogen — multi-agent benchmark suites",
+        "status": "pending",
+        "swarm": "test-prover"
+      },
+      {
+        "id": "EXT-005",
+        "domain": "edge",
+        "name": "Integrate Cloudflare Workers AI — edge inference + BGE embeddings",
+        "status": "pending",
+        "swarm": "edge-runner"
+      },
+      {
+        "id": "EXT-006",
+        "domain": "integration",
+        "name": "Integrate Firebase Extensions — vector search, email triggers",
+        "status": "pending",
+        "swarm": "bridge-keeper"
+      },
+      {
+        "id": "DRUPAL-001",
+        "domain": "data",
+        "name": "Deploy drupal-sync service with HMAC-SHA256 webhook verification",
+        "status": "pending",
+        "swarm": "data-sculptor"
+      },
+      {
+        "id": "DRUPAL-002",
+        "domain": "data",
+        "name": "Configure 13 Drupal content types for tracking",
+        "status": "pending",
+        "swarm": "data-sculptor"
+      },
+      {
+        "id": "DRUPAL-003",
+        "domain": "data",
+        "name": "Configure phi-adaptive polling fallback (5-15 min)",
+        "status": "pending",
+        "swarm": "data-sculptor"
+      },
+      {
+        "id": "TEST-001",
+        "domain": "testing",
+        "name": "Run scripts/validate_bundle.py against merged repo",
+        "status": "pending",
+        "swarm": "test-prover"
+      },
+      {
+        "id": "TEST-002",
+        "domain": "testing",
+        "name": "Run tests/auto_context_contract.test.js",
+        "status": "pending",
+        "swarm": "test-prover"
+      },
+      {
+        "id": "TEST-003",
+        "domain": "testing",
+        "name": "Run tests/auth_runtime_contract.test.js",
+        "status": "pending",
+        "swarm": "test-prover"
+      },
+      {
+        "id": "TEST-004",
+        "domain": "testing",
+        "name": "Run tests/storage_policy.test.js",
+        "status": "pending",
+        "swarm": "test-prover"
+      },
+      {
+        "id": "TEST-005",
+        "domain": "testing",
+        "name": "Run tests/docs_presence.test.js",
+        "status": "pending",
+        "swarm": "test-prover"
+      },
+      {
+        "id": "GLOBAL-001",
+        "domain": "governance",
+        "name": "Enforce: No priority/ranking language in runtime routing, queues, enums, or task classification",
+        "status": "pending",
+        "swarm": "policy-sentinel"
+      },
+      {
+        "id": "GLOBAL-002",
+        "domain": "context",
+        "name": "Enforce: HeadyAutoContext enriches every request path, site, API call, agent workflow",
+        "status": "pending",
+        "swarm": "context-shepherd"
+      },
+      {
+        "id": "GLOBAL-003",
+        "domain": "governance",
+        "name": "Enforce: CSL used for domain relevance matching and gating only, not importance ordering",
+        "status": "pending",
+        "swarm": "policy-sentinel"
+      },
+      {
+        "id": "GLOBAL-004",
+        "domain": "security",
+        "name": "Enforce: Central auth from auth.headysystems.com with httpOnly/Secure/SameSite=Strict cookies",
+        "status": "pending",
+        "swarm": "security-hive"
+      },
+      {
+        "id": "GLOBAL-005",
+        "domain": "monitoring",
+        "name": "Enforce: Every service emits health status + tracing metadata + registers into service discovery",
+        "status": "pending",
+        "swarm": "monitor-pulse"
+      }
+    ]
+  }
 }

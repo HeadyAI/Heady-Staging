@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HEADY Community - Connect, Collaborate, Build Together</title>
+    <meta name="description" content="Join the global HEADY community platform for AI pioneers, developers, and innovators. Access forums, knowledge base, code sharing, and exclusive workshops.">
+    <meta name="keywords" content="HEADY community, AI developers, collaborative platform, agent development, open source">
+    <meta name="author" content="Eric Haywood - HeadySystems Inc">
+
+    <!-- Open Graph / Social Media -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://headyconnection.com">
+    <meta property="og:title" content="HEADY Community - Connect, Collaborate, Build Together">
+    <meta property="og:description" content="Join the global HEADY community platform for AI pioneers, developers, and innovators.">
+    <meta property="og:image" content="https://headyconnection.com/og-image.png">
+    <meta property="og:site_name" content="HEADY Connection">
+
+    <!-- Twitter Card -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://headyconnection.com">
+    <meta property="twitter:title" content="HEADY Community - Connect, Collaborate, Build Together">
+    <meta property="twitter:description" content="Join the global HEADY community platform for AI pioneers, developers, and innovators.">
+    <meta property="twitter:image" content="https://headyconnection.com/og-image.png">
+
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "HEADY Community",
+        "url": "https://headyconnection.com",
+        "logo": "https://headyconnection.com/logo.png",
+        "description": "Global community platform for AI pioneers and developers",
+        "founder": {
+            "@type": "Person",
+            "name": "Eric Haywood"
+        },
+        "sameAs": [
+            "https://headysystems.com",
+            "https://headyme.com",
+            "https://heady-ai.com",
+            "https://headyos.com",
+            "https://headyconnection.org",
+            "https://headyex.com",
+            "https://headyfinance.com"
+        ],
+        "contactPoint": {
+            "@type": "ContactPoint",
+            "contactType": "Community Support",
+            "url": "https://headyconnection.com/support"
+        }
+    }
+    </script>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background-color: #0a0a0f;
+            color: #e0e0e0;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Canvas Background */
+        #canvas-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background-color: #0a0a0f;
+        }
+
+        /* Content wrapper */
+        main {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Typography */
+        h1, h2, h3, h4, h5, h6 {
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: #ffffff;
+        }
+
+        h1 {
+            font-size: clamp(2rem, 5vw, 4rem);
+            line-height: 1.2;
+        }
+
+        h2 {
+            font-size: clamp(1.5rem, 4vw, 3rem);
+            margin-top: 3rem;
+        }
+
+        h3 {
+            font-size: clamp(1.2rem, 3vw, 2rem);
+        }
+
+        p {
+            margin-bottom: 1rem;
+            font-size: 1rem;
+        }
+
+        code, pre {
+            font-family: 'JetBrains Mono', monospace;
+            background-color: rgba(124, 94, 255, 0.1);
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.9rem;
+        }
+
+        pre {
+            padding: 1rem;
+            overflow-x: auto;
+            border-left: 3px solid #7c5eff;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header / Navigation */
+        header {
+            background-color: rgba(10, 10, 15, 0.8);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(124, 94, 255, 0.2);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #7c5eff 0%, #40e0d0 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: #e0e0e0;
+            text-decoration: none;
+            transition: color 0.3s ease;
+            font-size: 0.95rem;
+        }
+
+        .nav-links a:hover {
+            color: #7c5eff;
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #7c5eff 0%, #40e0d0 100%);
+            color: #0a0a0f;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(124, 94, 255, 0.4);
+        }
+
+        .btn-secondary {
+            background-color: rgba(124, 94, 255, 0.1);
+            color: #7c5eff;
+            border: 1px solid #7c5eff;
+        }
+
+        .btn-secondary:hover {
+            background-color: rgba(124, 94, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .btn-accent {
+            background-color: #f0c040;
+            color: #0a0a0f;
+        }
+
+        .btn-accent:hover {
+            background-color: #f5d670;
+            transform: translateY(-2px);
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 8rem 0;
+            text-align: center;
+            position: relative;
+        }
+
+        .hero h1 {
+            background: linear-gradient(135deg, #ffffff 0%, #7c5eff 50%, #40e0d0 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1.5rem;
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            color: #b0b0b0;
+            margin-bottom: 2rem;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        @media (max-width: 768px) {
+            .hero {
+                padding: 4rem 0;
+            }
+
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .hero p {
+                font-size: 1.1rem;
+            }
+        }
+
+        /* Section */
+        section {
+            padding: 5rem 0;
+            border-top: 1px solid rgba(124, 94, 255, 0.1);
+        }
+
+        section h2 {
+            margin-bottom: 3rem;
+            text-align: center;
+        }
+
+        /* Features Grid */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .feature-card {
+            background: linear-gradient(135deg, rgba(124, 94, 255, 0.1) 0%, rgba(64, 224, 208, 0.05) 100%);
+            border: 1px solid rgba(124, 94, 255, 0.2);
+            padding: 2rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            border-color: rgba(124, 94, 255, 0.5);
+            background: linear-gradient(135deg, rgba(124, 94, 255, 0.15) 0%, rgba(64, 224, 208, 0.1) 100%);
+            transform: translateY(-5px);
+        }
+
+        .feature-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .feature-card h3 {
+            margin-bottom: 0.5rem;
+            color: #7c5eff;
+        }
+
+        /* Stats Section */
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            text-align: center;
+            margin: 3rem 0;
+        }
+
+        .stat-item {
+            padding: 2rem;
+            background: rgba(124, 94, 255, 0.05);
+            border-radius: 8px;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #7c5eff 0%, #40e0d0 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: #b0b0b0;
+        }
+
+        /* Projects Grid */
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .project-card {
+            background: rgba(124, 94, 255, 0.08);
+            border: 1px solid rgba(124, 94, 255, 0.2);
+            border-radius: 8px;
+            padding: 2rem;
+            transition: all 0.3s ease;
+        }
+
+        .project-card:hover {
+            border-color: #40e0d0;
+            background: rgba(64, 224, 208, 0.08);
+            transform: translateY(-5px);
+        }
+
+        .project-tag {
+            display: inline-block;
+            background-color: rgba(240, 192, 64, 0.2);
+            color: #f0c040;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            margin-bottom: 1rem;
+        }
+
+        .project-card h3 {
+            margin-bottom: 0.5rem;
+        }
+
+        /* Ecosystem Links */
+        .ecosystem {
+            background: linear-gradient(135deg, rgba(124, 94, 255, 0.05) 0%, rgba(64, 224, 208, 0.05) 100%);
+            border: 1px solid rgba(124, 94, 255, 0.2);
+            border-radius: 8px;
+            padding: 3rem;
+            margin: 3rem 0;
+        }
+
+        .ecosystem h3 {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .ecosystem-links {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .ecosystem-link {
+            background-color: rgba(124, 94, 255, 0.1);
+            border: 1px solid rgba(124, 94, 255, 0.3);
+            padding: 1rem;
+            border-radius: 6px;
+            text-align: center;
+            text-decoration: none;
+            color: #7c5eff;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        .ecosystem-link:hover {
+            background-color: rgba(124, 94, 255, 0.2);
+            border-color: #40e0d0;
+            color: #40e0d0;
+        }
+
+        /* Footer */
+        footer {
+            background-color: rgba(10, 10, 15, 0.9);
+            border-top: 1px solid rgba(124, 94, 255, 0.2);
+            padding: 3rem 0;
+            margin-top: 5rem;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section h4 {
+            margin-bottom: 1rem;
+            color: #7c5eff;
+        }
+
+        .footer-section a {
+            display: block;
+            color: #b0b0b0;
+            text-decoration: none;
+            margin-bottom: 0.5rem;
+            transition: color 0.3s ease;
+        }
+
+        .footer-section a:hover {
+            color: #7c5eff;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(124, 94, 255, 0.1);
+            color: #707070;
+            font-size: 0.9rem;
+        }
+
+        /* Accessibility */
+        .skip-link {
+            position: absolute;
+            top: -40px;
+            left: 0;
+            background: #7c5eff;
+            color: #0a0a0f;
+            padding: 8px;
+            text-decoration: none;
+            z-index: 100;
+        }
+
+        .skip-link:focus {
+            top: 0;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .hero-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .btn {
+                width: 100%;
+                max-width: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Skip to main content link for accessibility -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
+    <!-- Canvas background -->
+    <canvas id="canvas-bg"></canvas>
+
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <nav>
+                <a href="/" class="logo">HEADY Connection</a>
+                <ul class="nav-links">
+                    <li><a href="#features">Features</a></li>
+                    <li><a href="#community">Community</a></li>
+                    <li><a href="#projects">Projects</a></li>
+                    <li><a href="#events">Events</a></li>
+                    <li><a href="#ecosystem">Ecosystem</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main id="main-content">
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="container">
+                <h1>JOIN THE HEADY COMMUNITY</h1>
+                <p>Connect, collaborate, and build with fellow AI pioneers shaping the future of intelligent systems</p>
+                <div class="hero-buttons">
+                    <a href="#join" class="btn btn-primary">Get Started Free</a>
+                    <a href="#explore" class="btn btn-secondary">Explore Projects</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section id="features">
+            <div class="container">
+                <h2>Community Features</h2>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">💬</div>
+                        <h3>Forums</h3>
+                        <p>Active discussions on agent development, best practices, and troubleshooting with community experts</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🎮</div>
+                        <h3>Discord Integration</h3>
+                        <p>Real-time chat, voice channels, and community events with instant notifications</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">📚</div>
+                        <h3>Knowledge Base</h3>
+                        <p>Comprehensive documentation, tutorials, and guides curated by community contributors</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">💻</div>
+                        <h3>Code Sharing</h3>
+                        <p>Share, discover, and contribute to open-source agents and integrations</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🚀</div>
+                        <h3>Agent Showcase</h3>
+                        <p>Feature your latest creations and discover innovative projects from peers</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🎓</div>
+                        <h3>Workshops</h3>
+                        <p>Live training sessions, masterclasses, and hands-on tutorials from industry experts</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Community Stats -->
+        <section id="community">
+            <div class="container">
+                <h2>Growing Community</h2>
+                <div class="stats">
+                    <div class="stat-item">
+                        <div class="stat-number">45,000+</div>
+                        <div class="stat-label">Active Members</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">12,300+</div>
+                        <div class="stat-label">Active Projects</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">8,500+</div>
+                        <div class="stat-label">Agents Shared</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">145</div>
+                        <div class="stat-label">Countries Represented</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Featured Projects -->
+        <section id="projects">
+            <div class="container">
+                <h2>Featured Community Projects</h2>
+                <div class="projects-grid">
+                    <div class="project-card">
+                        <span class="project-tag">Analytics</span>
+                        <h3>DataMind Analytics Suite</h3>
+                        <p>AI-powered analytics platform for real-time data insights. Built by @analytics_pro with 1.2K stars on GitHub</p>
+                    </div>
+                    <div class="project-card">
+                        <span class="project-tag">Finance</span>
+                        <h3>TradeSignals Pro</h3>
+                        <p>Intelligent trading signal generator using ensemble models. 890 active users across 23 exchanges</p>
+                    </div>
+                    <div class="project-card">
+                        <span class="project-tag">DevOps</span>
+                        <h3>CloudOrchestrator</h3>
+                        <p>Autonomous infrastructure management agent. Powers 500+ enterprise deployments</p>
+                    </div>
+                    <div class="project-card">
+                        <span class="project-tag">Healthcare</span>
+                        <h3>MedAssist Diagnostic</h3>
+                        <p>Clinical decision support system. FDA registered and helping 200+ healthcare facilities</p>
+                    </div>
+                    <div class="project-card">
+                        <span class="project-tag">Security</span>
+                        <h3>ThreatGuard AI</h3>
+                        <p>Real-time threat detection and response automation. Protected 10M+ transactions</p>
+                    </div>
+                    <div class="project-card">
+                        <span class="project-tag">Education</span>
+                        <h3>LearningPath Engine</h3>
+                        <p>Personalized educational content recommender. Used by 150K+ students globally</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Developer Community Section -->
+        <section>
+            <div class="container">
+                <h2>Developer Community Programs</h2>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">🏆</div>
+                        <h3>Hackathons</h3>
+                        <p>Quarterly global hackathons with $50K+ prize pools. Build, innovate, and win recognition</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">💰</div>
+                        <h3>Bounty Programs</h3>
+                        <p>Earn rewards for bug fixes, feature implementations, and community contributions</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🌟</div>
+                        <h3>Open Source</h3>
+                        <p>Contribute to core HEADY projects and see your code powering the platform</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Learning Hub -->
+        <section>
+            <div class="container">
+                <h2>Learning Hub</h2>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">📖</div>
+                        <h3>Tutorials</h3>
+                        <p>Step-by-step guides covering everything from basics to advanced agent development</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🎬</div>
+                        <h3>Video Courses</h3>
+                        <p>Professional courses taught by HEADY experts and industry leaders</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">📚</div>
+                        <h3>Documentation</h3>
+                        <p>Complete API references, architecture guides, and best practice documentation</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🎖️</div>
+                        <h3>Certification</h3>
+                        <p>Become a certified HEADY professional and validate your expertise</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Events Section -->
+        <section id="events">
+            <div class="container">
+                <h2>Events & Conferences</h2>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">🌍</div>
+                        <h3>Global Meetups</h3>
+                        <p>Monthly local meetups in 40+ cities worldwide. Network and learn from peers</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🎙️</div>
+                        <h3>Webinars</h3>
+                        <p>Weekly technical talks, product updates, and community showcases</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🎉</div>
+                        <h3>Annual Conference</h3>
+                        <p>HEADY Summit 2026 - 3-day event with workshops, keynotes, and networking</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Join Section -->
+        <section id="join">
+            <div class="container" style="text-align: center;">
+                <h2>Ready to Join?</h2>
+                <p style="font-size: 1.1rem; margin-bottom: 2rem; max-width: 600px; margin-left: auto; margin-right: auto;">Start building with the HEADY community today. Sign up for free, connect your GitHub and Discord, and get instant access to forums, resources, and collaboration tools.</p>
+                <form style="max-width: 400px; margin: 0 auto; margin-bottom: 2rem;">
+                    <input type="email" placeholder="your@email.com" required style="width: 100%; padding: 0.75rem; margin-bottom: 1rem; background-color: rgba(124, 94, 255, 0.1); border: 1px solid #7c5eff; border-radius: 6px; color: #e0e0e0;">
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">Sign Up Free</button>
+                </form>
+                <p style="color: #707070; font-size: 0.9rem;">Or connect with <a href="#" style="color: #40e0d0;">Discord</a> / <a href="#" style="color: #40e0d0;">GitHub</a></p>
+            </div>
+        </section>
+
+        <!-- Ecosystem Links -->
+        <section id="ecosystem" class="ecosystem">
+            <div class="container">
+                <h3>HEADY Ecosystem</h3>
+                <div class="ecosystem-links">
+                    <a href="https://headysystems.com" class="ecosystem-link">🏠 HeadySystems.com</a>
+                    <a href="https://headyme.com" class="ecosystem-link">👤 HeadyMe.com</a>
+                    <a href="https://heady-ai.com" class="ecosystem-link">🤖 Heady-AI.com</a>
+                    <a href="https://headyos.com" class="ecosystem-link">🖥️ HeadyOS.com</a>
+                    <a href="https://headyconnection.org" class="ecosystem-link">🌐 Connection.org</a>
+                    <a href="https://headyex.com" class="ecosystem-link">📊 HeadyEx.com</a>
+                    <a href="https://headyfinance.com" class="ecosystem-link">💰 Finance.com</a>
+                    <a href="https://admin.headysystems.com" class="ecosystem-link">⚙️ Admin Portal</a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>Community</h4>
+                    <a href="#features">Features</a>
+                    <a href="#projects">Projects</a>
+                    <a href="#events">Events</a>
+                    <a href="#join">Join</a>
+                </div>
+                <div class="footer-section">
+                    <h4>Resources</h4>
+                    <a href="#">Documentation</a>
+                    <a href="#">API Reference</a>
+                    <a href="#">Code Examples</a>
+                    <a href="#">Support</a>
+                </div>
+                <div class="footer-section">
+                    <h4>Company</h4>
+                    <a href="https://headysystems.com">About HEADY</a>
+                    <a href="#">Blog</a>
+                    <a href="#">Contact</a>
+                    <a href="#">Careers</a>
+                </div>
+                <div class="footer-section">
+                    <h4>Connect</h4>
+                    <a href="#">Discord</a>
+                    <a href="#">GitHub</a>
+                    <a href="#">Twitter</a>
+                    <a href="#">LinkedIn</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>Founded by Eric Haywood | 51 Provisional Patents | © 2026 HeadySystems Inc. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Canvas animation
+        const canvas = document.getElementById('canvas-bg');
+        const ctx = canvas.getContext('2d');
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+
+        // Particle animation
+        const particles = [];
+        const particleCount = 50;
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 2 + 0.5;
+                this.speedX = Math.random() * 0.5 - 0.25;
+                this.speedY = Math.random() * 0.5 - 0.25;
+                this.opacity = Math.random() * 0.3 + 0.1;
+            }
+
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+
+                if (this.x > canvas.width) this.x = 0;
+                if (this.x < 0) this.x = canvas.width;
+                if (this.y > canvas.height) this.y = 0;
+                if (this.y < 0) this.y = canvas.height;
+            }
+
+            draw() {
+                ctx.fillStyle = `rgba(124, 94, 255, ${this.opacity})`;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        for (let i = 0; i < particleCount; i++) {
+            particles.push(new Particle());
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            for (let particle of particles) {
+                particle.update();
+                particle.draw();
+            }
+
+            // Draw connecting lines
+            for (let i = 0; i < particles.length; i++) {
+                for (let j = i; j < particles.length; j++) {
+                    const dx = particles[i].x - particles[j].x;
+                    const dy = particles[i].y - particles[j].y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+
+                    if (distance < 150) {
+                        ctx.strokeStyle = `rgba(124, 94, 255, ${0.1 * (1 - distance / 150)})`;
+                        ctx.lineWidth = 0.5;
+                        ctx.beginPath();
+                        ctx.moveTo(particles[i].x, particles[i].y);
+                        ctx.lineTo(particles[j].x, particles[j].y);
+                        ctx.stroke();
+                    }
+                }
+            }
+
+            requestAnimationFrame(animate);
+        }
+
+        animate();
+    </script>
+</body>
+</html>

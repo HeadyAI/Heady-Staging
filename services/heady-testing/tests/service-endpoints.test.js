@@ -5,7 +5,9 @@
  */
 import { describe, it, before, after } from 'node:test';
 import assert from 'node:assert/strict';
-import { PHI, PSI, PHI_TIMING, CSL_THRESHOLDS, VECTOR, BEE, PIPELINE } from '../../../shared/phi-math.js';
+import phiMath from '../../../shared/phi-math.js';
+const { PHI, PSI, PHI_TIMING, CSL_THRESHOLDS, PIPELINE } = phiMath;
+function phiMs(n) { return Math.round(Math.pow(PHI, n) * 1000); }
 
 // Dynamic import of the app module to start the server
 let server;

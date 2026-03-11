@@ -1,4 +1,3 @@
-const logger = require('../shared/logger')('heady-doctor');
 #!/usr/bin/env node
 /*
  * © 2026 Heady™Systems Inc..
@@ -34,9 +33,9 @@ function check(name, fn) {
     CHECKS.push({ name, fn });
 }
 
-function pass(msg) { passed++; logger.info(`  ✅ ${msg}`); }
-function warn(msg) { warned++; logger.info(`  ⚠️  ${msg}`); }
-function fail(msg) { failed++; logger.info(`  ❌ ${msg}`); }
+function pass(msg) { passed++; console.log(`  ✅ ${msg}`); }
+function warn(msg) { warned++; console.log(`  ⚠️  ${msg}`); }
+function fail(msg) { failed++; console.log(`  ❌ ${msg}`); }
 
 // ── 1. Core Files ─────────────────────────────────────────────
 check('Core Files', () => {
@@ -214,14 +213,14 @@ check('Patent Registry', () => {
 
 // ── Run All ──────────────────────────────────────────────────
 async function main() {
-    logger.info('');
-    logger.info('─── heady doctor ───────────────────────────────');
-    logger.info(`  Diagnosing: ${ROOT}`);
-    logger.info(`  Time: ${new Date().toISOString()}`);
-    logger.info('');
+    console.log('');
+    console.log('─── heady doctor ───────────────────────────────');
+    console.log(`  Diagnosing: ${ROOT}`);
+    console.log(`  Time: ${new Date().toISOString()}`);
+    console.log('');
 
     for (const { name, fn } of CHECKS) {
-        logger.info(`\n[${name}]`);
+        console.log(`\n[${name}]`);
         try {
             await fn();
         } catch (err) {
@@ -229,21 +228,21 @@ async function main() {
         }
     }
 
-    logger.info('\n─── Summary ────────────────────────────────────');
-    logger.info(`  ✅ Passed:  ${passed}`);
-    logger.info(`  ⚠️  Warned: ${warned}`);
-    logger.info(`  ❌ Failed:  ${failed}`);
-    logger.info(`  Total:     ${passed + warned + failed}`);
-    logger.info('');
+    console.log('\n─── Summary ────────────────────────────────────');
+    console.log(`  ✅ Passed:  ${passed}`);
+    console.log(`  ⚠️  Warned: ${warned}`);
+    console.log(`  ❌ Failed:  ${failed}`);
+    console.log(`  Total:     ${passed + warned + failed}`);
+    console.log('');
 
     if (failed > 0) {
-        logger.info('  Status: UNHEALTHY — fix failed checks above');
+        console.log('  Status: UNHEALTHY — fix failed checks above');
         process.exit(1);
     } else if (warned > 0) {
-        logger.info('  Status: DEGRADED — review warnings above');
+        console.log('  Status: DEGRADED — review warnings above');
         process.exit(0);
     } else {
-        logger.info('  Status: HEALTHY ✅');
+        console.log('  Status: HEALTHY ✅');
         process.exit(0);
     }
 }

@@ -47,11 +47,11 @@ function getServices() {
   }
   // Default built-in services
   return [
-    { name: 'api-gateway',      url: process.env.API_GATEWAY_URL ? process.env.API_GATEWAY_URL + '/health' : 'http://localhost:3000/health', critical: true  },
-    { name: 'vector-store',     url: process.env.VECTOR_STORE_URL ? process.env.VECTOR_STORE_URL + '/health' : 'http://localhost:3001/health', critical: true  },
-    { name: 'swarm-coordinator',url: process.env.SWARM_COORDINATOR_URL ? process.env.SWARM_COORDINATOR_URL + '/health' : 'http://localhost:3002/health', critical: true  },
-    { name: 'task-runner',      url: process.env.TASK_RUNNER_URL ? process.env.TASK_RUNNER_URL + '/health' : 'http://localhost:3003/health', critical: false },
-    { name: 'telemetry-sink',   url: process.env.TELEMETRY_SINK_URL ? process.env.TELEMETRY_SINK_URL + '/health' : 'http://localhost:3004/health', critical: false },
+    { name: 'api-gateway',      url: 'http://localhost:3000/health', critical: true  },
+    { name: 'vector-store',     url: 'http://localhost:3001/health', critical: true  },
+    { name: 'swarm-coordinator',url: 'http://localhost:3002/health', critical: true  },
+    { name: 'task-runner',      url: 'http://localhost:3003/health', critical: false },
+    { name: 'telemetry-sink',   url: 'http://localhost:3004/health', critical: false },
   ];
 }
 

@@ -652,7 +652,7 @@ export const HEADY_SWARM_CONFIGS = {
 // ---------------------------------------------------------------------------
 
 /**
- * Returns all swarm configs sorted by priorityLevel ascending (lowest = concurrent-equal weight).
+ * Returns all swarm configs sorted by priorityLevel ascending (lowest = highest priority).
  *
  * @returns {HeadySwarmConfig[]}
  */
@@ -737,7 +737,7 @@ export function validateFibonacciAllocation() {
  * @property {string}   description
  * @property {number}   fibAllocation          - Raw Fibonacci number
  * @property {number}   allocationPct          - Effective resource allocation percentage
- * @property {number}   priorityLevel          - 1 = concurrent-equal weight
+ * @property {number}   priorityLevel          - 1 = highest priority
  * @property {string}   uiLayoutRegion         - UI_REGION value
  * @property {string[]} includedTemplates      - HeadyBee template IDs managed by this swarm
  * @property {object[]} workerAssignments

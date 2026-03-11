@@ -181,7 +181,7 @@ async function runFullBenchmark(vectorMem) {
         timestamp: new Date().toISOString(),
         totalDuration: Date.now() - benchStart,
         results: benchmarks,
-        concurrent evaluation: sorted.map((b, i) => ({
+        ranking: sorted.map((b, i) => ({
             rank: i + 1,
             provider: b.provider,
             totalLatency: b.totalLatency,
@@ -205,7 +205,7 @@ async function runFullBenchmark(vectorMem) {
     // Store in vector memory for pattern learning
     if (vectorMem && typeof vectorMem.ingestMemory === "function") {
         await vectorMem.ingestMemory({
-            content: `Provider benchmark: fastest=${report.fastest} (${sorted[0]?.totalLatency}ms). Ranking: ${report.concurrent evaluation.map(r => `${r.rank}.${r.provider}(${r.totalLatency}ms)`).join(", ")}`,
+            content: `Provider benchmark: fastest=${report.fastest} (${sorted[0]?.totalLatency}ms). Ranking: ${report.ranking.map(r => `${r.rank}.${r.provider}(${r.totalLatency}ms)`).join(", ")}`,
             metadata: { type: "benchmark", fastest: report.fastest, ts: report.timestamp },
         }).catch(() => { });
     }

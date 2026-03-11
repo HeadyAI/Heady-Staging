@@ -1,25 +1,28 @@
 {
   "version": 1,
-  "drive_id": "89d3269b-1cb0-4a9b-9dc9-efbc3e803c36",
+  "drive_id": "30199124-f859-4929-9fc1-b248398e772b",
   "name": "heady-system-build",
-  "description": "Heady multi-site static website package — 9 sites + auth, shared design system, sacred geometry renderers",
+  "description": "Heady system bundle: 53 service implementations, 14 skill files, 11 app HTML surfaces, infra configs (Envoy/Consul/OTel/K8s), refactored orchestration artifacts, Drupal vector sync, central auth runtime, and build reports",
   "tags": [
     "heady",
-    "multi-site",
-    "glassmorphism",
-    "sacred-geometry",
-    "static-sites",
-    "auth",
-    "autocontext"
+    "backend",
+    "microservices",
+    "skills",
+    "infra",
+    "kubernetes",
+    "drupal",
+    "autocontext",
+    "no-ranking",
+    "csl-routing"
   ],
-  "created_at": "2026-03-09T20:59:15.436031+00:00",
-  "updated_at": "2026-03-09T20:59:15.436031+00:00",
+  "created_at": "2026-03-09T21:04:51.127529+00:00",
+  "updated_at": "2026-03-09T22:27:00+00:00",
   "parent_project": null,
   "sessions": [
     {
-      "session_id": "25410c10-c4f3-4ba9-aa7b-195681177840/subagents/build_heady_websites_20260309_204205",
-      "timestamp": "2026-03-09T20:59:15.436031+00:00",
-      "summary": "Built complete static multi-site package for the Heady platform: 9 sites (headyme, headysystems, heady-ai, headyos, headyconnection-org, headyconnection-com, headyex, headyfinance, admin-headysystems) + auth.headysystems.com. Shared packages include heady-base.css (1077-line dark glass design system), heady-sacred-geometry.js (7 canvas geometry renderers), heady-shared.js (nav/FAQ/theme/AutoContext/BeeInjector). Auth page features Firebase-ready sign-in/sign-up/reset + relay iframe for postMessage auth sync. Python builder generates all sites from registry JSON. All sites pass visual QA. HeadyMe deployed live."
+      "session_id": "47ac1235-27fe-4368-8f60-286602aeacde/subagents/build_heady_backend_bundle_20260309_204659",
+      "timestamp": "2026-03-09T21:04:51.127529+00:00",
+      "summary": "Built the complete Heady system bundle under /home/user/workspace/heady-system-build/. Includes: 53 service implementations with /health endpoints and AutoContext middleware (ports 8100-8907 plus heady-auth 8510), refactored swarm-coordinator/bee-factory/HCFullPipeline Stage 4 with ranking language removed and CSL domain routing only, Drupal webhook+polling vector sync service, 14 new skill SKILL.md files, central auth runtime and login surfaces, Envoy/Consul/OpenTelemetry/Kubernetes infra configs, and reports in /reports/."
     }
   ]
 }

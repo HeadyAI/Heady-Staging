@@ -14,6 +14,18 @@
  */
 
 'use strict';
+// ─── HEADY CORS WHITELIST ────────────────────────────────────────────
+const HEADY_ALLOWED_ORIGINS = new Set([
+    'https://headyme.com', 'https://headysystems.com', 'https://headyconnection.org',
+    'https://headyconnection.com', 'https://headybuddy.org', 'https://headymcp.com',
+    'https://headyapi.com', 'https://headyio.com', 'https://headyos.com',
+    'https://headyweb.com', 'https://headybot.com', 'https://headycloud.com',
+    'https://headybee.co', 'https://heady-ai.com', 'https://headyex.com',
+    'https://headyfinance.com', 'https://admin.headysystems.com',
+    'https://auth.headysystems.com', 'https://api.headysystems.com',
+]);
+const _isHeadyOrigin = (o) => !o ? false : HEADY_ALLOWED_ORIGINS.has(o) || /\.run\.app$/.test(o) || (process.env.NODE_ENV !== 'production' && /^https?:\/\/(localhost|127\.0\.0\.1):/.test(o));
+
 
 // ─── Allowed Origins ──────────────────────────────────────────────────────────
 
@@ -200,7 +212,7 @@ function corsPolicy(opts = {}) {
 
     // Handle public API (no credentials)
     if (routeOverride?.allowAll) {
-      res.set('Access-Control-Allow-Origin', '*');
+      res.set('Access-Control-Allow-Origin', _isHeadyOrigin(req.headers.origin) ? req.headers.origin : 'null');
       res.set('Access-Control-Allow-Methods', (routeOverride.methods || ALLOWED_METHODS).join(', '));
       res.set('Access-Control-Allow-Headers', allowedHeadersStr);
       res.set('Access-Control-Expose-Headers', (routeOverride.exposedHeaders || exposedHeaders).join(', '));
@@ -268,7 +280,7 @@ function corsPolicy(opts = {}) {
  */
 function publicCors(methods = ['GET', 'POST']) {
   return (req, res, next) => {
-    res.set('Access-Control-Allow-Origin', '*');
+    res.set('Access-Control-Allow-Origin', _isHeadyOrigin(req.headers.origin) ? req.headers.origin : 'null');
     res.set('Access-Control-Allow-Methods', methods.join(', '));
     res.set('Access-Control-Allow-Headers', ALLOWED_HEADERS.join(', '));
     res.set('Access-Control-Expose-Headers', EXPOSED_HEADERS.join(', '));

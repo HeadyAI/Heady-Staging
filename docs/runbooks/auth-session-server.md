@@ -1,231 +1,320 @@
-# Runbook: auth-session-server (Port 3397)
+# Runbook: auth-session-server (Authentication Service)
 
-> Heady™ Platform — Central Authentication Service
-> Domain: security | All services are concurrent equals.
-> © 2024-2026 HeadySystems Inc. All Rights Reserved.
-
-## Service Overview
-
-auth-session-server is the central authentication service for the Heady™ platform. It validates Firebase ID tokens, creates httpOnly session cookies (`__Host-heady_session`), and provides session verification for all 58 services. Every authenticated request across all 9 sites depends on this service.
-
-- **Port**: 3397
-- **Health**: `http://localhost:3397/health`
-- **Readiness**: `http://localhost:3397/readiness`
-- **Domain**: security
-- **Dependencies**: Firebase Admin SDK (external), PostgreSQL (:5432) for session store
-- **Cookie name**: `__Host-heady_session`
-- **Cookie attributes**: httpOnly, secure, SameSite=Strict, path=/
+**Service:** JWT Issuance & Session Management
+**Language:** Node.js/TypeScript
+**On-Call:** Check PagerDuty
+**Slack:** #heady-auth
+**Repo:** https://github.com/heady-ai/auth-session-server
 
 ---
 
-## Authentication Flow
+## Overview
 
-```
-Client → Firebase SDK → ID Token → POST /session/create → httpOnly Cookie
-                                                             ↓
-Client → Any Service → Cookie → POST /session/verify → Session Data
-                                                             ↓
-Client → POST /session/revoke → Cookie Cleared
-```
+auth-session-server validates Firebase ID tokens, creates HEADY session JWTs, and manages cross-domain SSO via relay iframe. Critical for all user authentication across 60+ domains.
+
+### Service Tier
+**Tier 1 (Critical):** Authentication unavailable = no access to any domain
+
+### Dependencies
+- **Upstream:** api-gateway, relay-iframe
+- **Downstream:** Firebase Admin SDK (Google Cloud), postgres (user lookup), redis (session cache), permission-guard
+- **External:** Firebase (Google-managed), Google Secret Manager
 
 ---
 
-## Symptom: Users Cannot Log In (Session Creation Fails)
+## Key Metrics
 
-### Diagnosis
+| Metric | Alert | Target |
+|--------|-------|--------|
+| Auth Error Rate (5xx) | >2% | <0.5% |
+| Token Verification Latency p99 | >500ms | <200ms |
+| Session Cache Hit Rate | <80% | >90% |
+| Cross-domain SSO Success Rate | <95% | >99% |
+| Firebase API Failures | >5 in 5min | 0 |
+
+### Health Check
 
 ```bash
-# 1. Check service health
-curl -s http://localhost:3397/health | jq .
+curl http://localhost:8000/health
+# Expected: { "status": "healthy", "firebase": "connected", "database": "ok" }
+```
 
-# 2. Check circuit breaker state
-curl -s http://localhost:3397/health | jq '.circuitBreaker'
+---
 
-# 3. Test session creation with a sample ID token
-curl -s -X POST http://localhost:3397/session/create \
+## Common Issues & Resolutions
+
+### Issue 1: Firebase ID Token Signature Invalid (401)
+
+**Error:** `HEADY-AUTH-003 | Firebase ID token signature invalid`
+
+**Diagnosis:**
+
+```bash
+# Step 1: Check Firebase SDK initialization
+kubectl logs deployment/auth-session-server | grep "firebase"
+# Should see: "Firebase initialized" or "Initialized: OK"
+
+# Step 2: Check JWK cache age
+kubectl exec pod/auth-session-server-xyz -- redis-cli
+redis> GET firebase:jwks
+# Should return JWK set; if null/empty → cache stale
+
+# Step 3: Check Firebase credentials
+kubectl get secret firebase-service-account -o jsonpath='{.data.key}' | base64 -d | head -10
+# Should show JSON with "private_key" and "client_email"
+```
+
+**Resolution:**
+
+```bash
+# Option 1: Refresh JWK cache (immediate)
+curl -X POST http://localhost:8000/admin/cache/refresh-jwks
+
+# Option 2: Clear Redis cache (forces refetch)
+kubectl exec pod/auth-session-server-xyz -- redis-cli FLUSHDB
+kubectl rollout restart deployment/auth-session-server
+
+# Option 3: Verify Firebase credentials (if cache refresh fails)
+# Check Secret Manager:
+gcloud secrets versions access latest --secret=firebase-service-account
+# Should contain valid credentials with kid matching tokens
+
+# Option 4: Update Firebase SDK
+# Possible firebase-admin SDK bug; upgrade to latest
+npm update firebase-admin
+# Rebuild and deploy
+```
+
+### Issue 2: User Not Found in Domain (403)
+
+**Error:** `HEADY-AUTH-004 | User not found in domain`
+
+**Diagnosis:**
+
+```bash
+# Step 1: Check user exists in Firebase
+gcloud auth list
+# Should show authenticated user
+
+# Step 2: Check user in database
+kubectl port-forward svc/postgres 5432:5432
+psql -h localhost -U heady_user -d heady_db
+SELECT * FROM users WHERE uid = 'firebase-uid-123';
+# If empty → user not enrolled in domain
+
+# Step 3: Check domain_id in request header
+kubectl logs deployment/auth-session-server | grep "domain_id"
+# Should show: domain_id: customer-a
+```
+
+**Resolution:**
+
+```bash
+# Option 1: Admin enrolls user in domain (correct action)
+# User authenticates successfully with Firebase
+# But they're not registered in this domain
+# Admin must: Dashboard → Users → Add [user@email.com] to domain
+
+# Option 2: User already enrolled, check database
+# Query: SELECT * FROM users WHERE uid = 'xxx' AND domain_id = 'yyy'
+# If returns user but still error: cache stale
+
+# Option 3: Clear user cache
+curl -X POST http://localhost:8000/admin/cache/clear-user/firebase-uid-123
+# Or restart service
+kubectl rollout restart deployment/auth-session-server
+
+# Option 4: Check domain name
+# User enrolled in 'customer-a' but request has 'customer_a'
+# domain_id must exactly match (case-sensitive, no underscore)
+```
+
+### Issue 3: Cross-Domain SSO Relay Failure (401)
+
+**Error:** Session transfer fails between domains
+
+**Diagnosis:**
+
+```bash
+# Step 1: Check relay-iframe service
+kubectl get pods -l app=relay-iframe
+# Should be Running
+
+# Step 2: Check relay endpoint
+curl -X POST http://localhost:8001/auth/bridge/transfer \
   -H "Content-Type: application/json" \
-  -d '{"idToken": "test_token"}' | jq .
+  -d '{"firebaseIdToken":"...","targetDomain":"https://..."}'
+# Should return: { "success": true }
 
-# 4. Check Firebase connectivity
-# Verify FIREBASE_PROJECT_ID is set
-docker compose exec auth-session-server env | grep FIREBASE
+# Step 3: Check Firebase token validity
+# Log in user at domain-a
+# Get token from browser dev tools → Application → Cookies → heady_session
+# Decode: jwt.io → check exp claim
+# If exp in past → token expired
 
-# 5. Check logs for Firebase errors
-docker compose logs auth-session-server --tail=89 | jq 'select(.level == "error")'
+# Step 4: Check origin validation
+kubectl logs deployment/auth-session-server | grep "postMessage"
+# Should see: "Origin validated: https://domain-a.heady.ai"
 ```
 
-### Fix
+**Resolution:**
 
 ```bash
-# If Firebase Admin SDK fails to initialize
-# Check that FIREBASE_PROJECT_ID=gen-lang-client-0920560496 is set in .env
-grep FIREBASE_PROJECT_ID .env
+# Option 1: Retry SSO flow
+# User clicks "Access domain-b" again
+# If 50% success rate: timing issue (token expiring mid-transfer)
 
-# If network connectivity to Firebase is blocked
-# Test from inside the container
-docker compose exec auth-session-server wget -qO- https://www.googleapis.com/identitytoolkit/v3/relyingparty/getAccountInfo 2>&1 | head -5
+# Option 2: Increase token TTL (short-term)
+# Edit: config.yaml → token_ttl: 3600 → 7200 (1 hour → 2 hours)
+# More forgiving for users with slow networks
 
-# Restart the service
-docker compose restart auth-session-server
-```
+# Option 3: Verify relay-iframe health
+kubectl logs -f deployment/relay-iframe
+# Should see: "Connected to nats://..." and "Listeners ready"
 
----
+# Option 4: Check domain whitelist
+kubectl get configmap auth-domains
+# Should list: customer-a, customer-b, ...
+# If target domain not listed: add it
+kubectl patch configmap auth-domains -p '{"data":{"domains":"[\"customer-a\",\"customer-b\",\"new-domain\"]"}}'
+kubectl rollout restart deployment/auth-session-server
 
-## Symptom: Session Verification Fails (All Services Return 401)
-
-This is a high-impact issue — affects all 58 services and all 9 sites.
-
-### Diagnosis
-
-```bash
-# 1. Verify auth-session-server is running
-curl -s http://localhost:3397/health | jq .
-
-# 2. Check active sessions count
-curl -s http://localhost:3397/health | jq '.activeSessions'
-
-# 3. Test session verification directly
-curl -s -X POST http://localhost:3397/session/verify \
+# Option 5: Test with curl (debug)
+curl -v -X POST http://localhost:8001/auth/bridge/transfer \
+  -H "Origin: https://customer-a.heady.ai" \
   -H "Content-Type: application/json" \
-  -H "Cookie: __Host-heady_session=<session_value>" | jq .
-
-# 4. Check if session store has entries
-docker compose logs auth-session-server --tail=89 | jq 'select(.message | contains("session"))'
-
-# 5. Check downstream services' auth requests
-docker compose logs heady-brain --tail=34 | jq 'select(.message | contains("auth"))'
+  -d '{"targetDomain":"https://customer-b.heady.ai"}'
+# Check: 200 OK vs 403 Forbidden vs 500 Error
 ```
 
-### Fix
+### Issue 4: Session Cache Inconsistency (500)
+
+**Symptoms:**
+- Authentication succeeds but permission check fails
+- User profile doesn't load
+- Symptoms appear after domain cache expires
+
+**Diagnosis:**
 
 ```bash
-# If session store is empty (service restarted and lost in-memory sessions)
-# All users will need to re-authenticate — this is expected behavior for in-memory store
-# Log message: "Session not found" is normal after restart
+# Step 1: Check cache TTL
+kubectl logs deployment/auth-session-server | grep "cache_ttl"
+# Default: 3600s (1 hour)
 
-# If HMAC validation fails (session tampering)
-# Check logs for "HMAC verification failed" or "Session replay detected"
-docker compose logs auth-session-server --tail=233 | jq 'select(.message | contains("replay\|HMAC\|tamper"))'
+# Step 2: Check cache values
+kubectl exec pod/auth-session-server-xyz -- redis-cli
+redis> KEYS session:*
+redis> GET session:user-id-123-domain-a
+# Should return JSON with user permissions
 
-# If IP+UA binding is rejecting legitimate users (mobile network)
-# The service uses /24 subnet matching — check if user IP changed dramatically
-docker compose logs auth-session-server | jq 'select(.message | contains("fingerprint mismatch"))'
+# Step 3: Compare with database
+psql -h postgres
+SELECT * FROM users WHERE id = '123' AND domain_id = 'domain-a';
+# Compare roles and permissions with cached value
+
+# Step 4: Check for cache update events
+kubectl logs deployment/auth-session-server | grep "cache_invalidate"
+# Should see updates when user roles change
+```
+
+**Resolution:**
+
+```bash
+# Option 1: Clear user cache
+curl -X POST http://localhost:8000/admin/cache/clear-user/user-123
+
+# Option 2: Reduce cache TTL (more fresh but more database load)
+# Edit: config.yaml → session_cache_ttl: 3600 → 600 (1 hour → 10 minutes)
+# Tradeoff: fresher data but 6x more database queries
+
+# Option 3: Add event-driven cache invalidation
+# When user role changes, publish event → cache cleared
+# Requires: NATS subscription in auth-session-server
+# See: services/auth-session-server/src/events.ts
+
+# Option 4: Restart service to clear all cache
+kubectl rollout restart deployment/auth-session-server
+# Wait 1 minute for pod startup
 ```
 
 ---
 
-## Symptom: Session Replay Detected (403)
+## Scaling & Capacity
 
-### Diagnosis
-
-```bash
-# Check for replay detection events
-docker compose logs auth-session-server --tail=89 | jq 'select(.message | contains("replay"))'
-
-# The service binds sessions to SHA-256(clientIP + userAgent)
-# Check if legitimate users are being flagged
-docker compose logs auth-session-server | jq 'select(.level == "warn" and (.message | contains("fingerprint")))'
-```
-
-### Fix
+### Handle High Login Volume
 
 ```bash
-# If VPN/proxy users are being flagged
-# This is expected behavior — session cookies are bound to network fingerprint
-# Users must re-authenticate after significant network changes
+# If login spike (black Friday, product launch):
+# Current: 3 replicas, 1000 logins/min
+# Target: 10,000 logins/min
 
-# If many users affected simultaneously
-# Check if a reverse proxy is stripping X-Forwarded-For headers
-# The service should use the original client IP, not the proxy IP
-```
+# Scale up
+kubectl scale deployment auth-session-server --replicas=10
 
----
+# Verify scaling
+kubectl get pods -l app=auth-session-server
+# Should see 10 pods Runn ing in <1 minute
 
-## Symptom: Cookie Not Set in Browser
+# Monitor load balancing
+kubectl logs -f deployment/auth-session-server | grep "request_count"
+# Should see distributed across pods
 
-### Diagnosis
-
-```bash
-# Check that the response includes Set-Cookie header
-curl -v -X POST http://localhost:3397/session/create \
-  -H "Content-Type: application/json" \
-  -d '{"idToken": "<valid_token>"}' 2>&1 | grep -i "set-cookie"
-
-# Verify cookie attributes
-# Expected: __Host-heady_session=<value>; HttpOnly; Secure; SameSite=Strict; Path=/
-
-# Check if HTTPS is required
-# __Host- prefix requires secure context — HTTP will not work in production
-```
-
-### Fix
-
-```bash
-# If cookie not visible in browser DevTools
-# 1. httpOnly cookies are NOT visible in document.cookie — this is by design
-# 2. Check Application > Cookies in DevTools instead
-# 3. Verify the domain matches (no domain attribute with __Host- prefix)
-
-# If SameSite=Strict blocking cross-site requests
-# This is by design — cookies are only sent on same-site requests
-# For cross-site auth, use a different mechanism (Bearer token header)
-
-# If running locally without HTTPS
-# __Host- prefix requires secure context
-# In development, the service may need to use __Secure- prefix instead
-# Or use localhost (browsers treat localhost as secure)
+# Scale back down after peak
+kubectl scale deployment auth-session-server --replicas=3
 ```
 
 ---
 
-## Log Locations
+## Deployment
+
+### Deploy New Version
 
 ```bash
-# All auth logs
-docker compose logs auth-session-server
+docker build -t auth-session-server:2.0.0 .
+docker tag auth-session-server:2.0.0 gcr.io/heady-ai/auth-session-server:2.0.0
+docker push gcr.io/heady-ai/auth-session-server:2.0.0
 
-# Session creation events
-docker compose logs auth-session-server | jq 'select(.message | contains("Session created"))'
+# Test in staging
+kubectl --context=staging set image deployment/auth-session-server \
+  auth-session-server=gcr.io/heady-ai/auth-session-server:2.0.0
 
-# Failed verifications
-docker compose logs auth-session-server | jq 'select(.message | contains("verification failed"))'
+# Monitor staging logins
+kubectl --context=staging logs -f deployment/auth-session-server
 
-# Replay detection
-docker compose logs auth-session-server | jq 'select(.message | contains("replay"))'
+# Canary (10% production)
+kubectl set image deployment/auth-session-server \
+  auth-session-server=gcr.io/heady-ai/auth-session-server:2.0.0 \
+  --record
 
-# By correlation ID
-docker compose logs auth-session-server | jq 'select(.correlationId == "<id>")'
+# Wait 15 minutes → if no errors → complete rollout
+# Monitor: Error rate, Auth latency, Session creation success
 ```
 
 ---
 
-## Performance Tuning
+## Observability
+
+### Check Auth Performance
 
 ```bash
-# Check bulkhead saturation (max concurrent: 55)
-curl -s http://localhost:3397/health | jq '.bulkhead'
+# Login success rate
+kubectl logs deployment/auth-session-server | grep "auth_result" | grep "success" | wc -l
+# Divide by total: success_rate = success_count / total_count
 
-# Session verification should be < 5ms for cached sessions
-# If slow, check session store size
-curl -s http://localhost:3397/health | jq '.activeSessions'
+# Auth latency
+kubectl logs deployment/auth-session-server | grep "duration_ms" | tail -20
+# Look for: duration_ms: 145, 203, 89, ... (should be <500ms)
 
-# If session store is very large (> FIB[12] = 233), old sessions should auto-expire
+# Firebase API calls
+kubectl logs deployment/auth-session-server | grep "firebase_api" | tail -20
+# Check: calls per second, error rate
 ```
 
 ---
 
-## Escalation Path
+## Related Documents
 
-1. **On-call engineer**: Follow diagnosis steps above
-2. **Security team**: If session tampering, replay attacks, or mass unauthorized access detected
-3. **Platform team**: If auth-session-server outage affects all services
-4. **Eric Haywood (founder)**: If security breach suspected
+- Security Model: `docs/SECURITY_MODEL.md` (Authentication section)
+- ADR-004: Firebase authentication architecture
+- ADR-010: Cross-domain SSO relay iframe
 
----
-
-## Known Issues
-
-1. **In-memory session store**: Sessions are lost on service restart — users must re-authenticate
-2. **__Host- prefix in development**: Requires HTTPS or localhost; may not work with custom dev domains
-3. **Fibonacci session expiry**: Sessions expire after Fibonacci-derived intervals, which may seem arbitrary to users
-4. **Mobile IP changes**: Users on cellular networks may trigger replay detection when IP changes

@@ -493,7 +493,10 @@ function registerServiceRoutes(app, deps = {}) {
             if (fs.existsSync(fp)) {
                 try {
                     const data = JSON.parse(fs.readFileSync(fp, "utf8"));
-                    res.setHeader("Access-Control-Allow-Origin", "*");
+                    const _origin = req.headers.origin || '';
+                    const _allowed = (process.env.CORS_ORIGINS || '').split(',').map(s => s.trim()).filter(Boolean);
+                    res.setHeader("Access-Control-Allow-Origin", _allowed.includes(_origin) ? _origin : (_allowed[0] || 'https://headyme.com'));
+                    res.setHeader("Access-Control-Allow-Credentials", "true");
                     return res.json(data);
                 } catch (err) {
                     return res.status(500).json({ ok: false, error: "Parse error" });
@@ -505,7 +508,10 @@ function registerServiceRoutes(app, deps = {}) {
 
     // ─── Auto-Success API (live task completion data for frontends) ────
     app.get("/api/auto-success/status", (req, res) => {
-        res.setHeader("Access-Control-Allow-Origin", "*");
+        const _origin2 = req.headers.origin || '';
+        const _allowed2 = (process.env.CORS_ORIGINS || '').split(',').map(s => s.trim()).filter(Boolean);
+        res.setHeader("Access-Control-Allow-Origin", _allowed2.includes(_origin2) ? _origin2 : (_allowed2[0] || 'https://headyme.com'));
+        res.setHeader("Access-Control-Allow-Credentials", "true");
         if (autoSuccessEngine) {
             return res.json(autoSuccessEngine.getStatus());
         }
@@ -513,7 +519,10 @@ function registerServiceRoutes(app, deps = {}) {
     });
 
     app.get("/api/auto-success/history", (req, res) => {
-        res.setHeader("Access-Control-Allow-Origin", "*");
+        const _origin3 = req.headers.origin || '';
+        const _allowed3 = (process.env.CORS_ORIGINS || '').split(',').map(s => s.trim()).filter(Boolean);
+        res.setHeader("Access-Control-Allow-Origin", _allowed3.includes(_origin3) ? _origin3 : (_allowed3[0] || 'https://headyme.com'));
+        res.setHeader("Access-Control-Allow-Credentials", "true");
         const limit = parseInt(req.query.limit) || 50;
         if (autoSuccessEngine) {
             return res.json({ ok: true, tasks: autoSuccessEngine.getHistory(limit) });
@@ -522,7 +531,10 @@ function registerServiceRoutes(app, deps = {}) {
     });
 
     app.get("/api/auto-success/tasks", (req, res) => {
-        res.setHeader("Access-Control-Allow-Origin", "*");
+        const _origin4 = req.headers.origin || '';
+        const _allowed4 = (process.env.CORS_ORIGINS || '').split(',').map(s => s.trim()).filter(Boolean);
+        res.setHeader("Access-Control-Allow-Origin", _allowed4.includes(_origin4) ? _origin4 : (_allowed4[0] || 'https://headyme.com'));
+        res.setHeader("Access-Control-Allow-Credentials", "true");
         const category = req.query.category || null;
         if (autoSuccessEngine) {
             return res.json({ ok: true, tasks: autoSuccessEngine.getTaskCatalog(category) });

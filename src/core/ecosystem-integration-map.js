@@ -190,7 +190,7 @@ const SERVICES = {
     entrypoint: 'index.js',
     port: 3303,
     publicPort: 443,
-    domains: ['headyos.com'], // headyos.com — sovereign OS vertical
+    domains: ['headyos.com'],
     status: 'projected',
     capabilities: [
       'latent-reasoning',
@@ -830,15 +830,15 @@ const INTEGRATION_EDGES = [
 // ─── Domain → Service Map ───────────────────────────────────────────────────
 
 const DOMAIN_MAP = {
-  'headyme.com':         { service: 'headyme-core',         primaryPurpose: 'Consumer-facing app, onboarding entry point' },
-  'headyapi.com':        { service: 'headyapi-core',         primaryPurpose: 'Public REST + WebSocket API' },
-  'headysystems.com':    { service: 'headysystems-core',     primaryPurpose: 'Internal platform monitoring + ops' },
-  'headyconnection.org': { service: 'headyconnection-core',  primaryPurpose: 'Developer portal + community' },
-  'headybuddy.org':      { service: 'headybuddy-core',       primaryPurpose: 'HeadyBuddy companion landing + embed' },
-  'headymcp.com':        { service: 'headymcp-core',         primaryPurpose: 'Model Context Protocol endpoint' },
-  'headyio.com':         { service: 'headyio-core',          primaryPurpose: 'I/O integrations hub (connectors)' },
-  'headybot.com':        { service: 'headybot-core',         primaryPurpose: 'Chatbot / messaging channel integrations' },
-  'heady-ai.com':         { service: 'heady-pre-production',  primaryPurpose: 'AI model gateway + inference proxy' },
+  'headyme.com': { service: 'headyme-core', primaryPurpose: 'Consumer-facing app, onboarding entry point' },
+  'headyapi.com': { service: 'headyapi-core', primaryPurpose: 'Public REST + WebSocket API' },
+  'headysystems.com': { service: 'headysystems-core', primaryPurpose: 'Internal platform monitoring + ops' },
+  'headyconnection.org': { service: 'headyconnection-core', primaryPurpose: 'Developer portal + community' },
+  'headybuddy.org': { service: 'headybuddy-core', primaryPurpose: 'HeadyBuddy companion landing + embed' },
+  'headymcp.com': { service: 'headymcp-core', primaryPurpose: 'Model Context Protocol endpoint' },
+  'headyio.com': { service: 'headyio-core', primaryPurpose: 'I/O integrations hub (connectors)' },
+  'headybot.com': { service: 'headybot-core', primaryPurpose: 'Chatbot / messaging channel integrations' },
+  'heady-ai.com': { service: 'heady-pre-production', primaryPurpose: 'AI model gateway + inference proxy' },
 };
 
 // ─── GCP Pub/Sub Topics ─────────────────────────────────────────────────────
@@ -877,35 +877,35 @@ const PUBSUB_TOPICS = {
 
 const EVENT_TOPICS = {
   // Pipeline events
-  'heady.pipeline.run.created':   { schema: { runId: 'string', request: 'object' } },
-  'heady.pipeline.run.started':   { schema: { runId: 'string' } },
+  'heady.pipeline.run.created': { schema: { runId: 'string', request: 'object' } },
+  'heady.pipeline.run.started': { schema: { runId: 'string' } },
   'heady.pipeline.run.completed': { schema: { runId: 'string', result: 'object' } },
-  'heady.pipeline.run.failed':    { schema: { runId: 'string', error: 'string' } },
+  'heady.pipeline.run.failed': { schema: { runId: 'string', error: 'string' } },
   'heady.pipeline.stage.started': { schema: { runId: 'string', stage: 'string' } },
   'heady.pipeline.stage.completed': { schema: { runId: 'string', stage: 'string', metrics: 'object' } },
-  'heady.pipeline.stage.failed':  { schema: { runId: 'string', stage: 'string', error: 'string' } },
+  'heady.pipeline.stage.failed': { schema: { runId: 'string', stage: 'string', error: 'string' } },
 
   // Bee events
-  'heady.bee.registered':   { schema: { beeId: 'string' } },
+  'heady.bee.registered': { schema: { beeId: 'string' } },
   'heady.bee.task.dispatched': { schema: { executionId: 'string', beeId: 'string', taskType: 'string' } },
-  'heady.bee.task.completed':  { schema: { executionId: 'string', durationMs: 'number' } },
-  'heady.bee.task.failed':     { schema: { executionId: 'string', error: 'string' } },
-  'heady.bee.alerts':          { schema: { target: 'string', alerts: 'array' } },
+  'heady.bee.task.completed': { schema: { executionId: 'string', durationMs: 'number' } },
+  'heady.bee.task.failed': { schema: { executionId: 'string', error: 'string' } },
+  'heady.bee.alerts': { schema: { target: 'string', alerts: 'array' } },
 
   // System events
-  'heady.system.boot':          { schema: { version: 'string', ts: 'string' } },
+  'heady.system.boot': { schema: { version: 'string', ts: 'string' } },
   'heady.system.health.changed': { schema: { status: 'string', score: 'number' } },
   'heady.system.circuit.changed': { schema: { breaker: 'string', from: 'string', to: 'string' } },
-  'heady.system.drift.detected':  { schema: { severity: 'string', similarity: 'number' } },
+  'heady.system.drift.detected': { schema: { severity: 'string', similarity: 'number' } },
 
   // User events
-  'heady.user.registered':    { schema: { userId: 'string', tier: 'string' } },
+  'heady.user.registered': { schema: { userId: 'string', tier: 'string' } },
   'heady.user.authenticated': { schema: { userId: 'string', method: 'string' } },
   'heady.user.onboarding.completed': { schema: { userId: 'string' } },
 
   // Alert events
-  'heady.alert.critical':  { schema: { source: 'string', message: 'string', data: 'object' } },
-  'heady.alert.warning':   { schema: { source: 'string', message: 'string' } },
+  'heady.alert.critical': { schema: { source: 'string', message: 'string', data: 'object' } },
+  'heady.alert.warning': { schema: { source: 'string', message: 'string' } },
 };
 
 // ─── Integration Map API ─────────────────────────────────────────────────────

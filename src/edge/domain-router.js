@@ -5,12 +5,24 @@
  */
 
 'use strict';
+// ─── HEADY CORS WHITELIST ────────────────────────────────────────────
+const HEADY_ALLOWED_ORIGINS = new Set([
+    'https://headyme.com', 'https://headysystems.com', 'https://headyconnection.org',
+    'https://headyconnection.com', 'https://headybuddy.org', 'https://headymcp.com',
+    'https://headyapi.com', 'https://headyio.com', 'https://headyos.com',
+    'https://headyweb.com', 'https://headybot.com', 'https://headycloud.com',
+    'https://headybee.co', 'https://heady-ai.com', 'https://headyex.com',
+    'https://headyfinance.com', 'https://admin.headysystems.com',
+    'https://auth.headysystems.com', 'https://api.headysystems.com',
+]);
+const _isHeadyOrigin = (o) => !o ? false : HEADY_ALLOWED_ORIGINS.has(o) || /\.run\.app$/.test(o) || (process.env.NODE_ENV !== 'production' && /^https?:\/\/(localhost|127\.0\.0\.1):/.test(o));
+
 
 const { PHI_TIMING } = require('../shared/phi-math');
 const EventEmitter = require('events');
-const http = require('http');
-const https = require('https');
-const { URL } = require('url');
+const http         = require('http');
+const https        = require('https');
+const { URL }      = require('url');
 
 // ─────────────────────────────────────────────
 // Domain Registry
@@ -24,112 +36,112 @@ const { URL } = require('url');
  */
 const DOMAIN_REGISTRY = {
   'headyme.com': {
-    domain: 'headyme.com',
-    aliases: ['www.headyme.com'],
-    role: 'primary_app',
+    domain:      'headyme.com',
+    aliases:     ['www.headyme.com'],
+    role:        'primary_app',
     description: 'HeadyMe flagship application — AI-powered wellness and sovereignty platform',
-    service: 'headyme-app',
-    upstream: process.env.HEADY_APP_UPSTREAM || 'http://localhost:3000',
-    healthPath: '/health',
-    ssl: 'cloudflare',
-    rateLimit: { windowMs: 60_000, max: 100 },
-    headers: { 'X-Heady-Domain': 'headyme' },
+    service:     'headyme-app',
+    upstream:    'http://localhost:3000',
+    healthPath:  '/health',
+    ssl:         'cloudflare',
+    rateLimit:   { windowMs: 60_000, max: 100 },
+    headers:     { 'X-Heady-Domain': 'headyme' },
   },
   'headysystems.com': {
-    domain: 'headysystems.com',
-    aliases: ['www.headysystems.com'],
-    role: 'platform_root',
+    domain:      'headysystems.com',
+    aliases:     ['www.headysystems.com'],
+    role:        'platform_root',
     description: 'HeadySystems corporate platform and admin hub',
-    service: 'headysystems-admin',
-    upstream: process.env.HEADY_ADMIN_UPSTREAM || 'http://localhost:3001',
-    healthPath: '/health',
-    ssl: 'cloudflare',
-    rateLimit: { windowMs: 60_000, max: 50 },
-    headers: { 'X-Heady-Domain': 'headysystems' },
+    service:     'headysystems-admin',
+    upstream:    'http://localhost:3001',
+    healthPath:  '/health',
+    ssl:         'cloudflare',
+    rateLimit:   { windowMs: 60_000, max: 50 },
+    headers:     { 'X-Heady-Domain': 'headysystems' },
   },
   'headymcp.com': {
-    domain: 'headymcp.com',
-    aliases: ['mcp.headyme.com'],
-    role: 'mcp_gateway',
+    domain:      'headymcp.com',
+    aliases:     ['mcp.headyme.com'],
+    role:        'mcp_gateway',
     description: 'Model Context Protocol gateway for AI tool integrations',
-    service: 'mcp-server',
-    upstream: process.env.HEADY_MCP_UPSTREAM || 'http://localhost:3002',
-    healthPath: '/health',
-    ssl: 'cloudflare',
-    rateLimit: { windowMs: 60_000, max: 200 },
-    headers: { 'X-Heady-Domain': 'headymcp', 'X-MCP-Version': '1.0' },
+    service:     'mcp-server',
+    upstream:    'http://localhost:3002',
+    healthPath:  '/health',
+    ssl:         'cloudflare',
+    rateLimit:   { windowMs: 60_000, max: 200 },
+    headers:     { 'X-Heady-Domain': 'headymcp', 'X-MCP-Version': '1.0' },
   },
   'headybuddy.org': {
-    domain: 'headybuddy.org',
-    aliases: ['www.headybuddy.org'],
-    role: 'companion_ai',
+    domain:      'headybuddy.org',
+    aliases:     ['www.headybuddy.org'],
+    role:        'companion_ai',
     description: 'HeadyBuddy conversational AI companion',
-    service: 'headybuddy-service',
-    upstream: process.env.HEADY_BUDDY_UPSTREAM || 'http://localhost:3003',
-    healthPath: '/health',
-    ssl: 'cloudflare',
-    rateLimit: { windowMs: 60_000, max: 150 },
-    headers: { 'X-Heady-Domain': 'headybuddy' },
+    service:     'headybuddy-service',
+    upstream:    'http://localhost:3003',
+    healthPath:  '/health',
+    ssl:         'cloudflare',
+    rateLimit:   { windowMs: 60_000, max: 150 },
+    headers:     { 'X-Heady-Domain': 'headybuddy' },
   },
   'headyconnection.org': {
-    domain: 'headyconnection.org',
-    aliases: ['www.headyconnection.org'],
-    role: 'community',
+    domain:      'headyconnection.org',
+    aliases:     ['www.headyconnection.org'],
+    role:        'community',
     description: 'HeadyConnection community and networking platform',
-    service: 'headyconnection-service',
-    upstream: process.env.HEADY_CONNECTION_UPSTREAM || 'http://localhost:3004',
-    healthPath: '/health',
-    ssl: 'cloudflare',
-    rateLimit: { windowMs: 60_000, max: 100 },
-    headers: { 'X-Heady-Domain': 'headyconnection' },
+    service:     'headyconnection-service',
+    upstream:    'http://localhost:3004',
+    healthPath:  '/health',
+    ssl:         'cloudflare',
+    rateLimit:   { windowMs: 60_000, max: 100 },
+    headers:     { 'X-Heady-Domain': 'headyconnection' },
   },
   'headyio.com': {
-    domain: 'headyio.com',
-    aliases: ['www.headyio.com', 'io.headyme.com'],
-    role: 'api_hub',
+    domain:      'headyio.com',
+    aliases:     ['www.headyio.com', 'io.headyme.com'],
+    role:        'api_hub',
     description: 'HeadyIO developer API hub and integration platform',
-    service: 'headyio-api',
-    upstream: process.env.HEADY_IO_UPSTREAM || 'http://localhost:3005',
-    healthPath: '/health',
-    ssl: 'cloudflare',
-    rateLimit: { windowMs: 60_000, max: 500 },
-    headers: { 'X-Heady-Domain': 'headyio', 'X-API-Version': 'v4' },
+    service:     'headyio-api',
+    upstream:    'http://localhost:3005',
+    healthPath:  '/health',
+    ssl:         'cloudflare',
+    rateLimit:   { windowMs: 60_000, max: 500 },
+    headers:     { 'X-Heady-Domain': 'headyio', 'X-API-Version': 'v4' },
   },
   'headybot.com': {
-    domain: 'headybot.com',
-    aliases: ['www.headybot.com'],
-    role: 'bot_platform',
+    domain:      'headybot.com',
+    aliases:     ['www.headybot.com'],
+    role:        'bot_platform',
     description: 'HeadyBot automation and workflow orchestration platform',
-    service: 'headybot-service',
-    upstream: process.env.HEADY_BOT_UPSTREAM || 'http://localhost:3006',
-    healthPath: '/health',
-    ssl: 'cloudflare',
-    rateLimit: { windowMs: 60_000, max: 200 },
-    headers: { 'X-Heady-Domain': 'headybot' },
+    service:     'headybot-service',
+    upstream:    'http://localhost:3006',
+    healthPath:  '/health',
+    ssl:         'cloudflare',
+    rateLimit:   { windowMs: 60_000, max: 200 },
+    headers:     { 'X-Heady-Domain': 'headybot' },
   },
   'headyapi.com': {
-    domain: 'headyapi.com',
-    aliases: ['api.headyme.com', 'www.headyapi.com'],
-    role: 'public_api',
+    domain:      'headyapi.com',
+    aliases:     ['api.headyme.com', 'www.headyapi.com'],
+    role:        'public_api',
     description: 'Public REST/GraphQL API for external integrations',
-    service: 'heady-public-api',
-    upstream: process.env.HEADY_API_UPSTREAM || 'http://localhost:3007',
-    healthPath: '/health',
-    ssl: 'cloudflare',
-    rateLimit: { windowMs: 60_000, max: 1000 },
-    headers: { 'X-Heady-Domain': 'headyapi' },
+    service:     'heady-public-api',
+    upstream:    'http://localhost:3007',
+    healthPath:  '/health',
+    ssl:         'cloudflare',
+    rateLimit:   { windowMs: 60_000, max: 1000 },
+    headers:     { 'X-Heady-Domain': 'headyapi', 'Access-Control-Allow-Origin': 'null'  // HEADY: Use _isHeadyOrigin() for dynamic CORS },
   },
   'heady-ai.com': {
-    domain: 'heady-ai.com',
-    aliases: ['www.heady-ai.com', 'ai.headyme.com'],
-    role: 'ai_gateway',
+    domain:      'heady-ai.com',
+    aliases:     ['www.heady-ai.com', 'ai.headyme.com'],
+    role:        'ai_gateway',
     description: 'HeadyAI inference and model gateway',
-    service: 'inference-gateway',
-    upstream: process.env.HEADY_AI_UPSTREAM || 'http://localhost:3008',
-    healthPath: '/health',
-    ssl: 'cloudflare',
-    rateLimit: { windowMs: 60_000, max: 300 },
-    headers: { 'X-Heady-Domain': 'headyai', 'X-Inference-Version': 'v4' },
+    service:     'inference-gateway',
+    upstream:    'http://localhost:3008',
+    healthPath:  '/health',
+    ssl:         'cloudflare',
+    rateLimit:   { windowMs: 60_000, max: 300 },
+    headers:     { 'X-Heady-Domain': 'headyai', 'X-Inference-Version': 'v4' },
   },
 };
 
@@ -176,9 +188,9 @@ class RateLimiter {
    */
   check(ip, domainConfig) {
     const { windowMs, max } = domainConfig.rateLimit ?? { windowMs: 60_000, max: 100 };
-    const key = `${domainConfig.domain}:${ip}`;
-    const now = Date.now();
-    let bucket = this._buckets.get(key);
+    const key    = `${domainConfig.domain}:${ip}`;
+    const now    = Date.now();
+    let bucket   = this._buckets.get(key);
 
     if (!bucket || now - bucket.windowStart > windowMs) {
       bucket = { count: 0, windowStart: now };
@@ -188,11 +200,11 @@ class RateLimiter {
     this._buckets.set(key, bucket);
 
     const remaining = Math.max(0, max - bucket.count);
-    const resetMs = windowMs - (now - bucket.windowStart);
+    const resetMs   = windowMs - (now - bucket.windowStart);
     return {
-      allowed: bucket.count <= max,
+      allowed:   bucket.count <= max,
       remaining,
-      resetMs: Math.max(0, resetMs),
+      resetMs:   Math.max(0, resetMs),
     };
   }
 }
@@ -213,11 +225,11 @@ class HealthMonitor extends EventEmitter {
   constructor(opts = {}) {
     super();
     this.intervalMs = opts.intervalMs ?? PHI_TIMING.CYCLE;
-    this.timeoutMs = opts.timeoutMs ?? 5_000;
+    this.timeoutMs  = opts.timeoutMs  ?? 5_000;
 
     /** @type {Map<string, {status: HealthStatus, lastCheckedAt: number, latencyMs: number}>} */
-    this._status = new Map();
-    this._timer = null;
+    this._status  = new Map();
+    this._timer   = null;
   }
 
   /** Start periodic polling. */
@@ -252,17 +264,17 @@ class HealthMonitor extends EventEmitter {
   async _poll() {
     const domains = this._domains ?? DOMAIN_REGISTRY;
     for (const [domain, config] of Object.entries(domains)) {
-      this._checkOne(domain, config).catch(() => { });
+      this._checkOne(domain, config).catch(() => {});
     }
   }
 
   async _checkOne(domain, config) {
-    const url = `${config.upstream}${config.healthPath}`;
+    const url   = `${config.upstream}${config.healthPath}`;
     const start = Date.now();
-    let status = 'unhealthy';
+    let status  = 'unhealthy';
     try {
       const res = await this._httpGet(url, this.timeoutMs);
-      status = res.statusCode >= 200 && res.statusCode < 400 ? 'healthy' : 'degraded';
+      status    = res.statusCode >= 200 && res.statusCode < 400 ? 'healthy' : 'degraded';
     } catch { /* unhealthy */ }
 
     const prev = this._status.get(domain)?.status;
@@ -276,10 +288,10 @@ class HealthMonitor extends EventEmitter {
 
   _httpGet(url, timeoutMs) {
     return new Promise((resolve, reject) => {
-      const parsed = new URL(url);
-      const lib = parsed.protocol === 'https:' ? https : http;
-      const req = lib.get(url, { timeout: timeoutMs }, resolve);
-      req.on('error', reject);
+      const parsed  = new URL(url);
+      const lib     = parsed.protocol === 'https:' ? https : http;
+      const req     = lib.get(url, { timeout: timeoutMs }, resolve);
+      req.on('error',   reject);
       req.on('timeout', () => { req.destroy(); reject(new Error('timeout')); });
     });
   }
@@ -338,14 +350,14 @@ class DomainRouter extends EventEmitter {
    */
   constructor(config = {}) {
     super();
-    this.config = config;
-    this.domains = { ...DOMAIN_REGISTRY, ...(config.domains ?? {}) };
-    this.rateLimiter = config.enableRateLimit !== false ? new RateLimiter() : null;
-    this.healthMon = config.enableHealthChecks !== false
+    this.config       = config;
+    this.domains      = { ...DOMAIN_REGISTRY, ...(config.domains ?? {}) };
+    this.rateLimiter  = config.enableRateLimit !== false ? new RateLimiter() : null;
+    this.healthMon    = config.enableHealthChecks !== false
       ? new HealthMonitor({
-        intervalMs: config.healthIntervalMs,
-        timeoutMs: config.healthTimeoutMs,
-      })
+          intervalMs: config.healthIntervalMs,
+          timeoutMs:  config.healthTimeoutMs,
+        })
       : null;
 
     /** Build a fast alias → canonical domain map */
@@ -394,10 +406,10 @@ class DomainRouter extends EventEmitter {
 
     // ─ Rate limit ─
     if (this.rateLimiter) {
-      const ip = this._clientIp(req);
+      const ip     = this._clientIp(req);
       const result = this.rateLimiter.check(ip, domainConfig);
       res.setHeader('X-RateLimit-Remaining', result.remaining);
-      res.setHeader('X-RateLimit-Reset', Math.ceil(result.resetMs / 1000));
+      res.setHeader('X-RateLimit-Reset',     Math.ceil(result.resetMs / 1000));
       if (!result.allowed) {
         this._sendError(res, 429, 'Rate limit exceeded');
         this.emit('rate_limited', { domain: domainConfig.domain, ip });
@@ -410,10 +422,10 @@ class DomainRouter extends EventEmitter {
       await this._proxy(req, res, domainConfig);
       this.emit('request_routed', {
         host,
-        domain: domainConfig.domain,
+        domain:  domainConfig.domain,
         service: domainConfig.service,
-        method: req.method,
-        path: req.url,
+        method:  req.method,
+        path:    req.url,
       });
     } catch (err) {
       this._sendError(res, 502, `Upstream error: ${err.message}`);
@@ -457,8 +469,8 @@ class DomainRouter extends EventEmitter {
    */
   status() {
     return {
-      domains: Object.keys(this.domains),
-      health: this.healthMon?.snapshot() ?? {},
+      domains:   Object.keys(this.domains),
+      health:    this.healthMon?.snapshot() ?? {},
     };
   }
 
@@ -477,12 +489,12 @@ class DomainRouter extends EventEmitter {
 
   async _proxy(req, res, domainConfig) {
     const upstreamUrl = new URL(domainConfig.upstream);
-    const options = {
+    const options     = {
       hostname: upstreamUrl.hostname,
-      port: upstreamUrl.port || (upstreamUrl.protocol === 'https:' ? 443 : 80),
-      path: req.url,
-      method: req.method,
-      headers: this._buildUpstreamHeaders(req, domainConfig),
+      port:     upstreamUrl.port || (upstreamUrl.protocol === 'https:' ? 443 : 80),
+      path:     req.url,
+      method:   req.method,
+      headers:  this._buildUpstreamHeaders(req, domainConfig),
     };
 
     await new Promise((resolve, reject) => {
@@ -507,10 +519,10 @@ class DomainRouter extends EventEmitter {
     for (const [k, v] of Object.entries(req.headers)) {
       if (!HOP_BY_HOP_HEADERS.has(k.toLowerCase())) headers[k] = v;
     }
-    headers['x-forwarded-for'] = this._clientIp(req);
-    headers['x-forwarded-host'] = req.headers['host'] ?? '';
+    headers['x-forwarded-for']   = this._clientIp(req);
+    headers['x-forwarded-host']  = req.headers['host'] ?? '';
     headers['x-forwarded-proto'] = 'https'; // Cloudflare always sends HTTPS
-    headers['x-heady-service'] = domainConfig.service;
+    headers['x-heady-service']   = domainConfig.service;
     return headers;
   }
 
@@ -549,7 +561,8 @@ class DomainRouter extends EventEmitter {
 // Exports
 // ─────────────────────────────────────────────
 
-module.exports = {
+export {
+
   DomainRouter,
   HealthMonitor,
   RateLimiter,

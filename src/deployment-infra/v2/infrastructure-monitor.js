@@ -1,4 +1,3 @@
-const logger = require('../../shared/logger')('infrastructure-monitor');
 /**
  * Heady™ Infrastructure Health Monitor
  *
@@ -310,7 +309,7 @@ class InfrastructureMonitor extends EventEmitter {
     this._check(); // Immediate first check
     this._timer = setInterval(() => this._check(), this.config.intervalMs);
     this._timer.unref?.();
-    logger.info(JSON.stringify({ level: 'info', msg: 'InfrastructureMonitor started', targets: this.targets.map(t => t.name), intervalMs: this.config.intervalMs }));
+    console.log(JSON.stringify({ level: 'info', msg: 'InfrastructureMonitor started', targets: this.targets.map(t => t.name), intervalMs: this.config.intervalMs }));
   }
 
   stop() {
@@ -400,7 +399,7 @@ class InfrastructureMonitor extends EventEmitter {
 
     this.history.push({ score, errorRate: 0, latencyMs: results[this.targets[0]?.name]?.latencyMs });
 
-    logger.info(JSON.stringify({
+    console.log(JSON.stringify({
       level: isCritical ? 'error' : isDegraded ? 'warn' : 'info',
       msg: 'Health check',
       score,
@@ -581,7 +580,7 @@ class InfrastructureMonitor extends EventEmitter {
       }
     });
     this._server.listen(this.config.port, () => {
-      logger.info(JSON.stringify({ level: 'info', msg: `Monitor HTTP server listening on :${this.config.port}` }));
+      console.log(JSON.stringify({ level: 'info', msg: `Monitor HTTP server listening on :${this.config.port}` }));
     });
   }
 }
@@ -594,13 +593,13 @@ async function main() {
 
   if (args.includes('--once')) {
     const report = await monitor.runOnce();
-    logger.info(JSON.stringify(report, null, 2));
+    console.log(JSON.stringify(report, null, 2));
     process.exit(report.status === 'critical' ? 1 : 0);
   }
 
   if (args.includes('--report')) {
     await monitor.runOnce();
-    logger.info(JSON.stringify(monitor.lastReport, null, 2));
+    console.log(JSON.stringify(monitor.lastReport, null, 2));
     process.exit(0);
   }
 
@@ -612,7 +611,7 @@ async function main() {
 
 if (require.main === module) {
   main().catch(err => {
-    logger.error(JSON.stringify({ level: 'fatal', error: err.message }));
+    console.error(JSON.stringify({ level: 'fatal', error: err.message }));
     process.exit(1);
   });
 }

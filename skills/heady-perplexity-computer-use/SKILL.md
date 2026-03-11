@@ -1,117 +1,108 @@
 ---
 name: heady-perplexity-computer-use
-description: Orchestrates Perplexity Computer use sessions for the Heady platform. Use when the user asks to automate browser tasks, perform web interactions, take screenshots, fill forms, navigate websites, or run computer-use workflows via Perplexity. Triggers on phrases like "browse the web", "take a screenshot of", "fill out the form at", "automate the website", "use computer to", or "navigate to and do".
-license: MIT
+description: Skill for Perplexity Computer to build, test, and deploy full Heady system components. Use when asked to build services, wire infrastructure, generate code artifacts, run shell commands, create files, or deploy Heady components to Cloud Run or Cloudflare Workers. Triggers on phrases like "build the backend", "create the service", "deploy to Cloud Run", "wire up the infra", or any construction/deployment task in the Heady ecosystem.
+license: proprietary
 metadata:
-  author: heady-connection
-  version: '1.0'
-  platform: heady
-  category: automation
+  author: HeadySystems Inc.
+  version: '2.1.0'
+  domain: heady-system-build
 ---
 
 # Heady Perplexity Computer Use
 
 ## When to Use This Skill
 
-Use this skill when the user asks to:
+Use this skill when:
 
-- Automate interactions with websites or desktop applications
-- Take screenshots of specific web pages or UI states
-- Fill out and submit web forms
-- Extract structured data from dynamically rendered pages
-- Chain multi-step browser workflows (login → navigate → extract → submit)
-- Monitor page state changes over time
-- Perform accessibility audits of live sites
-- Simulate user journeys for QA and testing
-
-## Concepts
-
-**Computer Use** refers to AI-driven control of a web browser or desktop environment. In the Heady/Perplexity context, computer use sessions follow a screenshot → analyze → act → verify loop.
-
-**Session State** is the persistent context between actions: cookies, local storage, open tabs, and scroll position are all part of session state and must be maintained across steps.
+- Building Heady microservices (50+ services with /health endpoints and AutoContext middleware)
+- Creating infrastructure configs (Envoy, Consul, OpenTelemetry, Kubernetes manifests)
+- Generating skill files for the Heady platform
+- Deploying services to Cloud Run (`gen-lang-client-0920560496 / us-east1`)
+- Deploying to Cloudflare Workers (account `8b1fa38f282c691423c6399247d53323`)
+- Wiring service registries, domain routers, or auth systems
+- Running tests, linters, or build pipelines in the workspace
 
 ## Instructions
 
-### 1. Session Initialization
+### Step 1 — Load Context Before Every Action
 
-Before performing any actions:
-1. Capture a full-page screenshot of the target URL to establish baseline state.
-2. Identify interactive elements: buttons, links, input fields, dropdowns, modals.
-3. Confirm the correct page has loaded by checking the page title and key landmarks.
-4. Log the session start with timestamp, target URL, and objective.
+Before any build action:
 
-### 2. Action Planning
+1. Load `/home/user/workspace/heady-build-inputs.md` for the current spec
+2. Read relevant source from `/home/user/workspace/heady-src/heady-preprod`
+3. Check `/home/user/workspace/heady-perplexity-full-system-context/heady-perplexity-bundle/` for system directives
+4. Verify the build output target: `/home/user/workspace/heady-system-build/`
 
-Plan the action sequence before executing:
-1. List each required action as a numbered step (e.g., `1. Click "Login" button`, `2. Type username`, `3. Submit form`).
-2. Identify potential failure points: CAPTCHAs, rate limiting, authentication gates, dynamic content delays.
-3. Define success criteria for each step (e.g., "redirect to /dashboard", "confirmation toast appears").
-4. Set retry limits: max 3 retries per action before escalating with an error.
+### Step 2 — Apply Unbreakable Laws to All Generated Code
 
-### 3. Execution Loop
+Every file must satisfy all 8 Unbreakable Laws:
 
-For each action in the plan:
-1. **Locate** the target element using CSS selector, XPath, or visual coordinates.
-2. **Act** — click, type, scroll, hover, or key-press as required.
-3. **Wait** — allow page transitions and async content to settle (default 1500ms; increase to 3000ms for heavy SPAs).
-4. **Verify** — take a screenshot and confirm the expected state change occurred.
-5. **Record** — log the action, selector used, and verification result.
+1. **Thoroughness**: typed error classes, full error handling, not just happy path
+2. **Root Cause**: no workarounds — solve the actual problem
+3. **Context Maximization**: HeadyAutoContext middleware on every endpoint
+4. **Deployable**: no stand-in markers, no DEFERRED_WORK_MARKERs, no scaffold markers without implementation
+5. **No Localhost**: all URLs use environment variables, never hardcoded loopback literals
+6. **10,000-Bee Scale**: Fibonacci pool sizes, phi-scaled timeouts
+7. **Auto-Success Integrity**: phi-heartbeat, dynamic allocation
+8. **Arena Mode**: generate 2+ candidate solutions, keep the best
 
-### 4. Data Extraction
+### Step 3 — Service Generation Pattern
 
-When the goal is to extract structured data:
-1. Identify the containing element(s) for each data field.
-2. Extract text, attributes, or computed styles as needed.
-3. Normalize data: trim whitespace, parse dates and numbers, map enums.
-4. Output as JSON array with named fields and source selectors.
+For every service:
 
-### 5. Error Handling
+```javascript
+// Required: health endpoint
+GET /health → { status: 'ok', service, uptime, activeRequests, version }
+GET /healthz → same
 
-| Error Type | Response |
-|---|---|
-| Element not found | Retry after 2s; try alternate selector; screenshot and log |
-| CAPTCHA detected | Pause and surface to user; do not attempt bypass |
-| Auth redirect | Check session credentials; re-authenticate if token expired |
-| Timeout | Increase wait; check network tab for pending requests |
-| Unexpected navigation | Screenshot current state; compare to expected URL; abort if diverged |
+// Required: AutoContext middleware on ALL routes
+import { autoContextMiddleware } from '../../shared/auto-context-middleware.js';
 
-### 6. Session Teardown
+// Required: structured logging with correlation IDs
+import { log, emitSpan } from '../../shared/service-base.js';
 
-1. Take a final screenshot documenting the end state.
-2. Clear sensitive inputs (passwords, API keys) from memory.
-3. Export the session log as structured JSON.
-4. Return the collected data and/or confirmation of completed actions to the user.
+// Required: phi-scaled timeouts
+const timeout = Math.round(baseMs * PHI);
 
-## Output Format
-
-```json
-{
-  "session_id": "heady-cu-2026-001",
-  "objective": "Extract product listings from example.com",
-  "steps_completed": 5,
-  "steps_total": 5,
-  "status": "success",
-  "data": [...],
-  "screenshots": ["step_1.png", "step_5.png"],
-  "duration_ms": 12400,
-  "errors": []
-}
+// Required: no priority fields — CSL domain match ONLY
+// ❌ NEVER: priority: 'HIGH'
+// ✅ ALWAYS: domain: 'security', cslScore: 0.882
 ```
+
+### Step 4 — Ranking Language Removal Checklist
+
+Before finalizing any orchestration artifact, verify:
+
+- [ ] No `CRITICAL`, `HIGH`, `MEDIUM`, `LOW` in task classification
+- [ ] No `priority` field on tasks, bees, or swarms
+- [ ] No priority queue sorting or ordering
+- [ ] Stage 4 TRIAGE routes by CSL domain match, not importance
+- [ ] All tasks dispatched concurrently via `Promise.all` or `setImmediate`
+- [ ] Resource allocation uses phi-ratios, not priority tiers
+
+### Step 5 — Deployment Targets
+
+| Target | Command Pattern |
+|--------|----------------|
+| Cloud Run | `gcloud run deploy {service} --region us-east1 --project gen-lang-client-0920560496` |
+| Cloudflare | `wrangler deploy --env production` in workers/ directory |
+| Docker | `docker build -t gcr.io/gen-lang-client-0920560496/{service}:latest .` |
+| Kubernetes | `kubectl apply -f infra/kubernetes/{service}/deployment.yaml` |
+
+### Step 6 — Quality Gate Before Delivery
+
+- All files under 500 lines (split if needed)
+- All imports resolve to real files (no broken imports)
+- All environment variables documented in comments
+- Health endpoint tested through the container hostname or deployed service DNS
 
 ## Examples
 
-**Input:** "Go to https://shop.headyconnection.org/admin, log in with my stored credentials, and export the pending orders as CSV."
+**Input**: "Build the heady-brain service"
+**Output**: Full service at `/home/user/workspace/heady-system-build/services/core-intelligence/heady-brain/` with `index.js`, `Dockerfile`, `package.json`, and Kubernetes manifest
 
-**Plan:**
-1. Navigate to login page → screenshot → verify login form present
-2. Fill username field → fill password field → click Submit
-3. Verify redirect to /admin/dashboard
-4. Click Orders → click Filter → select "Pending" → click Export CSV
-5. Confirm download initiated → record filename
+**Input**: "Refactor swarm-coordinator to remove ranking"
+**Output**: `swarm-coordinator-refactored.js` with all priority enums removed, CSL domain routing added
 
-**Input:** "Screenshot every page of our product catalog at headyconnection.org/products and save them."
-
-**Plan:**
-1. Navigate to /products → screenshot page 1
-2. Paginate through all pages, screenshot each
-3. Return ordered list of screenshot files with page URLs
+**Input**: "Wire Drupal webhook sync"
+**Output**: Complete `drupal-vector-sync.js` with HMAC verification, JSON:API client, and polling loop

@@ -190,7 +190,7 @@ if (process.env.OTEL_EXPORTER_ENDPOINT) {
     });
 
     // Graceful shutdown for OTEL
-    process.on('SIGTERM', () => sdk.shutdown().catch((err) => { logger.warn({ msg: 'OTEL shutdown failed', error: err.message }); }));
+    process.on('SIGTERM', () => sdk.shutdown().catch(() => {}));
   } catch (err) {
     logger.warn('[Manager] OpenTelemetry not available', { error: err.message });
   }

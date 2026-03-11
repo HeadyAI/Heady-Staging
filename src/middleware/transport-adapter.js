@@ -432,7 +432,7 @@ export class StreamableHTTPTransport extends BaseTransport {
           if (evt.id) this._lastEventId = evt.id;
           if (evt.data) {
             this._handleIncoming(evt.data);
-            try { lastResult = deserializeMessage(evt.data); } catch (err) { /* structured-logger: emit error */ }
+            try { lastResult = deserializeMessage(evt.data); } catch (_) {}
           }
         }
       }
@@ -570,7 +570,7 @@ export class LegacySSETransport extends BaseTransport {
    */
   async close() {
     this._connected = false;
-    try { await this._sseReader?.cancel(); } catch (err) { /* structured-logger: emit error */ }
+    try { await this._sseReader?.cancel(); } catch (_) {}
     this._sseReader = null;
     this.emit('disconnected', {});
   }

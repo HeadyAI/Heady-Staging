@@ -512,7 +512,7 @@ const MASTER_PROMPTS = Object.freeze([
   {
     id: 'trading-007', domain: 'trading', name: 'Portfolio Rebalance',
     description: 'Generate portfolio rebalancing recommendations',
-    template: `Generate portfolio rebalancing recommendations for ${portfolioName}.\n\nCurrent holdings:\n${currentHoldings}\n\nTarget allocation: ${targetAllocation}\nRebalancing tolerance: ${tolerance}%\nTax considerations: ${taxConsiderations}\nTransaction cost estimate: ${txCost} bps\n\nCompute:\n1. Deviation from target by asset\n2. Required trades (buy/sell amounts)\n3. Tax-loss harvesting opportunities\n4. Post-rebalance projected metrics\n5. Execution concurrent-equals execution order`,
+    template: `Generate portfolio rebalancing recommendations for ${portfolioName}.\n\nCurrent holdings:\n${currentHoldings}\n\nTarget allocation: ${targetAllocation}\nRebalancing tolerance: ${tolerance}%\nTax considerations: ${taxConsiderations}\nTransaction cost estimate: ${txCost} bps\n\nCompute:\n1. Deviation from target by asset\n2. Required trades (buy/sell amounts)\n3. Tax-loss harvesting opportunities\n4. Post-rebalance projected metrics\n5. Execution priority order`,
     variables: ['portfolioName', 'currentHoldings', 'targetAllocation', 'tolerance', 'taxConsiderations', 'txCost'],
     tags: ['portfolio', 'rebalancing'],
   },

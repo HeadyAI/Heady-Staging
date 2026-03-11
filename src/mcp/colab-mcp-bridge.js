@@ -1,4 +1,15 @@
-const logger = require('../shared/logger')('colab-mcp-bridge');
+// ─── HEADY CORS WHITELIST ────────────────────────────────────────────
+const HEADY_ALLOWED_ORIGINS = new Set([
+    'https://headyme.com', 'https://headysystems.com', 'https://headyconnection.org',
+    'https://headyconnection.com', 'https://headybuddy.org', 'https://headymcp.com',
+    'https://headyapi.com', 'https://headyio.com', 'https://headyos.com',
+    'https://headyweb.com', 'https://headybot.com', 'https://headycloud.com',
+    'https://headybee.co', 'https://heady-ai.com', 'https://headyex.com',
+    'https://headyfinance.com', 'https://admin.headysystems.com',
+    'https://auth.headysystems.com', 'https://api.headysystems.com',
+]);
+const _isHeadyOrigin = (o) => !o ? false : HEADY_ALLOWED_ORIGINS.has(o) || /\.run\.app$/.test(o) || (process.env.NODE_ENV !== 'production' && /^https?:\/\/(localhost|127\.0\.0\.1):/.test(o));
+
 #!/usr/bin/env node
 /*
  * © 2026 Heady™Systems Inc..
@@ -68,14 +79,14 @@ const telemetry = new HeadyTelemetry(vectorStore, learner);
     learner.learnPreference('3D GPU vector space for all memory operations');
     learner.learnPreference('Comprehensive data gathering during and between interactions for optimization');
 
-    logger.info(`  🧠 Seeded ${learner.interactionCount} knowledge vectors`);
-    logger.info(`  📊 Telemetry: audit trail + optimization engine active`);
+    console.log(`  🧠 Seeded ${learner.interactionCount} knowledge vectors`);
+    console.log(`  📊 Telemetry: audit trail + optimization engine active`);
 })();
 
 // ── Project History Ingestion — Full codebase context on boot ────
 const { ProjectHistoryIngestor } = require('./project-history-ingestor');
 const historyIngestor = new ProjectHistoryIngestor(learner);
-historyIngestor.ingestAll().catch(e => logger.error(`  ⚠ History ingest error: ${e.message}`));
+historyIngestor.ingestAll().catch(e => console.error(`  ⚠ History ingest error: ${e.message}`));
 
 // ── Tool Registry ────────────────────────────────────────────────
 // Full 33-tool registry: 30 from heady-mcp-server.js + 3 vector space tools.
@@ -131,7 +142,7 @@ function loadMCPTools() {
         { name: 'heady_memory_stats', description: 'Get continuous learning stats (interactions, directives, categories, memory usage).', inputSchema: { type: 'object', properties: {} } },
         { name: 'heady_telemetry', description: 'Get comprehensive telemetry stats (audit trail, tool call analytics, optimizations, environment).', inputSchema: { type: 'object', properties: {} } },
     ];
-    logger.info(`  📋 ${HEADY_TOOLS.length} MCP tools loaded (35 Heady + 8 bridge)`);
+    console.log(`  📋 ${HEADY_TOOLS.length} MCP tools loaded (35 Heady + 8 bridge)`);
 }
 
 // ── Tool Handler ─────────────────────────────────────────────────
@@ -337,7 +348,7 @@ function handleSSE(req, res) {
         'Content-Type': 'text/event-stream',
         'Cache-Control': 'no-cache',
         'Connection': 'keep-alive',
-        'Access-Control-Allow-Origin': 'https://headyme.com',
+        'Access-Control-Allow-Origin': 'null'  // HEADY: Use _isHeadyOrigin() for dynamic CORS,
     });
 
     // Send endpoint info
@@ -566,7 +577,7 @@ function parseBody(req) {
 function jsonRes(res, code, data) {
     res.writeHead(code, {
         'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': 'https://headyme.com',
+        'Access-Control-Allow-Origin': 'null'  // HEADY: Use _isHeadyOrigin() for dynamic CORS,
         'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
         'Access-Control-Allow-Headers': 'Content-Type, Authorization',
     });
@@ -583,7 +594,7 @@ function startHTTPServer() {
         // CORS preflight
         if (req.method === 'OPTIONS') {
             res.writeHead(204, {
-                'Access-Control-Allow-Origin': 'https://headyme.com',
+                'Access-Control-Allow-Origin': 'null'  // HEADY: Use _isHeadyOrigin() for dynamic CORS,
                 'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
                 'Access-Control-Allow-Headers': 'Content-Type, Authorization',
             });
@@ -671,24 +682,24 @@ function startHTTPServer() {
     });
 
     server.listen(PORT, async () => {
-        logger.info(`\n  🐝 Heady™ MCP Multi-Transport Bridge`);
-        logger.info(`  ════════════════════════════════════`);
-        logger.info(`  📡 HTTP REST : http://localhost:${PORT}/mcp/tools`);
-        logger.info(`  📡 JSON-RPC  : http://localhost:${PORT}/mcp/rpc`);
-        logger.info(`  📡 SSE       : http://localhost:${PORT}/sse`);
-        logger.info(`  📡 WebSocket : ws://localhost:${PORT}`);
-        logger.info(`  📡 Health    : http://localhost:${PORT}/health`);
-        logger.info(`  🧠 Vectors   : ${vectorStore.getStats().vectorCount} stored (${vectorStore.getStats().dimensions}D)`);
-        logger.info(`  ⚡ GPU       : ${GPU_CONFIG.useGPU ? 'enabled' : 'CPU mode'}`);
+        console.log(`\n  🐝 Heady™ MCP Multi-Transport Bridge`);
+        console.log(`  ════════════════════════════════════`);
+        console.log(`  📡 HTTP REST : http://localhost:${PORT}/mcp/tools`);
+        console.log(`  📡 JSON-RPC  : http://localhost:${PORT}/mcp/rpc`);
+        console.log(`  📡 SSE       : http://localhost:${PORT}/sse`);
+        console.log(`  📡 WebSocket : ws://localhost:${PORT}`);
+        console.log(`  📡 Health    : http://localhost:${PORT}/health`);
+        console.log(`  🧠 Vectors   : ${vectorStore.getStats().vectorCount} stored (${vectorStore.getStats().dimensions}D)`);
+        console.log(`  ⚡ GPU       : ${GPU_CONFIG.useGPU ? 'enabled' : 'CPU mode'}`);
 
         // ngrok tunnel for Colab
         const ngrokUrl = await setupNgrokTunnel(PORT);
         if (ngrokUrl) {
-            logger.info(`  🌐 ngrok     : ${ngrokUrl}`);
-            logger.info(`  🌐 SSE       : ${ngrokUrl}/sse`);
+            console.log(`  🌐 ngrok     : ${ngrokUrl}`);
+            console.log(`  🌐 SSE       : ${ngrokUrl}/sse`);
         }
 
-        logger.info(`  ════════════════════════════════════\n`);
+        console.log(`  ════════════════════════════════════\n`);
     });
 }
 
@@ -710,7 +721,7 @@ async function main() {
 }
 
 main().catch(err => {
-    logger.error(`[Heady™ MCP Bridge] Fatal: ${err.message}`);
+    console.error(`[Heady™ MCP Bridge] Fatal: ${err.message}`);
     process.exit(1);
 });
 

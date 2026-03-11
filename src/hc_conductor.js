@@ -135,12 +135,12 @@ class HeadyConductor {
           acceptanceCriteria: ['fit_score_calculated', 'success_probability_estimated']
         },
         {
-          id: 'coordinate concurrently-grants',
+          id: 'prioritize-grants',
           type: 'evaluation',
-          agent: 'grant-coordinate concurrentlyr',
+          agent: 'grant-prioritizer',
           parallel: false,
           inputs: ['grant_scores'],
-          outputs: ['coordinate concurrentlyd_grant_list'],
+          outputs: ['prioritized_grant_list'],
           acceptanceCriteria: ['grants_ranked', 'application_timeline_set']
         },
         {
@@ -148,20 +148,20 @@ class HeadyConductor {
           type: 'writing',
           agent: 'application-preparer',
           parallel: false,
-          inputs: ['coordinate concurrentlyd_grant_list', 'founder_profile'],
+          inputs: ['prioritized_grant_list', 'founder_profile'],
           outputs: ['application_materials'],
           acceptanceCriteria: ['customized_proposals', 'supporting_documents_identified']
         }
       ],
       successCriteria: [
         'minimum_5_eligible_grants',
-        'grants_coordinate concurrentlyd_by_fit',
+        'grants_prioritized_by_fit',
         'application_materials_ready',
         'timeline_established'
       ],
       humanInLoop: [
         {
-          step: 'after-coordinate concurrently-grants',
+          step: 'after-prioritize-grants',
           purpose: 'review_grant_prioritization',
           fallback: 'auto_proceed_if_top_3_above_0.85'
         }
@@ -238,7 +238,7 @@ class HeadyConductor {
 
     this.agentRegistry.set('match-evaluator', {
       type: 'evaluation',
-      capabilities: ['scoring', 'concurrent evaluation', 'fit_assessment'],
+      capabilities: ['scoring', 'ranking', 'fit_assessment'],
       modelTier: 'medium',
       maxTokens: 4000,
       temperature: 0.1
@@ -276,9 +276,9 @@ class HeadyConductor {
       temperature: 0.1
     });
 
-    this.agentRegistry.set('grant-coordinate concurrentlyr', {
+    this.agentRegistry.set('grant-prioritizer', {
       type: 'evaluation',
-      capabilities: ['prioritization', 'timeline_planning', 'strategic_concurrent evaluation'],
+      capabilities: ['prioritization', 'timeline_planning', 'strategic_ranking'],
       modelTier: 'medium',
       maxTokens: 4000,
       temperature: 0.2
@@ -324,7 +324,7 @@ class HeadyConductor {
     this.impactConstraints.set('equity', {
       description: 'Ensure equitable access to resources',
       rules: [
-        'coordinate concurrently_underrepresented_founders',
+        'prioritize_underrepresented_founders',
         'consider_geographic_diversity',
         'avoid_bias_in_recommendations',
         'provide_alternative_paths_for_disadvantaged'
@@ -335,7 +335,7 @@ class HeadyConductor {
     this.impactConstraints.set('sustainability', {
       description: 'Promote sustainable and ethical businesses',
       rules: [
-        'coordinate concurrently_sustainable_business_models',
+        'prioritize_sustainable_business_models',
         'consider_environmental_impact',
         'favor_social_enterprise',
         'avoid_harmful_industries'

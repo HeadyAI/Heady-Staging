@@ -72,7 +72,7 @@ const COMPONENT_REGISTRY = {
         providerPriority: ["gcloud-run", "cloudflare"],
     },
     "battle": {
-        capabilities: ["multi-model-competition", "solution-concurrent evaluation", "quality-comparison"],
+        capabilities: ["multi-model-competition", "solution-ranking", "quality-comparison"],
         contexts: ["high-stakes-decision", "model-evaluation", "creative-contest"],
         weight: 6,
         minInstances: 0,

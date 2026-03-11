@@ -389,7 +389,7 @@ class TradingBeeCSL extends EventEmitter {
     // ── § 6.3  QUEUE MANAGEMENT ──────────────────────────────────────────────
 
     /**
-     * Dequeue the next task from the hot pool (concurrent-equal weight).
+     * Dequeue the next task from the hot pool (highest priority).
      * Falls back to warm, then cold if hot is empty.
      *
      * @returns {Object|null}  Next task, or null if all queues empty.

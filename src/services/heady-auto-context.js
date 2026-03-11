@@ -187,7 +187,7 @@ class HeadyAutoContext extends EventEmitter {
      *
      * @param {string} task - The task description or user prompt
      * @param {Object} [opts]
-     * @param {string[]} [opts.focusFiles] - Specific files to coordinate concurrently
+     * @param {string[]} [opts.focusFiles] - Specific files to prioritize
      * @param {string} [opts.domain] - 'code' | 'config' | 'deploy' | 'research' | 'battle' | 'council'
      * @param {number} [opts.tokenBudget] - Override default budget
      * @param {boolean} [opts.vectorSearch] - Search latent space vectors (default: true)
@@ -582,9 +582,9 @@ class HeadyAutoContext extends EventEmitter {
                         }
                     });
                     if (w.unref) w.unref();
-                } catch (err) { logger.debug('[AutoContext] dir not watchable: ' + err.message); }
+                } catch (_) { /* some dirs may not be watchable */ }
             }
-        } catch (err) { logger.debug('[AutoContext] fs.watch unavailable: ' + err.message); }
+        } catch (_) { /* fs.watch not available */ }
 
         logger.info('[AutoContext] Background indexer started (interval: ' + INDEX_INTERVAL_MS + 'ms)');
     }
@@ -613,7 +613,7 @@ class HeadyAutoContext extends EventEmitter {
 
             let entries;
             try { entries = fs.readdirSync(dir, { withFileTypes: true }); }
-            catch (err) { logger.debug('[AutoContext] cannot read dir: ' + dir); return; }
+            catch (_) { return; }
 
             for (const entry of entries) {
                 if (entry.name.startsWith('.') && entry.name !== '.env.example') continue;
@@ -775,7 +775,7 @@ class HeadyAutoContext extends EventEmitter {
                     }
                 }
             }
-        } catch (err) { logger.debug('[AutoContext] context gather error: ' + err.message); }
+        } catch (_) { }
 
         return sources;
     }
@@ -817,7 +817,7 @@ class HeadyAutoContext extends EventEmitter {
                         }));
                     }
                 }
-            } catch (err) { logger.debug('[AutoContext] context gather error: ' + err.message); }
+            } catch (_) { }
         }
 
         return sources;
@@ -921,8 +921,7 @@ class HeadyAutoContext extends EventEmitter {
             }
 
             return content;
-        } catch (err) {
-            logger.debug('[AutoContext] file read error: ' + err.message);
+        } catch (_) {
             return null;
         }
     }

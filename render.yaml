@@ -25,7 +25,7 @@ services:
       - key: NODE_ENV
         value: "production"
       - key: HEADY_VERSION
-        value: "4.0.0"
+        value: "3.0.0"
       - key: HEADY_API_KEY
         fromSecret: HEADY_API_KEY
       - key: ADMIN_TOKEN

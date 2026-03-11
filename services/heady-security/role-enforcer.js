@@ -9,7 +9,6 @@
  */
 
 'use strict';
-const logger = require('../../shared/logger')(require('path').basename('services/heady-security/role-enforcer.js', '.js'));
 
 const ROLES = {
     ADMIN: 'admin',
@@ -182,24 +181,24 @@ class AccessDeniedError extends Error {
 if (require.main === module) {
     const enforcer = new RoleEnforcer();
 
-    logger.info('═══ Role Isolation Enforcer ═══\n');
+    console.log('═══ Role Isolation Enforcer ═══\n');
     for (const role of Object.values(ROLES)) {
         const perms = enforcer.getPermissions(role);
-        logger.info(`${role}: ${perms.length} permissions`);
+        console.log(`${role}: ${perms.length} permissions`);
     }
 
     // Demo enforce
     try {
         enforcer.enforce({ role: 'viewer', userId: 'test' }, 'system.deploy');
     } catch (e) {
-        logger.info(`\nDenied: ${e.message}`);
+        console.log(`\nDenied: ${e.message}`);
     }
 
     enforcer.enforce({ role: 'admin', userId: 'admin' }, 'system.deploy');
-    logger.info('Allowed: admin → system.deploy');
+    console.log('Allowed: admin → system.deploy');
 
-    logger.info(`\nAudit log: ${enforcer.getAuditLog().length} entries`);
-    logger.info('✅ Role Enforcer operational');
+    console.log(`\nAudit log: ${enforcer.getAuditLog().length} entries`);
+    console.log('✅ Role Enforcer operational');
 }
 
 module.exports = { RoleEnforcer, AccessDeniedError, ROLES, PERMISSIONS };

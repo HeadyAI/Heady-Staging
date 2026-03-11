@@ -70,7 +70,7 @@ async function isClaudeAvailable() {
       _claudeCheckTime = Date.now();
       resolve(false);
     });
-    setTimeout(() => { try { proc.kill(); } catch (err) { /* structured-logger: emit error */ } _claudeAvailable = false; _claudeCheckTime = Date.now(); resolve(false); }, 15000);
+    setTimeout(() => { try { proc.kill(); } catch (_) {} _claudeAvailable = false; _claudeCheckTime = Date.now(); resolve(false); }, 15000);
   });
 }
 

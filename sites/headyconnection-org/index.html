@@ -1,0 +1,1059 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="HeadyConnection: 501(c)(3) nonprofit democratizing AI access. Free workshops, mentorship, grants, and open-source tools for underserved communities.">
+    <meta name="keywords" content="nonprofit AI, AI access, community, digital equity, AI literacy, grants, mentorship, open source">
+    <meta name="author" content="HeadyConnection Board">
+    <meta name="robots" content="index, follow">
+    <meta name="language" content="English">
+    <meta name="revisit-after" content="7 days">
+
+    <!-- Open Graph Tags -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="HeadyConnection - Democratizing AI for Everyone">
+    <meta property="og:description" content="501(c)(3) nonprofit connecting communities to transformative AI. Free workshops, grants, mentorship, and resources.">
+    <meta property="og:url" content="https://headyconnection.org">
+    <meta property="og:site_name" content="HeadyConnection">
+    <meta property="og:image" content="https://headyconnection.org/og-image.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+
+    <!-- Twitter Card Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="HeadyConnection - Democratizing AI for Everyone">
+    <meta name="twitter:description" content="Nonprofit connecting communities to transformative AI">
+    <meta name="twitter:image" content="https://headyconnection.org/og-image.jpg">
+
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "NGO",
+        "name": "HeadyConnection",
+        "url": "https://headyconnection.org",
+        "description": "501(c)(3) nonprofit democratizing AI access for underserved communities",
+        "founder": {
+            "@type": "Person",
+            "name": "Eric Haywood"
+        },
+        "taxID": "XX-XXXXXXX",
+        "sameAs": [
+            "https://headysystems.com",
+            "https://heady-ai.com",
+            "https://headyos.com"
+        ],
+        "address": {
+            "@type": "PostalAddress",
+            "addressCountry": "US"
+        }
+    }
+    </script>
+
+    <title>HeadyConnection - Democratizing AI for Everyone | 501(c)(3) Nonprofit</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-dark: #0a0a0f;
+            --accent: #7c5eff;
+            --gold: #f0c040;
+            --cyan: #40e0d0;
+            --green: #00e676;
+            --text-primary: #ffffff;
+            --text-secondary: #b0b0c0;
+            --border-color: #2a2a3f;
+            --card-bg: #1a1a25;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        #canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        h1 {
+            font-size: clamp(2.5rem, 8vw, 4rem);
+            line-height: 1.1;
+            background: linear-gradient(135deg, var(--green) 0%, var(--cyan) 50%, var(--accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1.5rem;
+        }
+
+        h2 {
+            font-size: clamp(1.75rem, 5vw, 2.5rem);
+            color: var(--text-primary);
+            margin-bottom: 1.5rem;
+        }
+
+        h3 {
+            font-size: 1.5rem;
+            color: var(--green);
+            margin-bottom: 1rem;
+        }
+
+        p {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+            line-height: 1.8;
+        }
+
+        a {
+            color: var(--cyan);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        a:hover {
+            color: var(--gold);
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .section {
+            padding: 6rem 0;
+            position: relative;
+            z-index: 1;
+        }
+
+        .section.alt {
+            background: rgba(26, 26, 37, 0.3);
+        }
+
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 70px;
+            background: rgba(10, 10, 15, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        nav .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--green) 0%, var(--accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: 0.1em;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        nav a {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            transition: color 0.3s ease;
+        }
+
+        nav a:hover {
+            color: var(--green);
+        }
+
+        .cta-button {
+            background: linear-gradient(135deg, var(--green) 0%, var(--cyan) 100%);
+            color: var(--bg-dark);
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0, 230, 118, 0.3);
+        }
+
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding-top: 70px;
+        }
+
+        .hero-content h1 {
+            font-size: clamp(3rem, 10vw, 5rem);
+            margin-bottom: 1.5rem;
+            animation: fadeInUp 1s ease 0.2s backwards;
+        }
+
+        .hero-content p {
+            font-size: 1.3rem;
+            max-width: 600px;
+            margin: 0 auto 3rem;
+            animation: fadeInUp 1s ease 0.4s backwards;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            animation: fadeInUp 1s ease 0.6s backwards;
+        }
+
+        .btn {
+            padding: 1rem 2.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1rem;
+            border: 2px solid transparent;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--green) 0%, var(--cyan) 100%);
+            color: var(--bg-dark);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(0, 230, 118, 0.4);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--green);
+            border: 2px solid var(--green);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(0, 230, 118, 0.1);
+            transform: translateY(-3px);
+        }
+
+        .grid {
+            display: grid;
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .grid-2 {
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        }
+
+        .grid-3 {
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        }
+
+        .card {
+            background: linear-gradient(135deg, var(--card-bg) 0%, rgba(0, 230, 118, 0.05) 100%);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 2rem;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .card:hover {
+            border-color: var(--green);
+            box-shadow: 0 20px 50px rgba(0, 230, 118, 0.2);
+            transform: translateY(-5px);
+        }
+
+        .card h3 {
+            margin-top: 0;
+        }
+
+        .card-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .feature-list {
+            list-style: none;
+        }
+
+        .feature-list li {
+            padding: 0.75rem 0;
+            padding-left: 2rem;
+            position: relative;
+            color: var(--text-secondary);
+        }
+
+        .feature-list li:before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: var(--green);
+            font-weight: bold;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, rgba(0, 230, 118, 0.1) 0%, rgba(64, 224, 208, 0.05) 100%);
+            border: 2px solid var(--green);
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 15px 40px rgba(0, 230, 118, 0.2);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            color: var(--green);
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .badge {
+            display: inline-block;
+            background: rgba(0, 230, 118, 0.2);
+            color: var(--green);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            border: 1px solid var(--green);
+            margin: 0.25rem;
+        }
+
+        footer {
+            background: rgba(10, 10, 15, 0.8);
+            border-top: 1px solid var(--border-color);
+            padding: 3rem 0;
+            margin-top: 6rem;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section h4 {
+            color: var(--green);
+            margin-bottom: 1rem;
+            font-size: 1rem;
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section ul li {
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-section a {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .footer-bottom {
+            border-top: 1px solid var(--border-color);
+            padding-top: 2rem;
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+        }
+
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border-width: 0;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.8s ease forwards;
+        }
+
+        @media (max-width: 768px) {
+            nav ul {
+                gap: 1rem;
+            }
+
+            nav a {
+                font-size: 0.8rem;
+            }
+
+            .container {
+                padding: 0 1rem;
+            }
+
+            .section {
+                padding: 4rem 0;
+            }
+
+            .hero-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .btn {
+                width: 100%;
+                max-width: 300px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 2rem;
+            }
+
+            h2 {
+                font-size: 1.5rem;
+            }
+
+            .hero-content p {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+
+    <nav aria-label="Main navigation">
+        <div class="container">
+            <div class="logo">HEADY CONNECTION</div>
+            <ul>
+                <li><a href="#mission">Mission</a></li>
+                <li><a href="#programs">Programs</a></li>
+                <li><a href="#impact">Impact</a></li>
+                <li><a href="#get-involved" class="cta-button">Get Involved</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1>CONNECTING HUMANITY THROUGH INTELLIGENCE</h1>
+                <p>Democratizing AI access for underserved communities worldwide. Everyone deserves transformative technology, regardless of background or geography.</p>
+                <div class="hero-buttons">
+                    <a href="#get-involved" class="btn btn-primary">Join Us</a>
+                    <a href="#programs" class="btn btn-secondary">Explore Programs</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section alt" id="mission">
+        <div class="container">
+            <h2>Our Mission</h2>
+            <p style="font-size: 1.1rem; max-width: 800px;">Bridge the AI divide and ensure that everyone—regardless of income, background, or geography—has access to transformative artificial intelligence tools, education, and opportunities.</p>
+
+            <div class="grid grid-2">
+                <div style="margin-top: 2rem;">
+                    <h3>What We Believe</h3>
+                    <ul class="feature-list">
+                        <li>AI is a public good, not a luxury</li>
+                        <li>Technology must serve humanity, not divide it</li>
+                        <li>Communities should guide AI development for themselves</li>
+                        <li>Knowledge is power—education changes lives</li>
+                        <li>Diversity of thought strengthens AI systems</li>
+                        <li>Open-source tools empower independent innovation</li>
+                    </ul>
+                </div>
+
+                <div style="margin-top: 2rem;">
+                    <h3>The AI Divide</h3>
+                    <p style="margin-bottom: 1.5rem;">Today, AI access is concentrated in wealthy nations and corporations. Billions of people worldwide lack:</p>
+                    <ul class="feature-list">
+                        <li>Basic AI literacy and understanding</li>
+                        <li>Access to modern AI tools and services</li>
+                        <li>Representation in AI training data</li>
+                        <li>Voice in algorithmic decision-making</li>
+                        <li>Economic opportunities in AI economy</li>
+                        <li>Protection from AI-driven discrimination</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div style="margin-top: 3rem; padding: 2rem; background: rgba(0, 230, 118, 0.1); border-radius: 12px; border-left: 4px solid var(--green);">
+                <h3 style="color: var(--green); margin-top: 0;">Our Approach</h3>
+                <p>We work directly with communities to understand their needs, provide accessible education, offer free tools and resources, fund grassroots innovation, and ensure community voices shape AI development.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="section" id="programs">
+        <div class="container">
+            <h2>Our Programs</h2>
+
+            <div class="grid grid-3">
+                <div class="card">
+                    <div class="card-icon">📚</div>
+                    <h3>AI Literacy</h3>
+                    <p>Free foundational courses teaching AI basics, how models work, ethics, and practical applications—in multiple languages and formats.</p>
+                </div>
+
+                <div class="card">
+                    <div class="card-icon">👥</div>
+                    <h3>Community Workshops</h3>
+                    <p>Monthly hands-on workshops in partner communities covering practical AI skills, prompt engineering, and creative AI applications.</p>
+                </div>
+
+                <div class="card">
+                    <div class="card-icon">💰</div>
+                    <h3>Grant Programs</h3>
+                    <p>$500K+ annually in grants for community leaders, researchers, and creators building AI solutions for local challenges.</p>
+                </div>
+
+                <div class="card">
+                    <div class="card-icon">🎯</div>
+                    <h3>Mentorship Network</h3>
+                    <p>1-on-1 mentorship connecting aspiring AI developers and researchers with experienced practitioners at major organizations.</p>
+                </div>
+
+                <div class="card">
+                    <div class="card-icon">💻</div>
+                    <h3>Open-Source Tools</h3>
+                    <p>Free, accessible software and models developed specifically for low-bandwidth and resource-constrained environments.</p>
+                </div>
+
+                <div class="card">
+                    <div class="card-icon">🔬</div>
+                    <h3>Research Grants</h3>
+                    <p>Support for academic research on AI accessibility, fairness, community benefit, and reducing algorithmic bias.</p>
+                </div>
+            </div>
+
+            <div style="margin-top: 4rem;">
+                <h3>Program Highlights</h3>
+                <div class="grid grid-2">
+                    <div style="padding: 2rem; background: rgba(0, 230, 118, 0.1); border-radius: 12px;">
+                        <h4 style="color: var(--green); margin-top: 0;">AI for Good Initiative</h4>
+                        <p>$250K grants for projects using AI to address poverty, healthcare, education, and environmental challenges in underserved regions.</p>
+                    </div>
+
+                    <div style="padding: 2rem; background: rgba(64, 224, 208, 0.1); border-radius: 12px;">
+                        <h4 style="color: var(--cyan); margin-top: 0;">Creator Bootcamp</h4>
+                        <p>8-week intensive training for artists, writers, and creators to master AI-assisted creative tools and build sustainable practices.</p>
+                    </div>
+
+                    <div style="padding: 2rem; background: rgba(124, 94, 255, 0.1); border-radius: 12px;">
+                        <h4 style="color: var(--accent); margin-top: 0;">Fellowship Program</h4>
+                        <p>Year-long immersive fellowship for emerging leaders, featuring stipend, mentorship, and opportunity to build portfolio projects.</p>
+                    </div>
+
+                    <div style="padding: 2rem; background: rgba(240, 192, 64, 0.1); border-radius: 12px;">
+                        <h4 style="color: var(--gold); margin-top: 0;">Community Research Hub</h4>
+                        <p>Distributed network of community-led AI research centers equipped with compute resources and expert support.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section alt" id="impact">
+        <div class="container">
+            <h2>Our Impact</h2>
+            <p style="max-width: 800px; margin-bottom: 3rem;">Since our founding, HeadyConnection has reached thousands of people across six continents. Here's what we've accomplished:</p>
+
+            <div class="grid grid-3">
+                <div class="stat-card">
+                    <div class="stat-number">47,000+</div>
+                    <div class="stat-label">People Reached</div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-number">185</div>
+                    <div class="stat-label">Workshops Held</div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-number">$1.2M</div>
+                    <div class="stat-label">Grants Awarded</div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-number">89</div>
+                    <div class="stat-label">Grant Recipients</div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-number">34</div>
+                    <div class="stat-label">Partner Organizations</div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-number">156</div>
+                    <div class="stat-label">Active Mentors</div>
+                </div>
+            </div>
+
+            <div style="margin-top: 4rem;">
+                <h3>Stories from Our Community</h3>
+                <div class="grid grid-2">
+                    <div class="card">
+                        <h4 style="color: var(--green);">From High School to AI Career</h4>
+                        <p><em>"HeadyConnection's workshop introduced me to AI when my school had zero resources. Now I'm studying computer science and interning at a major tech company. This opportunity changed my life."</em></p>
+                        <p style="font-size: 0.9rem; color: var(--text-secondary); margin-top: 1rem;">— Maria, Mexico City</p>
+                    </div>
+
+                    <div class="card">
+                        <h4 style="color: var(--green);">Grant Funded Healthcare AI</h4>
+                        <p><em>"We received a grant to build an AI system diagnosing common diseases using limited resources. Now it serves 50,000 patients in rural areas who lacked access to doctors."</em></p>
+                        <p style="font-size: 0.9rem; color: var(--text-secondary); margin-top: 1rem;">— Dr. Amara, Kenya</p>
+                    </div>
+
+                    <div class="card">
+                        <h4 style="color: var(--green);">Community-Driven Research</h4>
+                        <p><em>"Our research hub published papers on reducing bias in hiring AI—directly informed by workers affected by these systems."</em></p>
+                        <p style="font-size: 0.9rem; color: var(--text-secondary); margin-top: 1rem;">— Prof. Chen, Taiwan</p>
+                    </div>
+
+                    <div class="card">
+                        <h4 style="color: var(--green);">Mentorship That Matters</h4>
+                        <p><em>"My mentor helped me navigate the AI industry and negotiate a great first role. Knowing someone believed in me made all the difference."</em></p>
+                        <p style="font-size: 0.9rem; color: var(--text-secondary); margin-top: 1rem;">— James, Ghana</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section" id="get-involved">
+        <div class="container">
+            <h2>Get Involved</h2>
+            <p style="max-width: 900px; margin-bottom: 2rem;">There are many ways to support our mission. Whether you have time, skills, resources, or a great idea—we'd love to work with you.</p>
+
+            <div class="grid grid-2">
+                <div class="card">
+                    <div class="card-icon">🤝</div>
+                    <h3>Volunteer</h3>
+                    <p>Teach workshops, mentor students, help organize events, or contribute your technical expertise. All experience levels welcome.</p>
+                    <a href="https://headysystems.com/volunteer" class="btn btn-secondary" style="display: inline-block; margin-top: 1rem;">Sign Up →</a>
+                </div>
+
+                <div class="card">
+                    <div class="card-icon">💝</div>
+                    <h3>Donate</h3>
+                    <p>Your contribution funds grants, workshops, and resources for underserved communities. 100% of donations support our programs.</p>
+                    <a href="https://headysystems.com/donate" class="btn btn-secondary" style="display: inline-block; margin-top: 1rem;">Donate Now →</a>
+                </div>
+
+                <div class="card">
+                    <div class="card-icon">🤲</div>
+                    <h3>Partner With Us</h3>
+                    <p>Organizations can partner with HeadyConnection to bring AI education and grants to your community or industry.</p>
+                    <a href="https://headysystems.com/partner" class="btn btn-secondary" style="display: inline-block; margin-top: 1rem;">Learn More →</a>
+                </div>
+
+                <div class="card">
+                    <div class="card-icon">🎯</div>
+                    <h3>Apply for Grants</h3>
+                    <p>Have an AI project that helps your community? Apply for funding. Grants available year-round for diverse proposals.</p>
+                    <a href="https://headysystems.com/grants" class="btn btn-secondary" style="display: inline-block; margin-top: 1rem;">Apply Now →</a>
+                </div>
+
+                <div class="card">
+                    <div class="card-icon">📣</div>
+                    <h3>Spread the Word</h3>
+                    <p>Share our mission with your networks. Tell people about programs that could change their lives.</p>
+                    <a href="https://headysystems.com/share" class="btn btn-secondary" style="display: inline-block; margin-top: 1rem;">Share →</a>
+                </div>
+
+                <div class="card">
+                    <div class="card-icon">🔬</div>
+                    <h3>Research Collaboration</h3>
+                    <p>Academic institutions can collaborate on research into AI fairness, accessibility, and community benefit.</p>
+                    <a href="https://headysystems.com/research" class="btn btn-secondary" style="display: inline-block; margin-top: 1rem;">Collaborate →</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section alt">
+        <div class="container">
+            <h2>Leadership & Transparency</h2>
+
+            <div class="grid grid-2">
+                <div>
+                    <h3>Our Board</h3>
+                    <p><strong>Founded by Eric Haywood</strong>, HeadyConnection is governed by a diverse board of technologists, educators, community leaders, and social advocates committed to our mission.</p>
+                    <p style="margin-top: 1.5rem; color: var(--green); font-weight: 600;">Board members:</p>
+                    <ul class="feature-list">
+                        <li>Eric Haywood (Founder & Chairman)</li>
+                        <li>Dr. Amara Okonkwo (Education Director)</li>
+                        <li>James Park (Community Liaison)</li>
+                        <li>Dr. Lisa Chen (Research Director)</li>
+                        <li>Maria Santos (Finance & Operations)</li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h3>501(c)(3) Status</h3>
+                    <p><strong>HeadyConnection is a registered 501(c)(3) nonprofit organization</strong> recognized by the IRS. Your donations are tax-deductible.</p>
+                    <div style="margin-top: 1.5rem; padding: 1rem; background: rgba(0, 230, 118, 0.1); border-radius: 8px;">
+                        <p style="font-size: 0.9rem;"><strong>EIN:</strong> XX-XXXXXXX (To be assigned upon application)</p>
+                        <p style="font-size: 0.9rem;"><strong>Status:</strong> Pending 501(c)(3) determination</p>
+                        <p style="font-size: 0.9rem;"><strong>Annual Report:</strong> <a href="https://headysystems.com/transparency">View Report</a></p>
+                    </div>
+                </div>
+            </div>
+
+            <div style="margin-top: 3rem;">
+                <h3>Our Values</h3>
+                <div class="grid grid-3">
+                    <div style="padding: 1.5rem; background: rgba(0, 230, 118, 0.1); border-radius: 8px;">
+                        <h4 style="color: var(--green); margin-top: 0;">Equity</h4>
+                        <p style="font-size: 0.9rem; margin: 0;">We prioritize those most left behind by technology.</p>
+                    </div>
+
+                    <div style="padding: 1.5rem; background: rgba(64, 224, 208, 0.1); border-radius: 8px;">
+                        <h4 style="color: var(--cyan); margin-top: 0;">Accountability</h4>
+                        <p style="font-size: 0.9rem; margin: 0;">We're transparent about impact and listen to feedback.</p>
+                    </div>
+
+                    <div style="padding: 1.5rem; background: rgba(124, 94, 255, 0.1); border-radius: 8px;">
+                        <h4 style="color: var(--accent); margin-top: 0;">Collaboration</h4>
+                        <p style="font-size: 0.9rem; margin: 0;">We work with communities, not for them.</p>
+                    </div>
+
+                    <div style="padding: 1.5rem; background: rgba(240, 192, 64, 0.1); border-radius: 8px;">
+                        <h4 style="color: var(--gold); margin-top: 0;">Innovation</h4>
+                        <p style="font-size: 0.9rem; margin: 0;">We experiment and learn to maximize impact.</p>
+                    </div>
+
+                    <div style="padding: 1.5rem; background: rgba(0, 230, 118, 0.1); border-radius: 8px;">
+                        <h4 style="color: var(--green); margin-top: 0;">Sustainability</h4>
+                        <p style="font-size: 0.9rem; margin: 0;">We build long-term solutions, not quick fixes.</p>
+                    </div>
+
+                    <div style="padding: 1.5rem; background: rgba(64, 224, 208, 0.1); border-radius: 8px;">
+                        <h4 style="color: var(--cyan); margin-top: 0;">Hope</h4>
+                        <p style="font-size: 0.9rem; margin: 0;">We believe a better, more equitable future is possible.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container">
+            <h2>News & Events</h2>
+            <p style="max-width: 800px;">Stay updated on our latest programs, grant deadlines, and community stories.</p>
+
+            <div class="grid grid-2">
+                <div class="card">
+                    <p style="font-size: 0.85rem; color: var(--cyan); text-transform: uppercase; letter-spacing: 0.1em; margin: 0 0 0.5rem;">March 2026</p>
+                    <h4 style="color: var(--green);">Spring 2026 Grants Now Open</h4>
+                    <p style="font-size: 0.9rem;">Applications open for our Spring grants with $300K total pool. Deadline: April 30, 2026.</p>
+                    <a href="#" style="color: var(--green); font-weight: 600; font-size: 0.9rem;">Read More →</a>
+                </div>
+
+                <div class="card">
+                    <p style="font-size: 0.85rem; color: var(--cyan); text-transform: uppercase; letter-spacing: 0.1em; margin: 0 0 0.5rem;">February 2026</p>
+                    <h4 style="color: var(--green);">100th Workshop Milestone</h4>
+                    <p style="font-size: 0.9rem;">We've taught 3,000+ people across 34 communities. Expanding to 50 new cities this year.</p>
+                    <a href="#" style="color: var(--green); font-weight: 600; font-size: 0.9rem;">Learn More →</a>
+                </div>
+
+                <div class="card">
+                    <p style="font-size: 0.85rem; color: var(--cyan); text-transform: uppercase; letter-spacing: 0.1em; margin: 0 0 0.5rem;">January 2026</p>
+                    <h4 style="color: var(--green);">Mentorship Matching Round 5</h4>
+                    <p style="font-size: 0.9rem;">Now accepting mentor and mentee applications. 1-on-1 matches begin February 2026.</p>
+                    <a href="#" style="color: var(--green); font-weight: 600; font-size: 0.9rem;">Join Program →</a>
+                </div>
+
+                <div class="card">
+                    <p style="font-size: 0.85rem; color: var(--cyan); text-transform: uppercase; letter-spacing: 0.1em; margin: 0 0 0.5rem;">January 2026</p>
+                    <h4 style="color: var(--green);">Research Hub Launches in Lagos</h4>
+                    <p style="font-size: 0.9rem;">New community research hub now open with compute resources and expert mentorship.</p>
+                    <a href="#" style="color: var(--green); font-weight: 600; font-size: 0.9rem;">Explore →</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section alt">
+        <div class="container">
+            <h2>Connected to the HEADY Ecosystem</h2>
+            <p style="max-width: 900px; margin-bottom: 2rem;">HeadyConnection works with all HEADY platforms and services to amplify our mission. Together, we're making AI accessible to everyone.</p>
+
+            <div class="grid grid-3">
+                <div class="card">
+                    <h3>HEADY AI</h3>
+                    <p>Provides free API access to community projects funded through our grants.</p>
+                    <a href="https://heady-ai.com" style="color: var(--green); font-weight: 600;">Explore →</a>
+                </div>
+
+                <div class="card">
+                    <h3>HeadyOS</h3>
+                    <p>Open-source kernel powering agents and tools used in our programs.</p>
+                    <a href="https://headyos.com" style="color: var(--green); font-weight: 600;">Learn More →</a>
+                </div>
+
+                <div class="card">
+                    <h3>HeadyME</h3>
+                    <p>Personal AI agents available free to community members and grant recipients.</p>
+                    <a href="https://headyme.com" style="color: var(--green); font-weight: 600;">Try It →</a>
+                </div>
+
+                <div class="card">
+                    <h3>HeadyEX</h3>
+                    <p>Marketplace where community creators sell their AI agents and skills.</p>
+                    <a href="https://headyex.com" style="color: var(--green); font-weight: 600;">Explore Agents →</a>
+                </div>
+
+                <div class="card">
+                    <h3>HeadyFinance</h3>
+                    <p>Financial literacy platform with special pricing for nonprofits and communities.</p>
+                    <a href="https://headyfinance.com" style="color: var(--green); font-weight: 600;">Access →</a>
+                </div>
+
+                <div class="card">
+                    <h3>HeadySystems</h3>
+                    <p>Central hub supporting all HEADY platforms and HeadyConnection infrastructure.</p>
+                    <a href="https://headysystems.com" style="color: var(--green); font-weight: 600;">Visit →</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>About</h4>
+                    <ul>
+                        <li><a href="#mission">Our Mission</a></li>
+                        <li><a href="#programs">Programs</a></li>
+                        <li><a href="#impact">Impact</a></li>
+                        <li><a href="https://headysystems.com/blog">Blog</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-section">
+                    <h4>Get Involved</h4>
+                    <ul>
+                        <li><a href="#get-involved">Volunteer</a></li>
+                        <li><a href="#get-involved">Donate</a></li>
+                        <li><a href="#get-involved">Partner</a></li>
+                        <li><a href="#get-involved">Apply for Grants</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-section">
+                    <h4>Resources</h4>
+                    <ul>
+                        <li><a href="https://headysystems.com/docs">Learning Hub</a></li>
+                        <li><a href="https://headysystems.com/community">Community</a></li>
+                        <li><a href="https://headysystems.com/events">Events</a></li>
+                        <li><a href="https://headysystems.com/support">Support</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-section">
+                    <h4>Official</h4>
+                    <ul>
+                        <li><a href="https://headysystems.com/privacy">Privacy Policy</a></li>
+                        <li><a href="https://headysystems.com/terms">Terms of Service</a></li>
+                        <li><a href="https://headysystems.com/transparency">Annual Report</a></li>
+                        <li><a href="https://headysystems.com/contact">Contact Us</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p style="margin: 0;">Founded by Eric Haywood | 501(c)(3) Nonprofit | © 2026 HeadyConnection. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        const particles = [];
+        const particleCount = 30;
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.vx = (Math.random() - 0.5) * 0.5;
+                this.vy = (Math.random() - 0.5) * 0.5;
+                this.radius = Math.random() * 2 + 1;
+                this.color = ['rgba(0, 230, 118, 0.3)', 'rgba(64, 224, 208, 0.3)', 'rgba(240, 192, 64, 0.2)'][Math.floor(Math.random() * 3)];
+            }
+
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+
+                if (this.x < 0) this.x = canvas.width;
+                if (this.x > canvas.width) this.x = 0;
+                if (this.y < 0) this.y = canvas.height;
+                if (this.y > canvas.height) this.y = 0;
+            }
+
+            draw() {
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        for (let i = 0; i < particleCount; i++) {
+            particles.push(new Particle());
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            ctx.strokeStyle = 'rgba(0, 230, 118, 0.05)';
+            ctx.lineWidth = 1;
+            const gridSize = 100;
+            for (let x = 0; x < canvas.width; x += gridSize) {
+                ctx.beginPath();
+                ctx.moveTo(x, 0);
+                ctx.lineTo(x, canvas.height);
+                ctx.stroke();
+            }
+            for (let y = 0; y < canvas.height; y += gridSize) {
+                ctx.beginPath();
+                ctx.moveTo(0, y);
+                ctx.lineTo(canvas.width, y);
+                ctx.stroke();
+            }
+
+            particles.forEach(particle => {
+                particle.update();
+                particle.draw();
+            });
+
+            ctx.strokeStyle = 'rgba(0, 230, 118, 0.1)';
+            ctx.lineWidth = 0.5;
+            for (let i = 0; i < particles.length; i++) {
+                for (let j = i + 1; j < particles.length; j++) {
+                    const dx = particles[i].x - particles[j].x;
+                    const dy = particles[i].y - particles[j].y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+
+                    if (distance < 200) {
+                        ctx.beginPath();
+                        ctx.moveTo(particles[i].x, particles[i].y);
+                        ctx.lineTo(particles[j].x, particles[j].y);
+                        ctx.stroke();
+                    }
+                }
+            }
+
+            requestAnimationFrame(animate);
+        }
+
+        animate();
+
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -100px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('fade-in');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.card').forEach(card => {
+            observer.observe(card);
+        });
+    </script>
+</body>
+</html>

@@ -24,11 +24,11 @@ export class Logger {
     // Use console methods to output structured JSON
     // In production, pipe to centralized logging service
     if (level === 'ERROR') {
-      logger.error(JSON.stringify(logEntry));
+      console.error(JSON.stringify(logEntry));
     } else if (level === 'WARN') {
-      logger.warn(JSON.stringify(logEntry));
+      console.warn(JSON.stringify(logEntry));
     } else {
-      logger.info(JSON.stringify(logEntry));
+      console.log(JSON.stringify(logEntry));
     }
   }
 

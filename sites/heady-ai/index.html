@@ -1,0 +1,1056 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="HEADY AI: Research-first artificial intelligence with Sacred Geometry orchestration. Multi-agent coordination, vector space cognition, and advanced ML capabilities.">
+    <meta name="keywords" content="AI research, machine learning, multi-agent systems, Sacred Geometry, AI orchestration, neural networks, LLM">
+    <meta name="author" content="Eric Haywood, HeadySystems Inc.">
+    <meta name="robots" content="index, follow">
+    <meta name="language" content="English">
+    <meta name="revisit-after" content="7 days">
+
+    <!-- Open Graph Tags -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="HEADY AI - Intelligence, Engineered">
+    <meta property="og:description" content="Research-first artificial intelligence platform with Sacred Geometry orchestration, multi-agent coordination, and advanced ML capabilities.">
+    <meta property="og:url" content="https://heady-ai.com">
+    <meta property="og:site_name" content="HEADY AI">
+    <meta property="og:image" content="https://heady-ai.com/og-image.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+
+    <!-- Twitter Card Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="HEADY AI - Intelligence, Engineered">
+    <meta name="twitter:description" content="Research-first artificial intelligence with Sacred Geometry orchestration">
+    <meta name="twitter:image" content="https://heady-ai.com/og-image.jpg">
+
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "HEADY AI",
+        "url": "https://heady-ai.com",
+        "logo": "https://heady-ai.com/logo.png",
+        "description": "Research-first artificial intelligence platform with Sacred Geometry orchestration",
+        "founder": {
+            "@type": "Person",
+            "name": "Eric Haywood"
+        },
+        "foundingDate": "2024",
+        "address": {
+            "@type": "PostalAddress",
+            "addressCountry": "US"
+        },
+        "sameAs": [
+            "https://headysystems.com",
+            "https://headyme.com",
+            "https://headyos.com",
+            "https://headyconnection.org",
+            "https://headyconnection.com",
+            "https://headyex.com",
+            "https://headyfinance.com"
+        ]
+    }
+    </script>
+
+    <title>HEADY AI - Intelligence, Engineered | Research-First AI Platform</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-dark: #0a0a0f;
+            --accent: #7c5eff;
+            --gold: #f0c040;
+            --cyan: #40e0d0;
+            --green: #00e676;
+            --text-primary: #ffffff;
+            --text-secondary: #b0b0c0;
+            --border-color: #2a2a3f;
+            --card-bg: #1a1a25;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Canvas Background */
+        #canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        /* Typography */
+        h1, h2, h3, h4, h5, h6 {
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        h1 {
+            font-size: clamp(2.5rem, 8vw, 4rem);
+            line-height: 1.1;
+            background: linear-gradient(135deg, var(--cyan) 0%, var(--accent) 50%, var(--gold) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1.5rem;
+        }
+
+        h2 {
+            font-size: clamp(1.75rem, 5vw, 2.5rem);
+            color: var(--text-primary);
+            margin-bottom: 1.5rem;
+        }
+
+        h3 {
+            font-size: 1.5rem;
+            color: var(--cyan);
+            margin-bottom: 1rem;
+        }
+
+        p {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+            line-height: 1.8;
+        }
+
+        a {
+            color: var(--cyan);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        a:hover {
+            color: var(--gold);
+        }
+
+        /* Container & Layout */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .section {
+            padding: 6rem 0;
+            position: relative;
+            z-index: 1;
+        }
+
+        .section.alt {
+            background: rgba(26, 26, 37, 0.3);
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 70px;
+            background: rgba(10, 10, 15, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        nav .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--cyan) 0%, var(--accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: 0.1em;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        nav a {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            transition: color 0.3s ease;
+        }
+
+        nav a:hover {
+            color: var(--cyan);
+        }
+
+        .cta-button {
+            background: linear-gradient(135deg, var(--accent) 0%, var(--cyan) 100%);
+            color: var(--bg-dark);
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(124, 94, 255, 0.3);
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding-top: 70px;
+        }
+
+        .hero-content h1 {
+            font-size: clamp(3rem, 10vw, 5rem);
+            margin-bottom: 1.5rem;
+            animation: fadeInUp 1s ease 0.2s backwards;
+        }
+
+        .hero-content p {
+            font-size: 1.3rem;
+            max-width: 600px;
+            margin: 0 auto 3rem;
+            animation: fadeInUp 1s ease 0.4s backwards;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            animation: fadeInUp 1s ease 0.6s backwards;
+        }
+
+        .btn {
+            padding: 1rem 2.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1rem;
+            border: 2px solid transparent;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent) 0%, var(--cyan) 100%);
+            color: var(--bg-dark);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(124, 94, 255, 0.4);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--cyan);
+            border: 2px solid var(--cyan);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(64, 224, 208, 0.1);
+            transform: translateY(-3px);
+        }
+
+        /* Grid Layout */
+        .grid {
+            display: grid;
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .grid-2 {
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        }
+
+        .grid-3 {
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        }
+
+        .grid-6 {
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        }
+
+        /* Card Styles */
+        .card {
+            background: linear-gradient(135deg, var(--card-bg) 0%, rgba(124, 94, 255, 0.05) 100%);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 2rem;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .card:hover {
+            border-color: var(--accent);
+            box-shadow: 0 20px 50px rgba(124, 94, 255, 0.2);
+            transform: translateY(-5px);
+        }
+
+        .card h3 {
+            margin-top: 0;
+        }
+
+        .card-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        /* Features */
+        .feature-list {
+            list-style: none;
+        }
+
+        .feature-list li {
+            padding: 0.75rem 0;
+            padding-left: 2rem;
+            position: relative;
+            color: var(--text-secondary);
+        }
+
+        .feature-list li:before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: var(--cyan);
+            font-weight: bold;
+        }
+
+        /* Badges */
+        .badge {
+            display: inline-block;
+            background: rgba(124, 94, 255, 0.2);
+            color: var(--accent);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            border: 1px solid var(--accent);
+            margin: 0.25rem;
+        }
+
+        .badge.gold {
+            background: rgba(240, 192, 64, 0.1);
+            color: var(--gold);
+            border-color: var(--gold);
+        }
+
+        .badge.green {
+            background: rgba(0, 230, 118, 0.1);
+            color: var(--green);
+            border-color: var(--green);
+        }
+
+        /* Footer */
+        footer {
+            background: rgba(10, 10, 15, 0.8);
+            border-top: 1px solid var(--border-color);
+            padding: 3rem 0;
+            margin-top: 6rem;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section h4 {
+            color: var(--cyan);
+            margin-bottom: 1rem;
+            font-size: 1rem;
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section ul li {
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-section a {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .footer-bottom {
+            border-top: 1px solid var(--border-color);
+            padding-top: 2rem;
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+        }
+
+        /* Accessibility */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border-width: 0;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.8s ease forwards;
+        }
+
+        /* Code Block */
+        .code-block {
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.5rem;
+            overflow-x: auto;
+            margin: 1.5rem 0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            nav ul {
+                gap: 1rem;
+            }
+
+            nav a {
+                font-size: 0.8rem;
+            }
+
+            .container {
+                padding: 0 1rem;
+            }
+
+            .section {
+                padding: 4rem 0;
+            }
+
+            .hero-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .btn {
+                width: 100%;
+                max-width: 300px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 2rem;
+            }
+
+            h2 {
+                font-size: 1.5rem;
+            }
+
+            .hero-content p {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Animated Canvas Background -->
+    <canvas id="canvas"></canvas>
+
+    <!-- Navigation -->
+    <nav aria-label="Main navigation">
+        <div class="container">
+            <div class="logo">HEADY AI</div>
+            <ul>
+                <li><a href="#research">Research</a></li>
+                <li><a href="#capabilities">Capabilities</a></li>
+                <li><a href="#models">Models</a></li>
+                <li><a href="#architecture">Architecture</a></li>
+                <li><a href="#api" class="cta-button">API Access</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1>INTELLIGENCE, ENGINEERED</h1>
+                <p>Research-first artificial intelligence with Sacred Geometry orchestration. Multi-agent coordination, vector space cognition, and advanced reasoning capabilities.</p>
+                <div class="hero-buttons">
+                    <a href="#research" class="btn btn-primary">Explore Research</a>
+                    <a href="#api" class="btn btn-secondary">Access API</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Research Areas -->
+    <section class="section alt" id="research">
+        <div class="container">
+            <h2>Advanced Research Areas</h2>
+            <p style="font-size: 1.1rem; max-width: 800px;">Our research foundation powers breakthrough AI capabilities through cutting-edge techniques in distributed cognition and mathematical optimization.</p>
+
+            <div class="grid grid-3">
+                <div class="card">
+                    <div class="card-icon">🧠</div>
+                    <h3>Multi-Agent Coordination</h3>
+                    <p>Orchestrate distributed AI agents with synchronized decision-making, consensus mechanisms, and emergent intelligence patterns.</p>
+                </div>
+
+                <div class="card">
+                    <div class="card-icon">🌐</div>
+                    <h3>Vector Space Cognition</h3>
+                    <p>Advanced semantic reasoning through high-dimensional vector embeddings with novel distance metrics and attention mechanisms.</p>
+                </div>
+
+                <div class="card">
+                    <div class="card-icon">⚡</div>
+                    <h3>Confidence Signal Logic (CSL)</h3>
+                    <p>Proprietary gate mechanisms that quantify model certainty, enabling adaptive reasoning and reliable decision cascades.</p>
+                </div>
+
+                <div class="card">
+                    <div class="card-icon">✦</div>
+                    <h3>φ-Scaling Mathematics</h3>
+                    <p>Golden ratio-based optimization for resource allocation, parameter scaling, and system harmonics in neural architectures.</p>
+                </div>
+
+                <div class="card">
+                    <div class="card-icon">📝</div>
+                    <h3>Prompt Engineering</h3>
+                    <p>Systematic approaches to instruction design, few-shot prompting, and chain-of-thought optimization across model families.</p>
+                </div>
+
+                <div class="card">
+                    <div class="card-icon">🔬</div>
+                    <h3>Model Evaluation</h3>
+                    <p>Comprehensive benchmarking frameworks, safety assessment protocols, and performance profiling across diverse tasks.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Capabilities -->
+    <section class="section" id="capabilities">
+        <div class="container">
+            <h2>Core Capabilities</h2>
+            <div class="grid grid-2">
+                <div>
+                    <h3>Natural Language Processing</h3>
+                    <ul class="feature-list">
+                        <li>Contextual understanding with 200k+ token windows</li>
+                        <li>Multilingual reasoning and translation</li>
+                        <li>Semantic analysis and entailment</li>
+                        <li>Real-time streaming inference</li>
+                        <li>Domain-specific fine-tuning available</li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h3>Code Generation & Analysis</h3>
+                    <ul class="feature-list">
+                        <li>Multi-language code synthesis</li>
+                        <li>Intelligent code review and debugging</li>
+                        <li>Architecture design assistance</li>
+                        <li>Test generation and validation</li>
+                        <li>Performance optimization suggestions</li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h3>Creative AI Systems</h3>
+                    <ul class="feature-list">
+                        <li>MIDI composition and music generation</li>
+                        <li>Image prompt engineering and analysis</li>
+                        <li>Narrative and content creation</li>
+                        <li>Style transfer and adaptation</li>
+                        <li>Multimodal creative workflows</li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h3>Document Intelligence</h3>
+                    <ul class="feature-list">
+                        <li>PDF parsing and extraction</li>
+                        <li>OCR with layout preservation</li>
+                        <li>Document classification and tagging</li>
+                        <li>Structured data extraction</li>
+                        <li>Document summarization</li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h3>Memory & Knowledge Systems</h3>
+                    <ul class="feature-list">
+                        <li>Persistent context management</li>
+                        <li>Vector database integration</li>
+                        <li>Knowledge graph reasoning</li>
+                        <li>Semantic search at scale</li>
+                        <li>Few-shot learning optimization</li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h3>Real-Time Inference</h3>
+                    <ul class="feature-list">
+                        <li>Sub-second response latency</li>
+                        <li>High-throughput batching</li>
+                        <li>Stream processing</li>
+                        <li>Auto-scaling infrastructure</li>
+                        <li>99.99% uptime SLA</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Supported Models -->
+    <section class="section alt" id="models">
+        <div class="container">
+            <h2>Supported Model Ecosystem</h2>
+            <p style="max-width: 800px;">Access cutting-edge models through unified API with automatic routing, fallback strategies, and performance optimization.</p>
+
+            <div class="grid grid-3">
+                <div class="card">
+                    <h3 style="margin-top: 0;">Proprietary Models</h3>
+                    <div style="margin: 1rem 0;">
+                        <div class="badge gold">GPT-4o</div>
+                        <div class="badge gold">Claude 3.5 Opus</div>
+                        <div class="badge gold">Gemini Pro</div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3 style="margin-top: 0;">Open Source</h3>
+                    <div style="margin: 1rem 0;">
+                        <div class="badge green">Llama 3</div>
+                        <div class="badge green">Mistral</div>
+                        <div class="badge green">Deepseek</div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3 style="margin-top: 0;">Community Models</h3>
+                    <div style="margin: 1rem 0;">
+                        <div class="badge">HuggingFace Hub</div>
+                        <div class="badge">Ollama Integration</div>
+                        <div class="badge">Custom Fine-Tunes</div>
+                    </div>
+                </div>
+            </div>
+
+            <div style="margin-top: 3rem; padding: 2rem; background: rgba(124, 94, 255, 0.1); border-radius: 12px; border-left: 4px solid var(--accent);">
+                <h3 style="margin-top: 0;">Model Selection & Routing</h3>
+                <p>Intelligent model selection based on task type, latency requirements, cost optimization, and context complexity. Automatic fallback ensures reliability.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Architecture -->
+    <section class="section" id="architecture">
+        <div class="container">
+            <h2>System Architecture</h2>
+
+            <div style="margin: 3rem 0;">
+                <div class="code-block">
+                <div style="color: var(--cyan); margin-bottom: 1.5rem; font-weight: 600;">HEADY AI Architecture Stack</div>
+
+┌─────────────────────────────────────────┐
+│     Application Layer                   │
+│  (User Interfaces, APIs, Integrations)  │
+└──────────────────┬──────────────────────┘
+                   │
+┌──────────────────▼──────────────────────┐
+│   Orchestration Layer                   │
+│  (Agent Coordination, Task Scheduling)  │
+└──────────────────┬──────────────────────┘
+                   │
+┌──────────────────▼──────────────────────┐
+│   CSL Gate Layer                        │
+│  (Confidence Signals, Decision Gates)   │
+└──────────────────┬──────────────────────┘
+                   │
+┌──────────────────▼──────────────────────┐
+│   Model Router Layer                    │
+│  (Intelligent Model Selection)          │
+└──────────────────┬──────────────────────┘
+                   │
+┌──────────────────▼──────────────────────┐
+│   Inference Engine                      │
+│  (GPU/TPU Compute, Batching)           │
+└──────────────────┬──────────────────────┘
+                   │
+┌──────────────────▼──────────────────────┐
+│   Memory & Vector Storage               │
+│  (Context, Embeddings, Knowledge)       │
+└─────────────────────────────────────────┘
+                </div>
+            </div>
+
+            <div class="grid grid-2">
+                <div class="card">
+                    <h3>Concurrent-Equals Processing</h3>
+                    <p>Process multiple inference streams in parallel with synchronized results aggregation. Enables sophisticated reasoning patterns like debate, consensus, and multi-path exploration.</p>
+                </div>
+
+                <div class="card">
+                    <h3>φ-Math Derivations</h3>
+                    <p>Golden ratio optimization embedded throughout the stack. From attention head scaling to layer normalization, Sacred Geometry principles guide system harmonics.</p>
+                </div>
+
+                <div class="card">
+                    <h3>Confidence Signal Logic (CSL)</h3>
+                    <p>Quantifiable certainty gates at every decision point. Models express confidence levels enabling adaptive routing, fallback chains, and human-in-the-loop integration.</p>
+                </div>
+
+                <div class="card">
+                    <h3>Dynamic Resource Allocation</h3>
+                    <p>Automatic scaling based on inference complexity, latency requirements, and cost optimization targets. Multi-cloud support ensures optimal resource utilization.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Patents & Publications -->
+    <section class="section alt" id="patents">
+        <div class="container">
+            <h2>51 Provisional Patents</h2>
+            <p style="max-width: 800px;">Our research team has filed 51 provisional patents covering advances in multi-agent systems, Sacred Geometry optimization, confidence signal logic, and distributed cognition frameworks.</p>
+
+            <div style="margin-top: 2rem; padding: 2rem; background: rgba(240, 192, 64, 0.1); border-radius: 12px; border: 1px solid var(--gold);">
+                <p style="color: var(--gold); font-weight: 600; margin: 0;">Patent Portfolio Highlights</p>
+                <ul class="feature-list">
+                    <li><strong>Multi-Agent Consensus Mechanisms:</strong> Distributed decision-making with Byzantine fault tolerance</li>
+                    <li><strong>Sacred Geometry Optimization:</strong> φ-based parameter scaling and resource allocation</li>
+                    <li><strong>Confidence Signal Gates:</strong> Quantifiable certainty metrics for adaptive routing</li>
+                    <li><strong>Vector Space Navigation:</strong> Novel semantic space traversal algorithms</li>
+                    <li><strong>Concurrent-Equals Processing:</strong> Parallel inference with synchronized aggregation</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- API Access -->
+    <section class="section" id="api">
+        <div class="container">
+            <h2>API Access & Integration</h2>
+
+            <div class="grid grid-2">
+                <div>
+                    <h3>Getting Started</h3>
+                    <div class="code-block">
+# Install SDK
+npm install @heady/ai-sdk
+
+# Initialize client
+import { HeadyAI } from '@heady/ai-sdk';
+const heady = new HeadyAI({
+  apiKey: 'your_api_key_here'
+});
+
+# Make inference request
+const response = await heady.inference({
+  model: 'auto',
+  prompt: 'Explain quantum computing',
+  maxTokens: 1000
+});
+                    </div>
+                </div>
+
+                <div>
+                    <h3>API Endpoints</h3>
+                    <ul class="feature-list">
+                        <li><strong>/inference</strong> - Run model inference with auto-routing</li>
+                        <li><strong>/batch</strong> - Process large batches asynchronously</li>
+                        <li><strong>/stream</strong> - Real-time streaming responses</li>
+                        <li><strong>/embeddings</strong> - Vector embeddings generation</li>
+                        <li><strong>/finetune</strong> - Custom model fine-tuning</li>
+                        <li><strong>/health</strong> - System status and metrics</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div style="margin-top: 3rem; text-align: center;">
+                <h3>Pricing Plans</h3>
+                <p style="margin-bottom: 2rem;">Flexible pricing with per-token billing, volume discounts, and enterprise support options.</p>
+                <a href="https://headysystems.com/pricing" class="btn btn-primary">View Pricing</a>
+                <a href="https://headysystems.com/docs" class="btn btn-secondary">Full API Docs</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- HEADY Ecosystem -->
+    <section class="section alt">
+        <div class="container">
+            <h2>The HEADY Ecosystem</h2>
+            <p style="max-width: 900px; margin-bottom: 2rem;">HEADY AI is part of an integrated ecosystem of technologies and platforms, all connected through unified architecture.</p>
+
+            <div class="grid grid-3">
+                <div class="card">
+                    <h3>HeadySystems</h3>
+                    <p>Central hub for all HEADY technologies, resources, and administration.</p>
+                    <a href="https://headysystems.com" style="color: var(--cyan); font-weight: 600;">Visit Site →</a>
+                </div>
+
+                <div class="card">
+                    <h3>HeadyOS</h3>
+                    <p>The latent operating system powering continuous AI reasoning and agent orchestration.</p>
+                    <a href="https://headyos.com" style="color: var(--cyan); font-weight: 600;">Learn More →</a>
+                </div>
+
+                <div class="card">
+                    <h3>HeadyME</h3>
+                    <p>Personal AI agent platform for individual users and creators.</p>
+                    <a href="https://headyme.com" style="color: var(--cyan); font-weight: 600;">Explore →</a>
+                </div>
+
+                <div class="card">
+                    <h3>HeadyConnection</h3>
+                    <p>Nonprofit organization democratizing AI access for underserved communities.</p>
+                    <a href="https://headyconnection.org" style="color: var(--cyan); font-weight: 600;">Join Movement →</a>
+                </div>
+
+                <div class="card">
+                    <h3>HeadyEX</h3>
+                    <p>Marketplace for discovering and deploying AI agents and skills.</p>
+                    <a href="https://headyex.com" style="color: var(--cyan); font-weight: 600;">Browse Agents →</a>
+                </div>
+
+                <div class="card">
+                    <h3>HeadyFinance</h3>
+                    <p>AI-powered financial analysis and portfolio management platform.</p>
+                    <a href="https://headyfinance.com" style="color: var(--cyan); font-weight: 600;">Access Platform →</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>Product</h4>
+                    <ul>
+                        <li><a href="#research">Research</a></li>
+                        <li><a href="#capabilities">Capabilities</a></li>
+                        <li><a href="#api">API Documentation</a></li>
+                        <li><a href="https://headysystems.com/pricing">Pricing</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-section">
+                    <h4>Ecosystem</h4>
+                    <ul>
+                        <li><a href="https://headysystems.com">HeadySystems</a></li>
+                        <li><a href="https://headyos.com">HeadyOS</a></li>
+                        <li><a href="https://headyme.com">HeadyME</a></li>
+                        <li><a href="https://headyex.com">HeadyEX</a></li>
+                        <li><a href="https://headyfinance.com">HeadyFinance</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-section">
+                    <h4>Resources</h4>
+                    <ul>
+                        <li><a href="https://headysystems.com/docs">Documentation</a></li>
+                        <li><a href="https://headysystems.com/blog">Blog</a></li>
+                        <li><a href="https://headysystems.com/community">Community</a></li>
+                        <li><a href="https://headysystems.com/support">Support</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-section">
+                    <h4>Company</h4>
+                    <ul>
+                        <li><a href="https://headysystems.com/about">About</a></li>
+                        <li><a href="https://headysystems.com/privacy">Privacy Policy</a></li>
+                        <li><a href="https://headysystems.com/terms">Terms of Service</a></li>
+                        <li><a href="https://headyconnection.org">HeadyConnection</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p style="margin: 0;">Founded by Eric Haywood | 51 Provisional Patents | © 2026 HeadySystems Inc. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Canvas background animation
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        // Particle animation for background
+        const particles = [];
+        const particleCount = 30;
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.vx = (Math.random() - 0.5) * 0.5;
+                this.vy = (Math.random() - 0.5) * 0.5;
+                this.radius = Math.random() * 2 + 1;
+                this.color = ['rgba(124, 94, 255, 0.3)', 'rgba(64, 224, 208, 0.3)', 'rgba(240, 192, 64, 0.2)'][Math.floor(Math.random() * 3)];
+            }
+
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+
+                if (this.x < 0) this.x = canvas.width;
+                if (this.x > canvas.width) this.x = 0;
+                if (this.y < 0) this.y = canvas.height;
+                if (this.y > canvas.height) this.y = 0;
+            }
+
+            draw() {
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        // Initialize particles
+        for (let i = 0; i < particleCount; i++) {
+            particles.push(new Particle());
+        }
+
+        // Animation loop
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Draw grid
+            ctx.strokeStyle = 'rgba(124, 94, 255, 0.05)';
+            ctx.lineWidth = 1;
+            const gridSize = 100;
+            for (let x = 0; x < canvas.width; x += gridSize) {
+                ctx.beginPath();
+                ctx.moveTo(x, 0);
+                ctx.lineTo(x, canvas.height);
+                ctx.stroke();
+            }
+            for (let y = 0; y < canvas.height; y += gridSize) {
+                ctx.beginPath();
+                ctx.moveTo(0, y);
+                ctx.lineTo(canvas.width, y);
+                ctx.stroke();
+            }
+
+            // Update and draw particles
+            particles.forEach(particle => {
+                particle.update();
+                particle.draw();
+            });
+
+            // Draw connections
+            ctx.strokeStyle = 'rgba(64, 224, 208, 0.1)';
+            ctx.lineWidth = 0.5;
+            for (let i = 0; i < particles.length; i++) {
+                for (let j = i + 1; j < particles.length; j++) {
+                    const dx = particles[i].x - particles[j].x;
+                    const dy = particles[i].y - particles[j].y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+
+                    if (distance < 200) {
+                        ctx.beginPath();
+                        ctx.moveTo(particles[i].x, particles[i].y);
+                        ctx.lineTo(particles[j].x, particles[j].y);
+                        ctx.stroke();
+                    }
+                }
+            }
+
+            requestAnimationFrame(animate);
+        }
+
+        animate();
+
+        // Scroll animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -100px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('fade-in');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.card').forEach(card => {
+            observer.observe(card);
+        });
+    </script>
+</body>
+</html>

@@ -105,7 +105,7 @@ backend_services:
       - postgres://db.headysystems.com:5432
 
   render_mcp_server:
-    description: "Render.com MCP server"
+    description: "Cloud Run MCP server"
     ports:
       http: 3500
     domains:

@@ -20,7 +20,7 @@ const config = {
 
   // PostgreSQL connection
   database: {
-    url: process.env.DATABASE_URL || 'postgresql://heady:heady@heady-pgbouncer:5432/heady_vector',
+    url: process.env.DATABASE_URL || 'postgresql://heady:heady@localhost:5432/heady_vector',
     poolSize: parseInt(process.env.PG_POOL_SIZE, 10) || Math.round(PHI * 10), // ~16
     idleTimeoutMillis: parseInt(process.env.PG_IDLE_TIMEOUT, 10) || PHI_TIMING.CYCLE,
     connectionTimeoutMillis: parseInt(process.env.PG_CONNECT_TIMEOUT, 10) || 5000,

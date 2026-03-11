@@ -15,11 +15,11 @@
 # HEADY_BRAND:END
 # ╔══════════════════════════════════════════════════════════════════════════════╗
 # ║  HEADY SYSTEMS — FUNCTIONAL DOMAIN ARCHITECTURE                                 ║
-# ║  Uses ACTUAL Render domains + local service names (no api.headysystems.com)              ║
+# ║  Uses ACTUAL Cloud Run domains + local service names (no api.headysystems.com)              ║
 # ╚══════════════════════════════════════════════════════════════════════════════╝
 
 # ═══════════════════════════════════════════════════════════════════════════════
-# CLOUD DOMAINS (These actually work on Render)
+# CLOUD DOMAINS (These actually work on Cloud Run)
 # ═══════════════════════════════════════════════════════════════════════════════
 cloud:
   me:
@@ -97,7 +97,7 @@ usage:
        - cache.local:6379 → Redis
        
   cloud_deploy: |
-    The cloud domains above work automatically on Render:
+    The cloud domains above work automatically on Cloud Run:
        - https://app.headysystems.com
        - https://app.headysystems.com
        - https://app.headysystems.com

@@ -1,0 +1,40 @@
+{
+    "version": 3,
+    "updatedAt": "2026-03-03T18:05:49.178Z",
+    "scoring": {
+        "weights": {
+            "skills": 0.2,
+            "workflows": 0.2,
+            "nodes": 0.1,
+            "headyswarmTasks": 0.25,
+            "bees": 0.15,
+            "situations": 0.1
+        },
+        "limits": {
+            "skills": 10,
+            "workflows": 8,
+            "nodes": 5,
+            "headyswarmTasks": 8,
+            "bees": 6,
+            "situations": 6
+        },
+        "minimumScore": 0.25,
+        "maxTemplatesPerSituation": 5
+    },
+    "zones": {
+        "0": "core-operations",
+        "1": "vector-memory",
+        "2": "security",
+        "3": "deployment",
+        "4": "intelligence",
+        "5": "resilience",
+        "6": "data",
+        "7": "finops",
+        "8": "observability",
+        "9": "creative",
+        "10": "networking",
+        "11": "user-experience"
+    },
+    "beePriorityFloor": 0.5,
+    "templateActivationThreshold": 0.3
+}
