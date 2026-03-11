@@ -3,7 +3,7 @@
  * Provides: navigation, FAQ accordion, scroll animations,
  *           theme toggle, AutoContext bridge, content injectors
  */
-(function(global) {
+(function (global) {
   'use strict';
 
   // ============================================================
@@ -305,6 +305,192 @@
   }
 
   // ============================================================
+  // SMOOTH SCROLL FOR ANCHOR LINKS
+  // ============================================================
+  function initSmoothScroll() {
+    document.addEventListener('click', function (e) {
+      const a = e.target.closest('a[href^="#"]');
+      if (!a) return;
+      const id = a.getAttribute('href');
+      if (id === '#') return; // skip dead links
+      const target = document.querySelector(id);
+      if (target) {
+        e.preventDefault();
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        history.pushState(null, '', id);
+      }
+    });
+  }
+
+  // ============================================================
+  // HEADY BUDDY CHAT WIDGET
+  // ============================================================
+  function initBuddyChat() {
+    // Don't inject on auth pages
+    if (location.hostname === 'auth.headysystems.com') return;
+
+    // Inject CSS
+    const style = document.createElement('style');
+    style.textContent = `
+      .buddy-fab{position:fixed;bottom:24px;right:24px;z-index:9999;width:56px;height:56px;border-radius:50%;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 24px rgba(0,0,0,0.35);transition:transform .2s,box-shadow .2s;background:linear-gradient(135deg,var(--color-accent,#00d4aa),#8b5cf6);}
+      .buddy-fab:hover{transform:scale(1.08);box-shadow:0 6px 32px rgba(0,0,0,0.45);}
+      .buddy-fab svg{width:28px;height:28px;fill:#fff;}
+      .buddy-fab .buddy-pulse{position:absolute;inset:-4px;border-radius:50%;border:2px solid var(--color-accent,#00d4aa);animation:buddy-pulse 2s ease-out infinite;pointer-events:none;}
+      @keyframes buddy-pulse{0%{opacity:.8;transform:scale(1);}100%{opacity:0;transform:scale(1.5);}}
+      .buddy-window{position:fixed;bottom:92px;right:24px;z-index:9998;width:380px;max-width:calc(100vw - 48px);height:520px;max-height:calc(100vh - 120px);border-radius:20px;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 12px 48px rgba(0,0,0,0.4);opacity:0;transform:translateY(16px) scale(0.95);pointer-events:none;transition:opacity .25s,transform .25s;background:var(--color-bg,#0b0e14);border:1px solid var(--glass-border,rgba(255,255,255,0.08));}
+      .buddy-window.open{opacity:1;transform:translateY(0) scale(1);pointer-events:auto;}
+      .buddy-header{padding:16px 20px;display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--glass-border,rgba(255,255,255,0.08));background:linear-gradient(135deg,rgba(0,212,170,0.08),rgba(139,92,246,0.08));}
+      .buddy-header-dot{width:10px;height:10px;border-radius:50%;background:#00d4aa;box-shadow:0 0 8px rgba(0,212,170,0.5);}
+      .buddy-header-title{font-weight:600;font-size:15px;color:var(--color-text,#fff);flex:1;}
+      .buddy-header-close{background:none;border:none;cursor:pointer;color:var(--color-text-muted,#888);font-size:20px;line-height:1;padding:4px;}
+      .buddy-header-close:hover{color:var(--color-text,#fff);}
+      .buddy-messages{flex:1;overflow-y:auto;padding:16px 20px;display:flex;flex-direction:column;gap:12px;scroll-behavior:smooth;}
+      .buddy-msg{max-width:85%;padding:10px 14px;border-radius:16px;font-size:14px;line-height:1.5;word-wrap:break-word;animation:buddy-msg-in .3s ease;}
+      .buddy-msg.bot{align-self:flex-start;background:rgba(255,255,255,0.06);border:1px solid var(--glass-border,rgba(255,255,255,0.08));color:var(--color-text,#e0e0e0);border-bottom-left-radius:4px;}
+      .buddy-msg.user{align-self:flex-end;background:linear-gradient(135deg,var(--color-accent,#00d4aa),#8b5cf6);color:#fff;border-bottom-right-radius:4px;}
+      @keyframes buddy-msg-in{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+      .buddy-input-area{padding:12px 16px;border-top:1px solid var(--glass-border,rgba(255,255,255,0.08));display:flex;gap:8px;background:rgba(255,255,255,0.02);}
+      .buddy-input{flex:1;padding:10px 14px;border-radius:12px;border:1px solid var(--glass-border,rgba(255,255,255,0.08));background:rgba(255,255,255,0.04);color:var(--color-text,#fff);font-size:14px;outline:none;font-family:inherit;}
+      .buddy-input::placeholder{color:var(--color-text-faint,#666);}
+      .buddy-input:focus{border-color:var(--color-accent,#00d4aa);}
+      .buddy-send{width:40px;height:40px;border-radius:50%;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;background:var(--color-accent,#00d4aa);transition:background .2s,transform .15s;}
+      .buddy-send:hover{background:#00b891;transform:scale(1.05);}
+      .buddy-send:active{transform:scale(0.95);}
+      .buddy-send svg{width:18px;height:18px;fill:#fff;}
+      .buddy-typing{display:flex;gap:4px;padding:10px 14px;align-self:flex-start;}
+      .buddy-typing span{width:6px;height:6px;border-radius:50%;background:var(--color-text-faint,#666);animation:buddy-dot 1.4s infinite;}
+      .buddy-typing span:nth-child(2){animation-delay:.2s;}
+      .buddy-typing span:nth-child(3){animation-delay:.4s;}
+      @keyframes buddy-dot{0%,80%,100%{transform:scale(0.6);opacity:0.4;}40%{transform:scale(1);opacity:1;}}
+    `;
+    document.head.appendChild(style);
+
+    // Inject HTML
+    const fab = document.createElement('button');
+    fab.className = 'buddy-fab';
+    fab.setAttribute('aria-label', 'Open HeadyBuddy chat');
+    fab.innerHTML = '<span class="buddy-pulse"></span><svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H6l-2 2V4h16v12z"/></svg>';
+    document.body.appendChild(fab);
+
+    const win = document.createElement('div');
+    win.className = 'buddy-window';
+    win.innerHTML = `
+      <div class="buddy-header">
+        <span class="buddy-header-dot"></span>
+        <span class="buddy-header-title">HeadyBuddy</span>
+        <button class="buddy-header-close" aria-label="Close chat">&times;</button>
+      </div>
+      <div class="buddy-messages" id="buddy-messages"></div>
+      <div class="buddy-input-area">
+        <input class="buddy-input" id="buddy-input" type="text" placeholder="Ask Buddy anything…" autocomplete="off">
+        <button class="buddy-send" aria-label="Send message"><svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg></button>
+      </div>
+    `;
+    document.body.appendChild(win);
+
+    const msgs = win.querySelector('#buddy-messages');
+    const input = win.querySelector('#buddy-input');
+    const sendBtn = win.querySelector('.buddy-send');
+    const closeBtn = win.querySelector('.buddy-header-close');
+    let isOpen = false;
+
+    function addMsg(text, role) {
+      const el = document.createElement('div');
+      el.className = 'buddy-msg ' + role;
+      el.textContent = text;
+      msgs.appendChild(el);
+      msgs.scrollTop = msgs.scrollHeight;
+    }
+
+    function showTyping() {
+      const el = document.createElement('div');
+      el.className = 'buddy-typing';
+      el.id = 'buddy-typing';
+      el.innerHTML = '<span></span><span></span><span></span>';
+      msgs.appendChild(el);
+      msgs.scrollTop = msgs.scrollHeight;
+    }
+
+    function hideTyping() {
+      const t = document.getElementById('buddy-typing');
+      if (t) t.remove();
+    }
+
+    const siteName = (global.__HEADY_SITE_META__?.name || document.title || 'Heady').replace(/\s*[—–\-|].*/, '');
+
+    function toggle() {
+      isOpen = !isOpen;
+      win.classList.toggle('open', isOpen);
+      fab.setAttribute('aria-label', isOpen ? 'Close HeadyBuddy chat' : 'Open HeadyBuddy chat');
+      if (isOpen && msgs.children.length === 0) {
+        addMsg('Hey! 👋 I\'m Buddy, your Heady assistant. Ask me anything about ' + siteName + ' or the Heady ecosystem.', 'bot');
+      }
+      if (isOpen) input.focus();
+    }
+
+    async function sendMessage() {
+      const text = input.value.trim();
+      if (!text) return;
+      addMsg(text, 'user');
+      input.value = '';
+      showTyping();
+
+      try {
+        const endpoint = global.__HEADY_AUTH_CONFIG__?.cookieEndpoint?.replace('/session/start', '/buddy/chat')
+          || 'https://auth.headysystems.com/api/buddy/chat';
+        const res = await fetch(endpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+          body: JSON.stringify({
+            message: text,
+            site: global.__HEADY_SITE_META__?.slug || 'unknown',
+            context: HeadyAutoContext?.get() || {}
+          })
+        });
+        hideTyping();
+        if (res.ok) {
+          const data = await res.json();
+          addMsg(data.reply || data.message || 'Got it!', 'bot');
+        } else {
+          addMsg(getBuddyFallback(text), 'bot');
+        }
+      } catch (e) {
+        hideTyping();
+        addMsg(getBuddyFallback(text), 'bot');
+      }
+    }
+
+    function getBuddyFallback(text) {
+      const lower = text.toLowerCase();
+      if (lower.includes('hello') || lower.includes('hi') || lower.includes('hey'))
+        return 'Hello! 😊 How can I help you today?';
+      if (lower.includes('what') && (lower.includes('heady') || lower.includes('platform')))
+        return 'Heady is a sovereign AI orchestration platform with 60+ patents, 9 domains, and 20 AI nodes. Check the features section on this page for a deep dive!';
+      if (lower.includes('help'))
+        return 'I can help with:\n• Navigation across Heady sites\n• Understanding features & architecture\n• Getting started with the platform\n• Finding documentation\nJust ask!';
+      if (lower.includes('price') || lower.includes('cost') || lower.includes('pricing'))
+        return 'Visit headyfinance.com for investment and pricing details, or contact sales through the headysystems.com contact section.';
+      if (lower.includes('doc') || lower.includes('api'))
+        return 'Check out our docs at headyio.com and API reference at headyapi.com. For MCP tools, visit headymcp.com.';
+      if (lower.includes('sign') || lower.includes('login') || lower.includes('account'))
+        return 'You can sign in or create an account at auth.headysystems.com. Sessions carry across all Heady sites!';
+      return 'Great question! The Heady ecosystem is constantly evolving. You can explore more at headysystems.com or check our documentation at headyio.com. Is there something specific I can help with?';
+    }
+
+    fab.addEventListener('click', toggle);
+    closeBtn.addEventListener('click', toggle);
+    sendBtn.addEventListener('click', sendMessage);
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+    });
+    // Close on escape
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && isOpen) toggle();
+    });
+  }
+
+  // ============================================================
   // INIT ALL
   // ============================================================
   function initAll() {
@@ -313,8 +499,10 @@
     initFAQ();
     initScrollAnimations();
     initCounters();
+    initSmoothScroll();
     initAuthRelay();
     initAuthWidget();
+    initBuddyChat();
   }
 
   if (document.readyState === 'loading') {
