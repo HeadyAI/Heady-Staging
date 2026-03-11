@@ -43,9 +43,13 @@ import {
   cslGate,
   VECTOR_DIMENSIONS,
   normalize,
-  dot,
-  magnitude,
-} from '../shared/phi-math.js';
+  placeholderVector,
+} = require('../../shared/phi-math.js');
+
+const VECTOR_DIMENSIONS = VECTOR_CONFIG ? VECTOR_CONFIG.DIMS : 384;
+
+const logger = { info() {}, warn() {}, error() {}, debug() {} };
+try { const pino = require('pino'); Object.assign(logger, pino()); } catch (_) { /* pino optional */ }
 
 // ─── Scoring Constants ────────────────────────────────────────────────────────
 
