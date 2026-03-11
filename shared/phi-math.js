@@ -16,6 +16,8 @@
 
 const PHI = 1.6180339887498948;    // φ = (1 + √5) / 2
 const PSI = 0.6180339887498949;    // ψ = 1/φ = φ - 1
+const PSI_SQ = PSI * PSI;              // ψ² ≈ 0.382
+const PSI_CUBED = PSI * PSI * PSI;     // ψ³ ≈ 0.236
 const PHI_SQ = 2.618033988749895;     // φ² = φ + 1
 const PHI_CUBED = 4.23606797749979;      // φ³ = 2φ + 1
 const SQRT5 = 2.23606797749979;      // √5
@@ -329,6 +331,25 @@ function normalize(v) {
   return mag === 0 ? v : v.map(x => x / mag);
 }
 
+/**
+ * Generate a deterministic pseudo-random unit vector from a string seed.
+ * Uses LCG PRNG (multiplier 1103515245, increment 12345) seeded from
+ * character code sum. Produces the same vector for the same seed every time.
+ * @param {string} seed - Seed string
+ * @param {number} [dims=384] - Vector dimensionality
+ * @returns {number[]} Normalized unit vector
+ */
+function placeholderVector(seed, dims = VECTOR.DIMS) {
+  let s = 0;
+  for (let i = 0; i < seed.length; i++) s += seed.charCodeAt(i);
+  const vec = new Array(dims);
+  for (let i = 0; i < dims; i++) {
+    s = (s * 1103515245 + 12345) & 0x7fffffff;
+    vec[i] = (s / 0x7fffffff - PSI) * PHI;
+  }
+  return normalize(vec);
+}
+
 // ═══════════════════════════════════════════════════════════════════════════════
 // EXPORTS
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -346,8 +367,18 @@ const classifyPressure = getPressureLevel;
 /** Alias for PRESSURE */
 const PRESSURE_LEVELS = PRESSURE;
 
-/** CSL AND gate — min of two continuous values */
-function cslAND(a, b) { return Math.min(a, b); }
+/** CSL AND gate — cosine similarity between two vectors, gated by minimum threshold.
+ *  If given two scalars, falls back to Math.min for backward compatibility.
+ *  @param {number[]|number} a - Vector A or scalar
+ *  @param {number[]|number} b - Vector B or scalar
+ *  @param {number} [minThreshold] - Floor below which result is 0
+ *  @returns {number} Cosine similarity or min of scalars
+ */
+function cslAND(a, b, minThreshold = CSL_THRESHOLDS.MINIMUM) {
+  if (typeof a === 'number' && typeof b === 'number') return Math.min(a, b);
+  const sim = cosineSimilarity(a, b);
+  return sim >= minThreshold ? sim : 0;
+}
 
 /** Phi-weighted fusion score — weighted sum of CSL signals */
 function phiFusionScore(signals) {
@@ -379,7 +410,7 @@ const RESOURCE_ALLOCATION = Object.freeze({
 
 export {
   // Core
-  PHI, PSI, PHI_SQ, PHI_CUBED, SQRT5,
+  PHI, PSI, PSI_SQ, PSI_CUBED, PHI_SQ, PHI_CUBED, SQRT5,
   // Fibonacci
   FIB_CACHE, fib, fibCeil, fibFloor,
   // Timing
@@ -403,7 +434,7 @@ export {
   // CSL functions
   sigmoid, cslGate, cslBlend, adaptiveTemperature,
   // Vector math
-  cosineSimilarity, normalize,
+  cosineSimilarity, normalize, placeholderVector,
   // Aliases & compatibility (core/liquid-nodes)
   phiResourceWeights, classifyPressure, PRESSURE_LEVELS,
   cslAND, phiFusionScore, phiAdaptiveInterval,
@@ -412,7 +443,7 @@ export {
 
 // Default export for CJS-style consumers using `import pm from '...'`
 export default {
-  PHI, PSI, PHI_SQ, PHI_CUBED, SQRT5,
+  PHI, PSI, PSI_SQ, PSI_CUBED, PHI_SQ, PHI_CUBED, SQRT5,
   FIB_CACHE, fib, fibCeil, fibFloor,
   phiPower, phiMs, PHI_TIMING,
   phiThreshold, CSL_THRESHOLDS,
@@ -423,7 +454,7 @@ export default {
   JUDGE, COST_W, EVICTION, VECTOR,
   phiTokenBudgets,
   sigmoid, cslGate, cslBlend, adaptiveTemperature,
-  cosineSimilarity, normalize,
+  cosineSimilarity, normalize, placeholderVector,
   phiResourceWeights, classifyPressure, PRESSURE_LEVELS,
   cslAND, phiFusionScore, phiAdaptiveInterval,
   fibSequence, DEDUP_THRESHOLD, RESOURCE_ALLOCATION,
