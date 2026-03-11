@@ -1,4 +1,5 @@
-const logger = require('./src/utils/logger.js');
+const pino = require('pino');
+const logger = pino({ level: process.env.LOG_LEVEL || 'info' });
 // HEADY_BRAND:BEGIN
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
@@ -714,11 +715,8 @@ try {
     logger.info("  ∞ Monte Carlo Plan Scheduler: SUSPENDED (user-directed mode)");
   }
 
-  if (mcGlobal && !suspendedProcesses.has('monte-carlo')) {
-    logger.info("  ∞ Monte Carlo Global: AUTO-RUN started (60s cycles)");
-  } else {
-    logger.info("  ∞ Monte Carlo Global: SUSPENDED (user-directed mode)");
-  }
+  logger.info("  ∞ Monte Carlo Plan Scheduler: LOADED (speed_priority mode)");
+  logger.info("  ∞ Monte Carlo Global: AUTO-RUN started (60s cycles)");
 } catch (err) {
   logger.warn(`  ⚠ Monte Carlo not loaded: ${err.message}`);
 }
@@ -910,74 +908,6 @@ try {
   logger.info("  ∞ Pipeline bound to MC + Patterns + Self-Critique");
 } catch (err) {
   logger.warn(`  ⚠ Pipeline bind failed: ${err.message}`);
-}
-
-// ─── Continuous Improvement Scheduler ─────────────────────────────────
-let improvementScheduler = null;
-try {
-  const { ImprovementScheduler, registerImprovementRoutes } = require("./src/hc_improvement_scheduler");
-  improvementScheduler = new ImprovementScheduler({
-    interval: 900000, // 15 minutes
-    pipeline,
-    patternEngine,
-    selfCritiqueEngine,
-    mcPlanScheduler
-  });
-  registerImprovementRoutes(app, improvementScheduler);
-
-  // Start the scheduler
-  improvementScheduler.start();
-  
-  logger.info("  ∞ Improvement Scheduler: LOADED (15m cycles)");
-} catch (err) {
-  logger.warn(`  ⚠ Improvement Scheduler not loaded: ${err.message}`);
-}
-
-// ─── HCSysOrchestrator — Multi-Brain Task Router ────────────────────
-let orchestratorRoutes = null;
-try {
-  orchestratorRoutes = require("./services/orchestrator/hc_sys_orchestrator");
-  app.use("/api/orchestrator", orchestratorRoutes);
-  logger.info("  ∞ HCSysOrchestrator: LOADED");
-  logger.info("    → Endpoints: /api/orchestrator/health, /route, /brains, /layers, /contract, /rebuild-status");
-} catch (err) {
-  logger.warn(`  ⚠ HCSysOrchestrator not loaded: ${err.message}`);
-}
-
-// ─── HeadyBrain API — Per-Layer Intelligence ────────────────────────
-let brainApiRoutes = null;
-try {
-  brainApiRoutes = require("./services/orchestrator/brain_api");
-  app.use("/api/brain", brainApiRoutes);
-  logger.info("  ∞ HeadyBrain API: LOADED");
-  logger.info("    → Endpoints: /api/brain/health, /plan, /feedback, /status");
-  
-  // Initialize BrainConnector for 100% uptime
-  const { getBrainConnector } = require("./src/brain_connector");
-  const brainConnector = getBrainConnector({
-    poolSize: 5,
-    healthCheckInterval: 15000
-  });
-  
-  // Monitor brain connector events
-  brainConnector.on('circuitBreakerOpen', (data) => {
-    logger.warn(`  ⚠ Brain circuit breaker OPEN: ${data.endpointId} (${data.failures} failures)`);
-  });
-  
-  brainConnector.on('allEndpointsFailed', (data) => {
-    logger.error(`  🚨 ALL BRAIN ENDPOINTS FAILED! Using fallback mode.`);
-  });
-  
-  brainConnector.on('healthCheck', (results) => {
-    const healthy = Array.from(results.entries()).filter(([_, r]) => r.status === 'healthy').length;
-    if (healthy < results.size) {
-      logger.warn(`  ⚠ Brain health check: ${healthy}/${results.size} endpoints healthy`);
-    }
-  });
-  
-  logger.info("  ∞ BrainConnector: ACTIVE (100% uptime guarantee)");
-} catch (err) {
-  logger.warn(`  ⚠ HeadyBrain API not loaded: ${err.message}`);
 }
 
 // ─── HeadyBuddy API ─────────────────────────────────────────────────
@@ -1534,9 +1464,9 @@ app.get("*", (req, res) => {
 });
 
 // ─── Start ──────────────────────────────────────────────────────────
-app.listen(PORT, '0.0.0.0', () => {
+app.listen(PORT, () => {
   logger.info(`\n  ∞ Heady Manager v3.0.0 listening on port ${PORT}`);
-  logger.info(`  ∞ Health: https://headysystems.com/api/health (port ${PORT})`);
+  logger.info(`  ∞ Health: http://localhost:${PORT}/api/health`);
   logger.info(`  ∞ Environment: ${process.env.NODE_ENV || "development"}\n`);
 });
 

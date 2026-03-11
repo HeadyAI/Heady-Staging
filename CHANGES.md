@@ -1,14 +1,13 @@
 # CHANGES
 
-*   `src/routes/auth-routes.js`: Added `res.cookie` configuration to set `httpOnly` session tokens, updated `extractToken` to support parsing tokens from `req.cookies`.
-*   `heady-manager.js`: Integrated `cookie-parser` middleware. Replaced `helmet` configuration with strict Content Security Policy directives. Replaced `console.log` statements with `logger.info`.
-*   `quick-server.js`: Replaced `console.log` statements with `logger.info`.
-*   `src/utils/logger.js`: Created a central Pino-based structured JSON logger.
-*   `public/auth.html`: Removed `localStorage.setItem` for session tokens.
-*   `public/onboarding.html`: Updated token retrieval and onboarding state to use `document.cookie` (since `httpOnly` tokens are handled by server, auth checks are adjusted) instead of `localStorage`.
-*   `training/heady-task-manager.html`: Changed `localStorage` references to `sessionStorage`.
-*   `oracle_service/src/oracle_server.py`: Replaced TODOs with functional HMAC-SHA256 verification and `httpx` requests.
-*   `oracle_service/requirements.txt`: Added `httpx` dependency.
-*   `training/hello-headystack.js`: Completed missing functions and removed TODO comments.
-*   Codebase-wide: Ran a clean-up script to remove all unresolved `<<<<<<< HEAD` blocks resulting from merge conflicts, keeping the `HEAD` changes.
-*   Created documentation artifacts: `GAPS_FOUND.md`, `IMPROVEMENTS.md`, `CHANGES.md`.
+## Maximum-potential pass
+- Implemented concrete HeadyAutoContext enrichment endpoints: `/context/enrich`, `/context/index-batch`, `/context/remove`, and `/context/query`.
+- Added in-memory vector source indexing with deterministic seed vectors, CSL-style scoring, and source summaries for downstream services.
+- Expanded `heady-auth` with Google and GitHub OAuth launch plus callback routes guarded by signed flow cookies, redirect allowlists, and nonce/state preservation.
+- Removed browser storage dependence from the client AutoContext bridge. Context now stays in memory and syncs across active tabs/windows via `BroadcastChannel` and `postMessage`.
+- Cleaned the site generator so future auth surfaces do not reintroduce browser storage or alert-based OAuth placeholders.
+- Added a root documentation tree for architecture, ADRs, security posture, onboarding, runbooks, and error catalog material.
+- Added validation tests and a local validation script for auth, AutoContext, bundle structure, and storage-policy enforcement.
+
+- **Logging Modernization**: Replaced `console.log` and `console.error` with structured `pino` logger in `heady-manager.js` and `api-gateway.js` to support production-grade observability.
+- **Name Correction**: Fixed lingering erroneous references to "Eric Haywood" and typos like "Eric Haywoodington", unifying all references globally to "Eric Haywood".
