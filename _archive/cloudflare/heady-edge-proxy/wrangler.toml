@@ -1,0 +1,65 @@
+name = "heady-edge-proxy"
+main = "src/heady-edge-proxy.js"
+account_id = "8b1fa38f282c691423c6399247d53323"
+compatibility_date = "2024-02-23"
+compatibility_flags = ["nodejs_compat"]
+no_bundle = true
+
+# ═══ Custom Domain Routes ═══
+# These routes make the worker intercept requests for these domains
+# instead of Cloudflare Pages serving old cached content.
+routes = [
+  { pattern = "headyme.com/*", zone_name = "headyme.com" },
+  { pattern = "www.headyme.com/*", zone_name = "headyme.com" },
+  { pattern = "headysystems.com/*", zone_name = "headysystems.com" },
+  { pattern = "www.headysystems.com/*", zone_name = "headysystems.com" },
+  { pattern = "manager.headysystems.com/*", zone_name = "headysystems.com" },
+  { pattern = "api.headysystems.com/*", zone_name = "headysystems.com" },
+  { pattern = "admin.headysystems.com/*", zone_name = "headysystems.com" },
+  { pattern = "buddy.headysystems.com/*", zone_name = "headysystems.com" },
+  { pattern = "headymcp.com/*", zone_name = "headymcp.com" },
+  { pattern = "www.headymcp.com/*", zone_name = "headymcp.com" },
+  { pattern = "headyio.com/*", zone_name = "headyio.com" },
+  { pattern = "www.headyio.com/*", zone_name = "headyio.com" },
+  { pattern = "headyconnection.org/*", zone_name = "headyconnection.org" },
+  { pattern = "www.headyconnection.org/*", zone_name = "headyconnection.org" },
+  { pattern = "headyconnection.com/*", zone_name = "headyconnection.com" },
+  { pattern = "www.headyconnection.com/*", zone_name = "headyconnection.com" },
+  { pattern = "headybuddy.org/*", zone_name = "headybuddy.org" },
+  { pattern = "www.headybuddy.org/*", zone_name = "headybuddy.org" },
+  { pattern = "headybuddy.org/*", zone_name = "headybuddy.org" },
+  { pattern = "www.headybuddy.org/*", zone_name = "headybuddy.org" },
+  { pattern = "headybot.com/*", zone_name = "headybot.com" },
+  { pattern = "www.headybot.com/*", zone_name = "headybot.com" },
+  { pattern = "api.headyme.com/*", zone_name = "headyme.com" },
+  { pattern = "api.headyio.com/*", zone_name = "headyio.com" },
+  { pattern = "api.headymcp.com/*", zone_name = "headymcp.com" },
+  { pattern = "api.headybuddy.org/*", zone_name = "headybuddy.org" },
+  { pattern = "api.headybuddy.org/*", zone_name = "headybuddy.org" },
+  { pattern = "api.headyconnection.org/*", zone_name = "headyconnection.org" },
+  { pattern = "api.headyconnection.com/*", zone_name = "headyconnection.com" },
+  { pattern = "headyos.com/*", zone_name = "headyos.com" },
+  { pattern = "www.headyos.com/*", zone_name = "headyos.com" },
+  { pattern = "headyapi.com/*", zone_name = "headyapi.com" },
+  { pattern = "www.headyapi.com/*", zone_name = "headyapi.com" },
+]
+
+# ═══ Workers AI Binding — powers edge-ai provider ═══
+[ai]
+binding = "AI"
+
+[env.production]
+vars = { ENVIRONMENT = "production" }
+
+# ═══ Heady Universal Hub — Required Cloudflare Secrets ═══
+# Set via: wrangler secret put <NAME> (encrypted at rest, never in config)
+#
+# HEADY_API_KEYS     — Comma-separated valid API keys for auth
+# GOOGLE_API_KEY     — Gemini API (generativelanguage.googleapis.com)
+# ANTHROPIC_API_KEY  — Claude API (api.anthropic.com)
+# GROQ_API_KEY       — Groq API (api.groq.com)
+# HF_TOKEN           — Hugging Face Inference API (api-inference.huggingface.co)
+# OPENAI_API_KEY     — OpenAI API (api.openai.com)
+# XAI_API_KEY        — xAI / Grok API (api.x.ai)
+# MAGIC_API_KEY      — Magic LTM API (api.magic.dev)
+# NOTION_API_KEY     — Notion sync (api.notion.com) [optional]

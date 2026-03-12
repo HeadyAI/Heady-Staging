@@ -1,0 +1,166 @@
+# Heady™ AI Platform — Continuous Integration
+# Node.js CI: lint, test, build
+
+name: CI
+
+on:
+  push:
+    branches: [main, develop, "feature/**", "fix/**"]
+  pull_request:
+    branches: [main, develop]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  NODE_ENV: test
+  NODE_VERSION: "20"
+
+jobs:
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci --prefer-offline
+
+      - name: Lint check
+        run: npm run lint:check
+
+      - name: Format check
+        run: npm run format:check
+
+  test:
+    name: Test (Node ${{ matrix.node-version }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    needs: lint
+    strategy:
+      matrix:
+        node-version: ["20", "22"]
+      fail-fast: false
+
+    services:
+      postgres:
+        image: pgvector/pgvector:pg16
+        env:
+          POSTGRES_USER: heady
+          POSTGRES_PASSWORD: heady_test
+          POSTGRES_DB: heady_test
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
+      redis:
+        image: redis:7-alpine
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 6379:6379
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci --prefer-offline
+
+      - name: Create test environment
+        run: |
+          cat > .env.test << 'ENVEOF'
+          NODE_ENV=test
+          PORT=3302
+          DATABASE_URL=postgresql://heady:heady_test@localhost:5432/heady_test
+          REDIS_URL=redis://localhost:6379
+          JWT_SECRET=test-jwt-secret-32-chars-minimum-here
+          HEADY_API_KEY=test-api-key
+          ENVEOF
+
+      - name: Run tests
+        run: npm test -- --coverage --forceExit --detectOpenHandles
+        env:
+          NODE_ENV: test
+          DATABASE_URL: postgresql://heady:heady_test@localhost:5432/heady_test
+          REDIS_URL: redis://localhost:6379
+          JWT_SECRET: test-jwt-secret-32-chars-minimum-here
+          HEADY_API_KEY: test-api-key
+
+      - name: Upload coverage
+        uses: codecov/codecov-action@v4
+        if: matrix.node-version == '20'
+        with:
+          files: ./coverage/lcov.info
+          flags: unit
+          fail_ci_if_error: false
+
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    needs: lint
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci --prefer-offline
+
+      - name: Build
+        run: npm run build --if-present
+
+      - name: Verify main entry
+        run: node --check heady-manager.js
+
+      - name: Docker build test
+        run: docker build -t heady-test:ci . --target=production 2>/dev/null || docker build -t heady-test:ci .
+
+  validate-configs:
+    name: Validate Configs
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Validate JSON configs
+        run: |
+          for f in configs/**/*.json configs/*.json; do
+            [ -f "$f" ] && python3 -c "import json,sys; json.load(open('$f'))" && echo "✓ $f" || (echo "✗ $f INVALID" && exit 1)
+          done
+
+      - name: Validate YAML configs
+        run: |
+          pip install pyyaml --quiet
+          for f in configs/**/*.yml configs/*.yml; do
+            [ -f "$f" ] && python3 -c "import yaml,sys; yaml.safe_load(open('$f'))" && echo "✓ $f" || (echo "✗ $f INVALID" && exit 1)
+          done

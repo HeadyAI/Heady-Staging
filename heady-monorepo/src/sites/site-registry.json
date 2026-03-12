@@ -1,0 +1,98 @@
+{
+  "version": "1.0.0",
+  "generated": "2026-01-01T00:00:00.000Z",
+  "domains": [
+    "headyme.com",
+    "headysystems.com",
+    "headyconnection.org",
+    "headymcp.com",
+    "headyos.com",
+    "headyapi.com",
+    "headybuddy.org",
+    "headybot.com",
+    "headyio.com"
+  ],
+  "preconfigured": {
+    "headyme.com": {
+      "name": "HeadyMe",
+      "domain": "headyme.com",
+      "tagline": "Your AI-Powered Personal OS",
+      "description": "Personalized AI assistant and productivity platform",
+      "primaryColor": "#6B5BFF",
+      "repo": "HeadyMe/headyme-core",
+      "port": 3000
+    },
+    "headysystems.com": {
+      "name": "HeadySystems",
+      "domain": "headysystems.com",
+      "tagline": "Enterprise AI Infrastructure",
+      "description": "Enterprise-grade AI orchestration and systems management",
+      "primaryColor": "#00D4FF",
+      "repo": "HeadyMe/headysystems-core",
+      "port": 3001
+    },
+    "headyconnection.org": {
+      "name": "HeadyConnection",
+      "domain": "headyconnection.org",
+      "tagline": "Connect Everything",
+      "description": "API connectivity and integration platform",
+      "primaryColor": "#FF6B35",
+      "repo": "HeadyMe/headyconnection-core",
+      "port": 3002
+    },
+    "headymcp.com": {
+      "name": "HeadyMCP",
+      "domain": "headymcp.com",
+      "tagline": "Model Context Protocol Hub",
+      "description": "MCP server and tool orchestration platform",
+      "primaryColor": "#35FF9F",
+      "repo": "HeadyMe/headymcp-core",
+      "port": 3003
+    },
+    "headyos.com": {
+      "name": "HeadyOS",
+      "domain": "headyos.com",
+      "tagline": "The AI Operating System",
+      "description": "Full-stack AI operating system for next-gen applications",
+      "primaryColor": "#FFD700",
+      "repo": "HeadyMe/headyos-core",
+      "port": 3004
+    },
+    "headyapi.com": {
+      "name": "HeadyAPI",
+      "domain": "headyapi.com",
+      "tagline": "Unified AI API Gateway",
+      "description": "Multi-provider AI API gateway with intelligent routing",
+      "primaryColor": "#FF3B9A",
+      "repo": "HeadyMe/headyapi-core",
+      "port": 3005
+    },
+    "headybuddy.org": {
+      "name": "HeadyBuddy",
+      "domain": "headybuddy.org",
+      "tagline": "Your AI Companion",
+      "description": "Conversational AI companion for daily life",
+      "primaryColor": "#7CFC00",
+      "repo": "HeadyMe/headybuddy-core",
+      "port": 3006
+    },
+    "headybot.com": {
+      "name": "HeadyBot",
+      "domain": "headybot.com",
+      "tagline": "Autonomous AI Agent",
+      "description": "Autonomous agent platform for automated workflows",
+      "primaryColor": "#FF8C00",
+      "repo": "HeadyMe/headybot-core",
+      "port": 3007
+    },
+    "headyio.com": {
+      "name": "HeadyIO",
+      "domain": "headyio.com",
+      "tagline": "AI I/O Layer",
+      "description": "Streaming AI input/output processing platform",
+      "primaryColor": "#00CED1",
+      "repo": "HeadyMe/headyio-core",
+      "port": 3008
+    }
+  }
+}

@@ -1,0 +1,80 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Environment variables (NEVER commit these)
+.env
+.env.local
+.env.production
+.env.*.local
+
+# Build outputs
+dist/
+build/
+.next/
+out/
+coverage/
+.nyc_output/
+
+# Runtime data
+data/
+logs/
+*.log
+pids/
+*.pid
+*.pid.lock
+
+# SSL Certificates (never commit private keys)
+certs/
+*.key
+*.pem
+*.crt
+*.p12
+*.pfx
+
+# Cache
+.cache/
+.temp/
+tmp/
+temp/
+
+# OS files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V4
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# IDE / Editor
+.vscode/settings.json
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Offline packages
+offline-packages/
+
+# Database dumps
+*.sql.gz
+*.dump
+
+# Vector data (can be large)
+data/vector-memory.json
+data/vector-shards/
+data/vector-graph.json
+data/error-audit.jsonl
+data/error-pipeline-ledger.jsonl
+
+# Generated sites
+public/generated/
+
+# PM2 files
+.pm2/
+ecosystem.config.js.backup

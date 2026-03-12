@@ -1,0 +1,263 @@
+{
+  "name": "heady-ecosystem",
+  "version": "3.0.0",
+  "description": "Sacred Geometry Multi-Agent AI Orchestration Network",
+  "organization": "HeadySystems Inc",
+  "architecture": {
+    "core": "v3.0.0",
+    "mcp_gateway": "v3.0.0",
+    "admin_ui": "v3.0.0",
+    "trader_widget": "v3.0.0",
+    "ableton_collaborator": "v1.0.0-beta"
+  },
+  "protocols": {
+    "midi": "Network MIDI 2.0 (UDP)",
+    "orchestration": "HCFullPipeline",
+    "logic": "Ternary (-1, 0, +1)"
+  },
+  "last_audit": "2026-02-27T15:00:00Z",
+  "services": [
+    {
+      "id": "brain",
+      "name": "heady-brain",
+      "role": "inference",
+      "critical": true,
+      "endpoint": "/api/brain/health",
+      "lastScanHealthy": false,
+      "lastScanLatencyMs": null,
+      "lastScannedAt": "2026-03-02T02:03:19.256Z"
+    },
+    {
+      "id": "soul",
+      "name": "heady-soul",
+      "role": "reflection",
+      "critical": true,
+      "endpoint": "/api/soul/health",
+      "lastScanHealthy": false,
+      "lastScanLatencyMs": null,
+      "lastScannedAt": "2026-03-02T02:03:19.256Z"
+    },
+    {
+      "id": "conductor",
+      "name": "heady-conductor",
+      "role": "orchestration",
+      "critical": true,
+      "endpoint": "/api/conductor/health",
+      "lastScanHealthy": false,
+      "lastScanLatencyMs": null,
+      "lastScannedAt": "2026-03-02T02:03:19.256Z"
+    },
+    {
+      "id": "battle",
+      "name": "heady-battle",
+      "role": "competition",
+      "critical": false,
+      "endpoint": "/api/battle/health",
+      "lastScanHealthy": false,
+      "lastScanLatencyMs": null,
+      "lastScannedAt": "2026-03-02T02:03:19.256Z"
+    },
+    {
+      "id": "hcfp",
+      "name": "heady-hcfp",
+      "role": "pipeline",
+      "critical": true,
+      "endpoint": "/api/hcfp/health",
+      "lastScanHealthy": false,
+      "lastScanLatencyMs": null,
+      "lastScannedAt": "2026-03-02T02:03:19.256Z"
+    },
+    {
+      "id": "patterns",
+      "name": "heady-patterns",
+      "role": "resilience",
+      "critical": true,
+      "endpoint": "/api/patterns/health",
+      "lastScanHealthy": false,
+      "lastScanLatencyMs": null,
+      "lastScannedAt": "2026-03-02T02:03:19.256Z"
+    },
+    {
+      "id": "lens",
+      "name": "heady-lens",
+      "role": "differentials",
+      "critical": false,
+      "endpoint": "/api/lens/health",
+      "lastScanHealthy": false,
+      "lastScanLatencyMs": null,
+      "lastScannedAt": "2026-03-02T02:03:19.256Z"
+    },
+    {
+      "id": "vinci",
+      "name": "heady-vinci",
+      "role": "creative",
+      "critical": false,
+      "endpoint": "/api/vinci/health",
+      "lastScanHealthy": false,
+      "lastScanLatencyMs": null,
+      "lastScannedAt": "2026-03-02T02:03:19.256Z"
+    },
+    {
+      "id": "notion",
+      "name": "heady-notion",
+      "role": "knowledge",
+      "critical": false,
+      "endpoint": "/api/notion/health",
+      "lastScanHealthy": false,
+      "lastScanLatencyMs": null,
+      "lastScannedAt": "2026-03-02T02:03:19.256Z"
+    },
+    {
+      "id": "ops",
+      "name": "heady-ops",
+      "role": "operations",
+      "critical": true,
+      "endpoint": "/api/ops/health",
+      "lastScanHealthy": false,
+      "lastScanLatencyMs": null,
+      "lastScannedAt": "2026-03-02T02:03:19.256Z"
+    },
+    {
+      "id": "maintenance",
+      "name": "heady-maintenance",
+      "role": "housekeeping",
+      "critical": true,
+      "endpoint": "/api/maintenance/health",
+      "lastScanHealthy": false,
+      "lastScanLatencyMs": null,
+      "lastScannedAt": "2026-03-02T02:03:19.256Z"
+    },
+    {
+      "id": "registry",
+      "name": "heady-registry",
+      "role": "catalog",
+      "critical": true,
+      "endpoint": "/api/registry",
+      "lastScanHealthy": false,
+      "lastScanLatencyMs": null,
+      "lastScannedAt": "2026-03-02T02:03:19.256Z"
+    },
+    {
+      "id": "auto-success",
+      "name": "heady-auto-success",
+      "role": "background-tasks",
+      "critical": true,
+      "endpoint": "/api/auto-success/health",
+      "lastScanHealthy": false,
+      "lastScanLatencyMs": null,
+      "lastScannedAt": "2026-03-02T02:03:19.256Z"
+    },
+    {
+      "id": "stream",
+      "name": "heady-stream",
+      "role": "real-time",
+      "critical": false,
+      "endpoint": "/api/stream/clients",
+      "lastScanHealthy": false,
+      "lastScanLatencyMs": null,
+      "lastScannedAt": "2026-03-02T02:03:19.256Z"
+    },
+    {
+      "id": "cloud",
+      "name": "heady-cloud",
+      "role": "cloud-connector",
+      "critical": true,
+      "endpoint": "/api/cloud/status",
+      "lastScanHealthy": false,
+      "lastScanLatencyMs": null,
+      "lastScannedAt": "2026-03-02T02:03:19.256Z"
+    },
+    {
+      "id": "memory",
+      "name": "heady-memory",
+      "role": "context-store",
+      "critical": false,
+      "endpoint": "/api/memory/health",
+      "lastScanHealthy": false,
+      "lastScanLatencyMs": null,
+      "lastScannedAt": "2026-03-02T02:03:19.256Z"
+    },
+    {
+      "id": "config",
+      "name": "heady-config",
+      "role": "configuration",
+      "critical": false,
+      "endpoint": "/api/config/health",
+      "lastScanHealthy": false,
+      "lastScanLatencyMs": null,
+      "lastScannedAt": "2026-03-02T02:03:19.256Z"
+    },
+    {
+      "id": "system",
+      "name": "heady-system",
+      "role": "system-info",
+      "critical": false,
+      "endpoint": "/api/system/health",
+      "lastScanHealthy": false,
+      "lastScanLatencyMs": null,
+      "lastScannedAt": "2026-03-02T02:03:19.256Z"
+    },
+    {
+      "id": "nodes",
+      "name": "heady-nodes",
+      "role": "ai-node-registry",
+      "critical": false,
+      "endpoint": "/api/nodes/health",
+      "lastScanHealthy": false,
+      "lastScanLatencyMs": null,
+      "lastScannedAt": "2026-03-02T02:03:19.256Z"
+    }
+  ],
+  "cloudProviders": {},
+  "patternsSummary": {
+    "circuitBreakers": 0,
+    "pools": 0,
+    "caches": 0
+  },
+  "bestPracticeScores": {
+    "resilience": {
+      "name": "Circuit Breaker Coverage",
+      "score": 0,
+      "optimal": false,
+      "recommendation": "Add circuit breakers for: brain, soul, conductor, hcfp, patterns, ops, maintenance, registry, auto-success, cloud"
+    },
+    "caching": {
+      "name": "Hot/Cold Cache Utilization",
+      "score": 0,
+      "optimal": false,
+      "recommendation": "Consider adding caches for: conductor-polls, registry-lookups, pattern-evaluations"
+    },
+    "pooling": {
+      "name": "Connection Pool Optimization",
+      "score": 0,
+      "optimal": false,
+      "recommendation": "Add pools for: cloud-requests, file-operations"
+    },
+    "monitoring": {
+      "name": "Service Health Monitoring",
+      "score": 0,
+      "optimal": false,
+      "recommendation": "19 services are unhealthy — investigate immediately"
+    },
+    "redundancy": {
+      "name": "Failover & Graceful Degradation",
+      "score": 0.5,
+      "optimal": false,
+      "recommendation": "Enable missing failover capabilities"
+    },
+    "cloudCoverage": {
+      "name": "External Cloud Integration",
+      "score": 0,
+      "optimal": false,
+      "recommendation": "All external cloud providers active"
+    },
+    "autoSuccess": {
+      "name": "Background Task Engine Coverage",
+      "score": 0,
+      "optimal": false,
+      "recommendation": "Start the Auto-Success engine for continuous background optimization"
+    }
+  },
+  "overallSystemScore": 0.07,
+  "lastDeepScan": "2026-03-02T02:03:19.256Z"
+}

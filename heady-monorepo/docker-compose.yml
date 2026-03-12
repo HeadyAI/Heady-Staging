@@ -1,0 +1,241 @@
+# ╔══════════════════════════════════════════════════════════════════════╗
+# ║  Heady™ AI Platform — Docker Compose Stack                          ║
+# ║  Full stack: heady-core, postgres+pgvector, redis, nginx            ║
+# ║  © 2026 Heady™Systems Inc.                                           ║
+# ╚══════════════════════════════════════════════════════════════════════╝
+
+version: '3.9'
+
+networks:
+  heady-net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/24
+
+volumes:
+  postgres-data:
+    driver: local
+  redis-data:
+    driver: local
+  heady-data:
+    driver: local
+  nginx-logs:
+    driver: local
+
+services:
+
+  # ─── Heady™ Core Application ─────────────────────────────────────────────
+  heady-core:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: runner
+    container_name: heady-core
+    image: heady-systems:3.1.0
+    restart: unless-stopped
+    ports:
+      - "${PORT:-3301}:3301"
+    environment:
+      NODE_ENV: ${NODE_ENV:-development}
+      PORT: 3301
+      DATABASE_URL: ${DATABASE_URL:-postgresql://heady:heady@postgres:5432/headydb}
+      REDIS_URL: ${REDIS_URL:-redis://redis:6379}
+      UPSTASH_REDIS_REST_URL: ${UPSTASH_REDIS_REST_URL:-}
+      UPSTASH_REDIS_REST_TOKEN: ${UPSTASH_REDIS_REST_TOKEN:-}
+      HEADY_API_KEY: ${HEADY_API_KEY:-dev-api-key}
+      ADMIN_TOKEN: ${ADMIN_TOKEN:-dev-admin-token}
+      JWT_SECRET: ${JWT_SECRET:-dev-jwt-secret-min-32-chars-here}
+      LOG_LEVEL: ${LOG_LEVEL:-info}
+      # AI Providers
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      GOOGLE_API_KEY: ${GOOGLE_API_KEY:-}
+      GEMINI_API_KEY: ${GEMINI_API_KEY:-}
+      GROQ_API_KEY: ${GROQ_API_KEY:-}
+      PERPLEXITY_API_KEY: ${PERPLEXITY_API_KEY:-}
+      HF_TOKEN: ${HF_TOKEN:-}
+      # External services
+      GITHUB_TOKEN: ${GITHUB_TOKEN:-}
+      CLOUDFLARE_API_TOKEN: ${CLOUDFLARE_API_TOKEN:-}
+      STRIPE_SECRET_KEY: ${STRIPE_SECRET_KEY:-}
+      SENTRY_DSN: ${SENTRY_DSN:-}
+    env_file:
+      - .env.local
+    volumes:
+      - heady-data:/app/data
+      - ./logs:/app/logs
+      - ./configs:/app/configs:ro
+    networks:
+      - heady-net
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-sf", "http://localhost:3301/healthz"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+          cpus: '2.0'
+        reservations:
+          memory: 512M
+          cpus: '0.5'
+    logging:
+      driver: json-file
+      options:
+        max-size: "50m"
+        max-file: "5"
+
+  # ─── PostgreSQL + pgvector ───────────────────────────────────────────────
+  postgres:
+    image: pgvector/pgvector:pg16
+    container_name: heady-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: headydb
+      POSTGRES_USER: heady
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-heady-dev-password}
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./db/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
+    ports:
+      - "5432:5432"
+    networks:
+      - heady-net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U heady -d headydb"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+          cpus: '1.0'
+    logging:
+      driver: json-file
+      options:
+        max-size: "20m"
+        max-file: "3"
+
+  # ─── Redis ───────────────────────────────────────────────────────────────
+  redis:
+    image: redis:7-alpine
+    container_name: heady-redis
+    restart: unless-stopped
+    command: >
+      redis-server
+      --maxmemory 256mb
+      --maxmemory-policy allkeys-lru
+      --save 60 1000
+      --save 300 100
+      --save 900 1
+      --loglevel notice
+      --tcp-keepalive 300
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    networks:
+      - heady-net
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+          cpus: '0.5'
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # ─── Nginx Reverse Proxy ─────────────────────────────────────────────────
+  nginx:
+    image: nginx:alpine
+    container_name: heady-nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/sites:/etc/nginx/conf.d:ro
+      - ./certs:/etc/ssl/certs/heady:ro
+      - nginx-logs:/var/log/nginx
+    networks:
+      - heady-net
+    depends_on:
+      heady-core:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "nginx", "-t"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    logging:
+      driver: json-file
+      options:
+        max-size: "20m"
+        max-file: "5"
+    profiles:
+      - production
+
+  # ─── pgAdmin (Development Only) ──────────────────────────────────────────
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: heady-pgadmin
+    restart: unless-stopped
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${ADMIN_EMAIL:-eric@headyconnection.org}
+      PGADMIN_DEFAULT_PASSWORD: ${ADMIN_TOKEN:-admin}
+      PGADMIN_LISTEN_PORT: 5050
+    ports:
+      - "5050:5050"
+    networks:
+      - heady-net
+    depends_on:
+      - postgres
+    profiles:
+      - development
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "2"
+
+  # ─── Redis Commander (Development Only) ──────────────────────────────────
+  redis-commander:
+    image: rediscommander/redis-commander:latest
+    container_name: heady-redis-commander
+    restart: unless-stopped
+    environment:
+      REDIS_HOSTS: local:redis:6379
+      HTTP_USER: admin
+      HTTP_PASSWORD: ${ADMIN_TOKEN:-admin}
+    ports:
+      - "8081:8081"
+    networks:
+      - heady-net
+    depends_on:
+      - redis
+    profiles:
+      - development
+    logging:
+      driver: json-file
+      options:
+        max-size: "5m"
+        max-file: "2"

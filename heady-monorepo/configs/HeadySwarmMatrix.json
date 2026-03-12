@@ -1,0 +1,60 @@
+{
+  "_comment": "Heady Swarm Matrix — 197 workers across 24 domains, Sacred Geometry allocation",
+  "version": "3.1.0",
+  "phi": 1.6180339887,
+  "fibonacci": [1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89],
+  "resourcePools": {
+    "hot": { "percentage": 34, "description": "Active execution, real-time tasks" },
+    "warm": { "percentage": 21, "description": "Ready standby, cached contexts" },
+    "cold": { "percentage": 13, "description": "Dormant, low-frequency tasks" },
+    "reserve": { "percentage": 8, "description": "Emergency failover capacity" },
+    "governance": { "percentage": 5, "description": "Policy enforcement, audit" }
+  },
+  "domains": {
+    "health": { "beeFile": "health-bee.js", "priority": 0.95, "workers": 8, "pool": "hot" },
+    "security": { "beeFile": "security-bee.js", "priority": 0.99, "workers": 12, "pool": "hot" },
+    "governance": { "beeFile": "governance-bee.js", "priority": 0.97, "workers": 6, "pool": "governance" },
+    "credential": { "beeFile": "credential-bee.js", "priority": 0.98, "workers": 8, "pool": "hot" },
+    "deployment": { "beeFile": "deployment-bee.js", "priority": 0.90, "workers": 10, "pool": "warm" },
+    "lifecycle": { "beeFile": "lifecycle-bee.js", "priority": 0.88, "workers": 8, "pool": "warm" },
+    "documentation": { "beeFile": "documentation-bee.js", "priority": 0.70, "workers": 6, "pool": "cold" },
+    "brain": { "beeFile": "brain-bee.js", "priority": 0.95, "workers": 12, "pool": "hot" },
+    "memory": { "beeFile": "memory-bee.js", "priority": 0.92, "workers": 10, "pool": "hot" },
+    "intelligence": { "beeFile": "intelligence-bee.js", "priority": 0.93, "workers": 12, "pool": "hot" },
+    "orchestration": { "beeFile": "orchestration-bee.js", "priority": 0.91, "workers": 10, "pool": "hot" },
+    "ops": { "beeFile": "ops-bee.js", "priority": 0.85, "workers": 8, "pool": "warm" },
+    "resilience": { "beeFile": "resilience-bee.js", "priority": 0.94, "workers": 8, "pool": "hot" },
+    "telemetry": { "beeFile": "telemetry-bee.js", "priority": 0.80, "workers": 6, "pool": "warm" },
+    "creative": { "beeFile": "creative-bee.js", "priority": 0.75, "workers": 6, "pool": "warm" },
+    "agents": { "beeFile": "agents-bee.js", "priority": 0.88, "workers": 10, "pool": "warm" },
+    "pipeline": { "beeFile": "pipeline-bee.js", "priority": 0.90, "workers": 10, "pool": "hot" },
+    "providers": { "beeFile": "providers-bee.js", "priority": 0.85, "workers": 8, "pool": "warm" },
+    "vector": { "beeFile": "vector-ops-bee.js", "priority": 0.87, "workers": 8, "pool": "warm" },
+    "services": { "beeFile": "services-bee.js", "priority": 0.82, "workers": 8, "pool": "warm" },
+    "routes": { "beeFile": "routes-bee.js", "priority": 0.78, "workers": 6, "pool": "cold" },
+    "trading": { "beeFile": "trading-bee.js", "priority": 0.72, "workers": 6, "pool": "cold" },
+    "valuation": { "beeFile": "valuation-analyzer-bee.js", "priority": 0.70, "workers": 4, "pool": "cold" },
+    "audio": { "beeFile": "audio-overview-generator-bee.js", "priority": 0.65, "workers": 4, "pool": "cold" }
+  },
+  "circuitBreaker": {
+    "failureThreshold": 5,
+    "recoveryTimeMs": 30000,
+    "halfOpenRetries": 3
+  },
+  "autoScaling": {
+    "enabled": true,
+    "minWorkers": 2,
+    "maxWorkers": 34,
+    "scaleUpThreshold": 0.75,
+    "scaleDownThreshold": 0.25
+  },
+  "monitoring": {
+    "metricsIntervalMs": 5000,
+    "healthCheckIntervalMs": 30000,
+    "alertThresholds": {
+      "errorRate": 0.05,
+      "p99LatencyMs": 2000,
+      "memoryUsagePct": 80
+    }
+  }
+}

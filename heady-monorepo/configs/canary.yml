@@ -1,0 +1,51 @@
+# Canary Deployment Configuration
+# Progressive rollout strategy for Heady™ AI Platform
+
+version: "1.0"
+service: "heady-systems"
+
+strategy:
+  type: "canary"
+  initialTrafficPct: 5
+  increments: [5, 10, 25, 50, 100]
+  incrementIntervalMinutes: 15
+  autoPromote: true
+  autoRollback: true
+
+healthChecks:
+  endpoints:
+    - path: "/health/live"
+      method: "GET"
+      expectedStatus: 200
+      timeoutMs: 5000
+    - path: "/health/ready"
+      method: "GET"
+      expectedStatus: 200
+      timeoutMs: 5000
+  intervalSeconds: 30
+  consecutiveFailuresBeforeRollback: 3
+
+metrics:
+  errorRateThreshold: 0.02
+  p99LatencyThresholdMs: 2000
+  p50LatencyThresholdMs: 500
+  evaluationWindowMinutes: 5
+
+notifications:
+  slack:
+    enabled: "${SLACK_WEBHOOK_ENABLED:-false}"
+    webhookUrl: "${SLACK_WEBHOOK_URL}"
+    channel: "#deployments"
+  email:
+    enabled: false
+
+cloudRun:
+  service: "heady-manager"
+  region: "${CLOUD_RUN_REGION:-us-central1}"
+  project: "${GOOGLE_CLOUD_PROJECT}"
+  minInstances: 1
+  maxInstances: 10
+  concurrency: 100
+  cpu: "2"
+  memory: "2Gi"
+  timeoutSeconds: 300

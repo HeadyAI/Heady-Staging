@@ -1,0 +1,39 @@
+{
+  "env": {
+    "node": true,
+    "es2022": true
+  },
+  "extends": [
+    "eslint:recommended"
+  ],
+  "parserOptions": {
+    "ecmaVersion": 2022,
+    "sourceType": "commonjs"
+  },
+  "rules": {
+    "no-console": "off",
+    "no-unused-vars": ["warn", { "argsIgnorePattern": "^_", "varsIgnorePattern": "^_" }],
+    "no-constant-condition": ["error", { "checkLoops": false }],
+    "no-empty": ["warn", { "allowEmptyCatch": true }],
+    "prefer-const": "warn",
+    "no-var": "error",
+    "eqeqeq": ["error", "always", { "null": "ignore" }],
+    "curly": ["error", "multi-line"],
+    "no-throw-literal": "error",
+    "prefer-promise-reject-errors": "warn",
+    "no-return-await": "warn",
+    "require-atomic-updates": "warn",
+    "no-await-in-loop": "off",
+    "no-process-exit": "off"
+  },
+  "ignorePatterns": [
+    "node_modules/",
+    "dist/",
+    "build/",
+    "coverage/",
+    "offline-packages/",
+    "*.min.js",
+    "scripts/",
+    "src/vsa/*.py"
+  ]
+}

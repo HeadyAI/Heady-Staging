@@ -1,0 +1,26 @@
+# ═══ Heady Edge Gateway — Cloudflare Worker Config ═══
+name = "heady-edge-gateway"
+main = "worker.js"
+compatibility_date = "2024-12-01"
+compatibility_flags = ["nodejs_compat"]
+workers_dev = true
+
+# Edge AI binding — native Cloudflare Workers AI
+[ai]
+binding = "AI"
+
+# KV for response caching + audit logs (uncomment after creating namespace)
+# [[kv_namespaces]]
+# binding = "HEADY_CACHE"
+# id = ""  # Set after `wrangler kv:namespace create HEADY_CACHE`
+
+# Secrets (set via `wrangler secret put`)
+# GOOGLE_API_KEY, CLAUDE_API_KEY, OPENAI_API_KEY, HF_TOKEN
+
+[vars]
+ENVIRONMENT = "production"
+
+# Routes
+[[routes]]
+pattern = "edge.headyme.com/*"
+zone_name = "headyme.com"

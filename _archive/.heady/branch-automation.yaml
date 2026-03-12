@@ -1,0 +1,6 @@
+sync:
+  dev_to_staging: true
+  staging_to_main: true
+rules:
+  require_HeadySims: true
+  require_HeadyBattle: true

@@ -1,0 +1,138 @@
+{
+  "_comment": "Heady Service Registry — Canonical list of all services, nodes, and endpoints",
+  "version": "3.1.0",
+  "updated": "2026-03-07",
+  "baseUrl": "https://manager.headysystems.com",
+  "port": 3301,
+  "nodes": {
+    "CONDUCTOR": {
+      "name": "Heady Conductor",
+      "path": "/api/conductor",
+      "service": "heady-conductor",
+      "status": "active",
+      "priority": 1.0,
+      "description": "Federated liquid routing — orchestrates all AI traffic across providers"
+    },
+    "BRAIN": {
+      "name": "Heady Brain",
+      "path": "/api/brain",
+      "service": "brain",
+      "status": "active",
+      "priority": 0.97,
+      "description": "Multi-model AI reasoning hub — Claude, GPT-4, Gemini, Groq"
+    },
+    "SOUL": {
+      "name": "Heady Soul",
+      "path": "/api/soul",
+      "service": "soul",
+      "status": "active",
+      "priority": 0.93,
+      "description": "Identity, emotion, and memory persistence layer"
+    },
+    "VINCI": {
+      "name": "Heady Vinci",
+      "path": "/api/vinci",
+      "service": "vinci",
+      "status": "active",
+      "priority": 0.88,
+      "description": "Creative synthesis — code generation, visual design, content"
+    },
+    "ALOHA": {
+      "name": "Heady Aloha",
+      "path": "/api/aloha",
+      "service": "aloha",
+      "status": "active",
+      "priority": 0.85,
+      "description": "Multi-site serving engine — headyme.com, headysystems.com, etc."
+    },
+    "GUARDIAN": {
+      "name": "Heady Guardian",
+      "path": "/api/security",
+      "service": "security",
+      "status": "active",
+      "priority": 0.99,
+      "description": "Post-quantum security, PQC, RBAC, audit log"
+    },
+    "NEXUS": {
+      "name": "Heady Nexus",
+      "path": "/api/memory",
+      "service": "memory",
+      "status": "active",
+      "priority": 0.92,
+      "description": "3D vector memory — 384D embeddings, pgvector, RAM cache"
+    },
+    "ORACLE": {
+      "name": "Heady Oracle",
+      "path": "/api/intelligence",
+      "service": "intelligence",
+      "status": "active",
+      "priority": 0.91,
+      "description": "Deep research, Monte Carlo reasoning, pattern recognition"
+    },
+    "BUDDY": {
+      "name": "Heady Buddy",
+      "path": "/api/buddy",
+      "service": "buddy",
+      "status": "active",
+      "priority": 0.89,
+      "description": "Personal AI companion — autonomous task execution, device sync"
+    },
+    "SWARM": {
+      "name": "Heady Swarm",
+      "path": "/api/swarm",
+      "service": "swarm",
+      "status": "active",
+      "priority": 0.90,
+      "description": "Bee colony orchestration — 197 workers, 24 domains"
+    },
+    "PIPELINE": {
+      "name": "Heady Pipeline",
+      "path": "/api/pipeline",
+      "service": "hcfp",
+      "status": "active",
+      "priority": 0.88,
+      "description": "12-stage HCFullPipeline: INTAKE→JUDGE→EXECUTE→RECEIPT"
+    },
+    "HEADYCOIN": {
+      "name": "HeadyCoin",
+      "path": "/api/headycoin",
+      "service": "headycoin",
+      "status": "active",
+      "priority": 0.75,
+      "description": "HC token economy — usage metering, rewards, billing"
+    }
+  },
+  "services": {
+    "llm-router": { "file": "src/services/llm-router.js", "enabled": true },
+    "model-router": { "file": "src/services/model-router.js", "enabled": true },
+    "buddy-system": { "file": "src/services/buddy-system.js", "enabled": true },
+    "battle-arena": { "file": "src/services/battle-arena.js", "enabled": true },
+    "budget-service": { "file": "src/services/budget-service.js", "enabled": true },
+    "health-registry": { "file": "src/services/health-registry.js", "enabled": true },
+    "secure-key-vault": { "file": "src/services/secure-key-vault.js", "enabled": true },
+    "liquid-unified-runtime": { "file": "src/services/liquid-unified-runtime.js", "enabled": true },
+    "governance": { "file": "src/services/governance.js", "enabled": true },
+    "neon-db": { "file": "src/services/neon-db.js", "enabled": true },
+    "upstash-redis": { "file": "src/services/upstash-redis.js", "enabled": true },
+    "opentelemetry-tracing": { "file": "src/services/opentelemetry-tracing.js", "enabled": true },
+    "structured-logger": { "file": "src/services/structured-logger.js", "enabled": true },
+    "template-registry-service": { "file": "src/services/template-registry-service.js", "enabled": true }
+  },
+  "healthEndpoints": {
+    "live": "/health/live",
+    "ready": "/health/ready",
+    "metrics": "/metrics",
+    "pulse": "/api/pulse"
+  },
+  "domains": [
+    "headyme.com",
+    "headysystems.com",
+    "headyconnection.org",
+    "headymcp.com",
+    "headyio.com",
+    "headybuddy.org",
+    "headybot.com",
+    "headyos.com",
+    "headyapi.com"
+  ]
+}

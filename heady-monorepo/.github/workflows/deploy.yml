@@ -1,0 +1,251 @@
+# Heady™ AI Platform — Deployment Pipeline
+# Deploys to Google Cloud Run (backend) + Cloudflare Pages (edge/sites)
+
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+    tags: ["v*.*.*"]
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: "Deployment environment"
+        required: true
+        default: "production"
+        type: choice
+        options: [production, staging]
+      canary:
+        description: "Enable canary deployment (5% traffic initially)"
+        required: false
+        default: "true"
+        type: boolean
+
+concurrency:
+  group: deploy-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  NODE_VERSION: "20"
+  REGISTRY: gcr.io
+  IMAGE_NAME: ${{ secrets.GOOGLE_CLOUD_PROJECT }}/heady-manager
+  CLOUD_RUN_SERVICE: heady-manager
+  CLOUD_RUN_REGION: us-central1
+
+jobs:
+  # ── Pre-flight checks ──────────────────────────────────────────────
+  preflight:
+    name: Pre-flight Checks
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+      environment: ${{ steps.env.outputs.environment }}
+      deploy_canary: ${{ steps.env.outputs.deploy_canary }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Determine version
+        id: version
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          echo "version=${VERSION}-$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+
+      - name: Determine environment
+        id: env
+        run: |
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            echo "environment=${{ github.event.inputs.environment }}" >> $GITHUB_OUTPUT
+            echo "deploy_canary=${{ github.event.inputs.canary }}" >> $GITHUB_OUTPUT
+          elif [[ "${{ github.ref }}" == refs/tags/* ]]; then
+            echo "environment=production" >> $GITHUB_OUTPUT
+            echo "deploy_canary=true" >> $GITHUB_OUTPUT
+          else
+            echo "environment=staging" >> $GITHUB_OUTPUT
+            echo "deploy_canary=false" >> $GITHUB_OUTPUT
+          fi
+
+  # ── Build Docker image ─────────────────────────────────────────────
+  build-image:
+    name: Build & Push Docker Image
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    needs: preflight
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
+
+      - name: Setup gcloud
+        uses: google-github-actions/setup-gcloud@v2
+
+      - name: Configure Docker for GCR
+        run: gcloud auth configure-docker ${{ env.REGISTRY }} --quiet
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build and push
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: |
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ needs.preflight.outputs.version }}
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          build-args: |
+            NODE_ENV=production
+            VERSION=${{ needs.preflight.outputs.version }}
+
+  # ── Deploy to Cloud Run ─────────────────────────────────────────────
+  deploy-cloud-run:
+    name: Deploy to Cloud Run (${{ needs.preflight.outputs.environment }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    needs: [preflight, build-image]
+    environment: ${{ needs.preflight.outputs.environment }}
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
+
+      - name: Deploy to Cloud Run
+        id: deploy
+        uses: google-github-actions/deploy-cloudrun@v2
+        with:
+          service: ${{ env.CLOUD_RUN_SERVICE }}
+          region: ${{ env.CLOUD_RUN_REGION }}
+          image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ needs.preflight.outputs.version }}
+          flags: |
+            --port=3301
+            --cpu=2
+            --memory=2Gi
+            --min-instances=1
+            --max-instances=10
+            --concurrency=100
+            --timeout=300
+            --set-env-vars=NODE_ENV=production,VERSION=${{ needs.preflight.outputs.version }}
+          secrets: |
+            DATABASE_URL=heady-database-url:latest
+            REDIS_URL=heady-redis-url:latest
+            ANTHROPIC_API_KEY=anthropic-api-key:latest
+            OPENAI_API_KEY=openai-api-key:latest
+            JWT_SECRET=heady-jwt-secret:latest
+
+      - name: Set traffic (canary)
+        if: needs.preflight.outputs.deploy_canary == 'true'
+        run: |
+          gcloud run services update-traffic ${{ env.CLOUD_RUN_SERVICE }} \
+            --region ${{ env.CLOUD_RUN_REGION }} \
+            --to-revisions=LATEST=5
+
+      - name: Set traffic (full)
+        if: needs.preflight.outputs.deploy_canary != 'true'
+        run: |
+          gcloud run services update-traffic ${{ env.CLOUD_RUN_SERVICE }} \
+            --region ${{ env.CLOUD_RUN_REGION }} \
+            --to-latest
+
+      - name: Health check
+        run: |
+          URL="${{ steps.deploy.outputs.url }}"
+          echo "Checking $URL/health/live ..."
+          for i in {1..10}; do
+            STATUS=$(curl -s -o /dev/null -w "%{http_code}" "$URL/health/live" || echo "000")
+            if [ "$STATUS" = "200" ]; then
+              echo "✓ Health check passed (attempt $i)"
+              exit 0
+            fi
+            echo "  Attempt $i: HTTP $STATUS — waiting 10s..."
+            sleep 10
+          done
+          echo "✗ Health check failed after 10 attempts"
+          exit 1
+
+      - name: Output deployment URL
+        run: echo "Deployed to ${{ steps.deploy.outputs.url }}"
+
+  # ── Deploy edge workers to Cloudflare ─────────────────────────────
+  deploy-cloudflare:
+    name: Deploy to Cloudflare Workers
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    needs: [preflight, deploy-cloud-run]
+    if: needs.preflight.outputs.environment == 'production'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci --prefer-offline
+
+      - name: Deploy edge workers
+        run: |
+          if [ -f "src/edge/edge-worker.js" ]; then
+            npx wrangler deploy src/edge/edge-worker.js \
+              --name heady-edge \
+              --compatibility-date 2026-01-01
+          else
+            echo "No edge worker found, skipping"
+          fi
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+
+  # ── Promote canary to 100% ─────────────────────────────────────────
+  promote-canary:
+    name: Promote Canary to 100%
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    needs: [preflight, deploy-cloud-run]
+    if: needs.preflight.outputs.deploy_canary == 'true' && needs.preflight.outputs.environment == 'production'
+    environment: production
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - name: Wait for canary soak period
+        run: |
+          echo "Soaking canary for 5 minutes..."
+          sleep 300
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
+
+      - name: Setup gcloud
+        uses: google-github-actions/setup-gcloud@v2
+
+      - name: Promote to 100% traffic
+        run: |
+          gcloud run services update-traffic ${{ env.CLOUD_RUN_SERVICE }} \
+            --region ${{ env.CLOUD_RUN_REGION }} \
+            --to-latest
+          echo "✓ Promoted to 100% traffic"

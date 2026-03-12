@@ -1,0 +1,20 @@
+[
+  {
+    "toolPattern": "heady_analyze",
+    "templateId": "analysis-template-v1",
+    "description": "Standard code and text analysis template",
+    "defaultArgs": { "type": "general" }
+  },
+  {
+    "toolPattern": "heady_coder",
+    "templateId": "coder-template-v1", 
+    "description": "Code generation template",
+    "defaultArgs": { "action": "generate" }
+  },
+  {
+    "toolPattern": "heady_deploy",
+    "templateId": "deploy-template-v1",
+    "description": "Deployment workflow template",
+    "defaultArgs": { "action": "deploy" }
+  }
+]

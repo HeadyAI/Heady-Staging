@@ -1,0 +1,129 @@
+{
+  "_comment": "HCFullPipeline — 12-stage AI execution pipeline configuration",
+  "version": "3.1.0",
+  "pipeline": {
+    "name": "HCFullPipeline",
+    "stages": [
+      {
+        "id": "INTAKE",
+        "order": 1,
+        "description": "Receive and validate task input",
+        "timeoutMs": 5000,
+        "retries": 3,
+        "required": true
+      },
+      {
+        "id": "TRIAGE",
+        "order": 2,
+        "description": "Classify task type, priority, and routing",
+        "timeoutMs": 3000,
+        "retries": 2,
+        "required": true
+      },
+      {
+        "id": "MONTE_CARLO",
+        "order": 3,
+        "description": "Probabilistic outcome simulation — 1000 iterations",
+        "timeoutMs": 15000,
+        "retries": 2,
+        "required": false,
+        "skipCondition": "task.complexity < 0.3"
+      },
+      {
+        "id": "ARENA",
+        "order": 4,
+        "description": "Multi-model battle arena — best approach selection",
+        "timeoutMs": 30000,
+        "retries": 1,
+        "required": false,
+        "skipCondition": "task.complexity < 0.5"
+      },
+      {
+        "id": "JUDGE",
+        "order": 5,
+        "description": "Evaluate and score arena outputs",
+        "timeoutMs": 10000,
+        "retries": 2,
+        "required": true
+      },
+      {
+        "id": "APPROVE",
+        "order": 6,
+        "description": "Governance approval gate — RBAC + policy check",
+        "timeoutMs": 5000,
+        "retries": 1,
+        "required": true
+      },
+      {
+        "id": "EXECUTE",
+        "order": 7,
+        "description": "Execute approved action with circuit breaker",
+        "timeoutMs": 60000,
+        "retries": 3,
+        "required": true
+      },
+      {
+        "id": "VERIFY",
+        "order": 8,
+        "description": "Verify execution output quality",
+        "timeoutMs": 10000,
+        "retries": 2,
+        "required": true
+      },
+      {
+        "id": "RECEIPT",
+        "order": 9,
+        "description": "Generate signed execution receipt",
+        "timeoutMs": 3000,
+        "retries": 3,
+        "required": true
+      },
+      {
+        "id": "LEARN",
+        "order": 10,
+        "description": "Update vector memory with execution outcome",
+        "timeoutMs": 5000,
+        "retries": 2,
+        "required": false
+      },
+      {
+        "id": "TELEMETRY",
+        "order": 11,
+        "description": "Emit metrics and traces to OTEL",
+        "timeoutMs": 2000,
+        "retries": 1,
+        "required": false
+      },
+      {
+        "id": "NOTIFY",
+        "order": 12,
+        "description": "Send completion notifications",
+        "timeoutMs": 3000,
+        "retries": 2,
+        "required": false
+      }
+    ],
+    "defaults": {
+      "totalTimeoutMs": 120000,
+      "parallelStages": ["MONTE_CARLO", "TELEMETRY"],
+      "onFailure": "ROLLBACK",
+      "onTimeout": "PARTIAL_RECEIPT"
+    }
+  },
+  "routing": {
+    "code": { "primary": "claude-sonnet", "fallback": "gpt-4o", "arena": true },
+    "research": { "primary": "perplexity-sonar-pro", "fallback": "gpt-4o-search", "arena": false },
+    "reasoning": { "primary": "gemini-2.0-flash", "fallback": "claude-sonnet", "arena": true },
+    "creative": { "primary": "claude-sonnet", "fallback": "gpt-4o", "arena": true },
+    "fast": { "primary": "groq-llama", "fallback": "gpt-4o-mini", "arena": false },
+    "budget": { "primary": "gpt-4o-mini", "fallback": "groq-llama", "arena": false },
+    "default": { "primary": "gpt-4o", "fallback": "claude-sonnet", "arena": false }
+  },
+  "monteCarloConfig": {
+    "iterations": 1000,
+    "minIterations": 100,
+    "convergenceThreshold": 0.02,
+    "parallelWorkers": 8,
+    "phi": 1.6180339887
+  }
+}

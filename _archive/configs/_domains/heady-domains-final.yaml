@@ -1,0 +1,337 @@
+# HEADY_BRAND:BEGIN
+# ╔══════════════════════════════════════════════════════════════════╗
+# ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
+# ║  ██║  ██║██╔════╝██╔══██╗██╔══██╗╚██╗ ██╔╝                     ║
+# ║  ███████║█████╗  ███████║██║  ██║ ╚████╔╝                      ║
+# ║  ██╔══██║██╔══╝  ██╔══██║██║  ██║  ╚██╔╝                       ║
+# ║  ██║  ██║███████╗██║  ██║██████╔╝   ██║                        ║
+# ║  ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝    ╚═╝                        ║
+# ║                                                                  ║
+# ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
+# ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
+# ║  FILE: configs/heady-domains-final.yaml                                                    ║
+# ║  LAYER: config                                                  ║
+# ╚══════════════════════════════════════════════════════════════════╝
+# HEADY_BRAND:END
+# ╔══════════════════════════════════════════════════════════════════════════════╗
+# ║  HEADY SYSTEMS — HEADY{*}.COM & HEADY{*}.ORG DOMAINS                          ║
+# ║  ONLY .com and .org domains — NOTHING ELSE                                   ║
+# ╚══════════════════════════════════════════════════════════════════════════════╝
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# CORE — .COM
+# ═══════════════════════════════════════════════════════════════════════════════
+core:
+  manager:
+    domain: headysystems.com
+    port: 3300
+    
+  buddy:
+    domain: headybuddy.org
+    port: 5174
+    
+  promoter:
+    domain: headyagent.com
+    port: 3305
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# AI NODES — .COM
+# ═══════════════════════════════════════════════════════════════════════════════
+ai:
+  jules:
+    domain: headyagent.com
+    port: 8001
+    
+  observer:
+    domain: headysense.com
+    port: 8002
+    
+  builder:
+    domain: headycreator.com
+    port: 8003
+    
+  atlas:
+    domain: headycloud.com
+    port: 8004
+    
+  pythia:
+    domain: heady-ai.com
+    port: 8005
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# INTELLIGENCE — .COM
+# ═══════════════════════════════════════════════════════════════════════════════
+intelligence:
+  HeadySims:
+    domain: headyfinance.com
+    port: 8006
+    
+  patterns:
+    domain: heady-ai.com
+    port: 8007
+    
+  critique:
+    domain: heady-ai.com
+    port: 8008
+    
+  imagination:
+    domain: headycreator.com
+    port: 8009
+    
+  stories:
+    domain: headytube.com
+    port: 8010
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# DATA — .COM
+# ═══════════════════════════════════════════════════════════════════════════════
+data:
+  postgres:
+    domain: headydb.com
+    port: 5432
+    
+  redis:
+    domain: headydb.com
+    port: 6379
+    
+  events:
+    domain: headyex.com
+    port: 6380
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# OBSERVABILITY — .COM
+# ═══════════════════════════════════════════════════════════════════════════════
+observability:
+  lens:
+    domain: headysense.com
+    port: 9090
+    
+  metrics:
+    domain: headysense.com
+    port: 9091
+    
+  logs:
+    domain: headysense.com
+    port: 9200
+    
+  traces:
+    domain: headysense.com
+    port: 9411
+    
+  alerts:
+    domain: headysense.com
+    port: 9093
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# FRONTEND — .COM
+# ═══════════════════════════════════════════════════════════════════════════════
+frontend:
+  web:
+    domain: headyme.com
+    port: 5173
+    
+  desktop:
+    domain: headyio.com
+    port: 5175
+    
+  mobile:
+    domain: headyplus.com
+    port: 5176
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# BROWSERS — .COM
+# ═══════════════════════════════════════════════════════════════════════════════
+browsers:
+  chrome:
+    domain: headyio.com
+    port: 3302
+    
+  firefox:
+    domain: headyio.com
+    port: 3303
+    
+  edge:
+    domain: headycloud.com
+    port: 3304
+    
+  safari:
+    domain: headyio.com
+    port: 3305
+    
+  bridge:
+    domain: headymcp.com
+    port: 3306
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# IDES — .COM
+# ═══════════════════════════════════════════════════════════════════════════════
+ides:
+  vscode:
+    domain: headyio.com
+    port: 3307
+    
+  jetbrains:
+    domain: headyio.com
+    port: 3308
+    
+  neovim:
+    domain: headyio.com
+    port: 3309
+    
+  sublime:
+    domain: headyio.com
+    port: 3310
+    
+  emacs:
+    domain: headyio.com
+    port: 3311
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# INTEGRATIONS — .COM
+# ═══════════════════════════════════════════════════════════════════════════════
+integrations:
+  slack:
+    domain: headysystems.com
+    port: 3312
+    
+  discord:
+    domain: headysystems.com
+    port: 3313
+    
+  teams:
+    domain: headysystems.com
+    port: 3314
+    
+  email:
+    domain: headymx.com
+    port: 3315
+    
+  calendar:
+    domain: headysystems.com
+    port: 3316
+    
+  github:
+    domain: headyio.com
+    port: 3317
+    
+  notion:
+    domain: headyio.com
+    port: 3318
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# MCP TOOLS — .COM
+# ═══════════════════════════════════════════════════════════════════════════════
+mcp:
+  gateway:
+    domain: headymcp.com
+    port: 3001
+    
+  filesystem:
+    domain: headycloud.com
+    port: 3002
+    
+  terminal:
+    domain: headyio.com
+    port: 3003
+    
+  browser:
+    domain: headyio.com
+    port: 3004
+    
+  search:
+    domain: headycloud.com
+    port: 3005
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# BUSINESS — .COM
+# ═══════════════════════════════════════════════════════════════════════════════
+business:
+  billing:
+    domain: headyfinance.com
+    port: 3319
+    
+  telemetry:
+    domain: headysense.com
+    port: 3320
+    
+  registry:
+    domain: headymcp.com
+    port: 8600
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# HEADYOS — .COM
+# ═══════════════════════════════════════════════════════════════════════════════
+headyos:
+  docker:
+    domain: headycloud.com
+    port: 3321
+    
+  metal:
+    domain: headymusic.com
+    port: 3322
+    
+  linux:
+    domain: headystore.com
+    port: 3323
+    
+  android:
+    domain: headyio.com
+    port: 3324
+    
+  embedded:
+    domain: headyio.com
+    port: 3325
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# SECURITY — .COM
+# ═══════════════════════════════════════════════════════════════════════════════
+security:
+  vault:
+    domain: headyvault.com
+    port: 3326
+    
+  cdn:
+    domain: headycloud.com
+    port: 3327
+    
+  dns:
+    domain: headycloud.com
+    port: 53
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# .ORG ALTERNATIVES
+# ═══════════════════════════════════════════════════════════════════════════════
+org:
+  academy:
+    domain: headyu.com
+    
+  opensource:
+    domain: headyio.com
+    
+  community:
+    domain: headyconnection.org
+    
+  docs:
+    domain: headyio.com
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# SETUP
+# ═══════════════════════════════════════════════════════════════════════════════
+setup:
+  buy_domains: |
+    Buy all 50+ domains at namecheap.com or your registrar
+    
+  cloudflare_dns: |
+    Point all domains to your server via Cloudflare
+    
+  alternative: |
+    If buying 50 domains is too expensive, use subdomains:
+    - jules.headysystems.com
+    - observer.headysystems.com
+    - buddy.headysystems.com
+    etc.
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# TOTAL: 50+ HEADY*.COM DOMAINS + 4 HEADY*.ORG
+# ═══════════════════════════════════════════════════════════════════════════════
+# app.headysystems.com • NO api.headysystems.com • NO api.headysystems.com • NO .local • NO .internal
