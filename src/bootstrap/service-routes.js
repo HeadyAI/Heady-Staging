@@ -44,6 +44,21 @@ function registerServiceRoutes(app, deps = {}) {
         logger.logNodeActivity("CONDUCTOR", `  ⚠ Vault Boot not loaded: ${err.message}`);
     }
 
+    // ─── Liquid Node Wiring — Connect external services with vault credentials ──
+    try {
+        const { wireLiquidNodes, registerLiquidNodeRoutes } = require("../boot/wire-liquid-nodes");
+        wireLiquidNodes().then(result => {
+            if (result.ok) {
+                logger.logNodeActivity("CONDUCTOR", `  🔌 Liquid Nodes: ALL ${result.wired}/${result.total} wired (${result.coveragePct}%)`);
+            } else {
+                logger.logNodeActivity("CONDUCTOR", `  ⚠ Liquid Nodes: ${result.wired}/${result.total} wired, ${result.disconnected} disconnected`);
+            }
+        }).catch(e => logger.logError("CONDUCTOR", `Liquid node wiring error: ${e.message}`));
+        registerLiquidNodeRoutes(app);
+    } catch (err) {
+        logger.logNodeActivity("CONDUCTOR", `  ⚠ Liquid Nodes not loaded: ${err.message}`);
+    }
+
     // ─── Auto-Projection — Zero-Middleman Site Deployment ──────────────
     try {
         const { bootAutoProjection, autoProjectionRoutes } = require("../services/auto-projection");
@@ -138,7 +153,7 @@ function registerServiceRoutes(app, deps = {}) {
 
     // ─── Deep Scan & Unified Control API ─────────────────────────────
     try {
-        const { registerDeepScanRoutes, runDeepScan } = require("../hc_deep_scan");
+        const { registerDeepScanRoutes, runDeepScan } = require("../intelligence/hc_deep_scan");
         registerDeepScanRoutes(app);
 
         global.__autoSuccessEngine = autoSuccessEngine;
@@ -157,7 +172,7 @@ function registerServiceRoutes(app, deps = {}) {
 
     // ─── HeadyCreative ─────────────────────────────────────────────────
     try {
-        const { HeadyCreativeEngine, registerCreativeRoutes } = require("../hc_creative");
+        const { HeadyCreativeEngine, registerCreativeRoutes } = require("../intelligence/hc_creative");
         const creativeEngine = new HeadyCreativeEngine();
         registerCreativeRoutes(app, creativeEngine);
 
@@ -188,7 +203,7 @@ function registerServiceRoutes(app, deps = {}) {
 
     // ─── HeadyDeepIntel ────────────────────────────────────────────────
     try {
-        const { DeepIntelEngine, registerDeepIntelRoutes } = require("../hc_deep_intel");
+        const { DeepIntelEngine, registerDeepIntelRoutes } = require("../intelligence/hc_deep_intel");
         const deepIntel = new DeepIntelEngine();
         registerDeepIntelRoutes(app, deepIntel);
         global.__deepIntel = deepIntel;
@@ -212,7 +227,7 @@ function registerServiceRoutes(app, deps = {}) {
 
     // ─── Liquid Component Allocation Engine ────────────────────────────
     try {
-        const { LiquidAllocator, registerLiquidRoutes } = require("../hc_liquid");
+        const { LiquidAllocator, registerLiquidRoutes } = require("../runtime/hc_liquid");
         const liquidAllocator = new LiquidAllocator();
         registerLiquidRoutes(app, liquidAllocator);
 
@@ -251,7 +266,7 @@ function registerServiceRoutes(app, deps = {}) {
         logger.logNodeActivity("CONDUCTOR", "  ∞ HeadyBrain API: LOADED");
         logger.logNodeActivity("CONDUCTOR", "    → Endpoints: /api/brain/health, /plan, /feedback, /status");
 
-        const { getBrainConnector } = require("../brain_connector");
+        const { getBrainConnector } = require("../memory/brain_connector");
         const brainConnector = getBrainConnector({ poolSize: 5, healthCheckInterval: 15000 });
 
         brainConnector.on('circuitBreakerOpen', (data) => {

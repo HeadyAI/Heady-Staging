@@ -36,9 +36,10 @@
 
   "compute_layer": {
     "colab_runtimes": [
-      { "id": "colab-1", "region": "us-east", "gpu": "A100", "subscription": "pro_plus", "vector": [0, 1.618, 0] },
-      { "id": "colab-2", "region": "us-west", "gpu": "A100", "subscription": "pro_plus", "vector": [0, 1.0, 0.618] },
-      { "id": "colab-3", "region": "eu-west", "gpu": "A100", "subscription": "pro_plus", "vector": [0.618, 1.618, 0] }
+      { "id": "colab-a", "region": "us-east", "gpu": "A100", "subscription": "pro_plus", "focus": "realtime-inference", "fib_concurrency": 34, "vector": [0, 1.618, 0] },
+      { "id": "colab-b", "region": "us-west", "gpu": "A100", "subscription": "pro_plus", "focus": "template-optimization", "fib_concurrency": 21, "vector": [0, 1.0, 0.618] },
+      { "id": "colab-c", "region": "eu-west", "gpu": "A100", "subscription": "pro_plus", "focus": "swarm-burst", "fib_concurrency": 13, "vector": [0.618, 1.618, 0] },
+      { "id": "colab-d", "region": "us-central", "gpu": "A100", "subscription": "pro_plus", "focus": "intelligence-and-learning", "fib_concurrency": 8, "dedicated": true, "vector": [1.618, 1.618, 1.618] }
     ],
     "vertex_ai": {
       "project": "heady-ai",
@@ -67,10 +68,13 @@
     }
   },
 
+  "ui_policy": "drupal-only — NO REACT, NO NEXT.JS, NO VITE FRONTENDS",
+
   "cms_layer": {
     "platform": "drupal-11",
     "mode": "headless",
-    "modules": ["heady_admin", "heady_control", "heady_cms"],
+    "is_sole_ui_layer": true,
+    "modules": ["heady_admin", "heady_control", "heady_cms", "heady_config", "heady_content", "heady_sites", "heady_tasks"],
     "apis": {
       "content": "/api/cms/content/{site}",
       "sites": "/api/cms/sites",

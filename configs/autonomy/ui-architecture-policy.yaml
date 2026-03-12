@@ -1,0 +1,72 @@
+version: 1
+profile: heady-ui-architecture-policy
+updated_at: 2026-03-11T00:00:00Z
+policy: drupal-only
+
+# ═══ UI ARCHITECTURE POLICY ═══
+# All user-facing UI MUST go through Drupal 11 headless CMS.
+# No React, Next.js, or Vite frontends for added complexity.
+# Drupal serves JSON:API → Cloudflare edge renders → user sees result.
+
+directive: >-
+  NO REACT. NO NEXT.JS. NO VITE FRONTENDS.
+  All UI projection routes through Drupal 11 headless CMS modules.
+  Drupal is the single source of truth for content, admin, and dashboard UIs.
+  Cloudflare Pages/Workers handle edge delivery and SSR from Drupal JSON:API.
+
+primary_ui_layer:
+  platform: drupal-11
+  mode: headless
+  delivery: json-api
+  admin_url: https://admin.headysystems.com
+  modules:
+    - heady_admin     # Service management dashboard
+    - heady_cms       # Content delivery, task browser, liquid nodes, clipboard
+    - heady_control   # System control dashboard
+    - heady_config    # Configuration management
+    - heady_content   # Content type definitions
+    - heady_sites     # Multi-site management (47 sites)
+    - heady_tasks     # Task queue management
+
+edge_delivery:
+  platform: cloudflare
+  strategy: pages-with-workers
+  pages_projects:
+    - headysystems.com
+    - headyme.com
+    - headybuddy.org
+    - headyconnection.org
+    - headyos.pages.dev
+    - headyapi.pages.dev
+  worker: liquid-gateway-worker
+  rendering: edge-ssr-from-drupal-api
+
+deprecated_react_apps:
+  # These exist in the codebase but are NOT to be maintained, extended,
+  # or deployed. All their functionality migrates to Drupal modules.
+  status: frozen
+  action: do-not-extend
+  apps:
+    - path: apps/headyweb/          # Micro-frontend portal → Drupal admin
+    - path: apps/command-center/    # Next.js → heady_control module
+    - path: apps/heady-io-docs/     # Next.js → heady_cms content type
+    - path: apps/heady-mcp-portal/  # Next.js → heady_admin module
+    - path: headybuddy/             # Vite React → Drupal headybuddy theme
+    - path: distribution/headyos/web-shell/  # Next.js → heady_control
+    - path: services/heady-onboarding/       # Next.js → heady_admin
+    - path: services/heady-midi/             # React components → Drupal MIDI module
+
+migration_strategy:
+  approach: progressive-replacement
+  steps:
+    - Drupal modules already handle content, tasks, liquid nodes, clipboard
+    - Cloudflare Pages serve static assets, Workers handle SSR
+    - All new UI features go into Drupal modules + Twig templates
+    - React apps remain frozen — no new features, no maintenance
+    - Over time, traffic shifts fully to Drupal-backed projections
+
+enforcement:
+  - No new React/Next.js/Vite dependencies in package.json
+  - No new .jsx/.tsx files outside _archive/
+  - All UI PRs must use Drupal module or Twig template
+  - CI/CD blocks React app builds (optional — enable when ready)

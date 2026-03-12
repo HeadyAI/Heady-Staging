@@ -171,12 +171,50 @@ class GPUVectorStore {
  * Enforces isolation: colab-d NEVER receives operational workloads.
  */
 class ColabOrchestrator {
-    constructor() {
-        this.runtimes = { ...RUNTIMES };
+    constructor({ autoMonitor = true, monitorIntervalMs } = {}) {
+        this.runtimes = JSON.parse(JSON.stringify(RUNTIMES)); // deep clone
         this.activeTasks = new Map();
         this.taskHistory = [];
         this.healthCache = new Map();
         this._healthCheckInterval = null;
+        this._consecutiveFailures = new Map();
+        this._degradationLog = [];
+        this._monitorStartedAt = null;
+        this._healthCheckBaseInterval = monitorIntervalMs || Math.round(PHI * 18000);
+        this._staleTaskTimeoutMs = Math.round(PHI * 300000); // ~485s — auto-reap stale tasks
+
+        // Auto-start health monitoring unless explicitly disabled
+        if (autoMonitor) {
+            this.startHealthMonitor(this._healthCheckBaseInterval);
+        }
+
+        // Stale task reaper — runs every SURGE (11090ms)
+        this._staleReaper = setInterval(() => this._reapStaleTasks(), 11090);
+    }
+
+    /**
+     * Reap tasks that have been active longer than the stale timeout.
+     * Prevents resource leaks from orphaned tasks.
+     */
+    _reapStaleTasks() {
+        const now = Date.now();
+        for (const [taskId, entry] of this.activeTasks) {
+            if (now - entry.startedAt > this._staleTaskTimeoutMs) {
+                console.warn(`🧹 Reaping stale task ${taskId} on ${entry.runtimeId} (${((now - entry.startedAt) / 1000).toFixed(0)}s old)`);
+                this.complete(taskId, { status: "reaped", reason: "stale-timeout" });
+            }
+        }
+    }
+
+    /**
+     * Graceful shutdown — stops all monitors and reapers.
+     */
+    shutdown() {
+        this.stopHealthMonitor();
+        if (this._staleReaper) {
+            clearInterval(this._staleReaper);
+            this._staleReaper = null;
+        }
     }
 
     /**
@@ -227,11 +265,21 @@ class ColabOrchestrator {
         const runtime = this.runtimes[runtimeId];
         if (!runtime) throw new Error(`Unknown runtime: ${runtimeId}`);
 
+        // Circuit breaker check — don't dispatch to broken runtimes
+        if (runtime._circuitBroken && runtimeId !== "colab-d") {
+            console.warn(`⚡ ${runtimeId} circuit-broken, rerouting task`);
+            return this._dispatchLeastLoaded(task, [runtimeId]);
+        }
+        // For colab-d (dedicated), queue even if circuit-broken — no fallback
+        if (runtime._circuitBroken && runtimeId === "colab-d") {
+            return { queued: true, runtime: runtimeId, reason: "circuit-broken", retryAfterMs: Math.round(PHI * 30000) };
+        }
+
         const activeCount = this._countActive(runtimeId);
         if (activeCount >= runtime.fibConcurrency) {
             // Overflow: try next operational runtime (skip colab-d for non-learning)
             if (runtimeId !== "colab-d") {
-                return this._dispatchLeastLoaded(task);
+                return this._dispatchLeastLoaded(task, [runtimeId]);
             }
             // colab-d overflow: queue the task
             return { queued: true, runtime: runtimeId, position: activeCount - runtime.fibConcurrency + 1 };
@@ -249,8 +297,15 @@ class ColabOrchestrator {
         };
     }
 
-    _dispatchLeastLoaded(task) {
-        const operational = ["colab-a", "colab-b", "colab-c"];
+    _dispatchLeastLoaded(task, exclude = []) {
+        const operational = ["colab-a", "colab-b", "colab-c"]
+            .filter(id => !exclude.includes(id) && !this.runtimes[id]._circuitBroken);
+
+        if (operational.length === 0) {
+            // All operational runtimes are down — queue with backoff
+            return { queued: true, runtime: null, reason: "all-operational-runtimes-unavailable", retryAfterMs: Math.round(PHI * 10000) };
+        }
+
         let bestId = operational[0];
         let bestLoad = Infinity;
 
@@ -325,10 +380,56 @@ class ColabOrchestrator {
         return results;
     }
 
-    startHealthMonitor(intervalMs = 30000) {
+    /**
+     * Start health monitor with φ-scaled defaults and degradation tracking.
+     * Default interval: PHI * 18000 ≈ 29124ms (close to fib timing CYCLE)
+     * Consecutive failures trigger exponential backoff up to PHI^4 × base.
+     * Emits runtime events for circuit-breaker integration.
+     */
+    startHealthMonitor(intervalMs = Math.round(PHI * 18000)) {
         if (this._healthCheckInterval) clearInterval(this._healthCheckInterval);
-        this._healthCheckInterval = setInterval(() => this.checkHealth(), intervalMs);
-        this.checkHealth(); // immediate first check
+        this._consecutiveFailures = new Map();
+        this._degradationLog = [];
+        this._monitorStartedAt = Date.now();
+        this._healthCheckBaseInterval = intervalMs;
+
+        const runCheck = async () => {
+            const results = await this.checkHealth();
+            for (const [id, result] of Object.entries(results)) {
+                const failures = this._consecutiveFailures.get(id) || 0;
+                if (result.status === "unreachable" || result.status === "degraded") {
+                    const newFailures = failures + 1;
+                    this._consecutiveFailures.set(id, newFailures);
+                    this._degradationLog.push({
+                        runtimeId: id,
+                        status: result.status,
+                        failureCount: newFailures,
+                        timestamp: Date.now(),
+                        error: result.error || null,
+                    });
+                    // Cap degradation log at 500 entries
+                    if (this._degradationLog.length > 500) this._degradationLog.shift();
+
+                    // Mark runtime as circuit-broken after fib(5)=8 consecutive failures
+                    if (newFailures >= FIB[5]) {
+                        this.runtimes[id]._circuitBroken = true;
+                        this.runtimes[id]._circuitBrokenAt = Date.now();
+                        console.warn(`⚡ Circuit breaker OPEN for ${id} after ${newFailures} failures`);
+                    }
+                } else {
+                    // Recovery: reset failure count and circuit breaker
+                    if (failures > 0) {
+                        console.log(`✅ ${id} recovered after ${failures} failures`);
+                        this.runtimes[id]._circuitBroken = false;
+                        this.runtimes[id]._circuitBrokenAt = null;
+                    }
+                    this._consecutiveFailures.set(id, 0);
+                }
+            }
+        };
+
+        this._healthCheckInterval = setInterval(runCheck, intervalMs);
+        runCheck(); // immediate first check
     }
 
     stopHealthMonitor() {
@@ -336,6 +437,23 @@ class ColabOrchestrator {
             clearInterval(this._healthCheckInterval);
             this._healthCheckInterval = null;
         }
+    }
+
+    /**
+     * Get health monitor diagnostics — failures, degradation events, uptime.
+     */
+    getHealthDiagnostics() {
+        return {
+            monitorRunning: !!this._healthCheckInterval,
+            monitorUptimeMs: this._monitorStartedAt ? Date.now() - this._monitorStartedAt : 0,
+            checkIntervalMs: this._healthCheckBaseInterval || 0,
+            consecutiveFailures: Object.fromEntries(this._consecutiveFailures || new Map()),
+            circuitBrokenRuntimes: Object.entries(this.runtimes)
+                .filter(([, r]) => r._circuitBroken)
+                .map(([id, r]) => ({ id, brokenSince: r._circuitBrokenAt })),
+            recentDegradation: (this._degradationLog || []).slice(-20),
+            totalDegradationEvents: (this._degradationLog || []).length,
+        };
     }
 
     getStatus() {

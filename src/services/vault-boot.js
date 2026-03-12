@@ -19,49 +19,97 @@
 const logger = require('../utils/logger');
 
 // ── ENV VAR mapping for each vault credential ──────────────────
+// Every credential stored in SecureKeyVault maps to a process.env var.
+// On boot, vault-boot decrypts and projects each into RAM.
 const CREDENTIAL_ENV_MAP = {
-    // GitHub
-    'github-pat-primary': 'GITHUB_TOKEN',
-    'github-pat-secondary': 'GITHUB_TOKEN_SECONDARY',
-    // Claude / Anthropic
-    'claude-api-key': 'ANTHROPIC_API_KEY',
-    'claude-code-oauth': 'CLAUDE_CODE_OAUTH_TOKEN',
-    'claude-admin-key': 'ANTHROPIC_ADMIN_KEY',
-    'claude-dev-admin': 'ANTHROPIC_ADMIN_KEY_DEV',
-    'claude-org-id': 'ANTHROPIC_ORG_ID',
-    // OpenAI
-    'openai-api-key': 'OPENAI_API_KEY',
-    // Hugging Face
-    'hf-token': 'HF_TOKEN',
-    // Groq
-    'groq-api-key': 'GROQ_API_KEY',
-    // Cloudflare
-    'cf-api-token-primary': 'CLOUDFLARE_API_TOKEN',
-    'cf-api-token-secondary': 'CLOUDFLARE_API_TOKEN_2',
-    'cf-api-token-tertiary': 'CLOUDFLARE_API_TOKEN_3',
-    // Sentry
-    'sentry-org-token': 'SENTRY_AUTH_TOKEN',
-    'sentry-personal-token': 'SENTRY_PERSONAL_TOKEN',
-    'sentry-dsn': 'SENTRY_DSN',
-    // Neon
-    'neon-api-key': 'NEON_API_KEY',
-    'neon-database-url': 'DATABASE_URL',
-    // Upstash
-    'upstash-db-id': 'UPSTASH_REDIS_REST_TOKEN',
-    // Pinecone
-    'pinecone-api-key': 'PINECONE_API_KEY',
-    // Stripe
-    'stripe-secret-key': 'STRIPE_SECRET_KEY',
-    // 1Password
+    // ─── Heady Internal ───────────────────────────────────────────
+    'heady-api-key':            'HEADY_API_KEY',
+    'heady-admin-token':        'ADMIN_TOKEN',
+    'heady-master-key':         'HEADY_MASTER_KEY',
+    'heady-jwt-secret':         'HEADY_JWT_SECRET',
+    'heady-internal-key':       'HEADY_INTERNAL_KEY',
+
+    // ─── GitHub ───────────────────────────────────────────────────
+    'github-pat-primary':       'GITHUB_TOKEN',
+    'github-pat-secondary':     'HEADY_GITHUB_PAT',
+
+    // ─── Claude / Anthropic ───────────────────────────────────────
+    'claude-api-key':           'ANTHROPIC_API_KEY',
+    'claude-api-key-secondary': 'CLAUDE_API_KEY',
+    'claude-code-oauth':        'CLAUDE_CODE_OAUTH_TOKEN',
+    'claude-admin-key':         'ANTHROPIC_ADMIN_KEY',
+    'claude-dev-admin':         'CLAUDE_DEV_ADMIN_KEY',
+    'claude-org-id':            'ANTHROPIC_ORG_ID',
+    'claude-jules-key':         'HEADY_JULES_KEY',
+
+    // ─── OpenAI ───────────────────────────────────────────────────
+    'openai-api-key':           'OPENAI_API_KEY',
+
+    // ─── Hugging Face ─────────────────────────────────────────────
+    'hf-token':                 'HF_TOKEN',
+
+    // ─── Groq ─────────────────────────────────────────────────────
+    'groq-api-key':             'GROQ_API_KEY',
+
+    // ─── Perplexity ───────────────────────────────────────────────
+    'perplexity-api-key':       'PERPLEXITY_API_KEY',
+
+    // ─── Google AI / GCloud ───────────────────────────────────────
+    'gai-google-primary':       'GOOGLE_API_KEY',
+    'gai-google-secondary':     'GOOGLE_AI_API_KEY',
+    'gai-headyme-colab':        'GEMINI_API_KEY',
+    'gai-heady-project':        'HEADY_PYTHIA_KEY_STUDIO',
+    'gai-gcloud-default':       'HEADY_PYTHIA_KEY_GCLOUD',
+    'gai-cloud-api':            'HEADY_PYTHIA_KEY_COLAB',
+    'gai-firebase':             'FIREBASE_API_KEY',
+    'gai-pythia-heady':         'HEADY_PYTHIA_KEY_HEADY',
+
+    // ─── GCP Service Accounts & Project ───────────────────────────
+    'gcp-project-id':           'GCLOUD_PROJECT_ID',
+    'gcp-deployer-sa-path':     'GOOGLE_APPLICATION_CREDENTIALS',
+
+    // ─── Cloudflare ───────────────────────────────────────────────
+    'cf-api-token-primary':     'CLOUDFLARE_API_TOKEN',
+    'cf-api-token-secondary':   'CF_API_TOKEN',
+    'cf-api-token-tertiary':    'CF_AI_TOKEN',
+    'cf-kv-token':              'CF_KV_API_TOKEN',
+
+    // ─── Sentry ───────────────────────────────────────────────────
+    'sentry-dsn':               'SENTRY_DSN',
+    'sentry-org-token':         'SENTRY_AUTH_TOKEN',
+
+    // ─── Neon ─────────────────────────────────────────────────────
+    'neon-api-key':             'NEON_API_KEY',
+    'neon-database-url':        'DATABASE_URL',
+    'neon-database-url-alt':    'NEON_DATABASE_URL',
+    'neon-project-id':          'NEON_PROJECT_ID',
+
+    // ─── Upstash Redis ────────────────────────────────────────────
+    'upstash-rest-url':         'UPSTASH_REDIS_REST_URL',
+    'upstash-rest-token':       'UPSTASH_REDIS_REST_TOKEN',
+    'upstash-rest-token-ro':    'UPSTASH_REDIS_REST_TOKEN_RO',
+    'upstash-password':         'UPSTASH_REDIS_PASSWORD',
+    'upstash-endpoint':         'UPSTASH_REDIS_ENDPOINT',
+    'upstash-port':             'UPSTASH_REDIS_PORT',
+    'upstash-api-key':          'UPSTASH_API_KEY',
+    'upstash-email':            'UPSTASH_EMAIL',
+
+    // ─── Pinecone ─────────────────────────────────────────────────
+    'pinecone-api-key':         'PINECONE_API_KEY',
+
+    // ─── Stripe ───────────────────────────────────────────────────
+    'stripe-secret-key':        'STRIPE_SECRET_KEY',
+
+    // ─── 1Password ────────────────────────────────────────────────
     'onepassword-service-account': 'OP_SERVICE_ACCOUNT_TOKEN',
-    // Google AI
-    'gai-headyme-colab': 'GEMINI_API_KEY',
-    'gai-heady-project': 'GEMINI_API_KEY_HEADY',
-    'gai-gcloud-default': 'GCLOUD_API_KEY',
-    'gai-firebase': 'FIREBASE_API_KEY',
-    // Perplexity
-    'perplexity-api-key': 'PERPLEXITY_API_KEY',
-    // Domain URLs (projected from vector space at runtime)
+
+    // ─── NPM ──────────────────────────────────────────────────────
+    'npm-token':                'NPM_TOKEN',
+
+    // ─── SSH (path to key, not the key itself) ────────────────────
+    'ssh-private-key-path':     'SSH_KEY_PATH',
+
+    // ─── Domain URLs (projected from vector space at runtime) ─────
     'heady-url-main':           'HEADY_URL',
     'heady-url-api':            'HEADY_MANAGER_URL',
     'heady-url-brain':          'HEADY_BRAIN_URL',
@@ -124,7 +172,8 @@ function _domainFromName(name) {
         'hf': 'huggingface', 'groq': 'groq', 'cf': 'cloudflare',
         'sentry': 'sentry', 'neon': 'neon', 'upstash': 'upstash',
         'pinecone': 'pinecone', 'stripe': 'stripe', 'onepassword': 'onepassword',
-        'gai': 'googleai', 'heady': 'heady', 'perplexity': 'perplexity',
+        'gai': 'googleai', 'gcp': 'gcloud', 'heady': 'heady',
+        'perplexity': 'perplexity', 'npm': 'npm', 'ssh': 'ssh',
     };
     for (const [prefix, domain] of Object.entries(prefixMap)) {
         if (name.startsWith(prefix)) return domain;

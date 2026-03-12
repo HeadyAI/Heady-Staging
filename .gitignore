@@ -22,3 +22,9 @@ Heady-pre-production-9f2f0642-main/_archive/misc/heady_unified_os.ipynb
 *.ipynb_checkpoints/
 Heady-pre-production-9f2f0642-main/
 .shit
+# HeadyVault — SA keys, vault seeds, GCP credentials (NEVER commit)
+.heady/gcp-*.json
+.heady/vault-seed.js
+.heady_cache/
+hc_pipeline.log
+package-lock.json

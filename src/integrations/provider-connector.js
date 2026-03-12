@@ -205,15 +205,20 @@ class ProviderConnector extends EventEmitter {
         // OpenAI
         if (process.env.OPENAI_API_KEY) this.addKeys("openai", [{ key: process.env.OPENAI_API_KEY, label: "env", account: "env" }]);
 
-        // Anthropic
-        if (process.env.ANTHROPIC_API_KEY) this.addKeys("anthropic", [{ key: process.env.ANTHROPIC_API_KEY, label: "env", account: "env" }]);
-        if (process.env.CLAUDE_API_KEY) this.addKeys("anthropic", [{ key: process.env.CLAUDE_API_KEY, label: "claude", account: "env" }]);
-        if (process.env.CLAUDE_API_KEY_PAYG) this.addKeys("anthropic", [{ key: process.env.CLAUDE_API_KEY_PAYG, label: "payg", account: "env" }]);
+        // Anthropic / Claude (all seats + Jules)
+        if (process.env.ANTHROPIC_API_KEY) this.addKeys("anthropic", [{ key: process.env.ANTHROPIC_API_KEY, label: "primary", account: "anthropic" }]);
+        if (process.env.CLAUDE_API_KEY) this.addKeys("anthropic", [{ key: process.env.CLAUDE_API_KEY, label: "secondary", account: "anthropic" }]);
+        if (process.env.HEADY_JULES_KEY) this.addKeys("anthropic", [{ key: process.env.HEADY_JULES_KEY, label: "jules", account: "heady" }]);
+        if (process.env.CLAUDE_API_KEY_PAYG) this.addKeys("anthropic", [{ key: process.env.CLAUDE_API_KEY_PAYG, label: "payg", account: "anthropic" }]);
 
-        // Gemini
-        if (process.env.GEMINI_API_KEY) this.addKeys("gemini", [{ key: process.env.GEMINI_API_KEY, label: "env", account: "env" }]);
-        if (process.env.GOOGLE_API_KEY) this.addKeys("gemini", [{ key: process.env.GOOGLE_API_KEY, label: "google", account: "env" }]);
-        if (process.env.GOOGLE_CLOUD_API_KEY) this.addKeys("gemini", [{ key: process.env.GOOGLE_CLOUD_API_KEY, label: "gcloud", account: "env" }]);
+        // Gemini / Google AI (all Pythia keys + Google API keys)
+        if (process.env.GEMINI_API_KEY) this.addKeys("gemini", [{ key: process.env.GEMINI_API_KEY, label: "env", account: "headyme-colab" }]);
+        if (process.env.GOOGLE_API_KEY) this.addKeys("gemini", [{ key: process.env.GOOGLE_API_KEY, label: "google-primary", account: "google" }]);
+        if (process.env.GOOGLE_AI_API_KEY) this.addKeys("gemini", [{ key: process.env.GOOGLE_AI_API_KEY, label: "google-secondary", account: "google" }]);
+        if (process.env.HEADY_PYTHIA_KEY_STUDIO) this.addKeys("gemini", [{ key: process.env.HEADY_PYTHIA_KEY_STUDIO, label: "pythia-studio", account: "heady" }]);
+        if (process.env.HEADY_PYTHIA_KEY_GCLOUD) this.addKeys("gemini", [{ key: process.env.HEADY_PYTHIA_KEY_GCLOUD, label: "pythia-gcloud", account: "heady" }]);
+        if (process.env.HEADY_PYTHIA_KEY_COLAB) this.addKeys("gemini", [{ key: process.env.HEADY_PYTHIA_KEY_COLAB, label: "pythia-colab", account: "heady" }]);
+        if (process.env.HEADY_PYTHIA_KEY_HEADY) this.addKeys("gemini", [{ key: process.env.HEADY_PYTHIA_KEY_HEADY, label: "pythia-heady", account: "heady" }]);
 
         // Perplexity
         if (process.env.PERPLEXITY_API_KEY) this.addKeys("perplexity", [{ key: process.env.PERPLEXITY_API_KEY, label: "env", account: "env" }]);
