@@ -7,37 +7,39 @@
   "phi": 1.618033988749895,
   "description": "Complete task queue for HCFullPipeline — dual-scan reconciled (full-repo + production-scoped)",
   "taskCount": 138,
+  "concurrentEquals": true,
+  "paradigm": "All tasks are concurrent-equals. No ranking, no priority tiering. CSL resonance determines contextual relevance, not importance hierarchy.",
   "categories": {
     "SECURITY": {
-      "priority_weight": 0.927,
+      "csl_resonance": 1.0,
       "tasks": 20
     },
     "INFRASTRUCTURE": {
-      "priority_weight": 0.882,
+      "csl_resonance": 1.0,
       "tasks": 22
     },
     "ARCHITECTURE": {
-      "priority_weight": 0.718,
+      "csl_resonance": 1.0,
       "tasks": 20
     },
     "QUALITY": {
-      "priority_weight": 0.618,
+      "csl_resonance": 1.0,
       "tasks": 25
     },
     "DOCUMENTATION": {
-      "priority_weight": 0.382,
+      "csl_resonance": 1.0,
       "tasks": 17
     },
     "SCALING": {
-      "priority_weight": 0.618,
+      "csl_resonance": 1.0,
       "tasks": 13
     },
     "FEATURES": {
-      "priority_weight": 0.382,
+      "csl_resonance": 1.0,
       "tasks": 16
     },
     "REMEDIATION": {
-      "priority_weight": 0.718,
+      "csl_resonance": 1.0,
       "tasks": 5
     }
   },

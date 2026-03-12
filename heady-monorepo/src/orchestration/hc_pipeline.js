@@ -532,12 +532,6 @@ async function executeStage(stage, state, configs, circuitBreakers) {
 async function executeSingleTask(taskName, context, state, circuitBreakers) {
   state.metrics.totalTasks++;
 
-  // Auto-prioritize change-related tasks
-  if (taskName.includes('change_request') || taskName.includes('change')) {
-    taskName.priority = 'high';
-    taskName.tags.push('automated_priority');
-  }
-
   // Check circuit breaker for this task's endpoint category
   const breaker = circuitBreakers ? findBreakerForTask(taskName, circuitBreakers) : null;
   if (breaker && !breaker.canExecute()) {
@@ -583,75 +577,16 @@ async function executeSingleTask(taskName, context, state, circuitBreakers) {
   }
 }
 
-// ─── NODE POOL PRIORITY ─────────────────────────────────────────────────────
-
-// Map tasks to node pool tiers for priority ordering
-const TASK_POOL_MAP = {
-  // Hot pool: user-facing, core pipeline tasks (critical latency)
-  resolve_channel_and_identity: "hot",
-  route_to_pipeline_branch: "hot",
-  route_to_agents: "hot",
-  monitor_agent_execution: "hot",
-  collect_agent_results: "hot",
-  compute_readiness_score: "hot",
-  mc_plan_selection: "hot",
-  mc_replan_failed_tasks: "hot",
-  // Warm pool: important background tasks
-  sync_cross_device_context: "warm",
-  determine_launch_mode: "warm",
-  generate_task_graph: "warm",
-  assign_priorities: "warm",
-  validate_governance: "warm",
-  evaluate_failures: "warm",
-  apply_compensation: "warm",
-  persist_results: "warm",
-  log_run_config_hash: "warm",
-  record_run_critique: "warm",
-  diagnose_bottlenecks: "warm",
-  check_all_connection_health: "warm",
-  identify_improvement_candidates: "warm",
-  run_meta_analysis: "warm",
-  apply_pattern_improvements: "warm",
-  adjust_mc_strategy_weights: "warm",
-  adjust_worker_pool_concurrency: "warm",
-  update_channel_optimizations: "warm",
-  record_pipeline_improvements: "warm",
-  feed_stage_timing_to_mc: "warm",
-  feed_task_timing_to_patterns: "warm",
-  publish_metrics_to_channels: "warm",
-  check_cross_channel_seamlessness: "warm",
-  propose_micro_upgrades: "warm",
-  archive_run_to_history: "warm",
-  sync_registry_and_docs: "warm",
-  validate_notebook_integrity: "warm",
-  check_doc_owner_freshness: "warm",
-  // Cold pool: async ingestion, analytics, mining
-  ingest_news_feeds: "cold",
-  ingest_external_apis: "cold",
-  ingest_repo_changes: "cold",
-  ingest_health_metrics: "cold",
-  ingest_channel_events: "cold",
-  ingest_connection_health: "cold",
-  ingest_public_domain_patterns: "cold",
-  estimate_costs: "cold",
-  check_public_domain_inspiration: "cold",
-  retry_recoverable: "cold",
-  escalate_unrecoverable: "cold",
-  update_concept_index: "cold",
-  send_checkpoint_email: "cold",
-  mine_public_domain_best_practices: "cold",
-  invalidate_stale_caches: "cold",
-};
-
-const POOL_PRIORITY = { hot: 0, warm: 1, cold: 2 };
+// ─── CONCURRENT-EQUALS PARADIGM ─────────────────────────────────────────────
+// Heady treats ALL tasks as concurrent-equals. No priority ranking, no tiering.
+// Tasks execute in their natural stage-defined order with fair scheduling.
+// CSL resonance determines contextual relevance, NOT importance hierarchy.
 
 function sortTasksByPool(tasks) {
-  return [...tasks].sort((a, b) => {
-    const pa = POOL_PRIORITY[TASK_POOL_MAP[a] || "cold"] || 2;
-    const pb = POOL_PRIORITY[TASK_POOL_MAP[b] || "cold"] || 2;
-    return pa - pb;
-  });
+  // Concurrent-equals: tasks keep their natural order — no priority sorting
+  return [...tasks];
 }
+
 
 // Map task names to circuit breaker endpoints
 function findBreakerForTask(taskName, circuitBreakers) {
