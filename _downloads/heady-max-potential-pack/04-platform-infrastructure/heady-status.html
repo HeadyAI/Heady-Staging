@@ -1,0 +1,1298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Heady Ecosystem Status</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #0B0D17 0%, #1a1d2e 100%);
+            color: #e0e6f6;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* HEADER */
+        .header {
+            margin-bottom: 40px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 30px;
+        }
+
+        .header-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .header-title {
+            font-size: 32px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #27AE60 0%, #2ecc71 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .status-badge.operational {
+            background: rgba(39, 174, 96, 0.2);
+            color: #27AE60;
+            border: 1px solid #27AE60;
+        }
+
+        .status-badge.degraded {
+            background: rgba(243, 156, 18, 0.2);
+            color: #F39C12;
+            border: 1px solid #F39C12;
+        }
+
+        .status-badge.critical {
+            background: rgba(231, 76, 60, 0.2);
+            color: #E74C3C;
+            border: 1px solid #E74C3C;
+        }
+
+        .status-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        .status-indicator.green {
+            background: #27AE60;
+            box-shadow: 0 0 10px rgba(39, 174, 96, 0.5);
+        }
+
+        .status-indicator.yellow {
+            background: #F39C12;
+            box-shadow: 0 0 10px rgba(243, 156, 18, 0.5);
+        }
+
+        .status-indicator.red {
+            background: #E74C3C;
+            box-shadow: 0 0 10px rgba(231, 76, 60, 0.5);
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.6;
+            }
+        }
+
+        .header-meta {
+            font-size: 13px;
+            color: #a0aac0;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        /* STATUS SUMMARY */
+        .status-summary {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 40px;
+            backdrop-filter: blur(10px);
+        }
+
+        .status-summary.critical {
+            background: rgba(231, 76, 60, 0.1);
+            border-color: #E74C3C;
+        }
+
+        .status-summary.degraded {
+            background: rgba(243, 156, 18, 0.1);
+            border-color: #F39C12;
+        }
+
+        .status-summary-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .status-summary-description {
+            font-size: 14px;
+            color: #c0c6d6;
+            line-height: 1.6;
+        }
+
+        /* REFRESH INDICATOR */
+        .refresh-section {
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .progress-bar {
+            height: 3px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 2px;
+            overflow: hidden;
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #27AE60, #2ecc71);
+            border-radius: 2px;
+            animation: fillProgress 30s linear;
+        }
+
+        @keyframes fillProgress {
+            0% {
+                width: 0%;
+            }
+            100% {
+                width: 100%;
+            }
+        }
+
+        .next-check {
+            font-size: 13px;
+            color: #a0aac0;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        /* SERVICE GROUPS */
+        .service-group {
+            margin-bottom: 50px;
+        }
+
+        .service-group-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #27AE60;
+            margin-bottom: 16px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid rgba(39, 174, 96, 0.3);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .service-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 16px;
+        }
+
+        .service-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 20px;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .service-card:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .service-card.operational {
+            border-left: 3px solid #27AE60;
+        }
+
+        .service-card.degraded {
+            border-left: 3px solid #F39C12;
+        }
+
+        .service-card.down {
+            border-left: 3px solid #E74C3C;
+        }
+
+        .service-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .service-name {
+            font-size: 15px;
+            font-weight: 600;
+            flex: 1;
+        }
+
+        .service-status {
+            font-size: 13px;
+            font-weight: 500;
+            padding: 4px 10px;
+            border-radius: 4px;
+            white-space: nowrap;
+        }
+
+        .service-status.operational {
+            background: rgba(39, 174, 96, 0.2);
+            color: #27AE60;
+        }
+
+        .service-status.degraded {
+            background: rgba(243, 156, 18, 0.2);
+            color: #F39C12;
+        }
+
+        .service-status.down {
+            background: rgba(231, 76, 60, 0.2);
+            color: #E74C3C;
+        }
+
+        .service-details {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            font-size: 12px;
+            color: #a0aac0;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .service-detail {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .service-detail-label {
+            color: #7a8099;
+        }
+
+        /* UPTIME CHART */
+        .uptime-section {
+            margin-bottom: 50px;
+        }
+
+        .uptime-section-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #27AE60;
+            margin-bottom: 20px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid rgba(39, 174, 96, 0.3);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .uptime-chart {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 16px;
+            backdrop-filter: blur(10px);
+        }
+
+        .uptime-service-name {
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .uptime-bars {
+            display: flex;
+            gap: 2px;
+            align-items: flex-end;
+            height: 40px;
+        }
+
+        .uptime-bar {
+            flex: 1;
+            border-radius: 2px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .uptime-bar:hover {
+            transform: scaleY(1.2);
+        }
+
+        .uptime-bar.up {
+            background: #27AE60;
+        }
+
+        .uptime-bar.degraded {
+            background: #F39C12;
+        }
+
+        .uptime-bar.down {
+            background: #E74C3C;
+        }
+
+        .uptime-tooltip {
+            font-size: 11px;
+            color: #a0aac0;
+            margin-top: 4px;
+        }
+
+        /* INCIDENT LOG */
+        .incident-section {
+            margin-bottom: 50px;
+        }
+
+        .incident-section-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #27AE60;
+            margin-bottom: 16px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid rgba(39, 174, 96, 0.3);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .incident-log {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .incident-item {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 16px;
+            backdrop-filter: blur(10px);
+            border-left: 3px solid #F39C12;
+        }
+
+        .incident-item.resolved {
+            border-left-color: #27AE60;
+            background: rgba(39, 174, 96, 0.05);
+        }
+
+        .incident-date {
+            font-size: 12px;
+            color: #a0aac0;
+            font-family: 'JetBrains Mono', monospace;
+            margin-bottom: 6px;
+        }
+
+        .incident-title {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+
+        .incident-description {
+            font-size: 13px;
+            color: #c0c6d6;
+            line-height: 1.5;
+        }
+
+        /* SUBSCRIPTION */
+        .subscribe-section {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 30px;
+            margin-bottom: 40px;
+            backdrop-filter: blur(10px);
+        }
+
+        .subscribe-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+
+        .subscribe-description {
+            font-size: 14px;
+            color: #c0c6d6;
+            margin-bottom: 20px;
+        }
+
+        .subscribe-form {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .email-input {
+            flex: 1;
+            min-width: 250px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 6px;
+            padding: 12px 16px;
+            font-family: 'Inter', sans-serif;
+            color: #e0e6f6;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .email-input::placeholder {
+            color: #7a8099;
+        }
+
+        .email-input:focus {
+            outline: none;
+            border-color: #27AE60;
+            background: rgba(39, 174, 96, 0.05);
+            box-shadow: 0 0 0 2px rgba(39, 174, 96, 0.2);
+        }
+
+        .subscribe-button {
+            background: linear-gradient(135deg, #27AE60 0%, #2ecc71 100%);
+            color: #0B0D17;
+            border: none;
+            border-radius: 6px;
+            padding: 12px 24px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+
+        .subscribe-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(39, 174, 96, 0.3);
+        }
+
+        .subscribe-links {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .subscribe-link {
+            font-size: 14px;
+            color: #27AE60;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.3s ease;
+        }
+
+        .subscribe-link:hover {
+            color: #2ecc71;
+        }
+
+        /* FOOTER */
+        .footer {
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 30px;
+            text-align: center;
+            font-size: 13px;
+            color: #7a8099;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .header-title {
+                font-size: 24px;
+            }
+
+            .header-top {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .service-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .subscribe-form {
+                flex-direction: column;
+            }
+
+            .email-input {
+                min-width: 100%;
+            }
+
+            .status-icon {
+                font-size: 18px;
+            }
+        }
+
+        /* STATUS ICONS */
+        .status-icon {
+            font-size: 20px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- HEADER -->
+        <div class="header">
+            <div class="header-top">
+                <h1 class="header-title">Heady Ecosystem Status</h1>
+                <div class="status-badge critical">
+                    <span class="status-indicator red"></span>
+                    System Degraded
+                </div>
+            </div>
+            <div class="header-meta">
+                Last checked: <span id="lastChecked">2026-03-12 14:32:45 UTC</span> | Next check in <span id="nextCheck">30s</span>
+            </div>
+        </div>
+
+        <!-- STATUS SUMMARY -->
+        <div class="status-summary critical">
+            <div class="status-summary-title">
+                <span class="status-icon">⚠️</span>
+                Multiple Services Experiencing Issues
+            </div>
+            <div class="status-summary-description">
+                We have identified critical issues affecting multiple backend services and the HeadyBuddy ecosystem. Our engineering team is actively investigating. See incident log below for details.
+            </div>
+        </div>
+
+        <!-- REFRESH PROGRESS -->
+        <div class="refresh-section">
+            <div style="flex: 1; min-width: 200px;">
+                <div class="progress-bar">
+                    <div class="progress-fill"></div>
+                </div>
+            </div>
+            <div class="next-check">Next check: <span id="nextCheckTimer">30</span>s</div>
+        </div>
+
+        <!-- WEB PROPERTIES -->
+        <div class="service-group">
+            <div class="service-group-title">Web Properties</div>
+            <div class="service-grid">
+                <div class="service-card operational">
+                    <div class="service-header">
+                        <span class="status-indicator green"></span>
+                        <div class="service-name">headysystems.com</div>
+                        <span class="service-status operational">Operational</span>
+                    </div>
+                    <div class="service-details">
+                        <div class="service-detail">
+                            <span class="service-detail-label">Response Time:</span>
+                            <span>145ms</span>
+                        </div>
+                        <div class="service-detail">
+                            <span class="service-detail-label">Last Checked:</span>
+                            <span>2 minutes ago</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="service-card operational">
+                    <div class="service-header">
+                        <span class="status-indicator green"></span>
+                        <div class="service-name">headyme.com</div>
+                        <span class="service-status operational">Operational</span>
+                    </div>
+                    <div class="service-details">
+                        <div class="service-detail">
+                            <span class="service-detail-label">Response Time:</span>
+                            <span>132ms</span>
+                        </div>
+                        <div class="service-detail">
+                            <span class="service-detail-label">Last Checked:</span>
+                            <span>2 minutes ago</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="service-card operational">
+                    <div class="service-header">
+                        <span class="status-indicator green"></span>
+                        <div class="service-name">heady-ai.com</div>
+                        <span class="service-status operational">Operational</span>
+                    </div>
+                    <div class="service-details">
+                        <div class="service-detail">
+                            <span class="service-detail-label">Response Time:</span>
+                            <span>178ms</span>
+                        </div>
+                        <div class="service-detail">
+                            <span class="service-detail-label">Last Checked:</span>
+                            <span>2 minutes ago</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="service-card degraded">
+                    <div class="service-header">
+                        <span class="status-indicator yellow"></span>
+                        <div class="service-name">headyconnection.com</div>
+                        <span class="service-status degraded">Misconfigured</span>
+                    </div>
+                    <div class="service-details">
+                        <div class="service-detail">
+                            <span class="service-detail-label">Response Time:</span>
+                            <span>89ms</span>
+                        </div>
+                        <div class="service-detail">
+                            <span class="service-detail-label">Issue:</span>
+                            <span>Serving wrong content</span>
+                        </div>
+                        <div class="service-detail">
+                            <span class="service-detail-label">Last Checked:</span>
+                            <span>2 minutes ago</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- BACKEND SERVICES -->
+        <div class="service-group">
+            <div class="service-group-title">Backend Services</div>
+            <div class="service-grid">
+                <div class="service-card down">
+                    <div class="service-header">
+                        <span class="status-indicator red"></span>
+                        <div class="service-name">Cloud Manager (HeadyMe)</div>
+                        <span class="service-status down">Down</span>
+                    </div>
+                    <div class="service-details">
+                        <div class="service-detail">
+                            <span class="service-detail-label">Status Code:</span>
+                            <span>ECONNREFUSED</span>
+                        </div>
+                        <div class="service-detail">
+                            <span class="service-detail-label">Last Checked:</span>
+                            <span>1 minute ago</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="service-card down">
+                    <div class="service-header">
+                        <span class="status-indicator red"></span>
+                        <div class="service-name">Cloud Manager (HeadySystems)</div>
+                        <span class="service-status down">Down</span>
+                    </div>
+                    <div class="service-details">
+                        <div class="service-detail">
+                            <span class="service-detail-label">Status Code:</span>
+                            <span>ECONNREFUSED</span>
+                        </div>
+                        <div class="service-detail">
+                            <span class="service-detail-label">Last Checked:</span>
+                            <span>1 minute ago</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="service-card down">
+                    <div class="service-header">
+                        <span class="status-indicator red"></span>
+                        <div class="service-name">Cloud Manager (HeadyConnection)</div>
+                        <span class="service-status down">Down</span>
+                    </div>
+                    <div class="service-details">
+                        <div class="service-detail">
+                            <span class="service-detail-label">Status Code:</span>
+                            <span>ECONNREFUSED</span>
+                        </div>
+                        <div class="service-detail">
+                            <span class="service-detail-label">Last Checked:</span>
+                            <span>1 minute ago</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="service-card down">
+                    <div class="service-header">
+                        <span class="status-indicator red"></span>
+                        <div class="service-name">API Gateway</div>
+                        <span class="service-status down">Unreachable</span>
+                    </div>
+                    <div class="service-details">
+                        <div class="service-detail">
+                            <span class="service-detail-label">Status Code:</span>
+                            <span>Connection timeout</span>
+                        </div>
+                        <div class="service-detail">
+                            <span class="service-detail-label">Last Checked:</span>
+                            <span>1 minute ago</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SUPPORTING SERVICES -->
+        <div class="service-group">
+            <div class="service-group-title">Supporting Services</div>
+            <div class="service-grid">
+                <div class="service-card down">
+                    <div class="service-header">
+                        <span class="status-indicator red"></span>
+                        <div class="service-name">headybuddy.com</div>
+                        <span class="service-status down">Down</span>
+                    </div>
+                    <div class="service-details">
+                        <div class="service-detail">
+                            <span class="service-detail-label">Issue:</span>
+                            <span>SSL certificate expired</span>
+                        </div>
+                        <div class="service-detail">
+                            <span class="service-detail-label">Last Checked:</span>
+                            <span>2 minutes ago</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="service-card degraded">
+                    <div class="service-header">
+                        <span class="status-indicator yellow"></span>
+                        <div class="service-name">HeadyBuddy Chat</div>
+                        <span class="service-status degraded">Degraded</span>
+                    </div>
+                    <div class="service-details">
+                        <div class="service-detail">
+                            <span class="service-detail-label">Status:</span>
+                            <span>Offline fallback only</span>
+                        </div>
+                        <div class="service-detail">
+                            <span class="service-detail-label">Last Checked:</span>
+                            <span>2 minutes ago</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="service-card down">
+                    <div class="service-header">
+                        <span class="status-indicator red"></span>
+                        <div class="service-name">headymcp.com</div>
+                        <span class="service-status down">Down</span>
+                    </div>
+                    <div class="service-details">
+                        <div class="service-detail">
+                            <span class="service-detail-label">Status Code:</span>
+                            <span>503 Service Unavailable</span>
+                        </div>
+                        <div class="service-detail">
+                            <span class="service-detail-label">Last Checked:</span>
+                            <span>1 minute ago</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="service-card degraded">
+                    <div class="service-header">
+                        <span class="status-indicator yellow"></span>
+                        <div class="service-name">Documentation</div>
+                        <span class="service-status degraded">Partial</span>
+                    </div>
+                    <div class="service-details">
+                        <div class="service-detail">
+                            <span class="service-detail-label">Status:</span>
+                            <span>Index only (no content)</span>
+                        </div>
+                        <div class="service-detail">
+                            <span class="service-detail-label">Last Checked:</span>
+                            <span>2 minutes ago</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- INFRASTRUCTURE -->
+        <div class="service-group">
+            <div class="service-group-title">Infrastructure</div>
+            <div class="service-grid">
+                <div class="service-card operational">
+                    <div class="service-header">
+                        <span class="status-indicator green"></span>
+                        <div class="service-name">Primary Database</div>
+                        <span class="service-status operational">Operational</span>
+                    </div>
+                    <div class="service-details">
+                        <div class="service-detail">
+                            <span class="service-detail-label">CPU Usage:</span>
+                            <span>42%</span>
+                        </div>
+                        <div class="service-detail">
+                            <span class="service-detail-label">Memory:</span>
+                            <span>68%</span>
+                        </div>
+                        <div class="service-detail">
+                            <span class="service-detail-label">Last Checked:</span>
+                            <span>30 seconds ago</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="service-card operational">
+                    <div class="service-header">
+                        <span class="status-indicator green"></span>
+                        <div class="service-name">Redis Cache</div>
+                        <span class="service-status operational">Operational</span>
+                    </div>
+                    <div class="service-details">
+                        <div class="service-detail">
+                            <span class="service-detail-label">Connected Clients:</span>
+                            <span>127</span>
+                        </div>
+                        <div class="service-detail">
+                            <span class="service-detail-label">Memory Usage:</span>
+                            <span>1.2GB / 4GB</span>
+                        </div>
+                        <div class="service-detail">
+                            <span class="service-detail-label">Last Checked:</span>
+                            <span>30 seconds ago</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="service-card operational">
+                    <div class="service-header">
+                        <span class="status-indicator green"></span>
+                        <div class="service-name">Vector Database</div>
+                        <span class="service-status operational">Operational</span>
+                    </div>
+                    <div class="service-details">
+                        <div class="service-detail">
+                            <span class="service-detail-label">Vectors Indexed:</span>
+                            <span>2.4M</span>
+                        </div>
+                        <div class="service-detail">
+                            <span class="service-detail-label">Query Latency:</span>
+                            <span>12ms avg</span>
+                        </div>
+                        <div class="service-detail">
+                            <span class="service-detail-label">Last Checked:</span>
+                            <span>30 seconds ago</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="service-card operational">
+                    <div class="service-header">
+                        <span class="status-indicator green"></span>
+                        <div class="service-name">Error Tracking (Sentry)</div>
+                        <span class="service-status operational">Operational</span>
+                    </div>
+                    <div class="service-details">
+                        <div class="service-detail">
+                            <span class="service-detail-label">Events (24h):</span>
+                            <span>342</span>
+                        </div>
+                        <div class="service-detail">
+                            <span class="service-detail-label">Storage:</span>
+                            <span>47GB / 100GB</span>
+                        </div>
+                        <div class="service-detail">
+                            <span class="service-detail-label">Last Checked:</span>
+                            <span>30 seconds ago</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- AI NODES -->
+        <div class="service-group">
+            <div class="service-group-title">AI Processing Nodes</div>
+            <div class="service-grid">
+                <div class="service-card operational">
+                    <div class="service-header">
+                        <span class="status-indicator green"></span>
+                        <div class="service-name">CODEMAP Node</div>
+                        <span class="service-status operational">Operational</span>
+                    </div>
+                    <div class="service-details">
+                        <div class="service-detail">
+                            <span class="service-detail-label">GPU Utilization:</span>
+                            <span>73%</span>
+                        </div>
+                        <div class="service-detail">
+                            <span class="service-detail-label">Requests (1h):</span>
+                            <span>2,847</span>
+                        </div>
+                        <div class="service-detail">
+                            <span class="service-detail-label">Last Checked:</span>
+                            <span>45 seconds ago</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="service-card operational">
+                    <div class="service-header">
+                        <span class="status-indicator green"></span>
+                        <div class="service-name">JULES Node</div>
+                        <span class="service-status operational">Operational</span>
+                    </div>
+                    <div class="service-details">
+                        <div class="service-detail">
+                            <span class="service-detail-label">GPU Utilization:</span>
+                            <span>68%</span>
+                        </div>
+                        <div class="service-detail">
+                            <span class="service-detail-label">Requests (1h):</span>
+                            <span>1,923</span>
+                        </div>
+                        <div class="service-detail">
+                            <span class="service-detail-label">Last Checked:</span>
+                            <span>45 seconds ago</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="service-card operational">
+                    <div class="service-header">
+                        <span class="status-indicator green"></span>
+                        <div class="service-name">OBSERVER Node</div>
+                        <span class="service-status operational">Operational</span>
+                    </div>
+                    <div class="service-details">
+                        <div class="service-detail">
+                            <span class="service-detail-label">GPU Utilization:</span>
+                            <span>81%</span>
+                        </div>
+                        <div class="service-detail">
+                            <span class="service-detail-label">Requests (1h):</span>
+                            <span>3,124</span>
+                        </div>
+                        <div class="service-detail">
+                            <span class="service-detail-label">Last Checked:</span>
+                            <span>45 seconds ago</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="service-card operational">
+                    <div class="service-header">
+                        <span class="status-indicator green"></span>
+                        <div class="service-name">BUILDER Node</div>
+                        <span class="service-status operational">Operational</span>
+                    </div>
+                    <div class="service-details">
+                        <div class="service-detail">
+                            <span class="service-detail-label">GPU Utilization:</span>
+                            <span>64%</span>
+                        </div>
+                        <div class="service-detail">
+                            <span class="service-detail-label">Requests (1h):</span>
+                            <span>1,567</span>
+                        </div>
+                        <div class="service-detail">
+                            <span class="service-detail-label">Last Checked:</span>
+                            <span>45 seconds ago</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="service-card operational">
+                    <div class="service-header">
+                        <span class="status-indicator green"></span>
+                        <div class="service-name">ATLAS Node</div>
+                        <span class="service-status operational">Operational</span>
+                    </div>
+                    <div class="service-details">
+                        <div class="service-detail">
+                            <span class="service-detail-label">GPU Utilization:</span>
+                            <span>76%</span>
+                        </div>
+                        <div class="service-detail">
+                            <span class="service-detail-label">Requests (1h):</span>
+                            <span>2,456</span>
+                        </div>
+                        <div class="service-detail">
+                            <span class="service-detail-label">Last Checked:</span>
+                            <span>45 seconds ago</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="service-card operational">
+                    <div class="service-header">
+                        <span class="status-indicator green"></span>
+                        <div class="service-name">PYTHIA Node</div>
+                        <span class="service-status operational">Operational</span>
+                    </div>
+                    <div class="service-details">
+                        <div class="service-detail">
+                            <span class="service-detail-label">GPU Utilization:</span>
+                            <span>71%</span>
+                        </div>
+                        <div class="service-detail">
+                            <span class="service-detail-label">Requests (1h):</span>
+                            <span>2,198</span>
+                        </div>
+                        <div class="service-detail">
+                            <span class="service-detail-label">Last Checked:</span>
+                            <span>45 seconds ago</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- UPTIME HISTORY -->
+        <div class="uptime-section">
+            <div class="uptime-section-title">30-Day Uptime History</div>
+
+            <div class="uptime-chart">
+                <div class="uptime-service-name">
+                    <span class="status-indicator green"></span>
+                    headysystems.com
+                </div>
+                <div class="uptime-bars" id="uptime-headysystems"></div>
+                <div class="uptime-tooltip">99.82% uptime — 3h 14m downtime</div>
+            </div>
+
+            <div class="uptime-chart">
+                <div class="uptime-service-name">
+                    <span class="status-indicator green"></span>
+                    headyme.com
+                </div>
+                <div class="uptime-bars" id="uptime-headyme"></div>
+                <div class="uptime-tooltip">99.91% uptime — 1h 18m downtime</div>
+            </div>
+
+            <div class="uptime-chart">
+                <div class="uptime-service-name">
+                    <span class="status-indicator green"></span>
+                    heady-ai.com
+                </div>
+                <div class="uptime-bars" id="uptime-headyai"></div>
+                <div class="uptime-tooltip">99.76% uptime — 5h 42m downtime</div>
+            </div>
+
+            <div class="uptime-chart">
+                <div class="uptime-service-name">
+                    <span class="status-indicator yellow"></span>
+                    headyconnection.com
+                </div>
+                <div class="uptime-bars" id="uptime-headyconnection"></div>
+                <div class="uptime-tooltip">97.34% uptime — 19h 8m issues</div>
+            </div>
+
+            <div class="uptime-chart">
+                <div class="uptime-service-name">
+                    <span class="status-indicator red"></span>
+                    Cloud Manager Services (All 3)
+                </div>
+                <div class="uptime-bars" id="uptime-cloudmanager"></div>
+                <div class="uptime-tooltip">65.12% uptime — 8d 10h downtime (Critical)</div>
+            </div>
+
+            <div class="uptime-chart">
+                <div class="uptime-service-name">
+                    <span class="status-indicator red"></span>
+                    API Gateway
+                </div>
+                <div class="uptime-bars" id="uptime-apigateway"></div>
+                <div class="uptime-tooltip">71.84% uptime — 7d 16h downtime (Critical)</div>
+            </div>
+
+            <div class="uptime-chart">
+                <div class="uptime-service-name">
+                    <span class="status-indicator red"></span>
+                    headybuddy.com
+                </div>
+                <div class="uptime-bars" id="uptime-headybuddy"></div>
+                <div class="uptime-tooltip">78.91% uptime — 6d 7h downtime</div>
+            </div>
+        </div>
+
+        <!-- INCIDENT LOG -->
+        <div class="incident-section">
+            <div class="incident-section-title">Recent Incidents</div>
+            <div class="incident-log">
+                <div class="incident-item">
+                    <div class="incident-date">2026-03-12 14:15 UTC</div>
+                    <div class="incident-title">Cloud Manager Services Down</div>
+                    <div class="incident-description">
+                        All three Cloud Manager instances (HeadyMe, HeadySystems, HeadyConnection) are returning ECONNREFUSED errors. Investigation shows database connectivity issues. Engineering team is working on recovery.
+                    </div>
+                </div>
+
+                <div class="incident-item">
+                    <div class="incident-date">2026-03-12 13:42 UTC</div>
+                    <div class="incident-title">API Gateway Timeout</div>
+                    <div class="incident-description">
+                        API Gateway experiencing persistent connection timeouts. Requests are failing with timeout errors after 30 seconds. Load balancer health checks are passing but upstream services are unresponsive.
+                    </div>
+                </div>
+
+                <div class="incident-item">
+                    <div class="incident-date">2026-03-11 22:30 UTC</div>
+                    <div class="incident-title">HeadyBuddy SSL Certificate Expired</div>
+                    <div class="incident-description">
+                        The SSL certificate for headybuddy.com expired at 2026-03-11 20:00 UTC. Certificate renewal is in progress. Visitors will see SSL warnings until renewal is complete.
+                    </div>
+                </div>
+
+                <div class="incident-item">
+                    <div class="incident-date">2026-03-10 09:15 UTC</div>
+                    <div class="incident-title">HeadyConnection Content Misconfiguration</div>
+                    <div class="incident-description">
+                        HeadyConnection domain is incorrectly serving content from the HeadyMe instance. Root cause identified as DNS configuration error. Temporary workaround deployed; permanent fix scheduled for 2026-03-13.
+                    </div>
+                </div>
+
+                <div class="incident-item resolved">
+                    <div class="incident-date">2026-03-08 18:45 UTC</div>
+                    <div class="incident-title">Database Replication Lag (RESOLVED)</div>
+                    <div class="incident-description">
+                        Primary database experienced replication lag to secondary nodes. Issue resolved by restarting replication service. All nodes now in sync. Monitoring increased for 24 hours.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SUBSCRIPTION -->
+        <div class="subscribe-section">
+            <div class="subscribe-title">Get Notified About Status Changes</div>
+            <div class="subscribe-description">
+                Subscribe to receive notifications when Heady services experience issues or when service is restored.
+            </div>
+            <div class="subscribe-form">
+                <input type="email" class="email-input" placeholder="Enter your email address" id="emailInput">
+                <button class="subscribe-button" onclick="handleSubscribe()">Subscribe</button>
+            </div>
+            <div class="subscribe-links">
+                <a href="#" class="subscribe-link">
+                    <span>📡</span>
+                    Subscribe to RSS Feed
+                </a>
+                <a href="#" class="subscribe-link">
+                    <span>🐦</span>
+                    Follow on Twitter
+                </a>
+                <a href="#" class="subscribe-link">
+                    <span>📧</span>
+                    Email Support
+                </a>
+            </div>
+        </div>
+
+        <!-- FOOTER -->
+        <div class="footer">
+            <p>Heady Ecosystem Status Dashboard | Last updated 2026-03-12 14:32:45 UTC | <a href="#" style="color: #27AE60; text-decoration: none;">API Status</a> • <a href="#" style="color: #27AE60; text-decoration: none;">System Metrics</a></p>
+        </div>
+    </div>
+
+    <script>
+        // Auto-update timestamp and refresh timer
+        function updateTimestamps() {
+            const now = new Date();
+            const utcString = now.toUTCString().replace(' GMT', ' UTC');
+            document.getElementById('lastChecked').textContent = utcString;
+
+            // Update next check timer
+            let secondsLeft = 30;
+            const countdownInterval = setInterval(() => {
+                secondsLeft--;
+                document.getElementById('nextCheckTimer').textContent = secondsLeft;
+
+                if (secondsLeft <= 0) {
+                    clearInterval(countdownInterval);
+                    // Restart the refresh animation
+                    const progressFill = document.querySelector('.progress-fill');
+                    progressFill.style.animation = 'none';
+                    setTimeout(() => {
+                        progressFill.style.animation = 'fillProgress 30s linear';
+                    }, 10);
+                    updateTimestamps();
+                }
+            }, 1000);
+        }
+
+        // Generate uptime chart bars
+        function generateUptimeChart(elementId, upPercentage, degradedPercentage = 0) {
+            const container = document.getElementById(elementId);
+            const totalBars = 30;
+            const upBars = Math.round((totalBars * upPercentage) / 100);
+            const degradedBars = Math.round((totalBars * degradedPercentage) / 100);
+            const downBars = totalBars - upBars - degradedBars;
+
+            for (let i = 0; i < upBars; i++) {
+                const bar = document.createElement('div');
+                bar.className = 'uptime-bar up';
+                bar.title = 'Day ' + (i + 1) + ': Up';
+                container.appendChild(bar);
+            }
+
+            for (let i = 0; i < degradedBars; i++) {
+                const bar = document.createElement('div');
+                bar.className = 'uptime-bar degraded';
+                bar.title = 'Day ' + (upBars + i + 1) + ': Degraded';
+                container.appendChild(bar);
+            }
+
+            for (let i = 0; i < downBars; i++) {
+                const bar = document.createElement('div');
+                bar.className = 'uptime-bar down';
+                bar.title = 'Day ' + (upBars + degradedBars + i + 1) + ': Down';
+                container.appendChild(bar);
+            }
+        }
+
+        // Initialize uptime charts
+        generateUptimeChart('uptime-headysystems', 99.82);
+        generateUptimeChart('uptime-headyme', 99.91);
+        generateUptimeChart('uptime-headyai', 99.76);
+        generateUptimeChart('uptime-headyconnection', 97.34, 2.2);
+        generateUptimeChart('uptime-cloudmanager', 65.12, 5.3);
+        generateUptimeChart('uptime-apigateway', 71.84, 4.1);
+        generateUptimeChart('uptime-headybuddy', 78.91, 6.5);
+
+        // Handle subscription
+        function handleSubscribe() {
+            const email = document.getElementById('emailInput').value;
+            if (email && email.includes('@')) {
+                alert('Thank you for subscribing! Confirmation email sent to ' + email);
+                document.getElementById('emailInput').value = '';
+            } else {
+                alert('Please enter a valid email address.');
+            }
+        }
+
+        // Allow Enter key to subscribe
+        document.getElementById('emailInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                handleSubscribe();
+            }
+        });
+
+        // Initialize
+        updateTimestamps();
+    </script>
+</body>
+</html>

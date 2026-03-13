@@ -317,8 +317,8 @@ jobs:
             "https://heady-manager-609590223909.us-central1.run.app/api/domains/matrix" \
             "https://heady-manager-609590223909.us-central1.run.app/api/scheduler/health" \
             "https://headyme-site-609590223909.us-central1.run.app" \
-            "https://huggingface.co/spaces/HeadyMe/heady-ai" \
-            "https://huggingface.co/spaces/HeadyMe/heady-demo" \
+            "https://huggingface.co/spaces/HeadyConnection/heady-ai" \
+            "https://huggingface.co/spaces/HeadyConnection/heady-demo" \
             "https://heady.headyme.com/health"; do
             TOTAL=$((TOTAL+1))
             STATUS=$(curl -s -o /dev/null -w "%{http_code}" --max-time 10 "$url" 2>/dev/null || echo "000")

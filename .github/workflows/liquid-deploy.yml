@@ -80,15 +80,15 @@ jobs:
 
           // Projection matrix: vertical → { repo, paths }
           const VERTICALS = {
-            'headyme-core':         { repo: 'HeadyMe/headyme-core',         paths: ['src/app/', 'src/shared/'] },
-            'headysystems-core':    { repo: 'HeadyMe/headysystems-core',    paths: ['src/systems/', 'src/shared/'] },
-            'headyconnection-core': { repo: 'HeadyMe/headyconnection-core', paths: ['src/connection/', 'src/shared/'] },
-            'headybuddy-core':      { repo: 'HeadyMe/headybuddy-core',      paths: ['src/buddy/', 'src/shared/'] },
-            'headymcp-core':        { repo: 'HeadyMe/headymcp-core',        paths: ['src/mcp/', 'src/shared/'] },
-            'headyio-core':         { repo: 'HeadyMe/headyio-core',         paths: ['src/io/', 'src/shared/'] },
-            'headybot-core':        { repo: 'HeadyMe/headybot-core',        paths: ['src/bot/', 'src/shared/'] },
-            'headyapi-core':        { repo: 'HeadyMe/headyapi-core',        paths: ['src/api/', 'src/shared/'] },
-            'headyos-core':         { repo: 'HeadyMe/headyos-core',         paths: ['src/os/', 'src/shared/'] },
+            'headyme-core':         { repo: 'HeadyConnection/headyme-core',         paths: ['src/app/', 'src/shared/'] },
+            'headysystems-core':    { repo: 'HeadyConnection/headysystems-core',    paths: ['src/systems/', 'src/shared/'] },
+            'headyconnection-core': { repo: 'HeadyConnection/headyconnection-core', paths: ['src/connection/', 'src/shared/'] },
+            'headybuddy-core':      { repo: 'HeadyConnection/headybuddy-core',      paths: ['src/buddy/', 'src/shared/'] },
+            'headymcp-core':        { repo: 'HeadyConnection/headymcp-core',        paths: ['src/mcp/', 'src/shared/'] },
+            'headyio-core':         { repo: 'HeadyConnection/headyio-core',         paths: ['src/io/', 'src/shared/'] },
+            'headybot-core':        { repo: 'HeadyConnection/headybot-core',        paths: ['src/bot/', 'src/shared/'] },
+            'headyapi-core':        { repo: 'HeadyConnection/headyapi-core',        paths: ['src/api/', 'src/shared/'] },
+            'headyos-core':         { repo: 'HeadyConnection/headyos-core',         paths: ['src/os/', 'src/shared/'] },
           };
 
           const lines = fs.readFileSync('/dev/stdin', 'utf8').trim().split('\n').filter(Boolean);

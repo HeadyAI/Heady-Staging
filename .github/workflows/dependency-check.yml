@@ -72,7 +72,7 @@ jobs:
         if: ${{ !secrets.SOCKET_API_KEY }}
         run: |
           npm install -g @socketsecurity/cli
-          socket scan create --defaultBranch --org HeadyMe . || true
+          socket scan create --defaultBranch --org HeadyConnection . || true
           echo "::warning::Socket.dev API key not configured — running without authentication"
 
   # ─── npm audit (production dependencies) ────────────────────────────────────
