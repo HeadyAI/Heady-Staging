@@ -1,0 +1,87 @@
+---
+layout: page.njk
+title: HeadyMCP — Manager Control Plane
+heroTitle: HeadyMCP
+heroSubtitle: The Manager Control Plane that orchestrates all Heady services, AI nodes, pipelines, and infrastructure as one unified, intelligent system.
+order: 2
+---
+
+<div class="cta-row" style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:48px;">
+  <a href="/api/health" class="btn btn-primary">Check Health</a>
+  <a href="/api/registry" class="btn btn-secondary">View Registry</a>
+  <a href="/api/system/status" class="btn btn-secondary">System Status</a>
+</div>
+
+<div class="cards-grid">
+  {% sacredCard "Intelligent Orchestration" %}
+    HCFullPipeline runs in strict dependency order with checkpoints at each stage.
+    The system deeply re-analyzes state, configs, and patterns at every checkpoint.
+  {% endsacredCard %}
+
+  {% sacredCard "Multi-Agent Supervisor" %}
+    JULES, OBSERVER, BUILDER, ATLAS, and PYTHIA work in parallel fan-out.
+    Tasks routed via direct routing with no proxy for minimal latency.
+  {% endsacredCard %}
+
+  {% sacredCard "Circuit Breakers" %}
+    Resource policies enforce concurrency limits, cost budgets, retry/backoff,
+    and circuit breakers on all external calls. Production-grade resilience.
+  {% endsacredCard %}
+
+  {% sacredCard "Operational Readiness" %}
+    Continuous ORS scoring (0-100) determines system mode: full parallelism
+    above 85, normal at 70-85, maintenance at 50-70, recovery below 50.
+  {% endsacredCard %}
+
+  {% sacredCard "Checkpoint Protocol" %}
+    Validate run state, compare config hashes, re-evaluate health, check
+    concept alignment, sync registry, and produce comprehensive reports.
+  {% endsacredCard %}
+
+  {% sacredCard "YAML-Driven Config" %}
+    All pipeline definitions, resource rules, governance policies, and concept
+    indexes live in versioned YAML configs. Deterministic given same inputs.
+  {% endsacredCard %}
+</div>
+
+<h2 style="text-align:center;margin:48px 0 24px;">Managed Services</h2>
+
+<div class="cards-grid" style="grid-template-columns:repeat(auto-fit,minmax(220px,1fr));">
+  {% for svc in services %}
+    <div class="sacred-card" style="padding:16px;display:flex;align-items:center;gap:12px;">
+      <span style="width:8px;height:8px;border-radius:50%;background:{{ svc.color }};display:inline-block;{% if svc.building %}animation:breathe 2s ease-in-out infinite{% endif %}"></span>
+      <div>
+        <strong>{{ svc.name }}</strong><br>
+        <small style="color:var(--heady-muted);">{{ svc.desc }}</small>
+      </div>
+    </div>
+  {% endfor %}
+</div>
+
+<h2 style="text-align:center;margin:48px 0 24px;">API Reference</h2>
+
+<table class="api-table" style="width:100%;border-collapse:collapse;border-radius:12px;overflow:hidden;border:1px solid var(--heady-border,#1e2548);">
+  <thead>
+    <tr>
+      <th style="text-align:left;padding:12px 16px;font-size:11px;text-transform:uppercase;letter-spacing:1px;">Endpoint</th>
+      <th style="padding:12px 16px;">Method</th>
+      <th style="text-align:left;padding:12px 16px;">Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% apiEndpoint "GET" "/api/health" "System health check" %}
+    {% apiEndpoint "GET" "/api/system/status" "Full system status with capabilities" %}
+    {% apiEndpoint "POST" "/api/pipeline/run" "Trigger a pipeline run" %}
+    {% apiEndpoint "GET" "/api/pipeline/state" "Current pipeline execution state" %}
+    {% apiEndpoint "GET" "/api/registry" "Full HeadyRegistry catalog" %}
+    {% apiEndpoint "GET" "/api/nodes" "List all AI nodes" %}
+    {% apiEndpoint "GET" "/api/brain/status" "Brain status and readiness score" %}
+    {% apiEndpoint "GET" "/api/supervisor/status" "Multi-agent supervisor status" %}
+    {% apiEndpoint "GET" "/api/readiness/evaluate" "Run operational readiness probes" %}
+    {% apiEndpoint "POST" "/api/checkpoint/analyze" "Run checkpoint analysis" %}
+    {% apiEndpoint "GET" "/api/subsystems" "All subsystem status overview" %}
+    {% apiEndpoint "GET" "/api/context/health" "AutoContext service health" %}
+    {% apiEndpoint "POST" "/api/context/enrich" "5-pass enrichment pipeline" %}
+    {% apiEndpoint "GET" "/api/memory/stats" "Memory tier statistics" %}
+  </tbody>
+</table>

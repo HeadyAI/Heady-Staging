@@ -1,0 +1,23 @@
+{
+  "name": "HeadyMCP",
+  "tagline": "Manager Control Plane",
+  "description": "The central management hub for orchestrating Heady services, AI nodes, pipelines, and infrastructure.",
+  "nav": [
+    { "text": "Health", "url": "/api/health" },
+    { "text": "Registry", "url": "/api/registry" },
+    { "text": "Status", "url": "/api/system/status" },
+    { "text": "Docs", "url": "/api-docs" }
+  ],
+  "services": [
+    { "name": "HeadyBrain", "desc": "System meta-controller & ORS", "color": "#4ade80", "building": false },
+    { "name": "HeadyConductor", "desc": "Python render worker", "color": "#4ade80", "building": false },
+    { "name": "HeadySync", "desc": "Multi-remote git sync", "color": "#4ade80", "building": false },
+    { "name": "HeadyRegistry", "desc": "Central component catalog", "color": "#4ade80", "building": false },
+    { "name": "HeadyCheckpoint", "desc": "Protocol analyzer", "color": "#4ade80", "building": false },
+    { "name": "HeadyHealth", "desc": "Node health + cron", "color": "#4ade80", "building": false },
+    { "name": "HeadyReadiness", "desc": "Operational readiness probes", "color": "#4ade80", "building": false },
+    { "name": "HeadyMemory", "desc": "3-tier vector memory", "color": "#4ade80", "building": false },
+    { "name": "HeadyAutoContext", "desc": "5-pass enrichment pipeline", "color": "#4ade80", "building": false },
+    { "name": "HeadyBuddy", "desc": "AI companion overlay", "color": "#ffd700", "building": true }
+  ]
+}

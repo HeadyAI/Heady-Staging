@@ -14,7 +14,6 @@
 // ╚══════════════════════════════════════════════════════════════════╝
 // HEADY_BRAND:END
 import { useState, useEffect } from 'react';
-import axios from 'axios';
 
 export const useMCPTools = () => {
   const [tools, setTools] = useState([]);
@@ -25,8 +24,10 @@ export const useMCPTools = () => {
     const fetchTools = async () => {
       setStatus('loading');
       try {
-        const response = await axios.get('/api/mcp/tools');
-        setTools(response.data);
+        const res = await fetch('/api/mcp/tools');
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const data = await res.json();
+        setTools(data);
         setStatus('success');
       } catch (err) {
         setError(err);

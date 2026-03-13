@@ -1,18 +1,17 @@
 // HEADY_BRAND:BEGIN
 // ╔══════════════════════════════════════════════════════════════════╗
-// ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
-// ║  ██║  ██║██╔════╝██╔══██╗██╔══██╗╚██╗ ██╔╝                     ║
-// ║  ███████║█████╗  ███████║██║  ██║ ╚████╔╝                      ║
-// ║  ██╔══██║██╔══╝  ██╔══██║██║  ██║  ╚██╔╝                       ║
-// ║  ██║  ██║███████╗██║  ██║██████╔╝   ██║                        ║
-// ║  ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝    ╚═╝                        ║
-// ║                                                                  ║
-// ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
-// ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
-// ║  FILE: websites/sites/headymcp.com/.eleventy.js                                                    ║
-// ║  LAYER: root                                                  ║
+// ║  HeadyMCP.com — Site-specific Eleventy configuration             ║
 // ╚══════════════════════════════════════════════════════════════════╝
 // HEADY_BRAND:END
+
 module.exports = function(eleventyConfig) {
-  // HeadyMCP.com specific config
+  // HeadyMCP-specific overrides
+  eleventyConfig.addPassthroughCopy('assets');
+
+  return {
+    dir: {
+      input: '.',
+      output: '../../_dist/headymcp.com',
+    },
+  };
 };

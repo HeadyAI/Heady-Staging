@@ -28,12 +28,84 @@ class HCBrain {
     this.autoExecuteQueue = [];
   }
 
-  think() {
-    console.log('Thinking...');
+  think(context = {}) {
+    const projectRoot = path.join(__dirname, '../..');
+    const thoughts = {
+      timestamp: new Date().toISOString(),
+      systemState: this.checkSystemHealth(),
+      registryState: this.loadRegistry(),
+      context,
+      observations: [],
+      recommendations: [],
+    };
+
+    // Observe config drift
+    const configsDir = path.join(projectRoot, 'configs');
+    if (fs.existsSync(configsDir)) {
+      const configs = fs.readdirSync(configsDir).filter(f => f.endsWith('.yaml') || f.endsWith('.yml'));
+      thoughts.observations.push({ type: 'configs', count: configs.length, files: configs });
+    }
+
+    // Check for unresolved issues
+    if (thoughts.systemState.issues.length > 0) {
+      thoughts.recommendations.push({
+        priority: 'high',
+        message: `Resolve ${thoughts.systemState.issues.length} system issue(s) before proceeding`,
+        issues: thoughts.systemState.issues,
+      });
+    }
+
+    // Memory pressure check
+    const heapUsedMB = process.memoryUsage().heapUsed / 1024 / 1024;
+    if (heapUsedMB > 300) {
+      thoughts.recommendations.push({
+        priority: 'medium',
+        message: `Memory usage at ${heapUsedMB.toFixed(0)}MB — consider garbage collection or reducing cache`,
+        category: 'performance',
+      });
+    }
+
+    return thoughts;
   }
 
-  decide() {
-    console.log('Making decisions...');
+  decide(options = {}) {
+    const thoughts = this.think(options.context || {});
+    const decision = {
+      timestamp: new Date().toISOString(),
+      action: 'proceed',
+      confidence: 1.0,
+      reasoning: [],
+    };
+
+    // If critical issues exist, halt
+    const criticalIssues = thoughts.recommendations.filter(r => r.priority === 'critical');
+    if (criticalIssues.length > 0) {
+      decision.action = 'halt';
+      decision.confidence = 0.95;
+      decision.reasoning.push(`${criticalIssues.length} critical issue(s) require resolution`);
+      return decision;
+    }
+
+    // If high-priority issues exist, proceed with caution
+    const highIssues = thoughts.recommendations.filter(r => r.priority === 'high');
+    if (highIssues.length > 0) {
+      decision.action = 'cautious';
+      decision.confidence = 0.7;
+      decision.reasoning.push(`${highIssues.length} high-priority issue(s) detected`);
+    }
+
+    // If system is degraded, reduce parallelism
+    if (thoughts.systemState.status === 'degraded') {
+      decision.action = decision.action === 'halt' ? 'halt' : 'cautious';
+      decision.confidence *= 0.8;
+      decision.reasoning.push('System in degraded state');
+    }
+
+    if (decision.reasoning.length === 0) {
+      decision.reasoning.push('All systems operational, no issues detected');
+    }
+
+    return decision;
   }
 
   monitorRegistry(registry) {
