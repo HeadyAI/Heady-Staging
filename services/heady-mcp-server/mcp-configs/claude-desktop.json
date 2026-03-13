@@ -1,16 +1,10 @@
 {
   "mcpServers": {
     "heady": {
-      "command": "node",
-      "args": ["/home/headyme/Heady/services/heady-mcp-server/src/index.js"],
-      "env": {
-        "HEADY_MCP_TRANSPORT": "stdio",
-        "HEADY_SERVICE_HOST": "localhost",
-        "HEADY_LOG_LEVEL": "info",
-        "NODE_ENV": "production",
-        "DATABASE_URL": "${DATABASE_URL}",
-        "REDIS_URL": "${REDIS_URL}",
-        "HEADY_API_KEY": "${HEADY_API_KEY}"
+      "transport": "streamable-http",
+      "url": "https://mcp.headysystems.com/mcp",
+      "headers": {
+        "Authorization": "Bearer ${HEADY_API_KEY}"
       }
     },
     "heady-render": {
@@ -20,19 +14,6 @@
         "RENDER_API_KEY": "${RENDER_API_KEY}"
       }
     },
-    "heady-manager": {
-      "command": "node",
-      "args": ["/home/headyme/Heady/heady-manager.js"],
-      "env": {
-        "PORT": "3300",
-        "NODE_ENV": "development",
-        "MCP_SERVER_URL": "http://localhost:3310",
-        "DATABASE_URL": "${DATABASE_URL}",
-        "REDIS_URL": "${REDIS_URL}",
-        "HEADY_API_KEY": "${HEADY_API_KEY}",
-        "ANTHROPIC_API_KEY": "${ANTHROPIC_API_KEY}"
-      }
-    },
     "filesystem": {
       "command": "npx",
       "args": [
@@ -40,13 +21,6 @@
         "@modelcontextprotocol/server-filesystem",
         "/home/headyme/Heady"
       ]
-    },
-    "heady-remote": {
-      "transport": "streamable-http",
-      "url": "https://mcp.headysystems.com/mcp",
-      "headers": {
-        "Authorization": "Bearer ${HEADY_API_KEY}"
-      }
     }
   }
 }
