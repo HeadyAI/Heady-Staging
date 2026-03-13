@@ -8,8 +8,8 @@
 const crypto = require('crypto');
 const { EventEmitter } = require('events');
 const logger = require('../../utils/logger');
-const HeadyKV = require('../../core/heady-kv');
-const headyFetch = require('../../core/heady-fetch');
+const HeadyKV = require('../core/heady-kv');
+const headyFetch = require('../core/heady-fetch');
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 

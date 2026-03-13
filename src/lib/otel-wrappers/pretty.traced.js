@@ -53,7 +53,7 @@ function dataType(data) {
 }
 
 // ─── Load original module ─────────────────────────────────────────────────────
-const original = require('../lib/pretty');
+const original = require('../pretty');
 
 // ─── Generic function wrapper ─────────────────────────────────────────────────
 function wrapFn(fnName, originalFn) {

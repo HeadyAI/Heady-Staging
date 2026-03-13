@@ -20,7 +20,7 @@
 
 const crypto = require('crypto');
 const path   = require('path');
-const logger = require('../utils/logger');
+const logger = require('../../utils/logger');
 
 // ─── Security logger ───────────────────────────────────────────────────────────
 

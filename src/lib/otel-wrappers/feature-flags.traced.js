@@ -21,7 +21,7 @@ const tracer = trace.getTracer('heady.' + MODULE_NAME, '3.1.0');
 const meter  = metrics.getMeter('heady.' + MODULE_NAME, '3.1.0');
 
 // ─── Load original exports ────────────────────────────────────────────────────
-const original = require('../lib/feature-flags');
+const original = require('../feature-flags');
 
 // ─── Metrics ──────────────────────────────────────────────────────────────────
 const flagChecksTotal = meter.createCounter('heady.flag_checks_total', {

@@ -82,9 +82,9 @@ function getWork(ctx = {}) {
 
         // ═══ MODULE HEALTH CHECKS ═══
         async () => { try { require('../governance/approval-gates'); return { bee: domain, action: 'approval-gates', loaded: true }; } catch { return { bee: domain, action: 'approval-gates', loaded: false }; } },
-        async () => { try { require('../policy-engine'); return { bee: domain, action: 'policy-engine', loaded: true }; } catch { return { bee: domain, action: 'policy-engine', loaded: false }; } },
-        async () => { try { require('../policy-service'); return { bee: domain, action: 'policy-service', loaded: true }; } catch { return { bee: domain, action: 'policy-service', loaded: false }; } },
-        async () => { try { require('../heady-principles'); return { bee: domain, action: 'heady-principles', loaded: true }; } catch { return { bee: domain, action: 'heady-principles', loaded: false }; } },
+        async () => { try { require('../governance/policy-engine'); return { bee: domain, action: 'policy-engine', loaded: true }; } catch { return { bee: domain, action: 'policy-engine', loaded: false }; } },
+        async () => { try { require('../shared/policy-service'); return { bee: domain, action: 'policy-service', loaded: true }; } catch { return { bee: domain, action: 'policy-service', loaded: false }; } },
+        async () => { try { require('../shared/heady-principles'); return { bee: domain, action: 'heady-principles', loaded: true }; } catch { return { bee: domain, action: 'heady-principles', loaded: false }; } },
         async () => { try { require('../corrections'); return { bee: domain, action: 'corrections', loaded: true }; } catch { return { bee: domain, action: 'corrections', loaded: false }; } },
     ];
 }

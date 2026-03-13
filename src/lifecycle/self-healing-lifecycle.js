@@ -41,7 +41,7 @@ const {
   cosineSimilarity,
   phiPriorityScore,
   phiBackoff,   // phiBackoff already includes jitter; use as phiBackoffWithJitter
-} = require('../../shared/phi-math-v2.js');
+} = require('../shared/phi-math');
 
 // ─────────────────────────────────────────────────────────────────────────────
 // PHI BACKOFF SEQUENCE  (pre-computed, matches task spec)

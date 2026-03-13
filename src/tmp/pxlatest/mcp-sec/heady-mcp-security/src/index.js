@@ -13,7 +13,7 @@
 'use strict';
 
 // ── Foundation ──────────────────────────────────────────────────────────────
-const phiMath = require('../shared/phi-math');
+const phiMath = require('../../../../../core/phi-math');
 
 // ── Gateway ─────────────────────────────────────────────────────────────────
 const { MCPGateway, CSLToolRouter, SecurityError } = require('./gateway/mcp-gateway');

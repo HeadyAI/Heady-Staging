@@ -1,1128 +1,541 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="HeadyOS: The Latent Operating System for continuous AI reasoning. Cognitive OS architecture for intelligent agents with kernel, scheduler, and memory management.">
-    <meta name="keywords" content="operating system, AI agent, latent OS, cognitive computing, distributed systems, kernel, scheduler, memory management">
-    <meta name="author" content="Eric Haywood, HeadySystems Inc.">
-    <meta name="robots" content="index, follow">
-    <meta name="language" content="English">
-    <meta name="revisit-after" content="7 days">
-
-    <!-- Open Graph Tags -->
-    <meta property="og:type" content="website">
-    <meta property="og:title" content="HeadyOS - The Latent Operating System">
-    <meta property="og:description" content="Cognitive operating system for continuous AI reasoning. Kernel, scheduler, memory manager, and process orchestration.">
-    <meta property="og:url" content="https://headyos.com">
-    <meta property="og:site_name" content="HeadyOS">
-    <meta property="og:image" content="https://headyos.com/og-image.jpg">
-    <meta property="og:image:width" content="1200">
-    <meta property="og:image:height" content="630">
-
-    <!-- Twitter Card Tags -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="HeadyOS - The Latent Operating System">
-    <meta name="twitter:description" content="Cognitive OS for continuous AI reasoning and agent orchestration">
-    <meta name="twitter:image" content="https://headyos.com/og-image.jpg">
-
-    <!-- JSON-LD Structured Data -->
-    <script type="application/ld+json">
-    {
-        "@context": "https://schema.org",
-        "@type": "SoftwareApplication",
-        "name": "HeadyOS",
-        "url": "https://headyos.com",
-        "description": "Latent operating system for continuous AI reasoning and cognitive computing",
-        "applicationCategory": "DeveloperApplication",
-        "operatingSystem": "Cloud-Native, GCP Cloud Run",
-        "author": {
-            "@type": "Organization",
-            "name": "HeadySystems Inc."
-        },
-        "creator": {
-            "@type": "Person",
-            "name": "Eric Haywood"
-        },
-        "version": "4.0"
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HeadyOS — The AI Operating System for Developers</title>
+  <meta name="description" content="Agent runtime, unified memory, system primitives, and event bus — build and deploy AI agents on the operating system designed for intelligence.">
+  <meta name="keywords" content="Heady, AI, HeadyOS, operating-system, sacred geometry, vector memory, CSL">
+  <meta property="og:title" content="HeadyOS — The AI Operating System for Developers">
+  <meta property="og:description" content="Agent runtime, unified memory, system primitives, and event bus — build and deploy AI agents on the operating system designed for intelligence.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://headyos.com">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../packages/design-system/heady-design.css">
+  <style>
+    :root {
+      --accent: #14b8a6;
+      --accent-glow: rgba(20,184,166,0.15);
+      --accent-subtle: rgba(20,184,166,0.06);
+      --brand-font: 'Fira Code', 'Courier New', monospace;
+      --brand-heading: 'Fira Code', 'Courier New', monospace;
     }
-    </script>
-
-    <title>HeadyOS - The Latent Operating System | Cognitive AI Architecture</title>
-
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        :root {
-            --bg-dark: #0a0a0f;
-            --accent: #7c5eff;
-            --gold: #f0c040;
-            --cyan: #40e0d0;
-            --green: #00e676;
-            --text-primary: #ffffff;
-            --text-secondary: #b0b0c0;
-            --border-color: #2a2a3f;
-            --card-bg: #1a1a25;
-        }
-
-        html {
-            scroll-behavior: smooth;
-        }
-
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            background-color: var(--bg-dark);
-            color: var(--text-primary);
-            line-height: 1.6;
-            overflow-x: hidden;
-        }
-
-        #canvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-        }
-
-        h1, h2, h3, h4, h5, h6 {
-            font-weight: 700;
-            margin-bottom: 1rem;
-        }
-
-        h1 {
-            font-size: clamp(2.5rem, 8vw, 4rem);
-            line-height: 1.1;
-            background: linear-gradient(135deg, var(--cyan) 0%, var(--accent) 50%, var(--gold) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 1.5rem;
-        }
-
-        h2 {
-            font-size: clamp(1.75rem, 5vw, 2.5rem);
-            color: var(--text-primary);
-            margin-bottom: 1.5rem;
-        }
-
-        h3 {
-            font-size: 1.5rem;
-            color: var(--cyan);
-            margin-bottom: 1rem;
-        }
-
-        p {
-            font-size: 1rem;
-            color: var(--text-secondary);
-            margin-bottom: 1rem;
-            line-height: 1.8;
-        }
-
-        a {
-            color: var(--cyan);
-            text-decoration: none;
-            transition: color 0.3s ease;
-        }
-
-        a:hover {
-            color: var(--gold);
-        }
-
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 0 2rem;
-        }
-
-        .section {
-            padding: 6rem 0;
-            position: relative;
-            z-index: 1;
-        }
-
-        .section.alt {
-            background: rgba(26, 26, 37, 0.3);
-        }
-
-        nav {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 70px;
-            background: rgba(10, 10, 15, 0.95);
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid var(--border-color);
-            display: flex;
-            align-items: center;
-            z-index: 1000;
-        }
-
-        nav .container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            width: 100%;
-        }
-
-        .logo {
-            font-size: 1.5rem;
-            font-weight: 800;
-            background: linear-gradient(135deg, var(--cyan) 0%, var(--accent) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            letter-spacing: 0.1em;
-        }
-
-        nav ul {
-            list-style: none;
-            display: flex;
-            gap: 2rem;
-            align-items: center;
-        }
-
-        nav a {
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-            transition: color 0.3s ease;
-        }
-
-        nav a:hover {
-            color: var(--cyan);
-        }
-
-        .cta-button {
-            background: linear-gradient(135deg, var(--accent) 0%, var(--cyan) 100%);
-            color: var(--bg-dark);
-            padding: 0.75rem 1.5rem;
-            border-radius: 8px;
-            font-weight: 600;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .cta-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(124, 94, 255, 0.3);
-        }
-
-        .hero {
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            padding-top: 70px;
-        }
-
-        .hero-content h1 {
-            font-size: clamp(3rem, 10vw, 5rem);
-            margin-bottom: 1.5rem;
-            animation: fadeInUp 1s ease 0.2s backwards;
-        }
-
-        .hero-content p {
-            font-size: 1.3rem;
-            max-width: 600px;
-            margin: 0 auto 3rem;
-            animation: fadeInUp 1s ease 0.4s backwards;
-        }
-
-        .hero-buttons {
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
-            flex-wrap: wrap;
-            animation: fadeInUp 1s ease 0.6s backwards;
-        }
-
-        .btn {
-            padding: 1rem 2.5rem;
-            border-radius: 8px;
-            font-weight: 600;
-            font-size: 1rem;
-            border: 2px solid transparent;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-decoration: none;
-            display: inline-block;
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, var(--accent) 0%, var(--cyan) 100%);
-            color: var(--bg-dark);
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 15px 40px rgba(124, 94, 255, 0.4);
-        }
-
-        .btn-secondary {
-            background: transparent;
-            color: var(--cyan);
-            border: 2px solid var(--cyan);
-        }
-
-        .btn-secondary:hover {
-            background: rgba(64, 224, 208, 0.1);
-            transform: translateY(-3px);
-        }
-
-        .grid {
-            display: grid;
-            gap: 2rem;
-            margin-top: 3rem;
-        }
-
-        .grid-2 {
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-        }
-
-        .grid-3 {
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-        }
-
-        .card {
-            background: linear-gradient(135deg, var(--card-bg) 0%, rgba(124, 94, 255, 0.05) 100%);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 2rem;
-            transition: all 0.3s ease;
-            backdrop-filter: blur(10px);
-        }
-
-        .card:hover {
-            border-color: var(--accent);
-            box-shadow: 0 20px 50px rgba(124, 94, 255, 0.2);
-            transform: translateY(-5px);
-        }
-
-        .card h3 {
-            margin-top: 0;
-        }
-
-        .card-icon {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
-        }
-
-        .feature-list {
-            list-style: none;
-        }
-
-        .feature-list li {
-            padding: 0.75rem 0;
-            padding-left: 2rem;
-            position: relative;
-            color: var(--text-secondary);
-        }
-
-        .feature-list li:before {
-            content: "→";
-            position: absolute;
-            left: 0;
-            color: var(--cyan);
-            font-weight: bold;
-        }
-
-        .badge {
-            display: inline-block;
-            background: rgba(124, 94, 255, 0.2);
-            color: var(--accent);
-            padding: 0.5rem 1rem;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            border: 1px solid var(--accent);
-            margin: 0.25rem;
-        }
-
-        .code-block {
-            background: rgba(0, 0, 0, 0.5);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 1.5rem;
-            overflow-x: auto;
-            margin: 1.5rem 0;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.9rem;
-            line-height: 1.6;
-        }
-
-        .architecture-diagram {
-            background: rgba(0, 0, 0, 0.5);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 2rem;
-            margin: 2rem 0;
-            overflow-x: auto;
-        }
-
-        footer {
-            background: rgba(10, 10, 15, 0.8);
-            border-top: 1px solid var(--border-color);
-            padding: 3rem 0;
-            margin-top: 6rem;
-        }
-
-        .footer-content {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
-            margin-bottom: 2rem;
-        }
-
-        .footer-section h4 {
-            color: var(--cyan);
-            margin-bottom: 1rem;
-            font-size: 1rem;
-        }
-
-        .footer-section ul {
-            list-style: none;
-        }
-
-        .footer-section ul li {
-            margin-bottom: 0.5rem;
-        }
-
-        .footer-section a {
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-        }
-
-        .footer-bottom {
-            border-top: 1px solid var(--border-color);
-            padding-top: 2rem;
-            text-align: center;
-            color: var(--text-secondary);
-            font-size: 0.85rem;
-        }
-
-        .sr-only {
-            position: absolute;
-            width: 1px;
-            height: 1px;
-            padding: 0;
-            margin: -1px;
-            overflow: hidden;
-            clip: rect(0, 0, 0, 0);
-            white-space: nowrap;
-            border-width: 0;
-        }
-
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        .fade-in {
-            animation: fadeIn 0.8s ease forwards;
-        }
-
-        @media (max-width: 768px) {
-            nav ul {
-                gap: 1rem;
-            }
-
-            nav a {
-                font-size: 0.8rem;
-            }
-
-            .container {
-                padding: 0 1rem;
-            }
-
-            .section {
-                padding: 4rem 0;
-            }
-
-            .hero-buttons {
-                flex-direction: column;
-                align-items: center;
-            }
-
-            .btn {
-                width: 100%;
-                max-width: 300px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            h1 {
-                font-size: 2rem;
-            }
-
-            h2 {
-                font-size: 1.5rem;
-            }
-
-            .hero-content p {
-                font-size: 1rem;
-            }
-        }
-    </style>
+    body { padding-top: 32px; font-family: var(--brand-font); }
+    h1, h2, h3, h4 { font-family: var(--brand-heading); }
+    .sacred-canvas {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      z-index: 0;
+      pointer-events: none;
+    }
+    .hero-badge {
+      display: inline-block;
+      padding: 0.4rem 1rem;
+      background: rgba(20,184,166,0.08);
+      border: 1px solid rgba(20,184,166,0.2);
+      border-radius: 100px;
+      font-size: var(--text-xs);
+      color: #14b8a6;
+      letter-spacing: 0.04em;
+      margin-bottom: var(--space-8);
+      font-weight: 500;
+    }
+    .hero-cta-row { display: flex; gap: var(--space-8); justify-content: center; flex-wrap: wrap; }
+    .feature-icon {
+      font-size: 1.618rem;
+      display: block;
+      margin-bottom: 0.8rem;
+      color: var(--accent);
+    }
+    .btn-sm {
+      padding: 0.4rem 1rem;
+      font-size: var(--text-xs);
+      border-radius: var(--radius-sm);
+    }
+    .deep-dive { max-width: 800px; margin: 0 auto; text-align: left; }
+    .deep-dive h3 { font-size: var(--text-xl); margin: var(--space-21) 0 var(--space-8); color: var(--accent); }
+    .deep-dive h4 { font-size: var(--text-lg); margin: var(--space-13) 0 var(--space-5); color: var(--text-primary); }
+    .deep-dive p { margin-bottom: var(--space-8); font-size: var(--text-base); line-height: 1.8; }
+    .nav-links { display: flex; align-items: center; gap: var(--space-8); }
+    .nav-links a { color: var(--text-secondary); font-size: var(--text-sm); font-weight: 500; }
+    .nav-links a:hover { color: var(--text-primary); opacity: 1; }
+    .nav-logo {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+      font-size: 1.1rem;
+      letter-spacing: 0.05em;
+      color: var(--accent);
+    }
+    .eco-map { display: grid; grid-template-columns: repeat(3,1fr); gap: 1.3125rem; max-width: 900px; margin: 0 auto; }
+    .eco-node { display: flex; flex-direction: column; align-items: center; text-align: center; padding: 2rem 1rem; background: var(--glass-bg); backdrop-filter: blur(24px); border: 1px solid var(--glass-border); border-radius: var(--radius-lg); text-decoration: none; transition: all .382s; }
+    .eco-node:hover { transform: translateY(-3px); border-color: var(--node-accent); box-shadow: 0 0 21px rgba(124,94,255,.12); opacity: 1; }
+    .eco-node--current { border-color: var(--node-accent); background: rgba(124,94,255,.04); }
+    .eco-icon { font-size: 1.8rem; margin-bottom: .5rem; color: var(--node-accent); }
+    .eco-label { font-weight: 600; color: #e8e8f0; font-size: .95rem; margin-bottom: .25rem; }
+    .eco-desc { font-size: .75rem; color: #9898b0; }
+    .how-steps { display: grid; grid-template-columns: repeat(auto-fit,minmax(200px,1fr)); gap: 1.3125rem; }
+    .how-step { text-align: center; padding: 2rem 1rem; }
+    .how-step-num { font-family: 'JetBrains Mono', monospace; font-size: 2rem; font-weight: 700; color: rgba(20,184,166,0.3); margin-bottom: .5rem; }
+    .how-step h4 { color: #e8e8f0; margin-bottom: .5rem; }
+    .how-step p { font-size: .85rem; color: #9898b0; }
+    @media(max-width:768px) {
+      .eco-map { grid-template-columns: 1fr 1fr; }
+      .how-steps { grid-template-columns: 1fr; }
+      .nav-links { display: none; }
+    }
+    @media(max-width:480px) {
+      .eco-map { grid-template-columns: 1fr; }
+    }
+  </style>
 </head>
 <body>
-    <canvas id="canvas"></canvas>
 
-    <nav aria-label="Main navigation">
-        <div class="container">
-            <div class="logo">HEADY OS</div>
-            <ul>
-                <li><a href="#what-is">What is HeadyOS</a></li>
-                <li><a href="#components">Components</a></li>
-                <li><a href="#architecture">Architecture</a></li>
-                <li><a href="#developer" class="cta-button">Developer Guide</a></li>
-            </ul>
+  <!-- Sacred Geometry Canvas Background -->
+  <canvas id="sacred-canvas" class="sacred-canvas"></canvas>
+
+  <!-- Navigation -->
+  <nav class="glass-nav" style="top:32px;">
+    <span class="nav-logo">HeadyOS</span>
+    <div class="nav-links">
+      <a href="#runtime">Runtime</a>
+<a href="#sdk">SDK</a>
+<a href="#docs">Docs</a>
+<a href="https://heady-ai.com" class="btn btn-primary btn-sm" target="_blank" rel="noopener">HeadyAI</a>
+
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    
+    <div class="hero-badge">◇ Runtime · Memory · MCP Tools · Event Bus</div>
+    <h1 class="text-gradient">The AI Operating System for Developers</h1>
+    <p class="subtitle">Agent runtime, unified memory, system primitives, and event bus — build and deploy AI agents on the operating system designed for intelligence.</p>
+    <div class="hero-terminal glass-card" style="max-width:480px;margin:var(--space-13) auto 0;padding:1.2rem;text-align:left;font-family:'Fira Code',monospace;font-size:.8rem;color:#9898b0;">
+      <div style="color:#2dd4bf;">$ npm install @heady/sdk</div>
+      <div style="color:#9898b0;margin-top:.3rem;">import { Agent, Memory } from '@heady/sdk'</div>
+      <div style="color:#9898b0;">const agent = new Agent('my-agent')</div>
+      <div style="color:#34d399;margin-top:.3rem;">✓ Agent deployed to HeadyOS runtime</div>
+    </div>
+    <div class="hero-cta-row" style="margin-top:var(--space-13);">
+      <a href="#deep-dive" class="btn btn-primary">Start Building</a>
+      <a href="https://auth.headysystems.com/login?redirect=https://headyos.com" class="btn btn-ghost">Sign In →</a>
+    </div>
+  </section>
+
+  <!-- Stats Banner -->
+  <section class="section" style="padding: var(--space-21) 0;">
+    <div class="container">
+      <div class="stats-row">
+        
+        <div class="stat">
+          <div class="stat-num">31</div>
+          <div class="stat-label">MCP Tools</div>
         </div>
-    </nav>
-
-    <section class="hero">
-        <div class="container">
-            <div class="hero-content">
-                <h1>THE LATENT OPERATING SYSTEM</h1>
-                <p>The invisible OS that powers continuous AI reasoning. A cognitive operating system for intelligent agents and distributed systems.</p>
-                <div class="hero-buttons">
-                    <a href="#what-is" class="btn btn-primary">Learn More</a>
-                    <a href="#developer" class="btn btn-secondary">Developer Docs</a>
-                </div>
-            </div>
+        <div class="stat">
+          <div class="stat-num">∞</div>
+          <div class="stat-label">Agents</div>
         </div>
-    </section>
-
-    <section class="section alt" id="what-is">
-        <div class="container">
-            <h2>What is HeadyOS?</h2>
-            <p style="font-size: 1.1rem; max-width: 900px;">HeadyOS is not a traditional operating system. It's a cognitive operating system—a metaphorical but functionally complete OS architecture for AI agents and distributed intelligence systems. While traditional OSes manage hardware resources, HeadyOS manages cognitive resources: context, memory, computation, and reasoning flow.</p>
-
-            <div class="grid grid-2">
-                <div style="margin-top: 2rem;">
-                    <h3>Traditional OS vs Cognitive OS</h3>
-                    <table style="width: 100%; margin-top: 1.5rem;">
-                        <tr style="border-bottom: 1px solid var(--border-color);">
-                            <td style="padding: 1rem; color: var(--text-secondary);">Traditional OS</td>
-                            <td style="padding: 1rem; color: var(--text-secondary);">Manages hardware resources</td>
-                        </tr>
-                        <tr style="border-bottom: 1px solid var(--border-color);">
-                            <td style="padding: 1rem; color: var(--cyan); font-weight: 600;">HeadyOS</td>
-                            <td style="padding: 1rem; color: var(--cyan);">Manages cognitive resources</td>
-                        </tr>
-                        <tr style="border-bottom: 1px solid var(--border-color);">
-                            <td style="padding: 1rem; color: var(--text-secondary);">Process scheduling</td>
-                            <td style="padding: 1rem; color: var(--text-secondary);">Agent orchestration</td>
-                        </tr>
-                        <tr style="border-bottom: 1px solid var(--border-color);">
-                            <td style="padding: 1rem; color: var(--text-secondary);">Memory management</td>
-                            <td style="padding: 1rem; color: var(--text-secondary);">Context windowing</td>
-                        </tr>
-                        <tr>
-                            <td style="padding: 1rem; color: var(--text-secondary);">I/O devices</td>
-                            <td style="padding: 1rem; color: var(--text-secondary);">LLM inference engines</td>
-                        </tr>
-                    </table>
-                </div>
-
-                <div style="margin-top: 2rem;">
-                    <h3>Core Principles</h3>
-                    <ul class="feature-list">
-                        <li><strong>Abstraction:</strong> Hide complexity of underlying systems</li>
-                        <li><strong>Resource Management:</strong> Allocate cognitive resources efficiently</li>
-                        <li><strong>Concurrency:</strong> Execute multiple reasoning streams</li>
-                        <li><strong>Isolation:</strong> Separate concerns and contexts</li>
-                        <li><strong>Scheduling:</strong> Prioritize computation dynamically</li>
-                        <li><strong>Persistence:</strong> Maintain state across invocations</li>
-                    </ul>
-                </div>
-            </div>
+        <div class="stat">
+          <div class="stat-num">384d</div>
+          <div class="stat-label">Memory Space</div>
         </div>
-    </section>
-
-    <section class="section" id="components">
-        <div class="container">
-            <h2>Core Components</h2>
-            <p style="max-width: 900px;">HeadyOS is built on six fundamental subsystems, each handling critical functions in the cognitive architecture.</p>
-
-            <div class="grid grid-3">
-                <div class="card">
-                    <div class="card-icon">⚙️</div>
-                    <h3>Kernel (heady-soul)</h3>
-                    <p>The core execution engine. Manages process lifecycles, system calls, and fundamental operations. The soul of the system.</p>
-                    <ul class="feature-list" style="font-size: 0.9rem;">
-                        <li>Process lifecycle management</li>
-                        <li>System call interface</li>
-                        <li>Error handling and recovery</li>
-                        <li>Security primitives</li>
-                    </ul>
-                </div>
-
-                <div class="card">
-                    <div class="card-icon">🎵</div>
-                    <h3>Scheduler (heady-conductor)</h3>
-                    <p>Orchestrates execution flow. Determines which agents run, when, and how resources are allocated. The conductor of reasoning.</p>
-                    <ul class="feature-list" style="font-size: 0.9rem;">
-                        <li>Task scheduling algorithms</li>
-                        <li>Priority management</li>
-                        <li>Load balancing</li>
-                        <li>Concurrent execution</li>
-                    </ul>
-                </div>
-
-                <div class="card">
-                    <div class="card-icon">🧠</div>
-                    <h3>Memory Manager (heady-memory)</h3>
-                    <p>Manages context, embeddings, and persistent state. Maintains continuity across reasoning steps and sessions.</p>
-                    <ul class="feature-list" style="font-size: 0.9rem;">
-                        <li>Context window management</li>
-                        <li>Vector store integration</li>
-                        <li>Garbage collection</li>
-                        <li>Cache optimization</li>
-                    </ul>
-                </div>
-
-                <div class="card">
-                    <div class="card-icon">🔄</div>
-                    <h3>Process Manager (heady-orchestration)</h3>
-                    <p>Manages agent lifecycle and inter-agent communication. Enables multi-agent coordination and composition.</p>
-                    <ul class="feature-list" style="font-size: 0.9rem;">
-                        <li>Agent spawning/termination</li>
-                        <li>Message passing</li>
-                        <li>State synchronization</li>
-                        <li>Dependency resolution</li>
-                    </ul>
-                </div>
-
-                <div class="card">
-                    <div class="card-icon">🔐</div>
-                    <h3>Security Layer (heady-guard)</h3>
-                    <p>Enforces access controls and safety boundaries. Protects against adversarial inputs and ensures policy compliance.</p>
-                    <ul class="feature-list" style="font-size: 0.9rem;">
-                        <li>Authentication/authorization</li>
-                        <li>Input validation</li>
-                        <li>Rate limiting</li>
-                        <li>Audit logging</li>
-                    </ul>
-                </div>
-
-                <div class="card">
-                    <div class="card-icon">📁</div>
-                    <h3>Vector File System (heady-vector)</h3>
-                    <p>Semantic file system for embeddings and knowledge. Enables similarity-based retrieval and semantic operations.</p>
-                    <ul class="feature-list" style="font-size: 0.9rem;">
-                        <li>Vector indexing</li>
-                        <li>Similarity search</li>
-                        <li>Semantic clustering</li>
-                        <li>Knowledge graphs</li>
-                    </ul>
-                </div>
-            </div>
+        <div class="stat">
+          <div class="stat-num"><10ms</div>
+          <div class="stat-label">Event Latency</div>
         </div>
-    </section>
+      </div>
+    </div>
+  </section>
 
-    <section class="section alt" id="architecture">
-        <div class="container">
-            <h2>System Architecture</h2>
-
-            <div class="architecture-diagram">
-                <div style="color: var(--cyan); margin-bottom: 1.5rem; font-weight: 600; font-family: 'JetBrains Mono', monospace;">HeadyOS Layered Architecture</div>
-
-                <pre style="color: var(--text-secondary); font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; margin: 0;">
-┌────────────────────────────────────────────────────┐
-│         Application Layer                          │
-│    (User Agents, Services, Workloads)             │
-└──────────────────┬─────────────────────────────────┘
-                   │
-┌──────────────────▼─────────────────────────────────┐
-│    Process & Agent Management                      │
-│  heady-orchestration | Agent Lifecycle             │
-└──────────────────┬─────────────────────────────────┘
-                   │
-┌──────────────────▼─────────────────────────────────┐
-│    Scheduler & Conductor                           │
-│  heady-conductor | Task Scheduling & Routing       │
-└──────────────────┬─────────────────────────────────┘
-                   │
-┌──────────────────▼─────────────────────────────────┐
-│         Kernel Core                                │
-│    heady-soul | Execution Engine                  │
-└──────────────────┬─────────────────────────────────┘
-                   │
-        ┌──────────┼──────────┐
-        │          │          │
-        ▼          ▼          ▼
-    ┌────────┐ ┌────────┐ ┌────────┐
-    │Memory  │ │Security│ │Vector  │
-    │Manager │ │Layer   │ │FS      │
-    │        │ │        │ │        │
-    │heady-  │ │heady-  │ │heady-  │
-    │memory  │ │guard   │ │vector  │
-    └────────┘ └────────┘ └────────┘
-        │          │          │
-        └──────────┼──────────┘
-                   │
-        ┌──────────┼──────────┐
-        │          │          │
-        ▼          ▼          ▼
-    ┌────────────────────────────┐
-    │   Infrastructure Layer      │
-    │  GCP Cloud Run, Vector DB   │
-    └────────────────────────────┘
-                </pre>
-            </div>
-
-            <div class="grid grid-2">
-                <div class="card">
-                    <h3>Agent Lifecycle</h3>
-                    <ol style="padding-left: 1.5rem; color: var(--text-secondary);">
-                        <li style="margin-bottom: 1rem;">
-                            <strong style="color: var(--cyan);">Spawn:</strong> Agent instantiated with initial context
-                        </li>
-                        <li style="margin-bottom: 1rem;">
-                            <strong style="color: var(--cyan);">Initialize:</strong> Load model, configure parameters
-                        </li>
-                        <li style="margin-bottom: 1rem;">
-                            <strong style="color: var(--cyan);">Reason:</strong> Execute inference, generate outputs
-                        </li>
-                        <li style="margin-bottom: 1rem;">
-                            <strong style="color: var(--cyan);">Communicate:</strong> Send messages to other agents
-                        </li>
-                        <li>
-                            <strong style="color: var(--cyan);">Terminate:</strong> Cleanup resources, persist state
-                        </li>
-                    </ol>
-                </div>
-
-                <div class="card">
-                    <h3>Context Windowing</h3>
-                    <p>Dynamic context management with intelligent compression:</p>
-                    <ul class="feature-list">
-                        <li>Sliding window over conversation history</li>
-                        <li>Importance-based token filtering</li>
-                        <li>Hierarchical summarization</li>
-                        <li>Semantic deduplification</li>
-                        <li>Supports 200k+ token windows</li>
-                    </ul>
-                </div>
-            </div>
+  <!-- Features Grid -->
+  <section id="features" class="section">
+    <div class="container">
+      <div class="section-header">
+        <h2>Core Capabilities</h2>
+        <p>Everything you need from HeadyOS — powered by Sacred Geometry and Continuous Semantic Logic.</p>
+      </div>
+      <div class="grid-3">
+        
+        <div class="glass-card">
+          <span class="feature-icon">◇</span>
+          <h4>Agent Runtime</h4>
+          <p>Managed execution environment for AI agents with hot-reload, sandbox isolation, WASM containment, and φ-scaled auto-scaling that adapts to workload patterns.</p>
         </div>
-    </section>
-
-    <section class="section" id="subsystems">
-        <div class="container">
-            <h2>Advanced Subsystems</h2>
-
-            <div class="grid grid-2">
-                <div>
-                    <h3>Model Routing</h3>
-                    <p>Intelligent selection of models based on:</p>
-                    <ul class="feature-list">
-                        <li>Task complexity and type</li>
-                        <li>Latency requirements (p50, p99)</li>
-                        <li>Cost optimization targets</li>
-                        <li>Model specialization scores</li>
-                        <li>Fallback chain strategies</li>
-                        <li>A/B testing and canary deployments</li>
-                    </ul>
-                </div>
-
-                <div>
-                    <h3>Event Processing</h3>
-                    <p>Real-time event streaming and handling:</p>
-                    <ul class="feature-list">
-                        <li>Asynchronous event queues</li>
-                        <li>Event filtering and routing</li>
-                        <li>Workflow orchestration</li>
-                        <li>Retry and backoff logic</li>
-                        <li>Dead letter queues</li>
-                        <li>Event audit trail</li>
-                    </ul>
-                </div>
-
-                <div>
-                    <h3>Memory Persistence</h3>
-                    <p>Durable state management across sessions:</p>
-                    <ul class="feature-list">
-                        <li>Session snapshots and checkpoints</li>
-                        <li>Vector embeddings cache</li>
-                        <li>Conversation history archival</li>
-                        <li>Knowledge base synchronization</li>
-                        <li>Replication and backups</li>
-                        <li>Point-in-time recovery</li>
-                    </ul>
-                </div>
-
-                <div>
-                    <h3>Observability & Monitoring</h3>
-                    <p>Comprehensive system visibility:</p>
-                    <ul class="feature-list">
-                        <li>Structured logging</li>
-                        <li>Distributed tracing</li>
-                        <li>Metrics and time-series</li>
-                        <li>Performance profiling</li>
-                        <li>Anomaly detection</li>
-                        <li>Real-time dashboards</li>
-                    </ul>
-                </div>
-            </div>
+        <div class="glass-card">
+          <span class="feature-icon">◈</span>
+          <h4>Unified Memory</h4>
+          <p>Shared 3D vector space across all running agents with cross-agent context sharing, semantic search, and CSL-gated access control for memory isolation.</p>
         </div>
-    </section>
-
-    <section class="section alt" id="developer">
-        <div class="container">
-            <h2>Developer Guide</h2>
-
-            <div style="margin: 2rem 0;">
-                <h3>Building on HeadyOS</h3>
-                <p>Create agents and services on top of HeadyOS using our SDK and APIs.</p>
-            </div>
-
-            <div class="grid grid-2">
-                <div>
-                    <h3>Installation</h3>
-                    <div class="code-block">
-# Install HeadyOS SDK
-npm install @heady/os-sdk
-
-# Python SDK
-pip install heady-os-sdk
-
-# Create new agent
-heady-os init my-agent</div>
-                </div>
-
-                <div>
-                    <h3>Basic Agent Example</h3>
-                    <div class="code-block">
-import { HeadyAgent } from '@heady/os-sdk';
-
-const agent = new HeadyAgent({
-  name: 'research-agent',
-  model: 'claude-3.5',
-  systemPrompt: 'You are a research assistant'
-});
-
-agent.on('message', async (msg) => {
-  const response = await agent.reason(msg);
-  console.log(response);
-});
-
-await agent.start();</div>
-                </div>
-            </div>
-
-            <div style="margin-top: 3rem;">
-                <h3>Available APIs</h3>
-                <div class="grid grid-3">
-                    <div class="card">
-                        <h3 style="font-size: 1.1rem;">Process API</h3>
-                        <ul class="feature-list" style="font-size: 0.9rem;">
-                            <li>spawn(config)</li>
-                            <li>terminate(processId)</li>
-                            <li>signal(processId, signal)</li>
-                            <li>getStatus(processId)</li>
-                        </ul>
-                    </div>
-
-                    <div class="card">
-                        <h3 style="font-size: 1.1rem;">Memory API</h3>
-                        <ul class="feature-list" style="font-size: 0.9rem;">
-                            <li>storeVector(embedding)</li>
-                            <li>search(query, k)</li>
-                            <li>getContext(sessionId)</li>
-                            <li>clearMemory()</li>
-                        </ul>
-                    </div>
-
-                    <div class="card">
-                        <h3 style="font-size: 1.1rem;">Scheduler API</h3>
-                        <ul class="feature-list" style="font-size: 0.9rem;">
-                            <li>schedule(task, time)</li>
-                            <li>cancel(taskId)</li>
-                            <li>setPriority(taskId, p)</li>
-                            <li>getQueue()</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-
-            <div style="margin-top: 2rem; padding: 2rem; background: rgba(0, 230, 118, 0.1); border-radius: 12px; border-left: 4px solid var(--green);">
-                <h3 style="color: var(--green); margin-top: 0;">System Requirements</h3>
-                <ul class="feature-list">
-                    <li><strong>Runtime:</strong> Cloud-native, runs on GCP Cloud Run, AWS Lambda, or on-premises</li>
-                    <li><strong>Storage:</strong> Vector database (Pinecone, Weaviate, Milvus)</li>
-                    <li><strong>Models:</strong> LLM provider access (OpenAI, Anthropic, Google)</li>
-                    <li><strong>Networking:</strong> Outbound HTTPS for model APIs</li>
-                </ul>
-            </div>
+        <div class="glass-card">
+          <span class="feature-icon">⬡</span>
+          <h4>System Primitives</h4>
+          <p>File, network, and compute tools available to any agent via MCP protocol. 31 tools exposed through JSON-RPC 2.0 over SSE/stdio channels.</p>
         </div>
-    </section>
-
-    <section class="section" id="version">
-        <div class="container">
-            <h2>Version History</h2>
-
-            <div class="grid grid-2">
-                <div class="card">
-                    <h3>v4.0 - Sacred Geometry Era</h3>
-                    <p><strong style="color: var(--gold);">Current Version</strong></p>
-                    <ul class="feature-list" style="font-size: 0.9rem;">
-                        <li>φ-scaling mathematics throughout</li>
-                        <li>Confidence Signal Logic gates</li>
-                        <li>200k+ token context windows</li>
-                        <li>Multi-agent coordination</li>
-                        <li>Vector-native architecture</li>
-                    </ul>
-                </div>
-
-                <div class="card">
-                    <h3>v3.0 - Orchestration</h3>
-                    <p><strong style="color: var(--cyan);">Previous Release</strong></p>
-                    <ul class="feature-list" style="font-size: 0.9rem;">
-                        <li>Agent lifecycle management</li>
-                        <li>Basic scheduler implementation</li>
-                        <li>Memory persistence</li>
-                        <li>Event processing</li>
-                        <li>Security layer foundation</li>
-                    </ul>
-                </div>
-            </div>
-
-            <div style="margin-top: 2rem; padding: 2rem; background: rgba(124, 94, 255, 0.1); border-radius: 12px;">
-                <h3 style="color: var(--accent); margin-top: 0;">Roadmap</h3>
-                <ul class="feature-list">
-                    <li>v4.1: Hardware acceleration support (GPU/TPU optimization)</li>
-                    <li>v4.2: Federated agent networks (peer-to-peer coordination)</li>
-                    <li>v5.0: Quantum-ready architecture (post-classical computing)</li>
-                    <li>OpenHeadyOS: Community fork with governance</li>
-                </ul>
-            </div>
+        <div class="glass-card">
+          <span class="feature-icon">⊕</span>
+          <h4>Event Bus</h4>
+          <p>Real-time inter-agent communication with pub/sub, request-reply, and streaming patterns. φ-scaled backpressure prevents any single agent from overwhelming the bus.</p>
         </div>
-    </section>
+      </div>
+    </div>
+  </section>
 
-    <section class="section alt">
-        <div class="container">
-            <h2>The HEADY Ecosystem</h2>
-            <p style="max-width: 900px; margin-bottom: 2rem;">HeadyOS is the foundational layer of the HEADY ecosystem. It powers all cognitive agents and services across the platform.</p>
+  <!-- Deep Dive Content (2000+ words) -->
+  <section id="deep-dive" class="section">
+    <div class="container">
+      <div class="section-header">
+        <h2>Deep Dive</h2>
+        <p>A comprehensive look at what HeadyOS offers and how it works.</p>
+      </div>
+      <div class="deep-dive">
+        
+<h3>An Operating System Built for AI</h3>
+<p>HeadyOS reimagines the operating system concept for the age of artificial intelligence. Traditional operating systems manage processes, files, and hardware. HeadyOS manages AI agents, vector memory, and intelligence. It provides the foundational runtime, primitives, and abstractions that autonomous agents need to execute tasks, communicate with each other, and persist learned knowledge.</p>
 
-            <div class="grid grid-3">
-                <div class="card">
-                    <h3>HEADY AI</h3>
-                    <p>Research-first AI platform utilizing HeadyOS for orchestration and reasoning.</p>
-                    <a href="https://heady-ai.com" style="color: var(--cyan); font-weight: 600;">Explore AI →</a>
-                </div>
+<h3>Agent Runtime Environment</h3>
+<p>The HeadyOS runtime executes AI agents in managed sandboxes with full lifecycle control. Each agent runs in a WASM containment boundary, preventing any agent from accessing resources outside its granted permissions. Agents can be started, stopped, hot-reloaded, and scaled independently.</p>
 
-                <div class="card">
-                    <h3>HeadyME</h3>
-                    <p>Personal AI agents running on HeadyOS kernel for individual users.</p>
-                    <a href="https://headyme.com" style="color: var(--cyan); font-weight: 600;">Try HeadyME →</a>
-                </div>
+<p>The runtime provides automatic resource management using φ-scaled allocation. When an agent needs more compute, memory, or network bandwidth, HeadyOS allocates resources in golden-ratio increments (×1.618 per step), creating smooth scaling curves that avoid the oscillation problems of binary doubling. When demand decreases, resources are reclaimed using the inverse ratio (×0.618 per step).</p>
 
-                <div class="card">
-                    <h3>HeadyEX</h3>
-                    <p>Marketplace for agents deployed on HeadyOS with standardized interfaces.</p>
-                    <a href="https://headyex.com" style="color: var(--cyan); font-weight: 600;">Browse Agents →</a>
-                </div>
+<p>Hot-reload enables live code updates without stopping running agents. When new agent code is deployed, HeadyOS creates a shadow instance, validates it against the agent's test suite, and atomically swaps traffic from the old instance to the new one. This zero-downtime deployment ensures agents remain available during updates.</p>
 
-                <div class="card">
-                    <h3>HeadySystems</h3>
-                    <p>Central hub managing all HeadyOS infrastructure and services.</p>
-                    <a href="https://headysystems.com" style="color: var(--cyan); font-weight: 600;">Go to Hub →</a>
-                </div>
+<h3>Unified Vector Memory</h3>
+<p>All agents running on HeadyOS share access to a unified 3D vector memory space — a 384-dimensional persistent store backed by pgvector with octree spatial indexing. Each agent can read from the shared memory and write to its own memory partition, with CSL-gated access control determining visibility between agents.</p>
 
-                <div class="card">
-                    <h3>HeadyConnection</h3>
-                    <p>Nonprofit ensuring HeadyOS access for all communities worldwide.</p>
-                    <a href="https://headyconnection.org" style="color: var(--cyan); font-weight: 600;">Learn More →</a>
-                </div>
+<p>Cross-agent context sharing enables collaborative intelligence. When Agent A discovers a useful pattern, it can write that pattern to shared memory where Agent B automatically discovers it during context pre-enrichment. This creates a form of collective learning where the intelligence of the system grows with every agent interaction.</p>
 
-                <div class="card">
-                    <h3>HeadyFinance</h3>
-                    <p>Financial platform with specialized agents on HeadyOS.</p>
-                    <a href="https://headyfinance.com" style="color: var(--cyan); font-weight: 600;">Access Platform →</a>
-                </div>
-            </div>
+<h3>MCP Protocol — 31 System Tools</h3>
+<p>HeadyOS exposes 31 tools through the Model Context Protocol (MCP) via JSON-RPC 2.0 over SSE/stdio channels. These tools cover file operations (read, write, search, watch), network operations (HTTP, WebSocket, DNS), compute operations (function execution, shell commands, WASM instantiation), memory operations (embed, search, store, delete), and system operations (health check, telemetry, configuration, secrets).</p>
+
+<p>Every tool call is enriched by HeadyAutoContext before execution and after completion. This means when an agent reads a file, the file content is automatically embedded into vector memory. When an agent makes an HTTP request, the response is indexed for future semantic search. The operating system learns from every operation.</p>
+
+<h3>Event Bus Architecture</h3>
+<p>The HeadyOS event bus provides real-time inter-agent communication through three patterns: publish/subscribe for broadcast messages, request/reply for synchronous queries, and streaming for continuous data flows. The bus uses φ-scaled backpressure to prevent any single agent from overwhelming the system — when a consumer falls behind, the bus slows the producer by ψ (0.618) rate, creating smooth degradation instead of hard failures.</p>
+
+<p>Events are typed and versioned, ensuring forward and backward compatibility as agents evolve. The bus supports topic hierarchies (e.g., agents.research.papers.new) with wildcard subscriptions, enabling agents to listen for broad categories or specific events.</p>
+
+<h3>Developer Experience</h3>
+<p>HeadyOS provides a complete SDK for agent development in JavaScript/TypeScript, Python, and Rust. The SDK includes agent lifecycle management, memory access, MCP tool wrappers, event bus subscriptions, and testing utilities. An interactive CLI lets developers create, deploy, monitor, and debug agents from the terminal.</p>
+
+<p>The HeadyOS IDE integration (via the Antigravity IDE) provides real-time agent monitoring, memory visualization, event stream inspection, and hot-reload triggers directly in the development environment. Developers can see their agents' vector memory evolve in real time as they test interactions.</p>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- How It Works -->
+  <section id="how-it-works" class="section">
+    <div class="container">
+      <div class="section-header">
+        <h2>How It Works</h2>
+        <p>The HeadyOS workflow in four steps.</p>
+      </div>
+      <div class="how-steps">
+        
+        <div class="how-step glass-card">
+          <div class="how-step-num">01</div>
+          <h4>Create Agent</h4>
+          <p>Define your agent's capabilities, permissions, and initial context using the HeadyOS SDK. Deploy with a single CLI command.</p>
         </div>
-    </section>
-
-    <footer>
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-section">
-                    <h4>Platform</h4>
-                    <ul>
-                        <li><a href="#what-is">What is HeadyOS</a></li>
-                        <li><a href="#components">Components</a></li>
-                        <li><a href="#developer">Developer Guide</a></li>
-                        <li><a href="https://docs.heady.ai">Documentation</a></li>
-                    </ul>
-                </div>
-
-                <div class="footer-section">
-                    <h4>Ecosystem</h4>
-                    <ul>
-                        <li><a href="https://headysystems.com">HeadySystems</a></li>
-                        <li><a href="https://heady-ai.com">HEADY AI</a></li>
-                        <li><a href="https://headyme.com">HeadyME</a></li>
-                        <li><a href="https://headyex.com">HeadyEX</a></li>
-                        <li><a href="https://headyfinance.com">HeadyFinance</a></li>
-                    </ul>
-                </div>
-
-                <div class="footer-section">
-                    <h4>Resources</h4>
-                    <ul>
-                        <li><a href="https://headysystems.com/api">API Reference</a></li>
-                        <li><a href="https://headysystems.com/sdk">SDK Downloads</a></li>
-                        <li><a href="https://headysystems.com/blog">Blog</a></li>
-                        <li><a href="https://headysystems.com/community">Community</a></li>
-                        <li><a href="https://headysystems.com/support">Support</a></li>
-                    </ul>
-                </div>
-
-                <div class="footer-section">
-                    <h4>Company</h4>
-                    <ul>
-                        <li><a href="https://headysystems.com/about">About</a></li>
-                        <li><a href="https://headysystems.com/privacy">Privacy Policy</a></li>
-                        <li><a href="https://headysystems.com/terms">Terms of Service</a></li>
-                        <li><a href="https://headyconnection.org">HeadyConnection</a></li>
-                    </ul>
-                </div>
-            </div>
-
-            <div class="footer-bottom">
-                <p style="margin: 0;">Founded by Eric Haywood | 51 Provisional Patents | © 2026 HeadySystems Inc. All rights reserved.</p>
-            </div>
+        <div class="how-step glass-card">
+          <div class="how-step-num">02</div>
+          <h4>Runtime Executes</h4>
+          <p>HeadyOS manages your agent's lifecycle in a WASM sandbox with φ-scaled resource allocation and hot-reload capability.</p>
         </div>
-    </footer>
+        <div class="how-step glass-card">
+          <div class="how-step-num">03</div>
+          <h4>Memory Enriches</h4>
+          <p>Every agent action is indexed into shared 3D vector memory. Context pre-enrichment ensures your agent always has relevant information.</p>
+        </div>
+        <div class="how-step glass-card">
+          <div class="how-step-num">04</div>
+          <h4>Agents Collaborate</h4>
+          <p>Event bus enables real-time communication between agents. Shared memory creates collective intelligence that grows over time.</p>
+        </div>
+      </div>
+    </div>
+  </section>
 
-    <script>
-        const canvas = document.getElementById('canvas');
-        const ctx = canvas.getContext('2d');
+  <!-- Technology Stack -->
+  <section id="tech-stack" class="section">
+    <div class="container">
+      <div class="section-header">
+        <h2>Technology Stack</h2>
+        <p>Built on the Heady™ infrastructure — sacred geometry governs every parameter.</p>
+      </div>
+      <div id="tech-container"></div>
+    </div>
+  </section>
 
-        function resizeCanvas() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        }
+  <!-- Ecosystem Map -->
+  <section id="ecosystem" class="section">
+    <div class="container">
+      <div class="section-header">
+        <h2>Heady Ecosystem</h2>
+        <p>Nine interconnected platforms. One unified intelligence layer.</p>
+      </div>
+      <div class="eco-map">
+        
+        <a href="https://headyme.com" class="eco-node" style="--node-accent:#00d4aa" target="_blank" rel="noopener">
+          <span class="eco-icon">◎</span>
+          <span class="eco-label">HeadyMe</span>
+          <span class="eco-desc">Personal Cloud</span>
+        </a>
+        <a href="https://headysystems.com" class="eco-node" style="--node-accent:#3b82f6" target="_blank" rel="noopener">
+          <span class="eco-icon">⟐</span>
+          <span class="eco-label">HeadySystems</span>
+          <span class="eco-desc">Infrastructure</span>
+        </a>
+        <a href="https://heady-ai.com" class="eco-node" style="--node-accent:#8b5cf6" target="_blank" rel="noopener">
+          <span class="eco-icon">△</span>
+          <span class="eco-label">HeadyAI</span>
+          <span class="eco-desc">Research</span>
+        </a>
+        <a href="https://headyos.com" class="eco-node eco-node--current" style="--node-accent:#14b8a6">
+          <span class="eco-icon">◇</span>
+          <span class="eco-label">HeadyOS</span>
+          <span class="eco-desc">Operating System</span>
+        </a>
+        <a href="https://headyconnection.org" class="eco-node" style="--node-accent:#f59e0b" target="_blank" rel="noopener">
+          <span class="eco-icon">✦</span>
+          <span class="eco-label">HeadyConnection</span>
+          <span class="eco-desc">Community</span>
+        </a>
+        <a href="https://headyconnection.com" class="eco-node" style="--node-accent:#06b6d4" target="_blank" rel="noopener">
+          <span class="eco-icon">🌐</span>
+          <span class="eco-label">HeadyConnection Community</span>
+          <span class="eco-desc">Community Portal</span>
+        </a>
+        <a href="https://headyex.com" class="eco-node" style="--node-accent:#10b981" target="_blank" rel="noopener">
+          <span class="eco-icon">🏪</span>
+          <span class="eco-label">HeadyEX</span>
+          <span class="eco-desc">Marketplace</span>
+        </a>
+        <a href="https://headyfinance.com" class="eco-node" style="--node-accent:#a855f7" target="_blank" rel="noopener">
+          <span class="eco-icon">📈</span>
+          <span class="eco-label">HeadyFinance</span>
+          <span class="eco-desc">Investor Relations</span>
+        </a>
+        <a href="https://admin.headysystems.com" class="eco-node" style="--node-accent:#06b6d4" target="_blank" rel="noopener">
+          <span class="eco-icon">📊</span>
+          <span class="eco-label">HeadySystems Admin Portal</span>
+          <span class="eco-desc">Admin</span>
+        </a>
+      </div>
+    </div>
+  </section>
 
-        window.addEventListener('resize', resizeCanvas);
-        resizeCanvas();
+  <!-- Use Cases -->
+  <section id="use-cases" class="section">
+    <div class="container">
+      <div class="section-header">
+        <h2>Use Cases</h2>
+        <p>Real-world applications of HeadyOS.</p>
+      </div>
+      <div class="grid-3">
+        
+        <div class="glass-card">
+          <span style="font-size:1.618rem;display:block;margin-bottom:0.8rem">🤖</span>
+          <h4>Autonomous Research</h4>
+          <p>Deploy research agents that continuously monitor academic papers, extract insights, and build knowledge graphs in shared vector memory.</p>
+        </div>
+        <div class="glass-card">
+          <span style="font-size:1.618rem;display:block;margin-bottom:0.8rem">💻</span>
+          <h4>Code Generation</h4>
+          <p>Build code generation agents with access to your entire codebase through vector memory. Context-aware suggestions that understand your architecture.</p>
+        </div>
+        <div class="glass-card">
+          <span style="font-size:1.618rem;display:block;margin-bottom:0.8rem">🔧</span>
+          <h4>DevOps Automation</h4>
+          <p>Agent-powered infrastructure management. Deploy, monitor, scale, and heal services automatically using MCP system tools.</p>
+        </div>
+        <div class="glass-card">
+          <span style="font-size:1.618rem;display:block;margin-bottom:0.8rem">📈</span>
+          <h4>Data Pipeline</h4>
+          <p>Create data processing agents that ingest, transform, enrich, and analyze data streams in real time through the event bus.</p>
+        </div>
+        <div class="glass-card">
+          <span style="font-size:1.618rem;display:block;margin-bottom:0.8rem">🎯</span>
+          <h4>Task Orchestration</h4>
+          <p>Compose complex workflows from simple agents. The event bus handles coordination, and shared memory provides context.</p>
+        </div>
+        <div class="glass-card">
+          <span style="font-size:1.618rem;display:block;margin-bottom:0.8rem">🧪</span>
+          <h4>Agent Testing</h4>
+          <p>Comprehensive testing framework for AI agents. Simulate environments, inject test data, and verify agent behavior deterministically.</p>
+        </div>
+      </div>
+    </div>
+  </section>
 
-        const particles = [];
-        const particleCount = 30;
+  <!-- FAQ -->
+  <section id="faq" class="section">
+    <div class="container">
+      <div class="section-header">
+        <h2>Frequently Asked Questions</h2>
+        <p>Everything you need to know about HeadyOS.</p>
+      </div>
+      <div style="max-width:700px;margin:0 auto;">
+        
+        <div class="faq-item" data-index="0">
+          <button class="faq-question">What programming languages does HeadyOS support?</button>
+          <div class="faq-answer"><p>The SDK supports JavaScript/TypeScript, Python, and Rust for agent development. WASM containment means any language that compiles to WebAssembly can run on HeadyOS. The MCP protocol is language-agnostic.</p></div>
+        </div>
+        <div class="faq-item" data-index="1">
+          <button class="faq-question">How does memory isolation work between agents?</button>
+          <div class="faq-answer"><p>Each agent has its own memory partition for private data. Shared memory uses CSL-gated access control — agents can read shared content above the 0.382 relevance threshold and write to shared space if their output meets the 0.618 quality gate.</p></div>
+        </div>
+        <div class="faq-item" data-index="2">
+          <button class="faq-question">What is the MCP protocol?</button>
+          <div class="faq-answer"><p>Model Context Protocol (MCP) is a JSON-RPC 2.0 based protocol for exposing tools to AI agents over SSE or stdio channels. HeadyOS provides 31 MCP tools covering file, network, compute, memory, and system operations.</p></div>
+        </div>
+        <div class="faq-item" data-index="3">
+          <button class="faq-question">Can I run HeadyOS locally?</button>
+          <div class="faq-answer"><p>Yes. HeadyOS provides a local development runtime that emulates the full platform. Agents developed locally can be deployed to HeadyOS cloud with a single command. Local mode uses SQLite with vector extensions instead of pgvector.</p></div>
+        </div>
+        <div class="faq-item" data-index="4">
+          <button class="faq-question">How does hot-reload work?</button>
+          <div class="faq-answer"><p>When new agent code is deployed, HeadyOS creates a shadow instance, validates it against tests, and atomically swaps traffic. The old instance continues running until all in-flight requests complete, then gracefully shuts down.</p></div>
+        </div>
+        <div class="faq-item" data-index="5">
+          <button class="faq-question">Is there a free tier?</button>
+          <div class="faq-answer"><p>HeadyOS offers a developer tier with 3 concurrent agents, 100MB vector memory, and 1000 MCP tool calls per day. Production tiers scale with usage. Enterprise plans include dedicated infrastructure and custom SLAs.</p></div>
+        </div>
+        <div class="faq-item" data-index="6">
+          <button class="faq-question">How does the event bus prevent overload?</button>
+          <div class="faq-answer"><p>φ-scaled backpressure reduces producer rate by ψ (0.618) when consumers fall behind. This creates smooth degradation curves instead of hard failures. Topic-based routing ensures events reach only interested subscribers.</p></div>
+        </div>
+        <div class="faq-item" data-index="7">
+          <button class="faq-question">Can agents access external APIs?</button>
+          <div class="faq-answer"><p>Yes. The network MCP tools support HTTP, WebSocket, and DNS operations. All external requests are logged, traced via OpenTelemetry, and indexed into vector memory by AutoContext.</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
 
-        class Particle {
-            constructor() {
-                this.x = Math.random() * canvas.width;
-                this.y = Math.random() * canvas.height;
-                this.vx = (Math.random() - 0.5) * 0.5;
-                this.vy = (Math.random() - 0.5) * 0.5;
-                this.radius = Math.random() * 2 + 1;
-                this.color = ['rgba(124, 94, 255, 0.3)', 'rgba(64, 224, 208, 0.3)', 'rgba(240, 192, 64, 0.2)'][Math.floor(Math.random() * 3)];
-            }
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <span class="nav-logo">HeadyOS</span>
+          <p>Agent runtime, unified memory, system primitives, and event bus — build and deploy AI agents on the operating system designed for intelligence.</p>
+        </div>
+        
+        <div class="footer-col">
+          <h4>Platform</h4>
+          <a href="https://headyme.com" target="_blank" rel="noopener">HeadyMe</a>
+<a href="https://headysystems.com" target="_blank" rel="noopener">HeadySystems</a>
+<a href="https://heady-ai.com" target="_blank" rel="noopener">HeadyAI</a>
+<a href="https://headyos.com" target="_blank" rel="noopener">HeadyOS</a>
 
-            update() {
-                this.x += this.vx;
-                this.y += this.vy;
+        </div>
+        <div class="footer-col">
+          <h4>Community</h4>
+          <a href="https://headyconnection.org" target="_blank" rel="noopener">HeadyConnection.org</a>
+<a href="https://headyconnection.com" target="_blank" rel="noopener">HeadyConnection.com</a>
+<a href="https://headyex.com" target="_blank" rel="noopener">HeadyEX</a>
 
-                if (this.x < 0) this.x = canvas.width;
-                if (this.x > canvas.width) this.x = 0;
-                if (this.y < 0) this.y = canvas.height;
-                if (this.y > canvas.height) this.y = 0;
-            }
+        </div>
+        <div class="footer-col">
+          <h4>Company</h4>
+          <a href="https://headyfinance.com" target="_blank" rel="noopener">HeadyFinance</a>
+<a href="https://admin.headysystems.com" target="_blank" rel="noopener">Admin Portal</a>
+<a href="https://github.com/HeadySystems" target="_blank" rel="noopener">GitHub</a>
 
-            draw() {
-                ctx.fillStyle = this.color;
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-                ctx.fill();
-            }
-        }
+        </div>
+        <div class="footer-col">
+          <h4>Legal</h4>
+          <a href="https://headysystems.com/legal/terms" target="_blank" rel="noopener">Terms of Service</a>
+<a href="https://headysystems.com/legal/privacy" target="_blank" rel="noopener">Privacy Policy</a>
+<a href="https://headysystems.com/pricing" target="_blank" rel="noopener">Pricing</a>
 
-        for (let i = 0; i < particleCount; i++) {
-            particles.push(new Particle());
-        }
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>&copy; 2026 HeadySystems Inc. All Rights Reserved. 51+ Provisional Patents.</span>
+        <a href="https://www.perplexity.ai/computer" target="_blank" rel="noopener noreferrer" style="color:var(--text-muted);">
+          Created with Perplexity Computer
+        </a>
+      </div>
+    </div>
+  </footer>
 
-        function animate() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
+  <!-- Scripts -->
+  <script src="../packages/sacred-geometry/sacred-geometry.js"></script>
+  <script src="../packages/cross-nav/cross-nav.js"></script>
+  <script src="../packages/auth-widget/auth-widget.js"></script>
+  <script src="../packages/auto-context/auto-context-bridge.js"></script>
+  <script src="../packages/bee-injectors/bee-injectors.js"></script>
+  <script>
+    // Initialize Sacred Geometry Canvas with site-specific settings
+    new SacredGeometryCanvas('sacred-canvas', {
+      accentColor: '#14b8a6',
+      secondaryColor: '#2dd4bf',
+      goldColor: '#34d399',
+      opacity: 0.25,
+      nodeCount: 40,
+      connectionDistance: 130,
+      geometry: 'torus',
+    });
 
-            ctx.strokeStyle = 'rgba(124, 94, 255, 0.05)';
-            ctx.lineWidth = 1;
-            const gridSize = 100;
-            for (let x = 0; x < canvas.width; x += gridSize) {
-                ctx.beginPath();
-                ctx.moveTo(x, 0);
-                ctx.lineTo(x, canvas.height);
-                ctx.stroke();
-            }
-            for (let y = 0; y < canvas.height; y += gridSize) {
-                ctx.beginPath();
-                ctx.moveTo(0, y);
-                ctx.lineTo(canvas.width, y);
-                ctx.stroke();
-            }
+    // Initialize Cross-Site Navigation
+    new HeadyCrossNav({ siteId: 'headyos' });
 
-            particles.forEach(particle => {
-                particle.update();
-                particle.draw();
-            });
+    // Initialize Auth Widget
+    new HeadyAuthWidget({
+      siteId: 'headyos',
+      accentColor: '#14b8a6',
+    });
 
-            ctx.strokeStyle = 'rgba(64, 224, 208, 0.1)';
-            ctx.lineWidth = 0.5;
-            for (let i = 0; i < particles.length; i++) {
-                for (let j = i + 1; j < particles.length; j++) {
-                    const dx = particles[i].x - particles[j].x;
-                    const dy = particles[i].y - particles[j].y;
-                    const distance = Math.sqrt(dx * dx + dy * dy);
+    // Initialize AutoContext Bridge
+    new AutoContextBridge({ siteId: 'headyos' });
 
-                    if (distance < 200) {
-                        ctx.beginPath();
-                        ctx.moveTo(particles[i].x, particles[i].y);
-                        ctx.lineTo(particles[j].x, particles[j].y);
-                        ctx.stroke();
-                    }
+    // Inject Tech Stack via Bee Injectors
+    const techContainer = document.getElementById('tech-container');
+    if (techContainer && window.HeadyBeeInjectors) {
+      HeadyBeeInjectors.injectTechStack(techContainer);
+    }
+
+    // FAQ Accordion
+    document.querySelectorAll('.faq-question').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const item = btn.parentElement;
+        const wasActive = item.classList.contains('active');
+        document.querySelectorAll('.faq-item').forEach(fi => fi.classList.remove('active'));
+        if (!wasActive) item.classList.add('active');
+      });
+    });
+
+    // Animated stat counters
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.querySelectorAll('.stat-num').forEach(el => {
+            const final = el.textContent;
+            const numeric = parseInt(final);
+            if (!isNaN(numeric) && numeric > 0) {
+              let current = 0;
+              const step = Math.max(1, Math.floor(numeric / 40));
+              const timer = setInterval(() => {
+                current += step;
+                if (current >= numeric) {
+                  el.textContent = final;
+                  clearInterval(timer);
+                } else {
+                  el.textContent = current + (final.includes('+') ? '+' : '');
                 }
+              }, 30);
             }
-
-            requestAnimationFrame(animate);
+          });
+          observer.unobserve(entry.target);
         }
-
-        animate();
-
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -100px 0px'
-        };
-
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('fade-in');
-                    observer.unobserve(entry.target);
-                }
-            });
-        }, observerOptions);
-
-        document.querySelectorAll('.card').forEach(card => {
-            observer.observe(card);
-        });
-    </script>
+      });
+    }, { threshold: 0.3 });
+    document.querySelectorAll('.stats-row').forEach(row => observer.observe(row));
+  </script>
 </body>
 </html>

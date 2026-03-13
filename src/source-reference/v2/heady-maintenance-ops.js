@@ -7,7 +7,7 @@
 
 const fs = require("fs");
 const path = require("path");
-const logger = require("../utils/logger");
+const logger = require('../../utils/logger');
 const { execSync } = require("child_process");
 
 const PROJECT_ROOT = path.join(__dirname, "..", "..");
@@ -116,7 +116,7 @@ class HeadyMaintenanceOps {
 
         let projection = { ok: false, reason: "sync_projection_unavailable" };
         try {
-            const syncBee = require("../bees/sync-projection-bee");
+            const syncBee = require("../../bees/sync-projection-bee");
             const state = syncBee.getSyncState();
             projection = {
                 ok: true,

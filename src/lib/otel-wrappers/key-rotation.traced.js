@@ -36,7 +36,7 @@ const keyRegistrationTotal = meter.createCounter('heady.key_registration_total',
 });
 
 // ─── Load original singleton ──────────────────────────────────────────────────
-const originalManager = require('../lib/key-rotation');
+const originalManager = require('../key-rotation');
 
 // ─── Observable gauge for expired keys — polled each metric collection ────────
 meter.createObservableGauge('heady.keys_expired_gauge', {

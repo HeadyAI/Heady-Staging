@@ -49,7 +49,7 @@ function sanitizeInput(input) {
 }
 
 // ─── Load original ────────────────────────────────────────────────────────────
-const OriginalPromptGuard = require('../lib/prompt-guard');
+const OriginalPromptGuard = require('../prompt-guard');
 
 // ─── Traced subclass ──────────────────────────────────────────────────────────
 class TracedPromptGuard extends OriginalPromptGuard {

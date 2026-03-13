@@ -14,7 +14,7 @@ const fs = require('fs');
 const path = require('path');
 const os = require('os');
 const crypto = require('crypto');
-const { PHI, BASE, goldenSplit, phiScale, phiBackoff } = require('../heady-principles');
+const { PHI, BASE, goldenSplit, phiScale, phiBackoff } = require('../shared/heady-principles');
 
 const domain = 'device-provisioner';
 const description = 'Cross-platform device provisioning, filesystem auth, and mod installation via swarm';

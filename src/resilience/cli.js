@@ -383,7 +383,7 @@ async function generateTests(dir, name, template) {
 
   const testCode = `'use strict';
 
-const { ${className} } = require('../src/bee');
+const { ${className} } = require('./bee');
 
 describe('${className}', () => {
   let bee;

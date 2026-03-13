@@ -1,1275 +1,537 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="HeadyMe - Your Personal AI Cloud. An AI that remembers everything, learns continuously, and works for you 24/7.">
-    <meta name="keywords" content="personal AI, AI assistant, memory, agents, cloud AI, HEADY">
-    <meta name="author" content="HeadySystems Inc">
-    <meta name="copyright" content="© 2026 HeadySystems Inc">
-
-    <!-- Open Graph Tags -->
-    <meta property="og:title" content="HeadyMe - Your Personal AI Cloud">
-    <meta property="og:description" content="An AI that remembers everything, learns continuously, and works for you 24/7.">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://headyme.com">
-    <meta property="og:image" content="https://headyme.com/og-image.png">
-    <meta property="og:site_name" content="HeadyMe">
-
-    <!-- Twitter Card Tags -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="HeadyMe - Your Personal AI Cloud">
-    <meta name="twitter:description" content="An AI that remembers everything, learns continuously, and works for you 24/7.">
-    <meta name="twitter:image" content="https://headyme.com/twitter-image.png">
-
-    <title>HeadyMe - Your Personal AI Cloud | HEADY</title>
-
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        :root {
-            --bg-primary: #0a0a0f;
-            --bg-secondary: #12121a;
-            --bg-tertiary: #1a1a24;
-            --accent: #7c5eff;
-            --accent-light: #9b7fff;
-            --accent-dark: #5d3fcc;
-            --gold: #f0c040;
-            --gold-light: #f5d676;
-            --gold-dark: #d4a820;
-            --cyan: #40e0d0;
-            --cyan-light: #5fffe8;
-            --cyan-dark: #20c4a8;
-            --text-primary: #ffffff;
-            --text-secondary: #b0b0c0;
-            --text-tertiary: #808090;
-            --border: #2a2a3a;
-            --success: #4ade80;
-            --warning: #facc15;
-            --error: #ef4444;
-        }
-
-        html {
-            scroll-behavior: smooth;
-        }
-
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            background-color: var(--bg-primary);
-            color: var(--text-primary);
-            line-height: 1.6;
-            overflow-x: hidden;
-        }
-
-        /* Typography */
-        h1, h2, h3, h4, h5, h6 {
-            font-weight: 700;
-            line-height: 1.2;
-            margin-bottom: 1rem;
-        }
-
-        h1 {
-            font-size: clamp(2.5rem, 8vw, 4.5rem);
-        }
-
-        h2 {
-            font-size: clamp(2rem, 5vw, 3.5rem);
-        }
-
-        h3 {
-            font-size: clamp(1.5rem, 3vw, 2rem);
-        }
-
-        p {
-            margin-bottom: 1rem;
-            color: var(--text-secondary);
-            font-size: 1.05rem;
-        }
-
-        a {
-            color: var(--accent);
-            text-decoration: none;
-            transition: color 0.3s ease;
-        }
-
-        a:hover {
-            color: var(--accent-light);
-        }
-
-        /* Buttons */
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.75rem;
-            padding: 0.875rem 2rem;
-            border-radius: 0.5rem;
-            font-weight: 600;
-            font-size: 1rem;
-            font-family: 'Inter', sans-serif;
-            border: 2px solid transparent;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            white-space: nowrap;
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 100%);
-            color: #fff;
-            border-color: var(--accent);
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 24px rgba(124, 94, 255, 0.3);
-        }
-
-        .btn-secondary {
-            background: transparent;
-            color: var(--accent);
-            border-color: var(--accent);
-        }
-
-        .btn-secondary:hover {
-            background: rgba(124, 94, 255, 0.1);
-        }
-
-        .btn-gold {
-            background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 100%);
-            color: var(--bg-primary);
-            border-color: var(--gold);
-        }
-
-        .btn-gold:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 24px rgba(240, 192, 64, 0.3);
-        }
-
-        .btn-small {
-            padding: 0.5rem 1.25rem;
-            font-size: 0.875rem;
-        }
-
-        /* Container */
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 0 2rem;
-        }
-
-        @media (max-width: 768px) {
-            .container {
-                padding: 0 1.5rem;
-            }
-        }
-
-        /* Navigation */
-        header {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 1000;
-            background: rgba(10, 10, 15, 0.8);
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid var(--border);
-        }
-
-        nav {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 1rem 0;
-            max-width: 1400px;
-            margin: 0 auto;
-            padding-left: 2rem;
-            padding-right: 2rem;
-        }
-
-        .logo {
-            font-size: 1.5rem;
-            font-weight: 700;
-            background: linear-gradient(135deg, var(--accent) 0%, var(--cyan) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            white-space: nowrap;
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 2.5rem;
-            list-style: none;
-            align-items: center;
-        }
-
-        .nav-links a {
-            font-size: 0.95rem;
-            font-weight: 500;
-            color: var(--text-secondary);
-            transition: color 0.3s ease;
-        }
-
-        .nav-links a:hover {
-            color: var(--accent);
-        }
-
-        .nav-auth {
-            display: flex;
-            gap: 1rem;
-            align-items: center;
-        }
-
-        .hamburger {
-            display: none;
-            flex-direction: column;
-            gap: 0.5rem;
-            cursor: pointer;
-        }
-
-        .hamburger span {
-            width: 24px;
-            height: 2px;
-            background: var(--text-primary);
-            border-radius: 1px;
-        }
-
-        @media (max-width: 968px) {
-            .nav-links {
-                display: none;
-                position: absolute;
-                top: 70px;
-                left: 0;
-                right: 0;
-                flex-direction: column;
-                gap: 1rem;
-                background: var(--bg-secondary);
-                padding: 2rem;
-                border-bottom: 1px solid var(--border);
-            }
-
-            .nav-links.active {
-                display: flex;
-            }
-
-            .hamburger {
-                display: flex;
-            }
-        }
-
-        /* Hero Section */
-        .hero {
-            padding-top: 150px;
-            padding-bottom: 100px;
-            position: relative;
-            overflow: hidden;
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .hero::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: radial-gradient(circle at 20% 50%, rgba(124, 94, 255, 0.1) 0%, transparent 50%),
-                        radial-gradient(circle at 80% 80%, rgba(64, 224, 208, 0.1) 0%, transparent 50%);
-            z-index: 0;
-        }
-
-        .hero-canvas {
-            position: absolute;
-            top: 0;
-            left: 0;
-            z-index: 1;
-        }
-
-        .hero-content {
-            position: relative;
-            z-index: 2;
-            text-align: center;
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 0 2rem;
-        }
-
-        .hero h1 {
-            background: linear-gradient(135deg, var(--accent) 0%, var(--cyan) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 1.5rem;
-            font-weight: 800;
-            letter-spacing: -0.02em;
-        }
-
-        .hero-subtitle {
-            font-size: 1.4rem;
-            color: var(--text-secondary);
-            margin-bottom: 2.5rem;
-            max-width: 800px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        .hero-cta {
-            display: flex;
-            gap: 1.5rem;
-            justify-content: center;
-            flex-wrap: wrap;
-            margin-bottom: 2rem;
-        }
-
-        .hero-features {
-            display: flex;
-            gap: 3rem;
-            justify-content: center;
-            flex-wrap: wrap;
-            margin-top: 3rem;
-            font-size: 0.95rem;
-            color: var(--text-tertiary);
-        }
-
-        .hero-feature {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-        }
-
-        .hero-feature-icon {
-            width: 8px;
-            height: 8px;
-            background: var(--cyan);
-            border-radius: 50%;
-        }
-
-        @media (max-width: 768px) {
-            .hero {
-                padding-top: 100px;
-                padding-bottom: 60px;
-                min-height: auto;
-            }
-
-            .hero-cta {
-                flex-direction: column;
-            }
-
-            .btn {
-                width: 100%;
-            }
-        }
-
-        /* Section */
-        section {
-            padding: 5rem 0;
-        }
-
-        section h2 {
-            text-align: center;
-            margin-bottom: 3rem;
-            background: linear-gradient(135deg, var(--accent) 0%, var(--cyan) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        /* Features Section */
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 2rem;
-            margin-top: 3rem;
-        }
-
-        .feature-card {
-            background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-tertiary) 100%);
-            border: 1px solid var(--border);
-            border-radius: 0.75rem;
-            padding: 2.5rem;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .feature-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 2px;
-            background: linear-gradient(90deg, var(--accent) 0%, var(--cyan) 100%);
-            transform: scaleX(0);
-            transform-origin: left;
-            transition: transform 0.3s ease;
-        }
-
-        .feature-card:hover {
-            border-color: var(--accent);
-            transform: translateY(-8px);
-            box-shadow: 0 16px 48px rgba(124, 94, 255, 0.15);
-        }
-
-        .feature-card:hover::before {
-            transform: scaleX(1);
-        }
-
-        .feature-icon {
-            font-size: 2.5rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .feature-card h3 {
-            margin-bottom: 1rem;
-            color: var(--text-primary);
-        }
-
-        .feature-card p {
-            color: var(--text-secondary);
-            margin-bottom: 0;
-        }
-
-        /* How It Works */
-        .how-it-works {
-            background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-tertiary) 100%);
-            border-radius: 1rem;
-            padding: 4rem 3rem;
-            margin-top: 3rem;
-        }
-
-        .steps {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 2rem;
-            margin-top: 3rem;
-        }
-
-        .step {
-            text-align: center;
-            position: relative;
-        }
-
-        .step-number {
-            width: 60px;
-            height: 60px;
-            background: linear-gradient(135deg, var(--accent) 0%, var(--cyan) 100%);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-            font-size: 1.5rem;
-            margin: 0 auto 1.5rem;
-            color: #fff;
-        }
-
-        .step h4 {
-            margin-bottom: 0.75rem;
-            color: var(--text-primary);
-        }
-
-        .step p {
-            font-size: 0.95rem;
-            color: var(--text-secondary);
-        }
-
-        .step::after {
-            content: '';
-            position: absolute;
-            right: -1rem;
-            top: 30px;
-            width: 2rem;
-            height: 2px;
-            background: linear-gradient(90deg, var(--accent) 0%, transparent 100%);
-        }
-
-        .step:last-child::after {
-            display: none;
-        }
-
-        @media (max-width: 768px) {
-            .steps {
-                grid-template-columns: 1fr;
-            }
-
-            .step::after {
-                display: none;
-            }
-        }
-
-        /* Memory Architecture */
-        .memory-section {
-            background: linear-gradient(135deg, rgba(124, 94, 255, 0.05) 0%, rgba(64, 224, 208, 0.05) 100%);
-            border: 1px solid var(--border);
-            border-radius: 1rem;
-            padding: 4rem 3rem;
-            margin-top: 3rem;
-        }
-
-        .memory-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 2rem;
-            margin-top: 2rem;
-        }
-
-        .memory-item {
-            background: var(--bg-secondary);
-            border: 1px solid var(--border);
-            border-radius: 0.75rem;
-            padding: 2rem;
-            text-align: center;
-        }
-
-        .memory-item h4 {
-            color: var(--accent);
-            margin-bottom: 1rem;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.9rem;
-        }
-
-        .memory-item p {
-            font-size: 0.95rem;
-        }
-
-        /* Pricing Section */
-        .pricing-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 2rem;
-            margin-top: 3rem;
-        }
-
-        .pricing-card {
-            background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-tertiary) 100%);
-            border: 1px solid var(--border);
-            border-radius: 0.75rem;
-            padding: 2.5rem;
-            position: relative;
-            transition: all 0.3s ease;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .pricing-card.featured {
-            border-color: var(--accent);
-            transform: scale(1.05);
-            box-shadow: 0 20px 60px rgba(124, 94, 255, 0.2);
-        }
-
-        .pricing-badge {
-            position: absolute;
-            top: -12px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: linear-gradient(135deg, var(--accent) 0%, var(--cyan) 100%);
-            color: #fff;
-            padding: 0.4rem 1.2rem;
-            border-radius: 50px;
-            font-size: 0.75rem;
-            font-weight: 700;
-            white-space: nowrap;
-        }
-
-        .pricing-card h3 {
-            margin-bottom: 0.5rem;
-            color: var(--text-primary);
-        }
-
-        .pricing-price {
-            font-size: 2.5rem;
-            font-weight: 800;
-            color: var(--accent);
-            margin: 1rem 0;
-        }
-
-        .pricing-price span {
-            font-size: 1rem;
-            color: var(--text-secondary);
-            font-weight: 400;
-        }
-
-        .pricing-description {
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-            margin-bottom: 2rem;
-        }
-
-        .pricing-features {
-            list-style: none;
-            margin-bottom: 2rem;
-            flex-grow: 1;
-        }
-
-        .pricing-features li {
-            padding: 0.75rem 0;
-            border-bottom: 1px solid var(--border);
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-        }
-
-        .pricing-features li::before {
-            content: '✓';
-            color: var(--cyan);
-            font-weight: 700;
-            min-width: 1rem;
-        }
-
-        .pricing-features li:last-child {
-            border-bottom: none;
-        }
-
-        .pricing-cta {
-            width: 100%;
-            margin-top: auto;
-        }
-
-        /* Ecosystem Section */
-        .ecosystem-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 2rem;
-            margin-top: 3rem;
-        }
-
-        .ecosystem-item {
-            background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-tertiary) 100%);
-            border: 1px solid var(--border);
-            border-radius: 0.75rem;
-            padding: 2rem;
-            text-align: center;
-            transition: all 0.3s ease;
-        }
-
-        .ecosystem-item:hover {
-            border-color: var(--accent);
-            transform: translateY(-4px);
-        }
-
-        .ecosystem-item h4 {
-            font-size: 1rem;
-            color: var(--accent);
-            margin-bottom: 0.5rem;
-        }
-
-        .ecosystem-item p {
-            font-size: 0.85rem;
-            margin-bottom: 0;
-        }
-
-        /* Footer */
-        footer {
-            background: var(--bg-secondary);
-            border-top: 1px solid var(--border);
-            padding: 4rem 0 2rem;
-            margin-top: 6rem;
-        }
-
-        .footer-content {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 3rem;
-            margin-bottom: 3rem;
-        }
-
-        .footer-section h4 {
-            margin-bottom: 1.5rem;
-            color: var(--text-primary);
-            font-size: 0.95rem;
-        }
-
-        .footer-section ul {
-            list-style: none;
-        }
-
-        .footer-section li {
-            margin-bottom: 0.75rem;
-        }
-
-        .footer-section a {
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-        }
-
-        .footer-bottom {
-            border-top: 1px solid var(--border);
-            padding-top: 2rem;
-            text-align: center;
-            color: var(--text-tertiary);
-            font-size: 0.85rem;
-        }
-
-        .footer-bottom p {
-            margin-bottom: 1rem;
-        }
-
-        /* Utilities */
-        .text-center {
-            text-align: center;
-        }
-
-        .mt-4 {
-            margin-top: 2rem;
-        }
-
-        .fade-in {
-            animation: fadeIn 0.6s ease-out;
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .gradient-text {
-            background: linear-gradient(135deg, var(--accent) 0%, var(--cyan) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        /* Accessibility */
-        .skip-link {
-            position: absolute;
-            top: -40px;
-            left: 0;
-            background: var(--accent);
-            color: white;
-            padding: 8px;
-            z-index: 100;
-        }
-
-        .skip-link:focus {
-            top: 0;
-        }
-
-        @media (prefers-reduced-motion: reduce) {
-            * {
-                animation-duration: 0.01ms !important;
-                animation-iteration-count: 1 !important;
-                transition-duration: 0.01ms !important;
-            }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HeadyMe — Your AI Operating System</title>
+  <meta name="description" content="The autonomous intelligence platform that thinks, orchestrates, and evolves. 51+ patents. 21 microservices. One unified experience.">
+  <meta name="keywords" content="Heady, AI, HeadyMe, personal-cloud, sacred geometry, vector memory, CSL">
+  <meta property="og:title" content="HeadyMe — Your AI Operating System">
+  <meta property="og:description" content="The autonomous intelligence platform that thinks, orchestrates, and evolves. 51+ patents. 21 microservices. One unified experience.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://headyme.com">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../packages/design-system/heady-design.css">
+  <style>
+    :root {
+      --accent: #00d4aa;
+      --accent-glow: rgba(0,212,170,0.15);
+      --accent-subtle: rgba(0,212,170,0.06);
+      --brand-font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      --brand-heading: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+    body { padding-top: 32px; font-family: var(--brand-font); }
+    h1, h2, h3, h4 { font-family: var(--brand-heading); }
+    .sacred-canvas {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      z-index: 0;
+      pointer-events: none;
+    }
+    .hero-badge {
+      display: inline-block;
+      padding: 0.4rem 1rem;
+      background: rgba(0,212,170,0.08);
+      border: 1px solid rgba(0,212,170,0.2);
+      border-radius: 100px;
+      font-size: var(--text-xs);
+      color: #00d4aa;
+      letter-spacing: 0.04em;
+      margin-bottom: var(--space-8);
+      font-weight: 500;
+    }
+    .hero-cta-row { display: flex; gap: var(--space-8); justify-content: center; flex-wrap: wrap; }
+    .feature-icon {
+      font-size: 1.618rem;
+      display: block;
+      margin-bottom: 0.8rem;
+      color: var(--accent);
+    }
+    .btn-sm {
+      padding: 0.4rem 1rem;
+      font-size: var(--text-xs);
+      border-radius: var(--radius-sm);
+    }
+    .deep-dive { max-width: 800px; margin: 0 auto; text-align: left; }
+    .deep-dive h3 { font-size: var(--text-xl); margin: var(--space-21) 0 var(--space-8); color: var(--accent); }
+    .deep-dive h4 { font-size: var(--text-lg); margin: var(--space-13) 0 var(--space-5); color: var(--text-primary); }
+    .deep-dive p { margin-bottom: var(--space-8); font-size: var(--text-base); line-height: 1.8; }
+    .nav-links { display: flex; align-items: center; gap: var(--space-8); }
+    .nav-links a { color: var(--text-secondary); font-size: var(--text-sm); font-weight: 500; }
+    .nav-links a:hover { color: var(--text-primary); opacity: 1; }
+    .nav-logo {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+      font-size: 1.1rem;
+      letter-spacing: 0.05em;
+      color: var(--accent);
+    }
+    .eco-map { display: grid; grid-template-columns: repeat(3,1fr); gap: 1.3125rem; max-width: 900px; margin: 0 auto; }
+    .eco-node { display: flex; flex-direction: column; align-items: center; text-align: center; padding: 2rem 1rem; background: var(--glass-bg); backdrop-filter: blur(24px); border: 1px solid var(--glass-border); border-radius: var(--radius-lg); text-decoration: none; transition: all .382s; }
+    .eco-node:hover { transform: translateY(-3px); border-color: var(--node-accent); box-shadow: 0 0 21px rgba(124,94,255,.12); opacity: 1; }
+    .eco-node--current { border-color: var(--node-accent); background: rgba(124,94,255,.04); }
+    .eco-icon { font-size: 1.8rem; margin-bottom: .5rem; color: var(--node-accent); }
+    .eco-label { font-weight: 600; color: #e8e8f0; font-size: .95rem; margin-bottom: .25rem; }
+    .eco-desc { font-size: .75rem; color: #9898b0; }
+    .how-steps { display: grid; grid-template-columns: repeat(auto-fit,minmax(200px,1fr)); gap: 1.3125rem; }
+    .how-step { text-align: center; padding: 2rem 1rem; }
+    .how-step-num { font-family: 'JetBrains Mono', monospace; font-size: 2rem; font-weight: 700; color: rgba(0,212,170,0.3); margin-bottom: .5rem; }
+    .how-step h4 { color: #e8e8f0; margin-bottom: .5rem; }
+    .how-step p { font-size: .85rem; color: #9898b0; }
+    @media(max-width:768px) {
+      .eco-map { grid-template-columns: 1fr 1fr; }
+      .how-steps { grid-template-columns: 1fr; }
+      .nav-links { display: none; }
+    }
+    @media(max-width:480px) {
+      .eco-map { grid-template-columns: 1fr; }
+    }
+  </style>
 </head>
 <body>
-    <a href="#main" class="skip-link">Skip to main content</a>
 
-    <!-- Navigation -->
-    <header>
-        <nav>
-            <div class="logo">HeadyMe</div>
-            <ul class="nav-links">
-                <li><a href="#features">Features</a></li>
-                <li><a href="#memory">Memory</a></li>
-                <li><a href="#agents">Agents</a></li>
-                <li><a href="#pricing">Pricing</a></li>
-                <li><a href="https://docs.heady.ai">Docs</a></li>
-            </ul>
-            <div class="nav-auth">
-                <a href="https://docs.heady.ai" class="btn btn-secondary btn-small">Docs</a>
-                <a href="https://heady-onboarding-609590223909.us-east1.run.app" class="btn btn-secondary btn-small">Sign In</a>
-                <a href="https://heady-onboarding-609590223909.us-east1.run.app" class="btn btn-primary btn-small">Create Your Heady</a>
-            </div>
-            <div class="hamburger">
-                <span></span>
-                <span></span>
-                <span></span>
-            </div>
-        </nav>
-    </header>
+  <!-- Sacred Geometry Canvas Background -->
+  <canvas id="sacred-canvas" class="sacred-canvas"></canvas>
 
-    <main id="main">
-        <!-- Hero Section -->
-        <section class="hero">
-            <canvas id="heroCanvas" class="hero-canvas"></canvas>
-            <div class="hero-content">
-                <h1>YOUR PERSONAL AI CLOUD</h1>
-                <p class="hero-subtitle">An AI that remembers everything, learns continuously, and works for you 24/7</p>
-                <div class="hero-cta">
-                    <a href="https://heady-onboarding-609590223909.us-east1.run.app" class="btn btn-primary">Create Your Heady (Free)</a>
-                    <a href="https://docs.heady.ai" class="btn btn-secondary">Explore Docs</a>
-                </div>
-                <div class="hero-features">
-                    <div class="hero-feature">
-                        <div class="hero-feature-icon"></div>
-                        <span>Zero Privacy Concerns</span>
-                    </div>
-                    <div class="hero-feature">
-                        <div class="hero-feature-icon"></div>
-                        <span>384-D Vector Memory</span>
-                    </div>
-                    <div class="hero-feature">
-                        <div class="hero-feature-icon"></div>
-                        <span>Deploy Agents Instantly</span>
-                    </div>
-                </div>
-            </div>
-        </section>
+  <!-- Navigation -->
+  <nav class="glass-nav" style="top:32px;">
+    <span class="nav-logo">HeadyMe</span>
+    <div class="nav-links">
+      <a href="#platform">Platform</a>
+<a href="#nodes">AI Nodes</a>
+<a href="#pricing">Pricing</a>
+<a href="https://headysystems.com" class="btn btn-primary btn-sm" target="_blank" rel="noopener">HeadySystems</a>
 
-        <!-- Features Section -->
-        <section id="features" class="container">
-            <h2>Superpowers for Your AI</h2>
-            <div class="features-grid">
-                <div class="feature-card fade-in">
-                    <div class="feature-icon">🧠</div>
-                    <h3>Persistent Memory</h3>
-                    <p>Your Heady remembers every conversation, preference, and context. Built on 384-dimensional vector memory with φ-scaled retrieval for perfect recall.</p>
-                </div>
+    </div>
+  </nav>
 
-                <div class="feature-card fade-in">
-                    <div class="feature-icon">🐝</div>
-                    <h3>Personal Agents</h3>
-                    <p>Deploy your own bee swarm. Each agent specializes in tasks you define — research, scheduling, writing, coding, analysis, and more.</p>
-                </div>
+  <!-- Hero Section -->
+  <section class="hero">
+    
+    <div class="hero-badge">✦ Your Sovereign Intelligence</div>
+    <h1 class="text-gradient">Your AI Operating System</h1>
+    <p class="subtitle">The autonomous intelligence platform that thinks, orchestrates, and evolves. 51+ patents. 21 microservices. One unified experience.</p>
+    <div class="hero-cta-row">
+      <a href="#deep-dive" class="btn btn-primary">Explore Your AI</a>
+      <a href="https://auth.headysystems.com/login?redirect=https://headyme.com" class="btn btn-ghost">Sign In →</a>
+    </div>
+  </section>
 
-                <div class="feature-card fade-in">
-                    <div class="feature-icon">🧬</div>
-                    <h3>Multi-Model Intelligence</h3>
-                    <p>Access GPT-4, Claude, Gemini, Llama, Mistral through a single interface. CSL gates automatically route requests to the best model for each task.</p>
-                </div>
-
-                <div class="feature-card fade-in">
-                    <div class="feature-icon">🔐</div>
-                    <h3>Privacy-First Architecture</h3>
-                    <p>Your data lives in YOUR sovereign space. Zero-trust security, end-to-end encryption, httpOnly session cookies. We never train on your data.</p>
-                </div>
-
-                <div class="feature-card fade-in">
-                    <div class="feature-icon">📱</div>
-                    <h3>Cross-Platform Access</h3>
-                    <p>Access from web, mobile, desktop, Discord, Slack, or API. Your context follows you everywhere. One Heady, infinite possibilities.</p>
-                </div>
-
-                <div class="feature-card fade-in">
-                    <div class="feature-icon">🎨</div>
-                    <h3>Creative Tools</h3>
-                    <p>MIDI composition, image generation, document creation, code generation. Your Heady is not just intelligent—it's creative and expressive.</p>
-                </div>
-
-                <div class="feature-card fade-in">
-                    <div class="feature-icon">🌱</div>
-                    <h3>Continuous Learning</h3>
-                    <p>Your Heady evolves with you. φ-scaled memory consolidation strengthens important memories over time. Growth is automatic and persistent.</p>
-                </div>
-
-                <div class="feature-card fade-in">
-                    <div class="feature-icon">👋</div>
-                    <h3>Heady Buddy</h3>
-                    <p>Your AI companion that proactively helps, suggests, and anticipates your needs. More than a tool—a true digital partner and collaborator.</p>
-                </div>
-            </div>
-        </section>
-
-        <!-- How It Works -->
-        <section id="agents" class="container">
-            <h2>How It Works</h2>
-            <div class="how-it-works">
-                <div class="steps">
-                    <div class="step">
-                        <div class="step-number">1</div>
-                        <h4>Create Your Heady</h4>
-                        <p>Start anonymous or authenticated. Takes 30 seconds.</p>
-                    </div>
-                    <div class="step">
-                        <div class="step-number">2</div>
-                        <h4>Talk Naturally</h4>
-                        <p>Your Heady learns your style, preferences, and personality.</p>
-                    </div>
-                    <div class="step">
-                        <div class="step-number">3</div>
-                        <h4>Deploy Agents</h4>
-                        <p>Create specialized agents to handle tasks autonomously.</p>
-                    </div>
-                    <div class="step">
-                        <div class="step-number">4</div>
-                        <h4>Memory Grows</h4>
-                        <p>Each interaction strengthens your Heady's understanding and capabilities.</p>
-                    </div>
-                    <div class="step">
-                        <div class="step-number">5</div>
-                        <h4>Access Everywhere</h4>
-                        <p>Use your Heady from any device, any platform, any time.</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Memory Architecture -->
-        <section id="memory" class="container">
-            <h2>Memory Architecture</h2>
-            <div class="memory-section">
-                <p style="text-align: center; margin-bottom: 2rem;">HeadyMe's memory engine is powered by cutting-edge vector technology and confidence-scaled retrieval. Your memories are embedded in a 384-dimensional space, optimized for semantic understanding and perfect recall.</p>
-                <div class="memory-grid">
-                    <div class="memory-item">
-                        <h4>384-DIMENSIONAL VECTORS</h4>
-                        <p>Each memory is embedded in a rich semantic space, capturing nuance and context with precision.</p>
-                    </div>
-                    <div class="memory-item">
-                        <h4>CSL CONFIDENCE GATES</h4>
-                        <p>Confidence-Scaled Lookup ensures only the most relevant memories are retrieved at the right time.</p>
-                    </div>
-                    <div class="memory-item">
-                        <h4>φ-SCALED CONSOLIDATION</h4>
-                        <p>Golden ratio memory consolidation strengthens important memories over time while pruning noise.</p>
-                    </div>
-                    <div class="memory-item">
-                        <h4>ZERO-KNOWLEDGE PRIVACY</h4>
-                        <p>Your memories are encrypted end-to-end. We never decrypt, access, or train on your data.</p>
-                    </div>
-                    <div class="memory-item">
-                        <h4>SEMANTIC SEARCH</h4>
-                        <p>Find memories by meaning, not keywords. Ask your Heady natural questions about your past.</p>
-                    </div>
-                    <div class="memory-item">
-                        <h4>INFINITE RETENTION</h4>
-                        <p>Never lose a conversation, insight, or important detail. Your memory grows indefinitely.</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Pricing Section -->
-        <section id="pricing" class="container">
-            <h2>Simple, Transparent Pricing</h2>
-            <div class="pricing-grid">
-                <div class="pricing-card">
-                    <h3>Free</h3>
-                    <div class="pricing-price">$0<span>/month</span></div>
-                    <p class="pricing-description">Perfect for exploring HeadyMe</p>
-                    <ul class="pricing-features">
-                        <li>34 messages per day</li>
-                        <li>Basic memory (30 days)</li>
-                        <li>1 Personal Agent</li>
-                        <li>Web access only</li>
-                    </ul>
-                    <a href="https://heady-onboarding-609590223909.us-east1.run.app" class="btn btn-secondary pricing-cta">Get Started</a>
-                </div>
-
-                <div class="pricing-card featured">
-                    <div class="pricing-badge">MOST POPULAR</div>
-                    <h3>Personal</h3>
-                    <div class="pricing-price">$55<span>/month</span></div>
-                    <p class="pricing-description">For individuals and creators</p>
-                    <ul class="pricing-features">
-                        <li>Unlimited messages</li>
-                        <li>Full memory (lifetime)</li>
-                        <li>5 Personal Agents</li>
-                        <li>Web + mobile access</li>
-                        <li>Priority support</li>
-                    </ul>
-                    <a href="https://heady-onboarding-609590223909.us-east1.run.app" class="btn btn-primary pricing-cta">Start Trial</a>
-                </div>
-
-                <div class="pricing-card">
-                    <h3>Pro</h3>
-                    <div class="pricing-price">$89<span>/month</span></div>
-                    <p class="pricing-description">For power users</p>
-                    <ul class="pricing-features">
-                        <li>Unlimited everything</li>
-                        <li>Multi-model access</li>
-                        <li>13 Personal Agents</li>
-                        <li>All platforms</li>
-                        <li>Custom integrations</li>
-                    </ul>
-                    <a href="https://heady-onboarding-609590223909.us-east1.run.app" class="btn btn-secondary pricing-cta">Start Trial</a>
-                </div>
-
-                <div class="pricing-card">
-                    <h3>Unlimited</h3>
-                    <div class="pricing-price">$233<span>/month</span></div>
-                    <p class="pricing-description">Enterprise & researchers</p>
-                    <ul class="pricing-features">
-                        <li>Everything included</li>
-                        <li>API access</li>
-                        <li>Custom models</li>
-                        <li>Dedicated support</li>
-                        <li>SLA guarantee</li>
-                    </ul>
-                    <a href="https://heady-onboarding-609590223909.us-east1.run.app" class="btn btn-secondary pricing-cta">Contact Sales</a>
-                </div>
-            </div>
-        </section>
-
-        <!-- Ecosystem Section -->
-        <section class="container">
-            <h2>The HEADY Ecosystem</h2>
-            <p style="text-align: center; margin-bottom: 2rem;">HeadyMe is one of 9 platforms in the HEADY system. Cross-platform integration creates a seamless intelligence layer across your entire digital life.</p>
-            <div class="ecosystem-grid">
-                <a href="https://headyme.com" class="ecosystem-item" style="text-decoration:none">
-                    <h4>HeadyMe</h4>
-                    <p>Personal AI Cloud</p>
-                </a>
-                <a href="https://headysystems.com" class="ecosystem-item" style="text-decoration:none">
-                    <h4>HeadySystems</h4>
-                    <p>Platform Hub</p>
-                </a>
-                <a href="https://heady-ai.com" class="ecosystem-item" style="text-decoration:none">
-                    <h4>HeadyAI</h4>
-                    <p>Enterprise AI Suite</p>
-                </a>
-                <a href="https://headyos.com" class="ecosystem-item" style="text-decoration:none">
-                    <h4>HeadyOS</h4>
-                    <p>Sovereign AI OS</p>
-                </a>
-                <a href="https://headyconnection.org" class="ecosystem-item" style="text-decoration:none">
-                    <h4>HeadyConnection</h4>
-                    <p>Nonprofit 501(c)(3)</p>
-                </a>
-                <a href="https://headyex.com" class="ecosystem-item" style="text-decoration:none">
-                    <h4>HeadyEx</h4>
-                    <p>Research & Dev Tools</p>
-                </a>
-                <a href="https://headyfinance.com" class="ecosystem-item" style="text-decoration:none">
-                    <h4>HeadyFinance</h4>
-                    <p>Trading & FinTech</p>
-                </a>
-                <a href="https://docs.heady.ai" class="ecosystem-item" style="text-decoration:none">
-                    <h4>HeadyDocs</h4>
-                    <p>Documentation Portal</p>
-                </a>
-                <a href="https://admin.headysystems.com" class="ecosystem-item" style="text-decoration:none">
-                    <h4>Admin Portal</h4>
-                    <p>System Management</p>
-                </a>
-            </div>
-        </section>
-    </main>
-
-    <!-- Footer -->
-    <footer>
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-section">
-                    <h4>ECOSYSTEM</h4>
-                    <ul>
-                        <li><a href="https://headyme.com">HeadyMe</a></li>
-                        <li><a href="https://headysystems.com">HeadySystems</a></li>
-                        <li><a href="https://heady-ai.com">HeadyAI</a></li>
-                        <li><a href="https://headyos.com">HeadyOS</a></li>
-                    </ul>
-                </div>
-                <div class="footer-section">
-                    <h4>RESOURCES</h4>
-                    <ul>
-                        <li><a href="https://docs.heady.ai">Documentation</a></li>
-                        <li><a href="https://headyex.com">Developer Tools</a></li>
-                        <li><a href="https://headyconnection.org">HeadyConnection</a></li>
-                        <li><a href="https://headyfinance.com">HeadyFinance</a></li>
-                    </ul>
-                </div>
-                <div class="footer-section">
-                    <h4>COMPANY</h4>
-                    <ul>
-                        <li><a href="https://headysystems.com">About HeadySystems</a></li>
-                        <li><a href="https://headysystems.com/#patents">Patents (60+)</a></li>
-                        <li><a href="https://headyconnection.org">Nonprofit Mission</a></li>
-                        <li><a href="https://admin.headysystems.com">Admin Portal</a></li>
-                    </ul>
-                </div>
-                <div class="footer-section">
-                    <h4>GET STARTED</h4>
-                    <ul>
-                        <li><a href="https://heady-onboarding-609590223909.us-east1.run.app">Sign In / Sign Up</a></li>
-                        <li><a href="https://docs.heady.ai">Read the Docs</a></li>
-                        <li><a href="https://heady-ide-bf4q4zywhq-ue.a.run.app">HeadyAI IDE</a></li>
-                        <li><a href="https://headyex.com">HeadyEx Research</a></li>
-                    </ul>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <p>&copy; 2026 HeadySystems Inc. | Founded by Eric Haywood | 60+ Provisional Patents</p>
-                <p>HeadyMe: Your Personal AI Cloud. An intelligent companion built for your unique needs.</p>
-            </div>
+  <!-- Stats Banner -->
+  <section class="section" style="padding: var(--space-21) 0;">
+    <div class="container">
+      <div class="stats-row">
+        
+        <div class="stat">
+          <div class="stat-num">51+</div>
+          <div class="stat-label">Patents</div>
         </div>
-    </footer>
+        <div class="stat">
+          <div class="stat-num">21</div>
+          <div class="stat-label">Services</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num">20</div>
+          <div class="stat-label">AI Nodes</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num">384</div>
+          <div class="stat-label">Vector Dims</div>
+        </div>
+      </div>
+    </div>
+  </section>
 
-    <!-- JSON-LD Schema -->
-    <script type="application/ld+json">
-    {
-        "@context": "https://schema.org",
-        "@type": "SoftwareApplication",
-        "name": "HeadyMe",
-        "description": "HeadyMe - Your Personal AI Cloud. An AI that remembers everything, learns continuously, and works for you 24/7.",
-        "url": "https://headyme.com",
-        "applicationCategory": "UtilitiesApplication",
-        "offers": {
-            "@type": "AggregateOffer",
-            "priceCurrency": "USD",
-            "lowPrice": "0",
-            "highPrice": "233"
-        },
-        "aggregateRating": {
-            "@type": "AggregateRating",
-            "ratingValue": "4.9",
-            "ratingCount": "2847"
-        },
-        "author": {
-            "@type": "Organization",
-            "name": "HeadySystems Inc",
-            "url": "https://heady.ai"
-        }
+  <!-- Features Grid -->
+  <section id="features" class="section">
+    <div class="container">
+      <div class="section-header">
+        <h2>Core Capabilities</h2>
+        <p>Everything you need from HeadyMe — powered by Sacred Geometry and Continuous Semantic Logic.</p>
+      </div>
+      <div class="grid-3">
+        
+        <div class="glass-card">
+          <span class="feature-icon">◎</span>
+          <h4>Personal Dashboard</h4>
+          <p>Unified view across all Heady services — your command center for orchestrating 20+ AI nodes, monitoring task execution, and reviewing context enrichment in real time. Every interaction is recorded, every pattern learned.</p>
+        </div>
+        <div class="glass-card">
+          <span class="feature-icon">◈</span>
+          <h4>3D AI Memory</h4>
+          <p>Vector-spatial context that remembers everything with O(log n) octree retrieval. Your personal knowledge graph spans 384-dimensional space, enabling instant semantic recall across every conversation and document.</p>
+        </div>
+        <div class="glass-card">
+          <span class="feature-icon">◇</span>
+          <h4>Cloud Runtime</h4>
+          <p>Managed execution environment for 20 autonomous AI nodes with hot-reload and φ-scaled auto-scaling. Each node runs in its own Cloudflare Worker with Durable Object state persistence.</p>
+        </div>
+        <div class="glass-card">
+          <span class="feature-icon">⬡</span>
+          <h4>Cross-Vertical Sync</h4>
+          <p>Seamlessly share context between all Heady apps — one memory, one identity, one continuous experience. What you learn in HeadyAI enhances your HeadyOS workflows automatically.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Deep Dive Content (2000+ words) -->
+  <section id="deep-dive" class="section">
+    <div class="container">
+      <div class="section-header">
+        <h2>Deep Dive</h2>
+        <p>A comprehensive look at what HeadyMe offers and how it works.</p>
+      </div>
+      <div class="deep-dive">
+        
+<h3>What is HeadyMe?</h3>
+<p>HeadyMe is the personal face of the Heady™ ecosystem — a unified AI operating system that puts you at the center of an intelligent network spanning research, development, finance, community, and enterprise infrastructure. Unlike traditional AI assistants that reset with every conversation, HeadyMe maintains a persistent 3D vector memory space that continuously learns and evolves with every interaction.</p>
+
+<p>At its core, HeadyMe operates through a revolutionary architecture built on three foundational principles: Continuous Semantic Logic (CSL), Sacred Geometry scaling, and Vector Symbolic Architecture. These aren't marketing buzzwords — they represent patented innovations (51+ provisional patents filed) that fundamentally change how AI systems think, remember, and act.</p>
+
+<h3>The Personal Dashboard Experience</h3>
+<p>When you log into HeadyMe, you enter a living command center. The dashboard presents a real-time view of your entire AI ecosystem: active nodes processing tasks, memory vectors being enriched, context flowing between services, and patterns being discovered. Every element on the dashboard is backed by actual telemetry data flowing through OpenTelemetry-instrumented microservices.</p>
+
+<p>The dashboard's layout follows φ-scaled spacing — the golden ratio (1.618) governs every margin, padding, and proportion. This isn't aesthetic whimsy; research in cognitive science demonstrates that golden-ratio proportions reduce cognitive load and improve information retention. When every visual element harmonizes mathematically, your brain processes information more efficiently.</p>
+
+<h3>3D Vector Memory — Your Permanent Knowledge Graph</h3>
+<p>HeadyMe's memory system operates in 384-dimensional vector space using pgvector with octree spatial indexing. When you have a conversation, write a document, or browse a webpage within the Heady ecosystem, the content is embedded into this high-dimensional space using our multi-provider embedding router (supporting OpenAI, Cohere, Voyage AI, and local models).</p>
+
+<p>Retrieval uses CSL gates — geometric thresholds that determine context relevance. A cosine similarity of 0.382 (ψ²) means the content is included in the context window. At 0.618 (ψ), it's boosted and given higher prominence. At 0.718 (ψ + 0.1), it's automatically injected into any AI interaction without you asking. This means HeadyMe proactively surfaces the right information at the right time.</p>
+
+<p>The memory isn't flat — it's spatial. Related concepts cluster together in 3D space, and you can literally navigate your knowledge graph like exploring a galaxy. Each node represents an embedded concept, and connections between nodes represent semantic relationships discovered through continuous analysis.</p>
+
+<h3>20 Autonomous AI Nodes</h3>
+<p>HeadyMe orchestrates 20 distinct AI processing nodes, each running as a Cloudflare Worker with Durable Object state persistence. These nodes cover every aspect of AI interaction: natural language understanding, code generation, research synthesis, creative writing, data analysis, image understanding, voice processing, and more.</p>
+
+<p>Each node participates in the HeadyBee swarm system. When you submit a task, the system doesn't route to a single model — it dispatches concurrent worker bees across all relevant nodes simultaneously. Results are aggregated using CSL relevance scoring, and the best output is returned. There's no queue, no waiting, no sequential processing. Everything happens at once.</p>
+
+<h3>Cross-Vertical Context Sharing</h3>
+<p>What makes HeadyMe truly unique is its position as the nexus point for all Heady services. Context discovered while using HeadyAI for research automatically enriches your HeadyOS development environment. Patterns learned from HeadyFinance market analysis inform your HeadyEX agent strategies. Non-profit impact data from HeadyConnection.org feeds into community engagement metrics on HeadyConnection.com.</p>
+
+<p>This cross-pollination is handled by the AutoContext bridge — a persistent JavaScript module running on every page that continuously monitors, embeds, and syncs context across all nine Heady domains. The bridge uses a φ-scaled heartbeat (every 29.034 seconds — φ⁷ milliseconds) to synchronize state, ensuring no context is ever lost.</p>
+
+<h3>Security and Privacy</h3>
+<p>Every HeadyMe interaction is protected by zero-trust security architecture. Authentication flows through auth.headysystems.com using Firebase Auth with Google OAuth, email/password, and anonymous guest modes. Tokens are stored as httpOnly, Secure, SameSite=Strict cookies — never in browser storage where they'd be vulnerable to XSS attacks. All API calls use mTLS client certificates through Envoy sidecar proxies, and every request is signed with Ed25519 cryptographic receipts for complete audit trails.</p>
+
+<p>Your vector memory is encrypted at rest and in transit. Only your authenticated identity can query your personal knowledge graph. The system uses post-quantum cryptographic primitives (CRYSTALS-Kyber for key exchange, CRYSTALS-Dilithium for signatures) to ensure your data remains secure even against future quantum computing threats.</p>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- How It Works -->
+  <section id="how-it-works" class="section">
+    <div class="container">
+      <div class="section-header">
+        <h2>How It Works</h2>
+        <p>The HeadyMe workflow in four steps.</p>
+      </div>
+      <div class="how-steps">
+        
+        <div class="how-step glass-card">
+          <div class="how-step-num">01</div>
+          <h4>Sign In</h4>
+          <p>Authenticate once via auth.headysystems.com. Your identity propagates across all 9 Heady sites instantly through secure cookie relay.</p>
+        </div>
+        <div class="how-step glass-card">
+          <div class="how-step-num">02</div>
+          <h4>Context Loads</h4>
+          <p>AutoContext bridge pre-enriches your session with relevant history, preferences, and active task context from 384-dim vector memory.</p>
+        </div>
+        <div class="how-step glass-card">
+          <div class="how-step-num">03</div>
+          <h4>Execute Tasks</h4>
+          <p>Submit any task — 20 AI nodes fire simultaneously. HeadyBee workers process concurrently. Results aggregate via CSL relevance scoring.</p>
+        </div>
+        <div class="how-step glass-card">
+          <div class="how-step-num">04</div>
+          <h4>Memory Evolves</h4>
+          <p>Every interaction enriches your persistent knowledge graph. Patterns compound over time, making the system faster and more accurate.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Technology Stack -->
+  <section id="tech-stack" class="section">
+    <div class="container">
+      <div class="section-header">
+        <h2>Technology Stack</h2>
+        <p>Built on the Heady™ infrastructure — sacred geometry governs every parameter.</p>
+      </div>
+      <div id="tech-container"></div>
+    </div>
+  </section>
+
+  <!-- Ecosystem Map -->
+  <section id="ecosystem" class="section">
+    <div class="container">
+      <div class="section-header">
+        <h2>Heady Ecosystem</h2>
+        <p>Nine interconnected platforms. One unified intelligence layer.</p>
+      </div>
+      <div class="eco-map">
+        
+        <a href="https://headyme.com" class="eco-node eco-node--current" style="--node-accent:#00d4aa">
+          <span class="eco-icon">◎</span>
+          <span class="eco-label">HeadyMe</span>
+          <span class="eco-desc">Personal Cloud</span>
+        </a>
+        <a href="https://headysystems.com" class="eco-node" style="--node-accent:#3b82f6" target="_blank" rel="noopener">
+          <span class="eco-icon">⟐</span>
+          <span class="eco-label">HeadySystems</span>
+          <span class="eco-desc">Infrastructure</span>
+        </a>
+        <a href="https://heady-ai.com" class="eco-node" style="--node-accent:#8b5cf6" target="_blank" rel="noopener">
+          <span class="eco-icon">△</span>
+          <span class="eco-label">HeadyAI</span>
+          <span class="eco-desc">Research</span>
+        </a>
+        <a href="https://headyos.com" class="eco-node" style="--node-accent:#14b8a6" target="_blank" rel="noopener">
+          <span class="eco-icon">◇</span>
+          <span class="eco-label">HeadyOS</span>
+          <span class="eco-desc">Operating System</span>
+        </a>
+        <a href="https://headyconnection.org" class="eco-node" style="--node-accent:#f59e0b" target="_blank" rel="noopener">
+          <span class="eco-icon">✦</span>
+          <span class="eco-label">HeadyConnection</span>
+          <span class="eco-desc">Community</span>
+        </a>
+        <a href="https://headyconnection.com" class="eco-node" style="--node-accent:#06b6d4" target="_blank" rel="noopener">
+          <span class="eco-icon">🌐</span>
+          <span class="eco-label">HeadyConnection Community</span>
+          <span class="eco-desc">Community Portal</span>
+        </a>
+        <a href="https://headyex.com" class="eco-node" style="--node-accent:#10b981" target="_blank" rel="noopener">
+          <span class="eco-icon">🏪</span>
+          <span class="eco-label">HeadyEX</span>
+          <span class="eco-desc">Marketplace</span>
+        </a>
+        <a href="https://headyfinance.com" class="eco-node" style="--node-accent:#a855f7" target="_blank" rel="noopener">
+          <span class="eco-icon">📈</span>
+          <span class="eco-label">HeadyFinance</span>
+          <span class="eco-desc">Investor Relations</span>
+        </a>
+        <a href="https://admin.headysystems.com" class="eco-node" style="--node-accent:#06b6d4" target="_blank" rel="noopener">
+          <span class="eco-icon">📊</span>
+          <span class="eco-label">HeadySystems Admin Portal</span>
+          <span class="eco-desc">Admin</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Use Cases -->
+  <section id="use-cases" class="section">
+    <div class="container">
+      <div class="section-header">
+        <h2>Use Cases</h2>
+        <p>Real-world applications of HeadyMe.</p>
+      </div>
+      <div class="grid-3">
+        
+        <div class="glass-card">
+          <span style="font-size:1.618rem;display:block;margin-bottom:0.8rem">🔬</span>
+          <h4>Research Synthesis</h4>
+          <p>Feed papers, articles, and datasets into HeadyMe. The system cross-references everything in vector space and surfaces insights you'd never find manually.</p>
+        </div>
+        <div class="glass-card">
+          <span style="font-size:1.618rem;display:block;margin-bottom:0.8rem">💻</span>
+          <h4>Development Workflow</h4>
+          <p>HeadyMe integrates with your IDE through HeadyOS. Code context, documentation, and architectural decisions are all vectorized and available instantly.</p>
+        </div>
+        <div class="glass-card">
+          <span style="font-size:1.618rem;display:block;margin-bottom:0.8rem">📊</span>
+          <h4>Business Intelligence</h4>
+          <p>Connect financial data from HeadyFinance, market signals from HeadyEX, and community feedback from HeadyConnection for holistic business intelligence.</p>
+        </div>
+        <div class="glass-card">
+          <span style="font-size:1.618rem;display:block;margin-bottom:0.8rem">🎨</span>
+          <h4>Creative Projects</h4>
+          <p>Use the multi-model council to generate, iterate, and refine creative content. HeadyMe remembers your style preferences and brand guidelines across sessions.</p>
+        </div>
+        <div class="glass-card">
+          <span style="font-size:1.618rem;display:block;margin-bottom:0.8rem">🤝</span>
+          <h4>Team Collaboration</h4>
+          <p>Share context graphs with team members. Collaborative vector spaces let multiple users contribute to and benefit from shared knowledge bases.</p>
+        </div>
+        <div class="glass-card">
+          <span style="font-size:1.618rem;display:block;margin-bottom:0.8rem">🔐</span>
+          <h4>Personal Privacy Vault</h4>
+          <p>All your data lives in your encrypted personal vault. Export, delete, or transfer at any time. You own your intelligence.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section id="faq" class="section">
+    <div class="container">
+      <div class="section-header">
+        <h2>Frequently Asked Questions</h2>
+        <p>Everything you need to know about HeadyMe.</p>
+      </div>
+      <div style="max-width:700px;margin:0 auto;">
+        
+        <div class="faq-item" data-index="0">
+          <button class="faq-question">What makes HeadyMe different from ChatGPT or Claude?</button>
+          <div class="faq-answer"><p>HeadyMe isn't a chatbot — it's an operating system. While ChatGPT and Claude are conversation interfaces to single models, HeadyMe orchestrates 20+ AI nodes simultaneously, maintains persistent 3D vector memory across sessions, and connects nine specialized platforms into one unified intelligence layer. Your context never resets.</p></div>
+        </div>
+        <div class="faq-item" data-index="1">
+          <button class="faq-question">How does the 3D vector memory work?</button>
+          <div class="faq-answer"><p>Content is embedded into 384-dimensional vectors using our multi-provider embedding router. These vectors are stored in pgvector with octree spatial indexing for O(log n) retrieval. CSL gates (0.382/0.618/0.718 cosine thresholds) automatically determine what context to include, boost, or inject into any AI interaction.</p></div>
+        </div>
+        <div class="faq-item" data-index="2">
+          <button class="faq-question">Is my data private?</button>
+          <div class="faq-answer"><p>Absolutely. HeadyMe uses zero-trust architecture with mTLS, Ed25519 signed receipts, and post-quantum cryptographic primitives. Your vector memory is encrypted at rest and in transit. Only your authenticated identity can access your knowledge graph. We never train on your data.</p></div>
+        </div>
+        <div class="faq-item" data-index="3">
+          <button class="faq-question">What is Sacred Geometry scaling?</button>
+          <div class="faq-answer"><p>Every parameter in HeadyMe — spacing, timeouts, retry intervals, cache durations, resource pools — is scaled using the golden ratio φ (1.618) and Fibonacci sequences. This mathematically optimal scaling creates natural load distribution patterns that avoid resonance cascades common in systems using arbitrary constants.</p></div>
+        </div>
+        <div class="faq-item" data-index="4">
+          <button class="faq-question">Can I use HeadyMe offline?</button>
+          <div class="faq-answer"><p>HeadyMe supports progressive web app (PWA) capabilities with Cloudflare Workers providing edge caching. Core functionality including local vector search and cached model inference works offline. Full capabilities require connectivity for cross-service orchestration.</p></div>
+        </div>
+        <div class="faq-item" data-index="5">
+          <button class="faq-question">How does cross-site context work?</button>
+          <div class="faq-answer"><p>The AutoContext bridge runs on every Heady page, synchronizing context via secure postMessage channels and cookie-based session relay. When you learn something on HeadyAI, that knowledge is immediately available on HeadyMe, HeadyOS, and all other Heady sites.</p></div>
+        </div>
+        <div class="faq-item" data-index="6">
+          <button class="faq-question">What AI models does HeadyMe use?</button>
+          <div class="faq-answer"><p>HeadyMe routes through the Multi-Model Council: Claude (Anthropic), GPT (OpenAI), Gemini (Google), Groq (fast inference), Perplexity (research), and specialized open-source models via HuggingFace. Model selection is automatic based on CSL domain similarity matching — not cost tiers or ranking.</p></div>
+        </div>
+        <div class="faq-item" data-index="7">
+          <button class="faq-question">How much does HeadyMe cost?</button>
+          <div class="faq-answer"><p>HeadyMe offers a free tier with basic AI node access and 1GB vector memory. Pro plans scale with usage — pay for the compute and memory you consume. Enterprise plans include dedicated infrastructure, custom model fine-tuning, and SLA guarantees. All tiers receive equal service quality.</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <span class="nav-logo">HeadyMe</span>
+          <p>The autonomous intelligence platform that thinks, orchestrates, and evolves. 51+ patents. 21 microservices. One unified experience.</p>
+        </div>
+        
+        <div class="footer-col">
+          <h4>Platform</h4>
+          <a href="https://headyme.com" target="_blank" rel="noopener">HeadyMe</a>
+<a href="https://headysystems.com" target="_blank" rel="noopener">HeadySystems</a>
+<a href="https://heady-ai.com" target="_blank" rel="noopener">HeadyAI</a>
+<a href="https://headyos.com" target="_blank" rel="noopener">HeadyOS</a>
+
+        </div>
+        <div class="footer-col">
+          <h4>Community</h4>
+          <a href="https://headyconnection.org" target="_blank" rel="noopener">HeadyConnection.org</a>
+<a href="https://headyconnection.com" target="_blank" rel="noopener">HeadyConnection.com</a>
+<a href="https://headyex.com" target="_blank" rel="noopener">HeadyEX</a>
+
+        </div>
+        <div class="footer-col">
+          <h4>Company</h4>
+          <a href="https://headyfinance.com" target="_blank" rel="noopener">HeadyFinance</a>
+<a href="https://admin.headysystems.com" target="_blank" rel="noopener">Admin Portal</a>
+<a href="https://github.com/HeadySystems" target="_blank" rel="noopener">GitHub</a>
+
+        </div>
+        <div class="footer-col">
+          <h4>Legal</h4>
+          <a href="https://headysystems.com/legal/terms" target="_blank" rel="noopener">Terms of Service</a>
+<a href="https://headysystems.com/legal/privacy" target="_blank" rel="noopener">Privacy Policy</a>
+<a href="https://headysystems.com/pricing" target="_blank" rel="noopener">Pricing</a>
+
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>&copy; 2026 HeadySystems Inc. All Rights Reserved. 51+ Provisional Patents.</span>
+        <a href="https://www.perplexity.ai/computer" target="_blank" rel="noopener noreferrer" style="color:var(--text-muted);">
+          Created with Perplexity Computer
+        </a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="../packages/sacred-geometry/sacred-geometry.js"></script>
+  <script src="../packages/cross-nav/cross-nav.js"></script>
+  <script src="../packages/auth-widget/auth-widget.js"></script>
+  <script src="../packages/auto-context/auto-context-bridge.js"></script>
+  <script src="../packages/bee-injectors/bee-injectors.js"></script>
+  <script>
+    // Initialize Sacred Geometry Canvas with site-specific settings
+    new SacredGeometryCanvas('sacred-canvas', {
+      accentColor: '#00d4aa',
+      secondaryColor: '#40e0d0',
+      goldColor: '#f0c040',
+      opacity: 0.3,
+      nodeCount: 34,
+      connectionDistance: 160,
+      geometry: 'flowerOfLife',
+    });
+
+    // Initialize Cross-Site Navigation
+    new HeadyCrossNav({ siteId: 'headyme' });
+
+    // Initialize Auth Widget
+    new HeadyAuthWidget({
+      siteId: 'headyme',
+      accentColor: '#00d4aa',
+    });
+
+    // Initialize AutoContext Bridge
+    new AutoContextBridge({ siteId: 'headyme' });
+
+    // Inject Tech Stack via Bee Injectors
+    const techContainer = document.getElementById('tech-container');
+    if (techContainer && window.HeadyBeeInjectors) {
+      HeadyBeeInjectors.injectTechStack(techContainer);
     }
-    </script>
 
-    <!-- Animated Canvas Background -->
-    <script>
-        // Particle animation for hero section
-        const canvas = document.getElementById('heroCanvas');
-        const ctx = canvas.getContext('2d');
+    // FAQ Accordion
+    document.querySelectorAll('.faq-question').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const item = btn.parentElement;
+        const wasActive = item.classList.contains('active');
+        document.querySelectorAll('.faq-item').forEach(fi => fi.classList.remove('active'));
+        if (!wasActive) item.classList.add('active');
+      });
+    });
 
-        function resizeCanvas() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        }
-
-        resizeCanvas();
-        window.addEventListener('resize', resizeCanvas);
-
-        const particles = [];
-        const particleCount = 60;
-
-        class Particle {
-            constructor() {
-                this.x = Math.random() * canvas.width;
-                this.y = Math.random() * canvas.height;
-                this.size = Math.random() * 1.5 + 0.5;
-                this.speedX = (Math.random() - 0.5) * 1.5;
-                this.speedY = (Math.random() - 0.5) * 1.5;
-                this.opacity = Math.random() * 0.5 + 0.3;
-                this.color = Math.random() > 0.5 ? '#7c5eff' : '#40e0d0';
-            }
-
-            update() {
-                this.x += this.speedX;
-                this.y += this.speedY;
-
-                if (this.x < 0) this.x = canvas.width;
-                if (this.x > canvas.width) this.x = 0;
-                if (this.y < 0) this.y = canvas.height;
-                if (this.y > canvas.height) this.y = 0;
-            }
-
-            draw() {
-                ctx.fillStyle = this.color;
-                ctx.globalAlpha = this.opacity;
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                ctx.fill();
-                ctx.globalAlpha = 1;
-            }
-        }
-
-        function initParticles() {
-            for (let i = 0; i < particleCount; i++) {
-                particles.push(new Particle());
-            }
-        }
-
-        function drawConnections() {
-            for (let i = 0; i < particles.length; i++) {
-                for (let j = i + 1; j < particles.length; j++) {
-                    const dx = particles[i].x - particles[j].x;
-                    const dy = particles[i].y - particles[j].y;
-                    const distance = Math.sqrt(dx * dx + dy * dy);
-
-                    if (distance < 150) {
-                        ctx.strokeStyle = particles[i].color;
-                        ctx.globalAlpha = 0.1 * (1 - distance / 150);
-                        ctx.lineWidth = 0.5;
-                        ctx.beginPath();
-                        ctx.moveTo(particles[i].x, particles[i].y);
-                        ctx.lineTo(particles[j].x, particles[j].y);
-                        ctx.stroke();
-                        ctx.globalAlpha = 1;
-                    }
+    // Animated stat counters
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.querySelectorAll('.stat-num').forEach(el => {
+            const final = el.textContent;
+            const numeric = parseInt(final);
+            if (!isNaN(numeric) && numeric > 0) {
+              let current = 0;
+              const step = Math.max(1, Math.floor(numeric / 40));
+              const timer = setInterval(() => {
+                current += step;
+                if (current >= numeric) {
+                  el.textContent = final;
+                  clearInterval(timer);
+                } else {
+                  el.textContent = current + (final.includes('+') ? '+' : '');
                 }
+              }, 30);
             }
+          });
+          observer.unobserve(entry.target);
         }
-
-        function animate() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-            for (let particle of particles) {
-                particle.update();
-                particle.draw();
-            }
-
-            drawConnections();
-            requestAnimationFrame(animate);
-        }
-
-        initParticles();
-        animate();
-
-        // Mobile menu toggle
-        const hamburger = document.querySelector('.hamburger');
-        const navLinks = document.querySelector('.nav-links');
-
-        hamburger.addEventListener('click', () => {
-            navLinks.classList.toggle('active');
-        });
-
-        // Close menu when link is clicked
-        document.querySelectorAll('.nav-links a').forEach(link => {
-            link.addEventListener('click', () => {
-                navLinks.classList.remove('active');
-            });
-        });
-
-        // Smooth scroll offset for fixed header
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                const href = this.getAttribute('href');
-                if (href !== '#' && href !== '#main') {
-                    e.preventDefault();
-                    const target = document.querySelector(href);
-                    if (target) {
-                        const offsetTop = target.offsetTop - 80;
-                        window.scrollTo({
-                            top: offsetTop,
-                            behavior: 'smooth'
-                        });
-                    }
-                }
-            });
-        });
-
-        // Intersection Observer for fade-in animations
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
-        };
-
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('fade-in');
-                    observer.unobserve(entry.target);
-                }
-            });
-        }, observerOptions);
-
-        document.querySelectorAll('.feature-card').forEach(card => {
-            observer.observe(card);
-        });
-    </script>
+      });
+    }, { threshold: 0.3 });
+    document.querySelectorAll('.stats-row').forEach(row => observer.observe(row));
+  </script>
 </body>
 </html>

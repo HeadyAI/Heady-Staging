@@ -230,7 +230,7 @@ const cfWorkerExport = {
 // ─── Internal helpers ─────────────────────────────────────────────────────────
 
 async function _cfFetch(url, token, body) {
-  const headyFetch = require('../../core/heady-fetch');
+  const headyFetch = require('../core/heady-fetch');
   const res = await headyFetch(url, {
     method: 'POST',
     headers: {

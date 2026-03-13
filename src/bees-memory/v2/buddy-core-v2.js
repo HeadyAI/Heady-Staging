@@ -710,7 +710,7 @@ class MCPToolRegistry {
       inputSchema: { type: 'object', properties: { query: { type: 'string' }, limit: { type: 'number', default: 5 }, filter: { type: 'object' } } },
       handler: async (input) => {
         try {
-          const vm = require('../vector-memory'); // or VectorMemoryV2 singleton
+          const vm = require('../../vector-memory'); // or VectorMemoryV2 singleton
           const results = vm.queryMemory ? await vm.queryMemory(input.query, input.limit || 5, input.filter) : [];
           return { ok: true, results, count: results.length };
         } catch (err) { return { ok: false, error: err.message }; }

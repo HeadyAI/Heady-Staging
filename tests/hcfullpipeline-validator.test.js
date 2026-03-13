@@ -657,15 +657,12 @@ describe('YAML ↔ JSON Parity', () => {
     }
   });
 
-  test('required stages match between configs (accounting for conditional requiredFor)', () => {
+  test('required stages match between configs', () => {
     for (let i = 0; i < STAGE_COUNT; i++) {
       const yamlRequired = yamlStages[i].required;
       const jsonStage = jsonConfig.stages[i];
-      // JSON uses either `required: bool` or `requiredFor: [...]` (conditional)
-      // When requiredFor is present, the stage is conditionally required (treat as false for parity)
-      const jsonRequired = jsonStage.requiredFor
-        ? false
-        : (jsonStage.required === true);
+      // JSON `required` field is the source of truth; `requiredFor` is metadata only
+      const jsonRequired = jsonStage.required === true;
       expect(yamlRequired).toBe(jsonRequired);
     }
   });

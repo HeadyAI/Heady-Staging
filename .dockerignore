@@ -1,64 +1,63 @@
-# ═══════════════════════════════════════════════════════════
-# Heady™ .dockerignore — keep images lean
-# ═══════════════════════════════════════════════════════════
+# ═══════════════════════════════════════════════════════════════
+# Heady™ .dockerignore
+# ═══════════════════════════════════════════════════════════════
 
 # Version control
 .git
 .gitignore
-.gitmodules
 
-# Dependencies (rebuilt in container)
-node_modules
-.pnp.*
+# IDE & editor
+.vscode
+.cursor
+.windsurf
+.gemini
+.github
 
 # Build artifacts
-dist
+node_modules
 coverage
-.nyc_output
+dist
+.turbo
+.next
+*.tsbuildinfo
 
-# Environment (secrets injected via Secret Manager)
+# Archive & downloads (huge, not needed in images)
+_archive
+_downloads
+
+# Documentation & tests (not in production images)
+tests
+notebooks
+*.test.js
+*.test.ts
+*.test.mjs
+*.spec.js
+*.spec.ts
+
+# Deployment configs (not part of app)
+deployment
+heady-build
+heady-deploy
+heady-improvements
+heady-latent-os-runtime-bundle
+heady-monorepo
+heady-native-services
+heady-projection
+heady-10-10
+drupal
+
+# Large binary assets
+*.mp4
+*.mp3
+*.wav
+*.zip
+*.tar.gz
+*.woff2
+*.ttf
+lfs-assets
+
+# Secrets
 .env
 .env.*
-!.env.example
-
-# IDE / Editor
-.vscode
-.idea
-*.swp
-*.swo
-*~
-
-# Documentation (keep docs/ for runtime but exclude dev docs)
-*.md
-!README.md
-!docs/**
-
-# Tests
-__tests__
-*.test.js
-*.spec.js
-jest.config.*
-.jest*
-
-# CI/CD
-.github
-.circleci
-.travis.yml
-
-# Infrastructure configs (not needed at runtime)
-infra/
-terraform/
-*.tf
-*.tfstate*
-
-# Archives
-_archive/
-
-# Docker build context exclusions
-Dockerfile*
-docker-compose*
-.dockerignore
-
-# OS junk
-.DS_Store
-Thumbs.db
+.heady/gcp-*.json
+.heady/vault-seed.js

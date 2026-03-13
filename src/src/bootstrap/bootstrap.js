@@ -176,7 +176,7 @@ async function phaseVectorMemory() {
 
 // Phase 5 — CSLEngine
 async function phaseCSLEngine() {
-  const { CSLEngine } = require('../csl/csl-engine'); // eslint-disable-line global-require
+  const { CSLEngine } = require('../../shared/csl-engine'); // eslint-disable-line global-require
   const csl = new CSLEngine();
 
   if (typeof csl.init === 'function') await csl.init();
@@ -236,7 +236,7 @@ async function phaseConductor() {
 
 // Phase 7 — Pipeline
 async function phasePipeline() {
-  const { PipelineCore } = require('../pipeline/pipeline-core'); // eslint-disable-line global-require
+  const { PipelineCore } = require('../../pipeline/pipeline-core'); // eslint-disable-line global-require
   const pipeline = new PipelineCore({
     conductor: global.__headyConductor,
     bus,
@@ -267,7 +267,7 @@ async function phasePipeline() {
 
 // Phase 8 — AutoSuccess
 async function phaseAutoSuccess() {
-  const { engine } = require('../auto-success/auto-success-engine'); // eslint-disable-line global-require
+  const { engine } = require('../../orchestration/auto-success-engine'); // eslint-disable-line global-require
   engine.start();
   global.__headyAutoSuccess = engine;
 

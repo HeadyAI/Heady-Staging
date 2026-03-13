@@ -55,7 +55,7 @@ function sanitizeState(state) {
 }
 
 // ─── Load original ────────────────────────────────────────────────────────────
-const OriginalGraphOrchestrator = require('../lib/graph-orchestrator');
+const OriginalGraphOrchestrator = require('../graph-orchestrator');
 
 // ─── Traced subclass ──────────────────────────────────────────────────────────
 class TracedGraphOrchestrator extends OriginalGraphOrchestrator {

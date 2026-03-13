@@ -4,7 +4,7 @@
  * Uses test keys in sandbox mode, live keys in production
  */
 
-const { CONFIG } = require('../../config/global');
+const { CONFIG } = require('../config/global');
 
 async function storeCheckoutHandler(req, res) {
     try {

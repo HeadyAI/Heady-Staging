@@ -1,4 +1,5 @@
----
+go
+vCHE---
 name: heady-unbreakable-laws
 version: "2.0.0"
 scope: GLOBAL_PERMANENT

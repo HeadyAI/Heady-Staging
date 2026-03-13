@@ -12,7 +12,7 @@ function getWork(ctx = {}) {
     return [
         async () => {
             try {
-                const HCFullPipeline = require('../hc-full-pipeline');
+                const HCFullPipeline = require('../orchestration/hc-full-pipeline');
                 return { bee: domain, action: 'full-pipeline', stages: HCFullPipeline.STAGES?.length || 9 };
             } catch { return { bee: domain, action: 'full-pipeline', loaded: false }; }
         },

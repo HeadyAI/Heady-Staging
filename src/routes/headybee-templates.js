@@ -12,7 +12,7 @@ const {
     validateTemplateCoverage,
     buildGithubSourceOfTruthProjection,
     auditInfrastructureDrift,
-} = require("../headybee-template-registry");
+} = require("../agents/headybee-template-registry");
 
 const router = express.Router();
 

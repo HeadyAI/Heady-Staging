@@ -712,7 +712,7 @@ class FeatureGate extends EventEmitter {
     if (!quotaKey) return { withinQuota: true };
 
     const plan = await this._getPlan(userId, orgId);
-    const limits = require('../configs/stripe-config').PLAN_LIMITS[plan];
+    const limits = require('./stripe-config').PLAN_LIMITS[plan];
     const limit = limits?.[quotaKey];
 
     if (limit === null || limit === undefined) return { withinQuota: true, unlimited: true };

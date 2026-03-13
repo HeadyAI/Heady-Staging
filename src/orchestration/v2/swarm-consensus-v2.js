@@ -44,7 +44,7 @@
 const { PHI_TIMING } = require('../../shared/phi-math');
 const EventEmitter = require('events');
 const crypto = require('crypto');
-let logger = null; try { logger = require('../utils/logger'); } catch(e) { /* graceful */ }
+let logger = null; try { logger = require('../../utils/logger'); } catch(e) { /* graceful */ }
 
 const PHI = (1 + Math.sqrt(5)) / 2;
 const DEFAULT_LOCK_TTL_MS = Math.round(PHI * PHI_TIMING.CYCLE);    // ~48.5s

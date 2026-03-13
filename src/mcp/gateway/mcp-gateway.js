@@ -20,12 +20,12 @@ const {
   cslGate, phiFusionWeights, phiAdaptiveInterval,
 } = require('../../shared/phi-math');
 
-const { SemanticRateLimiter } = require('../security/rate-limiter');
-const { ZeroTrustSandbox }    = require('../security/zero-trust-sandbox');
-const { AuditLogger }         = require('../security/audit-logger');
-const { OutputScanner }       = require('../security/output-scanner');
-const { InputValidator }      = require('../security/input-validator');
-const { RBACManager }         = require('../security/rbac-manager');
+const { SemanticRateLimiter } = require('../../security/mcp/rate-limiter');
+const { ZeroTrustSandbox }    = require('../../security/mcp/zero-trust-sandbox');
+const { AuditLogger }         = require('../../security/mcp/audit-logger');
+const { OutputScanner }       = require('../../security/mcp/output-scanner');
+const { InputValidator }      = require('../../security/mcp/input-validator');
+const { RBACManager }         = require('../../security/mcp/rbac-manager');
 const { ConnectionPoolManager } = require('./connection-pool');
 
 // ── CSL-Gated Tool Router ───────────────────────────────────────────────────

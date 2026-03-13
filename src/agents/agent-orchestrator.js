@@ -7,9 +7,9 @@
 
 const { PHI_TIMING } = require('../shared/phi-math');
 const logger = require('../../utils/logger');
-const HeadyConductor = require('../../orchestration/heady-conductor');
-const CircuitBreaker = require('../../resilience/circuit-breaker');
-const HeadyKV = require('../../core/heady-kv');
+const HeadyConductor = require('../heady-conductor');
+const CircuitBreaker = require('../circuit-breaker');
+const HeadyKV = require('../core/heady-kv');
 
 // ─── Agent definitions ────────────────────────────────────────────────────────
 

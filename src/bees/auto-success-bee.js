@@ -11,7 +11,7 @@ function getWork(ctx = {}) {
     return [
         async () => {
             try {
-                const mod = require('../hc_auto_success');
+                const mod = require('../orchestration/hc_auto_success');
                 return { bee: domain, action: 'engine-status', loaded: true };
             } catch { return { bee: domain, action: 'engine-status', loaded: false }; }
         },

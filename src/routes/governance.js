@@ -16,7 +16,7 @@
 
 const express = require('../core/heady-server');
 const router = express.Router();
-const PolicyEngine = require('../policy-engine');
+const PolicyEngine = require('../governance/policy-engine');
 const { getApprovalGates } = require('../governance/approval-gates');
 
 // ─── Singleton Policy Engine with default policies ──────────────────

@@ -6,8 +6,8 @@
 const http = require('http');
 const path = require('path');
 const { HeadyAuth } = require('./hc_auth');
-const { HEADY_DOMAINS, CORS_ORIGINS } = require('../src/middleware/security-headers');
-const { createLogger } = require('../shared/logger');
+const { HEADY_DOMAINS, CORS_ORIGINS } = require('../middleware/security-headers');
+const { createLogger } = require('../utils/logger');
 
 const log = createLogger({ service: 'auth-page-server' });
 const PORT = 3847;

@@ -40,7 +40,7 @@ const shutdownHookDurationMs = meter.createHistogram('heady.shutdown_hook_durati
 });
 
 // ─── Load original singleton ──────────────────────────────────────────────────
-const originalManager = require('../lib/shutdown');
+const originalManager = require('../shutdown');
 
 // ─── Intercept the internal _shutdown to instrument hook execution ────────────
 // We monkey-patch _shutdown on the singleton instance to add timing + spans.

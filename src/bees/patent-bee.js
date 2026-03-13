@@ -22,7 +22,7 @@ function getWork(ctx = {}) {
     // ── Worker 1: Coverage Report ──
     work.push(async () => {
         try {
-            const registry = require('../patent-concept-registry');
+            const registry = require('../shared/patent-concept-registry');
             const coverage = registry.getCoverage();
 
             // Emit telemetry
@@ -52,7 +52,7 @@ function getWork(ctx = {}) {
     // ── Worker 2: Vector Presence Check ──
     work.push(async () => {
         try {
-            const registry = require('../patent-concept-registry');
+            const registry = require('../shared/patent-concept-registry');
             const vm = global.__vectorMemory || require('../vector-memory');
 
             if (!vm || !vm.queryMemory) {
@@ -85,7 +85,7 @@ function getWork(ctx = {}) {
     // ── Worker 3: Domain Health ──
     work.push(async () => {
         try {
-            const registry = require('../patent-concept-registry');
+            const registry = require('../shared/patent-concept-registry');
             const coverage = registry.getCoverage();
 
             // Find domains with zero active implementations

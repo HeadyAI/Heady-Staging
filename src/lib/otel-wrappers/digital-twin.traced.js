@@ -60,7 +60,7 @@ function approxBytes(obj) {
 }
 
 // ─── Load original ────────────────────────────────────────────────────────────
-const OriginalDigitalTwin = require('../lib/digital-twin');
+const OriginalDigitalTwin = require('../digital-twin');
 
 // ─── Traced subclass ──────────────────────────────────────────────────────────
 class TracedDigitalTwin extends OriginalDigitalTwin {

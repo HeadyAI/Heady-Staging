@@ -9,7 +9,7 @@
  *         degradation on broadcast failure.
  */
 
-jest.mock('../../../src/utils/logger', () => ({
+jest.mock('../utils/logger', () => ({
   info:      jest.fn(),
   warn:      jest.fn(),
   error:     jest.fn(),
@@ -18,15 +18,15 @@ jest.mock('../../../src/utils/logger', () => ({
   child:     jest.fn().mockReturnThis(),
 }));
 
-const { PHI, PHI_INVERSE, PhiScale } = require('../../../src/core/phi-scales');
-const CSL = require('../../../src/core/semantic-logic');
+const { PHI, PHI_INVERSE, PhiScale } = require('../core/phi-scales');
+const CSL = require('../core/semantic-logic');
 
 // ---------------------------------------------------------------------------
 // Load HealthAttestor or build inline mock
 // ---------------------------------------------------------------------------
 let HealthAttestor;
 try {
-  const mod = require('../../../src/resilience/health-attestor');
+  const mod = require('./health-attestor');
   HealthAttestor = mod.HealthAttestor || mod;
 } catch (_) {
   HealthAttestor = class HealthAttestorMock {

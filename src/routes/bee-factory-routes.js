@@ -22,7 +22,7 @@
 
 'use strict';
 
-const { DynamicBeeFactory } = require('../agents/dynamic-bee-factory-enhanced');
+const { DynamicBeeFactory } = require('../bees/dynamic-bee-factory-enhanced');
 
 // Module-level singleton
 let _factory = null;

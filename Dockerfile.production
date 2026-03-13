@@ -31,7 +31,7 @@ COPY package.json package-lock.json* pnpm-lock.yaml* ./
 
 # Install ALL deps (including devDependencies for build step)
 RUN if [ -f pnpm-lock.yaml ]; then \
-  corepack enable && pnpm install --frozen-lockfile; \
+  corepack enable && pnpm install --no-frozen-lockfile; \
   elif [ -f package-lock.json ]; then \
   npm ci; \
   else \
@@ -54,7 +54,13 @@ COPY src/             ./src/
 COPY configs/         ./configs/
 COPY scripts/         ./scripts/
 COPY docs/            ./docs/
+COPY services/        ./services/
+COPY shared/          ./shared/
+COPY public/          ./public/
+COPY .heady/          ./.heady/
 COPY heady-manager.js ./
+COPY seventeen-swarm-orchestrator.js ./
+COPY heady-registry.json ./
 COPY heady-hive-sdk/  ./heady-hive-sdk/
 
 # Run build step (site generation, asset compilation)
@@ -100,7 +106,13 @@ COPY --from=build --chown=heady:heady /build/src/           ./src/
 COPY --from=build --chown=heady:heady /build/configs/       ./configs/
 COPY --from=build --chown=heady:heady /build/scripts/       ./scripts/
 COPY --from=build --chown=heady:heady /build/docs/          ./docs/
+COPY --from=build --chown=heady:heady /build/services/      ./services/
+COPY --from=build --chown=heady:heady /build/shared/        ./shared/
+COPY --from=build --chown=heady:heady /build/public/        ./public/
+COPY --from=build --chown=heady:heady /build/.heady/        ./.heady/
 COPY --from=build --chown=heady:heady /build/heady-manager.js ./
+COPY --from=build --chown=heady:heady /build/seventeen-swarm-orchestrator.js ./
+COPY --from=build --chown=heady:heady /build/heady-registry.json ./
 COPY --from=build --chown=heady:heady /build/heady-hive-sdk/  ./heady-hive-sdk/
 
 # Create data directories (vector shards, telemetry, audio, tmp)

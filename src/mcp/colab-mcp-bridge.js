@@ -42,7 +42,7 @@ const TRANSPORT = process.env.HEADY_MCP_TRANSPORT || 'all';
 const HEADY_DIR = process.env.HEADY_DIR || path.join(__dirname, '..', '..');
 
 // ── GPUVectorStore — 3D Vector Space ─────────────────────────────
-const { GPUVectorStore, GPU_CONFIG, setupNgrokTunnel } = require('../colab-runtime');
+const { GPUVectorStore, GPU_CONFIG, setupNgrokTunnel } = require('../runtime/colab-runtime');
 const vectorStore = new GPUVectorStore(384);
 
 // ── Template Auto-Generation Directive ───────────────────────────

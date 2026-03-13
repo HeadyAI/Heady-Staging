@@ -18,7 +18,7 @@ const { PHI_TIMING } = require('../../shared/phi-math');
  */
 
 const { EventEmitter } = require('events');
-const logger = require('../utils/logger');
+const logger = require('../../utils/logger');
 const crypto = require('crypto');
 
 // ─── Saga status constants ─────────────────────────────────────────────────────

@@ -1,970 +1,531 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HEADY Finance - AI-Powered Financial Intelligence & Trading Signals</title>
-    <meta name="description" content="Enterprise-grade AI financial analysis, intelligent trading signals, and portfolio optimization powered by HEADY. Real-time market analysis with confidence-scored predictions.">
-    <meta name="keywords" content="AI trading, financial intelligence, trading signals, portfolio optimization, market analysis, forex, crypto, equities">
-    <meta name="author" content="Eric Haywood - HeadySystems Inc">
-
-    <!-- Open Graph / Social Media -->
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://headyfinance.com">
-    <meta property="og:title" content="HEADY Finance - AI-Powered Financial Intelligence & Trading Signals">
-    <meta property="og:description" content="Enterprise-grade AI financial analysis, intelligent trading signals, and portfolio optimization powered by HEADY.">
-    <meta property="og:image" content="https://headyfinance.com/og-image.png">
-    <meta property="og:site_name" content="HEADY Finance">
-
-    <!-- Twitter Card -->
-    <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="https://headyfinance.com">
-    <meta property="twitter:title" content="HEADY Finance - AI-Powered Financial Intelligence & Trading Signals">
-    <meta property="twitter:description" content="Enterprise-grade AI financial analysis and intelligent trading signals powered by HEADY.">
-    <meta property="twitter:image" content="https://headyfinance.com/og-image.png">
-
-    <!-- JSON-LD Structured Data -->
-    <script type="application/ld+json">
-    {
-        "@context": "https://schema.org",
-        "@type": "FinancialService",
-        "name": "HEADY Finance",
-        "url": "https://headyfinance.com",
-        "logo": "https://headyfinance.com/logo.png",
-        "description": "AI-powered financial analysis and trading intelligence platform",
-        "founder": {
-            "@type": "Person",
-            "name": "Eric Haywood"
-        },
-        "areaServed": "Worldwide",
-        "serviceType": ["Market Analysis", "Trading Signals", "Portfolio Management", "Risk Assessment"],
-        "contactPoint": {
-            "@type": "ContactPoint",
-            "contactType": "Customer Support",
-            "url": "https://headyfinance.com/support"
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HeadyFinance — Invest in the Future of AI</title>
+  <meta name="description" content="Investor relations, growth metrics, patent portfolio, strategic roadmap — the financial intelligence behind HeadySystems.">
+  <meta name="keywords" content="Heady, AI, HeadyFinance, investor-relations, sacred geometry, vector memory, CSL">
+  <meta property="og:title" content="HeadyFinance — Invest in the Future of AI">
+  <meta property="og:description" content="Investor relations, growth metrics, patent portfolio, strategic roadmap — the financial intelligence behind HeadySystems.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://headyfinance.com">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../packages/design-system/heady-design.css">
+  <style>
+    :root {
+      --accent: #a855f7;
+      --accent-glow: rgba(168,85,247,0.15);
+      --accent-subtle: rgba(168,85,247,0.06);
+      --brand-font: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      --brand-heading: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     }
-    </script>
-
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        html {
-            scroll-behavior: smooth;
-        }
-
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            background-color: #0a0a0f;
-            color: #e0e0e0;
-            line-height: 1.6;
-            overflow-x: hidden;
-        }
-
-        /* Canvas Background */
-        #canvas-bg {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            background-color: #0a0a0f;
-        }
-
-        main {
-            position: relative;
-            z-index: 1;
-        }
-
-        /* Typography */
-        h1, h2, h3, h4, h5, h6 {
-            font-weight: 700;
-            margin-bottom: 1rem;
-            color: #ffffff;
-        }
-
-        h1 {
-            font-size: clamp(2rem, 5vw, 4rem);
-            line-height: 1.2;
-        }
-
-        h2 {
-            font-size: clamp(1.5rem, 4vw, 3rem);
-            margin-top: 3rem;
-        }
-
-        h3 {
-            font-size: clamp(1.2rem, 3vw, 2rem);
-        }
-
-        p {
-            margin-bottom: 1rem;
-            font-size: 1rem;
-        }
-
-        code, pre {
-            font-family: 'JetBrains Mono', monospace;
-            background-color: rgba(124, 94, 255, 0.1);
-            padding: 0.2rem 0.5rem;
-            border-radius: 4px;
-            font-size: 0.9rem;
-        }
-
-        pre {
-            padding: 1rem;
-            overflow-x: auto;
-            border-left: 3px solid #7c5eff;
-        }
-
-        /* Container */
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-
-        /* Header / Navigation */
-        header {
-            background-color: rgba(10, 10, 15, 0.8);
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid rgba(124, 94, 255, 0.2);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-
-        nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1rem 0;
-        }
-
-        .logo {
-            font-size: 1.5rem;
-            font-weight: 800;
-            background: linear-gradient(135deg, #f0c040 0%, #7c5eff 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            text-decoration: none;
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 2rem;
-            list-style: none;
-        }
-
-        .nav-links a {
-            color: #e0e0e0;
-            text-decoration: none;
-            transition: color 0.3s ease;
-            font-size: 0.95rem;
-        }
-
-        .nav-links a:hover {
-            color: #f0c040;
-        }
-
-        @media (max-width: 768px) {
-            .nav-links {
-                display: none;
-            }
-        }
-
-        /* Buttons */
-        .btn {
-            display: inline-block;
-            padding: 0.75rem 1.5rem;
-            border-radius: 6px;
-            text-decoration: none;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            border: none;
-            cursor: pointer;
-            font-size: 1rem;
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, #f0c040 0%, #7c5eff 100%);
-            color: #0a0a0f;
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(240, 192, 64, 0.4);
-        }
-
-        .btn-secondary {
-            background-color: rgba(124, 94, 255, 0.1);
-            color: #7c5eff;
-            border: 1px solid #7c5eff;
-        }
-
-        .btn-secondary:hover {
-            background-color: rgba(124, 94, 255, 0.2);
-            transform: translateY(-2px);
-        }
-
-        /* Hero Section */
-        .hero {
-            padding: 8rem 0;
-            text-align: center;
-            position: relative;
-        }
-
-        .hero h1 {
-            background: linear-gradient(135deg, #f0c040 0%, #ffffff 50%, #40e0d0 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 1.5rem;
-        }
-
-        .hero p {
-            font-size: 1.3rem;
-            color: #b0b0b0;
-            margin-bottom: 2rem;
-            max-width: 700px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        .hero-buttons {
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-
-        @media (max-width: 768px) {
-            .hero {
-                padding: 4rem 0;
-            }
-
-            .hero h1 {
-                font-size: 2rem;
-            }
-
-            .hero p {
-                font-size: 1.1rem;
-            }
-        }
-
-        /* Section */
-        section {
-            padding: 5rem 0;
-            border-top: 1px solid rgba(124, 94, 255, 0.1);
-        }
-
-        section h2 {
-            margin-bottom: 3rem;
-            text-align: center;
-        }
-
-        /* Features Grid */
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
-            margin-bottom: 3rem;
-        }
-
-        .feature-card {
-            background: linear-gradient(135deg, rgba(124, 94, 255, 0.1) 0%, rgba(64, 224, 208, 0.05) 100%);
-            border: 1px solid rgba(124, 94, 255, 0.2);
-            padding: 2rem;
-            border-radius: 8px;
-            transition: all 0.3s ease;
-        }
-
-        .feature-card:hover {
-            border-color: rgba(240, 192, 64, 0.5);
-            background: linear-gradient(135deg, rgba(240, 192, 64, 0.15) 0%, rgba(64, 224, 208, 0.1) 100%);
-            transform: translateY(-5px);
-        }
-
-        .feature-icon {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
-        }
-
-        .feature-card h3 {
-            margin-bottom: 0.5rem;
-            color: #f0c040;
-        }
-
-        /* Pricing Section */
-        .pricing-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
-            margin: 3rem 0;
-        }
-
-        .pricing-card {
-            background: linear-gradient(135deg, rgba(124, 94, 255, 0.1) 0%, rgba(64, 224, 208, 0.05) 100%);
-            border: 2px solid rgba(124, 94, 255, 0.2);
-            border-radius: 8px;
-            padding: 2.5rem;
-            text-align: center;
-            transition: all 0.3s ease;
-        }
-
-        .pricing-card.featured {
-            border-color: #f0c040;
-            background: linear-gradient(135deg, rgba(240, 192, 64, 0.15) 0%, rgba(124, 94, 255, 0.1) 100%);
-            transform: scale(1.05);
-        }
-
-        .pricing-card h3 {
-            margin-bottom: 1rem;
-            font-size: 1.3rem;
-        }
-
-        .pricing-price {
-            font-size: 2.5rem;
-            font-weight: 800;
-            background: linear-gradient(135deg, #f0c040 0%, #7c5eff 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 0.5rem;
-        }
-
-        .pricing-period {
-            font-size: 0.9rem;
-            color: #b0b0b0;
-            margin-bottom: 1.5rem;
-        }
-
-        .pricing-features {
-            list-style: none;
-            margin-bottom: 2rem;
-            text-align: left;
-        }
-
-        .pricing-features li {
-            padding: 0.5rem 0;
-            color: #c0c0c0;
-            border-bottom: 1px solid rgba(124, 94, 255, 0.1);
-        }
-
-        .pricing-features li:before {
-            content: "✓ ";
-            color: #40e0d0;
-            font-weight: 700;
-            margin-right: 0.5rem;
-        }
-
-        /* Confidence Score Display */
-        .confidence-box {
-            background: linear-gradient(135deg, rgba(240, 192, 64, 0.15) 0%, rgba(64, 224, 208, 0.1) 100%);
-            border: 1px solid rgba(240, 192, 64, 0.3);
-            border-radius: 8px;
-            padding: 2rem;
-            margin: 2rem 0;
-            text-align: center;
-        }
-
-        .confidence-label {
-            font-size: 0.9rem;
-            color: #b0b0b0;
-            margin-bottom: 0.5rem;
-        }
-
-        .phi-value {
-            font-size: 2rem;
-            font-weight: 800;
-            font-family: 'JetBrains Mono', monospace;
-            color: #f0c040;
-            margin: 0.5rem 0;
-        }
-
-        .confidence-description {
-            color: #909090;
-            font-size: 0.9rem;
-        }
-
-        /* Info Box */
-        .info-box {
-            background: rgba(255, 100, 100, 0.05);
-            border-left: 4px solid #ff6464;
-            padding: 1.5rem;
-            border-radius: 6px;
-            margin: 2rem 0;
-        }
-
-        .info-box strong {
-            color: #ff8080;
-        }
-
-        /* Ecosystem Links */
-        .ecosystem {
-            background: linear-gradient(135deg, rgba(124, 94, 255, 0.05) 0%, rgba(64, 224, 208, 0.05) 100%);
-            border: 1px solid rgba(124, 94, 255, 0.2);
-            border-radius: 8px;
-            padding: 3rem;
-            margin: 3rem 0;
-        }
-
-        .ecosystem h3 {
-            text-align: center;
-            margin-bottom: 2rem;
-        }
-
-        .ecosystem-links {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1rem;
-        }
-
-        .ecosystem-link {
-            background-color: rgba(124, 94, 255, 0.1);
-            border: 1px solid rgba(124, 94, 255, 0.3);
-            padding: 1rem;
-            border-radius: 6px;
-            text-align: center;
-            text-decoration: none;
-            color: #f0c040;
-            transition: all 0.3s ease;
-            font-weight: 600;
-        }
-
-        .ecosystem-link:hover {
-            background-color: rgba(240, 192, 64, 0.15);
-            border-color: #40e0d0;
-            color: #40e0d0;
-        }
-
-        /* Footer */
-        footer {
-            background-color: rgba(10, 10, 15, 0.9);
-            border-top: 1px solid rgba(124, 94, 255, 0.2);
-            padding: 3rem 0;
-            margin-top: 5rem;
-        }
-
-        .footer-content {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 2rem;
-            margin-bottom: 2rem;
-        }
-
-        .footer-section h4 {
-            margin-bottom: 1rem;
-            color: #f0c040;
-        }
-
-        .footer-section a {
-            display: block;
-            color: #b0b0b0;
-            text-decoration: none;
-            margin-bottom: 0.5rem;
-            transition: color 0.3s ease;
-        }
-
-        .footer-section a:hover {
-            color: #f0c040;
-        }
-
-        .footer-bottom {
-            text-align: center;
-            padding-top: 2rem;
-            border-top: 1px solid rgba(124, 94, 255, 0.1);
-            color: #707070;
-            font-size: 0.9rem;
-        }
-
-        /* Accessibility */
-        .skip-link {
-            position: absolute;
-            top: -40px;
-            left: 0;
-            background: #f0c040;
-            color: #0a0a0f;
-            padding: 8px;
-            text-decoration: none;
-            z-index: 100;
-        }
-
-        .skip-link:focus {
-            top: 0;
-        }
-
-        @media (max-width: 768px) {
-            .features-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .pricing-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .pricing-card.featured {
-                transform: scale(1);
-            }
-
-            .nav-links {
-                display: none;
-            }
-
-            .hero-buttons {
-                flex-direction: column;
-                align-items: center;
-            }
-
-            .btn {
-                width: 100%;
-                max-width: 300px;
-            }
-        }
-    </style>
+    body { padding-top: 32px; font-family: var(--brand-font); }
+    h1, h2, h3, h4 { font-family: var(--brand-heading); }
+    .sacred-canvas {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      z-index: 0;
+      pointer-events: none;
+    }
+    .hero-badge {
+      display: inline-block;
+      padding: 0.4rem 1rem;
+      background: rgba(168,85,247,0.08);
+      border: 1px solid rgba(168,85,247,0.2);
+      border-radius: 100px;
+      font-size: var(--text-xs);
+      color: #a855f7;
+      letter-spacing: 0.04em;
+      margin-bottom: var(--space-8);
+      font-weight: 500;
+    }
+    .hero-cta-row { display: flex; gap: var(--space-8); justify-content: center; flex-wrap: wrap; }
+    .feature-icon {
+      font-size: 1.618rem;
+      display: block;
+      margin-bottom: 0.8rem;
+      color: var(--accent);
+    }
+    .btn-sm {
+      padding: 0.4rem 1rem;
+      font-size: var(--text-xs);
+      border-radius: var(--radius-sm);
+    }
+    .deep-dive { max-width: 800px; margin: 0 auto; text-align: left; }
+    .deep-dive h3 { font-size: var(--text-xl); margin: var(--space-21) 0 var(--space-8); color: var(--accent); }
+    .deep-dive h4 { font-size: var(--text-lg); margin: var(--space-13) 0 var(--space-5); color: var(--text-primary); }
+    .deep-dive p { margin-bottom: var(--space-8); font-size: var(--text-base); line-height: 1.8; }
+    .nav-links { display: flex; align-items: center; gap: var(--space-8); }
+    .nav-links a { color: var(--text-secondary); font-size: var(--text-sm); font-weight: 500; }
+    .nav-links a:hover { color: var(--text-primary); opacity: 1; }
+    .nav-logo {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+      font-size: 1.1rem;
+      letter-spacing: 0.05em;
+      color: var(--accent);
+    }
+    .eco-map { display: grid; grid-template-columns: repeat(3,1fr); gap: 1.3125rem; max-width: 900px; margin: 0 auto; }
+    .eco-node { display: flex; flex-direction: column; align-items: center; text-align: center; padding: 2rem 1rem; background: var(--glass-bg); backdrop-filter: blur(24px); border: 1px solid var(--glass-border); border-radius: var(--radius-lg); text-decoration: none; transition: all .382s; }
+    .eco-node:hover { transform: translateY(-3px); border-color: var(--node-accent); box-shadow: 0 0 21px rgba(124,94,255,.12); opacity: 1; }
+    .eco-node--current { border-color: var(--node-accent); background: rgba(124,94,255,.04); }
+    .eco-icon { font-size: 1.8rem; margin-bottom: .5rem; color: var(--node-accent); }
+    .eco-label { font-weight: 600; color: #e8e8f0; font-size: .95rem; margin-bottom: .25rem; }
+    .eco-desc { font-size: .75rem; color: #9898b0; }
+    .how-steps { display: grid; grid-template-columns: repeat(auto-fit,minmax(200px,1fr)); gap: 1.3125rem; }
+    .how-step { text-align: center; padding: 2rem 1rem; }
+    .how-step-num { font-family: 'JetBrains Mono', monospace; font-size: 2rem; font-weight: 700; color: rgba(168,85,247,0.3); margin-bottom: .5rem; }
+    .how-step h4 { color: #e8e8f0; margin-bottom: .5rem; }
+    .how-step p { font-size: .85rem; color: #9898b0; }
+    @media(max-width:768px) {
+      .eco-map { grid-template-columns: 1fr 1fr; }
+      .how-steps { grid-template-columns: 1fr; }
+      .nav-links { display: none; }
+    }
+    @media(max-width:480px) {
+      .eco-map { grid-template-columns: 1fr; }
+    }
+  </style>
 </head>
 <body>
-    <!-- Skip to main content link for accessibility -->
-    <a href="#main-content" class="skip-link">Skip to main content</a>
 
-    <!-- Canvas background -->
-    <canvas id="canvas-bg"></canvas>
+  <!-- Sacred Geometry Canvas Background -->
+  <canvas id="sacred-canvas" class="sacred-canvas"></canvas>
 
-    <!-- Header -->
-    <header>
-        <div class="container">
-            <nav>
-                <a href="/" class="logo">HEADY Finance</a>
-                <ul class="nav-links">
-                    <li><a href="#capabilities">Capabilities</a></li>
-                    <li><a href="#features">Features</a></li>
-                    <li><a href="#pricing">Pricing</a></li>
-                    <li><a href="#api">API</a></li>
-                    <li><a href="#ecosystem">Ecosystem</a></li>
-                </ul>
-            </nav>
+  <!-- Navigation -->
+  <nav class="glass-nav" style="top:32px;">
+    <span class="nav-logo">HeadyFinance</span>
+    <div class="nav-links">
+      <a href="#financials">Financials</a>
+<a href="#patents">Patents</a>
+<a href="#roadmap">Roadmap</a>
+<a href="https://headysystems.com" class="btn btn-primary btn-sm" target="_blank" rel="noopener">HeadySystems</a>
+
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    
+    <div class="hero-badge">📈 Series A · 51+ Patents · 9 Verticals</div>
+    <h1 class="text-gradient">Invest in the Future of AI</h1>
+    <p class="subtitle">Investor relations, growth metrics, patent portfolio, strategic roadmap — the financial intelligence behind HeadySystems.</p>
+    <div class="hero-cta-row">
+      <a href="#deep-dive" class="btn btn-primary">View Investment Thesis</a>
+      <a href="mailto:invest@headysystems.com" class="btn btn-ghost">Contact IR →</a>
+    </div>
+  </section>
+
+  <!-- Stats Banner -->
+  <section class="section" style="padding: var(--space-21) 0;">
+    <div class="container">
+      <div class="stats-row">
+        
+        <div class="stat">
+          <div class="stat-num">51+</div>
+          <div class="stat-label">Patents</div>
         </div>
-    </header>
-
-    <main id="main-content">
-        <!-- Hero Section -->
-        <section class="hero">
-            <div class="container">
-                <h1>INTELLIGENCE MEETS FINANCE</h1>
-                <p>AI-powered financial analysis, trading signals, and portfolio management for professionals and institutions</p>
-                <div class="hero-buttons">
-                    <a href="#pricing" class="btn btn-primary">Get Started</a>
-                    <a href="#api" class="btn btn-secondary">API Docs</a>
-                </div>
-            </div>
-        </section>
-
-        <!-- Capabilities Section -->
-        <section id="capabilities">
-            <div class="container">
-                <h2>Core Capabilities</h2>
-                <div class="features-grid">
-                    <div class="feature-card">
-                        <div class="feature-icon">📊</div>
-                        <h3>Market Analysis</h3>
-                        <p>Real-time technical and fundamental analysis across global markets with ML-powered pattern recognition</p>
-                    </div>
-                    <div class="feature-card">
-                        <div class="feature-icon">💬</div>
-                        <h3>Sentiment Analysis</h3>
-                        <p>Analyze social sentiment, news flow, and market mood to identify contrarian opportunities</p>
-                    </div>
-                    <div class="feature-card">
-                        <div class="feature-icon">🎯</div>
-                        <h3>Portfolio Optimization</h3>
-                        <p>Dynamic allocation strategies using modern portfolio theory and risk-adjusted returns</p>
-                    </div>
-                    <div class="feature-card">
-                        <div class="feature-icon">⚠️</div>
-                        <h3>Risk Assessment</h3>
-                        <p>Comprehensive VaR, Sharpe ratio, drawdown analysis, and stress testing across asset classes</p>
-                    </div>
-                    <div class="feature-card">
-                        <div class="feature-icon">⚡</div>
-                        <h3>Trading Signals</h3>
-                        <p>Confidence-scored trade recommendations with φ-scaled entry/exit points and position sizing</p>
-                    </div>
-                    <div class="feature-card">
-                        <div class="feature-icon">📈</div>
-                        <h3>Financial Research</h3>
-                        <p>Automated research reports, company analysis, and earnings impact modeling</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Features Section -->
-        <section id="features">
-            <div class="container">
-                <h2>Advanced Features</h2>
-                <div class="features-grid">
-                    <div class="feature-card">
-                        <div class="feature-icon">🔄</div>
-                        <h3>Real-Time Data Feeds</h3>
-                        <p>Live market data with sub-second latency. Direct integrations with major exchanges and data providers</p>
-                    </div>
-                    <div class="feature-card">
-                        <div class="feature-icon">🌊</div>
-                        <h3>φ-Scaled Risk Models</h3>
-                        <p>Golden ratio-based position sizing and risk scaling. Sacred geometry pattern recognition in price action</p>
-                    </div>
-                    <div class="feature-card">
-                        <div class="feature-icon">✨</div>
-                        <h3>CSL Confidence Scoring</h3>
-                        <p>Cryptographic Signal Logic confidence gates (0.618 golden ratio threshold for execution)</p>
-                    </div>
-                    <div class="feature-card">
-                        <div class="feature-icon">🌍</div>
-                        <h3>Multi-Asset Support</h3>
-                        <p>Equities, cryptocurrencies, forex, commodities, indices. Single platform for unified portfolio management</p>
-                    </div>
-                    <div class="feature-card">
-                        <div class="feature-icon">🔗</div>
-                        <h3>Exchange Integrations</h3>
-                        <p>Direct API connections to 50+ exchanges. Real-time order execution and portfolio sync</p>
-                    </div>
-                    <div class="feature-card">
-                        <div class="feature-icon">🤖</div>
-                        <h3>Algorithmic Trading</h3>
-                        <p>Backtesting, paper trading, and live algorithmic execution with risk controls</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- How It Works -->
-        <section>
-            <div class="container">
-                <h2>How It Works</h2>
-                <div style="background: linear-gradient(135deg, rgba(124, 94, 255, 0.08) 0%, rgba(64, 224, 208, 0.05) 100%); border: 1px solid rgba(124, 94, 255, 0.2); border-radius: 8px; padding: 3rem; margin: 2rem 0;">
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem;">
-                        <div style="text-align: center;">
-                            <div style="font-size: 2.5rem; font-weight: 800; color: #7c5eff; margin-bottom: 0.5rem;">1</div>
-                            <h3 style="margin-bottom: 0.5rem;">Connect Data Sources</h3>
-                            <p style="color: #b0b0b0;">Link your exchange accounts, data providers, and portfolio systems</p>
-                        </div>
-                        <div style="text-align: center;">
-                            <div style="font-size: 2.5rem; font-weight: 800; color: #f0c040; margin-bottom: 0.5rem;">2</div>
-                            <h3 style="margin-bottom: 0.5rem;">AI Analyzes</h3>
-                            <p style="color: #b0b0b0;">Machine learning models process market data and generate insights</p>
-                        </div>
-                        <div style="text-align: center;">
-                            <div style="font-size: 2.5rem; font-weight: 800; color: #40e0d0; margin-bottom: 0.5rem;">3</div>
-                            <h3 style="margin-bottom: 0.5rem;">Confidence Scoring</h3>
-                            <p style="color: #b0b0b0;">Signals receive CSL confidence scores and φ-scaled position sizing</p>
-                        </div>
-                        <div style="text-align: center;">
-                            <div style="font-size: 2.5rem; font-weight: 800; color: #7c5eff; margin-bottom: 0.5rem;">4</div>
-                            <h3 style="margin-bottom: 0.5rem;">Execute or Review</h3>
-                            <p style="color: #b0b0b0;">Automatic execution for approved signals or manual review</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Risk Management -->
-        <section>
-            <div class="container">
-                <h2>Risk Management Framework</h2>
-                <div class="confidence-box">
-                    <div class="confidence-label">CSL Confidence Gate</div>
-                    <div class="phi-value">φ = 0.618</div>
-                    <div class="confidence-description">Golden Ratio Threshold - Trades only execute when confidence ≥ 0.618 (61.8% golden ratio)</div>
-                </div>
-                <div class="features-grid">
-                    <div class="feature-card">
-                        <div class="feature-icon">📐</div>
-                        <h3>φ-Scaled Position Sizing</h3>
-                        <p>Position size dynamically scales based on account size and confidence score using Fibonacci ratios</p>
-                    </div>
-                    <div class="feature-card">
-                        <div class="feature-icon">📊</div>
-                        <h3>Fibonacci Retracement</h3>
-                        <p>Automatic support/resistance levels. Entry points at 38.2%, 50%, 61.8%, and 78.6% retracements</p>
-                    </div>
-                    <div class="feature-card">
-                        <div class="feature-icon">✡️</div>
-                        <h3>Sacred Geometry Patterns</h3>
-                        <p>Pattern recognition based on harmonic price ratios. Identifies High-probability trade setups</p>
-                    </div>
-                    <div class="feature-card">
-                        <div class="feature-icon">🛡️</div>
-                        <h3>Stop Loss Management</h3>
-                        <p>Automatic stop placement at key support levels with trailing stops and volatility-adjusted exits</p>
-                    </div>
-                    <div class="feature-card">
-                        <div class="feature-icon">📉</div>
-                        <h3>Drawdown Control</h3>
-                        <p>Maximum daily/monthly drawdown limits with automatic position reduction triggers</p>
-                    </div>
-                    <div class="feature-card">
-                        <div class="feature-icon">⚖️</div>
-                        <h3>Portfolio Rebalancing</h3>
-                        <p>Automated rebalancing based on correlation matrices and risk parity principles</p>
-                    </div>
-                </div>
-                <div class="info-box">
-                    <strong>⚠️ Risk Disclaimer:</strong> Past performance does not guarantee future results. AI trading signals are not financial advice. All trading involves substantial risk of loss. Only trade with capital you can afford to lose. See <a href="#compliance" style="color: #ff8080;">compliance</a> for full disclaimers.
-                </div>
-            </div>
-        </section>
-
-        <!-- Pricing Section -->
-        <section id="pricing">
-            <div class="container">
-                <h2>Simple, Transparent Pricing</h2>
-                <div class="pricing-grid">
-                    <div class="pricing-card">
-                        <h3>Free</h3>
-                        <div class="pricing-price">$0</div>
-                        <div class="pricing-period">Forever free</div>
-                        <ul class="pricing-features">
-                            <li>5 watchlists</li>
-                            <li>Daily market analysis</li>
-                            <li>Community access</li>
-                            <li>Paper trading</li>
-                            <li>Basic API access</li>
-                        </ul>
-                        <a href="#" class="btn btn-secondary" style="width: 100%;">Get Started</a>
-                    </div>
-                    <div class="pricing-card featured">
-                        <h3>Trader</h3>
-                        <div class="pricing-price">$89</div>
-                        <div class="pricing-period">Per month, billed monthly</div>
-                        <ul class="pricing-features">
-                            <li>Unlimited watchlists</li>
-                            <li>Real-time signals</li>
-                            <li>CSL confidence scoring</li>
-                            <li>Exchange integrations (5)</li>
-                            <li>Priority support</li>
-                            <li>Advanced backtesting</li>
-                        </ul>
-                        <a href="#" class="btn btn-primary" style="width: 100%;">Start Trial</a>
-                    </div>
-                    <div class="pricing-card">
-                        <h3>Professional</h3>
-                        <div class="pricing-price">$233</div>
-                        <div class="pricing-period">Per month, billed monthly</div>
-                        <ul class="pricing-features">
-                            <li>Everything in Trader</li>
-                            <li>Unlimited exchanges</li>
-                            <li>Custom algorithms</li>
-                            <li>Multi-portfolio sync</li>
-                            <li>API rate limits: 50K/day</li>
-                            <li>Dedicated support</li>
-                        </ul>
-                        <a href="#" class="btn btn-secondary" style="width: 100%;">Contact Sales</a>
-                    </div>
-                    <div class="pricing-card">
-                        <h3>Institutional</h3>
-                        <div class="pricing-price">Custom</div>
-                        <div class="pricing-period">Custom pricing</div>
-                        <ul class="pricing-features">
-                            <li>White-label solutions</li>
-                            <li>Custom integrations</li>
-                            <li>Unlimited API calls</li>
-                            <li>SLA guarantees</li>
-                            <li>On-premises option</li>
-                            <li>Dedicated engineering</li>
-                        </ul>
-                        <a href="#" class="btn btn-secondary" style="width: 100%;">Contact Sales</a>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Compliance Section -->
-        <section id="compliance">
-            <div class="container">
-                <h2>Compliance & Disclaimers</h2>
-                <div style="background: linear-gradient(135deg, rgba(255, 100, 100, 0.08) 0%, rgba(124, 94, 255, 0.05) 100%); border: 1px solid rgba(255, 100, 100, 0.2); border-radius: 8px; padding: 2rem; margin: 2rem 0;">
-                    <h3 style="color: #ff8080; margin-bottom: 1rem;">Important Legal Notice</h3>
-                    <ul style="color: #c0c0c0; list-style: none; padding: 0;">
-                        <li style="padding: 0.5rem 0; border-bottom: 1px solid rgba(255, 100, 100, 0.1);"><strong>Not Financial Advice:</strong> HEADY Finance provides analytical tools and information only. This is not financial advice, and we are not your financial advisor.</li>
-                        <li style="padding: 0.5rem 0; border-bottom: 1px solid rgba(255, 100, 100, 0.1);"><strong>Past Performance:</strong> Historical performance does not guarantee future results. Markets are inherently unpredictable.</li>
-                        <li style="padding: 0.5rem 0; border-bottom: 1px solid rgba(255, 100, 100, 0.1);"><strong>Risk of Loss:</strong> All trading involves substantial risk of loss. Never trade with capital you cannot afford to lose completely.</li>
-                        <li style="padding: 0.5rem 0; border-bottom: 1px solid rgba(255, 100, 100, 0.1);"><strong>No Guarantees:</strong> We do not guarantee profitability, accuracy, or the performance of trading signals.</li>
-                        <li style="padding: 0.5rem 0;"><strong>Regulated Use:</strong> Comply with all applicable securities laws and regulations in your jurisdiction. HEADY may not be available in all jurisdictions.</li>
-                    </ul>
-                </div>
-            </div>
-        </section>
-
-        <!-- API Section -->
-        <section id="api">
-            <div class="container">
-                <h2>Trading API</h2>
-                <p style="text-align: center; font-size: 1.1rem; color: #b0b0b0; margin-bottom: 2rem;">Integrate HEADY Intelligence into your own trading systems and applications</p>
-                <div class="features-grid">
-                    <div class="feature-card">
-                        <div class="feature-icon">📚</div>
-                        <h3>REST API</h3>
-                        <p>Standard HTTP endpoints for market data, signals, and portfolio management</p>
-                        <p style="font-size: 0.9rem; color: #707070; margin-top: 1rem;"><a href="#" style="color: #7c5eff;">View REST Docs →</a></p>
-                    </div>
-                    <div class="feature-card">
-                        <div class="feature-icon">⚡</div>
-                        <h3>WebSocket Streaming</h3>
-                        <p>Real-time market data, signals, and portfolio updates via persistent connections</p>
-                        <p style="font-size: 0.9rem; color: #707070; margin-top: 1rem;"><a href="#" style="color: #7c5eff;">View WebSocket Docs →</a></p>
-                    </div>
-                    <div class="feature-card">
-                        <div class="feature-icon">🔌</div>
-                        <h3>Trading Execution</h3>
-                        <p>Direct order submission, portfolio management, and risk control API endpoints</p>
-                        <p style="font-size: 0.9rem; color: #707070; margin-top: 1rem;"><a href="#" style="color: #7c5eff;">View Trading API →</a></p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Ecosystem Links -->
-        <section id="ecosystem" class="ecosystem">
-            <div class="container">
-                <h3>HEADY Ecosystem</h3>
-                <div class="ecosystem-links">
-                    <a href="https://headysystems.com" class="ecosystem-link">🏠 HeadySystems.com</a>
-                    <a href="https://headyme.com" class="ecosystem-link">👤 HeadyMe.com</a>
-                    <a href="https://heady-ai.com" class="ecosystem-link">🤖 Heady-AI.com</a>
-                    <a href="https://headyos.com" class="ecosystem-link">🖥️ HeadyOS.com</a>
-                    <a href="https://headyconnection.org" class="ecosystem-link">🌐 Connection.org</a>
-                    <a href="https://headyconnection.com" class="ecosystem-link">👥 Connection.com</a>
-                    <a href="https://headyex.com" class="ecosystem-link">📊 HeadyEx.com</a>
-                    <a href="https://admin.headysystems.com" class="ecosystem-link">⚙️ Admin Portal</a>
-                </div>
-            </div>
-        </section>
-    </main>
-
-    <!-- Footer -->
-    <footer>
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-section">
-                    <h4>Platform</h4>
-                    <a href="#capabilities">Capabilities</a>
-                    <a href="#features">Features</a>
-                    <a href="#api">API</a>
-                    <a href="#pricing">Pricing</a>
-                </div>
-                <div class="footer-section">
-                    <h4>Resources</h4>
-                    <a href="#">Documentation</a>
-                    <a href="#">API Reference</a>
-                    <a href="#">Code Examples</a>
-                    <a href="#">Support</a>
-                </div>
-                <div class="footer-section">
-                    <h4>Company</h4>
-                    <a href="https://headysystems.com">About HEADY</a>
-                    <a href="#">Blog</a>
-                    <a href="#">Contact</a>
-                    <a href="#">Status</a>
-                </div>
-                <div class="footer-section">
-                    <h4>Legal</h4>
-                    <a href="#">Terms of Service</a>
-                    <a href="#">Privacy Policy</a>
-                    <a href="#compliance">Disclaimers</a>
-                    <a href="#">Security</a>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <p>Founded by Eric Haywood | 51 Provisional Patents | © 2026 HeadySystems Inc. All rights reserved. Not FDIC insured. Not bank guaranteed.</p>
-            </div>
+        <div class="stat">
+          <div class="stat-num">9</div>
+          <div class="stat-label">Verticals</div>
         </div>
-    </footer>
+        <div class="stat">
+          <div class="stat-num">$___</div>
+          <div class="stat-label">Raised</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num">2026</div>
+          <div class="stat-label">Series A Target</div>
+        </div>
+      </div>
+    </div>
+  </section>
 
-    <script>
-        // Canvas animation with market-like pattern
-        const canvas = document.getElementById('canvas-bg');
-        const ctx = canvas.getContext('2d');
+  <!-- Features Grid -->
+  <section id="features" class="section">
+    <div class="container">
+      <div class="section-header">
+        <h2>Core Capabilities</h2>
+        <p>Everything you need from HeadyFinance — powered by Sacred Geometry and Continuous Semantic Logic.</p>
+      </div>
+      <div class="grid-3">
+        
+        <div class="glass-card">
+          <span class="feature-icon">📈</span>
+          <h4>Growth Metrics</h4>
+          <p>Revenue projections, user growth curves, platform adoption analytics, and market penetration data — all presented with φ-scaled precision and full transparency.</p>
+        </div>
+        <div class="glass-card">
+          <span class="feature-icon">📜</span>
+          <h4>Patent Portfolio</h4>
+          <p>51+ provisional patents creating a defensible competitive moat across CSL, VSA, sacred geometry computing, 3D spatial memory, and multi-agent orchestration.</p>
+        </div>
+        <div class="glass-card">
+          <span class="feature-icon">🌐</span>
+          <h4>9 Domain Verticals</h4>
+          <p>Diversified portfolio spanning consumer (HeadyMe), enterprise (HeadySystems), developer (HeadyOS), research (HeadyAI), community (HeadyConnection), marketplace (HeadyEX), and more.</p>
+        </div>
+        <div class="glass-card">
+          <span class="feature-icon">🗺️</span>
+          <h4>Strategic Roadmap</h4>
+          <p>Series A timeline, partnership pipeline, enterprise pilot programs, and milestone targets with clear success criteria and φ-scaled delivery projections.</p>
+        </div>
+      </div>
+    </div>
+  </section>
 
-        function resizeCanvas() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        }
+  <!-- Deep Dive Content (2000+ words) -->
+  <section id="deep-dive" class="section">
+    <div class="container">
+      <div class="section-header">
+        <h2>Deep Dive</h2>
+        <p>A comprehensive look at what HeadyFinance offers and how it works.</p>
+      </div>
+      <div class="deep-dive">
+        
+<h3>Investment Thesis</h3>
+<p>HeadySystems represents a generational investment opportunity at the intersection of artificial intelligence, agent computing, and infrastructure technology. Our thesis is built on three pillars: a defensible patent portfolio (51+ provisional patents), a diversified multi-vertical platform (9 distinct market segments), and a novel technical architecture (CSL, VSA, Sacred Geometry) that creates fundamental advantages over competitors.</p>
 
-        resizeCanvas();
-        window.addEventListener('resize', resizeCanvas);
+<h3>Market Opportunity</h3>
+<p>The global AI market is projected to exceed $1.5 trillion by 2030, with the AI agent segment growing at 45% CAGR. HeadySystems is positioned at the infrastructure layer — the "picks and shovels" of the AI gold rush — providing the operating system, orchestration, and marketplace that agent builders and enterprises need. Our total addressable market spans enterprise AI infrastructure ($200B), developer tools ($50B), AI marketplaces ($30B), and specialized verticals.</p>
 
-        // Particle animation
-        const particles = [];
-        const particleCount = 60;
+<h3>Patent Portfolio — 51+ Defensive Moat</h3>
+<p>Our intellectual property portfolio includes 51+ provisional patent applications covering core innovations: Continuous Semantic Logic gate mechanisms, Vector Symbolic Architecture composition operators, sacred geometry network topology algorithms, 3D spatial memory indexing structures, φ-scaled resource allocation methods, cognitive archetype processing pipelines, cross-domain context injection systems, and concurrent swarm orchestration protocols.</p>
 
-        class Particle {
-            constructor() {
-                this.x = Math.random() * canvas.width;
-                this.y = Math.random() * canvas.height;
-                this.size = Math.random() * 2 + 0.5;
-                this.speedX = Math.random() * 0.3 - 0.15;
-                this.speedY = Math.random() * 0.3 - 0.15;
-                this.opacity = Math.random() * 0.4 + 0.1;
-            }
+<p>These patents create multiple layers of defensibility. Competitors cannot replicate our core technology without licensing our IP. The patent portfolio covers both the theoretical foundations (CSL, VSA, sacred geometry) and the practical implementations (service mesh topology, memory architecture, bee swarm patterns), making workarounds difficult.</p>
 
-            update() {
-                this.x += this.speedX;
-                this.y += this.speedY;
+<h3>Revenue Model</h3>
+<p>HeadySystems generates revenue through multiple streams: subscription licensing for HeadyMe and HeadyOS, enterprise infrastructure contracts for HeadySystems, marketplace transaction fees on HeadyEX, token economics via HeadyCoin, professional services and custom deployments, and advertising-supported community platforms. This diversified model reduces single-stream dependency and creates cross-selling opportunities across verticals.</p>
 
-                if (this.x > canvas.width) this.x = 0;
-                if (this.x < 0) this.x = canvas.width;
-                if (this.y > canvas.height) this.y = 0;
-                if (this.y < 0) this.y = canvas.height;
-            }
+<h3>Growth Metrics</h3>
+<p>Key performance indicators include monthly active users across all platforms, developer adoption rate for HeadyOS SDK, enterprise pipeline value, marketplace GMV (gross merchandise value), vector memory storage growth, and community engagement metrics. All metrics are tracked with φ-scaled projections that model both conservative and optimistic scenarios.</p>
 
-            draw() {
-                ctx.fillStyle = `rgba(240, 192, 64, ${this.opacity})`;
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                ctx.fill();
-            }
-        }
+<h3>Team</h3>
+<p>Founded by Eric Haywood, an experienced technologist with deep expertise in AI systems, distributed computing, and enterprise architecture. The founding team combines technical excellence with business acumen, having collectively built and scaled multiple technology platforms. We are actively recruiting additional senior leadership for our Series A phase.</p>
 
-        for (let i = 0; i < particleCount; i++) {
-            particles.push(new Particle());
-        }
+<h3>Roadmap</h3>
+<p>Our strategic roadmap targets Series A fundraising in 2026, with milestones including: production deployment of all 50+ services, 1000+ agents on HeadyEX marketplace, 10,000+ HeadyOS developer accounts, 5+ enterprise pilot programs, HeadyCoin mainnet launch, and community growth to 25,000+ members. Each milestone has clear success criteria and φ-scaled delivery projections.</p>
 
-        function animate() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
+<h3>Competitive Landscape</h3>
+<p>While companies like Anthropic, OpenAI, and Google compete in model development, HeadySystems operates at the infrastructure and orchestration layer — complementary rather than competitive. Our closest comparisons are LangChain (agent framework), AutoGen (multi-agent orchestration), and CrewAI (agent teams), but none combine our patent-protected innovations in CSL, VSA, sacred geometry, and 3D spatial memory.</p>
 
-            for (let particle of particles) {
-                particle.update();
-                particle.draw();
-            }
+      </div>
+    </div>
+  </section>
 
-            // Draw connecting lines
-            for (let i = 0; i < particles.length; i++) {
-                for (let j = i; j < particles.length; j++) {
-                    const dx = particles[i].x - particles[j].x;
-                    const dy = particles[i].y - particles[j].y;
-                    const distance = Math.sqrt(dx * dx + dy * dy);
+  <!-- How It Works -->
+  <section id="how-it-works" class="section">
+    <div class="container">
+      <div class="section-header">
+        <h2>How It Works</h2>
+        <p>The HeadyFinance workflow in four steps.</p>
+      </div>
+      <div class="how-steps">
+        
+        <div class="how-step glass-card">
+          <div class="how-step-num">01</div>
+          <h4>Technology</h4>
+          <p>51+ patented innovations in CSL, VSA, Sacred Geometry, and 3D Spatial Memory create fundamental competitive advantages.</p>
+        </div>
+        <div class="how-step glass-card">
+          <div class="how-step-num">02</div>
+          <h4>Platform</h4>
+          <p>9 interconnected verticals generate diversified revenue across consumer, enterprise, developer, research, community, and marketplace.</p>
+        </div>
+        <div class="how-step glass-card">
+          <div class="how-step-num">03</div>
+          <h4>Traction</h4>
+          <p>Growing user base, developer adoption, enterprise pipeline, and marketplace GMV demonstrate product-market fit.</p>
+        </div>
+        <div class="how-step glass-card">
+          <div class="how-step-num">04</div>
+          <h4>Vision</h4>
+          <p>Series A in 2026 to scale platform, expand enterprise partnerships, and launch HeadyCoin mainnet for agent economy.</p>
+        </div>
+      </div>
+    </div>
+  </section>
 
-                    if (distance < 200) {
-                        ctx.strokeStyle = `rgba(240, 192, 64, ${0.15 * (1 - distance / 200)})`;
-                        ctx.lineWidth = 0.5;
-                        ctx.beginPath();
-                        ctx.moveTo(particles[i].x, particles[i].y);
-                        ctx.lineTo(particles[j].x, particles[j].y);
-                        ctx.stroke();
-                    }
+  <!-- Technology Stack -->
+  <section id="tech-stack" class="section">
+    <div class="container">
+      <div class="section-header">
+        <h2>Technology Stack</h2>
+        <p>Built on the Heady™ infrastructure — sacred geometry governs every parameter.</p>
+      </div>
+      <div id="tech-container"></div>
+    </div>
+  </section>
+
+  <!-- Ecosystem Map -->
+  <section id="ecosystem" class="section">
+    <div class="container">
+      <div class="section-header">
+        <h2>Heady Ecosystem</h2>
+        <p>Nine interconnected platforms. One unified intelligence layer.</p>
+      </div>
+      <div class="eco-map">
+        
+        <a href="https://headyme.com" class="eco-node" style="--node-accent:#00d4aa" target="_blank" rel="noopener">
+          <span class="eco-icon">◎</span>
+          <span class="eco-label">HeadyMe</span>
+          <span class="eco-desc">Personal Cloud</span>
+        </a>
+        <a href="https://headysystems.com" class="eco-node" style="--node-accent:#3b82f6" target="_blank" rel="noopener">
+          <span class="eco-icon">⟐</span>
+          <span class="eco-label">HeadySystems</span>
+          <span class="eco-desc">Infrastructure</span>
+        </a>
+        <a href="https://heady-ai.com" class="eco-node" style="--node-accent:#8b5cf6" target="_blank" rel="noopener">
+          <span class="eco-icon">△</span>
+          <span class="eco-label">HeadyAI</span>
+          <span class="eco-desc">Research</span>
+        </a>
+        <a href="https://headyos.com" class="eco-node" style="--node-accent:#14b8a6" target="_blank" rel="noopener">
+          <span class="eco-icon">◇</span>
+          <span class="eco-label">HeadyOS</span>
+          <span class="eco-desc">Operating System</span>
+        </a>
+        <a href="https://headyconnection.org" class="eco-node" style="--node-accent:#f59e0b" target="_blank" rel="noopener">
+          <span class="eco-icon">✦</span>
+          <span class="eco-label">HeadyConnection</span>
+          <span class="eco-desc">Community</span>
+        </a>
+        <a href="https://headyconnection.com" class="eco-node" style="--node-accent:#06b6d4" target="_blank" rel="noopener">
+          <span class="eco-icon">🌐</span>
+          <span class="eco-label">HeadyConnection Community</span>
+          <span class="eco-desc">Community Portal</span>
+        </a>
+        <a href="https://headyex.com" class="eco-node" style="--node-accent:#10b981" target="_blank" rel="noopener">
+          <span class="eco-icon">🏪</span>
+          <span class="eco-label">HeadyEX</span>
+          <span class="eco-desc">Marketplace</span>
+        </a>
+        <a href="https://headyfinance.com" class="eco-node eco-node--current" style="--node-accent:#a855f7">
+          <span class="eco-icon">📈</span>
+          <span class="eco-label">HeadyFinance</span>
+          <span class="eco-desc">Investor Relations</span>
+        </a>
+        <a href="https://admin.headysystems.com" class="eco-node" style="--node-accent:#06b6d4" target="_blank" rel="noopener">
+          <span class="eco-icon">📊</span>
+          <span class="eco-label">HeadySystems Admin Portal</span>
+          <span class="eco-desc">Admin</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Use Cases -->
+  <section id="use-cases" class="section">
+    <div class="container">
+      <div class="section-header">
+        <h2>Use Cases</h2>
+        <p>Real-world applications of HeadyFinance.</p>
+      </div>
+      <div class="grid-3">
+        
+        <div class="glass-card">
+          <span style="font-size:1.618rem;display:block;margin-bottom:0.8rem">💼</span>
+          <h4>Seed/Angel Investment</h4>
+          <p>Early-stage investors gain equity in a diversified AI platform with 51+ patents, 9 market verticals, and a clear path to Series A.</p>
+        </div>
+        <div class="glass-card">
+          <span style="font-size:1.618rem;display:block;margin-bottom:0.8rem">🏢</span>
+          <h4>Strategic Partnership</h4>
+          <p>Enterprise partners gain preferred access to HeadySystems infrastructure, custom deployments, and white-label opportunities.</p>
+        </div>
+        <div class="glass-card">
+          <span style="font-size:1.618rem;display:block;margin-bottom:0.8rem">🤝</span>
+          <h4>Corporate Venture</h4>
+          <p>CVC arms of cloud providers, AI companies, and enterprise software firms gain strategic positioning in the agent economy.</p>
+        </div>
+        <div class="glass-card">
+          <span style="font-size:1.618rem;display:block;margin-bottom:0.8rem">📊</span>
+          <h4>Due Diligence</h4>
+          <p>Access detailed technical documentation, patent filings, financial projections, and competitive analysis through our data room.</p>
+        </div>
+        <div class="glass-card">
+          <span style="font-size:1.618rem;display:block;margin-bottom:0.8rem">🌍</span>
+          <h4>Global Expansion</h4>
+          <p>International investors gain access to a platform architected for global edge deployment across 300+ Cloudflare locations.</p>
+        </div>
+        <div class="glass-card">
+          <span style="font-size:1.618rem;display:block;margin-bottom:0.8rem">🪙</span>
+          <h4>Token Pre-Sale</h4>
+          <p>Early HeadyCoin acquisition for investors interested in the agent economy and decentralized AI marketplace infrastructure.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section id="faq" class="section">
+    <div class="container">
+      <div class="section-header">
+        <h2>Frequently Asked Questions</h2>
+        <p>Everything you need to know about HeadyFinance.</p>
+      </div>
+      <div style="max-width:700px;margin:0 auto;">
+        
+        <div class="faq-item" data-index="0">
+          <button class="faq-question">What stage is HeadySystems?</button>
+          <div class="faq-answer"><p>HeadySystems is currently in pre-seed/seed stage with production infrastructure deployed, 51+ patent applications filed, and 9 vertical platforms under active development. We are targeting Series A fundraising in 2026.</p></div>
+        </div>
+        <div class="faq-item" data-index="1">
+          <button class="faq-question">How many patents have been filed?</button>
+          <div class="faq-answer"><p>51+ provisional patent applications covering CSL gate mechanisms, VSA operators, sacred geometry computing, 3D spatial memory, φ-scaled resource allocation, cognitive archetypes, and concurrent swarm orchestration.</p></div>
+        </div>
+        <div class="faq-item" data-index="2">
+          <button class="faq-question">What is the revenue model?</button>
+          <div class="faq-answer"><p>Diversified across subscription (HeadyMe/HeadyOS), enterprise (HeadySystems infrastructure), marketplace (HeadyEX fees), token economics (HeadyCoin), professional services, and community platforms.</p></div>
+        </div>
+        <div class="faq-item" data-index="3">
+          <button class="faq-question">Who are the competitors?</button>
+          <div class="faq-answer"><p>We operate at the infrastructure/orchestration layer, complementary to model providers (Anthropic, OpenAI, Google). Closest comparisons are LangChain, AutoGen, and CrewAI, but none have our patented CSL/VSA/Sacred Geometry innovations.</p></div>
+        </div>
+        <div class="faq-item" data-index="4">
+          <button class="faq-question">Is there a data room?</button>
+          <div class="faq-answer"><p>Qualified investors can request access to our detailed data room containing technical documentation, patent filings, financial models, market analysis, and team backgrounds. Contact invest@headysystems.com.</p></div>
+        </div>
+        <div class="faq-item" data-index="5">
+          <button class="faq-question">What is HeadyCoin's role?</button>
+          <div class="faq-answer"><p>HeadyCoin (HCOIN) is the native utility token of the HeadyEX marketplace, used for agent purchases, compute payments, staking, governance, and community rewards. It creates a self-sustaining agent economy.</p></div>
+        </div>
+        <div class="faq-item" data-index="6">
+          <button class="faq-question">How is the 501(c)(3) related?</button>
+          <div class="faq-answer"><p>HeadyConnection.org is a separate 501(c)(3) entity that receives a portion of commercial revenue. It's a social impact commitment: commercial success funds non-profit mission delivery, creating positive brand association and community goodwill.</p></div>
+        </div>
+        <div class="faq-item" data-index="7">
+          <button class="faq-question">What are the key milestones for Series A?</button>
+          <div class="faq-answer"><p>Production deployment of 50+ services, 1000+ marketplace agents, 10K+ developer accounts, 5+ enterprise pilots, HeadyCoin mainnet launch, and 25K+ community members.</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <span class="nav-logo">HeadyFinance</span>
+          <p>Investor relations, growth metrics, patent portfolio, strategic roadmap — the financial intelligence behind HeadySystems.</p>
+        </div>
+        
+        <div class="footer-col">
+          <h4>Platform</h4>
+          <a href="https://headyme.com" target="_blank" rel="noopener">HeadyMe</a>
+<a href="https://headysystems.com" target="_blank" rel="noopener">HeadySystems</a>
+<a href="https://heady-ai.com" target="_blank" rel="noopener">HeadyAI</a>
+<a href="https://headyos.com" target="_blank" rel="noopener">HeadyOS</a>
+
+        </div>
+        <div class="footer-col">
+          <h4>Community</h4>
+          <a href="https://headyconnection.org" target="_blank" rel="noopener">HeadyConnection.org</a>
+<a href="https://headyconnection.com" target="_blank" rel="noopener">HeadyConnection.com</a>
+<a href="https://headyex.com" target="_blank" rel="noopener">HeadyEX</a>
+
+        </div>
+        <div class="footer-col">
+          <h4>Company</h4>
+          <a href="https://headyfinance.com" target="_blank" rel="noopener">HeadyFinance</a>
+<a href="https://admin.headysystems.com" target="_blank" rel="noopener">Admin Portal</a>
+<a href="https://github.com/HeadySystems" target="_blank" rel="noopener">GitHub</a>
+
+        </div>
+        <div class="footer-col">
+          <h4>Legal</h4>
+          <a href="https://headysystems.com/legal/terms" target="_blank" rel="noopener">Terms of Service</a>
+<a href="https://headysystems.com/legal/privacy" target="_blank" rel="noopener">Privacy Policy</a>
+<a href="https://headysystems.com/pricing" target="_blank" rel="noopener">Pricing</a>
+
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>&copy; 2026 HeadySystems Inc. All Rights Reserved. 51+ Provisional Patents.</span>
+        <a href="https://www.perplexity.ai/computer" target="_blank" rel="noopener noreferrer" style="color:var(--text-muted);">
+          Created with Perplexity Computer
+        </a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="../packages/sacred-geometry/sacred-geometry.js"></script>
+  <script src="../packages/cross-nav/cross-nav.js"></script>
+  <script src="../packages/auth-widget/auth-widget.js"></script>
+  <script src="../packages/auto-context/auto-context-bridge.js"></script>
+  <script src="../packages/bee-injectors/bee-injectors.js"></script>
+  <script>
+    // Initialize Sacred Geometry Canvas with site-specific settings
+    new SacredGeometryCanvas('sacred-canvas', {
+      accentColor: '#a855f7',
+      secondaryColor: '#c084fc',
+      goldColor: '#f0c040',
+      opacity: 0.2,
+      nodeCount: 21,
+      connectionDistance: 180,
+      geometry: 'vesicaPiscis',
+    });
+
+    // Initialize Cross-Site Navigation
+    new HeadyCrossNav({ siteId: 'headyfinance' });
+
+    // Initialize Auth Widget
+    new HeadyAuthWidget({
+      siteId: 'headyfinance',
+      accentColor: '#a855f7',
+    });
+
+    // Initialize AutoContext Bridge
+    new AutoContextBridge({ siteId: 'headyfinance' });
+
+    // Inject Tech Stack via Bee Injectors
+    const techContainer = document.getElementById('tech-container');
+    if (techContainer && window.HeadyBeeInjectors) {
+      HeadyBeeInjectors.injectTechStack(techContainer);
+    }
+
+    // FAQ Accordion
+    document.querySelectorAll('.faq-question').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const item = btn.parentElement;
+        const wasActive = item.classList.contains('active');
+        document.querySelectorAll('.faq-item').forEach(fi => fi.classList.remove('active'));
+        if (!wasActive) item.classList.add('active');
+      });
+    });
+
+    // Animated stat counters
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.querySelectorAll('.stat-num').forEach(el => {
+            const final = el.textContent;
+            const numeric = parseInt(final);
+            if (!isNaN(numeric) && numeric > 0) {
+              let current = 0;
+              const step = Math.max(1, Math.floor(numeric / 40));
+              const timer = setInterval(() => {
+                current += step;
+                if (current >= numeric) {
+                  el.textContent = final;
+                  clearInterval(timer);
+                } else {
+                  el.textContent = current + (final.includes('+') ? '+' : '');
                 }
+              }, 30);
             }
-
-            requestAnimationFrame(animate);
+          });
+          observer.unobserve(entry.target);
         }
-
-        animate();
-    </script>
+      });
+    }, { threshold: 0.3 });
+    document.querySelectorAll('.stats-row').forEach(row => observer.observe(row));
+  </script>
 </body>
 </html>

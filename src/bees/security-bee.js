@@ -71,7 +71,7 @@ function getWork(ctx = {}) {
         },
 
         // ═══ MODULE HEALTH CHECKS (verify all security systems load) ═══
-        async () => { try { require('../hc_auth'); return { bee: domain, action: 'auth', loaded: true }; } catch { return { bee: domain, action: 'auth', loaded: false }; } },
+        async () => { try { require('../auth/hc_auth'); return { bee: domain, action: 'auth', loaded: true }; } catch { return { bee: domain, action: 'auth', loaded: false }; } },
         async () => { try { require('../security/code-governance'); return { bee: domain, action: 'code-governance', loaded: true }; } catch { return { bee: domain, action: 'code-governance', loaded: false }; } },
         async () => { try { require('../security/env-validator'); return { bee: domain, action: 'env-validator', loaded: true }; } catch { return { bee: domain, action: 'env-validator', loaded: false }; } },
         async () => { try { require('../security/handshake'); return { bee: domain, action: 'handshake', loaded: true }; } catch { return { bee: domain, action: 'handshake', loaded: false }; } },

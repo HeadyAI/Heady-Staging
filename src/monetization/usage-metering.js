@@ -43,7 +43,7 @@ import {
 } from '../../shared/phi-math.js';
 
 const EventEmitter = require('events');
-const { PLAN_LIMITS, reportUsage, batchReportUsage } = require('../configs/stripe-config');
+const { PLAN_LIMITS, reportUsage, batchReportUsage } = require('./stripe-config');
 
 // ── Metric Types ──────────────────────────────────────────────────────────────
 
@@ -76,7 +76,7 @@ const OVERAGE_RATES = {
 // Re-exported as module symbol for consumers; the constant from phi-math is the
 // canonical source of truth.
 // (The 'const ALERT_THRESHOLDS' below shadows the import intentionally so that
-//  require('../modules/usage-metering').ALERT_THRESHOLDS exposes the phi values.)
+//  require('./usage-metering').ALERT_THRESHOLDS exposes the phi values.)
 const ALERT_THRESHOLDS_EXPORT = ALERT_THRESHOLDS; // alias for module.exports
 
 // ── Phi-Scaled Sliding Windows ────────────────────────────────────────────────

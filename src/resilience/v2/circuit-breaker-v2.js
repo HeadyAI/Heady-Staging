@@ -16,7 +16,7 @@ const { PHI_TIMING } = require('../../shared/phi-math');
  */
 
 const { EventEmitter } = require('events');
-const logger = require('../utils/logger');
+const logger = require('../../utils/logger');
 
 // ─── State constants ───────────────────────────────────────────────────────────
 

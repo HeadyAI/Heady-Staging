@@ -6,7 +6,7 @@
 'use strict';
 
 const logger = require('../../utils/logger');
-const LLMRouter = require('../../providers/llm-router');
+const LLMRouter = require('../engines/llm-router');
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 

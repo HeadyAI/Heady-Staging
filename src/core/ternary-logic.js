@@ -34,7 +34,7 @@
 'use strict';
 
 const { CSL_THRESHOLDS, PHI_TEMPERATURE } = require('../../shared/phi-math.js');
-const { CSLEngine, norm, normalize, dot, clamp, EPSILON } = require('../engine/csl-engine');
+const { CSLEngine, norm, normalize, dot, clamp, EPSILON } = require('./csl-engine/csl-engine');
 
 // ─── Ternary Value Constants ──────────────────────────────────────────────────
 

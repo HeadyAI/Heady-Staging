@@ -26,7 +26,7 @@
  * 4. Provide feedback to train the system
  */
 
-const { imagination } = require('../src/hc_imagination');
+const { imagination } = require('../hc_imagination');
 
 // ============================================================================
 // AGENT LIFECYCLE INTEGRATION

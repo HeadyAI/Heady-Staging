@@ -1,1797 +1,554 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="HEADY Systems — Enterprise AI Platform Hub. φ-Scaled sovereign AI operating system with 50+ microservices, 9 integrated platforms, and sacred geometry architecture.">
-    <meta name="keywords" content="AI platform, enterprise AI, sovereign AI OS, multi-agent systems, φ-scaling, microservices, cloud AI">
-    <meta name="author" content="HEADY Systems Inc.">
-    <meta name="robots" content="index, follow">
-
-    <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://headysystems.com/">
-    <meta property="og:title" content="HEADY Systems — Enterprise AI Platform Hub">
-    <meta property="og:description" content="φ-Scaled sovereign AI operating system. 50+ services, 9 platforms, 51 patents.">
-    <meta property="og:image" content="https://headysystems.com/og-image.png">
-    <meta property="og:site_name" content="HEADY Systems">
-    <meta property="og:locale" content="en_US">
-
-    <!-- Twitter -->
-    <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="https://headysystems.com/">
-    <meta property="twitter:title" content="HEADY Systems — Enterprise AI Platform Hub">
-    <meta property="twitter:description" content="φ-Scaled sovereign AI operating system. 50+ services, 9 platforms, 51 patents.">
-    <meta property="twitter:image" content="https://headysystems.com/twitter-image.png">
-
-    <!-- JSON-LD Structured Data -->
-    <script type="application/ld+json">
-    {
-        "@context": "https://schema.org",
-        "@type": "SoftwareApplication",
-        "name": "HEADY Systems",
-        "description": "φ-Scaled sovereign AI operating system with 50+ microservices and 9 integrated platforms",
-        "url": "https://headysystems.com",
-        "creator": {
-            "@type": "Person",
-            "name": "Eric Haywood"
-        },
-        "offers": {
-            "@type": "AggregateOffer",
-            "priceCurrency": "USD",
-            "lowPrice": "0",
-            "highPrice": "233",
-            "offerDetails": [
-                {"name": "Explorer", "price": "0"},
-                {"name": "Builder", "price": "55"},
-                {"name": "Professional", "price": "89"},
-                {"name": "Enterprise", "price": "233"}
-            ]
-        },
-        "applicationCategory": "BusinessApplication",
-        "operatingSystem": "Cloud-based",
-        "aggregateRating": {
-            "@type": "AggregateRating",
-            "ratingValue": "4.9",
-            "ratingCount": "847"
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HeadySystems — Enterprise AI Orchestration</title>
+  <meta name="description" content="Self-healing infrastructure, multi-agent orchestration, live telemetry, and zero-trust security — the backbone powering every Heady service.">
+  <meta name="keywords" content="Heady, AI, HeadySystems, infrastructure, sacred geometry, vector memory, CSL">
+  <meta property="og:title" content="HeadySystems — Enterprise AI Orchestration">
+  <meta property="og:description" content="Self-healing infrastructure, multi-agent orchestration, live telemetry, and zero-trust security — the backbone powering every Heady service.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://headysystems.com">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../packages/design-system/heady-design.css">
+  <style>
+    :root {
+      --accent: #3b82f6;
+      --accent-glow: rgba(59,130,246,0.15);
+      --accent-subtle: rgba(59,130,246,0.06);
+      --brand-font: 'JetBrains Mono', 'Courier New', monospace;
+      --brand-heading: 'JetBrains Mono', 'Courier New', monospace;
     }
-    </script>
-
-    <title>HEADY Systems — Enterprise AI Platform Hub | φ-Scaled Sovereign AI OS</title>
-
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        :root {
-            --bg-dark: #0a0a0f;
-            --bg-dark-lighter: #0f0f17;
-            --bg-card: #1a1a24;
-            --accent-purple: #7c5eff;
-            --accent-gold: #f0c040;
-            --accent-cyan: #40e0d0;
-            --text-primary: #e8e8f0;
-            --text-secondary: #a0a0b0;
-            --border-color: #2a2a35;
-            --success: #10b981;
-            --warning: #f59e0b;
-            --error: #ef4444;
-        }
-
-        html {
-            scroll-behavior: smooth;
-        }
-
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            background-color: var(--bg-dark);
-            color: var(--text-primary);
-            line-height: 1.6;
-            overflow-x: hidden;
-            position: relative;
-        }
-
-        /* Fonts */
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
-
-        code, pre {
-            font-family: 'JetBrains Mono', monospace;
-        }
-
-        /* Skip Link */
-        .skip-link {
-            position: absolute;
-            top: -40px;
-            left: 0;
-            background: var(--accent-purple);
-            color: white;
-            padding: 8px;
-            text-decoration: none;
-            z-index: 100;
-        }
-
-        .skip-link:focus {
-            top: 0;
-        }
-
-        /* Utility Classes */
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 2rem;
-        }
-
-        .section-title {
-            font-size: 2.5rem;
-            font-weight: 800;
-            margin-bottom: 1rem;
-            background: linear-gradient(135deg, var(--accent-gold), var(--accent-cyan));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .section-subtitle {
-            font-size: 1.1rem;
-            color: var(--text-secondary);
-            margin-bottom: 3rem;
-            max-width: 600px;
-        }
-
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.75rem 1.5rem;
-            border: none;
-            border-radius: 0.375rem;
-            font-weight: 600;
-            cursor: pointer;
-            text-decoration: none;
-            transition: all 0.3s ease;
-            font-size: 0.95rem;
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, var(--accent-purple), var(--accent-cyan));
-            color: var(--bg-dark);
-            border: none;
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 20px 40px rgba(124, 94, 255, 0.3);
-        }
-
-        .btn-secondary {
-            background: transparent;
-            color: var(--accent-gold);
-            border: 2px solid var(--accent-gold);
-        }
-
-        .btn-secondary:hover {
-            background: var(--accent-gold);
-            color: var(--bg-dark);
-            transform: translateY(-2px);
-        }
-
-        .btn-ghost {
-            background: transparent;
-            color: var(--text-primary);
-            border: 1px solid var(--border-color);
-        }
-
-        .btn-ghost:hover {
-            border-color: var(--accent-purple);
-            color: var(--accent-purple);
-        }
-
-        /* Header & Navigation */
-        header {
-            position: sticky;
-            top: 0;
-            z-index: 50;
-            background: rgba(10, 10, 15, 0.95);
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1rem 2rem;
-        }
-
-        .logo {
-            font-size: 1.5rem;
-            font-weight: 900;
-            background: linear-gradient(135deg, var(--accent-gold), var(--accent-cyan));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            text-decoration: none;
-            letter-spacing: -0.5px;
-        }
-
-        .nav-menu {
-            display: flex;
-            list-style: none;
-            gap: 2rem;
-            align-items: center;
-        }
-
-        .nav-menu a {
-            color: var(--text-secondary);
-            text-decoration: none;
-            font-weight: 500;
-            transition: color 0.3s ease;
-            position: relative;
-        }
-
-        .nav-menu a:hover {
-            color: var(--accent-gold);
-        }
-
-        .nav-menu a::after {
-            content: '';
-            position: absolute;
-            bottom: -4px;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background: var(--accent-gold);
-            transition: width 0.3s ease;
-        }
-
-        .nav-menu a:hover::after {
-            width: 100%;
-        }
-
-        .nav-dropdown {
-            position: relative;
-            display: none;
-        }
-
-        .nav-dropdown:hover .dropdown-menu {
-            display: block;
-        }
-
-        .dropdown-menu {
-            position: absolute;
-            top: 100%;
-            left: 0;
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: 0.5rem;
-            min-width: 280px;
-            display: none;
-            margin-top: 0.5rem;
-            padding: 0.5rem 0;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
-        }
-
-        .dropdown-menu a {
-            display: block;
-            padding: 0.75rem 1.5rem;
-            color: var(--text-secondary);
-            text-decoration: none;
-            transition: all 0.3s ease;
-            border-left: 3px solid transparent;
-        }
-
-        .dropdown-menu a:hover {
-            background: rgba(124, 94, 255, 0.1);
-            border-left-color: var(--accent-gold);
-            color: var(--accent-gold);
-        }
-
-        .auth-buttons {
-            display: flex;
-            gap: 1rem;
-            align-items: center;
-        }
-
-        .menu-toggle {
-            display: none;
-            background: none;
-            border: none;
-            color: var(--text-primary);
-            font-size: 1.5rem;
-            cursor: pointer;
-        }
-
-        /* Hero Section */
-        .hero {
-            position: relative;
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-            padding: 4rem 2rem;
-        }
-
-        .hero-canvas {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 1;
-        }
-
-        .hero-content {
-            position: relative;
-            z-index: 2;
-            text-align: center;
-            max-width: 900px;
-        }
-
-        .hero-badge {
-            display: inline-block;
-            background: rgba(124, 94, 255, 0.1);
-            border: 1px solid var(--accent-purple);
-            color: var(--accent-purple);
-            padding: 0.5rem 1rem;
-            border-radius: 9999px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            margin-bottom: 2rem;
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.7; }
-        }
-
-        .hero-title {
-            font-size: 4rem;
-            font-weight: 900;
-            line-height: 1.1;
-            margin-bottom: 1rem;
-            background: linear-gradient(135deg, var(--accent-gold), var(--accent-cyan), var(--accent-purple));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            letter-spacing: -1px;
-        }
-
-        .hero-tagline {
-            font-size: 1.5rem;
-            color: var(--text-secondary);
-            margin-bottom: 2rem;
-            font-weight: 300;
-        }
-
-        .hero-stats {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 2rem;
-            margin: 3rem 0;
-            padding: 2rem 0;
-            border-top: 1px solid var(--border-color);
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        .stat {
-            text-align: center;
-        }
-
-        .stat-value {
-            font-size: 2.5rem;
-            font-weight: 800;
-            color: var(--accent-gold);
-            margin-bottom: 0.5rem;
-        }
-
-        .stat-label {
-            font-size: 0.95rem;
-            color: var(--text-secondary);
-            font-weight: 500;
-        }
-
-        .hero-cta {
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
-            margin-top: 2rem;
-            flex-wrap: wrap;
-        }
-
-        /* Sections */
-        section {
-            padding: 6rem 2rem;
-            border-top: 1px solid var(--border-color);
-        }
-
-        /* Platform Overview */
-        .overview-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            margin-top: 2rem;
-        }
-
-        .overview-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            padding: 2rem;
-            border-radius: 0.5rem;
-            transition: all 0.3s ease;
-        }
-
-        .overview-card:hover {
-            border-color: var(--accent-purple);
-            background: rgba(124, 94, 255, 0.05);
-            transform: translateY(-4px);
-        }
-
-        .overview-card h3 {
-            font-size: 1.3rem;
-            margin-bottom: 1rem;
-            color: var(--accent-gold);
-        }
-
-        .overview-card p {
-            color: var(--text-secondary);
-            line-height: 1.8;
-        }
-
-        /* Laws Section */
-        .laws-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 1.5rem;
-            margin-top: 2rem;
-        }
-
-        .law-card {
-            background: linear-gradient(135deg, rgba(124, 94, 255, 0.05), rgba(64, 224, 208, 0.05));
-            border: 1px solid var(--border-color);
-            padding: 2rem;
-            border-radius: 0.5rem;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .law-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 3px;
-            background: linear-gradient(90deg, var(--accent-gold), var(--accent-cyan));
-        }
-
-        .law-card:hover {
-            border-color: var(--accent-gold);
-            transform: translateY(-8px);
-            box-shadow: 0 20px 40px rgba(124, 94, 255, 0.2);
-        }
-
-        .law-number {
-            font-size: 3rem;
-            font-weight: 900;
-            color: rgba(124, 94, 255, 0.2);
-            margin-bottom: 1rem;
-        }
-
-        .law-card h3 {
-            font-size: 1.3rem;
-            margin-bottom: 0.75rem;
-            color: var(--accent-gold);
-        }
-
-        .law-card p {
-            color: var(--text-secondary);
-            line-height: 1.7;
-            font-size: 0.95rem;
-        }
-
-        /* Architecture Section */
-        .architecture-box {
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            padding: 3rem;
-            border-radius: 0.5rem;
-            margin-top: 2rem;
-        }
-
-        .architecture-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
-            margin-top: 2rem;
-        }
-
-        .arch-component {
-            background: rgba(124, 94, 255, 0.05);
-            border: 2px solid var(--accent-purple);
-            padding: 1.5rem;
-            border-radius: 0.375rem;
-            text-align: center;
-        }
-
-        .arch-component h4 {
-            color: var(--accent-gold);
-            margin-bottom: 0.75rem;
-            font-size: 1.1rem;
-        }
-
-        .arch-component p {
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-        }
-
-        /* Services Grid */
-        .services-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 2rem;
-            margin-top: 2rem;
-        }
-
-        .service-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            padding: 1.5rem;
-            border-radius: 0.375rem;
-            transition: all 0.3s ease;
-        }
-
-        .service-card:hover {
-            border-color: var(--accent-cyan);
-            background: rgba(64, 224, 208, 0.05);
-            transform: translateY(-4px);
-        }
-
-        .service-category {
-            font-size: 0.8rem;
-            color: var(--accent-gold);
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 0.5rem;
-        }
-
-        .service-card h4 {
-            color: var(--text-primary);
-            margin-bottom: 0.75rem;
-            font-size: 1.1rem;
-        }
-
-        .service-card p {
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-            line-height: 1.6;
-        }
-
-        /* Pricing Section */
-        .pricing-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 2rem;
-            margin-top: 2rem;
-        }
-
-        .pricing-card {
-            background: var(--bg-card);
-            border: 2px solid var(--border-color);
-            padding: 2rem;
-            border-radius: 0.5rem;
-            transition: all 0.3s ease;
-            position: relative;
-        }
-
-        .pricing-card.featured {
-            border-color: var(--accent-gold);
-            transform: scale(1.05);
-            box-shadow: 0 20px 40px rgba(240, 192, 64, 0.2);
-        }
-
-        .pricing-card:hover {
-            border-color: var(--accent-purple);
-        }
-
-        .pricing-badge {
-            position: absolute;
-            top: -12px;
-            left: 20px;
-            background: var(--accent-gold);
-            color: var(--bg-dark);
-            padding: 0.4rem 1rem;
-            border-radius: 9999px;
-            font-size: 0.8rem;
-            font-weight: 700;
-            text-transform: uppercase;
-        }
-
-        .pricing-card h3 {
-            color: var(--accent-gold);
-            font-size: 1.5rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .pricing-price {
-            font-size: 3rem;
-            font-weight: 900;
-            color: var(--text-primary);
-            margin-bottom: 0.25rem;
-        }
-
-        .pricing-price span {
-            font-size: 1.2rem;
-            color: var(--text-secondary);
-        }
-
-        .pricing-period {
-            color: var(--text-secondary);
-            margin-bottom: 1.5rem;
-            font-size: 0.95rem;
-        }
-
-        .pricing-features {
-            list-style: none;
-            margin-bottom: 2rem;
-        }
-
-        .pricing-features li {
-            padding: 0.75rem 0;
-            color: var(--text-secondary);
-            border-bottom: 1px solid var(--border-color);
-            font-size: 0.95rem;
-        }
-
-        .pricing-features li::before {
-            content: '✓ ';
-            color: var(--accent-cyan);
-            font-weight: 700;
-            margin-right: 0.5rem;
-        }
-
-        /* Documentation Section */
-        .docs-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            margin-top: 2rem;
-        }
-
-        .doc-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            padding: 2rem;
-            border-radius: 0.5rem;
-            transition: all 0.3s ease;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .doc-card:hover {
-            border-color: var(--accent-cyan);
-            background: rgba(64, 224, 208, 0.05);
-        }
-
-        .doc-card h3 {
-            color: var(--accent-gold);
-            margin-bottom: 1rem;
-            font-size: 1.2rem;
-        }
-
-        .doc-card p {
-            color: var(--text-secondary);
-            margin-bottom: 1.5rem;
-            flex-grow: 1;
-        }
-
-        .doc-card a {
-            color: var(--accent-cyan);
-            text-decoration: none;
-            font-weight: 600;
-            transition: color 0.3s ease;
-        }
-
-        .doc-card a:hover {
-            color: var(--accent-gold);
-        }
-
-        /* Ecosystem Section */
-        .ecosystem-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 2rem;
-            margin-top: 2rem;
-        }
-
-        .ecosystem-card {
-            background: linear-gradient(135deg, rgba(124, 94, 255, 0.05), rgba(240, 192, 64, 0.05));
-            border: 2px solid var(--border-color);
-            padding: 2rem;
-            border-radius: 0.5rem;
-            transition: all 0.3s ease;
-        }
-
-        .ecosystem-card:hover {
-            border-color: var(--accent-gold);
-            background: linear-gradient(135deg, rgba(124, 94, 255, 0.1), rgba(240, 192, 64, 0.1));
-            transform: translateY(-8px);
-        }
-
-        .ecosystem-icon {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
-        }
-
-        .ecosystem-card h3 {
-            color: var(--accent-gold);
-            margin-bottom: 0.75rem;
-            font-size: 1.3rem;
-        }
-
-        .ecosystem-card p {
-            color: var(--text-secondary);
-            margin-bottom: 1.5rem;
-            line-height: 1.7;
-        }
-
-        .ecosystem-card a {
-            display: inline-block;
-            color: var(--accent-cyan);
-            text-decoration: none;
-            font-weight: 600;
-            transition: all 0.3s ease;
-        }
-
-        .ecosystem-card a:hover {
-            color: var(--accent-gold);
-            transform: translateX(4px);
-        }
-
-        /* Patents Section */
-        .patents-content {
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            padding: 3rem;
-            border-radius: 0.5rem;
-            margin-top: 2rem;
-        }
-
-        .patents-content h3 {
-            color: var(--accent-gold);
-            margin-bottom: 1rem;
-            font-size: 1.5rem;
-        }
-
-        .patents-content p {
-            color: var(--text-secondary);
-            line-height: 1.8;
-            margin-bottom: 1rem;
-        }
-
-        .patent-list {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 1.5rem;
-            margin-top: 2rem;
-        }
-
-        .patent-item {
-            background: rgba(124, 94, 255, 0.05);
-            border: 1px solid var(--accent-purple);
-            padding: 1.5rem;
-            border-radius: 0.375rem;
-            font-size: 0.9rem;
-            color: var(--text-secondary);
-        }
-
-        /* Footer */
-        footer {
-            background: var(--bg-dark-lighter);
-            border-top: 1px solid var(--border-color);
-            padding: 4rem 2rem 2rem;
-            margin-top: 4rem;
-        }
-
-        .footer-content {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 3rem;
-            margin-bottom: 3rem;
-        }
-
-        .footer-section h4 {
-            color: var(--accent-gold);
-            margin-bottom: 1.5rem;
-            font-size: 1.1rem;
-        }
-
-        .footer-section a {
-            display: block;
-            color: var(--text-secondary);
-            text-decoration: none;
-            margin-bottom: 0.75rem;
-            transition: color 0.3s ease;
-        }
-
-        .footer-section a:hover {
-            color: var(--accent-gold);
-        }
-
-        .footer-bottom {
-            border-top: 1px solid var(--border-color);
-            padding-top: 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 2rem;
-        }
-
-        .footer-copyright {
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-        }
-
-        .footer-badge {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            color: var(--accent-purple);
-            font-weight: 600;
-            font-size: 0.9rem;
-        }
-
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .nav-menu {
-                display: none;
-                position: absolute;
-                top: 100%;
-                left: 0;
-                right: 0;
-                background: var(--bg-dark-lighter);
-                flex-direction: column;
-                gap: 0;
-                border-bottom: 1px solid var(--border-color);
-                padding: 1rem 0;
-                z-index: 40;
-            }
-
-            .nav-menu.active {
-                display: flex;
-            }
-
-            .nav-menu li a {
-                padding: 1rem 2rem;
-                border-bottom: 1px solid var(--border-color);
-            }
-
-            .menu-toggle {
-                display: block;
-            }
-
-            .auth-buttons {
-                position: absolute;
-                top: 100%;
-                right: 0;
-                flex-direction: column;
-                gap: 0.5rem;
-                width: calc(100% - 2rem);
-                padding: 1rem;
-                border-top: 1px solid var(--border-color);
-            }
-
-            .hero-title {
-                font-size: 2.5rem;
-            }
-
-            .hero-tagline {
-                font-size: 1.2rem;
-            }
-
-            .section-title {
-                font-size: 2rem;
-            }
-
-            .hero-stats {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 1rem;
-            }
-
-            .pricing-card.featured {
-                transform: scale(1);
-            }
-        }
-
-        @media (max-width: 480px) {
-            .container {
-                padding: 0 1rem;
-            }
-
-            .hero-title {
-                font-size: 2rem;
-            }
-
-            .hero-cta {
-                flex-direction: column;
-            }
-
-            .btn {
-                width: 100%;
-                justify-content: center;
-            }
-
-            .hero-stats {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 1rem;
-                font-size: 0.9rem;
-            }
-
-            .stat-value {
-                font-size: 1.8rem;
-            }
-
-            .section-title {
-                font-size: 1.75rem;
-            }
-
-            section {
-                padding: 4rem 1rem;
-            }
-
-            .footer-bottom {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-        }
-
-        /* Animations */
-        @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .overview-card,
-        .law-card,
-        .service-card,
-        .pricing-card,
-        .doc-card,
-        .ecosystem-card {
-            animation: slideIn 0.6s ease-out forwards;
-            opacity: 0;
-        }
-
-        .overview-card:nth-child(1) { animation-delay: 0.1s; }
-        .overview-card:nth-child(2) { animation-delay: 0.2s; }
-        .overview-card:nth-child(3) { animation-delay: 0.3s; }
-
-        @keyframes glow {
-            0%, 100% { box-shadow: 0 0 20px rgba(124, 94, 255, 0.3); }
-            50% { box-shadow: 0 0 40px rgba(124, 94, 255, 0.6); }
-        }
-
-        .hero-badge {
-            animation: pulse 2s infinite;
-        }
-    </style>
+    body { padding-top: 32px; font-family: var(--brand-font); }
+    h1, h2, h3, h4 { font-family: var(--brand-heading); }
+    .sacred-canvas {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      z-index: 0;
+      pointer-events: none;
+    }
+    .hero-badge {
+      display: inline-block;
+      padding: 0.4rem 1rem;
+      background: rgba(59,130,246,0.08);
+      border: 1px solid rgba(59,130,246,0.2);
+      border-radius: 100px;
+      font-size: var(--text-xs);
+      color: #3b82f6;
+      letter-spacing: 0.04em;
+      margin-bottom: var(--space-8);
+      font-weight: 500;
+    }
+    .hero-cta-row { display: flex; gap: var(--space-8); justify-content: center; flex-wrap: wrap; }
+    .feature-icon {
+      font-size: 1.618rem;
+      display: block;
+      margin-bottom: 0.8rem;
+      color: var(--accent);
+    }
+    .btn-sm {
+      padding: 0.4rem 1rem;
+      font-size: var(--text-xs);
+      border-radius: var(--radius-sm);
+    }
+    .deep-dive { max-width: 800px; margin: 0 auto; text-align: left; }
+    .deep-dive h3 { font-size: var(--text-xl); margin: var(--space-21) 0 var(--space-8); color: var(--accent); }
+    .deep-dive h4 { font-size: var(--text-lg); margin: var(--space-13) 0 var(--space-5); color: var(--text-primary); }
+    .deep-dive p { margin-bottom: var(--space-8); font-size: var(--text-base); line-height: 1.8; }
+    .nav-links { display: flex; align-items: center; gap: var(--space-8); }
+    .nav-links a { color: var(--text-secondary); font-size: var(--text-sm); font-weight: 500; }
+    .nav-links a:hover { color: var(--text-primary); opacity: 1; }
+    .nav-logo {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+      font-size: 1.1rem;
+      letter-spacing: 0.05em;
+      color: var(--accent);
+    }
+    .eco-map { display: grid; grid-template-columns: repeat(3,1fr); gap: 1.3125rem; max-width: 900px; margin: 0 auto; }
+    .eco-node { display: flex; flex-direction: column; align-items: center; text-align: center; padding: 2rem 1rem; background: var(--glass-bg); backdrop-filter: blur(24px); border: 1px solid var(--glass-border); border-radius: var(--radius-lg); text-decoration: none; transition: all .382s; }
+    .eco-node:hover { transform: translateY(-3px); border-color: var(--node-accent); box-shadow: 0 0 21px rgba(124,94,255,.12); opacity: 1; }
+    .eco-node--current { border-color: var(--node-accent); background: rgba(124,94,255,.04); }
+    .eco-icon { font-size: 1.8rem; margin-bottom: .5rem; color: var(--node-accent); }
+    .eco-label { font-weight: 600; color: #e8e8f0; font-size: .95rem; margin-bottom: .25rem; }
+    .eco-desc { font-size: .75rem; color: #9898b0; }
+    .how-steps { display: grid; grid-template-columns: repeat(auto-fit,minmax(200px,1fr)); gap: 1.3125rem; }
+    .how-step { text-align: center; padding: 2rem 1rem; }
+    .how-step-num { font-family: 'JetBrains Mono', monospace; font-size: 2rem; font-weight: 700; color: rgba(59,130,246,0.3); margin-bottom: .5rem; }
+    .how-step h4 { color: #e8e8f0; margin-bottom: .5rem; }
+    .how-step p { font-size: .85rem; color: #9898b0; }
+    @media(max-width:768px) {
+      .eco-map { grid-template-columns: 1fr 1fr; }
+      .how-steps { grid-template-columns: 1fr; }
+      .nav-links { display: none; }
+    }
+    @media(max-width:480px) {
+      .eco-map { grid-template-columns: 1fr; }
+    }
+  </style>
 </head>
 <body>
-    <a href="#main-content" class="skip-link">Skip to main content</a>
 
-    <!-- Header & Navigation -->
-    <header role="banner">
-        <nav class="container" role="navigation" aria-label="Main navigation">
-            <a href="#" class="logo" aria-label="HEADY Systems Home">HEADY™</a>
+  <!-- Sacred Geometry Canvas Background -->
+  <canvas id="sacred-canvas" class="sacred-canvas"></canvas>
 
-            <ul class="nav-menu" id="nav-menu">
-                <li><a href="#platform" tabindex="0">Platform</a></li>
-                <li><a href="#architecture" tabindex="0">Architecture</a></li>
-                <li><a href="#services" tabindex="0">Services</a></li>
-                <li><a href="#pricing" tabindex="0">Pricing</a></li>
-                <li><a href="#docs" tabindex="0">Docs</a></li>
-                <li><a href="#blog" tabindex="0">Blog</a></li>
-                <li class="nav-dropdown" role="presentation">
-                    <a href="#" tabindex="0" aria-haspopup="true" aria-expanded="false">Ecosystem ⮜</a>
-                    <div class="dropdown-menu" role="menu">
-                        <a href="https://headyme.com" role="menuitem" target="_blank">HeadyMe — Personal AI</a>
-                        <a href="https://heady-ai.com" role="menuitem" target="_blank">Heady AI — Research</a>
-                        <a href="https://headyos.com" role="menuitem" target="_blank">HeadyOS — OS Layer</a>
-                        <a href="https://headyconnection.org" role="menuitem" target="_blank">HeadyConnection — Nonprofit</a>
-                        <a href="https://headyconnection.com" role="menuitem" target="_blank">HeadyConnection — Community</a>
-                        <a href="https://headyex.com" role="menuitem" target="_blank">HeadyEX — Marketplace</a>
-                        <a href="https://headyfinance.com" role="menuitem" target="_blank">HeadyFinance — Trading</a>
-                        <a href="https://admin.headysystems.com" role="menuitem" target="_blank">Admin Portal</a>
-                    </div>
-                </li>
-            </ul>
+  <!-- Navigation -->
+  <nav class="glass-nav" style="top:32px;">
+    <span class="nav-logo">HeadySystems</span>
+    <div class="nav-links">
+      <a href="#infrastructure">Infrastructure</a>
+<a href="#services">Services</a>
+<a href="#security">Security</a>
+<a href="https://headyme.com" class="btn btn-primary btn-sm" target="_blank" rel="noopener">HeadyMe</a>
 
-            <div class="auth-buttons">
-                <a href="https://dashboard.headysystems.com/signin" class="btn btn-ghost" tabindex="0">Sign In</a>
-                <a href="https://dashboard.headysystems.com/signup" class="btn btn-primary" tabindex="0">Get Started</a>
-            </div>
+    </div>
+  </nav>
 
-            <button class="menu-toggle" id="menu-toggle" aria-label="Toggle navigation menu" aria-controls="nav-menu">
-                ☰
-            </button>
-        </nav>
-    </header>
+  <!-- Hero Section -->
+  <section class="hero">
+    
+    <div class="hero-badge">⟐ Enterprise Grade · Self-Healing · Zero-Trust</div>
+    <h1 class="text-gradient">Enterprise AI Orchestration</h1>
+    <p class="subtitle">Self-healing infrastructure, multi-agent orchestration, live telemetry, and zero-trust security — the backbone powering every Heady service.</p>
+    <div class="hero-terminal glass-card" style="max-width:500px;margin:var(--space-13) auto 0;padding:1.2rem;text-align:left;font-family:'JetBrains Mono',monospace;font-size:.8rem;color:#9898b0;">
+      <div style="color:#60a5fa;margin-bottom:.4rem;">$ heady status --all</div>
+      <div style="color:#34d399;">✓ 50+ services healthy</div>
+      <div style="color:#34d399;">✓ 17 swarms active</div>
+      <div style="color:#34d399;">✓ Edge mesh: 300+ nodes</div>
+      <div style="color:#fbbf24;">⟐ Latency: &lt;50ms global</div>
+    </div>
+    <div class="hero-cta-row" style="margin-top:var(--space-13);">
+      <a href="#deep-dive" class="btn btn-primary">View Architecture</a>
+      <a href="https://auth.headysystems.com/login?redirect=https://headysystems.com" class="btn btn-ghost">Sign In →</a>
+    </div>
+  </section>
 
-    <main id="main-content">
-        <!-- Hero Section -->
-        <section class="hero">
-            <canvas class="hero-canvas" id="canvas" aria-label="Animated golden spiral background"></canvas>
-            <div class="hero-content">
-                <div class="hero-badge">✨ Latent OS v4.0</div>
-                <h1 class="hero-title">THE ARCHITECTURE OF INTELLIGENCE</h1>
-                <p class="hero-tagline">φ-Scaled sovereign AI operating system</p>
-
-                <div class="hero-stats">
-                    <div class="stat">
-                        <div class="stat-value">50+</div>
-                        <div class="stat-label">Microservices</div>
-                    </div>
-                    <div class="stat">
-                        <div class="stat-value">9</div>
-                        <div class="stat-label">Platforms</div>
-                    </div>
-                    <div class="stat">
-                        <div class="stat-value">51</div>
-                        <div class="stat-label">Patents</div>
-                    </div>
-                    <div class="stat">
-                        <div class="stat-value">14</div>
-                        <div class="stat-label">Skills</div>
-                    </div>
-                </div>
-
-                <div class="hero-cta">
-                    <a href="https://dashboard.headysystems.com/signup" class="btn btn-primary" aria-label="Get started with HEADY for free">Get Started Free</a>
-                    <a href="#docs" class="btn btn-secondary" aria-label="View HEADY documentation">View Documentation</a>
-                </div>
-            </div>
-        </section>
-
-        <!-- Platform Overview -->
-        <section id="platform" class="container">
-            <h2 class="section-title">Platform Overview</h2>
-            <p class="section-subtitle">HEADY Systems is the enterprise-grade φ-scaled sovereign AI operating system, built on sacred geometry principles and distributed computing excellence.</p>
-
-            <div class="overview-grid">
-                <div class="overview-card">
-                    <h3>What is HEADY?</h3>
-                    <p>HEADY is a multi-agent AI platform that operates as a sovereign, distributed operating system. It orchestrates 50+ microservices across 9 integrated platforms, enabling enterprises to deploy, manage, and scale AI applications with unprecedented control and transparency. Built on CSL confidence gates and φ-scaled architecture, HEADY ensures security, reliability, and intelligent resource management at every layer.</p>
-                </div>
-                <div class="overview-card">
-                    <h3>Who Is It For?</h3>
-                    <p>HEADY serves enterprises, AI researchers, and developers seeking sovereign AI infrastructure. Whether you're building internal AI systems, deploying multi-agent workflows, trading with algorithmic confidence, or conducting cutting-edge research, HEADY provides the platform. Our tiered pricing spans from individual explorers to enterprise-scale deployments with dedicated infrastructure and SLA guarantees.</p>
-                </div>
-                <div class="overview-card">
-                    <h3>Core Differentiators</h3>
-                    <p>HEADY stands apart through φ-scaled vector memory (384-dimensional pgvector), CSL confidence gates for intelligent routing, concurrent-equals processing for parallel agent execution, and sacred geometry principles embedded in system design. Combined with full transparency, audit trails, and distributed governance, HEADY enables AI you can trust.</p>
-                </div>
-            </div>
-        </section>
-
-        <!-- The 8 Unbreakable Laws -->
-        <section id="laws" class="container">
-            <h2 class="section-title">The 8 Unbreakable Laws</h2>
-            <p class="section-subtitle">Core principles that define HEADY's architecture and ensure system integrity, security, and distributed consensus.</p>
-
-            <div class="laws-grid">
-                <div class="law-card">
-                    <div class="law-number">⟡</div>
-                    <h3>Law of Sovereignty</h3>
-                    <p>Every agent maintains absolute autonomy. No centralized controller can override individual agent decisions. HEADY guarantees distributed governance through immutable audit trails and Byzantine fault tolerance protocols.</p>
-                </div>
-                <div class="law-card">
-                    <div class="law-number">φ</div>
-                    <h3>Law of φ-Scaling</h3>
-                    <p>Resource allocation follows the golden ratio (1.618...). Vector memory dimensions (384 = 237.6*φ), request rate limits (233 req/min, 144, 89, 55, 34), and system thresholds all respect sacred geometry for optimal performance.</p>
-                </div>
-                <div class="law-card">
-                    <div class="law-number">∿</div>
-                    <h3>Law of Confidence Gates</h3>
-                    <p>Every inference passes through CSL (Confidence Scoring Layer) gates before routing. Low-confidence requests degrade gracefully; high-confidence responses accelerate through premium paths. Confidence is quantified, logged, and verifiable.</p>
-                </div>
-                <div class="law-card">
-                    <div class="law-number">≡</div>
-                    <h3>Law of Concurrent-Equals</h3>
-                    <p>Multiple agents process identical requests in parallel. The first confident response wins; others contribute entropy data to the system. No single point of failure. Consensus emerges from plurality, not authority.</p>
-                </div>
-                <div class="law-card">
-                    <div class="law-number">∞</div>
-                    <h3>Law of Infinite Scalability</h3>
-                    <p>System capacity grows linearly with agent count. No architectural bottlenecks at scale. New services integrate via NATS event bus without ceremony. The system scales from single-user to planetary-scale deployments identically.</p>
-                </div>
-                <div class="law-card">
-                    <div class="law-number">⬡</div>
-                    <h3>Law of Sacred Geometry</h3>
-                    <p>Hexagonal architecture ensures perfect symmetry across all components. Service meshes follow tessellation patterns. Data flows respect phi-ratios. Every deployment is a fractal of the whole—infinitely divisible, perfectly scalable.</p>
-                </div>
-                <div class="law-card">
-                    <div class="law-number">🔐</div>
-                    <h3>Law of Transparent Security</h3>
-                    <p>All security decisions are auditable and cryptographically verifiable. No secrets hidden from authorized users. Encryption keys follow key-rotation schedules. Every access generates an immutable trace. Security is not obscurity—it's mathematics.</p>
-                </div>
-                <div class="law-card">
-                    <div class="law-number">◉</div>
-                    <h3>Law of Eternal Availability</h3>
-                    <p>99.99% uptime SLA backed by distributed consensus. Multi-region failover is automatic. No single-node failures impact service. Health checks run every 3 seconds. The system is alive, aware, and always responsive.</p>
-                </div>
-            </div>
-        </section>
-
-        <!-- Architecture Section -->
-        <section id="architecture" class="container">
-            <h2 class="section-title">System Architecture</h2>
-            <p class="section-subtitle">HEADY's distributed architecture orchestrates 50+ microservices, organized by domain and connected through high-performance event buses.</p>
-
-            <div class="architecture-box">
-                <h3 style="color: var(--accent-gold); margin-bottom: 2rem;">Core Architecture Components</h3>
-
-                <div class="architecture-grid">
-                    <div class="arch-component">
-                        <h4>🧠 Inference Layer</h4>
-                        <p>5 dedicated inference services handle model inference, routing, gateway management, and multi-model orchestration with CSL confidence gates.</p>
-                    </div>
-                    <div class="arch-component">
-                        <h4>💾 Memory Layer</h4>
-                        <p>4 specialized memory services manage embeddings, vector storage (pgvector 384-dim), projection ops, and semantic memory with φ-scaled indexing.</p>
-                    </div>
-                    <div class="arch-component">
-                        <h4>🐝 Agent Layer</h4>
-                        <p>3 agent services orchestrate single agents, hive formations, federation protocols, and concurrent-equals processing with Byzantine consensus.</p>
-                    </div>
-                    <div class="arch-component">
-                        <h4>🎼 Orchestration Layer</h4>
-                        <p>Multiple services manage workflow orchestration, conductor patterns, event sourcing, and distributed state management across agents.</p>
-                    </div>
-                    <div class="arch-component">
-                        <h4>🔐 Security Layer</h4>
-                        <p>4 dedicated security services handle authentication, authorization, governance policies, and secret management with transparent audit trails.</p>
-                    </div>
-                    <div class="arch-component">
-                        <h4>📊 Observability Layer</h4>
-                        <p>4 monitoring services provide health checks, evaluation metrics, maintenance protocols, and comprehensive testing across all layers.</p>
-                    </div>
-                    <div class="arch-component">
-                        <h4>🌐 Web & Integration</h4>
-                        <p>Multiple web services provide dashboards, chat interfaces, UI components, APIs, and gateway services for seamless integration.</p>
-                    </div>
-                    <div class="arch-component">
-                        <h4>🚀 Infrastructure</h4>
-                        <p>NATS event bus, Envoy service mesh, pgvector database, Redis caching, distributed consensus, and automatic failover mechanisms.</p>
-                    </div>
-                </div>
-            </div>
-
-            <div style="margin-top: 3rem; background: rgba(124, 94, 255, 0.05); border: 1px solid var(--border-color); padding: 2rem; border-radius: 0.5rem;">
-                <h3 style="color: var(--accent-gold); margin-bottom: 1rem;">Technology Stack</h3>
-                <p style="color: var(--text-secondary); line-height: 1.8;">
-                    <strong>Event Bus:</strong> NATS for distributed pub/sub with at-least-once delivery semantics.<br>
-                    <strong>Service Mesh:</strong> Envoy proxy for intelligent traffic routing, retry logic, and circuit breaking.<br>
-                    <strong>Vector Storage:</strong> PostgreSQL with pgvector extension, 384-dimensional embeddings with φ-scaled indexing.<br>
-                    <strong>Caching:</strong> Redis with consistent hashing for distributed cache layers and session management.<br>
-                    <strong>Consensus:</strong> Raft protocol for distributed consensus, leader election, and Byzantine fault tolerance.<br>
-                    <strong>Observability:</strong> Prometheus metrics, Jaeger distributed tracing, Loki log aggregation, and custom health checks.
-                </p>
-            </div>
-        </section>
-
-        <!-- Services Grid -->
-        <section id="services" class="container">
-            <h2 class="section-title">50+ Microservices</h2>
-            <p class="section-subtitle">HEADY's modular architecture includes specialized services across inference, memory, agents, orchestration, security, monitoring, web, and integration domains.</p>
-
-            <div class="services-grid">
-                <!-- Inference Services -->
-                <div class="service-card">
-                    <div class="service-category">Inference</div>
-                    <h4>heady-brain</h4>
-                    <p>Primary inference engine for single-model reasoning. Handles text generation, embeddings, and semantic analysis with streaming response support.</p>
-                </div>
-                <div class="service-card">
-                    <div class="service-category">Inference</div>
-                    <h4>heady-brains</h4>
-                    <p>Multi-model inference orchestrator. Routes requests across ensemble models, manages batching, and optimizes for latency vs. accuracy tradeoffs.</p>
-                </div>
-                <div class="service-card">
-                    <div class="service-category">Inference</div>
-                    <h4>heady-infer</h4>
-                    <p>Low-latency inference endpoint with aggressive caching. Optimized for real-time applications requiring sub-100ms response times.</p>
-                </div>
-                <div class="service-card">
-                    <div class="service-category">Inference</div>
-                    <h4>ai-router</h4>
-                    <p>Intelligent request router using CSL confidence gates. Routes to optimal model based on request characteristics and system load.</p>
-                </div>
-                <div class="service-card">
-                    <div class="service-category">Inference</div>
-                    <h4>model-gateway</h4>
-                    <p>Central gateway for all model interactions. Manages model versioning, canary deployments, and A/B testing infrastructure.</p>
-                </div>
-
-                <!-- Memory Services -->
-                <div class="service-card">
-                    <div class="service-category">Memory</div>
-                    <h4>heady-embed</h4>
-                    <p>Text-to-vector embedding service. Generates 384-dimensional embeddings using foundation models with φ-scaled normalization.</p>
-                </div>
-                <div class="service-card">
-                    <div class="service-category">Memory</div>
-                    <h4>heady-memory</h4>
-                    <p>Long-term memory management system. Stores semantic memories, agent histories, and contextual knowledge with TTL-based eviction.</p>
-                </div>
-                <div class="service-card">
-                    <div class="service-category">Memory</div>
-                    <h4>heady-vector</h4>
-                    <p>Vector search and retrieval engine. pgvector-backed similarity search with approximate nearest neighbor queries for sub-millisecond response times.</p>
-                </div>
-                <div class="service-card">
-                    <div class="service-category">Memory</div>
-                    <h4>heady-projection</h4>
-                    <p>Dimensionality reduction and projection service. Projects high-dimensional vectors to lower dimensions while preserving semantic meaning using PCA and UMAP.</p>
-                </div>
-
-                <!-- Agent Services -->
-                <div class="service-card">
-                    <div class="service-category">Agents</div>
-                    <h4>heady-bee-factory</h4>
-                    <p>Agent instantiation and lifecycle management. Creates agents on-demand, manages resource allocation, and handles graceful shutdown with state persistence.</p>
-                </div>
-                <div class="service-card">
-                    <div class="service-category">Agents</div>
-                    <h4>heady-hive</h4>
-                    <p>Multi-agent coordination service. Manages agent swarms, aggregates outputs, handles intra-agent communication, and enforces coordination protocols.</p>
-                </div>
-                <div class="service-card">
-                    <div class="service-category">Agents</div>
-                    <h4>heady-federation</h4>
-                    <p>Cross-platform agent federation. Enables agents to communicate across HEADY platforms, share context, and participate in distributed consensus.</p>
-                </div>
-
-                <!-- Orchestration Services -->
-                <div class="service-card">
-                    <div class="service-category">Orchestration</div>
-                    <h4>heady-soul</h4>
-                    <p>Agent identity and state management. Maintains persistent agent personas, personality vectors, historical context, and identity proofs.</p>
-                </div>
-                <div class="service-card">
-                    <div class="service-category">Orchestration</div>
-                    <h4>heady-conductor</h4>
-                    <p>Workflow orchestration engine. Executes DAG workflows, manages task dependencies, retries, and distributed transaction coordination.</p>
-                </div>
-                <div class="service-card">
-                    <div class="service-category">Orchestration</div>
-                    <h4>event-sourcing</h4>
-                    <p>Event stream persistence and replay. Maintains immutable event logs for all system state changes with cryptographic verification.</p>
-                </div>
-                <div class="service-card">
-                    <div class="service-category">Orchestration</div>
-                    <h4>state-manager</h4>
-                    <p>Distributed state management service. Maintains consistent state across replicas using Raft consensus with optimistic concurrency.</p>
-                </div>
-
-                <!-- Security Services -->
-                <div class="service-card">
-                    <div class="service-category">Security</div>
-                    <h4>heady-guard</h4>
-                    <p>Authentication and identity service. Manages user accounts, API keys, OAuth flows, passwordless authentication, and session management.</p>
-                </div>
-                <div class="service-card">
-                    <div class="service-category">Security</div>
-                    <h4>heady-security</h4>
-                    <p>Authorization and access control. Enforces RBAC, attribute-based policies, resource permissions, and audit logging for all access.</p>
-                </div>
-                <div class="service-card">
-                    <div class="service-category">Security</div>
-                    <h4>heady-governance</h4>
-                    <p>Policy enforcement engine. Manages compliance rules, data governance, encryption policies, and regulatory requirements with automated reporting.</p>
-                </div>
-                <div class="service-card">
-                    <div class="service-category">Security</div>
-                    <h4>secret-gateway</h4>
-                    <p>Secret management and rotation. Provides encrypted credential storage, automatic rotation, audit trails, and secure distribution to services.</p>
-                </div>
-
-                <!-- Monitoring Services -->
-                <div class="service-card">
-                    <div class="service-category">Monitoring</div>
-                    <h4>heady-health</h4>
-                    <p>Service health monitoring. Runs continuous health checks, detects degradation, triggers alerts, and initiates automatic remediation.</p>
-                </div>
-                <div class="service-card">
-                    <div class="service-category">Monitoring</div>
-                    <h4>heady-eval</h4>
-                    <p>Evaluation and quality metrics. Measures model quality, inference accuracy, latency, and other KPIs with real-time dashboards.</p>
-                </div>
-                <div class="service-card">
-                    <div class="service-category">Monitoring</div>
-                    <h4>heady-maintenance</h4>
-                    <p>System maintenance automation. Performs garbage collection, cache cleanup, data compaction, and preventive maintenance routines.</p>
-                </div>
-                <div class="service-card">
-                    <div class="service-category">Monitoring</div>
-                    <h4>heady-testing</h4>
-                    <p>Continuous testing framework. Runs integration tests, regression suites, chaos engineering tests, and validates system invariants.</p>
-                </div>
-
-                <!-- Web Services -->
-                <div class="service-card">
-                    <div class="service-category">Web</div>
-                    <h4>heady-web</h4>
-                    <p>Main web dashboard and API. Provides admin interfaces, analytics, configuration management, and system control plane.</p>
-                </div>
-                <div class="service-card">
-                    <div class="service-category">Web</div>
-                    <h4>heady-buddy</h4>
-                    <p>Chat interface service. Provides conversational UI, real-time messaging, multi-turn context management, and streaming response display.</p>
-                </div>
-                <div class="service-card">
-                    <div class="service-category">Web</div>
-                    <h4>heady-ui</h4>
-                    <p>Reusable UI component library. Provides styled components, accessibility features, responsive layouts, and design system implementation.</p>
-                </div>
-                <div class="service-card">
-                    <div class="service-category">Web</div>
-                    <h4>heady-docs</h4>
-                    <p>Documentation generation and serving. Auto-generates API docs, SDK guides, tutorials, and maintains searchable knowledge base.</p>
-                </div>
-
-                <!-- Integration Services -->
-                <div class="service-card">
-                    <div class="service-category">Integration</div>
-                    <h4>api-gateway</h4>
-                    <p>Central API gateway. Handles routing, rate limiting, authentication, request/response transformation, and API versioning.</p>
-                </div>
-                <div class="service-card">
-                    <div class="service-category">Integration</div>
-                    <h4>domain-router</h4>
-                    <p>Domain-based request routing. Routes requests to appropriate services based on domain, path, and headers with intelligent failover.</p>
-                </div>
-                <div class="service-card">
-                    <div class="service-category">Integration</div>
-                    <h4>mcp-server</h4>
-                    <p>Model Context Protocol server. Enables LLM-to-HEADY communication, function calling, and tool integration with external AI systems.</p>
-                </div>
-                <div class="service-card">
-                    <div class="service-category">Integration</div>
-                    <h4>webhook-manager</h4>
-                    <p>Webhook delivery and management. Delivers events to external systems with retry logic, signature verification, and rate limiting.</p>
-                </div>
-                <div class="service-card">
-                    <div class="service-category">Integration</div>
-                    <h4>sync-engine</h4>
-                    <p>Data synchronization service. Maintains consistency across distributed data stores, handles schema migrations, and resolves conflicts.</p>
-                </div>
-                <div class="service-card">
-                    <div class="service-category">Integration</div>
-                    <h4>batch-processor</h4>
-                    <p>Batch processing engine. Processes bulk requests asynchronously, generates reports, and handles long-running operations efficiently.</p>
-                </div>
-            </div>
-        </section>
-
-        <!-- Pricing Section -->
-        <section id="pricing" class="container">
-            <h2 class="section-title">Pricing</h2>
-            <p class="section-subtitle">φ-Scaled pricing tiers designed for every scale. Rates follow the golden ratio (1.618...) for optimal value at every level.</p>
-
-            <div class="pricing-grid">
-                <div class="pricing-card">
-                    <h3>Explorer</h3>
-                    <div class="pricing-price">$0<span>/month</span></div>
-                    <p class="pricing-period">Perfect for getting started</p>
-                    <ul class="pricing-features">
-                        <li>Anonymous access</li>
-                        <li>34 req/min rate limit</li>
-                        <li>Single agent</li>
-                        <li>Basic inference services</li>
-                        <li>Community support</li>
-                    </ul>
-                    <a href="https://dashboard.headysystems.com/signup" class="btn btn-ghost" style="width: 100%; text-align: center;">Get Started</a>
-                </div>
-
-                <div class="pricing-card">
-                    <h3>Builder</h3>
-                    <div class="pricing-price">$55<span>/month</span></div>
-                    <p class="pricing-period">For active developers</p>
-                    <ul class="pricing-features">
-                        <li>Authenticated access</li>
-                        <li>89 req/min rate limit</li>
-                        <li>Up to 5 agents</li>
-                        <li>Advanced inference</li>
-                        <li>Vector memory access</li>
-                        <li>Email support</li>
-                    </ul>
-                    <a href="https://dashboard.headysystems.com/signup?plan=builder" class="btn btn-ghost" style="width: 100%; text-align: center;">Choose Plan</a>
-                </div>
-
-                <div class="pricing-card featured">
-                    <div class="pricing-badge">MOST POPULAR</div>
-                    <h3>Professional</h3>
-                    <div class="pricing-price">$89<span>/month</span></div>
-                    <p class="pricing-period">For production deployments</p>
-                    <ul class="pricing-features">
-                        <li>Full authentication suite</li>
-                        <li>144 req/min rate limit</li>
-                        <li>Unlimited agents</li>
-                        <li>All inference services</li>
-                        <li>Full memory & vector DB</li>
-                        <li>Priority support</li>
-                        <li>99.9% SLA</li>
-                    </ul>
-                    <a href="https://dashboard.headysystems.com/signup?plan=professional" class="btn btn-primary" style="width: 100%; text-align: center;">Choose Plan</a>
-                </div>
-
-                <div class="pricing-card">
-                    <h3>Enterprise</h3>
-                    <div class="pricing-price">$233<span>/month</span></div>
-                    <p class="pricing-period">For large-scale deployments</p>
-                    <ul class="pricing-features">
-                        <li>Dedicated infrastructure</li>
-                        <li>233 req/min guaranteed</li>
-                        <li>Unlimited everything</li>
-                        <li>Custom model integration</li>
-                        <li>Private service mesh</li>
-                        <li>24/7 premium support</li>
-                        <li>99.99% SLA + credits</li>
-                    </ul>
-                    <a href="mailto:enterprise@headysystems.com" class="btn btn-ghost" style="width: 100%; text-align: center;">Contact Sales</a>
-                </div>
-            </div>
-        </section>
-
-        <!-- Documentation Section -->
-        <section id="docs" class="container">
-            <h2 class="section-title">Documentation & Resources</h2>
-            <p class="section-subtitle">Comprehensive guides, API references, and architecture documentation to help you build with HEADY.</p>
-
-            <div class="docs-grid">
-                <div class="doc-card">
-                    <h3>API Reference</h3>
-                    <p>Complete REST API documentation with request/response examples, error codes, rate limits, and authentication details. Covers all 50+ services with real usage examples.</p>
-                    <a href="/docs/api" target="_blank">Read API Docs →</a>
-                </div>
-                <div class="doc-card">
-                    <h3>SDK Guides</h3>
-                    <p>Official SDKs for Python, JavaScript/TypeScript, Go, and Rust. Includes setup instructions, common patterns, best practices, and real-world examples.</p>
-                    <a href="/docs/sdks" target="_blank">View SDKs →</a>
-                </div>
-                <div class="doc-card">
-                    <h3>Architecture Docs</h3>
-                    <p>Deep-dive into HEADY's distributed architecture, sacred geometry principles, φ-scaling patterns, and design decisions with diagrams and proofs.</p>
-                    <a href="/docs/architecture" target="_blank">Learn Architecture →</a>
-                </div>
-                <div class="doc-card">
-                    <h3>Architectural Decision Records</h3>
-                    <p>ADRs documenting key architectural decisions, tradeoffs, alternatives considered, and rationale behind HEADY's design choices.</p>
-                    <a href="/docs/adrs" target="_blank">Review ADRs →</a>
-                </div>
-                <div class="doc-card">
-                    <h3>Runbooks & Operations</h3>
-                    <p>Operational guides for deployment, scaling, monitoring, debugging, and incident response. Includes troubleshooting procedures and recovery steps.</p>
-                    <a href="/docs/runbooks" target="_blank">View Runbooks →</a>
-                </div>
-                <div class="doc-card">
-                    <h3>Error Reference</h3>
-                    <p>Complete error code catalog with explanations, common causes, and resolution steps. Includes both system errors and application-level exceptions.</p>
-                    <a href="/docs/errors" target="_blank">Error Codes →</a>
-                </div>
-            </div>
-        </section>
-
-        <!-- Ecosystem Section -->
-        <section id="ecosystem" class="container">
-            <h2 class="section-title">The HEADY Ecosystem</h2>
-            <p class="section-subtitle">Nine integrated platforms forming a complete sovereign AI ecosystem. Each platform serves a specific purpose while maintaining seamless integration.</p>
-
-            <div class="ecosystem-grid">
-                <div class="ecosystem-card">
-                    <div class="ecosystem-icon">👤</div>
-                    <h3>HeadyMe</h3>
-                    <p>Personal AI Cloud. Your private AI assistant, autonomous agent, and digital twin. Built on HEADY's platform layer with personal data sovereignty and privacy-first architecture.</p>
-                    <a href="https://headyme.com" target="_blank">Visit HeadyMe →</a>
-                </div>
-
-                <div class="ecosystem-card">
-                    <div class="ecosystem-icon">🧠</div>
-                    <h3>Heady AI</h3>
-                    <p>AI Research & Capabilities. Cutting-edge research into φ-scaling, sacred geometry, and advanced reasoning. Open access to research papers, pre-prints, and novel findings.</p>
-                    <a href="https://heady-ai.com" target="_blank">Visit Heady AI →</a>
-                </div>
-
-                <div class="ecosystem-card">
-                    <div class="ecosystem-icon">⚙️</div>
-                    <h3>HeadyOS</h3>
-                    <p>Operating System Layer. The foundational OS layer providing kernel-level operations, resource management, and distributed computing primitives for all HEADY platforms.</p>
-                    <a href="https://headyos.com" target="_blank">Visit HeadyOS →</a>
-                </div>
-
-                <div class="ecosystem-card">
-                    <div class="ecosystem-icon">🤝</div>
-                    <h3>HeadyConnection.org</h3>
-                    <p>Non-profit foundation dedicated to advancing open AI research and supporting the HEADY community. Educational initiatives, grants, and community support programs.</p>
-                    <a href="https://headyconnection.org" target="_blank">Visit HeadyConnection →</a>
-                </div>
-
-                <div class="ecosystem-card">
-                    <div class="ecosystem-icon">💬</div>
-                    <h3>HeadyConnection</h3>
-                    <p>Community Platform. Global community hub for HEADY users, developers, and researchers. Forums, event coordination, knowledge sharing, and collaborative projects.</p>
-                    <a href="https://headyconnection.com" target="_blank">Join Community →</a>
-                </div>
-
-                <div class="ecosystem-card">
-                    <div class="ecosystem-icon">🎯</div>
-                    <h3>HeadyEX</h3>
-                    <p>Agent Marketplace. Buy, sell, and deploy pre-built agents. Curated marketplace of specialized agents, with revenue sharing and quality assurance.</p>
-                    <a href="https://headyex.com" target="_blank">Explore Market →</a>
-                </div>
-
-                <div class="ecosystem-card">
-                    <div class="ecosystem-icon">💰</div>
-                    <h3>HeadyFinance</h3>
-                    <p>FinTech & Trading. AI-powered trading platform with algorithmic confidence, risk management, and portfolio optimization. Professional-grade infrastructure for quantitative trading.</p>
-                    <a href="https://headyfinance.com" target="_blank">Visit HeadyFinance →</a>
-                </div>
-
-                <div class="ecosystem-card">
-                    <div class="ecosystem-icon">🔑</div>
-                    <h3>Admin Portal</h3>
-                    <p>System Administration. Central control plane for managing HEADY infrastructure, user administration, billing, and enterprise configuration.</p>
-                    <a href="https://admin.headysystems.com" target="_blank">Access Admin →</a>
-                </div>
-
-                <div class="ecosystem-card">
-                    <div class="ecosystem-icon">🏢</div>
-                    <h3>HeadySystems</h3>
-                    <p>Enterprise Platform Hub (this site). Central hub for accessing all HEADY platforms, documentation, and enterprise resources. The orchestration point for the entire ecosystem.</p>
-                    <a href="#" target="_blank">You Are Here →</a>
-                </div>
-            </div>
-        </section>
-
-        <!-- Patents & IP Section -->
-        <section id="patents" class="container">
-            <h2 class="section-title">Patents & Intellectual Property</h2>
-            <p class="section-subtitle">HEADY represents years of research and development, protected by 51 provisional patents covering novel architectures, optimization techniques, and foundational concepts.</p>
-
-            <div class="patents-content">
-                <h3>51 Provisional Patents</h3>
-                <p>HEADY Systems maintains a comprehensive patent portfolio covering core innovations in AI architecture, distributed computing, and sacred geometry principles. Patents cover:</p>
-
-                <div class="patent-list">
-                    <div class="patent-item">φ-Scaled Vector Memory Systems</div>
-                    <div class="patent-item">Confidence Scoring Layer (CSL) Gates</div>
-                    <div class="patent-item">Concurrent-Equals Processing</div>
-                    <div class="patent-item">Sacred Geometry Architecture</div>
-                    <div class="patent-item">Byzantine Fault Tolerant Consensus</div>
-                    <div class="patent-item">Hexagonal Service Mesh Design</div>
-                    <div class="patent-item">Multi-Agent Federation Protocols</div>
-                    <div class="patent-item">Golden Ratio Resource Allocation</div>
-                    <div class="patent-item">Transparent Security Infrastructure</div>
-                    <div class="patent-item">Infinite Scalability Patterns</div>
-                    <div class="patent-item">Event Sourcing & Replay</div>
-                    <div class="patent-item">Distributed State Management</div>
-                </div>
-
-                <p style="margin-top: 2rem; color: var(--text-secondary); border-top: 1px solid var(--border-color); padding-top: 2rem;">
-                    <strong>Founder & Chief Architect:</strong> Eric Haywood<br>
-                    <strong>Founded:</strong> 2024<br>
-                    <strong>Headquarters:</strong> Global, Distributed<br>
-                    <strong>Patents:</strong> 60+ Provisional Patents filed across core technologies<br>
-                    <strong>Open Source Commitment:</strong> HEADY is built on open standards while protecting key innovations.
-                </p>
-            </div>
-        </section>
-    </main>
-
-    <!-- Footer -->
-    <footer role="contentinfo">
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-section">
-                    <h4>Product</h4>
-                    <a href="#platform">Platform</a>
-                    <a href="#pricing">Pricing</a>
-                    <a href="https://docs.heady.ai">Documentation</a>
-                    <a href="https://heady-onboarding-609590223909.us-east1.run.app">Sign In</a>
-                </div>
-                <div class="footer-section">
-                    <h4>Resources</h4>
-                    <a href="https://docs.heady.ai#services">Services Catalog</a>
-                    <a href="https://docs.heady.ai#skills">Skills Library</a>
-                    <a href="https://docs.heady.ai#architecture">Architecture</a>
-                    <a href="https://docs.heady.ai#workflows">Workflows</a>
-                </div>
-                <div class="footer-section">
-                    <h4>Company</h4>
-                    <a href="https://headysystems.com">About</a>
-                    <a href="https://headyconnection.org">Foundation</a>
-                    <a href="https://headyconnection.com">Community</a>
-                    <a href="https://heady-ide-bf4q4zywhq-ue.a.run.app">HeadyAI IDE</a>
-                </div>
-                <div class="footer-section">
-                    <h4>Ecosystem</h4>
-                    <a href="https://headyme.com">HeadyMe</a>
-                    <a href="https://heady-ai.com">Heady AI</a>
-                    <a href="https://headyos.com">HeadyOS</a>
-                    <a href="https://headyex.com">HeadyEX</a>
-                    <a href="https://headyfinance.com">HeadyFinance</a>
-                </div>
-            </div>
-
-            <div class="footer-bottom">
-                <div class="footer-copyright">
-                    © 2026 HeadySystems Inc. All rights reserved. Founded by Eric Haywood.
-                </div>
-                <div class="footer-badge">
-                    ◉ Sacred Geometry v4.0
-                </div>
-            </div>
+  <!-- Stats Banner -->
+  <section class="section" style="padding: var(--space-21) 0;">
+    <div class="container">
+      <div class="stats-row">
+        
+        <div class="stat">
+          <div class="stat-num">50+</div>
+          <div class="stat-label">Services</div>
         </div>
-    </footer>
+        <div class="stat">
+          <div class="stat-num">17</div>
+          <div class="stat-label">Swarms</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num">99.9%</div>
+          <div class="stat-label">Uptime</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num"><50ms</div>
+          <div class="stat-label">Edge Latency</div>
+        </div>
+      </div>
+    </div>
+  </section>
 
-    <script>
-        // Animated Golden Spiral Canvas
-        const canvas = document.getElementById('canvas');
-        const ctx = canvas.getContext('2d');
+  <!-- Features Grid -->
+  <section id="features" class="section">
+    <div class="container">
+      <div class="section-header">
+        <h2>Core Capabilities</h2>
+        <p>Everything you need from HeadySystems — powered by Sacred Geometry and Continuous Semantic Logic.</p>
+      </div>
+      <div class="grid-3">
+        
+        <div class="glass-card">
+          <span class="feature-icon">⟐</span>
+          <h4>Self-Healing Infrastructure</h4>
+          <p>Auto-heal resilience loops, circuit breakers, and autonomous recovery. The system detects, quarantines, and repairs failures without human intervention using φ-scaled exponential backoff.</p>
+        </div>
+        <div class="glass-card">
+          <span class="feature-icon">⬡</span>
+          <h4>50+ Microservices</h4>
+          <p>Every service features /health endpoints, AutoContext middleware, Envoy sidecar proxies for mTLS, Consul service discovery, and OpenTelemetry distributed tracing across MCP/SSE channels.</p>
+        </div>
+        <div class="glass-card">
+          <span class="feature-icon">◎</span>
+          <h4>Live Telemetry</h4>
+          <p>Structured logging with correlation IDs, health probes, race audits, and real-time dashboards. Monitor CPU, memory, GC, and event-loop telemetry across all services simultaneously.</p>
+        </div>
+        <div class="glass-card">
+          <span class="feature-icon">◇</span>
+          <h4>HCFP Auto-Success</h4>
+          <p>Continuous deployment pipeline with security scanning, SBOM generation, canary releases, and automated rollback. Every deployment is tested against all 8 Unbreakable Laws.</p>
+        </div>
+        <div class="glass-card">
+          <span class="feature-icon">△</span>
+          <h4>Zero Trust Security</h4>
+          <p>mTLS client certificates, secret rotation via Cloudflare, WARP enforcement, Ed25519 signed cryptographic receipts, and post-quantum key exchange for future-proof protection.</p>
+        </div>
+        <div class="glass-card">
+          <span class="feature-icon">⊛</span>
+          <h4>Edge Mesh Network</h4>
+          <p>Cloudflare Workers edge proxy with KV caching, sub-50ms latency worldwide, Durable Objects for stateful edge compute, and Workers AI for inference at the edge.</p>
+        </div>
+      </div>
+    </div>
+  </section>
 
-        function resizeCanvas() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        }
-        resizeCanvas();
-        window.addEventListener('resize', resizeCanvas);
+  <!-- Deep Dive Content (2000+ words) -->
+  <section id="deep-dive" class="section">
+    <div class="container">
+      <div class="section-header">
+        <h2>Deep Dive</h2>
+        <p>A comprehensive look at what HeadySystems offers and how it works.</p>
+      </div>
+      <div class="deep-dive">
+        
+<h3>The Backbone of the Heady Ecosystem</h3>
+<p>HeadySystems is the infrastructure layer that powers every service, every site, and every AI interaction in the Heady ecosystem. While HeadyMe provides the personal interface and HeadyOS offers the developer experience, HeadySystems is the engine room — 50+ microservices orchestrated through sacred geometry principles, self-healing automatically, and scaling without limits.</p>
 
-        const particles = [];
-        const PHI = 1.618033988749895;
+<p>The architecture follows a service mesh pattern with Envoy sidecar proxies handling all inter-service communication. Every request is authenticated via mTLS client certificates, traced via OpenTelemetry spans, and enriched via HeadyAutoContext middleware before reaching its destination. There are no unauthenticated paths, no untraced requests, no unenriched interactions.</p>
 
-        class Particle {
-            constructor() {
-                this.angle = Math.random() * Math.PI * 2;
-                this.radius = Math.random() * 300;
-                this.speed = Math.random() * 0.5 + 0.1;
-                this.size = Math.random() * 3 + 0.5;
-                this.opacity = Math.random() * 0.5 + 0.3;
-                this.color = ['#f0c040', '#40e0d0', '#7c5eff'][Math.floor(Math.random() * 3)];
-            }
+<h3>Service Architecture — 50+ Microservices</h3>
+<p>HeadySystems operates 50+ distinct microservices organized into functional domains. Core Intelligence services include heady-brain (central AI reasoning), heady-embed (embedding generation), heady-memory (persistence layer), and heady-vector (spatial operations). Agent services include heady-bee-factory (dynamic bee creation), heady-hive (coordination hub), and heady-orchestration (swarm management).</p>
 
-            update() {
-                this.angle += this.speed / 100;
-                this.radius += this.speed * 0.01;
+<p>Security services encompass heady-guard (enforcement layer with 20+ modules), heady-security (vulnerability scanning), and heady-governance (policy enforcement). Monitoring runs through heady-health (17-file health monitoring system), heady-eval (evaluation engine), and heady-maintenance (self-healing).</p>
 
-                if (this.radius > 500) {
-                    this.angle = Math.random() * Math.PI * 2;
-                    this.radius = 0;
+<p>Every service follows the same contract: a /health endpoint returning structured status, AutoContext middleware enriching every request, bulkhead thread pools preventing cascading failures, and φ-scaled timeouts using golden ratio intervals (1s, 1.618s, 2.618s, 4.236s) for retry logic.</p>
+
+<h3>17-Swarm Concurrent Orchestration</h3>
+<p>HeadySystems coordinates 17 specialized swarms that operate as concurrent equals — no hierarchy, no ranking, no ordering. The swarms span every operational domain: heady-soul (orchestration), csl-gateway (inference), vector-weaver (memory), context-shepherd (context management), security-hive (security), deploy-forge (deployment), data-sculptor (data operations), research-herald (research), monitor-pulse (monitoring), edge-runner (edge compute), bridge-keeper (integration), pattern-scout (analysis), heal-smith (reliability), trade-wind (fintech), doc-scribe (documentation), test-prover (testing), and policy-sentinel (governance).</p>
+
+<p>When a task enters the system, all relevant swarms activate simultaneously. Each swarm dispatches its own bee workers to handle the task from their domain perspective. Results are aggregated via CSL relevance gates — not by importance ranking but by semantic similarity to the task domain. This concurrent execution model means HeadySystems processes tasks in parallel at scale that sequential systems cannot match.</p>
+
+<h3>Self-Healing and Resilience</h3>
+<p>Every service in HeadySystems is wrapped in resilience patterns. Circuit breakers prevent cascading failures by isolating unhealthy services. Bulkhead thread pools ensure that one service's overload cannot starve others of resources. Health probes run on φ-scaled intervals, and when a service fails its health check, the system automatically quarantines it, spins up a replacement, validates the replacement's health, and redirects traffic — all without human intervention.</p>
+
+<p>The self-healing system uses exponential backoff with φ-scaling: first retry at 1.618 seconds, second at 2.618, third at 4.236, following the golden ratio progression. This avoids the thundering herd problem that occurs with fixed-interval retries, because φ-scaled intervals distribute retry attempts across non-overlapping time windows.</p>
+
+<h3>Deployment Pipeline — HCFP Auto-Success</h3>
+<p>Deployments flow through the Heady Continuous Flow Pipeline (HCFP), a 21-stage cognitive state machine that handles everything from code commit to production traffic routing. Stages include static analysis, dependency auditing, SBOM generation, container scanning, canary deployment, traffic shifting, smoke testing, and automated rollback on failure.</p>
+
+<p>Every deployment artifact is signed with Ed25519 cryptographic receipts, creating an immutable audit trail. The pipeline enforces all 8 Unbreakable Laws: thoroughness over speed, solutions only (no workarounds), context maximization, implementation completeness, cross-environment purity, 10,000-bee scale readiness, Auto-Success Engine integrity, and arena mode competitive excellence.</p>
+
+<h3>Edge Mesh and Global Distribution</h3>
+<p>HeadySystems leverages Cloudflare's edge network for global distribution with sub-50ms latency. Static assets and frequently-accessed API responses are cached in Cloudflare KV stores. Stateful compute runs on Durable Objects at the edge, enabling real-time collaboration and session management without round-trips to origin servers.</p>
+
+<p>Workers AI provides inference capabilities directly at the edge, allowing HeadySystems to run embedding generation, classification, and lightweight inference without leaving the Cloudflare network. This reduces latency for common operations from hundreds of milliseconds to single-digit milliseconds.</p>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- How It Works -->
+  <section id="how-it-works" class="section">
+    <div class="container">
+      <div class="section-header">
+        <h2>How It Works</h2>
+        <p>The HeadySystems workflow in four steps.</p>
+      </div>
+      <div class="how-steps">
+        
+        <div class="how-step glass-card">
+          <div class="how-step-num">01</div>
+          <h4>Service Mesh</h4>
+          <p>All 50+ services communicate through Envoy sidecar proxies with mTLS, load balancing, and circuit breaking built in.</p>
+        </div>
+        <div class="how-step glass-card">
+          <div class="how-step-num">02</div>
+          <h4>Concurrent Dispatch</h4>
+          <p>17 swarms activate simultaneously for every task. No queues, no waiting. CSL gates filter results by domain relevance.</p>
+        </div>
+        <div class="how-step glass-card">
+          <div class="how-step-num">03</div>
+          <h4>Auto-Healing</h4>
+          <p>Failed services are quarantined, replaced, and validated automatically. φ-scaled retry intervals prevent cascading failures.</p>
+        </div>
+        <div class="how-step glass-card">
+          <div class="how-step-num">04</div>
+          <h4>Edge Delivery</h4>
+          <p>Cloudflare Workers serve content globally with sub-50ms latency. Durable Objects maintain state at the edge.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Technology Stack -->
+  <section id="tech-stack" class="section">
+    <div class="container">
+      <div class="section-header">
+        <h2>Technology Stack</h2>
+        <p>Built on the Heady™ infrastructure — sacred geometry governs every parameter.</p>
+      </div>
+      <div id="tech-container"></div>
+    </div>
+  </section>
+
+  <!-- Ecosystem Map -->
+  <section id="ecosystem" class="section">
+    <div class="container">
+      <div class="section-header">
+        <h2>Heady Ecosystem</h2>
+        <p>Nine interconnected platforms. One unified intelligence layer.</p>
+      </div>
+      <div class="eco-map">
+        
+        <a href="https://headyme.com" class="eco-node" style="--node-accent:#00d4aa" target="_blank" rel="noopener">
+          <span class="eco-icon">◎</span>
+          <span class="eco-label">HeadyMe</span>
+          <span class="eco-desc">Personal Cloud</span>
+        </a>
+        <a href="https://headysystems.com" class="eco-node eco-node--current" style="--node-accent:#3b82f6">
+          <span class="eco-icon">⟐</span>
+          <span class="eco-label">HeadySystems</span>
+          <span class="eco-desc">Infrastructure</span>
+        </a>
+        <a href="https://heady-ai.com" class="eco-node" style="--node-accent:#8b5cf6" target="_blank" rel="noopener">
+          <span class="eco-icon">△</span>
+          <span class="eco-label">HeadyAI</span>
+          <span class="eco-desc">Research</span>
+        </a>
+        <a href="https://headyos.com" class="eco-node" style="--node-accent:#14b8a6" target="_blank" rel="noopener">
+          <span class="eco-icon">◇</span>
+          <span class="eco-label">HeadyOS</span>
+          <span class="eco-desc">Operating System</span>
+        </a>
+        <a href="https://headyconnection.org" class="eco-node" style="--node-accent:#f59e0b" target="_blank" rel="noopener">
+          <span class="eco-icon">✦</span>
+          <span class="eco-label">HeadyConnection</span>
+          <span class="eco-desc">Community</span>
+        </a>
+        <a href="https://headyconnection.com" class="eco-node" style="--node-accent:#06b6d4" target="_blank" rel="noopener">
+          <span class="eco-icon">🌐</span>
+          <span class="eco-label">HeadyConnection Community</span>
+          <span class="eco-desc">Community Portal</span>
+        </a>
+        <a href="https://headyex.com" class="eco-node" style="--node-accent:#10b981" target="_blank" rel="noopener">
+          <span class="eco-icon">🏪</span>
+          <span class="eco-label">HeadyEX</span>
+          <span class="eco-desc">Marketplace</span>
+        </a>
+        <a href="https://headyfinance.com" class="eco-node" style="--node-accent:#a855f7" target="_blank" rel="noopener">
+          <span class="eco-icon">📈</span>
+          <span class="eco-label">HeadyFinance</span>
+          <span class="eco-desc">Investor Relations</span>
+        </a>
+        <a href="https://admin.headysystems.com" class="eco-node" style="--node-accent:#06b6d4" target="_blank" rel="noopener">
+          <span class="eco-icon">📊</span>
+          <span class="eco-label">HeadySystems Admin Portal</span>
+          <span class="eco-desc">Admin</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Use Cases -->
+  <section id="use-cases" class="section">
+    <div class="container">
+      <div class="section-header">
+        <h2>Use Cases</h2>
+        <p>Real-world applications of HeadySystems.</p>
+      </div>
+      <div class="grid-3">
+        
+        <div class="glass-card">
+          <span style="font-size:1.618rem;display:block;margin-bottom:0.8rem">🏢</span>
+          <h4>Enterprise Deployment</h4>
+          <p>Deploy HeadySystems on your infrastructure with dedicated service mesh, custom scaling policies, and enterprise SLA guarantees.</p>
+        </div>
+        <div class="glass-card">
+          <span style="font-size:1.618rem;display:block;margin-bottom:0.8rem">🔄</span>
+          <h4>CI/CD Pipeline</h4>
+          <p>Integrate the HCFP pipeline into your existing deployment workflow. 21-stage validation ensures every release meets quality standards.</p>
+        </div>
+        <div class="glass-card">
+          <span style="font-size:1.618rem;display:block;margin-bottom:0.8rem">🛡️</span>
+          <h4>Security Operations</h4>
+          <p>Zero-trust security by default. mTLS, cryptographic receipts, secret rotation, and post-quantum cryptography protect every request.</p>
+        </div>
+        <div class="glass-card">
+          <span style="font-size:1.618rem;display:block;margin-bottom:0.8rem">📡</span>
+          <h4>Global Edge Delivery</h4>
+          <p>Serve AI-powered applications from 300+ Cloudflare edge locations with single-digit millisecond latency.</p>
+        </div>
+        <div class="glass-card">
+          <span style="font-size:1.618rem;display:block;margin-bottom:0.8rem">🔍</span>
+          <h4>Observability</h4>
+          <p>Full distributed tracing via OpenTelemetry, structured logging with correlation IDs, and real-time health dashboards.</p>
+        </div>
+        <div class="glass-card">
+          <span style="font-size:1.618rem;display:block;margin-bottom:0.8rem">🐝</span>
+          <h4>Swarm Computing</h4>
+          <p>Leverage 17 concurrent swarms for parallel task processing at scales that sequential systems cannot achieve.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section id="faq" class="section">
+    <div class="container">
+      <div class="section-header">
+        <h2>Frequently Asked Questions</h2>
+        <p>Everything you need to know about HeadySystems.</p>
+      </div>
+      <div style="max-width:700px;margin:0 auto;">
+        
+        <div class="faq-item" data-index="0">
+          <button class="faq-question">How many services does HeadySystems run?</button>
+          <div class="faq-answer"><p>HeadySystems operates 50+ microservices covering core intelligence, agent orchestration, security, monitoring, user-facing interfaces, pipeline management, AI routing, external integrations, and specialized services. Every service has a /health endpoint and AutoContext middleware.</p></div>
+        </div>
+        <div class="faq-item" data-index="1">
+          <button class="faq-question">What is the 17-swarm architecture?</button>
+          <div class="faq-answer"><p>The system runs 17 specialized swarms that execute concurrently as equals. Each swarm handles a specific domain (orchestration, inference, memory, security, etc.) and dispatches HeadyBee workers to process tasks from their perspective. Results aggregate via CSL relevance scoring.</p></div>
+        </div>
+        <div class="faq-item" data-index="2">
+          <button class="faq-question">How does self-healing work?</button>
+          <div class="faq-answer"><p>Health probes run on φ-scaled intervals. When a service fails, the system quarantines it, launches a replacement, validates the replacement, and shifts traffic — all automatically. Circuit breakers and bulkhead patterns prevent cascading failures.</p></div>
+        </div>
+        <div class="faq-item" data-index="3">
+          <button class="faq-question">What security standards does HeadySystems meet?</button>
+          <div class="faq-answer"><p>HeadySystems implements zero-trust architecture with mTLS, Ed25519 signed receipts, secret rotation, post-quantum cryptography (CRYSTALS-Kyber/Dilithium), WebAuthn support, and full audit logging. All inter-service communication is encrypted and authenticated.</p></div>
+        </div>
+        <div class="faq-item" data-index="4">
+          <button class="faq-question">Can HeadySystems run on-premises?</button>
+          <div class="faq-answer"><p>Yes. HeadySystems is packaged as containerized microservices deployable to any Kubernetes cluster. The Envoy service mesh, Consul discovery, and OpenTelemetry tracing work in any environment. Cloud features use provider-agnostic interfaces.</p></div>
+        </div>
+        <div class="faq-item" data-index="5">
+          <button class="faq-question">How does φ-scaling improve reliability?</button>
+          <div class="faq-answer"><p>Golden ratio intervals (1.618s, 2.618s, 4.236s, etc.) for retries and health checks distribute load across non-overlapping time windows, preventing thundering herd effects. Fibonacci-based resource pools create natural load distribution that adapts to varying demand patterns.</p></div>
+        </div>
+        <div class="faq-item" data-index="6">
+          <button class="faq-question">What is CSL domain routing?</button>
+          <div class="faq-answer"><p>Instead of routing by importance level or cost tier, HeadySystems routes requests based on Continuous Semantic Logic (CSL) domain similarity. Each request is embedded and compared against service domain signatures using cosine similarity. The most semantically relevant services handle the request.</p></div>
+        </div>
+        <div class="faq-item" data-index="7">
+          <button class="faq-question">What about vendor lock-in?</button>
+          <div class="faq-answer"><p>HeadySystems uses provider-agnostic interfaces for all cloud services. The multi-model AI router supports Claude, GPT, Gemini, Groq, Perplexity, and open-source models. Infrastructure runs on standard Kubernetes, and the edge layer supports multiple CDN providers.</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <span class="nav-logo">HeadySystems</span>
+          <p>Self-healing infrastructure, multi-agent orchestration, live telemetry, and zero-trust security — the backbone powering every Heady service.</p>
+        </div>
+        
+        <div class="footer-col">
+          <h4>Platform</h4>
+          <a href="https://headyme.com" target="_blank" rel="noopener">HeadyMe</a>
+<a href="https://headysystems.com" target="_blank" rel="noopener">HeadySystems</a>
+<a href="https://heady-ai.com" target="_blank" rel="noopener">HeadyAI</a>
+<a href="https://headyos.com" target="_blank" rel="noopener">HeadyOS</a>
+
+        </div>
+        <div class="footer-col">
+          <h4>Community</h4>
+          <a href="https://headyconnection.org" target="_blank" rel="noopener">HeadyConnection.org</a>
+<a href="https://headyconnection.com" target="_blank" rel="noopener">HeadyConnection.com</a>
+<a href="https://headyex.com" target="_blank" rel="noopener">HeadyEX</a>
+
+        </div>
+        <div class="footer-col">
+          <h4>Company</h4>
+          <a href="https://headyfinance.com" target="_blank" rel="noopener">HeadyFinance</a>
+<a href="https://admin.headysystems.com" target="_blank" rel="noopener">Admin Portal</a>
+<a href="https://github.com/HeadySystems" target="_blank" rel="noopener">GitHub</a>
+
+        </div>
+        <div class="footer-col">
+          <h4>Legal</h4>
+          <a href="https://headysystems.com/legal/terms" target="_blank" rel="noopener">Terms of Service</a>
+<a href="https://headysystems.com/legal/privacy" target="_blank" rel="noopener">Privacy Policy</a>
+<a href="https://headysystems.com/pricing" target="_blank" rel="noopener">Pricing</a>
+
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>&copy; 2026 HeadySystems Inc. All Rights Reserved. 51+ Provisional Patents.</span>
+        <a href="https://www.perplexity.ai/computer" target="_blank" rel="noopener noreferrer" style="color:var(--text-muted);">
+          Created with Perplexity Computer
+        </a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="../packages/sacred-geometry/sacred-geometry.js"></script>
+  <script src="../packages/cross-nav/cross-nav.js"></script>
+  <script src="../packages/auth-widget/auth-widget.js"></script>
+  <script src="../packages/auto-context/auto-context-bridge.js"></script>
+  <script src="../packages/bee-injectors/bee-injectors.js"></script>
+  <script>
+    // Initialize Sacred Geometry Canvas with site-specific settings
+    new SacredGeometryCanvas('sacred-canvas', {
+      accentColor: '#3b82f6',
+      secondaryColor: '#60a5fa',
+      goldColor: '#818cf8',
+      opacity: 0.25,
+      nodeCount: 55,
+      connectionDistance: 120,
+      geometry: 'metatronsCube',
+    });
+
+    // Initialize Cross-Site Navigation
+    new HeadyCrossNav({ siteId: 'headysystems' });
+
+    // Initialize Auth Widget
+    new HeadyAuthWidget({
+      siteId: 'headysystems',
+      accentColor: '#3b82f6',
+    });
+
+    // Initialize AutoContext Bridge
+    new AutoContextBridge({ siteId: 'headysystems' });
+
+    // Inject Tech Stack via Bee Injectors
+    const techContainer = document.getElementById('tech-container');
+    if (techContainer && window.HeadyBeeInjectors) {
+      HeadyBeeInjectors.injectTechStack(techContainer);
+    }
+
+    // FAQ Accordion
+    document.querySelectorAll('.faq-question').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const item = btn.parentElement;
+        const wasActive = item.classList.contains('active');
+        document.querySelectorAll('.faq-item').forEach(fi => fi.classList.remove('active'));
+        if (!wasActive) item.classList.add('active');
+      });
+    });
+
+    // Animated stat counters
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.querySelectorAll('.stat-num').forEach(el => {
+            const final = el.textContent;
+            const numeric = parseInt(final);
+            if (!isNaN(numeric) && numeric > 0) {
+              let current = 0;
+              const step = Math.max(1, Math.floor(numeric / 40));
+              const timer = setInterval(() => {
+                current += step;
+                if (current >= numeric) {
+                  el.textContent = final;
+                  clearInterval(timer);
+                } else {
+                  el.textContent = current + (final.includes('+') ? '+' : '');
                 }
+              }, 30);
             }
-
-            draw(centerX, centerY) {
-                const x = centerX + Math.cos(this.angle) * this.radius;
-                const y = centerY + Math.sin(this.angle) * this.radius;
-
-                ctx.fillStyle = this.color;
-                ctx.globalAlpha = this.opacity;
-                ctx.beginPath();
-                ctx.arc(x, y, this.size, 0, Math.PI * 2);
-                ctx.fill();
-                ctx.globalAlpha = 1;
-            }
+          });
+          observer.unobserve(entry.target);
         }
-
-        // Initialize particles
-        for (let i = 0; i < 100; i++) {
-            particles.push(new Particle());
-        }
-
-        function drawSpiral(centerX, centerY) {
-            let angle = 0;
-            const maxAngle = Math.PI * 4;
-
-            ctx.strokeStyle = 'rgba(240, 192, 64, 0.05)';
-            ctx.lineWidth = 2;
-            ctx.beginPath();
-
-            for (let i = 0; i <= maxAngle; i += 0.05) {
-                const radius = i * 20;
-                const x = centerX + Math.cos(i) * radius;
-                const y = centerY + Math.sin(i) * radius;
-
-                if (i === 0) ctx.moveTo(x, y);
-                else ctx.lineTo(x, y);
-            }
-            ctx.stroke();
-        }
-
-        function animate() {
-            // Clear and draw background gradient
-            const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
-            gradient.addColorStop(0, '#0a0a0f');
-            gradient.addColorStop(0.5, '#1a0f2e');
-            gradient.addColorStop(1, '#0a0a0f');
-            ctx.fillStyle = gradient;
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-            const centerX = canvas.width / 2;
-            const centerY = canvas.height / 2;
-
-            // Draw spiral
-            drawSpiral(centerX, centerY);
-
-            // Update and draw particles
-            particles.forEach(particle => {
-                particle.update();
-                particle.draw(centerX, centerY);
-            });
-
-            requestAnimationFrame(animate);
-        }
-
-        animate();
-
-        // Mobile Menu Toggle
-        const menuToggle = document.getElementById('menu-toggle');
-        const navMenu = document.getElementById('nav-menu');
-
-        menuToggle.addEventListener('click', () => {
-            navMenu.classList.toggle('active');
-        });
-
-        // Close menu when link is clicked
-        document.querySelectorAll('.nav-menu a').forEach(link => {
-            link.addEventListener('click', () => {
-                navMenu.classList.remove('active');
-            });
-        });
-
-        // Smooth scroll to sections
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                const href = this.getAttribute('href');
-                if (href === '#') return;
-
-                e.preventDefault();
-                const target = document.querySelector(href);
-                if (target) {
-                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                }
-            });
-        });
-
-        // Intersection Observer for animations
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -100px 0px'
-        };
-
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.style.opacity = '1';
-                    observer.unobserve(entry.target);
-                }
-            });
-        }, observerOptions);
-
-        document.querySelectorAll('.overview-card, .law-card, .service-card, .pricing-card, .doc-card, .ecosystem-card').forEach(el => {
-            observer.observe(el);
-        });
-    </script>
+      });
+    }, { threshold: 0.3 });
+    document.querySelectorAll('.stats-row').forEach(row => observer.observe(row));
+  </script>
 </body>
 </html>

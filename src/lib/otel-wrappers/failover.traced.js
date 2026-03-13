@@ -53,7 +53,7 @@ function sanitizeRequest(req) {
 }
 
 // ─── Load original ────────────────────────────────────────────────────────────
-const OriginalMultiCloudFailover = require('../lib/failover');
+const OriginalMultiCloudFailover = require('../failover');
 
 // ─── Traced subclass ──────────────────────────────────────────────────────────
 class TracedMultiCloudFailover extends OriginalMultiCloudFailover {

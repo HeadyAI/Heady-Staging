@@ -30,7 +30,7 @@ const CLAUDE_ORGS = [
     },
 ];
 
-const { budgetService } = require("../policy-service");
+const { budgetService } = require("../shared/policy-service");
 
 // Usage tracking
 const USAGE_PATH = path.join(__dirname, "../../data/headyjules-usage.json");

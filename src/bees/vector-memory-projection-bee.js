@@ -27,7 +27,7 @@ function getVectorMemory() {
   if (global.vectorMemory) return global.vectorMemory;
   try {
     // Attempt project-relative resolution
-    return require('../core/vector-memory');
+    return require('../vector-memory');
   } catch {
     logger.warn('VectorMemory not available — returning null stub');
     return null;

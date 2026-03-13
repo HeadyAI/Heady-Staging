@@ -47,7 +47,7 @@ function getFactoryTemplates() {
 
 function getVectorTemplates() {
     try {
-        const vte = require("../vector-template-engine");
+        const vte = require("../memory/vector-template-engine");
         return vte.listTemplates().map((template) => template.name || template.id).filter(Boolean);
     } catch {
         return [];

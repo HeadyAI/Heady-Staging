@@ -30,7 +30,7 @@ const MODULE_NAME = 'telemetry';
 const SERVICE_NAME = process.env.HEADY_SERVICE_NAME || 'heady-manager';
 
 // ─── Load original telemetry exports ─────────────────────────────────────────
-const original = require('../lib/telemetry');
+const original = require('../telemetry');
 
 // ─── Enhanced tracer + meter (re-use from original where possible) ─────────────
 const tracer = original.tracer || trace.getTracer(SERVICE_NAME, '3.1.0');

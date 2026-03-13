@@ -20,7 +20,7 @@ const tracer = trace.getTracer('heady.' + MODULE_NAME, '3.1.0');
 const meter  = metrics.getMeter('heady.' + MODULE_NAME, '3.1.0');
 
 // ─── Load originals ───────────────────────────────────────────────────────────
-const { WorkerPool: OriginalWorkerPool, batchEmbed: originalBatchEmbed } = require('../lib/worker-pool');
+const { WorkerPool: OriginalWorkerPool, batchEmbed: originalBatchEmbed } = require('../worker-pool');
 
 // ─── Metrics ──────────────────────────────────────────────────────────────────
 const poolTasksDispatched = meter.createCounter('heady.pool_tasks_dispatched', {

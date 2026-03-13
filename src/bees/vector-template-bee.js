@@ -14,7 +14,7 @@ function getWork(ctx = {}) {
     return [
         async () => {
             try {
-                const vte = require('../vector-template-engine');
+                const vte = require('../memory/vector-template-engine');
                 const stats = vte.getStats();
                 return {
                     bee: domain,
@@ -30,7 +30,7 @@ function getWork(ctx = {}) {
         },
         async () => {
             try {
-                const vte = require('../vector-template-engine');
+                const vte = require('../memory/vector-template-engine');
                 return {
                     bee: domain,
                     action: 'list-templates',
@@ -42,7 +42,7 @@ function getWork(ctx = {}) {
         },
         async () => {
             try {
-                const vte = require('../vector-template-engine');
+                const vte = require('../memory/vector-template-engine');
                 // Auto-detect and report what templates are available for swarming
                 const templates = vte.listTemplates();
                 const ready = templates.filter(t => t.priority >= 0.8);

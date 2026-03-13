@@ -72,12 +72,18 @@ COPY --from=build --chown=heady:heady /app/src ./src
 COPY --from=build --chown=heady:heady /app/shared ./shared
 COPY --from=build --chown=heady:heady /app/configs ./configs
 COPY --from=build --chown=heady:heady /app/scripts ./scripts
+COPY --from=build --chown=heady:heady /app/services ./services
+COPY --from=build --chown=heady:heady /app/public ./public
+COPY --from=build --chown=heady:heady /app/.heady ./.heady
 COPY --from=build --chown=heady:heady /app/docs ./docs
 COPY --from=build --chown=heady:heady /app/package.json ./
 COPY --from=build --chown=heady:heady /app/heady-manager.js ./
+COPY --from=build --chown=heady:heady /app/seventeen-swarm-orchestrator.js ./
+COPY --from=build --chown=heady:heady /app/heady-registry.json ./
 
-# Copy heady-hive-sdk if it exists
-COPY --from=build --chown=heady:heady /app/heady-hive-sdk ./heady-hive-sdk 2>/dev/null || true
+# Copy heady-hive-sdk if it exists (ignore if missing)
+RUN mkdir -p ./heady-hive-sdk
+COPY --from=build --chown=heady:heady /app/heady-hive-sdk/ ./heady-hive-sdk/
 
 # Switch to non-root
 USER heady

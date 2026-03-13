@@ -55,7 +55,7 @@ function sanitizeArgs(args) {
 }
 
 // ─── Load original ────────────────────────────────────────────────────────────
-const OriginalEvalPipeline = require('../lib/eval-pipeline');
+const OriginalEvalPipeline = require('../eval-pipeline');
 
 // ─── Traced subclass ──────────────────────────────────────────────────────────
 class TracedEvalPipeline extends OriginalEvalPipeline {

@@ -103,7 +103,7 @@ function wrapMethod(instance, methodName, fn) {
 }
 
 // ─── Load original module ─────────────────────────────────────────────────────
-const OriginalAgentProtocolAdapter = require('../lib/agent-protocol');
+const OriginalAgentProtocolAdapter = require('../agent-protocol');
 
 // ─── Traced subclass ──────────────────────────────────────────────────────────
 class TracedAgentProtocolAdapter extends OriginalAgentProtocolAdapter {

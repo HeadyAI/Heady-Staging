@@ -13,9 +13,9 @@
 
 const MonteCarloEngine = require("../monte-carlo");
 const DriftDetector = require("../drift-detector");
-const MemoryReceipts = require("../memory-receipts");
-const { policyEngine: policy } = require("../policy-service");
-const IncidentManager = require("../incident-manager");
+const MemoryReceipts = require("../memory/memory-receipts");
+const { policyEngine: policy } = require("../shared/policy-service");
+const IncidentManager = require("../observability/incident-manager");
 const { CognitiveOperationsController } = require("../orchestration/cognitive-operations-controller");
 const { prettyJsonMiddleware } = (() => { try { return require("../lib/pretty"); } catch { return { prettyJsonMiddleware: () => (_r, _s, n) => n() }; } })();
 

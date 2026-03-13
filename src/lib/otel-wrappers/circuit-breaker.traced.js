@@ -56,7 +56,7 @@ function sanitizeArgs(args) {
 }
 
 // ─── Load originals ───────────────────────────────────────────────────────────
-const { CircuitBreaker: OriginalCircuitBreaker, TokenBucketRateLimiter: OriginalRateLimiter, STATES } = require('../lib/circuit-breaker');
+const { CircuitBreaker: OriginalCircuitBreaker, TokenBucketRateLimiter: OriginalRateLimiter, STATES } = require('../circuit-breaker');
 
 // ─── Traced CircuitBreaker ────────────────────────────────────────────────────
 class TracedCircuitBreaker extends OriginalCircuitBreaker {

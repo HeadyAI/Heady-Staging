@@ -1,380 +1,1245 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="Heady™ Documentation Portal — Laws, Directives, Services, Skills, Workflows, and Architecture for the φ-scaled sovereign AI operating system.">
-<meta name="author" content="HeadySystems Inc.">
-<title>Heady™ Docs — Unified Documentation Portal</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-<style>
-*{margin:0;padding:0;box-sizing:border-box}
-:root{
-  --bg:#0a0a0f;--bg2:#12121a;--bg3:#1a1a24;--card:rgba(255,255,255,0.03);
-  --glass:rgba(255,255,255,0.05);--border:rgba(255,255,255,0.08);
-  --accent:#7c5eff;--gold:#f0c040;--cyan:#40e0d0;--green:#10b981;
-  --t1:#e8e8f0;--t2:#a0a0b0;--t3:#70708a;
-  --sp-xs:5px;--sp-sm:8px;--sp-md:13px;--sp-lg:21px;--sp-xl:34px;--sp-2xl:55px;--sp-3xl:89px;
-}
-html{scroll-behavior:smooth}
-body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--t1);line-height:1.618;overflow-x:hidden}
-a{color:var(--cyan);text-decoration:none;transition:color .3s}
-a:hover{color:var(--gold)}
-code{font-family:'JetBrains Mono',monospace;background:rgba(124,94,255,.12);padding:2px 6px;border-radius:4px;font-size:.85em}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Heady Documentation</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-.docs-layout{display:flex;min-height:100vh}
-.sidebar{width:280px;position:fixed;top:0;left:0;bottom:0;background:var(--bg2);border-right:1px solid var(--border);overflow-y:auto;z-index:40;transition:transform .3s}
-.sidebar-header{padding:var(--sp-lg);border-bottom:1px solid var(--border)}
-.sidebar-logo{font-size:1.3rem;font-weight:800;background:linear-gradient(135deg,var(--gold),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-.sidebar-sub{font-size:.75rem;color:var(--t3);margin-top:4px;letter-spacing:1px;text-transform:uppercase}
-.sidebar-search{padding:var(--sp-md);border-bottom:1px solid var(--border)}
-.sidebar-search input{width:100%;background:var(--bg);border:1px solid var(--border);color:var(--t1);padding:8px 12px;border-radius:6px;font-size:.85rem;outline:none}
-.sidebar-search input:focus{border-color:var(--accent)}
-.sidebar-nav{padding:var(--sp-sm) 0}
-.nav-group{margin-bottom:var(--sp-xs)}
-.nav-group-title{display:flex;align-items:center;gap:8px;padding:8px var(--sp-lg);font-size:.7rem;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:1.5px;cursor:pointer;user-select:none}
-.nav-group-title:hover{color:var(--gold)}
-.nav-group-items{display:none;padding:0 0 var(--sp-sm) 0}
-.nav-group.open .nav-group-items{display:block}
-.nav-group-title::before{content:'▸';transition:transform .2s;font-size:.6rem}
-.nav-group.open .nav-group-title::before{transform:rotate(90deg)}
-.nav-item{display:block;padding:6px var(--sp-lg) 6px var(--sp-2xl);font-size:.85rem;color:var(--t2);transition:all .2s;border-left:2px solid transparent}
-.nav-item:hover,.nav-item.active{color:var(--cyan);background:rgba(64,224,208,.05);border-left-color:var(--cyan)}
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #F9FAFB;
+            color: #1F2937;
+            line-height: 1.6;
+        }
 
-.main-content{margin-left:280px;flex:1;min-width:0}
-.top-bar{position:sticky;top:0;z-index:30;background:rgba(10,10,15,.92);backdrop-filter:blur(13px);border-bottom:1px solid var(--border);padding:var(--sp-md) var(--sp-xl);display:flex;align-items:center;justify-content:space-between}
-.top-bar-links{display:flex;gap:var(--sp-lg);align-items:center}
-.top-bar-links a{font-size:.85rem;color:var(--t2);font-weight:500}
-.top-bar-links a:hover{color:var(--gold)}
-.burger{display:none;background:none;border:none;color:var(--t1);font-size:1.5rem;cursor:pointer}
-.content{max-width:960px;margin:0 auto;padding:var(--sp-xl) var(--sp-xl) var(--sp-3xl)}
+        .container {
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
 
-.doc-section{margin-bottom:var(--sp-3xl);scroll-margin-top:80px}
-.doc-section h2{font-size:2rem;font-weight:800;margin-bottom:var(--sp-lg);background:linear-gradient(135deg,var(--gold),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-.doc-section h3{font-size:1.25rem;font-weight:700;color:var(--gold);margin:var(--sp-xl) 0 var(--sp-md)}
-.doc-section p,.doc-section li{color:var(--t2);font-size:.95rem;margin-bottom:var(--sp-sm)}
-.doc-section ul,.doc-section ol{padding-left:var(--sp-lg);margin-bottom:var(--sp-lg)}
+        /* Sidebar */
+        .sidebar {
+            width: 280px;
+            background: #111827;
+            color: white;
+            overflow-y: auto;
+            border-right: 1px solid #374151;
+            flex-shrink: 0;
+        }
 
-.card-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:var(--sp-lg)}
-.card{background:var(--glass);backdrop-filter:blur(13px);border:1px solid var(--border);border-radius:var(--sp-md);padding:var(--sp-lg);transition:all .3s}
-.card:hover{border-color:var(--accent);transform:translateY(-4px);box-shadow:0 13px 34px rgba(124,94,255,.15)}
-.card h4{font-size:1rem;font-weight:700;color:var(--t1);margin-bottom:var(--sp-sm)}
-.card p{font-size:.85rem;color:var(--t2);margin:0}
-.card .tag{display:inline-block;font-size:.7rem;padding:2px 8px;border-radius:4px;font-weight:600;margin-top:var(--sp-sm)}
-.tag-law{background:rgba(240,192,64,.15);color:var(--gold)}
-.tag-directive{background:rgba(124,94,255,.15);color:var(--accent)}
-.tag-service{background:rgba(64,224,208,.15);color:var(--cyan)}
-.tag-skill{background:rgba(16,185,129,.15);color:var(--green)}
-.tag-workflow{background:rgba(240,192,64,.15);color:var(--gold)}
+        .sidebar-header {
+            padding: 24px 16px;
+            border-bottom: 1px solid #374151;
+            font-size: 20px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
 
-.law-card{position:relative;overflow:hidden}
-.law-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--gold),var(--cyan))}
-.law-num{font-size:2.5rem;font-weight:900;color:rgba(124,94,255,.15);margin-bottom:var(--sp-sm)}
+        .sidebar-search {
+            padding: 12px 16px;
+            border-bottom: 1px solid #374151;
+        }
 
-.docs-hero{padding:var(--sp-3xl) 0 var(--sp-2xl);text-align:center;position:relative}
-.docs-hero h1{font-size:clamp(2rem,5vw,3.5rem);font-weight:900;background:linear-gradient(135deg,var(--gold),var(--cyan),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:var(--sp-md)}
-.docs-hero p{font-size:1.1rem;color:var(--t2);max-width:600px;margin:0 auto var(--sp-lg)}
-.stat-bar{display:flex;gap:var(--sp-xl);justify-content:center;flex-wrap:wrap;padding:var(--sp-lg) 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border);margin-top:var(--sp-lg)}
-.stat-item{text-align:center}
-.stat-val{font-size:1.8rem;font-weight:800;color:var(--gold)}
-.stat-lbl{font-size:.75rem;color:var(--t3);text-transform:uppercase;letter-spacing:1px}
+        .sidebar-search input {
+            width: 100%;
+            padding: 8px 12px;
+            background: #1F2937;
+            border: 1px solid #374151;
+            border-radius: 6px;
+            color: white;
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+        }
 
-.eco-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:var(--sp-md)}
-.eco-card{background:var(--glass);border:1px solid var(--border);border-radius:var(--sp-md);padding:var(--sp-lg);text-align:center;transition:all .3s}
-.eco-card:hover{border-color:var(--gold);transform:translateY(-3px)}
-.eco-card .icon{font-size:2rem;margin-bottom:var(--sp-sm)}
-.eco-card h4{font-size:.9rem;margin-bottom:4px}
-.eco-card p{font-size:.75rem;color:var(--t3);margin:0}
+        .sidebar-search input::placeholder {
+            color: #9CA3AF;
+        }
 
-.docs-footer{padding:var(--sp-xl);border-top:1px solid var(--border);text-align:center}
-.docs-footer p{font-size:.8rem;color:var(--t3)}
+        .sidebar-section {
+            padding: 16px 0;
+            border-bottom: 1px solid #374151;
+        }
 
-@media(max-width:768px){
-  .sidebar{transform:translateX(-100%)}
-  .sidebar.open{transform:translateX(0)}
-  .main-content{margin-left:0}
-  .burger{display:block}
-  .card-grid{grid-template-columns:1fr}
-  .stat-bar{gap:var(--sp-lg)}
-  .content{padding:var(--sp-lg)}
-}
-@media(prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}}
-</style>
+        .sidebar-section:last-child {
+            border-bottom: none;
+        }
+
+        .sidebar-section-title {
+            padding: 8px 16px;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: #9CA3AF;
+            letter-spacing: 0.5px;
+        }
+
+        .sidebar-link {
+            padding: 10px 16px;
+            color: #D1D5DB;
+            text-decoration: none;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+            border-left: 3px solid transparent;
+            display: block;
+        }
+
+        .sidebar-link:hover {
+            background: #1F2937;
+            color: white;
+            border-left-color: #3B82F6;
+        }
+
+        .sidebar-link.active {
+            background: #1F2937;
+            color: white;
+            border-left-color: #3B82F6;
+            font-weight: 500;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .top-bar {
+            background: white;
+            border-bottom: 1px solid #E5E7EB;
+            padding: 16px 32px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0;
+        }
+
+        .top-bar-left h1 {
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .edit-github {
+            color: #3B82F6;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .edit-github:hover {
+            text-decoration: underline;
+        }
+
+        .breadcrumb {
+            padding: 16px 32px;
+            font-size: 13px;
+            color: #6B7280;
+            background: white;
+            border-bottom: 1px solid #E5E7EB;
+            flex-shrink: 0;
+        }
+
+        .breadcrumb a {
+            color: #3B82F6;
+            text-decoration: none;
+        }
+
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+
+        .content-scroll {
+            flex: 1;
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+
+        .content {
+            padding: 32px;
+            max-width: 900px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .content h1 {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: #111827;
+        }
+
+        .content-subtitle {
+            font-size: 16px;
+            color: #6B7280;
+            margin-bottom: 32px;
+            padding-bottom: 32px;
+            border-bottom: 1px solid #E5E7EB;
+        }
+
+        .content h2 {
+            font-size: 24px;
+            font-weight: 700;
+            margin: 32px 0 16px 0;
+            color: #111827;
+        }
+
+        .content h3 {
+            font-size: 18px;
+            font-weight: 600;
+            margin: 24px 0 12px 0;
+            color: #1F2937;
+        }
+
+        .content p {
+            margin-bottom: 16px;
+            color: #374151;
+        }
+
+        .content ul, .content ol {
+            margin: 16px 0 16px 24px;
+            color: #374151;
+        }
+
+        .content li {
+            margin-bottom: 8px;
+        }
+
+        .content code {
+            background: #F3F4F6;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+            color: #DC2626;
+        }
+
+        .code-block {
+            background: #1F2937;
+            color: #E5E7EB;
+            padding: 16px;
+            border-radius: 8px;
+            margin: 16px 0;
+            overflow-x: auto;
+            position: relative;
+        }
+
+        .code-block-header {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            color: #9CA3AF;
+            margin-bottom: 8px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .code-block pre {
+            margin: 0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .code-block code {
+            background: none;
+            color: inherit;
+            padding: 0;
+        }
+
+        .copy-btn {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: #374151;
+            color: #D1D5DB;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .copy-btn:hover {
+            background: #4B5563;
+            color: white;
+        }
+
+        .info-box {
+            background: #DBEAFE;
+            border-left: 4px solid #3B82F6;
+            padding: 16px;
+            border-radius: 4px;
+            margin: 16px 0;
+            color: #1E40AF;
+        }
+
+        .warning-box {
+            background: #FEF3C7;
+            border-left: 4px solid #F59E0B;
+            padding: 16px;
+            border-radius: 4px;
+            margin: 16px 0;
+            color: #92400E;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 16px 0;
+            background: white;
+            border: 1px solid #E5E7EB;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        th {
+            background: #F3F4F6;
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+            color: #1F2937;
+            border-bottom: 2px solid #E5E7EB;
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #E5E7EB;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover {
+            background: #F9FAFB;
+        }
+
+        .step {
+            background: white;
+            border: 1px solid #E5E7EB;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 16px 0;
+        }
+
+        .step-number {
+            display: inline-block;
+            background: #3B82F6;
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 32px;
+            font-weight: 700;
+            margin-right: 12px;
+        }
+
+        .step h3 {
+            display: inline-block;
+            margin: 0;
+        }
+
+        .coming-soon {
+            text-align: center;
+            padding: 80px 32px;
+            color: #9CA3AF;
+        }
+
+        .coming-soon-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+        }
+
+        .coming-soon h2 {
+            color: #6B7280;
+            margin: 16px 0;
+        }
+
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 48px;
+            padding-top: 32px;
+            border-top: 1px solid #E5E7EB;
+        }
+
+        .nav-btn {
+            padding: 10px 20px;
+            background: #3B82F6;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+            text-decoration: none;
+            display: inline-block;
+            transition: background 0.2s;
+        }
+
+        .nav-btn:hover {
+            background: #2563EB;
+        }
+
+        .nav-btn:disabled {
+            background: #D1D5DB;
+            cursor: not-allowed;
+        }
+
+        .mobile-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: #1F2937;
+            cursor: pointer;
+            font-size: 24px;
+            padding: 8px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                height: auto;
+                max-height: 0;
+                overflow: hidden;
+                transition: max-height 0.3s;
+                position: absolute;
+                top: 60px;
+                left: 0;
+                right: 0;
+                z-index: 100;
+                border-right: none;
+                border-bottom: 1px solid #374151;
+            }
+
+            .sidebar.open {
+                max-height: 100vh;
+            }
+
+            .mobile-toggle {
+                display: block;
+            }
+
+            .top-bar {
+                justify-content: space-between;
+            }
+
+            .main-content {
+                flex: 1;
+            }
+
+            .content {
+                padding: 16px;
+            }
+
+            .content h1 {
+                font-size: 24px;
+            }
+
+            .content h2 {
+                font-size: 20px;
+            }
+        }
+    </style>
 </head>
 <body>
-<div class="docs-layout">
-<aside class="sidebar" id="sidebar">
-<div class="sidebar-header">
-  <div class="sidebar-logo">Heady™ Docs</div>
-  <div class="sidebar-sub">v3.2.3 • Documentation Portal</div>
-</div>
-<div class="sidebar-search"><input type="text" id="search" placeholder="Search docs..." aria-label="Search documentation"></div>
-<nav class="sidebar-nav" id="sidebarNav">
-  <div class="nav-group open"><div class="nav-group-title">Getting Started</div><div class="nav-group-items">
-    <a class="nav-item" href="#overview">Overview</a>
-    <a class="nav-item" href="#architecture">Architecture</a>
-    <a class="nav-item" href="#ecosystem">Ecosystem Sites</a>
-  </div></div>
-  <div class="nav-group open"><div class="nav-group-title">Governance</div><div class="nav-group-items">
-    <a class="nav-item" href="#laws">8 Unbreakable Laws</a>
-    <a class="nav-item" href="#directives">10 Master Directives</a>
-  </div></div>
-  <div class="nav-group"><div class="nav-group-title">Platform</div><div class="nav-group-items">
-    <a class="nav-item" href="#services">Services (56)</a>
-    <a class="nav-item" href="#skills">Skills (79)</a>
-    <a class="nav-item" href="#workflows">Workflows (24)</a>
-  </div></div>
-  <div class="nav-group"><div class="nav-group-title">Technical</div><div class="nav-group-items">
-    <a class="nav-item" href="#csl">CSL Engine</a>
-    <a class="nav-item" href="#phi">φ-Math Foundation</a>
-    <a class="nav-item" href="#security">Security Model</a>
-    <a class="nav-item" href="#deployment">Deployment</a>
-  </div></div>
-</nav>
-</aside>
+    <div class="container">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">Heady Docs</div>
 
-<div class="main-content">
-<div class="top-bar">
-  <button class="burger" id="burger" aria-label="Toggle sidebar">☰</button>
-  <div class="top-bar-links">
-    <a href="https://headyme.com">HeadyMe</a>
-    <a href="https://headysystems.com">Systems</a>
-    <a href="https://headyos.com">HeadyOS</a>
-    <a href="https://heady-ai.com">Heady AI</a>
-    <a href="https://headyconnection.org">Connection</a>
-    <a href="https://heady-onboarding-609590223909.us-east1.run.app">Sign In</a>
-  </div>
-</div>
-<div class="content">
+            <div class="sidebar-search">
+                <input type="text" id="searchInput" placeholder="Search docs...">
+            </div>
 
-<div class="docs-hero" id="overview">
-  <h1>Heady™ Documentation</h1>
-  <p>The complete reference for the φ-scaled sovereign AI operating system. Laws, Directives, Services, Skills, Workflows — all in one place.</p>
-  <div class="stat-bar">
-    <div class="stat-item"><div class="stat-val">8</div><div class="stat-lbl">Unbreakable Laws</div></div>
-    <div class="stat-item"><div class="stat-val">10</div><div class="stat-lbl">Master Directives</div></div>
-    <div class="stat-item"><div class="stat-val">56</div><div class="stat-lbl">Microservices</div></div>
-    <div class="stat-item"><div class="stat-val">79</div><div class="stat-lbl">Agent Skills</div></div>
-    <div class="stat-item"><div class="stat-val">24</div><div class="stat-lbl">Workflows</div></div>
-    <div class="stat-item"><div class="stat-val">60+</div><div class="stat-lbl">Patents</div></div>
-  </div>
-</div>
+            <!-- Getting Started -->
+            <div class="sidebar-section">
+                <div class="sidebar-section-title">Getting Started</div>
+                <a class="sidebar-link active" data-page="quick-start">Quick Start Guide</a>
+                <a class="sidebar-link" data-page="authentication">Authentication</a>
+                <a class="sidebar-link" data-page="first-api-call">Your First API Call</a>
+            </div>
 
-<section class="doc-section" id="architecture">
-<h2>Architecture</h2>
-<p>Heady™ is a Continuous Latent Architecture (CLA) — a sovereign AI operating system running in vector space with Sacred Geometry (φ = 1.618) as its mathematical foundation. CSL gates replace boolean logic; all decisions are confidence-weighted vector operations.</p>
-<h3>Core Layers</h3>
-<div class="card-grid">
-  <div class="card"><h4>🧠 CSL Engine</h4><p>Continuous Semantic Logic — vector operations as logical gates. AND (cosine), OR (superposition), NOT (orthogonal projection). Decisions confidence-weighted 0→1.</p></div>
-  <div class="card"><h4>🐝 HeadyBee Swarm</h4><p>17-Swarm worker matrix, 10,000 concurrent bees. Fibonacci-stepped pool sizing, CSL-scored task routing, cooperative lifecycle management.</p></div>
-  <div class="card"><h4>💾 Vector Memory</h4><p>pgvector 384-dimensional with 3D spatial projection. Graph RAG for multi-hop reasoning. φ-scaled consolidation.</p></div>
-  <div class="card"><h4>🔀 HCFullPipeline</h4><p>21-stage cognitive state machine: CHANNEL_ENTRY → RECON → INTAKE → CLASSIFY → TRIAGE → DECOMPOSE → TRIAL → ORCHESTRATE → MONTE_CARLO → ARENA → JUDGE → APPROVE → EXECUTE → VERIFY → SELF_AWARENESS → CRITIQUE → MISTAKE_ANALYSIS → OPT_OPS → SEARCH → EVOLUTION → RECEIPT.</p></div>
-  <div class="card"><h4>🌐 Multi-Model Council</h4><p>CSL-scored routing across Claude, GPT, Gemini, Groq, Perplexity, Workers AI. Cost-aware, latency-aware with circuit breaker failover.</p></div>
-  <div class="card"><h4>☁️ Cloud Infrastructure</h4><p>Google Cloud Run (us-east1) + Cloudflare Workers (edge) + Colab Pro+ (GPU burst). Zero localhost.</p></div>
-</div>
-</section>
+            <!-- API Reference -->
+            <div class="sidebar-section">
+                <div class="sidebar-section-title">API Reference</div>
+                <a class="sidebar-link" data-page="inference-endpoint">Inference Endpoint</a>
+                <a class="sidebar-link" data-page="chat-endpoint">Chat Endpoint</a>
+                <a class="sidebar-link" data-page="models-endpoint">Models Endpoint</a>
+                <a class="sidebar-link" data-page="webhooks">Webhooks</a>
+            </div>
 
-<section class="doc-section" id="ecosystem">
-<h2>Ecosystem Sites</h2>
-<p>Nine interconnected platforms composing the Heady™ digital presence:</p>
-<div class="eco-grid">
-  <a href="https://headyme.com" class="eco-card"><div class="icon">👤</div><h4>HeadyMe</h4><p>Personal AI Cloud</p></a>
-  <a href="https://headysystems.com" class="eco-card"><div class="icon">🏢</div><h4>HeadySystems</h4><p>Enterprise Platform Hub</p></a>
-  <a href="https://headyos.com" class="eco-card"><div class="icon">💻</div><h4>HeadyOS</h4><p>AI Operating System</p></a>
-  <a href="https://heady-ai.com" class="eco-card"><div class="icon">🤖</div><h4>Heady AI</h4><p>AI Research &amp; Tools</p></a>
-  <a href="https://headyconnection.org" class="eco-card"><div class="icon">🤝</div><h4>HeadyConnection.org</h4><p>Nonprofit &amp; Community</p></a>
-  <a href="https://headyconnection.com" class="eco-card"><div class="icon">🔗</div><h4>HeadyConnection.com</h4><p>Integration Hub</p></a>
-  <a href="https://headyex.com" class="eco-card"><div class="icon">📊</div><h4>HeadyEX</h4><p>Exchange &amp; Trading</p></a>
-  <a href="https://headyfinance.com" class="eco-card"><div class="icon">💰</div><h4>HeadyFinance</h4><p>Financial Intelligence</p></a>
-  <a href="https://admin.headysystems.com" class="eco-card"><div class="icon">⚙️</div><h4>Admin Portal</h4><p>Platform Administration</p></a>
-</div>
-</section>
+            <!-- MCP Protocol -->
+            <div class="sidebar-section">
+                <div class="sidebar-section-title">MCP Protocol</div>
+                <a class="sidebar-link" data-page="mcp-overview">Overview</a>
+                <a class="sidebar-link" data-page="mcp-message-format">Message Format</a>
+                <a class="sidebar-link" data-page="mcp-node-communication">Node Communication</a>
+                <a class="sidebar-link" data-page="mcp-integration">Integration Guide</a>
+            </div>
 
-<section class="doc-section" id="laws">
-<h2>The 8 Unbreakable Laws</h2>
-<p>Constitutional bedrock of Heady™. No agent, prompt, or instruction may weaken these. <strong>The law wins. Always.</strong></p>
-<div class="card-grid">
-  <div class="card law-card"><div class="law-num">01</div><h4>Thoroughness Over Speed</h4><p>Correctness, completeness, depth, production-grade quality. Every function has error handling, every API validates input, every async op has timeout + retry + circuit breaker.</p><span class="tag tag-law">IMMUTABLE</span></div>
-  <div class="card law-card"><div class="law-num">02</div><h4>Solutions Only — No Workarounds</h4><p>Every implementation addresses ROOT CAUSE. No band-aids, no setTimeout for race conditions, no empty catch blocks. If root cause needs 50 file refactor — that's the scope.</p><span class="tag tag-law">IMMUTABLE</span></div>
-  <div class="card law-card"><div class="law-num">03</div><h4>Context Maximization</h4><p>Never generic advice. 5-stage enrichment: Memory Recall → Ecosystem Assessment → External Intelligence → Context Fusion → Intelligence Maximization.</p><span class="tag tag-law">IMMUTABLE</span></div>
-  <div class="card law-card"><div class="law-num">04</div><h4>Implementation Completeness</h4><p>Deployable artifacts only. Code compiles, runs, handles errors, deploys in one CI/CD cycle. No TODOs, no empty functions, no placeholders.</p><span class="tag tag-law">IMMUTABLE</span></div>
-  <div class="card law-card"><div class="law-num">05</div><h4>Cross-Environment Purity</h4><p>Zero localhost contamination. Works identically across local, edge, cloud, Colab. All URLs from env vars, CORS per-domain.</p><span class="tag tag-law">IMMUTABLE</span></div>
-  <div class="card law-card"><div class="law-num">06</div><h4>10,000-Bee Scale Readiness</h4><p>HeadyBee factory supports 10K concurrent bees across 17 swarms. Fibonacci-stepped pools, &lt;50ms spawn, cooperative cancellation.</p><span class="tag tag-law">IMMUTABLE</span></div>
-  <div class="card law-card"><div class="law-num">07</div><h4>Auto-Success Engine Integrity</h4><p>φ⁷-derived cycle (29,034ms), CSL-discovered categories, φ-ratio tiered allocation. Sacred Geometry timing — no arbitrary numbers.</p><span class="tag tag-law">IMMUTABLE</span></div>
-  <div class="card law-card"><div class="law-num">08</div><h4>Arena Mode — Competitive Excellence</h4><p>Multiple approaches compete. Monte Carlo validation (1K+ sims). HeadyBattle scoring. Winners auto-promoted, losers logged for learning.</p><span class="tag tag-law">IMMUTABLE</span></div>
-</div>
-</section>
+            <!-- Architecture -->
+            <div class="sidebar-section">
+                <div class="sidebar-section-title">Architecture</div>
+                <a class="sidebar-link" data-page="six-layer-mesh">6-Layer Mesh</a>
+                <a class="sidebar-link" data-page="headybee-swarms">HeadyBee Swarms</a>
+                <a class="sidebar-link" data-page="vector-memory">Vector Memory</a>
+                <a class="sidebar-link" data-page="self-healing">Self-Healing</a>
+            </div>
 
-<section class="doc-section" id="directives">
-<h2>The 10 Master Directives</h2>
-<p>Operational intelligence protocols implementing the Unbreakable Laws in daily execution.</p>
-<div class="card-grid">
-  <div class="card"><h4>D1: Omnipresent Contextual Awareness</h4><p>8 awareness channels: vector memory, health registry, file system, event bus, webhooks, budget tracker, git state, MCP gateway.</p><span class="tag tag-directive">MANDATORY</span></div>
-  <div class="card"><h4>D2: Instant App Generation</h4><p>User intent → CSL gate → template → code synthesis → security scan → deploy → live URL. Card-based micro-frontend architecture.</p><span class="tag tag-directive">MANDATORY</span></div>
-  <div class="card"><h4>D3: Zero-Trust Auto-Sanitization</h4><p>Zod schemas, DOMPurify, parameterized queries, CSP headers, TruffleHog. Self-healing: block → classify → rewrite → revalidate.</p><span class="tag tag-directive">MANDATORY</span></div>
-  <div class="card"><h4>D4: Low-Latency Deterministic Orchestration</h4><p>MIDI (&lt;1ms), TCP (&lt;10ms), MCP (&lt;50ms), REST (&lt;200ms). Seeded PRNG for reproducible audit trails.</p><span class="tag tag-directive">MANDATORY</span></div>
-  <div class="card"><h4>D5: Graceful Lifecycle Management</h4><p>SPAWN → INIT → READY → ACTIVE → DRAINING → SHUTDOWN → DEAD. Every resource cleaned on exit.</p><span class="tag tag-directive">MANDATORY</span></div>
-  <div class="card"><h4>D6: Empathic Masking &amp; Persona</h4><p>5 modes: Empathic Safe Space, Analytical Coach, Environmental Actuator, Creative Collaborator, Executive Strategist.</p><span class="tag tag-directive">MANDATORY</span></div>
-  <div class="card"><h4>D7: HCFullPipeline — 21 Stages</h4><p>Nervous system of Heady™. 21 = fib(8). Sequential stages, phi-backoff retry. Fast/Full/Arena/Learning variants.</p><span class="tag tag-directive">MANDATORY</span></div>
-  <div class="card"><h4>D8: Continuous Learning</h4><p>Arena results, error patterns, performance, user prefs, external intel. wisdom.json + vector memory + Graph RAG + HeadyVinci.</p><span class="tag tag-directive">MANDATORY</span></div>
-  <div class="card"><h4>D9: Multi-Model Council</h4><p>Claude, GPT, Gemini, O1, Sonar, Groq, Workers AI. CSL routing, cost-aware, Council Mode for critical decisions.</p><span class="tag tag-directive">MANDATORY</span></div>
-  <div class="card"><h4>D10: Sacred Geometry — φ Everything</h4><p>Golden ratio and Fibonacci as foundational constants. Backoff, caches, pools, timeouts, thresholds — all φ-derived.</p><span class="tag tag-directive">MANDATORY</span></div>
-</div>
-</section>
+            <!-- SDKs -->
+            <div class="sidebar-section">
+                <div class="sidebar-section-title">SDKs</div>
+                <a class="sidebar-link" data-page="sdk-javascript">JavaScript</a>
+                <a class="sidebar-link" data-page="sdk-python">Python</a>
+                <a class="sidebar-link" data-page="sdk-cli">CLI</a>
+            </div>
 
-<section class="doc-section" id="services">
-<h2>Services Catalog</h2>
-<p>56 microservices with health probes, structured logging, graceful shutdown, φ-scaled configuration.</p>
-<div class="card-grid">
-  <div class="card"><h4>heady-onboarding</h4><p>Next.js — Auth, Buddy, Brain/Chat, Pilot Onboarding.</p><span class="tag tag-service">CORE</span></div>
-  <div class="card"><h4>heady-buddy</h4><p>AI companion — proactive assistance, cross-device sync, memory.</p><span class="tag tag-service">CORE</span></div>
-  <div class="card"><h4>heady-brain</h4><p>Central intelligence — reasoning, context fusion, synthesis.</p><span class="tag tag-service">CORE</span></div>
-  <div class="card"><h4>heady-conductor</h4><p>Auto-success orchestration — φ⁷ heartbeat, CSL categories.</p><span class="tag tag-service">ORCHESTRATION</span></div>
-  <div class="card"><h4>heady-bee-factory</h4><p>Worker spawning — 30+ bee types, 10K capacity, Fibonacci pools.</p><span class="tag tag-service">ORCHESTRATION</span></div>
-  <div class="card"><h4>heady-orchestration</h4><p>Cross-swarm coordination — 17 swarms, task routing, event bus.</p><span class="tag tag-service">ORCHESTRATION</span></div>
-  <div class="card"><h4>heady-infer</h4><p>Multi-provider inference — Groq, Gemini, Claude, OpenAI, HF.</p><span class="tag tag-service">AI</span></div>
-  <div class="card"><h4>heady-embed</h4><p>Embedding service — 384-dim, multi-provider, MRL truncation.</p><span class="tag tag-service">AI</span></div>
-  <div class="card"><h4>heady-eval</h4><p>Agent evaluation — success rate, trajectory quality, promptfoo.</p><span class="tag tag-service">AI</span></div>
-  <div class="card"><h4>heady-memory</h4><p>Persistent vector memory — pgvector, Graph RAG, φ-consolidation.</p><span class="tag tag-service">MEMORY</span></div>
-  <div class="card"><h4>heady-vector</h4><p>Vector ops — HNSW, hybrid search, binary pre-filtering.</p><span class="tag tag-service">MEMORY</span></div>
-  <div class="card"><h4>heady-projection</h4><p>3D spatial projection — vector serving, template rendering.</p><span class="tag tag-service">MEMORY</span></div>
-  <div class="card"><h4>heady-cache</h4><p>Resilient caching — hot-cold, LRU, auto-tuning, phi-backoff.</p><span class="tag tag-service">INFRA</span></div>
-  <div class="card"><h4>heady-guard</h4><p>Security — zero-trust, input sanitization, threat detection.</p><span class="tag tag-service">SECURITY</span></div>
-  <div class="card"><h4>heady-security</h4><p>Advanced — PQC, WebAuthn, mTLS, secret rotation.</p><span class="tag tag-service">SECURITY</span></div>
-  <div class="card"><h4>heady-federation</h4><p>Auth federation — OAuth, API keys, multi-provider SSO.</p><span class="tag tag-service">SECURITY</span></div>
-  <div class="card"><h4>heady-health</h4><p>Health monitoring — all swarms, services, bees, dashboards.</p><span class="tag tag-service">OPS</span></div>
-  <div class="card"><h4>heady-mcp</h4><p>Model Context Protocol — JSON-RPC, SSE/stdio, tool registry.</p><span class="tag tag-service">PROTOCOL</span></div>
-  <div class="card"><h4>heady-web</h4><p>Web portal — micro-frontend Module Federation, 9 sites.</p><span class="tag tag-service">FRONTEND</span></div>
-  <div class="card"><h4>heady-ui</h4><p>UI components — generative-engine, CSL-gated factory.</p><span class="tag tag-service">FRONTEND</span></div>
-  <div class="card"><h4>heady-soul</h4><p>Personality — persona modes, empathic masking, preferences.</p><span class="tag tag-service">PERSONALITY</span></div>
-  <div class="card"><h4>heady-vinci</h4><p>Pattern recognition — learned patterns, historical matching.</p><span class="tag tag-service">INTELLIGENCE</span></div>
-  <div class="card"><h4>heady-chain</h4><p>Blockchain — HeadyCoin, Merkle trees, token economics.</p><span class="tag tag-service">FINTECH</span></div>
-  <div class="card"><h4>heady-midi</h4><p>MIDI integration — event bus, creative content, audio.</p><span class="tag tag-service">CREATIVE</span></div>
-  <div class="card"><h4>heady-governance</h4><p>Policy enforcement — approval gates, audit trails.</p><span class="tag tag-service">OPS</span></div>
-  <div class="card"><h4>heady-maintenance</h4><p>System maintenance — cleanup, optimization, scheduling.</p><span class="tag tag-service">OPS</span></div>
-  <div class="card"><h4>api-gateway</h4><p>API Gateway v2 — CSL routing, rate limiting, auth.</p><span class="tag tag-service">CORE</span></div>
-  <div class="card"><h4>domain-router</h4><p>Domain routing — service discovery, URL construction.</p><span class="tag tag-service">INFRA</span></div>
-  <div class="card"><h4>colab-gateway</h4><p>Colab Pro+ — GPU burst compute, notebook execution.</p><span class="tag tag-service">COMPUTE</span></div>
-  <div class="card"><h4>model-gateway</h4><p>Model routing — provider selection, cost optimization.</p><span class="tag tag-service">AI</span></div>
-</div>
-</section>
+            <!-- Guides -->
+            <div class="sidebar-section">
+                <div class="sidebar-section-title">Guides</div>
+                <a class="sidebar-link" data-page="multi-model-routing">Multi-Model Routing</a>
+                <a class="sidebar-link" data-page="fine-tuning">Fine-Tuning</a>
+                <a class="sidebar-link" data-page="edge-deployment">Edge Deployment</a>
+                <a class="sidebar-link" data-page="security-encryption">Security & Encryption</a>
+            </div>
+        </aside>
 
-<section class="doc-section" id="skills">
-<h2>Skills Reference</h2>
-<p>79 specialized skill modules extending agent capabilities with instructions, scripts, and resources.</p>
-<div class="card-grid">
-  <div class="card"><h4>heady-csl-engine</h4><p>CSL gates — cosine AND, superposition OR, orthogonal NOT. 60+ patents.</p><span class="tag tag-skill">CORE</span></div>
-  <div class="card"><h4>heady-phi-math-foundation</h4><p>φ-continuous scaling — golden ratio, Fibonacci, no magic numbers.</p><span class="tag tag-skill">CORE</span></div>
-  <div class="card"><h4>heady-bee-swarm-ops</h4><p>30+ bee types, template registry, swarm coordination.</p><span class="tag tag-skill">ORCHESTRATION</span></div>
-  <div class="card"><h4>heady-agent-orchestration</h4><p>Planner-executor-validator, swarm design, runtime workers.</p><span class="tag tag-skill">ORCHESTRATION</span></div>
-  <div class="card"><h4>heady-memory-ops</h4><p>3D vector memory — search, store, embed, learn.</p><span class="tag tag-skill">MEMORY</span></div>
-  <div class="card"><h4>heady-graph-rag-memory</h4><p>Entity extraction, Louvain communities, multi-hop reasoning.</p><span class="tag tag-skill">MEMORY</span></div>
-  <div class="card"><h4>heady-hybrid-vector-search</h4><p>BM25 + dense + SPLADE. RRF, HNSW, quantization.</p><span class="tag tag-skill">MEMORY</span></div>
-  <div class="card"><h4>heady-deployment</h4><p>Cloud Run, CF Workers, health checks, scaling.</p><span class="tag tag-skill">OPS</span></div>
-  <div class="card"><h4>heady-edge-ai</h4><p>Cloudflare edge inference — embeddings, chat, classification.</p><span class="tag tag-skill">AI</span></div>
-  <div class="card"><h4>heady-multi-model</h4><p>Cross-provider routing — Claude, GPT, Gemini, Groq.</p><span class="tag tag-skill">AI</span></div>
-  <div class="card"><h4>heady-code-generation</h4><p>HeadyCoder, HeadyCodex, HeadyCopilot, HeadyRefactor.</p><span class="tag tag-skill">DEV</span></div>
-  <div class="card"><h4>heady-deep-scan</h4><p>Project-wide context mapping into 3D vector memory.</p><span class="tag tag-skill">DEV</span></div>
-  <div class="card"><h4>heady-security-audit</h4><p>Vulnerability scanning, risk assessment, mitigation.</p><span class="tag tag-skill">SECURITY</span></div>
-  <div class="card"><h4>heady-companion-memory</h4><p>Long-term memory, preference learning, anticipation.</p><span class="tag tag-skill">BUDDY</span></div>
-  <div class="card"><h4>heady-cross-device-sync-fabric</h4><p>Session handoff, shared context, WebSocket relay.</p><span class="tag tag-skill">BUDDY</span></div>
-  <div class="card"><h4>heady-sacred-geometry-css</h4><p>φ-scaled CSS, glassmorphism, Fibonacci tokens, canvas.</p><span class="tag tag-skill">DESIGN</span></div>
-  <div class="card"><h4>heady-monetization-platform</h4><p>Stripe, phi-metering, CSL feature gates, SOC 2.</p><span class="tag tag-skill">BUSINESS</span></div>
-  <div class="card"><h4>heady-fintech-trading</h4><p>Signals, risk, backtests, portfolio, phi-constants.</p><span class="tag tag-skill">FINTECH</span></div>
-  <div class="card"><h4>heady-perplexity</h4><p>Sonar search, deep research, reasoning, embeddings.</p><span class="tag tag-skill">RESEARCH</span></div>
-  <div class="card"><h4>heady-battle-arena</h4><p>Competitive AI evaluation — pit nodes against each other.</p><span class="tag tag-skill">ARENA</span></div>
-</div>
-</section>
+        <!-- Main Content Area -->
+        <div class="main-content">
+            <div class="top-bar">
+                <button class="mobile-toggle" id="mobileToggle">☰</button>
+                <div class="top-bar-left">
+                    <h1 id="pageTitle">Quick Start Guide</h1>
+                </div>
+                <a href="https://github.com/heady/heady-docs" class="edit-github" target="_blank">Edit on GitHub</a>
+            </div>
 
-<section class="doc-section" id="workflows">
-<h2>Workflows</h2>
-<p>24 operational workflows for system management, deployment, monitoring, and optimization.</p>
-<div class="card-grid">
-  <div class="card"><h4>/health-check</h4><p>Validates all 9 sites + Cloud Run + internal services.</p><span class="tag tag-workflow">OPS</span></div>
-  <div class="card"><h4>/deployment-verification</h4><p>Post-deploy smoke tests for all endpoints.</p><span class="tag tag-workflow">DEPLOY</span></div>
-  <div class="card"><h4>/bee-swarm-diagnostic</h4><p>Blast all bees, report health across domains.</p><span class="tag tag-workflow">SWARM</span></div>
-  <div class="card"><h4>/deep-scan-init</h4><p>Full codebase context before implementation.</p><span class="tag tag-workflow">CONTEXT</span></div>
-  <div class="card"><h4>/incident-response</h4><p>Triage → diagnose → resolve → postmortem.</p><span class="tag tag-workflow">OPS</span></div>
-  <div class="card"><h4>/memory-compaction</h4><p>Prune, deduplicate, optimize vector memory.</p><span class="tag tag-workflow">MEMORY</span></div>
-  <div class="card"><h4>/vector-space-ops</h4><p>Operate through vector space, bees, events.</p><span class="tag tag-workflow">CORE</span></div>
-  <div class="card"><h4>/heady-battle-sim</h4><p>9-stage battle-sim for competitive evaluation.</p><span class="tag tag-workflow">ARENA</span></div>
-  <div class="card"><h4>/continuous-embedding</h4><p>Auto-embed all data into 3D vector memory.</p><span class="tag tag-workflow">MEMORY</span></div>
-  <div class="card"><h4>/edge-cache-warm</h4><p>Pre-warm Cloudflare cache after deploy.</p><span class="tag tag-workflow">DEPLOY</span></div>
-  <div class="card"><h4>/domain-branding-audit</h4><p>Sacred geometry and brand compliance.</p><span class="tag tag-workflow">BRAND</span></div>
-  <div class="card"><h4>/provider-failover-drill</h4><p>Test failover paths under simulated outage.</p><span class="tag tag-workflow">RESILIENCE</span></div>
-  <div class="card"><h4>/heady-drift-monitor</h4><p>Monitor drift, auto-reconfigure.</p><span class="tag tag-workflow">QUALITY</span></div>
-  <div class="card"><h4>/foundational-pillars</h4><p>Pillar validation before modifications.</p><span class="tag tag-workflow">GOVERNANCE</span></div>
-  <div class="card"><h4>/agent-performance-review</h4><p>Evaluate all agents for effectiveness.</p><span class="tag tag-workflow">QUALITY</span></div>
-  <div class="card"><h4>/heady-service-bootstrap</h4><p>Bootstrap new services from cold start.</p><span class="tag tag-workflow">DEV</span></div>
-</div>
-</section>
+            <div class="breadcrumb" id="breadcrumb">
+                <a href="#" data-page="quick-start">Docs</a> / Quick Start Guide
+            </div>
 
-<section class="doc-section" id="csl">
-<h2>CSL Engine — Continuous Semantic Logic</h2>
-<p>Core geometric AI innovation using vector operations as logical gates. All decisions confidence-weighted 0→1.</p>
-<div class="card-grid">
-  <div class="card"><h4>CSL AND (Cosine)</h4><p><code>cos(A, B)</code> — alignment between concepts. ≈1 = agreement.</p></div>
-  <div class="card"><h4>CSL OR (Superposition)</h4><p><code>normalize(A + B)</code> — union of meanings.</p></div>
-  <div class="card"><h4>CSL NOT (Orthogonal)</h4><p><code>A - proj_B(A)</code> — semantic negation via projection.</p></div>
-  <div class="card"><h4>CSL GATE</h4><p><code>cos(intent, context) ≥ 0.618</code> — φ-inverse threshold.</p></div>
-</div>
-</section>
+            <div class="content-scroll">
+                <div class="content">
+                    <!-- Quick Start Guide -->
+                    <section id="quick-start" class="page-content">
+                        <h1>Quick Start Guide</h1>
+                        <p class="content-subtitle">Get up and running with Heady in 5 minutes</p>
 
-<section class="doc-section" id="phi">
-<h2>φ-Math Foundation</h2>
-<p>Golden ratio (φ ≈ 1.618) and Fibonacci sequences as ALL system constants.</p>
-<div class="card-grid">
-  <div class="card"><h4>φ = 1.618</h4><p>Scaling factor for timeouts, thresholds, backoff.</p></div>
-  <div class="card"><h4>ψ = 0.618</h4><p>Default CSL resonance threshold.</p></div>
-  <div class="card"><h4>Fibonacci</h4><p>1,1,2,3,5,8,13,21,34,55,89,144 — sizes and limits.</p></div>
-  <div class="card"><h4>φ⁷×1000 = 29,034ms</h4><p>Auto-Success Engine heartbeat cycle.</p></div>
-</div>
-</section>
+                        <div class="step">
+                            <span class="step-number">1</span>
+                            <h3>Sign Up for an Account</h3>
+                            <p style="margin-top: 12px;">Visit <a href="https://headysystems.com/signup" target="_blank">headysystems.com/signup</a> to create your free Heady account. You'll have instant access to the dashboard and all developer tools.</p>
+                        </div>
 
-<section class="doc-section" id="security">
-<h2>Security Model</h2>
-<p>Zero-trust by default. Post-quantum ready.</p>
-<ul>
-  <li>Input validation — Zod schemas on all endpoints</li>
-  <li>Parameterized queries — never string interpolation</li>
-  <li>CORS whitelist — no wildcards in production</li>
-  <li>httpOnly, Secure, SameSite=Strict cookies</li>
-  <li>Rate limiting on auth endpoints</li>
-  <li>Secrets from env vars / Secret Manager only</li>
-  <li>WebAuthn passwordless + mutual TLS</li>
-  <li>Ed25519 signed trust receipts</li>
-</ul>
-</section>
+                        <div class="step">
+                            <span class="step-number">2</span>
+                            <h3>Get Your API Key</h3>
+                            <p style="margin-top: 12px;">Once logged in, navigate to <strong>Settings → API Keys</strong> in the dashboard. Click <strong>Generate New Key</strong> and copy your API key to a secure location. You'll use this to authenticate all API requests.</p>
+                        </div>
 
-<section class="doc-section" id="deployment">
-<h2>Deployment</h2>
-<p>Cloud Run (us-east1) or Cloudflare Workers. Never localhost.</p>
-<h3>Live Services</h3>
-<ul>
-  <li><a href="https://heady-onboarding-609590223909.us-east1.run.app">Onboarding + Auth</a></li>
-  <li><a href="https://heady-ide-bf4q4zywhq-ue.a.run.app">HeadyAI IDE</a></li>
-  <li><a href="https://headyweb-ide-bf4q4zywhq-ue.a.run.app">HeadyWeb IDE</a></li>
-</ul>
-</section>
+                        <div class="step">
+                            <span class="step-number">3</span>
+                            <h3>Make Your First API Call</h3>
+                            <p style="margin-top: 12px;">Let's test the Inference API with a simple cURL request:</p>
 
-</div>
-<footer class="docs-footer">
-  <p>© 2026 HeadySystems Inc. — Eric Haywood, Founder — 60+ Provisional Patents — Sacred Geometry v4.0</p>
-  <p>Heady™ — The Sovereign AI Operating System</p>
-</footer>
-</div>
-</div>
+                            <div class="code-block">
+                                <div class="code-block-header">cURL</div>
+                                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                                <pre><code>curl -X POST https://api.headysystems.com/v1/inference \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "prompt": "Explain quantum computing in simple terms",
+    "strategy": "best-quality",
+    "max_tokens": 256
+  }'</code></pre>
+                            </div>
 
-<script>
-document.getElementById('burger').addEventListener('click',()=>{document.getElementById('sidebar').classList.toggle('open')});
-document.querySelectorAll('.nav-group-title').forEach(t=>{t.addEventListener('click',()=>t.parentElement.classList.toggle('open'))});
-const sections=document.querySelectorAll('.doc-section,.docs-hero');
-const navItems=document.querySelectorAll('.nav-item');
-const obs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){navItems.forEach(n=>n.classList.remove('active'));const a=document.querySelector(`.nav-item[href="#${e.target.id}"]`);if(a){a.classList.add('active');a.closest('.nav-group')?.classList.add('open')}}})},{threshold:0.15,rootMargin:'-80px 0px -60% 0px'});
-sections.forEach(s=>obs.observe(s));
-document.getElementById('search').addEventListener('input',function(){const q=this.value.toLowerCase();document.querySelectorAll('.card').forEach(c=>{c.style.display=c.textContent.toLowerCase().includes(q)?'':'none'})});
-document.querySelectorAll('a[href^="#"]').forEach(a=>{a.addEventListener('click',function(e){e.preventDefault();const t=document.querySelector(this.getAttribute('href'));if(t){window.scrollTo({top:t.offsetTop-70,behavior:'smooth'})}document.getElementById('sidebar').classList.remove('open')})});
-</script>
+                            <p><strong>Expected Response:</strong></p>
+                            <div class="code-block">
+                                <div class="code-block-header">JSON</div>
+                                <pre><code>{
+  "id": "inf_1a2b3c4d5e6f",
+  "object": "inference.result",
+  "created": 1678886400,
+  "model": "heady-v3-large",
+  "usage": {
+    "prompt_tokens": 8,
+    "completion_tokens": 142,
+    "total_tokens": 150
+  },
+  "choices": [
+    {
+      "text": "Quantum computing uses quantum bits (qubits) that can exist in multiple states simultaneously...",
+      "finish_reason": "stop"
+    }
+  ]
+}</code></pre>
+                            </div>
+
+                            <div class="info-box">
+                                <strong>Tip:</strong> Replace <code>YOUR_API_KEY</code> with your actual API key from the dashboard.
+                            </div>
+                        </div>
+
+                        <div class="step">
+                            <span class="step-number">4</span>
+                            <h3>Try Multi-Model Routing</h3>
+                            <p style="margin-top: 12px;">Heady automatically routes your requests to the best model based on your strategy. Try the <code>lowest-cost</code> strategy:</p>
+
+                            <div class="code-block">
+                                <div class="code-block-header">cURL</div>
+                                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                                <pre><code>curl -X POST https://api.headysystems.com/v1/inference \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "prompt": "What are the benefits of remote work?",
+    "strategy": "lowest-cost",
+    "max_tokens": 200
+  }'</code></pre>
+                            </div>
+
+                            <p><strong>Available Strategies:</strong></p>
+                            <ul>
+                                <li><code>best-quality</code> - Uses the most capable model (higher cost)</li>
+                                <li><code>lowest-latency</code> - Optimizes for speed (moderate cost)</li>
+                                <li><code>lowest-cost</code> - Most economical option</li>
+                                <li><code>specific-model</code> - Routes to a specific model ID</li>
+                            </ul>
+                        </div>
+
+                        <div class="step">
+                            <span class="step-number">5</span>
+                            <h3>Connect HeadyBuddy Widget</h3>
+                            <p style="margin-top: 12px;">Embed the Heady chat widget on your website in just two lines of code:</p>
+
+                            <div class="code-block">
+                                <div class="code-block-header">HTML</div>
+                                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                                <pre><code>&lt;script src="https://headybuddy.com/widget.js"&gt;&lt;/script&gt;
+&lt;script&gt;
+  HeadyBuddy.init({
+    apiKey: 'YOUR_API_KEY',
+    position: 'bottom-right',
+    theme: 'light'
+  });
+&lt;/script&gt;</code></pre>
+                            </div>
+
+                            <p>Your chat widget is now live! Customize colors, position, and behavior in the <a href="https://headysystems.com/dashboard/widgets" target="_blank">Widget Settings</a>.</p>
+                        </div>
+
+                        <h2>What's Next?</h2>
+                        <ul>
+                            <li><a href="#" data-page="inference-endpoint">Explore the Inference API</a> - Learn all available parameters and options</li>
+                            <li><a href="#" data-page="sdk-javascript">Use the JavaScript SDK</a> - Simplify integration in your apps</li>
+                            <li><a href="#" data-page="multi-model-routing">Master Multi-Model Routing</a> - Optimize costs and performance</li>
+                            <li><a href="#" data-page="security-encryption">Security Best Practices</a> - Protect your API keys and data</li>
+                        </ul>
+
+                        <div class="nav-buttons">
+                            <button class="nav-btn" disabled>← Previous</button>
+                            <button class="nav-btn" onclick="navigateToPage('authentication')">Next: Authentication →</button>
+                        </div>
+                    </section>
+
+                    <!-- Authentication -->
+                    <section id="authentication" class="page-content" style="display: none;">
+                        <h1>Authentication</h1>
+                        <p class="content-subtitle">Secure your API requests with Heady's authentication methods</p>
+
+                        <h2>API Key Authentication</h2>
+                        <p>The simplest way to authenticate with Heady is using your API key. Include it in the <code>Authorization</code> header of every request.</p>
+
+                        <h3>Header Format</h3>
+                        <div class="code-block">
+                            <div class="code-block-header">HTTP Header</div>
+                            <pre><code>Authorization: Bearer sk_live_4eC39HqLyjWDarhtT...</code></pre>
+                        </div>
+
+                        <h3>Example Request</h3>
+                        <div class="code-block">
+                            <div class="code-block-header">cURL</div>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                            <pre><code>curl -X POST https://api.headysystems.com/v1/inference \
+  -H "Authorization: Bearer sk_live_4eC39HqLyjWDarhtT..." \
+  -H "Content-Type: application/json" \
+  -d '{
+    "prompt": "Hello, world!"
+  }'</code></pre>
+                        </div>
+
+                        <div class="warning-box">
+                            <strong>Security:</strong> Never commit your API keys to version control. Use environment variables instead.
+                        </div>
+
+                        <h2>OAuth 2.0 Authentication</h2>
+                        <p>For third-party integrations, use OAuth 2.0 with the Authorization Code flow.</p>
+
+                        <h3>Authorization Code Flow</h3>
+                        <p><strong>Step 1:</strong> Redirect the user to Heady's authorization endpoint:</p>
+                        <div class="code-block">
+                            <div class="code-block-header">URL</div>
+                            <pre><code>https://auth.headysystems.com/oauth/authorize?
+  client_id=YOUR_CLIENT_ID&
+  redirect_uri=https://yourapp.com/callback&
+  response_type=code&
+  scope=inference:read,chat:write&
+  state=random_state_string</code></pre>
+                        </div>
+
+                        <p><strong>Step 2:</strong> User authorizes your app and gets redirected with an authorization code.</p>
+
+                        <p><strong>Step 3:</strong> Exchange the code for an access token:</p>
+                        <div class="code-block">
+                            <div class="code-block-header">cURL</div>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                            <pre><code>curl -X POST https://auth.headysystems.com/oauth/token \
+  -H "Content-Type: application/x-www-form-urlencoded" \
+  -d "grant_type=authorization_code&
+       code=AUTH_CODE&
+       client_id=YOUR_CLIENT_ID&
+       client_secret=YOUR_CLIENT_SECRET&
+       redirect_uri=https://yourapp.com/callback"</code></pre>
+                        </div>
+
+                        <p><strong>Response:</strong></p>
+                        <div class="code-block">
+                            <div class="code-block-header">JSON</div>
+                            <pre><code>{
+  "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "token_type": "Bearer",
+  "expires_in": 3600,
+  "refresh_token": "ref_1a2b3c4d5e6f...",
+  "scope": "inference:read chat:write"
+}</code></pre>
+                        </div>
+
+                        <h2>Token Lifecycle</h2>
+                        <table>
+                            <tr>
+                                <th>Property</th>
+                                <th>Description</th>
+                                <th>Value</th>
+                            </tr>
+                            <tr>
+                                <td><strong>Access Token Expiry</strong></td>
+                                <td>Time until access token expires</td>
+                                <td>1 hour (3600 seconds)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Refresh Token Expiry</strong></td>
+                                <td>Time until refresh token expires</td>
+                                <td>30 days</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Refresh Endpoint</strong></td>
+                                <td>URL to refresh expired tokens</td>
+                                <td>POST /oauth/token</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Revocation</strong></td>
+                                <td>Immediately invalidate a token</td>
+                                <td>POST /oauth/revoke</td>
+                            </tr>
+                        </table>
+
+                        <h3>Refreshing an Access Token</h3>
+                        <p>When your access token expires, use the refresh token to get a new one:</p>
+                        <div class="code-block">
+                            <div class="code-block-header">cURL</div>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                            <pre><code>curl -X POST https://auth.headysystems.com/oauth/token \
+  -H "Content-Type: application/x-www-form-urlencoded" \
+  -d "grant_type=refresh_token&
+       refresh_token=ref_1a2b3c4d5e6f...&
+       client_id=YOUR_CLIENT_ID&
+       client_secret=YOUR_CLIENT_SECRET"</code></pre>
+                        </div>
+
+                        <h3>Revoking a Token</h3>
+                        <p>Immediately invalidate a token:</p>
+                        <div class="code-block">
+                            <div class="code-block-header">cURL</div>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                            <pre><code>curl -X POST https://auth.headysystems.com/oauth/revoke \
+  -H "Content-Type: application/x-www-form-urlencoded" \
+  -d "token=YOUR_TOKEN&
+       client_id=YOUR_CLIENT_ID&
+       client_secret=YOUR_CLIENT_SECRET"</code></pre>
+                        </div>
+
+                        <h2>Rate Limits</h2>
+                        <p>API rate limits vary by authentication method and tier:</p>
+                        <table>
+                            <tr>
+                                <th>Tier</th>
+                                <th>Requests/Minute</th>
+                                <th>Monthly Limit</th>
+                                <th>Concurrent Requests</th>
+                            </tr>
+                            <tr>
+                                <td><strong>Free</strong></td>
+                                <td>10</td>
+                                <td>10,000</td>
+                                <td>1</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Pro</strong></td>
+                                <td>100</td>
+                                <td>1,000,000</td>
+                                <td>10</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Enterprise</strong></td>
+                                <td>1,000</td>
+                                <td>Unlimited</td>
+                                <td>100</td>
+                            </tr>
+                        </table>
+
+                        <div class="info-box">
+                            <strong>Rate Limit Headers:</strong> Check your remaining quota using the <code>X-RateLimit-Remaining</code> header in all API responses.
+                        </div>
+
+                        <h2>Error Codes</h2>
+                        <p>When authentication fails, you'll receive one of these error codes:</p>
+                        <table>
+                            <tr>
+                                <th>Code</th>
+                                <th>HTTP Status</th>
+                                <th>Description</th>
+                                <th>Solution</th>
+                            </tr>
+                            <tr>
+                                <td><code>invalid_api_key</code></td>
+                                <td>401</td>
+                                <td>API key is missing or invalid</td>
+                                <td>Check your API key and try again</td>
+                            </tr>
+                            <tr>
+                                <td><code>expired_token</code></td>
+                                <td>401</td>
+                                <td>OAuth token has expired</td>
+                                <td>Refresh the token using your refresh token</td>
+                            </tr>
+                            <tr>
+                                <td><code>insufficient_scope</code></td>
+                                <td>403</td>
+                                <td>Token lacks required permissions</td>
+                                <td>Request new auth with required scopes</td>
+                            </tr>
+                            <tr>
+                                <td><code>rate_limit_exceeded</code></td>
+                                <td>429</td>
+                                <td>Too many requests in short time</td>
+                                <td>Wait before retrying or upgrade plan</td>
+                            </tr>
+                            <tr>
+                                <td><code>revoked_token</code></td>
+                                <td>401</td>
+                                <td>Token has been revoked</td>
+                                <td>Authenticate again with new credentials</td>
+                            </tr>
+                            <tr>
+                                <td><code>invalid_grant</code></td>
+                                <td>400</td>
+                                <td>Authorization code or refresh token invalid</td>
+                                <td>Restart OAuth flow or check token validity</td>
+                            </tr>
+                        </table>
+
+                        <div class="nav-buttons">
+                            <button class="nav-btn" onclick="navigateToPage('quick-start')">← Previous: Quick Start</button>
+                            <button class="nav-btn" onclick="navigateToPage('inference-endpoint')">Next: Inference Endpoint →</button>
+                        </div>
+                    </section>
+
+                    <!-- Inference Endpoint -->
+                    <section id="inference-endpoint" class="page-content" style="display: none;">
+                        <h1>Inference Endpoint</h1>
+                        <p class="content-subtitle">Generate text completions with the Heady inference engine</p>
+
+                        <h2>Endpoint</h2>
+                        <div class="code-block">
+                            <div class="code-block-header">HTTP</div>
+                            <pre><code>POST /v1/inference</code></pre>
+                        </div>
+
+                        <h2>Request Body</h2>
+                        <table>
+                            <tr>
+                                <th>Parameter</th>
+                                <th>Type</th>
+                                <th>Required</th>
+                                <th>Description</th>
+                            </tr>
+                            <tr>
+                                <td><code>prompt</code></td>
+                                <td>string</td>
+                                <td>Yes</td>
+                                <td>The input text to generate from (max 8,000 tokens)</td>
+                            </tr>
+                            <tr>
+                                <td><code>strategy</code></td>
+                                <td>string</td>
+                                <td>No</td>
+                                <td>Routing strategy: best-quality, lowest-latency, lowest-cost, specific-model (default: best-quality)</td>
+                            </tr>
+                            <tr>
+                                <td><code>model</code></td>
+                                <td>string</td>
+                                <td>No</td>
+                                <td>Model ID when using specific-model strategy</td>
+                            </tr>
+                            <tr>
+                                <td><code>max_tokens</code></td>
+                                <td>integer</td>
+                                <td>No</td>
+                                <td>Maximum tokens to generate (1-4096, default: 256)</td>
+                            </tr>
+                            <tr>
+                                <td><code>temperature</code></td>
+                                <td>float</td>
+                                <td>No</td>
+                                <td>Sampling temperature (0.0-2.0, default: 0.7)</td>
+                            </tr>
+                            <tr>
+                                <td><code>top_p</code></td>
+                                <td>float</td>
+                                <td>No</td>
+                                <td>Nucleus sampling parameter (0.0-1.0, default: 1.0)</td>
+                            </tr>
+                            <tr>
+                                <td><code>stop_sequences</code></td>
+                                <td>array</td>
+                                <td>No</td>
+                                <td>Strings that stop generation when encountered</td>
+                            </tr>
+                            <tr>
+                                <td><code>stream</code></td>
+                                <td>boolean</td>
+                                <td>No</td>
+                                <td>Stream response tokens as they're generated (default: false)</td>
+                            </tr>
+                        </table>
+
+                        <h2>Response Schema</h2>
+                        <div class="code-block">
+                            <div class="code-block-header">JSON</div>
+                            <pre><code>{
+  "id": "string",                    // Unique inference ID
+  "object": "inference.result",
+  "created": number,                 // Unix timestamp
+  "model": "string",                 // Model used for generation
+  "usage": {
+    "prompt_tokens": number,
+    "completion_tokens": number,
+    "total_tokens": number
+  },
+  "choices": [
+    {
+      "text": "string",               // Generated text
+      "finish_reason": "stop",       // stop, length, or error
+      "index": 0
+    }
+  ]
+}</code></pre>
+                        </div>
+
+                        <h2>Strategy Options</h2>
+
+                        <h3>best-quality</h3>
+                        <p>Selects the most capable model available. Best for complex tasks, reasoning, and creative work. Higher latency and cost.</p>
+
+                        <h3>lowest-latency</h3>
+                        <p>Optimizes for response speed with good quality. Ideal for real-time applications and chat interfaces.</p>
+
+                        <h3>lowest-cost</h3>
+                        <p>Uses the most economical model that meets quality thresholds. Best for high-volume applications.</p>
+
+                        <h3>specific-model</h3>
+                        <p>Routes to a specific model by ID. Requires the <code>model</code> parameter.</p>
+
+                        <h2>Code Examples</h2>
+
+                        <h3>cURL</h3>
+                        <div class="code-block">
+                            <div class="code-block-header">cURL</div>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                            <pre><code>curl -X POST https://api.headysystems.com/v1/inference \
+  -H "Authorization: Bearer sk_live_..." \
+  -H "Content-Type: application/json" \
+  -d '{
+    "prompt": "Write a haiku about programming",
+    "strategy": "best-quality",
+    "max_tokens": 100,
+    "temperature": 0.8
+  }'</code></pre>
+                        </div>
+
+                        <h3>JavaScript</h3>
+                        <div class="code-block">
+                            <div class="code-block-header">JavaScript</div>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                            <pre><code>const response = await fetch(
+  'https://api.headysystems.com/v1/inference',
+  {
+    method: 'POST',
+    headers: {
+      'Authorization': 'Bearer sk_live_...',
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      prompt: 'What are the benefits of TypeScript?',
+      strategy: 'best-quality',
+      max_tokens: 256,
+      temperature: 0.7
+    })
+  }
+);
+
+const data = await response.json();
+console.log(data.choices[0].text);</code></pre>
+                        </div>
+
+                        <h3>Python</h3>
+                        <div class="code-block">
+                            <div class="code-block-header">Python</div>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                            <pre><code>import requests
+
+response = requests.post(
+  'https://api.headysystems.com/v1/inference',
+  headers={
+    'Authorization': 'Bearer sk_live_...',
+    'Content-Type': 'application/json'
+  },
+  json={
+    'prompt': 'Explain machine learning to a beginner',
+    'strategy': 'best-quality',
+    'max_tokens': 256,
+    'temperature': 0.7
+  }
+)
+
+data = response.json()
+print(data['choices'][0]['text'])</code></pre>
+                        </div>
+
+                        <h2>Error Responses</h2>
+                        <table>
+                            <tr>
+                                <th>Status</th>
+                                <th>Error Code</th>
+                                <th>Description</th>
+                            </tr>
+                            <tr>
+                                <td>400</td>
+                                <td><code>invalid_request</code></td>
+                                <td>Request body is malformed or missing required fields</td>
+                            </tr>
+                            <tr>
+                                <td>401</td>
+                                <td><code>unauthorized</code></td>
+                                <td>Missing or invalid authentication</td>
+                            </tr>
+                            <tr>
+                                <td>429</td>
+                                <td><code>rate_limit_exceeded</code></td>
+                                <td>Rate limit exceeded for your plan</td>
+                            </tr>
+                            <tr>
+                                <td>500</td>
+                                <td><code>internal_error</code></td>
+                                <td>Server error during inference</td>
+                            </tr>
+                            <tr>
+                                <td>503</td>
+                                <td><code>service_unavailable</code></td>
+                                <td>Heady service is temporarily unavailable</td>
+                            </tr>
+                        </table>
+
+                        <h2>Example Error Response</h2>
+                        <div class="code-block">
+                            <div class="code-block-header">JSON</div>
+                            <pre><code>{
+  "error": {
+    "message": "rate_limit_exceeded",
+    "type": "invalid_request_error",
+    "param": null,
+    "code": "rate_limit_exceeded"
+  }
+}</code></pre>
+                        </div>
+
+                        <div class="nav-buttons">
+                            <button class="nav-btn" onclick="navigateToPage('authentication')">← Previous: Authentication</button>
+                            <button class="nav-btn" onclick="navigateToPage('chat-endpoint')">Next: Chat Endpoint →</button>
+                        </div>
+                    </section>
+
+                    <!-- Coming Soon Placeholder -->
+                    <section id="coming-soon" class="page-content" style="display: none;">
+                        <div class="coming-soon">
+                            <div class="coming-soon-icon">🚀</div>
+                            <h2>Coming Soon</h2>
+                            <p>This page is under development. Check back soon for more documentation.</p>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Page navigation
+        const pages = {
+            'quick-start': 'Quick Start Guide',
+            'authentication': 'Authentication',
+            'first-api-call': 'Your First API Call',
+            'inference-endpoint': 'Inference Endpoint',
+            'chat-endpoint': 'Chat Endpoint',
+            'models-endpoint': 'Models Endpoint',
+            'webhooks': 'Webhooks',
+            'mcp-overview': 'MCP Overview',
+            'mcp-message-format': 'Message Format',
+            'mcp-node-communication': 'Node Communication',
+            'mcp-integration': 'Integration Guide',
+            'six-layer-mesh': '6-Layer Mesh',
+            'headybee-swarms': 'HeadyBee Swarms',
+            'vector-memory': 'Vector Memory',
+            'self-healing': 'Self-Healing',
+            'sdk-javascript': 'JavaScript SDK',
+            'sdk-python': 'Python SDK',
+            'sdk-cli': 'CLI',
+            'multi-model-routing': 'Multi-Model Routing',
+            'fine-tuning': 'Fine-Tuning',
+            'edge-deployment': 'Edge Deployment',
+            'security-encryption': 'Security & Encryption'
+        };
+
+        const implementedPages = ['quick-start', 'authentication', 'inference-endpoint'];
+
+        function showPage(pageId) {
+            // Hide all pages
+            document.querySelectorAll('.page-content').forEach(el => {
+                el.style.display = 'none';
+            });
+
+            // Deactivate all sidebar links
+            document.querySelectorAll('.sidebar-link').forEach(el => {
+                el.classList.remove('active');
+            });
+
+            // Show selected page or coming soon
+            const pageEl = document.getElementById(pageId);
+            if (pageEl) {
+                pageEl.style.display = 'block';
+            } else {
+                document.getElementById('coming-soon').style.display = 'block';
+            }
+
+            // Activate sidebar link
+            const link = document.querySelector(`[data-page="${pageId}"]`);
+            if (link) {
+                link.classList.add('active');
+            }
+
+            // Update title and breadcrumb
+            const title = pages[pageId] || 'Page';
+            document.getElementById('pageTitle').textContent = title;
+            document.getElementById('breadcrumb').innerHTML = `
+                <a href="#" data-page="quick-start">Docs</a> / ${title}
+            `;
+
+            // Re-highlight code blocks
+            document.querySelectorAll('pre code').forEach(el => {
+                hljs.highlightElement(el);
+            });
+
+            // Close mobile sidebar
+            document.getElementById('sidebar').classList.remove('open');
+
+            // Scroll to top
+            document.querySelector('.content-scroll').scrollTop = 0;
+        }
+
+        function navigateToPage(pageId) {
+            showPage(pageId);
+        }
+
+        function copyCode(button) {
+            const codeBlock = button.closest('.code-block');
+            const code = codeBlock.querySelector('code').textContent;
+            navigator.clipboard.writeText(code).then(() => {
+                const originalText = button.textContent;
+                button.textContent = 'Copied!';
+                setTimeout(() => {
+                    button.textContent = originalText;
+                }, 2000);
+            });
+        }
+
+        // Sidebar links
+        document.querySelectorAll('.sidebar-link').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const pageId = link.dataset.page;
+                showPage(pageId);
+            });
+        });
+
+        // Mobile toggle
+        document.getElementById('mobileToggle').addEventListener('click', () => {
+            document.getElementById('sidebar').classList.toggle('open');
+        });
+
+        // Search functionality
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+            const query = e.target.value.toLowerCase();
+            document.querySelectorAll('.sidebar-link').forEach(link => {
+                const text = link.textContent.toLowerCase();
+                if (query === '' || text.includes(query)) {
+                    link.style.display = 'block';
+                } else {
+                    link.style.display = 'none';
+                }
+            });
+        });
+
+        // Breadcrumb navigation
+        document.addEventListener('click', (e) => {
+            if (e.target.matches('[data-page]')) {
+                e.preventDefault();
+                const pageId = e.target.dataset.page;
+                showPage(pageId);
+            }
+        });
+
+        // Initialize
+        showPage('quick-start');
+    </script>
 </body>
 </html>

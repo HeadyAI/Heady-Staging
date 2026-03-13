@@ -6,7 +6,8 @@
  * HeadyEmbeddedDuckDB — Production V2 Vector Memory
  * Real native DuckDB bindings with HNSW indexing and cosine similarity.
  */
-const duckdb = require('../core/heady-duck');
+let duckdb;
+try { duckdb = require('../core/heady-duck'); } catch { duckdb = null; }
 const path = require('path');
 const fs = require('fs');
 const crypto = require('crypto');

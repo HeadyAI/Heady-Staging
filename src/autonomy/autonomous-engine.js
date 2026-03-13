@@ -7,7 +7,7 @@
 
 const { EventEmitter } = require('events');
 const logger = require('../../utils/logger');
-const HeadyScheduler = require('../../core/heady-scheduler');
+const HeadyScheduler = require('../core/heady-scheduler');
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 

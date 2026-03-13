@@ -1,8 +1,19 @@
-version: "3.9"
+# ═══════════════════════════════════════════════════════════════════════════════
+# Heady™ Docker Compose — Full Stack
+# ═══════════════════════════════════════════════════════════════════════════════
+# Usage:
+#   docker compose up -d --build        # Build and start all services
+#   docker compose ps                   # Check service status
+#   docker compose logs -f heady-manager # Follow manager logs
+#   docker compose down                 # Stop all services
+# ═══════════════════════════════════════════════════════════════════════════════
 
 services:
+  # ─── Infrastructure Layer ────────────────────────────────────────────────────
+
   postgres:
     image: pgvector/pgvector:pg16
+    container_name: heady-postgres
     environment:
       POSTGRES_PASSWORD: postgres
       POSTGRES_USER: postgres
@@ -10,7 +21,7 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - heady_postgres:/var/lib/postgresql/data
+      - heady-postgres:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres -d heady"]
       interval: 10s
@@ -19,11 +30,15 @@ services:
       start_period: 20s
     networks:
       - heady-net
+    restart: unless-stopped
 
   redis:
-    image: redis:7-bookworm
+    image: redis:7-alpine
+    container_name: heady-redis
     ports:
       - "6379:6379"
+    volumes:
+      - heady-redis:/data
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
       interval: 10s
@@ -32,9 +47,13 @@ services:
       start_period: 10s
     networks:
       - heady-net
+    restart: unless-stopped
+
+  # ─── Observability Layer ─────────────────────────────────────────────────────
 
   otel-collector:
     image: otel/opentelemetry-collector-contrib:0.120.0
+    container_name: heady-otel
     command: ["--config=/etc/otelcol/config.yaml"]
     volumes:
       - ./infra/otel/collector.yaml:/etc/otelcol/config.yaml:ro
@@ -43,29 +62,36 @@ services:
       - "9464:9464"
     networks:
       - heady-net
+    restart: unless-stopped
+
+  # ─── Core: Heady Manager (API Gateway + Swarm Orchestrator) ──────────────────
 
   heady-manager:
     build:
       context: .
       dockerfile: Dockerfile.production
+    container_name: heady-manager
     environment:
       NODE_ENV: production
       HEADY_ENV: production
-      PORT: 3301
+      PORT: 3300
       DATABASE_URL: postgres://postgres:postgres@postgres:5432/heady
       REDIS_URL: redis://redis:6379
       OBSERVABILITY_EXPORT_URL: http://otel-collector:4316/v1/traces
       OTEL_EXPORTER_OTLP_ENDPOINT: http://otel-collector:4316
       OTEL_SERVICE_NAME: heady-manager
+      HEADY_TARGET: Docker
     ports:
-      - "3301:3301"
+      - "3300:3300"
+    volumes:
+      - heady-data:/app/.heady-memory
     depends_on:
       postgres:
         condition: service_healthy
       redis:
         condition: service_healthy
     healthcheck:
-      test: ["CMD-SHELL", "curl -f http://localhost:3301/health || exit 1"]
+      test: ["CMD", "curl", "-sf", "http://localhost:3300/api/health"]
       interval: 15s
       timeout: 10s
       retries: 5
@@ -74,180 +100,216 @@ services:
       - heady-net
     restart: unless-stopped
 
-  api-gateway:
-    build:
-      context: .
-      dockerfile: services/domain-router/Dockerfile
-    environment:
-      PORT: 4301
-      DATABASE_URL: postgres://postgres:postgres@postgres:5432/heady
-      REDIS_URL: redis://redis:6379
-      HEADY_MANAGER_URL: http://heady-manager:3301
-    ports:
-      - "4301:4301"
-    depends_on:
-      postgres:
-        condition: service_healthy
-      redis:
-        condition: service_healthy
-      heady-manager:
-        condition: service_healthy
-    healthcheck:
-      test: ["CMD-SHELL", "curl -f http://localhost:4301/health || exit 1"]
-      interval: 15s
-      timeout: 10s
-      retries: 5
-      start_period: 30s
-    networks:
-      - heady-net
-    restart: unless-stopped
+  # ─── Microservices Layer ─────────────────────────────────────────────────────
 
   domain-router:
     build:
       context: .
-      dockerfile: services/domain-router/Dockerfile
+      dockerfile: Dockerfile.service
+      args:
+        SERVICE_FILTER: "@heady-ai/domain-router"
+        SERVICE_DIR: "services/domain-router"
+    container_name: heady-domain-router
+    command: ["tsx", "services/domain-router/src/index.ts"]
     environment:
       PORT: 4301
       DATABASE_URL: postgres://postgres:postgres@postgres:5432/heady
       REDIS_URL: redis://redis:6379
+      HEADY_MANAGER_URL: http://heady-manager:3300
     ports:
-      - "4311:4301"
+      - "4301:4301"
     depends_on:
-      postgres:
-        condition: service_healthy
-      redis:
+      heady-manager:
         condition: service_healthy
     networks:
       - heady-net
-
-  observability-kernel:
-    build:
-      context: .
-      dockerfile: services/observability-kernel/Dockerfile
-    environment:
-      PORT: 4302
-      DATABASE_URL: postgres://postgres:postgres@postgres:5432/heady
-      REDIS_URL: redis://redis:6379
-    ports:
-      - "4302:4302"
-    depends_on:
-      postgres:
-        condition: service_healthy
-      redis:
-        condition: service_healthy
-    networks:
-      - heady-net
+    restart: unless-stopped
 
   budget-tracker:
     build:
       context: .
-      dockerfile: services/budget-tracker/Dockerfile
+      dockerfile: Dockerfile.service
+      args:
+        SERVICE_FILTER: "@heady-ai/budget-tracker"
+        SERVICE_DIR: "services/budget-tracker"
+    container_name: heady-budget-tracker
+    command: ["tsx", "services/budget-tracker/src/index.ts"]
     environment:
       PORT: 4303
       DATABASE_URL: postgres://postgres:postgres@postgres:5432/heady
       REDIS_URL: redis://redis:6379
+      HEADY_MANAGER_URL: http://heady-manager:3300
     ports:
       - "4303:4303"
     depends_on:
-      postgres:
-        condition: service_healthy
-      redis:
+      heady-manager:
         condition: service_healthy
     networks:
       - heady-net
+    restart: unless-stopped
 
   heady-memory:
     build:
       context: .
-      dockerfile: services/heady-memory/Dockerfile
+      dockerfile: Dockerfile.service
+      args:
+        SERVICE_FILTER: "@heady-ai/heady-memory"
+        SERVICE_DIR: "services/heady-memory"
+    container_name: heady-memory
+    command: ["tsx", "services/heady-memory/src/index.ts"]
     environment:
       PORT: 4304
       DATABASE_URL: postgres://postgres:postgres@postgres:5432/heady
       REDIS_URL: redis://redis:6379
+      HEADY_MANAGER_URL: http://heady-manager:3300
     ports:
       - "4304:4304"
     depends_on:
-      postgres:
-        condition: service_healthy
-      redis:
+      heady-manager:
         condition: service_healthy
     networks:
       - heady-net
+    restart: unless-stopped
 
   heady-health:
     build:
       context: .
-      dockerfile: services/heady-health/Dockerfile
+      dockerfile: Dockerfile.service
+      args:
+        SERVICE_FILTER: "@heady-ai/heady-health"
+        SERVICE_DIR: "services/heady-health"
+    container_name: heady-health
+    command: ["tsx", "services/heady-health/src/index.ts"]
     environment:
       PORT: 4305
       DATABASE_URL: postgres://postgres:postgres@postgres:5432/heady
       REDIS_URL: redis://redis:6379
+      HEADY_MANAGER_URL: http://heady-manager:3300
     ports:
       - "4305:4305"
     depends_on:
-      postgres:
-        condition: service_healthy
-      redis:
+      heady-manager:
         condition: service_healthy
     networks:
       - heady-net
+    restart: unless-stopped
 
   heady-conductor:
     build:
       context: .
-      dockerfile: services/heady-conductor/Dockerfile
+      dockerfile: Dockerfile.service
+      args:
+        SERVICE_FILTER: "@heady-ai/heady-conductor"
+        SERVICE_DIR: "services/heady-conductor"
+    container_name: heady-conductor
+    command: ["tsx", "services/heady-conductor/src/index.ts"]
     environment:
       PORT: 4306
       DATABASE_URL: postgres://postgres:postgres@postgres:5432/heady
       REDIS_URL: redis://redis:6379
+      HEADY_MANAGER_URL: http://heady-manager:3300
     ports:
       - "4306:4306"
     depends_on:
-      postgres:
-        condition: service_healthy
-      redis:
+      heady-manager:
         condition: service_healthy
     networks:
       - heady-net
+    restart: unless-stopped
 
   heady-brains:
     build:
       context: .
-      dockerfile: services/heady-brains/Dockerfile
+      dockerfile: Dockerfile.service
+      args:
+        SERVICE_FILTER: "@heady-ai/heady-brains"
+        SERVICE_DIR: "services/heady-brains"
+    container_name: heady-brains
+    command: ["tsx", "services/heady-brains/src/index.ts"]
     environment:
       PORT: 4307
       DATABASE_URL: postgres://postgres:postgres@postgres:5432/heady
       REDIS_URL: redis://redis:6379
+      HEADY_MANAGER_URL: http://heady-manager:3300
     ports:
       - "4307:4307"
     depends_on:
-      postgres:
-        condition: service_healthy
-      redis:
+      heady-manager:
         condition: service_healthy
     networks:
       - heady-net
+    restart: unless-stopped
 
   heady-soul:
     build:
       context: .
-      dockerfile: services/heady-soul/Dockerfile
+      dockerfile: Dockerfile.service
+      args:
+        SERVICE_FILTER: "@heady-ai/heady-soul"
+        SERVICE_DIR: "services/heady-soul"
+    container_name: heady-soul
+    command: ["tsx", "services/heady-soul/src/index.ts"]
     environment:
       PORT: 4308
       DATABASE_URL: postgres://postgres:postgres@postgres:5432/heady
       REDIS_URL: redis://redis:6379
+      HEADY_MANAGER_URL: http://heady-manager:3300
     ports:
       - "4308:4308"
     depends_on:
-      postgres:
-        condition: service_healthy
-      redis:
+      heady-manager:
         condition: service_healthy
     networks:
       - heady-net
+    restart: unless-stopped
+
+  # ─── Admin / Debug Tools ─────────────────────────────────────────────────────
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: heady-pgadmin
+    ports:
+      - "8080:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@heady.internal
+      PGADMIN_DEFAULT_PASSWORD: heady_admin
+      PGADMIN_CONFIG_MASTER_PASSWORD_REQUIRED: "False"
+    volumes:
+      - heady-pgadmin:/var/lib/pgadmin
+    networks:
+      - heady-net
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
+
+  redis-commander:
+    image: rediscommander/redis-commander:latest
+    container_name: heady-redis-commander
+    ports:
+      - "8081:8081"
+    environment:
+      REDIS_HOSTS: "local:redis:6379"
+    networks:
+      - heady-net
+    depends_on:
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+
+# ─── Volumes ─────────────────────────────────────────────────────────────────
 
 volumes:
-  heady_postgres:
+  heady-postgres:
+    driver: local
+  heady-redis:
+    driver: local
+  heady-data:
+    driver: local
+  heady-pgadmin:
+    driver: local
+
+# ─── Networks ────────────────────────────────────────────────────────────────
 
 networks:
   heady-net:
