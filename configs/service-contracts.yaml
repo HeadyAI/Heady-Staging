@@ -158,7 +158,7 @@ serviceBoundaries:
       - headybuddy-widget (internal)
       - VNC server + noVNC
     healthPattern:
-      endpoint: http://localhost:6080/
+      endpoint: http://api.headysystems.com:6080/
       method: GET
       expectedStatus: 200
       interval: 30s

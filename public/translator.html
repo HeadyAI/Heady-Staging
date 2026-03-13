@@ -1,0 +1,980 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HeadyTranslator - Universal Protocol Bridge</title>
+    <link rel="stylesheet" href="/sacred-geometry.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 100%);
+            color: #e0e6ff;
+            overflow-x: hidden;
+            position: relative;
+            min-height: 100vh;
+        }
+
+        /* Animated Background Orbs */
+        .orb-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.15;
+            animation: float 20s infinite ease-in-out;
+        }
+
+        .orb-cyan {
+            width: 400px;
+            height: 400px;
+            background: #00D9FF;
+            top: -100px;
+            left: -100px;
+            animation-duration: 25s;
+        }
+
+        .orb-magenta {
+            width: 350px;
+            height: 350px;
+            background: #FF00A0;
+            bottom: -50px;
+            right: -50px;
+            animation-duration: 30s;
+            animation-delay: -10s;
+        }
+
+        .orb-gold {
+            width: 300px;
+            height: 300px;
+            background: #D4AF37;
+            top: 50%;
+            right: 10%;
+            animation-duration: 35s;
+            animation-delay: -15s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            25% { transform: translate(50px, -50px) rotate(90deg); }
+            50% { transform: translate(-30px, 30px) rotate(180deg); }
+            75% { transform: translate(30px, 50px) rotate(270deg); }
+        }
+
+        /* Main Container */
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 60px 30px;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        h1 {
+            font-size: 3.5em;
+            margin-bottom: 15px;
+            background: linear-gradient(135deg, #00D9FF, #FF00A0, #D4AF37);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 700;
+            letter-spacing: 2px;
+        }
+
+        .subtitle {
+            font-size: 1.3em;
+            color: #00D9FF;
+            margin-bottom: 10px;
+        }
+
+        .description {
+            font-size: 1.1em;
+            color: #b0b6cc;
+            max-width: 800px;
+            margin: 20px auto;
+            line-height: 1.6;
+        }
+
+        /* Section Title */
+        .section-title {
+            font-size: 1.8em;
+            color: #FF00A0;
+            margin: 60px 0 30px 0;
+            font-weight: 600;
+        }
+
+        /* Protocol Cards */
+        .protocol-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 60px;
+        }
+
+        .protocol-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 217, 255, 0.3);
+            border-radius: 16px;
+            padding: 28px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .protocol-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: left 0.5s;
+        }
+
+        .protocol-card:hover {
+            border-color: #00D9FF;
+            background: rgba(0, 217, 255, 0.1);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 40px rgba(0, 217, 255, 0.2);
+        }
+
+        .protocol-card:hover::before {
+            left: 100%;
+        }
+
+        .protocol-icon {
+            font-size: 2.5em;
+            margin-bottom: 15px;
+        }
+
+        .protocol-name {
+            font-size: 1.3em;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #00D9FF;
+        }
+
+        .protocol-description {
+            font-size: 0.95em;
+            color: #b0b6cc;
+            line-height: 1.5;
+            margin-bottom: 15px;
+        }
+
+        .protocol-features {
+            font-size: 0.85em;
+            color: #FF00A0;
+            margin: 15px 0;
+        }
+
+        .feature-tag {
+            display: inline-block;
+            background: rgba(255, 0, 160, 0.2);
+            border: 1px solid rgba(255, 0, 160, 0.4);
+            color: #FF00A0;
+            padding: 4px 10px;
+            border-radius: 4px;
+            margin: 4px 4px 4px 0;
+            font-size: 0.8em;
+        }
+
+        /* Message Flow Diagram */
+        .flow-section {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 16px;
+            padding: 40px;
+            margin-bottom: 60px;
+        }
+
+        .flow-diagram {
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            margin: 30px 0;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .flow-node {
+            background: rgba(255, 255, 255, 0.03);
+            border: 2px solid #D4AF37;
+            border-radius: 12px;
+            padding: 20px 30px;
+            text-align: center;
+            font-weight: 600;
+            color: #D4AF37;
+            min-width: 120px;
+        }
+
+        .flow-arrow {
+            font-size: 2em;
+            color: #FF00A0;
+            animation: flow-pulse 1.5s infinite ease-in-out;
+        }
+
+        @keyframes flow-pulse {
+            0%, 100% { opacity: 0.6; transform: scaleX(1); }
+            50% { opacity: 1; transform: scaleX(1.2); }
+        }
+
+        /* Translation Statistics */
+        .stats-section {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 217, 255, 0.2);
+            border-radius: 16px;
+            padding: 40px;
+            margin-bottom: 60px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 0, 160, 0.2);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 2.2em;
+            color: #FF00A0;
+            font-weight: 700;
+            font-family: 'Courier New', monospace;
+            margin: 10px 0;
+        }
+
+        .stat-label {
+            font-size: 0.95em;
+            color: #b0b6cc;
+        }
+
+        .stat-detail {
+            font-size: 0.85em;
+            color: #00D9FF;
+            margin-top: 8px;
+        }
+
+        /* Try It Section */
+        .demo-section {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 217, 255, 0.2);
+            border-radius: 16px;
+            padding: 40px;
+            margin-bottom: 60px;
+        }
+
+        .demo-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-top: 20px;
+        }
+
+        .demo-box {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(0, 217, 255, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+        }
+
+        .demo-title {
+            color: #00D9FF;
+            font-weight: 600;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+        }
+
+        .demo-content {
+            background: rgba(10, 14, 39, 0.8);
+            border: 1px solid rgba(0, 217, 255, 0.2);
+            border-radius: 8px;
+            padding: 15px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            color: #00D9FF;
+            line-height: 1.6;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .demo-button {
+            background: linear-gradient(135deg, #00D9FF, #FF00A0);
+            color: #0a0e27;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .demo-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 217, 255, 0.4);
+        }
+
+        /* How It Works */
+        .how-it-works {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 16px;
+            padding: 40px;
+            margin-bottom: 60px;
+        }
+
+        .how-item {
+            background: rgba(255, 255, 255, 0.03);
+            border-left: 4px solid #D4AF37;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+        }
+
+        .how-title {
+            color: #D4AF37;
+            font-weight: 600;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+
+        .how-description {
+            color: #b0b6cc;
+            line-height: 1.6;
+        }
+
+        /* Adapter Showcase */
+        .adapters-section {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 0, 160, 0.2);
+            border-radius: 16px;
+            padding: 40px;
+            margin-bottom: 60px;
+        }
+
+        .adapter-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .adapter-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 0, 160, 0.2);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .adapter-card:hover {
+            background: rgba(255, 0, 160, 0.1);
+            border-color: #FF00A0;
+            transform: translateY(-3px);
+        }
+
+        .adapter-icon {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+
+        .adapter-name {
+            color: #FF00A0;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .adapter-status {
+            font-size: 0.85em;
+            color: #b0b6cc;
+        }
+
+        .status-badge {
+            display: inline-block;
+            background: rgba(0, 255, 136, 0.2);
+            color: #00FF88;
+            padding: 2px 8px;
+            border-radius: 3px;
+            margin-top: 8px;
+            font-size: 0.8em;
+        }
+
+        /* Benefits */
+        .benefits-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 60px;
+        }
+
+        .benefit-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 217, 255, 0.2);
+            border-radius: 16px;
+            padding: 25px;
+        }
+
+        .benefit-icon {
+            font-size: 2.5em;
+            margin-bottom: 15px;
+        }
+
+        .benefit-title {
+            color: #00D9FF;
+            font-weight: 600;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+
+        .benefit-text {
+            color: #b0b6cc;
+            line-height: 1.6;
+            font-size: 0.95em;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.2em;
+            }
+
+            .protocol-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .demo-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .flow-diagram {
+                flex-direction: column;
+            }
+
+            .flow-arrow {
+                transform: rotate(90deg);
+                margin: 10px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="orb-container">
+        <div class="orb orb-cyan"></div>
+        <div class="orb orb-magenta"></div>
+        <div class="orb orb-gold"></div>
+    </div>
+
+    <div class="container">
+        <div class="header">
+            <h1>HeadyTranslator</h1>
+            <div class="subtitle">Universal Protocol Bridge</div>
+            <p class="description">
+                HeadyTranslator is a sophisticated protocol adaptation layer that enables seamless communication 
+                across diverse protocols. It bridges the gap between MCP, HTTP, WebSocket, UDP, MIDI, and TCP, 
+                allowing unified message handling regardless of underlying transport mechanisms.
+            </p>
+        </div>
+
+        <!-- Supported Protocols -->
+        <div>
+            <div class="section-title">Supported Protocols</div>
+            <div class="protocol-grid">
+                <!-- MCP -->
+                <div class="protocol-card">
+                    <div class="protocol-icon">🎯</div>
+                    <div class="protocol-name">MCP</div>
+                    <div class="protocol-description">
+                        Model Context Protocol - native HeadyOS protocol for structured, efficient communication 
+                        with support for streaming and advanced features.
+                    </div>
+                    <div class="protocol-features">
+                        <div class="feature-tag">Bidirectional</div>
+                        <div class="feature-tag">Streaming</div>
+                        <div class="feature-tag">Structured</div>
+                        <div class="feature-tag">Low-latency</div>
+                    </div>
+                    <div style="color: #D4AF37; font-size: 0.9em; margin-top: 10px;">Status: <strong>Primary</strong></div>
+                </div>
+
+                <!-- HTTP -->
+                <div class="protocol-card">
+                    <div class="protocol-icon">🌐</div>
+                    <div class="protocol-name">HTTP/HTTPS</div>
+                    <div class="protocol-description">
+                        Industry-standard web protocol. Supports REST, JSON-RPC, and custom HTTP semantics. 
+                        Full HTTP/1.1 and HTTP/2 support with automatic negotiation.
+                    </div>
+                    <div class="protocol-features">
+                        <div class="feature-tag">REST</div>
+                        <div class="feature-tag">JSON-RPC</div>
+                        <div class="feature-tag">Async</div>
+                        <div class="feature-tag">Load-balanced</div>
+                    </div>
+                    <div style="color: #D4AF37; font-size: 0.9em; margin-top: 10px;">Status: <strong>Production</strong></div>
+                </div>
+
+                <!-- WebSocket -->
+                <div class="protocol-card">
+                    <div class="protocol-icon">⚡</div>
+                    <div class="protocol-name">WebSocket</div>
+                    <div class="protocol-description">
+                        Full-duplex real-time communication over HTTP. Perfect for applications requiring 
+                        low-latency bidirectional messaging and instant updates.
+                    </div>
+                    <div class="protocol-features">
+                        <div class="feature-tag">Real-time</div>
+                        <div class="feature-tag">Bidirectional</div>
+                        <div class="feature-tag">Multiplexing</div>
+                        <div class="feature-tag">Compression</div>
+                    </div>
+                    <div style="color: #D4AF37; font-size: 0.9em; margin-top: 10px;">Status: <strong>Production</strong></div>
+                </div>
+
+                <!-- UDP -->
+                <div class="protocol-card">
+                    <div class="protocol-icon">📫</div>
+                    <div class="protocol-name">UDP</div>
+                    <div class="protocol-description">
+                        Lightweight datagram protocol for high-throughput, low-latency scenarios. Ideal for 
+                        metrics, logs, and streaming data where occasional loss is acceptable.
+                    </div>
+                    <div class="protocol-features">
+                        <div class="feature-tag">Fast</div>
+                        <div class="feature-tag">Connectionless</div>
+                        <div class="feature-tag">Multicast</div>
+                        <div class="feature-tag">Low-overhead</div>
+                    </div>
+                    <div style="color: #D4AF37; font-size: 0.9em; margin-top: 10px;">Status: <strong>Production</strong></div>
+                </div>
+
+                <!-- MIDI -->
+                <div class="protocol-card">
+                    <div class="protocol-icon">🎹</div>
+                    <div class="protocol-name">MIDI</div>
+                    <div class="protocol-description">
+                        Musical Instrument Digital Interface protocol. Enables HeadyOS integration with music 
+                        production software and hardware synthesizers.
+                    </div>
+                    <div class="protocol-features">
+                        <div class="feature-tag">Musical</div>
+                        <div class="feature-tag">Low-latency</div>
+                        <div class="feature-tag">Hardware</div>
+                        <div class="feature-tag">Event-driven</div>
+                    </div>
+                    <div style="color: #D4AF37; font-size: 0.9em; margin-top: 10px;">Status: <strong>Beta</strong></div>
+                </div>
+
+                <!-- TCP -->
+                <div class="protocol-card">
+                    <div class="protocol-icon">🔗</div>
+                    <div class="protocol-name">TCP/IP</div>
+                    <div class="protocol-description">
+                        Reliable connection-oriented protocol. Used for critical, ordered message delivery. 
+                        Supports custom binary protocols and legacy system integration.
+                    </div>
+                    <div class="protocol-features">
+                        <div class="feature-tag">Reliable</div>
+                        <div class="feature-tag">Ordered</div>
+                        <div class="feature-tag">Connected</div>
+                        <div class="feature-tag">Legacy</div>
+                    </div>
+                    <div style="color: #D4AF37; font-size: 0.9em; margin-top: 10px;">Status: <strong>Production</strong></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Message Flow Diagram -->
+        <div class="flow-section">
+            <h2 style="font-size: 1.6em; color: #D4AF37; margin-bottom: 20px;">Universal Message Flow</h2>
+            <p style="color: #b0b6cc; margin-bottom: 30px;">
+                All protocols are converted to a unified internal message format, processed through the pipeline, 
+                and converted back to the appropriate output protocol.
+            </p>
+            <div class="flow-diagram">
+                <div class="flow-node">HTTP</div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-node">Normalize</div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-node">Process</div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-node">Format</div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-node">Protocol</div>
+            </div>
+            <div class="flow-diagram">
+                <div class="flow-node">WebSocket</div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-node" style="background: rgba(255, 0, 160, 0.1); border-color: #FF00A0; color: #FF00A0;">HeadyMessage</div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-node" style="background: rgba(212, 175, 55, 0.1); border-color: #D4AF37; color: #D4AF37;">Pipeline</div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-node" style="background: rgba(255, 0, 160, 0.1); border-color: #FF00A0; color: #FF00A0;">HeadyMessage</div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-node">TCP</div>
+            </div>
+        </div>
+
+        <!-- Protocol Adapters -->
+        <div class="adapters-section">
+            <h2 style="font-size: 1.6em; color: #FF00A0; margin-bottom: 20px;">Active Protocol Adapters</h2>
+            <div class="adapter-grid">
+                <div class="adapter-card">
+                    <div class="adapter-icon">🎯</div>
+                    <div class="adapter-name">MCP Adapter</div>
+                    <div class="adapter-status">Native implementation</div>
+                    <div class="status-badge">Active</div>
+                </div>
+                <div class="adapter-card">
+                    <div class="adapter-icon">🌐</div>
+                    <div class="adapter-name">HTTP Adapter</div>
+                    <div class="adapter-status">RESTful gateway</div>
+                    <div class="status-badge">Active</div>
+                </div>
+                <div class="adapter-card">
+                    <div class="adapter-icon">⚡</div>
+                    <div class="adapter-name">WebSocket Adapter</div>
+                    <div class="adapter-status">Real-time bridge</div>
+                    <div class="status-badge">Active</div>
+                </div>
+                <div class="adapter-card">
+                    <div class="adapter-icon">📫</div>
+                    <div class="adapter-name">UDP Adapter</div>
+                    <div class="adapter-status">Datagram handler</div>
+                    <div class="status-badge">Active</div>
+                </div>
+                <div class="adapter-card">
+                    <div class="adapter-icon">🎹</div>
+                    <div class="adapter-name">MIDI Adapter</div>
+                    <div class="adapter-status">Music protocol</div>
+                    <div class="status-badge">Beta</div>
+                </div>
+                <div class="adapter-card">
+                    <div class="adapter-icon">🔗</div>
+                    <div class="adapter-name">TCP Adapter</div>
+                    <div class="adapter-status">Binary protocol</div>
+                    <div class="status-badge">Active</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Translation Statistics -->
+        <div class="stats-section">
+            <h2 style="font-size: 1.6em; color: #00D9FF; margin-bottom: 20px;">Translation Metrics</h2>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div style="font-weight: 600; color: #FF00A0; margin-bottom: 10px;">Messages Translated</div>
+                    <div class="stat-value" id="msgTranslated">847M</div>
+                    <div class="stat-label">Since system start</div>
+                    <div class="stat-detail">12.4K/sec peak</div>
+                </div>
+                <div class="stat-card">
+                    <div style="font-weight: 600; color: #FF00A0; margin-bottom: 10px;">Protocol Conversions</div>
+                    <div class="stat-value" id="conversions">2.1B</div>
+                    <div class="stat-label">Total conversions</div>
+                    <div class="stat-detail">0 failures</div>
+                </div>
+                <div class="stat-card">
+                    <div style="font-weight: 600; color: #FF00A0; margin-bottom: 10px;">Avg Translation Latency</div>
+                    <div class="stat-value" id="avgLatency">3.2ms</div>
+                    <div class="stat-label">Per message</div>
+                    <div class="stat-detail">P99: 8.4ms</div>
+                </div>
+                <div class="stat-card">
+                    <div style="font-weight: 600; color: #FF00A0; margin-bottom: 10px;">Protocol Success Rate</div>
+                    <div class="stat-value" id="successRate">99.998%</div>
+                    <div class="stat-label">All protocols</div>
+                    <div class="stat-detail">Flawless operation</div>
+                </div>
+                <div class="stat-card">
+                    <div style="font-weight: 600; color: #FF00A0; margin-bottom: 10px;">Active Connections</div>
+                    <div class="stat-value" id="activeConns">12,847</div>
+                    <div class="stat-label">Concurrent clients</div>
+                    <div class="stat-detail">Stable capacity</div>
+                </div>
+                <div class="stat-card">
+                    <div style="font-weight: 600; color: #FF00A0; margin-bottom: 10px;">Data Throughput</div>
+                    <div class="stat-value" id="throughput">4.2GB/s</div>
+                    <div class="stat-label">Peak capacity</div>
+                    <div class="stat-detail">Efficient compression</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Try It Section -->
+        <div class="demo-section">
+            <h2 style="font-size: 1.6em; color: #00D9FF; margin-bottom: 20px;">Try Translation Examples</h2>
+            <p style="color: #b0b6cc; margin-bottom: 30px;">
+                See how HeadyTranslator converts messages between different protocols in real-time.
+            </p>
+            <div class="demo-grid">
+                <div class="demo-box">
+                    <div class="demo-title">📥 Input (HTTP/REST)</div>
+                    <div class="demo-content">
+POST /api/process
+Content-Type: application/json
+
+{
+  "action": "analyze",
+  "data": {
+    "query": "What is AI?",
+    "context": "technical"
+  },
+  "options": {
+    "detail": "high"
+  }
+}
+                    </div>
+                    <button class="demo-button" onclick="runTranslation('http')">Translate to MCP</button>
+                </div>
+
+                <div class="demo-box">
+                    <div class="demo-title">📤 Output (MCP)</div>
+                    <div class="demo-content" id="output-mcp">
+{
+  "version": "1.0",
+  "messageId": "msg_847a2f1c",
+  "type": "HeadyMessage",
+  "protocol": "MCP",
+  "action": "analyze",
+  "payload": {
+    "query": "What is AI?",
+    "context": "technical",
+    "processingLevel": "detailed"
+  },
+  "metadata": {
+    "timestamp": "2026-03-11T14:23:45Z",
+    "source": "http",
+    "target": "mcp"
+  }
+}
+                    </div>
+                </div>
+
+                <div class="demo-box">
+                    <div class="demo-title">📥 Input (WebSocket)</div>
+                    <div class="demo-content">
+{
+  "type": "request",
+  "id": 1,
+  "method": "query",
+  "params": {
+    "text": "Explain machine learning",
+    "maxTokens": 500
+  }
+}
+                    </div>
+                    <button class="demo-button" onclick="runTranslation('ws')">Translate to UDP</button>
+                </div>
+
+                <div class="demo-box">
+                    <div class="demo-title">📤 Output (UDP Datagram)</div>
+                    <div class="demo-content" id="output-udp">
+MCP|1.0|847a2f2d|query|
+text:Explain machine 
+learning|maxTokens:500|
+source:websocket|
+ts:1715416625845
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- How It Works -->
+        <div class="how-it-works">
+            <h2 style="font-size: 1.6em; color: #D4AF37; margin-bottom: 30px;">How Cross-Protocol Communication Works</h2>
+            
+            <div class="how-item">
+                <div class="how-title">1. Protocol Detection</div>
+                <div class="how-description">
+                    HeadyTranslator automatically detects the incoming protocol by analyzing connection metadata, 
+                    headers, and initial message format. The system maintains state machines for each protocol 
+                    to efficiently identify message boundaries and parse incoming data.
+                </div>
+            </div>
+
+            <div class="how-item">
+                <div class="how-title">2. Message Normalization</div>
+                <div class="how-description">
+                    Once the protocol is identified, the message is converted to HeadyMessage - a universal 
+                    internal format. This normalization extracts metadata, content, and context from the 
+                    protocol-specific envelope, creating a unified representation.
+                </div>
+            </div>
+
+            <div class="how-item">
+                <div class="how-title">3. Pipeline Processing</div>
+                <div class="how-description">
+                    The normalized HeadyMessage flows through the complete HCFullPipeline (14 stages) regardless 
+                    of its origin protocol. Processing is completely protocol-agnostic, ensuring identical 
+                    results and quality metrics across all input channels.
+                </div>
+            </div>
+
+            <div class="how-item">
+                <div class="how-title">4. Response Formatting</div>
+                <div class="how-description">
+                    After processing, the result is converted back to the appropriate output protocol. 
+                    HeadyTranslator automatically formats the response in the protocol expected by the client, 
+                    including proper headers, encoding, and envelope structure.
+                </div>
+            </div>
+
+            <div class="how-item">
+                <div class="how-title">5. Metadata Preservation</div>
+                <div class="how-description">
+                    Throughout translation, important metadata is preserved including request IDs, timestamps, 
+                    client information, and protocol-specific options. This ensures traceability and enables 
+                    intelligent routing and debugging.
+                </div>
+            </div>
+
+            <div class="how-item">
+                <div class="how-title">6. Error Handling</div>
+                <div class="how-description">
+                    If translation fails at any stage, HeadyTranslator generates protocol-appropriate error 
+                    responses. HTTP requests receive JSON error objects, WebSocket clients get error frames, 
+                    and UDP clients receive error datagrams.
+                </div>
+            </div>
+        </div>
+
+        <!-- Benefits Section -->
+        <div style="margin-bottom: 60px;">
+            <h2 style="font-size: 1.6em; color: #FF00A0; margin: 60px 0 30px 0; font-weight: 600;">Why HeadyTranslator?</h2>
+            <div class="benefits-section">
+                <div class="benefit-card">
+                    <div class="benefit-icon">🔗</div>
+                    <div class="benefit-title">Protocol Agnostic</div>
+                    <div class="benefit-text">
+                        Write once, deploy everywhere. Your application logic doesn't need to know about 
+                        underlying protocols - HeadyTranslator handles all conversion transparently.
+                    </div>
+                </div>
+                <div class="benefit-card">
+                    <div class="benefit-icon">⚡</div>
+                    <div class="benefit-title">Low Overhead</div>
+                    <div class="benefit-text">
+                        Translation latency is only 3.2ms average. Optimized adapters and efficient message 
+                        formats minimize performance impact while maximizing throughput.
+                    </div>
+                </div>
+                <div class="benefit-card">
+                    <div class="benefit-icon">🔄</div>
+                    <div class="benefit-title">Seamless Integration</div>
+                    <div class="benefit-text">
+                        Integrate with legacy systems, modern APIs, music hardware, and real-time applications 
+                        without modifying your core logic. Works with HTTP, WebSocket, UDP, TCP, MCP, and MIDI.
+                    </div>
+                </div>
+                <div class="benefit-card">
+                    <div class="benefit-icon">📊</div>
+                    <div class="benefit-title">Cross-Protocol Debugging</div>
+                    <div class="benefit-text">
+                        Unified logging and debugging across all protocols. Trace messages through their entire 
+                        lifecycle regardless of how many protocol conversions occur.
+                    </div>
+                </div>
+                <div class="benefit-card">
+                    <div class="benefit-icon">🎯</div>
+                    <div class="benefit-title">Intelligent Routing</div>
+                    <div class="benefit-text">
+                        Route messages based on content and context, not just protocol. Request a response via 
+                        HTTP, get a callback via WebSocket. Flexibility meets performance.
+                    </div>
+                </div>
+                <div class="benefit-card">
+                    <div class="benefit-icon">🛡️</div>
+                    <div class="benefit-title">Security Consistent</div>
+                    <div class="benefit-text">
+                        Apply security policies once at the translation layer. Encryption, rate limiting, and 
+                        authentication work identically across all protocols.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Animate metrics
+        function animateMetrics() {
+            const metrics = [
+                { id: 'msgTranslated', base: 847000000, format: n => (n / 1000000).toFixed(0) + 'M' },
+                { id: 'conversions', base: 2100000000, format: n => (n / 1000000000).toFixed(1) + 'B' },
+                { id: 'avgLatency', base: 3.2, format: n => n.toFixed(1) + 'ms' },
+                { id: 'successRate', base: 99.998, format: n => n.toFixed(3) + '%' },
+                { id: 'activeConns', base: 12847, format: n => Math.round(n).toLocaleString() },
+                { id: 'throughput', base: 4.2, format: n => n.toFixed(1) + 'GB/s' }
+            ];
+
+            metrics.forEach(metric => {
+                const el = document.getElementById(metric.id);
+                if (el) {
+                    const variance = metric.base * 0.03;
+                    const newValue = metric.base + (Math.random() - 0.5) * variance * 2;
+                    el.textContent = metric.format(newValue);
+                }
+            });
+        }
+
+        setInterval(animateMetrics, 4000);
+
+        // Demo translation
+        function runTranslation(source) {
+            const httpOutput = document.getElementById('output-mcp');
+            const wsOutput = document.getElementById('output-udp');
+            
+            if (source === 'http') {
+                httpOutput.style.background = 'rgba(0, 217, 255, 0.15)';
+                setTimeout(() => {
+                    httpOutput.style.background = 'rgba(10, 14, 39, 0.8)';
+                }, 1500);
+            } else if (source === 'ws') {
+                wsOutput.style.background = 'rgba(0, 217, 255, 0.15)';
+                setTimeout(() => {
+                    wsOutput.style.background = 'rgba(10, 14, 39, 0.8)';
+                }, 1500);
+            }
+        }
+    </script>
+    <script src="/nav-global.js"></script>
+</body>
+</html>

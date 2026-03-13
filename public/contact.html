@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact HeadySystems - Support & Inquiries</title>
+    <link rel="stylesheet" href="/sacred-geometry.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 50%, #0a0e27 100%);
+            color: #e0e0e0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow-x: hidden;
+            position: relative;
+            min-height: 100vh;
+        }
+
+        /* Animated Background Orbs */
+        .orb {
+            position: fixed;
+            border-radius: 50%;
+            opacity: 0.1;
+            filter: blur(40px);
+            z-index: 0;
+        }
+
+        .orb-1 {
+            width: 400px;
+            height: 400px;
+            background: #FF00A0;
+            top: -100px;
+            left: -100px;
+            animation: float 8s ease-in-out infinite;
+        }
+
+        .orb-2 {
+            width: 300px;
+            height: 300px;
+            background: #D4AF37;
+            bottom: 10%;
+            right: 5%;
+            animation: float 10s ease-in-out infinite reverse;
+        }
+
+        .orb-3 {
+            width: 350px;
+            height: 350px;
+            background: #00D9FF;
+            top: 50%;
+            left: 10%;
+            animation: float 12s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(30px, -30px); }
+        }
+
+        .content {
+            position: relative;
+            z-index: 1;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 60px 20px;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .header h1 {
+            font-size: 3.5em;
+            background: linear-gradient(135deg, #FF00A0, #00D9FF);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+
+        .header p {
+            font-size: 1.2em;
+            color: #a0a0a0;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Glass Card */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 40px;
+            margin: 40px 0;
+            transition: all 0.3s ease;
+        }
+
+        /* Contact Form */
+        .contact-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            grid-column: 1 / -1;
+        }
+
+        .form-group.half {
+            grid-column: span 1;
+        }
+
+        .form-group label {
+            display: block;
+            color: #00D9FF;
+            margin-bottom: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.85em;
+            letter-spacing: 1px;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 12px 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(0, 217, 255, 0.3);
+            border-radius: 8px;
+            color: #e0e0e0;
+            font-family: inherit;
+            font-size: 1em;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            background: rgba(255, 255, 255, 0.1);
+            border-color: #FF00A0;
+            box-shadow: 0 0 20px rgba(255, 0, 160, 0.2);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 150px;
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, #FF00A0, #D4AF37);
+            color: #0a0e27;
+            padding: 15px 40px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(255, 0, 160, 0.3);
+        }
+
+        /* Contact Info Grid */
+        .contact-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin: 60px 0;
+        }
+
+        .info-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .info-card:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(0, 217, 255, 0.3);
+            transform: translateY(-5px);
+        }
+
+        .info-card .icon {
+            font-size: 2.5em;
+            margin-bottom: 15px;
+        }
+
+        .info-card h3 {
+            color: #00D9FF;
+            font-size: 1.3em;
+            margin-bottom: 10px;
+        }
+
+        .info-card p {
+            color: #a0a0a0;
+            line-height: 1.6;
+            word-break: break-all;
+        }
+
+        /* Support Channels */
+        .support-section {
+            margin: 60px 0;
+        }
+
+        .support-section h2 {
+            font-size: 2.2em;
+            color: #D4AF37;
+            text-align: center;
+            margin-bottom: 40px;
+            text-shadow: 0 0 20px rgba(212, 175, 55, 0.2);
+        }
+
+        .support-channels {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+        }
+
+        .channel-card {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            padding: 35px;
+            border-radius: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .channel-card:hover {
+            background: rgba(255, 255, 255, 0.12);
+            border-color: #FF00A0;
+            transform: translateY(-5px);
+        }
+
+        .channel-card .channel-icon {
+            font-size: 2em;
+            margin-bottom: 15px;
+        }
+
+        .channel-card h3 {
+            color: #FF00A0;
+            font-size: 1.4em;
+            margin-bottom: 10px;
+        }
+
+        .channel-card p {
+            color: #b0b0b0;
+            line-height: 1.7;
+            margin-bottom: 15px;
+        }
+
+        .channel-card a {
+            color: #00D9FF;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+
+        .channel-card a:hover {
+            color: #FF00A0;
+            text-shadow: 0 0 10px rgba(255, 0, 160, 0.3);
+        }
+
+        /* Office Location */
+        .office-section {
+            margin: 60px 0;
+        }
+
+        .office-section h2 {
+            font-size: 2.2em;
+            color: #00D9FF;
+            text-align: center;
+            margin-bottom: 40px;
+            text-shadow: 0 0 20px rgba(0, 217, 255, 0.2);
+        }
+
+        .office-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            align-items: center;
+        }
+
+        .office-info {
+            padding: 30px;
+        }
+
+        .office-info h3 {
+            color: #FF00A0;
+            font-size: 1.5em;
+            margin-bottom: 20px;
+        }
+
+        .office-info p {
+            color: #b0b0b0;
+            line-height: 1.8;
+            margin-bottom: 15px;
+            font-size: 1.05em;
+        }
+
+        .office-map {
+            width: 100%;
+            aspect-ratio: 1;
+            background: linear-gradient(135deg, rgba(0, 217, 255, 0.1), rgba(255, 0, 160, 0.1));
+            border: 2px solid rgba(0, 217, 255, 0.3);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3em;
+            color: rgba(0, 217, 255, 0.5);
+        }
+
+        /* FAQ Section */
+        .faq-section {
+            margin: 60px 0;
+        }
+
+        .faq-section h2 {
+            font-size: 2.2em;
+            color: #D4AF37;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .faq-item {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .faq-item:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 0, 160, 0.2);
+        }
+
+        .faq-question {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #00D9FF;
+            font-weight: 600;
+            font-size: 1.1em;
+        }
+
+        .faq-toggle {
+            font-size: 1.5em;
+            color: #FF00A0;
+            transition: transform 0.3s ease;
+        }
+
+        .faq-item.active .faq-toggle {
+            transform: rotate(180deg);
+        }
+
+        .faq-answer {
+            display: none;
+            color: #b0b0b0;
+            line-height: 1.7;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .faq-item.active .faq-answer {
+            display: block;
+        }
+
+        /* Response Time */
+        .response-time {
+            text-align: center;
+            padding: 40px;
+            background: rgba(212, 175, 55, 0.1);
+            border: 2px solid rgba(212, 175, 55, 0.3);
+            border-radius: 15px;
+            margin-top: 40px;
+        }
+
+        .response-time h3 {
+            color: #D4AF37;
+            font-size: 1.4em;
+            margin-bottom: 15px;
+        }
+
+        .response-time p {
+            color: #a0a0a0;
+            font-size: 1em;
+            line-height: 1.6;
+        }
+
+        /* Success Message */
+        .success-message {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(78, 205, 196, 0.95);
+            backdrop-filter: blur(10px);
+            border: 2px solid #4ecdc4;
+            border-radius: 15px;
+            padding: 40px;
+            text-align: center;
+            z-index: 1000;
+            min-width: 300px;
+            max-width: 500px;
+            box-shadow: 0 20px 60px rgba(78, 205, 196, 0.3);
+            animation: slideIn 0.4s ease-out;
+        }
+
+        .success-message.show {
+            display: block;
+        }
+
+        .success-message h3 {
+            color: #0a0a0f;
+            font-size: 1.8em;
+            margin-bottom: 15px;
+        }
+
+        .success-message p {
+            color: #0a0a0f;
+            font-size: 1.1em;
+            line-height: 1.6;
+        }
+
+        .success-message .checkmark {
+            font-size: 3em;
+            margin-bottom: 20px;
+            animation: scaleIn 0.5s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translate(-50%, -60%);
+            }
+            to {
+                opacity: 1;
+                transform: translate(-50%, -50%);
+            }
+        }
+
+        @keyframes scaleIn {
+            from {
+                transform: scale(0);
+            }
+            to {
+                transform: scale(1);
+            }
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2em;
+            }
+
+            .contact-form {
+                grid-template-columns: 1fr;
+            }
+
+            .form-group.half {
+                grid-column: 1 / -1;
+            }
+
+            .office-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+
+    <div class="content">
+        <div class="header">
+            <h1>Contact HeadySystems</h1>
+            <p>We're here to help. Get in touch with our team for support, inquiries, or partnerships.</p>
+        </div>
+
+        <!-- Contact Form -->
+        <div class="glass-card">
+            <h2 style="color: #00D9FF; font-size: 2em; margin-bottom: 30px;">Send us a Message</h2>
+            <form id="contactForm" class="contact-form">
+                <div class="form-group half">
+                    <label for="name">Full Name</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+                <div class="form-group half">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                <div class="form-group half">
+                    <label for="company">Company</label>
+                    <input type="text" id="company" name="company">
+                </div>
+                <div class="form-group half">
+                    <label for="phone">Phone Number</label>
+                    <input type="tel" id="phone" name="phone">
+                </div>
+                <div class="form-group half">
+                    <label for="subject">Subject</label>
+                    <select id="subject" name="subject" required>
+                        <option value="">-- Select a Subject --</option>
+                        <option value="support">Technical Support</option>
+                        <option value="sales">Sales Inquiry</option>
+                        <option value="partnership">Partnership Opportunity</option>
+                        <option value="security">Security Report</option>
+                        <option value="general">General Inquiry</option>
+                        <option value="careers">Career Interest</option>
+                    </select>
+                </div>
+                <div class="form-group half">
+                    <label for="priority">Priority Level</label>
+                    <select id="priority" name="priority">
+                        <option value="normal">Normal</option>
+                        <option value="high">High</option>
+                        <option value="urgent">Urgent</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="message">Message</label>
+                    <textarea id="message" name="message" required></textarea>
+                </div>
+                <button type="submit" class="submit-btn">Send Message</button>
+            </form>
+        </div>
+
+        <!-- Quick Contact Info -->
+        <div class="contact-info">
+            <div class="info-card">
+                <div class="icon">📧</div>
+                <h3>Email Support</h3>
+                <p>support@headyconnection.org</p>
+            </div>
+            <div class="info-card">
+                <div class="icon">🔒</div>
+                <h3>Security Issues</h3>
+                <p>security@headysystems.com</p>
+            </div>
+            <div class="info-card">
+                <div class="icon">💼</div>
+                <h3>Business Inquiries</h3>
+                <p>business@headysystems.com</p>
+            </div>
+        </div>
+
+        <!-- Support Channels -->
+        <div class="support-section">
+            <h2>Support Channels</h2>
+            <div class="support-channels">
+                <div class="channel-card">
+                    <div class="channel-icon">🐙</div>
+                    <h3>GitHub Issues</h3>
+                    <p>Report bugs, request features, or discuss technical details on our GitHub repository.</p>
+                    <a href="https://github.com/HeadyMe" target="_blank">Visit GitHub →</a>
+                </div>
+                <div class="channel-card">
+                    <div class="channel-icon">💬</div>
+                    <h3>Discord Community</h3>
+                    <p>Join our community chat for real-time support, discussions, and peer-to-peer help.</p>
+                    <a href="https://discord.gg/headysystems" target="_blank">Join Discord →</a>
+                </div>
+                <div class="channel-card">
+                    <div class="channel-icon">𝕏</div>
+                    <h3>Twitter/X</h3>
+                    <p>Follow us for updates, announcements, and industry insights from the HeadySystems team.</p>
+                    <a href="https://x.com/HeadySystems" target="_blank">Follow on X →</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Office Location -->
+        <div class="office-section">
+            <h2>Our Location</h2>
+            <div class="glass-card">
+                <div class="office-grid">
+                    <div class="office-info">
+                        <h3>HeadySystems Headquarters</h3>
+                        <p><strong>Address:</strong><br>San Francisco, California<br>United States</p>
+                        <p><strong>Business Hours:</strong><br>Monday - Friday: 9:00 AM - 6:00 PM PT<br>Saturday - Sunday: Closed</p>
+                        <p><strong>Time Zone:</strong><br>Pacific Time (PT)</p>
+                        <p>We welcome meetings by appointment. Please email us to schedule a visit.</p>
+                    </div>
+                    <div class="office-map">🗺️</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- FAQ Section -->
+        <div class="faq-section">
+            <h2>Frequently Asked Questions</h2>
+
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>What is HeadyOS?</span>
+                    <span class="faq-toggle">▼</span>
+                </div>
+                <div class="faq-answer">
+                    HeadyOS is the world's first operating system built on Sacred Geometry principles. It uses mathematical constants like PHI, PSI, and Fibonacci sequences to optimize resource allocation, scaling, and system behavior — replacing arbitrary "magic numbers" with universal mathematical principles found throughout nature.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>How is HeadyOS different from traditional operating systems?</span>
+                    <span class="faq-toggle">▼</span>
+                </div>
+                <div class="faq-answer">
+                    Traditional OSes use trial-and-error tuning and arbitrary constants. HeadyOS integrates Sacred Geometry principles at every layer — from the 14-stage HCFullPipeline to resource scheduling. This makes systems more elegant, resilient, and aligned with natural patterns.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>Is HeadyOS ready for production use?</span>
+                    <span class="faq-toggle">▼</span>
+                </div>
+                <div class="faq-answer">
+                    HeadyOS v3.0.0 is currently available and includes Sacred Geometry v4.0, HeadySwarm, and Liquid Nodes. We recommend starting with our community edition to evaluate compatibility with your infrastructure before enterprise deployment.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>What platforms does HeadyOS support?</span>
+                    <span class="faq-toggle">▼</span>
+                </div>
+                <div class="faq-answer">
+                    HeadyOS runs on Linux, macOS, and Windows. We also provide Kubernetes manifests and Docker containers for cloud deployments. Specialized builds are available for embedded systems and edge computing platforms.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>How do I get started with HeadyOS?</span>
+                    <span class="faq-toggle">▼</span>
+                </div>
+                <div class="faq-answer">
+                    Visit our documentation at docs.headysystems.com to download the installer. We provide step-by-step setup guides, video tutorials, and a community Discord channel where you can ask questions and connect with other users.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>Is HeadyOS open source?</span>
+                    <span class="faq-toggle">▼</span>
+                </div>
+                <div class="faq-answer">
+                    Core components of HeadyOS are open source under the GNU General Public License (GPL). Enterprise features are available under commercial licensing. We believe in open architecture and community contributions.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>How is HeadyOS secured against quantum computing threats?</span>
+                    <span class="faq-toggle">▼</span>
+                </div>
+                <div class="faq-answer">
+                    HeadyOS implements post-quantum cryptography using lattice-based encryption and hash-based signatures. These algorithms are resilient against attacks from both classical and quantum computers, protecting your data for decades to come.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>What is the CodeLock system?</span>
+                    <span class="faq-toggle">▼</span>
+                </div>
+                <div class="faq-answer">
+                    CodeLock is HeadyOS's zero-trust file integrity and approval workflow system. It monitors all code changes, maintains cryptographic integrity hashes, and requires explicit approvals before deploying code — preventing unauthorized modifications and ensuring audit compliance.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>How can I report security vulnerabilities?</span>
+                    <span class="faq-toggle">▼</span>
+                </div>
+                <div class="faq-answer">
+                    Please email security@headysystems.com with a detailed description of the vulnerability. Do not publicly disclose the issue. Our security team will respond within 24 hours and work with you on a coordinated disclosure timeline.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>What kind of support is available?</span>
+                    <span class="faq-toggle">▼</span>
+                </div>
+                <div class="faq-answer">
+                    We offer community support via GitHub Issues, Discord, and email. Enterprise customers receive dedicated support engineers, SLA guarantees, and priority response times. Contact business@headysystems.com for enterprise support pricing.
+                </div>
+            </div>
+
+            <div class="response-time">
+                <h3>Our Support Commitment</h3>
+                <p>
+                    <strong>Community Support:</strong> Response within 48 business hours<br>
+                    <strong>Priority Support:</strong> Response within 4 business hours<br>
+                    <strong>Emergency Support (Enterprise):</strong> Response within 1 hour, 24/7
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Message Modal -->
+    <div class="success-message" id="successMessage">
+        <div class="checkmark">✓</div>
+        <h3>Message Sent!</h3>
+        <p>Thank you for contacting HeadySystems. Our team will respond within 24-48 business hours.</p>
+    </div>
+
+    <script>
+        // API Resolution Function
+        function resolveApi() {
+            const protocol = window.location.protocol;
+            const host = window.location.host;
+            return `${protocol}//${host}`;
+        }
+
+        // Contact Form Submission Handler
+        const contactForm = document.getElementById('contactForm');
+        const successMessage = document.getElementById('successMessage');
+        const submitBtn = contactForm.querySelector('.submit-btn');
+
+        contactForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            // Validate required fields
+            const name = document.getElementById('name').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const message = document.getElementById('message').value.trim();
+            const subject = document.getElementById('subject').value.trim();
+
+            if (!name || !email || !message || !subject) {
+                alert('Please fill in all required fields (Name, Email, Subject, and Message).');
+                return;
+            }
+
+            // Email validation
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                alert('Please enter a valid email address.');
+                return;
+            }
+
+            // Disable submit button to prevent double-submit
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Sending...';
+
+            try {
+                // Prepare form data
+                const formData = {
+                    name: name,
+                    email: email,
+                    company: document.getElementById('company').value.trim(),
+                    phone: document.getElementById('phone').value.trim(),
+                    subject: subject,
+                    priority: document.getElementById('priority').value,
+                    message: message
+                };
+
+                // POST to API
+                const response = await fetch(`${resolveApi()}/api/notifications/send`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                if (response.ok) {
+                    // Show success message
+                    successMessage.classList.add('show');
+
+                    // Reset form
+                    contactForm.reset();
+
+                    // Hide success message after 5 seconds
+                    setTimeout(() => {
+                        successMessage.classList.remove('show');
+                    }, 5000);
+                } else {
+                    alert('Failed to send message. Please try again or contact support@headyconnection.org');
+                }
+            } catch (error) {
+                console.error('Form submission error:', error);
+                alert('An error occurred. Please try again later or contact support@headyconnection.org');
+            } finally {
+                // Re-enable submit button
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Send Message';
+            }
+        });
+
+        // FAQ Toggle Functionality
+        const faqItems = document.querySelectorAll('.faq-item');
+        faqItems.forEach(item => {
+            item.addEventListener('click', () => {
+                item.classList.toggle('active');
+            });
+        });
+    </script>
+
+    <script src="/nav-global.js"></script>
+</body>
+</html>

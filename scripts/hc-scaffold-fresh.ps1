@@ -144,7 +144,7 @@ PORT=3300
 NODE_ENV=development
 
 # Database
-DATABASE_URL=postgresql://heady:heady_secret@localhost:5432/heady
+DATABASE_URL=postgresql://heady:heady_secret@api.headysystems.com:5432/heady
 
 # Authentication
 HEADY_API_KEY=
@@ -169,9 +169,9 @@ PYTHON_WORKER_PATH=backend/python_worker
 HEADY_PYTHON_BIN=python
 
 # Cloud Endpoints (for hybrid mode)
-CLOUD_HEADYME_URL=https://heady-manager-headyme.onrender.com
-CLOUD_HEADYSYSTEMS_URL=https://heady-manager-headysystems.onrender.com
-CLOUD_HEADYCONNECTION_URL=https://heady-manager-headyconnection.onrender.com
+CLOUD_HEADYME_URL=https://heady-manager-headyme.headysystems.com
+CLOUD_HEADYSYSTEMS_URL=https://heady-manager-headysystems.headysystems.com
+CLOUD_HEADYCONNECTION_URL=https://heady-manager-headyconnection.headysystems.com
 "@ | Set-Content (Join-Path $OutputPath ".env.example") -Encoding UTF8
 
 # package.json (root)
@@ -271,7 +271,7 @@ RUN npm run build || true
 EXPOSE 3300
 
 HEALTHCHECK --interval=30s --timeout=10s --retries=3 \
-  CMD wget -qO- http://localhost:3300/api/health || exit 1
+  CMD wget -qO- http://api.headysystems.com:3300/api/health || exit 1
 
 CMD ["node", "heady-manager.js"]
 "@ | Set-Content (Join-Path $OutputPath "Dockerfile") -Encoding UTF8
@@ -296,7 +296,7 @@ services:
     networks:
       - heady-net
     healthcheck:
-      test: ["CMD", "wget", "-qO-", "http://localhost:3300/api/health"]
+      test: ["CMD", "wget", "-qO-", "http://api.headysystems.com:3300/api/health"]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -387,6 +387,78 @@ Proprietary - Heady Systems
 "@ | Set-Content (Join-Path $OutputPath "README.md") -Encoding UTF8
 
 Write-Host "  [OK] Root files created" -ForegroundColor Green
+
+# ─── heady-registry.json (new structure) ──────────────────────────────
+$registryContent = @"
+{
+  "registryVersion": "3.2.0",
+  "updatedAt": "$(Get-Date -Format "yyyy-MM-ddTHH:mm:ss.fffZ")",
+  "description": "HeadyRegistry — Central catalog and control point for the Heady ecosystem",
+  "last_deployment": "",
+
+  "components": [
+  ],
+  "repos": [
+    {
+      "id": "heady-sys",
+      "name": "HeadySystems/Heady",
+      "url": "git@github.com:HeadySystems/Heady.git",
+      "role": "primary",
+      "promotionTargets": [],
+      "branchPolicy": {
+        "main": "protected-prod",
+        "release/*": "frozen"
+      }
+    },
+    {
+      "id": "heady-me",
+      "name": "HeadyMe/Heady",
+      "url": "git@github.com:HeadyMe/Heady.git",
+      "role": "personal-cloud",
+      "promotionTargets": ["heady-sys", "heady-conn"],
+      "branchPolicy": {
+        "main": "protected-prod",
+        "personal/*": "local-only"
+      }
+    },
+    {
+      "id": "heady-conn",
+      "name": "HeadyConnection/Heady",
+      "url": "https://github.com/HeadySystems/HeadyConnection.git",
+      "role": "cross-system-bridge",
+      "promotionTargets": ["heady-sys", "heady-me"],
+      "branchPolicy": {
+        "main": "protected-prod",
+        "tenant/*": "env-specific"
+      }
+    },
+    {
+      "id": "sandbox",
+      "name": "HeadySystems/sandbox",
+      "url": "git@github.com:HeadySystems/sandbox.git",
+      "role": "experimental",
+      "promotionTargets": ["heady-sys", "heady-me", "heady-conn"],
+      "branchPolicy": {
+        "main": "dev",
+        "exp/*": "short-lived"
+      }
+    }
+  ],
+  "patterns": [
+    {
+      "id": "multi-sot-protocol",
+      "name": "Multi Source-of-Truth Protocol",
+      "type": "operational",
+      "description": "Sandbox as change origin, controlled promotion to Systems/Me/Connection sources of truth with registry-driven sync and hard gates.",
+      "sourceOfTruth": "docs/ITERATIVE_REBUILD_PROTOCOL.md",
+      "status": "active"
+    }
+  ]
+}
+"@
+Set-Content (Join-Path $OutputPath "heady-registry.json") $registryContent -Encoding UTF8
+
+Write-Host "  [OK] heady-registry.json created" -ForegroundColor Green
 
 # ─── heady-manager.js (clean, modular) ────────────────────────────────
 Write-Host "Creating heady-manager.js..." -ForegroundColor Yellow
@@ -603,7 +675,7 @@ app.get("*", (req, res) => {
 // ─── Start ──────────────────────────────────────────────────────────
 app.listen(PORT, () => {
   console.log(`\n  ∞ Heady Manager v3.0.0 listening on port ${PORT}`);
-  console.log(`  ∞ Health: http://localhost:${PORT}/api/health`);
+  console.log(`  ∞ Health: http://api.headysystems.com:${PORT}/api/health`);
   console.log(`  ∞ Environment: ${process.env.NODE_ENV || "development"}\n`);
 });
 '@ | Set-Content (Join-Path $OutputPath "heady-manager.js") -Encoding UTF8
@@ -652,7 +724,7 @@ export default defineConfig({
   server: {
     port: 3001,
     proxy: {
-      "/api": "http://localhost:3300",
+      "/api": "http://api.headysystems.com:3300",
     },
   },
   build: {

@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Integrations - Connect Everything</title>
+    <link rel="stylesheet" href="/sacred-geometry.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #0a0e27;
+            color: #e0e0e0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* Animated background orbs */
+        .orbs-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.15;
+        }
+
+        .orb1 {
+            width: 500px;
+            height: 500px;
+            background: #00D9FF;
+            top: -150px;
+            left: -150px;
+            animation: float 25s infinite ease-in-out;
+        }
+
+        .orb2 {
+            width: 400px;
+            height: 400px;
+            background: #FF00A0;
+            bottom: -100px;
+            right: -100px;
+            animation: float 30s infinite ease-in-out reverse;
+        }
+
+        .orb3 {
+            width: 350px;
+            height: 350px;
+            background: #D4AF37;
+            top: 50%;
+            left: 20%;
+            animation: float 35s infinite ease-in-out;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(40px, -40px); }
+        }
+
+        /* Header */
+        header {
+            background: rgba(10, 14, 39, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(0, 217, 255, 0.2);
+            padding: 30px 40px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-inner {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+            background: linear-gradient(135deg, #00D9FF, #FF00A0, #D4AF37);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 20px;
+        }
+
+        .header-title {
+            font-size: 32px;
+            font-weight: bold;
+            color: #00D9FF;
+            margin-bottom: 15px;
+        }
+
+        .header-subtitle {
+            color: rgba(224, 224, 224, 0.7);
+            font-size: 15px;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 60px 40px;
+        }
+
+        /* Filter bar */
+        .filter-section {
+            margin-bottom: 50px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .filter-label {
+            color: #D4AF37;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 13px;
+            letter-spacing: 0.5px;
+        }
+
+        .filter-button {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(0, 217, 255, 0.3);
+            color: rgba(224, 224, 224, 0.8);
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 13px;
+            transition: all 0.3s ease;
+        }
+
+        .filter-button:hover {
+            border-color: #00D9FF;
+            color: #00D9FF;
+        }
+
+        .filter-button.active {
+            background: rgba(0, 217, 255, 0.2);
+            border-color: #00D9FF;
+            color: #00D9FF;
+        }
+
+        /* Category section */
+        .category-section {
+            margin-bottom: 80px;
+        }
+
+        .category-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: #FF00A0;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid rgba(255, 0, 160, 0.2);
+        }
+
+        /* Integration grid */
+        .integrations-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        /* Integration card */
+        .integration-card {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(0, 217, 255, 0.2);
+            border-radius: 12px;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .integration-card:hover {
+            border-color: rgba(0, 217, 255, 0.5);
+            background: rgba(255, 255, 255, 0.12);
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 217, 255, 0.1);
+        }
+
+        .integration-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .integration-icon {
+            font-size: 48px;
+            width: 70px;
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 217, 255, 0.1);
+            border-radius: 10px;
+        }
+
+        .integration-meta {
+            flex: 1;
+        }
+
+        .integration-name {
+            font-size: 18px;
+            font-weight: 600;
+            color: #00D9FF;
+            margin-bottom: 5px;
+        }
+
+        .integration-category {
+            font-size: 12px;
+            color: #D4AF37;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+        }
+
+        .integration-description {
+            color: rgba(224, 224, 224, 0.75);
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .integration-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .status-indicator {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        .status-indicator.connected {
+            background: #00D9FF;
+        }
+
+        .status-indicator.available {
+            background: #D4AF37;
+            animation: pulse-gold 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        @keyframes pulse-gold {
+            0%, 100% { box-shadow: 0 0 10px rgba(212, 175, 55, 0.5); }
+            50% { box-shadow: 0 0 20px rgba(212, 175, 55, 0.8); }
+        }
+
+        .status-text.connected {
+            color: #00D9FF;
+        }
+
+        .status-text.available {
+            color: #D4AF37;
+        }
+
+        .integration-footer {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(0, 217, 255, 0.1);
+        }
+
+        .btn {
+            flex: 1;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-primary {
+            background: rgba(0, 217, 255, 0.2);
+            border: 1px solid #00D9FF;
+            color: #00D9FF;
+        }
+
+        .btn-primary:hover {
+            background: rgba(0, 217, 255, 0.3);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            border: 1px solid rgba(0, 217, 255, 0.3);
+            color: rgba(224, 224, 224, 0.7);
+        }
+
+        .btn-secondary:hover {
+            border-color: rgba(0, 217, 255, 0.6);
+            color: #00D9FF;
+        }
+
+        /* Build Your Own Section */
+        .build-section {
+            background: rgba(255, 0, 160, 0.08);
+            border: 2px solid #FF00A0;
+            border-radius: 16px;
+            padding: 50px 40px;
+            margin-top: 100px;
+            text-align: center;
+        }
+
+        .build-title {
+            font-size: 32px;
+            font-weight: bold;
+            color: #FF00A0;
+            margin-bottom: 20px;
+        }
+
+        .build-description {
+            color: rgba(224, 224, 224, 0.8);
+            line-height: 1.8;
+            margin-bottom: 30px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            font-size: 15px;
+        }
+
+        .build-features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        .build-feature {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(0, 217, 255, 0.2);
+            border-radius: 10px;
+            padding: 20px;
+        }
+
+        .build-feature-icon {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .build-feature-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #00D9FF;
+            margin-bottom: 8px;
+        }
+
+        .build-feature-desc {
+            font-size: 13px;
+            color: rgba(224, 224, 224, 0.6);
+        }
+
+        .build-btn {
+            background: linear-gradient(135deg, #FF00A0, #00D9FF);
+            border: none;
+            color: #0a0e27;
+            padding: 14px 40px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 30px;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .build-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(0, 217, 255, 0.3);
+        }
+
+        /* Footer */
+        footer {
+            border-top: 1px solid rgba(0, 217, 255, 0.2);
+            padding: 40px;
+            text-align: center;
+            color: rgba(224, 224, 224, 0.6);
+            font-size: 13px;
+            margin-top: 100px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 40px 20px;
+            }
+
+            .integrations-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .filter-section {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            header {
+                padding: 20px;
+            }
+
+            .header-title {
+                font-size: 24px;
+            }
+
+            .build-section {
+                padding: 30px 20px;
+            }
+
+            .build-title {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="orbs-bg">
+        <div class="orb orb1"></div>
+        <div class="orb orb2"></div>
+        <div class="orb orb3"></div>
+    </div>
+
+    <header>
+        <div class="header-inner">
+            <div class="logo">HeadyOS Integrations</div>
+            <h1 class="header-title">Connect Everything</h1>
+            <p class="header-subtitle">Seamless integration with the tools and services you use every day</p>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Filter Section -->
+        <div class="filter-section">
+            <span class="filter-label">Filter by Category:</span>
+            <button class="filter-button active" onclick="filterCategory('all')">All</button>
+            <button class="filter-button" onclick="filterCategory('cloud')">Cloud</button>
+            <button class="filter-button" onclick="filterCategory('ai-ml')">AI/ML</button>
+            <button class="filter-button" onclick="filterCategory('devops')">DevOps</button>
+            <button class="filter-button" onclick="filterCategory('communication')">Communication</button>
+            <button class="filter-button" onclick="filterCategory('storage')">Storage</button>
+        </div>
+
+        <!-- Cloud Category -->
+        <div class="category-section" data-category="cloud">
+            <h2 class="category-title">Cloud Infrastructure</h2>
+            <div class="integrations-grid">
+                <!-- Google Cloud -->
+                <div class="integration-card">
+                    <div class="integration-header">
+                        <div class="integration-icon">☁️</div>
+                        <div class="integration-meta">
+                            <div class="integration-name">Google Cloud</div>
+                            <div class="integration-category">Cloud</div>
+                        </div>
+                    </div>
+                    <p class="integration-description">Deploy and manage applications on Google Cloud Platform with Compute Engine, Cloud Storage, and BigQuery integration.</p>
+                    <div class="integration-status">
+                        <div class="status-indicator connected"></div>
+                        <span class="status-text connected">Connected</span>
+                    </div>
+                    <div class="integration-footer">
+                        <button class="btn btn-primary">Configure</button>
+                        <button class="btn btn-secondary">Docs</button>
+                    </div>
+                </div>
+
+                <!-- Cloudflare -->
+                <div class="integration-card">
+                    <div class="integration-header">
+                        <div class="integration-icon">🔧</div>
+                        <div class="integration-meta">
+                            <div class="integration-name">Cloudflare</div>
+                            <div class="integration-category">Cloud</div>
+                        </div>
+                    </div>
+                    <p class="integration-description">CDN, DNS management, Workers, and security services. Deploy serverless functions globally with zero cold start.</p>
+                    <div class="integration-status">
+                        <div class="status-indicator connected"></div>
+                        <span class="status-text connected">Connected</span>
+                    </div>
+                    <div class="integration-footer">
+                        <button class="btn btn-primary">Configure</button>
+                        <button class="btn btn-secondary">Docs</button>
+                    </div>
+                </div>
+
+                <!-- Render -->
+                <div class="integration-card">
+                    <div class="integration-header">
+                        <div class="integration-icon">🚀</div>
+                        <div class="integration-meta">
+                            <div class="integration-name">Render</div>
+                            <div class="integration-category">Cloud</div>
+                        </div>
+                    </div>
+                    <p class="integration-description">Deploy web services, background workers, and databases. Native Git integration for automatic deployments.</p>
+                    <div class="integration-status">
+                        <div class="status-indicator connected"></div>
+                        <span class="status-text connected">Connected</span>
+                    </div>
+                    <div class="integration-footer">
+                        <button class="btn btn-primary">Configure</button>
+                        <button class="btn btn-secondary">Docs</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- AI/ML Category -->
+        <div class="category-section" data-category="ai-ml">
+            <h2 class="category-title">AI & Machine Learning</h2>
+            <div class="integrations-grid">
+                <!-- Vertex AI -->
+                <div class="integration-card">
+                    <div class="integration-header">
+                        <div class="integration-icon">🧠</div>
+                        <div class="integration-meta">
+                            <div class="integration-name">Vertex AI</div>
+                            <div class="integration-category">AI/ML</div>
+                        </div>
+                    </div>
+                    <p class="integration-description">Google's unified AI platform. Deploy and manage machine learning models with AutoML, Prediction API, and model monitoring.</p>
+                    <div class="integration-status">
+                        <div class="status-indicator connected"></div>
+                        <span class="status-text connected">Connected</span>
+                    </div>
+                    <div class="integration-footer">
+                        <button class="btn btn-primary">Configure</button>
+                        <button class="btn btn-secondary">Docs</button>
+                    </div>
+                </div>
+
+                <!-- AI Studio (Gemini) -->
+                <div class="integration-card">
+                    <div class="integration-header">
+                        <div class="integration-icon">✨</div>
+                        <div class="integration-meta">
+                            <div class="integration-name">AI Studio</div>
+                            <div class="integration-category">AI/ML</div>
+                        </div>
+                    </div>
+                    <p class="integration-description">Access Gemini API for advanced language models. Build sophisticated AI applications with prompt engineering and multi-turn conversations.</p>
+                    <div class="integration-status">
+                        <div class="status-indicator connected"></div>
+                        <span class="status-text connected">Connected</span>
+                    </div>
+                    <div class="integration-footer">
+                        <button class="btn btn-primary">Configure</button>
+                        <button class="btn btn-secondary">Docs</button>
+                    </div>
+                </div>
+
+                <!-- Google Colab -->
+                <div class="integration-card">
+                    <div class="integration-header">
+                        <div class="integration-icon">📓</div>
+                        <div class="integration-meta">
+                            <div class="integration-name">Google Colab</div>
+                            <div class="integration-category">AI/ML</div>
+                        </div>
+                    </div>
+                    <p class="integration-description">Jupyter notebooks in the cloud with GPU/TPU access. Run 3 Colab Pro+ runtimes for computationally intensive operations and vector memory.</p>
+                    <div class="integration-status">
+                        <div class="status-indicator connected"></div>
+                        <span class="status-text connected">Connected</span>
+                    </div>
+                    <div class="integration-footer">
+                        <button class="btn btn-primary">Configure</button>
+                        <button class="btn btn-secondary">Docs</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- DevOps Category -->
+        <div class="category-section" data-category="devops">
+            <h2 class="category-title">DevOps & Infrastructure</h2>
+            <div class="integrations-grid">
+                <!-- GitHub -->
+                <div class="integration-card">
+                    <div class="integration-header">
+                        <div class="integration-icon">🐙</div>
+                        <div class="integration-meta">
+                            <div class="integration-name">GitHub</div>
+                            <div class="integration-category">DevOps</div>
+                        </div>
+                    </div>
+                    <p class="integration-description">Repository management, CI/CD pipelines, Actions, and code hosting. Trigger workflows and post updates from HeadyOS.</p>
+                    <div class="integration-status">
+                        <div class="status-indicator connected"></div>
+                        <span class="status-text connected">Connected</span>
+                    </div>
+                    <div class="integration-footer">
+                        <button class="btn btn-primary">Configure</button>
+                        <button class="btn btn-secondary">Docs</button>
+                    </div>
+                </div>
+
+                <!-- Docker -->
+                <div class="integration-card">
+                    <div class="integration-header">
+                        <div class="integration-icon">🐳</div>
+                        <div class="integration-meta">
+                            <div class="integration-name">Docker</div>
+                            <div class="integration-category">DevOps</div>
+                        </div>
+                    </div>
+                    <p class="integration-description">Container orchestration and image management. Build, push, and deploy containerized applications seamlessly.</p>
+                    <div class="integration-status">
+                        <div class="status-indicator available"></div>
+                        <span class="status-text available">Available</span>
+                    </div>
+                    <div class="integration-footer">
+                        <button class="btn btn-primary">Enable</button>
+                        <button class="btn btn-secondary">Docs</button>
+                    </div>
+                </div>
+
+                <!-- Kubernetes -->
+                <div class="integration-card">
+                    <div class="integration-header">
+                        <div class="integration-icon">☸️</div>
+                        <div class="integration-meta">
+                            <div class="integration-name">Kubernetes</div>
+                            <div class="integration-category">DevOps</div>
+                        </div>
+                    </div>
+                    <p class="integration-description">Orchestrate containerized applications at scale. Deploy, manage, and scale services across clusters.</p>
+                    <div class="integration-status">
+                        <div class="status-indicator available"></div>
+                        <span class="status-text available">Available</span>
+                    </div>
+                    <div class="integration-footer">
+                        <button class="btn btn-primary">Enable</button>
+                        <button class="btn btn-secondary">Docs</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Communication Category -->
+        <div class="category-section" data-category="communication">
+            <h2 class="category-title">Communication</h2>
+            <div class="integrations-grid">
+                <!-- Slack -->
+                <div class="integration-card">
+                    <div class="integration-header">
+                        <div class="integration-icon">💬</div>
+                        <div class="integration-meta">
+                            <div class="integration-name">Slack</div>
+                            <div class="integration-category">Communication</div>
+                        </div>
+                    </div>
+                    <p class="integration-description">Send notifications, receive commands, and stream logs. Integrate HeadyOS events directly into Slack workflows.</p>
+                    <div class="integration-status">
+                        <div class="status-indicator connected"></div>
+                        <span class="status-text connected">Connected</span>
+                    </div>
+                    <div class="integration-footer">
+                        <button class="btn btn-primary">Configure</button>
+                        <button class="btn btn-secondary">Docs</button>
+                    </div>
+                </div>
+
+                <!-- Email -->
+                <div class="integration-card">
+                    <div class="integration-header">
+                        <div class="integration-icon">📧</div>
+                        <div class="integration-meta">
+                            <div class="integration-name">Email</div>
+                            <div class="integration-category">Communication</div>
+                        </div>
+                    </div>
+                    <p class="integration-description">Send transactional emails and alerts. Support for SMTP, SendGrid, and Mailgun providers.</p>
+                    <div class="integration-status">
+                        <div class="status-indicator available"></div>
+                        <span class="status-text available">Available</span>
+                    </div>
+                    <div class="integration-footer">
+                        <button class="btn btn-primary">Enable</button>
+                        <button class="btn btn-secondary">Docs</button>
+                    </div>
+                </div>
+
+                <!-- Webhooks -->
+                <div class="integration-card">
+                    <div class="integration-header">
+                        <div class="integration-icon">🔗</div>
+                        <div class="integration-meta">
+                            <div class="integration-name">Webhooks</div>
+                            <div class="integration-category">Communication</div>
+                        </div>
+                    </div>
+                    <p class="integration-description">HTTP-based event notifications. Trigger external systems via webhooks or receive webhook events in HeadyOS.</p>
+                    <div class="integration-status">
+                        <div class="status-indicator connected"></div>
+                        <span class="status-text connected">Connected</span>
+                    </div>
+                    <div class="integration-footer">
+                        <button class="btn btn-primary">Configure</button>
+                        <button class="btn btn-secondary">Docs</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Storage Category -->
+        <div class="category-section" data-category="storage">
+            <h2 class="category-title">Storage & Databases</h2>
+            <div class="integrations-grid">
+                <!-- Cloud Storage -->
+                <div class="integration-card">
+                    <div class="integration-header">
+                        <div class="integration-icon">💾</div>
+                        <div class="integration-meta">
+                            <div class="integration-name">Cloud Storage</div>
+                            <div class="integration-category">Storage</div>
+                        </div>
+                    </div>
+                    <p class="integration-description">Object storage for files, backups, and archives. S3-compatible APIs and lifecycle management.</p>
+                    <div class="integration-status">
+                        <div class="status-indicator connected"></div>
+                        <span class="status-text connected">Connected</span>
+                    </div>
+                    <div class="integration-footer">
+                        <button class="btn btn-primary">Configure</button>
+                        <button class="btn btn-secondary">Docs</button>
+                    </div>
+                </div>
+
+                <!-- PostgreSQL -->
+                <div class="integration-card">
+                    <div class="integration-header">
+                        <div class="integration-icon">🗄️</div>
+                        <div class="integration-meta">
+                            <div class="integration-name">PostgreSQL</div>
+                            <div class="integration-category">Storage</div>
+                        </div>
+                    </div>
+                    <p class="integration-description">Relational database management. Query data, manage schemas, and optimize performance.</p>
+                    <div class="integration-status">
+                        <div class="status-indicator connected"></div>
+                        <span class="status-text connected">Connected</span>
+                    </div>
+                    <div class="integration-footer">
+                        <button class="btn btn-primary">Configure</button>
+                        <button class="btn btn-secondary">Docs</button>
+                    </div>
+                </div>
+
+                <!-- Redis -->
+                <div class="integration-card">
+                    <div class="integration-header">
+                        <div class="integration-icon">⚡</div>
+                        <div class="integration-meta">
+                            <div class="integration-name">Redis</div>
+                            <div class="integration-category">Storage</div>
+                        </div>
+                    </div>
+                    <p class="integration-description">In-memory data store for caching and sessions. High-performance key-value operations.</p>
+                    <div class="integration-status">
+                        <div class="status-indicator available"></div>
+                        <span class="status-text available">Available</span>
+                    </div>
+                    <div class="integration-footer">
+                        <button class="btn btn-primary">Enable</button>
+                        <button class="btn btn-secondary">Docs</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Build Your Own Section -->
+        <section class="build-section">
+            <h2 class="build-title">Build Your Own Integration</h2>
+            <p class="build-description">Don't see the integration you need? Create a custom one using HeadyOS SDK and MCP tools. Our framework makes it easy to build and maintain integrations.</p>
+
+            <div class="build-features">
+                <div class="build-feature">
+                    <div class="build-feature-icon">📚</div>
+                    <div class="build-feature-title">SDK & Docs</div>
+                    <div class="build-feature-desc">Complete TypeScript SDK with full documentation and examples</div>
+                </div>
+                <div class="build-feature">
+                    <div class="build-feature-icon">🔧</div>
+                    <div class="build-feature-title">MCP Tools</div>
+                    <div class="build-feature-desc">Model Context Protocol tools for AI integration</div>
+                </div>
+                <div class="build-feature">
+                    <div class="build-feature-icon">🌊</div>
+                    <div class="build-feature-title">Protocol Bridges</div>
+                    <div class="build-feature-desc">Liquid Nodes support HTTP, WebSocket, UDP, MIDI, TCP</div>
+                </div>
+                <div class="build-feature">
+                    <div class="build-feature-icon">📦</div>
+                    <div class="build-feature-title">Share & Monetize</div>
+                    <div class="build-feature-desc">Publish integrations to marketplace and earn revenue</div>
+                </div>
+            </div>
+
+            <button class="build-btn" onclick="alert('Visit Developer Hub for integration development guide')">Start Building</button>
+        </section>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 HeadyOS Integrations. Connect everything, build anything.</p>
+    </footer>
+
+    <script>
+        function filterCategory(category) {
+            const buttons = document.querySelectorAll('.filter-button');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+
+            const sections = document.querySelectorAll('.category-section');
+            sections.forEach(section => {
+                if (category === 'all') {
+                    section.style.display = 'block';
+                } else if (section.dataset.category === category) {
+                    section.style.display = 'block';
+                } else {
+                    section.style.display = 'none';
+                }
+            });
+        }
+    </script>
+
+    <script src="/nav-global.js"></script>
+</body>
+</html>

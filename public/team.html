@@ -1,0 +1,1123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Team Behind HeadyOS - HeadySystems</title>
+    <link rel="stylesheet" href="/sacred-geometry.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 50%, #0a0e27 100%);
+            color: #e0e0e0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow-x: hidden;
+            position: relative;
+            min-height: 100vh;
+        }
+
+        /* Animated Background Orbs */
+        .orb {
+            position: fixed;
+            border-radius: 50%;
+            opacity: 0.1;
+            filter: blur(40px);
+            z-index: 0;
+        }
+
+        .orb-1 {
+            width: 400px;
+            height: 400px;
+            background: #00D9FF;
+            top: -100px;
+            right: -100px;
+            animation: float 8s ease-in-out infinite;
+        }
+
+        .orb-2 {
+            width: 300px;
+            height: 300px;
+            background: #FF00A0;
+            bottom: 10%;
+            left: 5%;
+            animation: float 10s ease-in-out infinite reverse;
+        }
+
+        .orb-3 {
+            width: 350px;
+            height: 350px;
+            background: #D4AF37;
+            top: 50%;
+            right: 10%;
+            animation: float 12s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(30px, -30px); }
+        }
+
+        .content {
+            position: relative;
+            z-index: 1;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 60px 20px;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 80px;
+        }
+
+        .header h1 {
+            font-size: 3.5em;
+            background: linear-gradient(135deg, #00D9FF, #FF00A0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 20px;
+            font-weight: 700;
+            letter-spacing: -1px;
+        }
+
+        .header p {
+            font-size: 1.2em;
+            color: #a0a0a0;
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        /* Glass Card */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 40px;
+            margin: 40px 0;
+            transition: all 0.3s ease;
+        }
+
+        .glass-card:hover {
+            background: rgba(255, 255, 255, 0.12);
+            border-color: rgba(0, 217, 255, 0.3);
+            transform: translateY(-5px);
+        }
+
+        /* Section Headers */
+        .section-header {
+            text-align: center;
+            margin: 60px 0 40px 0;
+        }
+
+        .section-header h2 {
+            font-size: 2.5em;
+            color: #D4AF37;
+            margin-bottom: 15px;
+            text-shadow: 0 0 20px rgba(212, 175, 55, 0.2);
+        }
+
+        .section-header .subtitle {
+            font-size: 1.1em;
+            color: #a0a0a0;
+            max-width: 700px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        /* Founder Section */
+        .founder-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            align-items: center;
+            margin-bottom: 60px;
+        }
+
+        .founder-image {
+            width: 100%;
+            aspect-ratio: 1;
+            background: linear-gradient(135deg, rgba(0, 217, 255, 0.2), rgba(255, 0, 160, 0.2));
+            border-radius: 15px;
+            border: 2px solid rgba(0, 217, 255, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4em;
+            font-weight: bold;
+            color: rgba(0, 217, 255, 0.5);
+        }
+
+        .founder-info h2 {
+            font-size: 2.5em;
+            color: #00D9FF;
+            margin-bottom: 10px;
+            text-shadow: 0 0 20px rgba(0, 217, 255, 0.3);
+        }
+
+        .founder-info .title {
+            font-size: 1.3em;
+            color: #FF00A0;
+            margin-bottom: 25px;
+            font-weight: 600;
+        }
+
+        .founder-info p {
+            color: #b0b0b0;
+            line-height: 1.8;
+            margin-bottom: 15px;
+            font-size: 1.05em;
+        }
+
+        /* Vision Section */
+        .vision-section {
+            text-align: center;
+            margin: 60px 0;
+        }
+
+        .vision-section h2 {
+            font-size: 2.5em;
+            color: #D4AF37;
+            margin-bottom: 30px;
+        }
+
+        .vision-statement {
+            font-size: 1.3em;
+            color: #c0c0c0;
+            line-height: 1.8;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 30px;
+            border-left: 4px solid #00D9FF;
+            border-radius: 10px;
+            background: rgba(0, 217, 255, 0.05);
+        }
+
+        /* Mission Section */
+        .mission-section {
+            margin: 60px 0;
+        }
+
+        .mission-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            align-items: start;
+        }
+
+        .mission-text h3 {
+            font-size: 1.8em;
+            color: #FF00A0;
+            margin-bottom: 20px;
+        }
+
+        .mission-text p {
+            color: #b0b0b0;
+            line-height: 1.8;
+            margin-bottom: 15px;
+            font-size: 1.05em;
+        }
+
+        /* Values Grid */
+        .values-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin: 60px 0;
+        }
+
+        .value-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .value-card:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 0, 160, 0.3);
+            transform: translateY(-5px);
+        }
+
+        .value-icon {
+            font-size: 2.5em;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .value-card h3 {
+            font-size: 1.5em;
+            color: #FF00A0;
+            margin-bottom: 15px;
+        }
+
+        .value-card p {
+            color: #a0a0a0;
+            line-height: 1.6;
+            font-size: 0.95em;
+        }
+
+        /* Timeline Section */
+        .timeline {
+            margin: 60px 0;
+            position: relative;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(180deg, #00D9FF, #FF00A0, #D4AF37);
+            transform: translateX(-1px);
+        }
+
+        .timeline-item {
+            margin-bottom: 50px;
+            width: 48%;
+        }
+
+        .timeline-item:nth-child(odd) {
+            margin-left: 0;
+            text-align: right;
+            padding-right: 50px;
+        }
+
+        .timeline-item:nth-child(even) {
+            margin-left: 52%;
+            padding-left: 50px;
+        }
+
+        .timeline-dot {
+            position: absolute;
+            left: 50%;
+            top: 10px;
+            width: 16px;
+            height: 16px;
+            background: #D4AF37;
+            border: 3px solid #0a0e27;
+            border-radius: 50%;
+            transform: translateX(-50%);
+            z-index: 2;
+        }
+
+        .timeline-item:nth-child(even) .timeline-dot {
+            left: 50%;
+        }
+
+        .timeline-content {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            position: relative;
+        }
+
+        .timeline-year {
+            font-size: 1.3em;
+            color: #00D9FF;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .timeline-title {
+            font-size: 1.1em;
+            color: #FF00A0;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .timeline-description {
+            color: #a0a0a0;
+            font-size: 0.95em;
+            line-height: 1.5;
+        }
+
+        /* Technology Philosophy Section */
+        .philosophy-section {
+            margin: 60px 0;
+        }
+
+        .philosophy-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 30px;
+            margin: 40px 0;
+        }
+
+        .philosophy-card {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 35px;
+            border-radius: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .philosophy-card:hover {
+            background: rgba(255, 255, 255, 0.12);
+            border-color: rgba(212, 175, 55, 0.3);
+            transform: translateY(-5px);
+        }
+
+        .philosophy-card h3 {
+            font-size: 1.4em;
+            color: #00D9FF;
+            margin-bottom: 15px;
+            text-shadow: 0 0 15px rgba(0, 217, 255, 0.2);
+        }
+
+        .philosophy-card p {
+            color: #b0b0b0;
+            line-height: 1.7;
+            font-size: 0.95em;
+        }
+
+        .philosophy-highlight {
+            color: #FF00A0;
+            font-weight: 600;
+        }
+
+        /* Advisory Section */
+        .advisory-section {
+            margin: 60px 0;
+        }
+
+        .advisory-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin: 40px 0;
+        }
+
+        .advisory-card {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(10px);
+            border: 2px dashed rgba(0, 217, 255, 0.3);
+            padding: 40px;
+            border-radius: 15px;
+            text-align: center;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 250px;
+        }
+
+        .advisory-card:hover {
+            border-color: rgba(0, 217, 255, 0.6);
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .advisory-placeholder-slot {
+            font-size: 2.5em;
+            color: rgba(0, 217, 255, 0.4);
+            margin-bottom: 15px;
+        }
+
+        .advisory-card p {
+            color: #7a7a7a;
+            font-size: 0.9em;
+        }
+
+        /* Company Stats Section */
+        .stats-section {
+            margin: 60px 0;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 25px;
+            margin: 40px 0;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(212, 175, 55, 0.3);
+            transform: scale(1.05);
+        }
+
+        .stat-number {
+            font-size: 2.5em;
+            font-weight: 700;
+            background: linear-gradient(135deg, #00D9FF, #FF00A0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+        }
+
+        .stat-label {
+            color: #a0a0a0;
+            font-size: 0.9em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Life at Heady Section */
+        .culture-section {
+            margin: 60px 0;
+        }
+
+        .culture-items {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 30px;
+            margin: 40px 0;
+        }
+
+        .culture-item {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            border-radius: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .culture-item:hover {
+            background: rgba(255, 255, 255, 0.12);
+            border-color: rgba(255, 0, 160, 0.3);
+            transform: translateY(-5px);
+        }
+
+        .culture-item h3 {
+            font-size: 1.3em;
+            color: #FF00A0;
+            margin-bottom: 15px;
+        }
+
+        .culture-item p {
+            color: #b0b0b0;
+            line-height: 1.6;
+            font-size: 0.95em;
+        }
+
+        /* Careers Section */
+        .careers-section {
+            margin: 60px 0;
+        }
+
+        .careers-intro {
+            color: #b0b0b0;
+            margin-bottom: 40px;
+            font-size: 1.1em;
+            line-height: 1.6;
+            text-align: center;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .jobs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+        }
+
+        .job-card {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            border-radius: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .job-card:hover {
+            background: rgba(255, 255, 255, 0.12);
+            border-color: rgba(212, 175, 55, 0.3);
+            transform: translateY(-5px);
+        }
+
+        .job-card h3 {
+            color: #FF00A0;
+            font-size: 1.3em;
+            margin-bottom: 10px;
+        }
+
+        .job-meta {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .job-card .department {
+            color: #00D9FF;
+            font-size: 0.85em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+
+        .job-card .location {
+            color: #D4AF37;
+            font-size: 0.85em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .job-card p {
+            color: #a0a0a0;
+            font-size: 0.95em;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .job-description {
+            color: #909090;
+            font-size: 0.9em;
+            line-height: 1.5;
+            margin-bottom: 20px;
+        }
+
+        .apply-btn {
+            display: inline-block;
+            background: linear-gradient(135deg, #00D9FF, #FF00A0);
+            color: #0a0e27;
+            padding: 12px 28px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: none;
+            font-size: 0.95em;
+        }
+
+        .apply-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0, 217, 255, 0.3);
+        }
+
+        /* CTA Section */
+        .cta-section {
+            margin: 80px 0 40px 0;
+            text-align: center;
+        }
+
+        .cta-box {
+            background: linear-gradient(135deg, rgba(0, 217, 255, 0.1), rgba(255, 0, 160, 0.1));
+            border: 2px solid rgba(212, 175, 55, 0.3);
+            padding: 60px 40px;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+        }
+
+        .cta-box h2 {
+            font-size: 2.3em;
+            color: #D4AF37;
+            margin-bottom: 20px;
+            text-shadow: 0 0 20px rgba(212, 175, 55, 0.2);
+        }
+
+        .cta-box p {
+            font-size: 1.1em;
+            color: #b0b0b0;
+            max-width: 700px;
+            margin: 0 auto 30px;
+            line-height: 1.6;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .cta-primary-btn {
+            display: inline-block;
+            background: linear-gradient(135deg, #00D9FF, #FF00A0);
+            color: #0a0e27;
+            padding: 15px 40px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1.05em;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: none;
+            text-shadow: none;
+        }
+
+        .cta-primary-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(0, 217, 255, 0.4);
+        }
+
+        .cta-secondary-btn {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.1);
+            color: #00D9FF;
+            padding: 15px 40px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1.05em;
+            border: 2px solid #00D9FF;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .cta-secondary-btn:hover {
+            background: rgba(0, 217, 255, 0.2);
+            transform: translateY(-3px);
+        }
+
+        @media (max-width: 768px) {
+            .founder-section {
+                grid-template-columns: 1fr;
+            }
+
+            .header h1 {
+                font-size: 2em;
+            }
+
+            .section-header h2 {
+                font-size: 1.8em;
+            }
+
+            .values-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .timeline::before {
+                left: 0;
+            }
+
+            .timeline-item {
+                width: 100%;
+                padding-left: 50px !important;
+                margin-left: 0 !important;
+                text-align: left !important;
+            }
+
+            .timeline-dot {
+                left: 0;
+            }
+
+            .mission-content {
+                grid-template-columns: 1fr;
+            }
+
+            .cta-buttons {
+                flex-direction: column;
+            }
+
+            .cta-primary-btn,
+            .cta-secondary-btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+
+    <div class="content">
+        <div class="header">
+            <h1>The Team Behind HeadyOS</h1>
+            <p>Meet the visionaries building the world's first Sacred Geometry Operating System</p>
+        </div>
+
+        <!-- Founder Section -->
+        <div class="glass-card">
+            <div class="founder-section">
+                <div class="founder-image">EH</div>
+                <div class="founder-info">
+                    <h2>Eric Haywood</h2>
+                    <div class="title">Founder & CEO, HeadySystems Inc.</div>
+                    <p>Eric Haywood is the visionary founder behind HeadyOS, a paradigm-shifting operating system that integrates Sacred Geometry principles into computing architecture. With a background in distributed systems, cryptography, and mathematical optimization, Eric recognized that most software systems use arbitrary "magic numbers" and disconnected components.</p>
+                    <p>His insight was radical: what if we rebuilt computing from the ground up using the mathematical principles found throughout nature? The result is HeadyOS — a system where PHI ratios scale resources, PSI constants tune thresholds, and Fibonacci sequences govern retry logic and connection pooling.</p>
+                    <p>Eric's philosophy centers on creating technology that is not just powerful, but beautiful and harmonious. Under his leadership, HeadySystems has achieved 51 provisional patents covering Sacred Geometry computing, post-quantum cryptography, swarm intelligence protocols, and multi-protocol translation systems.</p>
+                    <p>His personal mission: to prove that the most elegant and efficient systems are those aligned with universal mathematical truths — and that technology built this way serves humanity better.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mission & Values Section -->
+        <div class="mission-section">
+            <div class="section-header">
+                <h2>Our Mission & Values</h2>
+                <div class="subtitle">What drives us every day</div>
+            </div>
+            <div class="glass-card">
+                <div class="mission-content">
+                    <div class="mission-text">
+                        <h3>Our Mission</h3>
+                        <p>To revolutionize computing by returning to first principles — the universal mathematical truths found in nature. We build systems that are not only more efficient, resilient, and secure, but deeply aligned with the elegant patterns that have guided creation itself.</p>
+                        <p>We believe that arbitrary tuning and disconnected optimization are artifacts of the past. The future belongs to systems designed around eternal constants, elegant principles, and harmonious architecture.</p>
+                    </div>
+                    <div class="values-grid" style="margin: 0;">
+                        <div class="value-card">
+                            <span class="value-icon">✨</span>
+                            <h3>Innovation</h3>
+                            <p>We push beyond conventional thinking to discover new possibilities. From post-quantum cryptography to swarm intelligence, we're not afraid to explore ideas that challenge the status quo.</p>
+                        </div>
+                        <div class="value-card">
+                            <span class="value-icon">🔷</span>
+                            <h3>Sacred Geometry</h3>
+                            <p>Mathematics doesn't lie. We structure our systems around eternal principles like PHI, PSI, and Fibonacci sequences — replacing arbitrary tuning with universal constants.</p>
+                        </div>
+                        <div class="value-card">
+                            <span class="value-icon">🌐</span>
+                            <h3>Open Architecture</h3>
+                            <p>Closed systems limit potential. Our modular design allows developers to build, integrate, and extend without proprietary locks. Transparency is trust.</p>
+                        </div>
+                        <div class="value-card">
+                            <span class="value-icon">🛡️</span>
+                            <h3>Resilience</h3>
+                            <p>Systems must be robust. Whether facing quantum threats, network failures, or scale challenges, HeadyOS is designed to persist and adapt through intelligent redundancy.</p>
+                        </div>
+                        <div class="value-card">
+                            <span class="value-icon">⚡</span>
+                            <h3>Excellence</h3>
+                            <p>Every line of code, every design decision, every system component is held to the highest standard. We don't ship "good enough" — we ship systems we're proud of.</p>
+                        </div>
+                        <div class="value-card">
+                            <span class="value-icon">🤝</span>
+                            <h3>Community</h3>
+                            <p>Great technology emerges from collaboration. We foster an environment where diverse perspectives contribute to creating something greater than any individual could build.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Vision Section -->
+        <div class="vision-section">
+            <h2>Our Vision</h2>
+            <div class="vision-statement">
+                "To build the world's first operating system that harnesses the mathematical elegance of Sacred Geometry, creating computing systems that are not only more efficient and resilient, but deeply aligned with the patterns that appear throughout nature. We believe the future of technology lies not in arbitrary optimization, but in returning to first principles — the universal mathematical truths that have guided creation itself."
+            </div>
+        </div>
+
+        <!-- Timeline Section -->
+        <div class="section-header">
+            <h2>Our Story</h2>
+            <div class="subtitle">HeadySystems Milestones 2021–2026</div>
+        </div>
+        <div class="glass-card">
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-year">2021</div>
+                        <div class="timeline-title">The Insight</div>
+                        <div class="timeline-description">Eric Haywood recognizes that computing systems are built around arbitrary numbers. The first sketches of Sacred Geometry principles applied to distributed systems emerge.</div>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-year">2022</div>
+                        <div class="timeline-title">Foundation & First Patents</div>
+                        <div class="timeline-description">HeadySystems Inc. is officially founded. First 12 provisional patents filed covering PHI-based resource scaling and Fibonacci retry logic. Core research team assembled.</div>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-year">2023</div>
+                        <div class="timeline-title">HeadyOS Alpha & Ecosystem</div>
+                        <div class="timeline-description">First working prototype of HeadyOS released. Begin developing HCFullPipeline orchestration engine. Patent portfolio expands to 31 filings. Early partnerships with research institutions.</div>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-year">2024</div>
+                        <div class="timeline-title">Scale & Validation</div>
+                        <div class="timeline-description">HeadyOS beta launches to enterprise partners. Performance benchmarks show 40% efficiency improvement over conventional systems. Patents now include post-quantum cryptography and swarm intelligence. Platform achieves 99.99% uptime in production environments.</div>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-year">2025</div>
+                        <div class="timeline-title">Global Adoption & Innovation</div>
+                        <div class="timeline-description">Public launch of HeadyOS. Developer community reaches 5,000+ engineers. 51 provisional patents granted. Multi-protocol translation systems demonstrated. Sacred Geometry Conductor orchestrator becomes industry standard for distributed task management.</div>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-year">2026</div>
+                        <div class="timeline-title">Today: Leading the Future</div>
+                        <div class="timeline-description">HeadySystems is now the go-to platform for organizations building next-generation distributed systems. Expanding research into quantum-safe cryptography and ethical AI orchestration. Building the team to scale HeadyOS globally.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Technology Philosophy Section -->
+        <div class="philosophy-section">
+            <div class="section-header">
+                <h2>Sacred Geometry Technology Philosophy</h2>
+                <div class="subtitle">Why we build the way we do</div>
+            </div>
+            <div class="glass-card">
+                <div class="philosophy-grid">
+                    <div class="philosophy-card">
+                        <h3>PHI Scaling</h3>
+                        <p>The golden ratio (1.618...) appears throughout nature — in spiral galaxies, nautilus shells, and human anatomy. We use PHI to scale computational resources, throttling rates, and memory allocation. When you use the ratio nature chose, systems naturally stay in harmony.</p>
+                    </div>
+                    <div class="philosophy-card">
+                        <h3>Fibonacci Sequences</h3>
+                        <p>Retry logic, connection pooling, and timeout backoff shouldn't be guessed. We use Fibonacci sequences (1, 1, 2, 3, 5, 8, 13...) — the same pattern that grows flowers and arranges pine cones. It's mathematically proven to minimize contention.</p>
+                    </div>
+                    <div class="philosophy-card">
+                        <h3>PSI Constants</h3>
+                        <p>The PSI constant (2.3068...) governs thread scheduling, task prioritization, and queue management in HeadyOS. Rather than arbitrary tuning parameters, we use mathematical constants that preserve system balance across all scales.</p>
+                    </div>
+                    <div class="philosophy-card">
+                        <h3>Harmonic Resonance</h3>
+                        <p>Components of HeadyOS communicate through patterns aligned with harmonic principles. Message frequencies, synchronization intervals, and orchestration cycles all follow ratios found in music and physics — reducing friction and increasing coherence.</p>
+                    </div>
+                    <div class="philosophy-card">
+                        <h3>Emergent Properties</h3>
+                        <p>When individual systems follow universal principles, <span class="philosophy-highlight">emergent intelligence</span> arises. We don't script behavior — we architect conditions under which optimal behavior emerges naturally, just as it does in nature.</p>
+                    </div>
+                    <div class="philosophy-card">
+                        <h3>Deterministic Beauty</h3>
+                        <p>HeadyOS is both mathematically deterministic and aesthetically beautiful. Every curve, every ratio, every timing interval can be derived from first principles. This is not coincidence — it's the result of aligning with how the universe actually works.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Advisory Board Section -->
+        <div class="advisory-section">
+            <div class="section-header">
+                <h2>Advisory Board</h2>
+                <div class="subtitle">Building tomorrow's leadership council</div>
+            </div>
+            <div class="glass-card">
+                <p style="color: #b0b0b0; text-align: center; margin-bottom: 40px; font-size: 1.05em; line-height: 1.6;">We are actively recruiting world-class advisors across cryptography, distributed systems, sacred mathematics, and enterprise technology. If you're passionate about transforming how systems are built, we'd love to speak with you.</p>
+                <div class="advisory-grid">
+                    <div class="advisory-card">
+                        <div class="advisory-placeholder-slot">🔐</div>
+                        <p><strong style="color: #b0b0b0;">Cryptography Expert</strong></p>
+                        <p style="margin-top: 10px;">Post-quantum security & lattice-based systems</p>
+                    </div>
+                    <div class="advisory-card">
+                        <div class="advisory-placeholder-slot">📊</div>
+                        <p><strong style="color: #b0b0b0;">Systems Researcher</strong></p>
+                        <p style="margin-top: 10px;">Distributed systems & infrastructure scale</p>
+                    </div>
+                    <div class="advisory-card">
+                        <div class="advisory-placeholder-slot">✨</div>
+                        <p><strong style="color: #b0b0b0;">Mathematical Theorist</strong></p>
+                        <p style="margin-top: 10px;">Sacred geometry & natural principles</p>
+                    </div>
+                    <div class="advisory-card">
+                        <div class="advisory-placeholder-slot">🏢</div>
+                        <p><strong style="color: #b0b0b0;">Enterprise Executive</strong></p>
+                        <p style="margin-top: 10px;">Strategic partnerships & market leadership</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Company Stats Section -->
+        <div class="stats-section">
+            <div class="section-header">
+                <h2>By The Numbers</h2>
+                <div class="subtitle">HeadySystems at a glance</div>
+            </div>
+            <div class="glass-card">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number">51+</div>
+                        <div class="stat-label">Patents Filed</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">850K+</div>
+                        <div class="stat-label">Lines of Code</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">5000+</div>
+                        <div class="stat-label">Developer Community</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">99.99%</div>
+                        <div class="stat-label">Production Uptime</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">40%</div>
+                        <div class="stat-label">Efficiency Gain</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">42</div>
+                        <div class="stat-label">Team Members</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Life at Heady Section -->
+        <div class="culture-section">
+            <div class="section-header">
+                <h2>Life at Heady</h2>
+                <div class="subtitle">More than just code</div>
+            </div>
+            <div class="glass-card">
+                <div class="culture-items">
+                    <div class="culture-item">
+                        <h3>Deep Work Culture</h3>
+                        <p>We protect focused time. No endless meetings or context-switching — just skilled engineers solving hard problems. We believe in shipping excellence, not burning out.</p>
+                    </div>
+                    <div class="culture-item">
+                        <h3>Learning & Growth</h3>
+                        <p>Access to conferences, research papers, and continuous learning programs. We invest in your growth because your growth drives innovation. Patent authorship is common here.</p>
+                    </div>
+                    <div class="culture-item">
+                        <h3>Diversity of Thought</h3>
+                        <p>We actively recruit from non-traditional backgrounds. The best insights come from people who think differently. Your perspective matters, and we build spaces where it can flourish.</p>
+                    </div>
+                    <div class="culture-item">
+                        <h3>Flexible & Distributed</h3>
+                        <p>Remote-first, timezone-friendly team. We have offices in San Francisco and Berlin, but talent is global. Work from anywhere that lets you do your best thinking.</p>
+                    </div>
+                    <div class="culture-item">
+                        <h3>Competitive Compensation</h3>
+                        <p>Competitive salary, equity packages that mean something, and comprehensive benefits. We pay top talent top dollars — you're not taking a discount to join us.</p>
+                    </div>
+                    <div class="culture-item">
+                        <h3>Mission-Driven</h3>
+                        <p>You're not just building features. You're part of a movement to fundamentally reshape how systems are architected. Every line of code contributes to a grander vision.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Careers Section -->
+        <div class="careers-section">
+            <div class="section-header">
+                <h2>Open Positions</h2>
+                <div class="subtitle">We're hiring</div>
+            </div>
+            <p class="careers-intro">We're building something extraordinary, and we're looking for exceptional people to join the journey. HeadySystems is an equal opportunity employer committed to building a diverse, inclusive, and respectful workplace.</p>
+            <div class="glass-card">
+                <div class="jobs-grid">
+                    <div class="job-card">
+                        <h3>Senior Systems Architect</h3>
+                        <div class="job-meta">
+                            <span class="department">Engineering</span>
+                            <span class="location">San Francisco / Remote</span>
+                        </div>
+                        <div class="job-description">Full-time • Senior Level</div>
+                        <p>Design and implement core HeadyOS systems at scale. Lead architectural decisions for distributed computing challenges. This role requires deep expertise in kernel development, distributed systems, or large-scale infrastructure.</p>
+                        <p><strong style="color: #b0b0b0;">Requirements:</strong> 8+ years systems experience, Masters in CS or equivalent, published papers preferred.</p>
+                        <button class="apply-btn">View Position</button>
+                    </div>
+
+                    <div class="job-card">
+                        <h3>Post-Quantum Cryptography Engineer</h3>
+                        <div class="job-meta">
+                            <span class="department">Security Engineering</span>
+                            <span class="location">Berlin / Remote</span>
+                        </div>
+                        <div class="job-description">Full-time • Senior Level</div>
+                        <p>Develop and implement next-generation post-quantum cryptographic systems. Work on lattice-based crypto, hash-based signatures, and quantum-resistant key exchange protocols. Your research will shape the future of secure computing.</p>
+                        <p><strong style="color: #b0b0b0;">Requirements:</strong> PhD in cryptography or 10+ years experience, published research in PQC, expertise in lattice-based algorithms.</p>
+                        <button class="apply-btn">View Position</button>
+                    </div>
+
+                    <div class="job-card">
+                        <h3>Sacred Mathematics Research Scientist</h3>
+                        <div class="job-meta">
+                            <span class="department">Research Lab</span>
+                            <span class="location">San Francisco / Remote</span>
+                        </div>
+                        <div class="job-description">Full-time • Research Level</div>
+                        <p>Pioneer new applications of mathematical principles to computing. Explore how sacred geometry, harmonic ratios, and natural constants can optimize system behavior. Publish findings and drive innovation at the intersection of mathematics and software engineering.</p>
+                        <p><strong style="color: #b0b0b0;">Requirements:</strong> PhD in mathematics, physics, or related field; background in theoretical research; comfort with novel, unexplored problems.</p>
+                        <button class="apply-btn">View Position</button>
+                    </div>
+
+                    <div class="job-card">
+                        <h3>Infrastructure & DevOps Engineer</h3>
+                        <div class="job-meta">
+                            <span class="department">Infrastructure</span>
+                            <span class="location">Berlin / Remote</span>
+                        </div>
+                        <div class="job-description">Full-time • Mid/Senior Level</div>
+                        <p>Build and maintain deployment pipelines, infrastructure-as-code systems, and monitoring solutions that keep HeadyOS running at scale. Work with Kubernetes, Terraform, and cloud platforms. Own operational excellence.</p>
+                        <p><strong style="color: #b0b0b0;">Requirements:</strong> 5+ years DevOps experience, Kubernetes expertise, IaC proficiency, cloud platform experience (AWS/GCP/Azure).</p>
+                        <button class="apply-btn">View Position</button>
+                    </div>
+
+                    <div class="job-card">
+                        <h3>Technical Writer & Documentation Architect</h3>
+                        <div class="job-meta">
+                            <span class="department">Developer Relations</span>
+                            <span class="location">San Francisco / Remote</span>
+                        </div>
+                        <div class="job-description">Full-time • Mid Level</div>
+                        <p>Create comprehensive, beautiful documentation for complex systems. Develop educational content, tutorials, and API documentation. Help developers understand and love HeadyOS. Strong portfolio of technical writing required.</p>
+                        <p><strong style="color: #b0b0b0;">Requirements:</strong> 3+ years technical writing, software engineering background, proven ability to explain complex topics clearly, portfolio of published work.</p>
+                        <button class="apply-btn">View Position</button>
+                    </div>
+
+                    <div class="job-card">
+                        <h3>Product Manager, Developer Platform</h3>
+                        <div class="job-meta">
+                            <span class="department">Product Management</span>
+                            <span class="location">San Francisco / Remote</span>
+                        </div>
+                        <div class="job-description">Full-time • Senior Level</div>
+                        <p>Guide the vision, strategy, and roadmap for HeadyOS as a developer platform. Partner with engineering, research, and community to deliver products developers love. Shape the future of sacred geometry computing.</p>
+                        <p><strong style="color: #b0b0b0;">Requirements:</strong> 7+ years product experience, infrastructure or systems background, track record of shipping successful products, deep developer empathy.</p>
+                        <button class="apply-btn">View Position</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Call to Action Section -->
+        <div class="cta-section">
+            <div class="cta-box">
+                <h2>Join the Mission</h2>
+                <p>Whether you're a cryptographer redefining security, a systems engineer building the next generation of infrastructure, or a mathematician exploring the beauty of natural principles — there's a place for you here.</p>
+                <p>We're not just hiring. We're recruiting teammates who believe that the future of computing lies in elegant design, mathematical principles, and systems that work with nature instead of against it.</p>
+                <div class="cta-buttons">
+                    <button class="cta-primary-btn" onclick="document.location='#careers'">See Open Roles</button>
+                    <button class="cta-secondary-btn" onclick="document.location='mailto:careers@headysystems.com'">Get In Touch</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/nav-global.js"></script>
+</body>
+</html>

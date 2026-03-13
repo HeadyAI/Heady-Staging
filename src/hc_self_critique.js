@@ -36,6 +36,8 @@ const fs = require("fs");
 const path = require("path");
 const yaml = require("js-yaml");
 const EventEmitter = require("events");
+const ColorfulLogger = require("./hc_colorful_logger");
+const log = new ColorfulLogger({ level: "info" });
 
 // ─── CONFIG LOADING ────────────────────────────────────────────────
 
@@ -47,7 +49,8 @@ const CRITIQUE_STORE_PATH = path.join(__dirname, "..", ".heady_cache", "critique
 function loadYamlConfig(filePath) {
   try {
     return yaml.load(fs.readFileSync(filePath, "utf8")) || {};
-  } catch (_) {
+  } catch (err) {
+    log.warning("Failed to load YAML config", { path: filePath, error: err.message });
     return {};
   }
 }
@@ -55,7 +58,8 @@ function loadYamlConfig(filePath) {
 function loadCritiqueStore() {
   try {
     return JSON.parse(fs.readFileSync(CRITIQUE_STORE_PATH, "utf8"));
-  } catch (_) {
+  } catch (err) {
+    log.warning("Failed to load critique store", { path: CRITIQUE_STORE_PATH, error: err.message });
     return { critiques: [], improvements: [], diagnostics: [], connectionHealth: {} };
   }
 }
@@ -65,7 +69,7 @@ function saveCritiqueStore(data) {
     const dir = path.dirname(CRITIQUE_STORE_PATH);
     if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
     fs.writeFileSync(CRITIQUE_STORE_PATH, JSON.stringify(data, null, 2), "utf8");
-  } catch (_) {}
+  } catch (err) { log.warning("Failed to save critique store", { path: CRITIQUE_STORE_PATH, error: err.message }); }
 }
 
 // ═══════════════════════════════════════════════════════════════════════
@@ -156,6 +160,238 @@ class SelfCritiqueEngine extends EventEmitter {
           severity: ms > 15000 ? "critical" : ms > 8000 ? "high" : "medium",
         });
       }
+    }
+    // Integrate with pattern engine for context
+    if (improvement.patternId && this.patternEngine) {
+      record.patternContext = {
+        id: improvement.patternId,
+        state: this.patternEngine.getPatternState?.(improvement.patternId),
+        metrics: this.patternEngine.getPatternMetrics?.(improvement.patternId),
+        evolution: this.patternEngine.getPatternEvolution?.(improvement.patternId),
+        relatedPatterns: this.patternEngine.getRelatedPatterns?.(improvement.patternId),
+        stagnationRisk: this.patternEngine.getPatternsByState?.('stagnant')?.some(p => p.id === improvement.patternId),
+        degradationRisk: this.patternEngine.getPatternsByState?.('degrading')?.some(p => p.id === improvement.patternId),
+        historicalPerformance: this.patternEngine.getPatternHistory?.(improvement.patternId),
+        confidenceScore: this.patternEngine.getPatternConfidence?.(improvement.patternId)
+      };
+    }
+
+    // Link to recent critiques for correlation
+    if (!record.critiqueId && this.store.critiques.length > 0) {
+      const recentCritiques = this.store.critiques.slice(-10);
+      const relatedCritique = recentCritiques.find(c => 
+        c.context === improvement.context || 
+        c.weaknesses?.some(w => improvement.description?.toLowerCase().includes(w.toLowerCase())) ||
+        c.suggestedImprovements?.some(s => s.toLowerCase().includes(improvement.type?.toLowerCase())) ||
+        c.blindSpots?.some(b => improvement.description?.toLowerCase().includes(b.toLowerCase()))
+      );
+      if (relatedCritique) {
+        record.critiqueId = relatedCritique.id;
+        record.autoLinked = true;
+        record.critiqueConfidence = relatedCritique.confidenceRatings?.overall || 0.5;
+        record.critiqueSeverity = relatedCritique.severity;
+        record.critiqueTimestamp = relatedCritique.ts;
+        record.critiqueWeaknesses = relatedCritique.weaknesses;
+      }
+    }
+
+    // Track improvement priority based on severity and bottleneck diagnostics
+    if (improvement.severity || improvement.priority) {
+      record.priority = improvement.priority || (
+        improvement.severity === 'critical' ? 1 :
+        improvement.severity === 'high' ? 2 : 3
+      );
+      
+      // Boost priority if related to recent diagnostic findings
+      if (this.store.diagnostics.length > 0) {
+        const recentDiag = this.store.diagnostics.slice(-3);
+        const criticalFinding = recentDiag.flatMap(d => d.findings || []).find(f => 
+          (f.severity === 'critical' || f.severity === 'high') && 
+          (improvement.description?.includes(f.item) || improvement.context === f.category)
+        );
+        if (criticalFinding) {
+          record.priority = Math.min(1, record.priority);
+          record.diagnosticBoosted = true;
+          record.diagnosticCategory = criticalFinding.category;
+          record.diagnosticSeverity = criticalFinding.severity;
+          record.diagnosticLatency = criticalFinding.latencyMs;
+          record.diagnosticErrorRate = criticalFinding.errorRate;
+        }
+      }
+    }
+
+    // Add Monte Carlo confidence if available
+    if (improvement.mcConfidence || improvement.successProbability || improvement.score) {
+      record.confidence = {
+        mcScore: improvement.mcConfidence || improvement.score,
+        successProb: improvement.successProbability,
+        sampleSize: improvement.mcSamples,
+        historicalSuccessRate: this._getHistoricalSuccessRate(improvement.type),
+        pipelineSuccessRate: this.mcPlanScheduler?.lastResults?.pipeline?.successRate,
+        variance: improvement.mcVariance,
+        confidenceInterval: improvement.mcConfidenceInterval
+      };
+    }
+
+    // Track resource cost with pricing integration
+    if (improvement.cost || improvement.budgetUsd) {
+      const channelPricing = improvement.channel && this.pricingConfig?.channels?.[improvement.channel];
+      record.resourceCost = {
+        budgetUsd: improvement.budgetUsd || improvement.cost,
+        timeMs: improvement.timeMs,
+        channel: improvement.channel,
+        estimatedTokens: improvement.estimatedTokens,
+        channelRate: channelPricing?.ratePerToken,
+        projectedCost: channelPricing && improvement.estimatedTokens ? 
+          (channelPricing.ratePerToken * improvement.estimatedTokens) : null,
+        costEfficiency: channelPricing?.costEfficiency,
+        budgetRemaining: this.pricingConfig?.globalBudget?.remaining,
+        costPerImpact: improvement.measuredImpact ? (improvement.budgetUsd / improvement.measuredImpact) : null
+      };
+    }
+
+    // Track connection health impact
+    if (improvement.affectedChannels && this.store.connectionHealth) {
+      record.connectionImpact = improvement.affectedChannels.map(ch => ({
+        channel: ch,
+        currentHealth: this.store.connectionHealth[ch]?.healthy,
+        lastCheck: this.store.connectionHealth[ch]?.lastCheck,
+        errorRate: this.store.connectionHealth[ch]?.errorRate,
+        latency: this.store.connectionHealth[ch]?.avgLatency,
+        consecutiveFailures: this.store.connectionHealth[ch]?.consecutiveFailures,
+        lastError: this.store.connectionHealth[ch]?.lastError
+      }));
+      
+      // Calculate overall connection health score
+      const healthScores = record.connectionImpact.map(c => c.currentHealth ? 1 : 0);
+      record.overallConnectionHealth = healthScores.length > 0 ? 
+        healthScores.reduce((a, b) => a + b, 0) / healthScores.length : 1;
+    }
+
+    // Add improvement scheduler metadata
+    if (improvement.scheduledBy || improvement.schedulerPriority) {
+      record.schedulerMetadata = {
+        scheduledBy: improvement.scheduledBy || 'ImprovementScheduler',
+        schedulerPriority: improvement.schedulerPriority,
+        queuePosition: improvement.queuePosition,
+        lane: improvement.lane || 'improvement',
+        cycleId: improvement.cycleId,
+        batchId: improvement.batchId,
+        scheduledAt: improvement.scheduledAt || new Date().toISOString(),
+        executionDelay: improvement.executionDelay
+      };
+    }
+
+    // Track improvement type classification
+    record.classification = {
+      type: improvement.type || 'micro_upgrade',
+      category: improvement.category || this._classifyImprovement(improvement),
+      isPatternBased: !!improvement.patternId,
+      isCritiqueBased: !!record.critiqueId,
+      isDiagnosticBased: !!record.diagnosticBoosted,
+      isPipelineDriven: !!improvement.lane,
+      isAutomated: improvement.automated !== false,
+      requiresValidation: improvement.requiresValidation || record.priority === 1
+    };
+
+    // Add meta-analysis correlation
+    if (this.turnCounter > 0 && this.turnCounter % this.metaInterval === 0) {
+      const recentMeta = this._getRecentMetaAnalysis();
+      if (recentMeta) {
+        record.metaCorrelation = {
+          topWeakness: recentMeta.topWeaknesses?.[0]?.weakness,
+          improvementEffectiveness: recentMeta.improvementEffectiveness,
+          systemTrend: recentMeta.recommendations?.length > 3 ? 'degrading' : 'stable',
+          recentCritiqueCount: recentMeta.recentCritiqueCount,
+          unhealthyChannels: recentMeta.recommendations?.find(r => r.area === 'connections')?.count || 0
+        };
+      }
+    }
+
+    // Add pipeline execution context if available
+    if (this.pipeline && improvement.lane) {
+      record.pipelineContext = {
+        lane: improvement.lane,
+        pipelineState: this.pipeline.getState?.(),
+        queueDepth: this.pipeline.getQueueDepth?.(improvement.lane),
+        recentSuccessRate: this.pipeline.getSuccessRate?.(improvement.lane),
+        averageExecutionTime: this.pipeline.getAverageExecutionTime?.(improvement.lane)
+      };
+    }
+
+    // Track temporal context for trend analysis
+    record.temporalContext = {
+      timestamp: record.ts,
+      dayOfWeek: new Date(record.ts).getDay(),
+      hourOfDay: new Date(record.ts).getHours(),
+      turnNumber: this.turnCounter,
+      recentImprovementCount: this.store.improvements.slice(-10).length,
+      recentCritiqueCount: this.store.critiques.slice(-10).length,
+      timeSinceLastImprovement: this.store.improvements.length > 0 ? 
+        Date.now() - new Date(this.store.improvements[this.store.improvements.length - 1].ts).getTime() : null
+    };
+
+    // Add rollback capability tracking
+    record.rollback = {
+      canRollback: !!improvement.before,
+      rollbackData: improvement.before,
+      rollbackPlan: improvement.rollbackPlan,
+      autoRollbackThreshold: improvement.autoRollbackThreshold || 0.3,
+      rollbackConditions: improvement.rollbackConditions || []
+    };
+
+    // Meta-enrichment: extended analysis when meta-analysis is available
+    const recentMetaForEnrichment = typeof this._getRecentMetaAnalysis === 'function' ? this._getRecentMetaAnalysis() : null;
+    if (recentMetaForEnrichment) {
+      record.metaEnrichment = {
+        metaAnalysisId: recentMetaForEnrichment.turn,
+        metaTimestamp: recentMetaForEnrichment.ts,
+        confidenceScore: typeof this._calculateMetaConfidence === 'function' ? this._calculateMetaConfidence(improvement, recentMetaForEnrichment) : null,
+        alignmentScore: typeof this._calculateAlignmentWithMeta === 'function' ? this._calculateAlignmentWithMeta(improvement, recentMetaForEnrichment) : null,
+        recommendationMatch: recentMetaForEnrichment.recommendations?.some(r =>
+          r.action?.toLowerCase().includes(improvement.type?.toLowerCase()) ||
+          improvement.description?.toLowerCase().includes(r.area?.toLowerCase())
+        ),
+        criticalityScore: typeof this._assessImprovementCriticality === 'function' ? this._assessImprovementCriticality(improvement, recentMetaForEnrichment) : null,
+        impactRadius: typeof this._estimateImpactRadius === 'function' ? this._estimateImpactRadius(improvement, recentMetaForEnrichment) : null,
+        riskLevel: typeof this._calculateRiskLevel === 'function' ? this._calculateRiskLevel(improvement, recentMetaForEnrichment) : null,
+        priorityWeight: typeof this._calculatePriorityWeight === 'function' ? this._calculatePriorityWeight(improvement, recentMetaForEnrichment) : null,
+        dependencyChain: typeof this._identifyDependencies === 'function' ? this._identifyDependencies(improvement) : [],
+        conflictingPatterns: typeof this._detectConflictingPatterns === 'function' ? this._detectConflictingPatterns(improvement) : [],
+        synergisticImprovements: typeof this._findSynergisticImprovements === 'function' ? this._findSynergisticImprovements(improvement) : [],
+        historicalCorrelation: typeof this._findHistoricalCorrelations === 'function' ? this._findHistoricalCorrelations(improvement) : null,
+        patternEvolutionStage: typeof this._determinePatternStage === 'function' ? this._determinePatternStage(improvement) : null,
+        monteCarloValidation: this.mcPlanScheduler ? {
+          estimatedSuccessRate: typeof this._estimateSuccessRate === 'function' ? this._estimateSuccessRate(improvement.type) : null,
+          optimalStrategy: typeof this._getOptimalStrategy === 'function' ? this._getOptimalStrategy(improvement.type) : null,
+          estimatedLatency: typeof this._estimateLatency === 'function' ? this._estimateLatency(improvement.type, improvement.strategy) : null,
+          qualityEstimate: typeof this._estimateQuality === 'function' ? this._estimateQuality(improvement.type, improvement.strategy) : null,
+          speedMode: this.mcPlanScheduler.speedMode?.label,
+        } : null,
+        connectionHealthCorrelation: typeof this._correlateWithConnectionHealth === 'function' ? this._correlateWithConnectionHealth(improvement) : null,
+        costBenefitRatio: record.resourceCost?.budgetUsd && improvement.measuredImpact ?
+          improvement.measuredImpact / record.resourceCost.budgetUsd : null,
+        expectedROI: typeof this._calculateExpectedROI === 'function' ? this._calculateExpectedROI(improvement, recentMetaForEnrichment) : null,
+        degradationRisk: recentMetaForEnrichment.topWeaknesses?.some(w =>
+          improvement.description?.toLowerCase().includes(w.weakness?.toLowerCase())
+        ) ? 'high' : 'low',
+        systemStateAlignment: typeof this._assessSystemStateAlignment === 'function' ? this._assessSystemStateAlignment(improvement, recentMetaForEnrichment) : null,
+        pipelineReadiness: typeof this._assessPipelineReadiness === 'function' ? this._assessPipelineReadiness(improvement) : null,
+        rollbackComplexity: typeof this._assessRollbackComplexity === 'function' ? this._assessRollbackComplexity(improvement) : null,
+        weaknessTargeting: recentMetaForEnrichment.topWeaknesses?.filter(w =>
+          improvement.description?.toLowerCase().includes(w.weakness?.toLowerCase())
+        ).map(w => ({ weakness: w.weakness, occurrences: w.count })),
+        improvementEffectivenessHistory: recentMetaForEnrichment.improvementEffectiveness,
+        connectionHealthSnapshot: Object.entries(recentMetaForEnrichment.connectionHealth || {}).map(([id, health]) => ({
+          channelId: id,
+          healthy: health.healthy,
+          errorRate: health.errorRate,
+          consecutiveFailures: health.consecutiveFailures
+        })),
+        diagnosticAlignment: this.store.diagnostics.slice(-3).some(d =>
+          d.findings?.some(f => improvement.description?.includes(f.item))
+        ),
+      };
     }
 
     if (context.errorRates) {

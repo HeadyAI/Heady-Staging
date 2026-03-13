@@ -67,12 +67,12 @@
 cd C:\Users\erich\Heady
 npm install
 cp .env.example .env        # Edit with your secrets
-npm start                    # → http://localhost:3300
+npm start                    # → http://api.headysystems.com:3300
 ```
 
 **Verify:**
 ```bash
-curl http://localhost:3300/api/health
+curl http://api.headysystems.com:3300/api/health
 # → {"ok":true,"service":"heady-manager","version":"3.0.0",...}
 ```
 
@@ -81,18 +81,18 @@ curl http://localhost:3300/api/health
 ```bash
 cd C:\Users\erich\Heady
 docker compose up --build
-# heady-manager → http://localhost:3300
-# Postgres      → localhost:5432
-# Redis         → localhost:6379
+# heady-manager → http://api.headysystems.com:3300
+# Postgres      → api.headysystems.com:5432
+# Redis         → api.headysystems.com:6379
 ```
 
 ### Option C: HeadyBuddy Desktop (Docker Desktop in Browser)
 
 ```bash
 docker compose -f docker-compose.desktop.yml up --build
-# Full Linux desktop → http://localhost:6080 (VNC password: heady)
-# heady-manager API  → http://localhost:3300
-# HeadyBuddy widget  → http://localhost:3400
+# Full Linux desktop → http://api.headysystems.com:6080 (VNC password: heady)
+# heady-manager API  → http://api.headysystems.com:3300
+# HeadyBuddy widget  → http://api.headysystems.com:3400
 ```
 
 ### Option D: HeadyBuddy Widget Only (Dev)
@@ -103,7 +103,7 @@ cd C:\Users\erich\Heady && npm start
 
 # Terminal 2 — Widget dev server
 cd C:\Users\erich\Heady\headybuddy && npm install && npm run dev
-# → http://localhost:3400
+# → http://api.headysystems.com:3400
 ```
 
 ### Option E: Electron Desktop Overlay
@@ -118,7 +118,7 @@ npm run dev
 ### Option F: Connect to Cloud (No Local Setup)
 
 ```bash
-curl https://heady-manager-headysystems.onrender.com/api/health
+curl https://app.headysystems.com/api/health
 ```
 
 No local install needed — all API endpoints are available at the cloud URLs listed in [Section 5](#5-cloud-layers--switching).
@@ -129,7 +129,7 @@ No local install needed — all API endpoints are available at the cloud URLs li
 cd C:\Users\erich\Heady\frontend
 npm install
 npm run dev
-# → http://localhost:5173 (proxies API to localhost:3300)
+# → http://api.headysystems.com:5173 (proxies API to api.headysystems.com:3300)
 ```
 
 ---
@@ -142,7 +142,7 @@ npm run dev
 | **heady-frontend** | React (Vite) | 5173 (dev) / served by manager (prod) | `GET /` | Active |
 | **HeadyBuddy Widget** | React (Vite) | 3400 | `GET /api/buddy/health` | Active |
 | **HeadyBuddy Electron** | Electron overlay | N/A (desktop) | N/A | Active |
-| **HeadyBuddy Docker Desktop** | noVNC + Chromium | 6080 | `curl localhost:6080` | Active |
+| **HeadyBuddy Docker Desktop** | noVNC + Chromium | 6080 | `curl api.headysystems.com:6080` | Active |
 | **python-worker** | Python background worker | 5000 | N/A | Available |
 | **MCP Server (stdio)** | Model Context Protocol | stdio | N/A | Active |
 | **Render MCP Server** | MCP over stdio | stdio | N/A | Active |
@@ -160,14 +160,14 @@ The primary way to interact with Heady. All endpoints are served by `heady-manag
 
 **Local:**
 ```
-http://localhost:3300/api/{endpoint}
+http://api.headysystems.com:3300/api/{endpoint}
 ```
 
 **Cloud (pick your layer):**
 ```
-https://heady-manager-headysystems.onrender.com/api/{endpoint}
-https://heady-manager-headyme.onrender.com/api/{endpoint}
-https://heady-manager-headyconnection.onrender.com/api/{endpoint}
+https://app.headysystems.com/api/{endpoint}
+https://app.headysystems.com/api/{endpoint}
+https://app.headysystems.com/api/{endpoint}
 ```
 
 ### 3.2 MCP (Model Context Protocol)
@@ -227,17 +227,17 @@ cd desktop-overlay && npm install && npm run dev
 
 - **Hotkey**: `Ctrl+Shift+H` toggles the overlay
 - **Preload bridge**: `preload.js` provides secure IPC between renderer and main process
-- Loads HeadyBuddy widget from `http://localhost:3400` (dev) or bundled build (prod)
+- Loads HeadyBuddy widget from `http://api.headysystems.com:3400` (dev) or bundled build (prod)
 
 ### 3.5 Browser (Direct)
 
 | URL | What You See |
 |-----|-------------|
-| `http://localhost:3300` | Sacred Geometry dashboard (React frontend) |
-| `http://localhost:3300/admin` | Admin IDE with Monaco editor |
-| `http://localhost:3400` | HeadyBuddy widget (dev server) |
-| `http://localhost:6080` | Full Linux desktop via noVNC (Docker Desktop) |
-| `http://localhost:5173` | Vite dev server for frontend |
+| `http://api.headysystems.com:3300` | Sacred Geometry dashboard (React frontend) |
+| `http://api.headysystems.com:3300/admin` | Admin IDE with Monaco editor |
+| `http://api.headysystems.com:3400` | HeadyBuddy widget (dev server) |
+| `http://api.headysystems.com:6080` | Full Linux desktop via noVNC (Docker Desktop) |
+| `http://api.headysystems.com:5173` | Vite dev server for frontend |
 
 ### 3.6 PowerShell CLI
 
@@ -359,11 +359,11 @@ Heady supports **5 deployment layers**, switchable at runtime:
 
 | Layer ID | Name | Endpoint | Color | Git Remote |
 |----------|------|----------|-------|------------|
-| `local` | Local Dev | `http://localhost:3300` | Green | — |
-| `cloud-me` | Cloud HeadyMe | `https://heady-manager-headyme.onrender.com` | Cyan | `heady-me` |
-| `cloud-sys` | Cloud HeadySystems | `https://heady-manager-headysystems.onrender.com` | Magenta | `origin` |
-| `cloud-conn` | Cloud HeadyConnection | `https://heady-manager-headyconnection.onrender.com` | Yellow | `connection` |
-| `hybrid` | Hybrid Local+Cloud | `http://localhost:3300` (with cloud sync) | White | — |
+| `local` | Local Dev | `http://api.headysystems.com:3300` | Green | — |
+| `cloud-me` | Cloud HeadyMe | `https://app.headysystems.com` | Cyan | `heady-me` |
+| `cloud-sys` | Cloud HeadySystems | `https://app.headysystems.com` | Magenta | `origin` |
+| `cloud-conn` | Cloud HeadyConnection | `https://app.headysystems.com` | Yellow | `connection` |
+| `hybrid` | Hybrid Local+Cloud | `http://api.headysystems.com:3300` (with cloud sync) | White | — |
 
 ### CLI Usage
 
@@ -392,10 +392,10 @@ hl health                    # Health check all layers
 
 ```bash
 # Get current layer
-curl http://localhost:3300/api/layer
+curl http://api.headysystems.com:3300/api/layer
 
 # Switch via API
-curl -X POST http://localhost:3300/api/layer/switch \
+curl -X POST http://api.headysystems.com:3300/api/layer/switch \
   -H "Content-Type: application/json" \
   -d '{"layer": "cloud-me"}'
 ```
@@ -438,7 +438,7 @@ Includes:
 
 ```bash
 docker compose -f docker-compose.desktop.yml up --build
-# Open browser → http://localhost:6080
+# Open browser → http://api.headysystems.com:6080
 ```
 
 ### 6.3 Standalone Manager (`Dockerfile`)
@@ -574,19 +574,19 @@ User's Desktop
 
 ```bash
 # List all nodes
-curl http://localhost:3300/api/nodes
+curl http://api.headysystems.com:3300/api/nodes
 
 # Get specific node
-curl http://localhost:3300/api/nodes/PYTHIA
+curl http://api.headysystems.com:3300/api/nodes/PYTHIA
 
 # Activate a node
-curl -X POST http://localhost:3300/api/nodes/PYTHIA/activate
+curl -X POST http://api.headysystems.com:3300/api/nodes/PYTHIA/activate
 
 # Deactivate a node
-curl -X POST http://localhost:3300/api/nodes/JULES/deactivate
+curl -X POST http://api.headysystems.com:3300/api/nodes/JULES/deactivate
 
 # Activate ALL nodes (production mode)
-curl -X POST http://localhost:3300/api/system/production
+curl -X POST http://api.headysystems.com:3300/api/system/production
 ```
 
 ---
@@ -622,9 +622,9 @@ npm run pipeline              # Run pipeline
 npm run pipeline:config       # Show config summary
 
 # API
-curl -X POST http://localhost:3300/api/pipeline/run
-curl http://localhost:3300/api/pipeline/state
-curl http://localhost:3300/api/pipeline/config
+curl -X POST http://api.headysystems.com:3300/api/pipeline/run
+curl http://api.headysystems.com:3300/api/pipeline/state
+curl http://api.headysystems.com:3300/api/pipeline/config
 
 # Programmatic
 const { pipeline } = require('./src/hc_pipeline');
@@ -644,7 +644,7 @@ const state = await pipeline.run();
 | **Heady-Sync (checkpoint)** | — | Generate checkpoint report only | `.\scripts\Heady-Sync.ps1 -Checkpoint` |
 | **Heady-Sync (action)** | — | Run a specific script/command | `.\scripts\Heady-Sync.ps1 -Action "node-health-check.ps1"` |
 | **Layer Switcher** | `scripts/heady-layer.ps1` | Switch between cloud layers | `.\scripts\heady-layer.ps1 switch cloud-me` |
-| **Archive to Pre-Prod** | `scripts/hc-archive-to-preproduction.ps1` | Rename repos to `*-pre-production` | `.\scripts\hc-archive-to-preproduction.ps1` |
+| **Archive to Pre-Prod** | `scripts/hc-archive-to-preproduction.ps1` | Rename repos to `*-pre-production` variants | `.\scripts\hc-archive-to-preproduction.ps1` |
 | **Scaffold Fresh** | `scripts/hc-scaffold-fresh.ps1` | Create clean project from scratch | `.\scripts\hc-scaffold-fresh.ps1 -OutputPath C:\Heady-Fresh` |
 | **Node Health Check** | `scripts/ops/node-health-check.ps1` | Check health of all system nodes | `.\scripts\ops\node-health-check.ps1` |
 | **Profile Node** | `scripts/ops/profile_node.py` | Python-based node profiling | `python scripts/ops/profile_node.py` |
@@ -755,9 +755,9 @@ services:
 
 | Service | URL |
 |---------|-----|
-| HeadySystems | `https://heady-manager-headysystems.onrender.com` |
-| HeadyMe | `https://heady-manager-headyme.onrender.com` |
-| HeadyConnection | `https://heady-manager-headyconnection.onrender.com` |
+| HeadySystems | `https://app.headysystems.com` |
+| HeadyMe | `https://app.headysystems.com` |
+| HeadyConnection | `https://app.headysystems.com` |
 
 ### Deploy via MCP
 
@@ -782,15 +782,15 @@ git push heady-me main  # Triggers HeadyMe deploy
 
 | Probe | Type | URL | Criticality | Interval |
 |-------|------|-----|-------------|----------|
-| heady-manager-api | HTTP | `localhost:3300/api/health` | Critical | 60s |
-| heady-manager-pulse | HTTP | `localhost:3300/api/pulse` | High | 60s |
-| heady-frontend | HTTP | `localhost:3300/` | High | 300s |
-| heady-admin | HTTP | `localhost:3300/api/registry` | Medium | 300s |
+| heady-manager-api | HTTP | `api.headysystems.com:3300/api/health` | Critical | 60s |
+| heady-manager-pulse | HTTP | `api.headysystems.com:3300/api/pulse` | High | 60s |
+| heady-frontend | HTTP | `api.headysystems.com:3300/` | High | 300s |
+| heady-admin | HTTP | `api.headysystems.com:3300/api/registry` | Medium | 300s |
 | postgres-connection | TCP | `$DATABASE_URL` | Low | 120s |
-| render-deployment | HTTP | `heady-manager-headysystems.onrender.com/api/health` | High | 300s |
-| headybuddy-api | HTTP | `localhost:3300/api/buddy/health` | High | 60s |
-| headybuddy-widget | HTTP | `localhost:3400` | Medium | 300s |
-| headybuddy-suggestions | HTTP | `localhost:3300/api/buddy/suggestions` | Low | 120s |
+| render-deployment | HTTP | `app.headysystems.com/api/health` | High | 300s |
+| headybuddy-api | HTTP | `api.headysystems.com:3300/api/buddy/health` | High | 60s |
+| headybuddy-widget | HTTP | `api.headysystems.com:3400` | Medium | 300s |
+| headybuddy-suggestions | HTTP | `api.headysystems.com:3300/api/buddy/suggestions` | Low | 120s |
 
 ### Operational Readiness Score (ORS)
 
@@ -843,6 +843,62 @@ The nuclear option: archives all repos to `*-pre-production` variants and scaffo
 3. Tag `pre-production-archive` marks the exact commit
 4. Rename repos back via `gh repo rename`
 
+### 15.3 Global Multi-SOT Rebuild Playbook
+This playbook applies HCFullPipeline Archive Rebuild across all major Heady repositories and clouds in a single coordinated operation.
+
+Target repos
+- HeadySystems/Heady → role: primary (C-Corp)
+- HeadyMe/Heady → role: personal-cloud
+- HeadyConnection/Heady → role: cross-system-bridge
+- HeadySystems/sandbox → role: experimental
+
+1. Clone and archive everything (local)
+```powershell
+# Clone all current remotes into an archive root  
+mkdir C:\Heady-archived-$(Get-Date -Format yyyyMMdd)  
+cd C:\Heady-archived-$(Get-Date -Format yyyyMMdd)  
+git clone git@github.com:HeadySystems/Heady.git HeadySystems-Heady-pre-production  
+git clone git@github.com:HeadyMe/Heady.git HeadyMe-Heady-pre-production  
+git clone https://github.com/HeadySystems/HeadyConnection.git HeadyConnection-Heady-pre-production  
+git clone git@github.com:HeadySystems/sandbox.git HeadySystems-sandbox-pre-production  
+```
+2. Archive remotes (GitHub UI or gh CLI)
+- Rename each repo to *-pre-production or move to an Archive org.
+- Tag current main as pre-production-archive-YYYYMMDD.
+
+3. Create fresh repos (remote)
+- Create new empty repos:
+  - HeadySystems/Heady
+  - HeadyMe/Heady
+  - HeadyConnection/Heady
+  - HeadySystems/sandbox
+- Enable branch protection on main for the three production repos (Systems, Me, Connection).
+
+4. Scaffold from registry
+- Clone the new Sandbox repo locally.
+- Copy in:
+  - heady-registry.json
+  - Core docs listed in the registry (services-manual, iterative-rebuild-protocol, headystack-distribution-protocol, etc.)
+  - Core configs and scripts (Heady-Sync.ps1, checkpoint-sync.ps1, hc-full-pipeline workflow files)
+- Use hc-scaffold-fresh.ps1 to create the standard folder layout and placeholder files.
+
+5. Rebuild minimal deterministic slice
+- Implement heady-manager + health endpoints + registry access.
+- Implement Heady-Sync.ps1 driven by heady-registry.json.repos (no hard-coded remotes).
+- Add tests and GitHub Actions workflows so main cannot advance without a clean build, tests, and ORS above threshold.
+
+6. Promote to other sources of truth
+- From Sandbox, use promotion scripts/skills to push the validated slice into:
+  - HeadySystems/Heady:main
+  - HeadyMe/Heady:main
+  - HeadyConnection/Heady:main
+- Allow Render to auto-deploy based on these branches as configured in render.yaml.
+
+7. Register the new state
+- Update heady-registry.json.repos with correct URLs, roles, and promotion targets.
+- Update environments entries for cloud-me, cloud-sys, cloud-conn with new commit hashes and health status.
+- Log a Story Driver event marking this as "Global Multi-SOT Rebuild vN".
+
 ---
 
 ## 16. Environment Variables
@@ -873,9 +929,9 @@ The nuclear option: archives all repos to `*-pre-production` variants and scaffo
 | `HEADY_PYTHON_BIN` | Python binary | `python` |
 | `RENDER_API_KEY` | Render.com API key (for MCP server) | — |
 | `ALLOWED_ORIGINS` | CORS allowed origins (comma-separated) | `*` |
-| `CLOUD_HEADYME_URL` | HeadyMe cloud endpoint | `https://heady-manager-headyme.onrender.com` |
-| `CLOUD_HEADYSYSTEMS_URL` | HeadySystems cloud endpoint | `https://heady-manager-headysystems.onrender.com` |
-| `CLOUD_HEADYCONNECTION_URL` | HeadyConnection cloud endpoint | `https://heady-manager-headyconnection.onrender.com` |
+| `CLOUD_HEADYME_URL` | HeadyMe cloud endpoint | `https://app.headysystems.com` |
+| `CLOUD_HEADYSYSTEMS_URL` | HeadySystems cloud endpoint | `https://app.headysystems.com` |
+| `CLOUD_HEADYCONNECTION_URL` | HeadyConnection cloud endpoint | `https://app.headysystems.com` |
 
 ### Render Secret Group (`heady-shared-secrets`)
 
@@ -925,7 +981,7 @@ test -f .env && echo "OK" || echo "Missing — run: cp .env.example .env"
 .\scripts\heady-layer.ps1 health
 
 # Check specific endpoint
-curl -s https://heady-manager-headysystems.onrender.com/api/health
+curl -s https://app.headysystems.com/api/health
 ```
 
 Render free-tier services spin down after 15 minutes of inactivity. First request after spin-down takes ~30 seconds.
@@ -971,7 +1027,7 @@ node -e "const {pipeline}=require('./src/hc_pipeline');console.log(pipeline.getS
 
 ```bash
 # Activate all nodes
-curl -X POST http://localhost:3300/api/system/production
+curl -X POST http://api.headysystems.com:3300/api/system/production
 ```
 
 ---
@@ -1034,28 +1090,28 @@ System Events (Pipeline, Builds, Arena, Resources, Registry, Buddy)
 
 ```bash
 # List stories
-curl http://localhost:3300/api/stories
+curl http://api.headysystems.com:3300/api/stories
 
 # System narrative summary
-curl http://localhost:3300/api/stories/summary
+curl http://api.headysystems.com:3300/api/stories/summary
 
 # Create a story
-curl -X POST http://localhost:3300/api/stories \
+curl -X POST http://api.headysystems.com:3300/api/stories \
   -H "Content-Type: application/json" \
   -d '{"scope":"feature","title":"Landing Page Rebuild"}'
 
 # Add event
-curl -X POST http://localhost:3300/api/stories/{id}/events \
+curl -X POST http://api.headysystems.com:3300/api/stories/{id}/events \
   -H "Content-Type: application/json" \
   -d '{"type":"BUILD_SUCCESS","refs":{"buildId":"142"}}'
 
 # Annotate
-curl -X POST http://localhost:3300/api/stories/{id}/annotate \
+curl -X POST http://api.headysystems.com:3300/api/stories/{id}/annotate \
   -H "Content-Type: application/json" \
   -d '{"text":"Decided to pivot to new layout approach"}'
 
 # Ask HeadyBuddy
-curl -X POST http://localhost:3300/api/buddy/chat \
+curl -X POST http://api.headysystems.com:3300/api/buddy/chat \
   -H "Content-Type: application/json" \
   -d '{"message":"What changed recently?"}'
 ```
@@ -1089,7 +1145,7 @@ curl -X POST http://localhost:3300/api/buddy/chat \
 ```yaml
 # Node.js services
 healthcheck:
-  test: ["CMD", "wget", "-qO-", "http://localhost:PORT/api/health"]
+  test: ["CMD", "wget", "-qO-", "http://api.headysystems.com:PORT/api/health"]
   interval: 30s
   timeout: 10s
   retries: 3
@@ -1132,68 +1188,6 @@ For every feature branch that goes through Arena Mode or significant refactors:
 
 ---
 
-## Quiz & Flashcard Review
-
-### Quickstart
-
-- **Q: What is the fastest way to start Heady locally?**
-  A: `npm install && npm start` → `http://localhost:3300`
-
-- **Q: How do you access the full desktop environment via Docker?**
-  A: `docker compose -f docker-compose.desktop.yml up --build` → `http://localhost:6080` (password: `heady`)
-
-### Services
-
-- **Q: How many AI nodes are registered and active?**
-  A: 20 nodes, all active as of Feb 5, 2026.
-
-- **Q: What port does heady-manager run on?**
-  A: 3300 (configurable via `PORT` env var).
-
-- **Q: Name the three Docker compose configurations.**
-  A: `docker-compose.yml` (standard stack), `docker-compose.desktop.yml` (full desktop), standalone `Dockerfile` (manager only).
-
-### Connection
-
-- **Q: How many ways can you connect to Heady services?**
-  A: Eight: HTTP/REST API, MCP Protocol, Docker, Electron, Browser, PowerShell CLI, npm scripts, Git.
-
-- **Q: What does the Layer Switcher update when switching layers?**
-  A: Active layer state file, env vars, and the Cascade proxy endpoint.
-
-- **Q: True/False: You need a local install to use Heady.**
-  A: False. Cloud endpoints are available at `heady-manager-headysystems.onrender.com`.
-
-### Pipeline
-
-- **Q: What are the three task priority pools?**
-  A: Hot (user-facing, critical latency), Warm (important background), Cold (async ingestion/analytics).
-
-- **Q: What happens when ORS drops below 50?**
-  A: Recovery mode — repair only, escalate to owner.
-
-### Story Driver
-
-- **Q: What are the four story scopes?**
-  A: Project, Feature, Incident, Experiment.
-
-- **Q: What does the Story Driver do?**
-  A: Turns system events (pipeline cycles, builds, arena results, resource incidents, registry changes) into coherent human-readable narratives with timelines.
-
-- **Q: How does HeadyBuddy surface story data?**
-  A: Via chat ("What changed?", "story", "narrative" keywords), the Story tab in Expanded View, and suggestion chips.
-
-- **Q: Name two events that are always included in narratives.**
-  A: BUILD_FAILED and ARENA_WINNER_CHOSEN (also PIPELINE_GATE_FAIL, RESOURCE_CRITICAL, SCHEMA_MIGRATED, USER_DIRECTIVE, USER_PIVOT).
-
-### Services Architecture
-
-- **Q: What services does the full docker-compose.yml stack include?**
-  A: heady-manager, headybuddy-widget, python-worker, mcp-server, postgres, redis.
-
-- **Q: What is the network scoping rule for Docker services?**
-  A: Only heady-manager (3300) and noVNC (6080) exposed externally; Postgres, Redis, MCP Server, Python Worker are internal only.
-
----
-
 *Proprietary — Heady Systems | Sacred Geometry :: Organic Systems :: Breathing Interfaces*
+
+```

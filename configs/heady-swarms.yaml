@@ -1,0 +1,138 @@
+# HEADY_BRAND:BEGIN
+# ╔══════════════════════════════════════════════════════════════════╗
+# ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
+# ║  ██║  ██║██╔════╝██╔══██╗██╔══██╗╚██╗ ██╔╝                     ║
+# ║  ███████║█████╗  ███████║██║  ██║ ╚████╔╝                      ║
+# ║  ██╔══██║██╔══╝  ██╔══██║██║  ██║  ╚██╔╝                       ║
+# ║  ██║  ██║███████╗██║  ██║██████╔╝   ██║                        ║
+# ║  ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝    ╚═╝                        ║
+# ║                                                                  ║
+# ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
+# ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
+# ║  FILE: configs/heady-swarms.yaml                                                    ║
+# ║  LAYER: config                                                  ║
+# ╚══════════════════════════════════════════════════════════════════╝
+# HEADY_BRAND:END
+╔═══════════════════════════════════════════════════════════════════════════╗
+║                                                                           ║
+║                         H E A D Y   S Y S T E M S                         ║
+║                                                                           ║
+║                    Swarm Orchestration Configuration                      ║
+║                                                                           ║
+║                 Fibonacci-scaled bee colonies & φ-routing                 ║
+║                                                                           ║
+╚═══════════════════════════════════════════════════════════════════════════╝
+
+version: "1.0.0"
+name: HeadySwarms
+
+# Core swarm pool definitions
+swarms:
+  execute:
+    name: execute-swarm
+    role: "Primary execution — build, deploy, code generation"
+    beeCount: 34  # FIB[8]
+    concurrency: 21  # FIB[7] — φ-scaled
+    capabilities:
+      - "build compile package deploy install dependencies npm git"
+      - "code generation writing implementation scaffolding"
+      - "file create write edit modify update"
+    healthCheck: module-loaded
+    criticality: critical
+
+  critique:
+    name: critique-swarm
+    role: "Self-critique, audit, security scan, quality review"
+    beeCount: 13  # FIB[6]
+    concurrency: 8   # FIB[5]
+    capabilities:
+      - "audit security scan lint review quality check vulnerability"
+      - "self-critique analyze assess evaluate validate"
+    healthCheck: module-loaded
+    criticality: high
+
+  optimize:
+    name: optimize-swarm
+    role: "Refactor, performance improvement, dead code removal"
+    beeCount: 8   # FIB[5]
+    concurrency: 5   # FIB[4]
+    capabilities:
+      - "optimize refactor performance improve reduce simplify clean"
+      - "dead code remove prune rewrite restructure"
+    healthCheck: module-loaded
+    criticality: medium
+
+  monitor:
+    name: monitor-swarm
+    role: "Health checks, metrics collection, alert evaluation"
+    beeCount: 5   # FIB[4]
+    concurrency: 3   # FIB[3]
+    capabilities:
+      - "health monitor ping status uptime metrics alert observe"
+      - "check probe availability latency response time"
+    healthCheck: module-loaded
+    criticality: critical
+
+# Vector routing configuration
+vectorRouting:
+  enabled: true
+  dimensions: 128
+  algorithm: trigram_hash
+  thresholds:
+    include: 0.382   # CSL_GATES.include — minimum relevance
+    boost: 0.618     # CSL_GATES.boost — confident route
+    inject: 0.718    # CSL_GATES.inject — very high confidence
+  cacheSize: 55      # FIB[9]
+  fallbackSwarm: execute
+
+# Parallel execution policy
+parallelism:
+  strategy: concurrent_equals       # All bees equal, no priority ranking
+  maxConcurrentTasks: 34            # FIB[8] — hard limit
+  dependencyResolution: topological # DAG-based dependency ordering
+  failurePolicy: continue_others    # One failing task never blocks others
+  phiBackoff:
+    maxRetries: 4
+    baseDelayMs: 800                # FIB[5] * 100
+    multiplier: 1.618               # PHI
+
+# Colab offloading
+colabOffloading:
+  enabled: true
+  threshold: 0.618                  # Offload when task embedding score >= PSI
+  heavyTaskTypes:
+    - embedding
+    - inference
+    - training
+    - model_generation
+    - vector_indexing
+  runtimeMapping:
+    embedding:  primary
+    inference:  secondary
+    training:   tertiary
+    autonomous: learning
+
+# Integration points
+integration:
+  pipeline: hcfullpipeline.yaml
+  vectorRouter: src/hc_vector_router.js
+  orchestrator: src/hc_heady_swarms.js
+  colabOps: src/colab-latent-ops.js
+  latentSpace: src/hc_latent_space.js
+  dipra: src/hc_resource_manager.js
+
+# Observability
+observability:
+  logLevel: info
+  metricsInterval: 5000            # FIB[7]*1000 = 21s rounded
+  healthEndpoint: /api/swarms/health
+  metricsEndpoint: /api/swarms/metrics
+  recordToLatentSpace: true
+  latentCategory: swarm
+
+# Guardrails
+guardrails:
+  maxQueueDepth: 144               # FIB[11]
+  maxBeeRestartAttempts: 3         # FIB[3]
+  circuitBreakerThreshold: 0.618   # CSL_GATES.boost — open at 61.8% failure
+  neverStarveMonitor: true         # Monitor swarm always has resources

@@ -27,6 +27,8 @@
  */
 
 const crypto = require("crypto");
+const ColorfulLogger = require("./hc_colorful_logger");
+const log = new ColorfulLogger({ level: "info" });
 
 // ─── Random Utilities ───────────────────────────────────────────────
 function secureRandom() {
@@ -641,10 +643,10 @@ class MonteCarloGlobal {
   startAutoRun() {
     if (this.autoRunInterval) return;
     this.autoRunInterval = setInterval(() => {
-      try { this.runFullCycle("auto"); } catch (_) { /* non-fatal */ }
+      try { this.runFullCycle("auto"); } catch (err) { log.warning("Auto-refresh cycle failed", { error: err.message }); }
     }, this.backgroundCycleMs);
     // Immediate first run
-    try { this.runFullCycle("boot"); } catch (_) {}
+    try { this.runFullCycle("boot"); } catch (err) { log.warning("Boot cycle failed", { error: err.message }); }
   }
 
   stopAutoRun() {
@@ -668,17 +670,17 @@ class MonteCarloGlobal {
       if (stages && stages.length > 0) {
         results.pipeline = fastPipelineSim(stages);
       }
-    } catch (_) {}
+    } catch (err) { log.warning("Pipeline simulation failed", { error: err.message, trigger }); }
 
     // Deployment risk
     try {
       results.deployment = fastDeploymentSim(this._getDeploymentProfile());
-    } catch (_) {}
+    } catch (err) { log.warning("Deployment risk simulation failed", { error: err.message, trigger }); }
 
     // Readiness confidence
     try {
       results.readiness = fastReadinessSim(this._getHealthSignals());
-    } catch (_) {}
+    } catch (err) { log.warning("Readiness simulation failed", { error: err.message, trigger }); }
 
     // Node performance
     try {
@@ -686,7 +688,7 @@ class MonteCarloGlobal {
       if (profiles.length > 0) {
         results.nodes = fastNodeSim(profiles, load);
       }
-    } catch (_) {}
+    } catch (err) { log.warning("Node simulation failed", { error: err.message, trigger }); }
 
     // Composite score
     const scores = [];
@@ -793,7 +795,7 @@ class MonteCarloGlobal {
       if (stages && stages.length > 0) {
         this.lastResults.pipeline = fastPipelineSim(stages);
       }
-    } catch (_) {}
+    } catch (err) { log.warning("Pipeline re-simulation on stage end failed", { stageId, error: err.message }); }
   }
 
   /**
@@ -805,7 +807,7 @@ class MonteCarloGlobal {
     try {
       const signals = this._getHealthSignals();
       this.lastResults.readiness = fastReadinessSim(signals);
-    } catch (_) {}
+    } catch (err) { log.warning("Readiness simulation on checkpoint failed", { stageId, error: err.message }); }
     return this.enrich(checkpointData || {});
   }
 
@@ -833,7 +835,7 @@ class MonteCarloGlobal {
     try {
       const signals = this._getHealthSignals();
       this.lastResults.readiness = fastReadinessSim(signals);
-    } catch (_) {}
+    } catch (err) { log.warning("Readiness simulation on health check failed", { error: err.message }); }
   }
 
   /**
@@ -844,7 +846,7 @@ class MonteCarloGlobal {
     // Refresh deployment risk based on new error rates
     try {
       this.lastResults.deployment = fastDeploymentSim(this._getDeploymentProfile());
-    } catch (_) {}
+    } catch (err) { log.warning("Deployment risk re-simulation on brain tune failed", { error: err.message }); }
   }
 
   /**
@@ -892,7 +894,7 @@ class MonteCarloGlobal {
           dependsOn: s.dependsOn || [],
         }));
       }
-    } catch (_) {}
+    } catch (err) { log.warning("Failed to retrieve pipeline stages", { error: err.message }); }
     return [];
   }
 
@@ -934,7 +936,7 @@ class MonteCarloGlobal {
           if (total > 0) base.nodeAvailability = healthy / total;
         }
       }
-    } catch (_) {}
+    } catch (err) { log.warning("Failed to enrich health signals", { error: err.message }); }
     return base;
   }
 
@@ -954,7 +956,7 @@ class MonteCarloGlobal {
           });
         }
       }
-    } catch (_) {}
+    } catch (err) { log.warning("Failed to retrieve node profiles", { error: err.message }); }
     return { profiles, load };
   }
 
@@ -966,6 +968,59 @@ class MonteCarloGlobal {
       summary: typeof data === "object" ? (data.compositeScore !== undefined ? `score=${data.compositeScore.toFixed(1)}` : JSON.stringify(data).slice(0, 120)) : String(data),
     });
     if (this.eventLog.length > 500) this.eventLog = this.eventLog.slice(-500);
+  }
+
+  /**
+   * Prioritize improvement tasks based on:
+   * - Pattern severity
+   * - Self-critique findings
+   * - Historical success rates
+   */
+  prioritizeImprovements(improvements) {
+    if (!improvements || improvements.length === 0) return [];
+    
+    // Score each improvement
+    const scored = improvements.map(imp => {
+      let score = 0;
+      
+      // Base priority
+      score += (4 - imp.priority) * 25; // Higher priority = higher score
+      
+      // Pattern severity boost
+      if (imp.type.includes('pattern') && imp.details?.severity) {
+        score += imp.details.severity === 'critical' ? 50 : 
+                 imp.details.severity === 'high' ? 30 : 10;
+      }
+      
+      // Critique confidence boost
+      if (imp.type === 'self_critique' && imp.details?.confidence) {
+        score += imp.details.confidence * 20;
+      }
+      
+      // Historical success rate (if available)
+      if (this.lastResults.pipeline?.successRate) {
+        score *= this.lastResults.pipeline.successRate;
+      }
+      
+      return { ...imp, score };
+    });
+    
+    // Sort by score
+    return scored.sort((a, b) => b.score - a.score);
+  }
+
+  /**
+   * API: Get recommended improvement plan
+   */
+  getImprovementPlan(improvements) {
+    const prioritized = this.prioritizeImprovements(improvements);
+    const budget = 3; // Max improvements to recommend
+    
+    return {
+      recommendations: prioritized.slice(0, budget),
+      confidence: this.quickReadiness(),
+      timestamp: new Date().toISOString(),
+    };
   }
 }
 
@@ -992,7 +1047,7 @@ function loadMCConfig() {
     if (fs.existsSync(MC_CONFIG_PATH)) {
       return yaml.load(fs.readFileSync(MC_CONFIG_PATH, "utf8"));
     }
-  } catch (_) {}
+  } catch (err) { log.warning("Failed to load MC config", { path: MC_CONFIG_PATH, error: err.message }); }
   return null;
 }
 
@@ -1001,7 +1056,7 @@ function loadSamples() {
     if (fs.existsSync(MC_SAMPLES_PATH)) {
       return JSON.parse(fs.readFileSync(MC_SAMPLES_PATH, "utf8"));
     }
-  } catch (_) {}
+  } catch (err) { log.warning("Failed to load MC samples", { path: MC_SAMPLES_PATH, error: err.message }); }
   return {};
 }
 
@@ -1010,7 +1065,7 @@ function saveSamples(data) {
     const dir = path.dirname(MC_SAMPLES_PATH);
     if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
     fs.writeFileSync(MC_SAMPLES_PATH, JSON.stringify(data, null, 2), "utf8");
-  } catch (_) {}
+  } catch (err) { log.warning("Failed to save MC samples", { path: MC_SAMPLES_PATH, error: err.message }); }
 }
 
 // ─── PLAN STRATEGIES ─────────────────────────────────────────────────
@@ -1081,7 +1136,7 @@ class MCTaskPlanScheduler extends EventEmitter {
 
   getSpeedMode() { return this.speedMode; }
 
-  generatePlans(taskType, taskMeta = {}) {
+  generatePlans(taskType, taskMeta = {}, availableResources) {
     const numCandidates = taskMeta.complex
       ? (this.config.planGeneration || {}).candidatesForComplex || 12
       : (this.config.planGeneration || {}).candidatesPerTask || 6;
@@ -1107,18 +1162,21 @@ class MCTaskPlanScheduler extends EventEmitter {
         ucb1Score: this._getUCB1ForStrategy(taskType, strategy.id),
         fromCache: strategy.modelPreference === "cached",
         speedMode: this.speedMode.label,
+        requiredResources: strategy.requiredResources || [],
       });
     }
 
-    // Sort by composite score: UCB1 weighted by inverse latency (faster plans rank higher)
-    plans.sort((a, b) => {
-      const aComposite = a.ucb1Score * (1 + 1000 / (a.estimatedLatencyMs + 1));
-      const bComposite = b.ucb1Score * (1 + 1000 / (b.estimatedLatencyMs + 1));
-      return bComposite - aComposite;
-    });
+    // Filter plans based on resource availability
+    plans = plans.filter(plan => 
+      plan.requiredResources.every(res => 
+        availableResources[res.type] >= res.amount
+      )
+    );
 
-    this.emit("plans:generated", { taskType, count: plans.length, speedMode: this.speedMode.label });
-    return plans;
+    // Sort plans by estimated duration
+    plans.sort((a, b) => a.estimatedLatencyMs - b.estimatedLatencyMs);
+
+    return plans.slice(0, 5); // Return top 5 plans
   }
 
   // ─── Select the best plan ──────────────────────────────────────────
@@ -1221,8 +1279,8 @@ class MCTaskPlanScheduler extends EventEmitter {
 
   // ─── Full plan-select-execute cycle (convenience) ──────────────────
 
-  planAndSelect(taskType, taskMeta = {}, constraints = {}) {
-    const plans = this.generatePlans(taskType, taskMeta);
+  planAndSelect(taskType, taskMeta = {}, constraints = {}, availableResources) {
+    const plans = this.generatePlans(taskType, taskMeta, availableResources);
     const selected = this.selectPlan(plans, constraints);
     return { plans, selected };
   }
@@ -1426,9 +1484,9 @@ function registerMonteCarloRoutes(app, planScheduler, globalMC) {
   // Plan & select for a task
   app.post("/api/monte-carlo/plan", (req, res) => {
     try {
-      const { taskType, taskMeta, constraints } = req.body;
+      const { taskType, taskMeta, constraints, availableResources } = req.body;
       if (!taskType) return res.status(400).json({ error: "taskType required" });
-      const result = planScheduler.planAndSelect(taskType, taskMeta || {}, constraints || {});
+      const result = planScheduler.planAndSelect(taskType, taskMeta || {}, constraints || {}, availableResources || {});
       res.json({ ok: true, ...result, ts: new Date().toISOString() });
     } catch (err) {
       res.status(500).json({ error: err.message });

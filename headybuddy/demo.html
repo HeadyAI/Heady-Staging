@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HeadyBuddy Demo - Perfect Day AI Companion</title>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* HeadyBuddy Sacred Geometry Styles */
+        .glass {
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+        
+        .glow-cyan {
+            box-shadow: 0 0 20px rgba(6, 182, 212, 0.3);
+        }
+        
+        .rounded-sacred {
+            border-radius: 1.618rem;
+        }
+        
+        .border-heady-border {
+            border-color: rgba(148, 163, 184, 0.2);
+        }
+        
+        .text-heady-cyan {
+            color: rgb(6, 182, 212);
+        }
+        
+        .text-heady-muted {
+            color: rgb(148, 163, 184);
+        }
+        
+        .text-heady-text {
+            color: rgb(248, 250, 252);
+        }
+        
+        .bg-heady-bg {
+            background-color: rgb(15, 23, 42);
+        }
+        
+        .animate-slide-up {
+            animation: slideUp 0.3s ease-out;
+        }
+        
+        .animate-fade-in {
+            animation: fadeIn 0.3s ease-out;
+        }
+        
+        @keyframes slideUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        /* Sacred Avatar Animation */
+        .sacred-avatar {
+            background: linear-gradient(135deg, #06b6d4, #8b5cf6);
+            animation: sacred-pulse 4s ease-in-out infinite;
+        }
+        
+        @keyframes sacred-pulse {
+            0%, 100% { transform: scale(1); opacity: 0.8; }
+            50% { transform: scale(1.05); opacity: 1; }
+        }
+        
+        body {
+            background: linear-gradient(135deg, #0f172a, #1e293b);
+            min-height: 100vh;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+    
+    <script type="text/babel">
+        const { useState, useEffect, useRef, useCallback } = React;
+        
+        // Real Heady Systems API connection
+        const HEADY_API = "https://headysystems.com/api";
+        const HEADY_API_LOCAL = "http://localhost:3300/api";
+        
+        // Smart API selection with fallback
+        async function callHeadyAPI(endpoint, data) {
+            const apis = [HEADY_API, HEADY_API_LOCAL];
+            
+            for (const api of apis) {
+                try {
+                    const response = await fetch(`${api}${endpoint}`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'User-Agent': 'HeadyBuddy/1.0.0'
+                        },
+                        body: JSON.stringify(data)
+                    });
+                    
+                    if (response.ok) {
+                        return await response.json();
+                    }
+                } catch (error) {
+                    console.log(`API ${api} failed, trying next...`);
+                    continue;
+                }
+            }
+            
+            // Fallback to intelligent responses if all APIs fail
+            return getFallbackResponse(data.message);
+        }
+        
+        // Conversation memory and context tracking
+        class ConversationMemory {
+            constructor() {
+                this.topics = new Set();
+                this.lastResponses = [];
+                this.userPatterns = new Map();
+                this.responseHistory = new Map();
+            }
+            
+            addMessage(role, content) {
+                if (role === 'user') {
+                    // Track user patterns
+                    const words = content.toLowerCase().split(' ');
+                    words.forEach(word => {
+                        if (word.length > 3) {
+                            this.userPatterns.set(word, (this.userPatterns.get(word) || 0) + 1);
+                        }
+                    });
+                    
+                    // Track topics
+                    if (content.includes('plan') || content.includes('day')) this.topics.add('planning');
+                    if (content.includes('focus') || content.includes('task')) this.topics.add('focus');
+                    if (content.includes('motivat') || content.includes('stuck')) this.topics.add('motivation');
+                }
+                
+                // Track last responses to avoid repetition
+                this.lastResponses.push(content);
+                if (this.lastResponses.length > 5) {
+                    this.lastResponses.shift();
+                }
+            }
+            
+            getUniqueResponse(category, allResponses) {
+                const available = allResponses.filter(response => 
+                    !this.lastResponses.includes(response)
+                );
+                
+                if (available.length === 0) {
+                    // Reset and return random if all used
+                    this.lastResponses = [];
+                    return allResponses[Math.floor(Math.random() * allResponses.length)];
+                }
+                
+                return available[Math.floor(Math.random() * available.length)];
+            }
+            
+            getContextualSuggestions() {
+                const suggestions = [];
+                
+                if (this.topics.has('planning')) {
+                    suggestions.push("Review today's plan", "Adjust priorities", "Energy check");
+                }
+                
+                if (this.topics.has('focus')) {
+                    suggestions.push("Take a break", "Switch tasks", "Deep focus mode");
+                }
+                
+                if (this.topics.has('motivation')) {
+                    suggestions.push("Celebrate progress", "Visualize success", "Quantum boost");
+                }
+                
+                // Add variety suggestions
+                if (suggestions.length === 0) {
+                    suggestions.push("Plan my day", "Help me focus", "Quick motivation", "Quantum thinking");
+                }
+                
+                return suggestions.slice(0, 4);
+            }
+        }
+        
+        // Global conversation memory
+        const conversationMemory = new ConversationMemory();
+        function getFallbackResponse(message) {
+            conversationMemory.addMessage('user', message);
+            
+            const lowerMessage = message.toLowerCase();
+            const responses = {
+                dayPlanning: [
+                    "I'll help you plan the perfect day! Let me analyze your priorities and create an optimized schedule. What are your main goals today?",
+                    "Perfect day planning activated! I'll use sacred geometry principles to structure your time. What's your top priority?",
+                    "Let's design your ideal day! Based on golden ratio timing, what would make today absolutely perfect?",
+                    "Day optimization mode! I'll create a harmonious schedule. What energy level are you starting with?",
+                    "Time to architect your day! Using the Flower of Life pattern, we'll create perfect balance. What's your vision for today?",
+                    "Daily blueprint creation! I'll help you build a day that flows with sacred geometry. What feels most important?"
+                ],
+                taskFocus: [
+                    "Great! Let's optimize your focus. I recommend the Pomodoro technique with sacred geometry-inspired breaks. What task are you working on?",
+                    "Focus enhancement activated! Let's use the Flower of Life pattern to structure your work sessions. What needs your attention?",
+                    "Time to concentrate! I'll help you achieve deep focus using quantum principles. What's the mission?",
+                    "Let's get in the zone! I'll create a sacred geometry focus routine. What are we tackling?",
+                    "Deep focus mode engaged! I'll help you enter flow state using golden ratio timing. What deserves your full attention?",
+                    "Concentration optimization! Let's use the Metatron's Cube pattern for structured thinking. What's the objective?"
+                ],
+                motivation: [
+                    "I believe in you! You're capable of amazing things. Let's use the golden ratio principle - break this into smaller, harmonious parts. What's one small step?",
+                    "You've got this! Remember the spiral of growth - every small step creates momentum. What feels achievable right now?",
+                    "Motivation boost incoming! You're a sacred geometry masterpiece in progress. What would your future self thank you for?",
+                    "Let's activate your quantum potential! You're already successful, just walking the path. What's the next beautiful step?",
+                    "Energy surge activated! You're designed for success. Let's tap into your inner golden ratio. What feels exciting?",
+                    "Confidence boost online! Remember the Tree of Life - you're connected to infinite possibilities. What inspires you?"
+                ],
+                progress: [
+                    "Excellent! Progress tracking is key to growth. I'll help you review using the Flower of Life pattern. What area should we celebrate?",
+                    "Growth analysis time! Let's map your progress with sacred geometry patterns. What wins deserve recognition?",
+                    "Progress review activated! I'll help you see the golden ratio in your achievements. What area shines brightest?",
+                    "Let's trace your journey! Using the Tree of Life, we can see how everything connects. What progress are you proud of?",
+                    "Achievement mapping! I'll help you visualize your growth spiral. What milestones have you reached?",
+                    "Success celebration! Let's use sacred geometry to appreciate your journey. What accomplishment feels biggest?"
+                ],
+                quantum: [
+                    "Ah, quantum thinking! I'm connected to Heady quantum systems. We can use quantum algorithms to optimize decisions. What needs enhancement?",
+                    "Quantum mode activated! I'll access the quantum realm to help you think in probabilities. What decision needs insight?",
+                    "Quantum computing ready! Let's use superposition to explore multiple solutions. What complex challenge are we solving?",
+                    "Quantum enhancement online! I'll help you access quantum intuition and parallel processing. What needs quantum-level thinking?",
+                    "Quantum field engaged! I'll help you tap into infinite possibilities. What would you like to quantum-enhance?",
+                    "Superposition thinking! Let's explore multiple outcomes simultaneously. What decision feels quantum?"
+                ]
+            };
+            
+            // Enhanced pattern matching with memory
+            if (lowerMessage.includes('plan') || lowerMessage.includes('day') || lowerMessage.includes('schedule')) {
+                const reply = conversationMemory.getUniqueResponse('dayPlanning', responses.dayPlanning);
+                conversationMemory.addMessage('assistant', reply);
+                return {
+                    reply: reply,
+                    suggestions: conversationMemory.getContextualSuggestions()
+                };
+            }
+            
+            if (lowerMessage.includes('task') || lowerMessage.includes('focus') || lowerMessage.includes('concentrate')) {
+                const reply = conversationMemory.getUniqueResponse('taskFocus', responses.taskFocus);
+                conversationMemory.addMessage('assistant', reply);
+                return {
+                    reply: reply,
+                    suggestions: conversationMemory.getContextualSuggestions()
+                };
+            }
+            
+            if (lowerMessage.includes('motivat') || lowerMessage.includes('stuck') || lowerMessage.includes('can\'t')) {
+                const reply = conversationMemory.getUniqueResponse('motivation', responses.motivation);
+                conversationMemory.addMessage('assistant', reply);
+                return {
+                    reply: reply,
+                    suggestions: conversationMemory.getContextualSuggestions()
+                };
+            }
+            
+            if (lowerMessage.includes('progress') || lowerMessage.includes('review') || lowerMessage.includes('achieve')) {
+                const reply = conversationMemory.getUniqueResponse('progress', responses.progress);
+                conversationMemory.addMessage('assistant', reply);
+                return {
+                    reply: reply,
+                    suggestions: conversationMemory.getContextualSuggestions()
+                };
+            }
+            
+            if (lowerMessage.includes('quantum') || lowerMessage.includes('tech') || lowerMessage.includes('algorithm')) {
+                const reply = conversationMemory.getUniqueResponse('quantum', responses.quantum);
+                conversationMemory.addMessage('assistant', reply);
+                return {
+                    reply: reply,
+                    suggestions: conversationMemory.getContextualSuggestions()
+                };
+            }
+            
+            // Dynamic default responses with memory
+            const defaultResponses = [
+                "I'm your HeadyBuddy, connected to the full Heady Systems ecosystem. I can help with perfect day planning, task optimization, motivation, and quantum-enhanced thinking. What would make today perfect?",
+                "Welcome! I'm HeadyBuddy, your sacred geometry-powered companion. I'm here to help you create your perfect day using golden ratio principles. What's on your mind?",
+                "Hello! I'm connected to Heady Systems and ready to help you optimize your day. Whether it's planning, focus, motivation, or quantum thinking - I'm here! What would make today amazing?",
+                "Greetings! I'm HeadyBuddy, your AI companion with access to the Heady ecosystem. I can help you plan perfect days, optimize focus, and provide motivation. How can I help?",
+                "Hey there! I'm HeadyBuddy, your perfect day companion. I use sacred geometry and quantum computing to help you achieve your goals. What can I help you with today?",
+                "Hi! I'm HeadyBuddy, connected to Heady Systems. I specialize in day planning, focus optimization, motivation, and quantum-enhanced thinking. What would you like to work on?"
+            ];
+            
+            const reply = conversationMemory.getUniqueResponse('default', defaultResponses);
+            conversationMemory.addMessage('assistant', reply);
+            return {
+                reply: reply,
+                suggestions: conversationMemory.getContextualSuggestions()
+            };
+        }
+        
+        // Heady Systems resource monitoring
+        async function checkHeadySystemsHealth() {
+            const apis = [
+                'https://headysystems.com/api/health',
+                'http://localhost:3300/api/health'
+            ];
+            
+            for (const api of apis) {
+                try {
+                    const response = await fetch(api);
+                    if (response.ok) {
+                        const health = await response.json();
+                        return {
+                            status: 'healthy',
+                            api: api,
+                            services: health.services || {},
+                            uptime: health.uptime || 0,
+                            memory: health.memory || {}
+                        };
+                    }
+                } catch (error) {
+                    continue;
+                }
+            }
+            
+            return {
+                status: 'local',
+                api: 'fallback',
+                services: { 'buddy': 'active', 'quantum': 'ready', 'ai': 'online' },
+                uptime: Date.now(),
+                memory: { used: '45%', available: '55%' }
+            };
+        }
+        
+        // Resource status component
+        function ResourceStatus({ onStatusUpdate }) {
+            const [resourceData, setResourceData] = useState(null);
+            
+            useEffect(() => {
+                const checkHealth = async () => {
+                    const health = await checkHeadySystemsHealth();
+                    setResourceData(health);
+                    onStatusUpdate(health);
+                };
+                
+                checkHealth();
+                const interval = setInterval(checkHealth, 5000);
+                return () => clearInterval(interval);
+            }, [onStatusUpdate]);
+            
+            if (!resourceData) return null;
+            
+            const getStatusColor = (status) => {
+                switch(status) {
+                    case 'healthy': return 'bg-green-400';
+                    case 'local': return 'bg-yellow-400';
+                    default: return 'bg-red-400';
+                }
+            };
+            
+            return (
+                <div className="flex items-center gap-2 px-2 py-1 bg-heady-bg/60 rounded-full border border-heady-border/40">
+                    <div className={`w-2 h-2 rounded-full ${getStatusColor(resourceData.status)} ${resourceData.status === 'healthy' ? 'animate-pulse' : ''}`}></div>
+                    <span className="text-xs text-heady-muted">
+                        {resourceData.status === 'healthy' ? 'Heady Systems' : 'Local Mode'}
+                    </span>
+                </div>
+            );
+        }
+        
+        // Collapsed Pill Component
+        function CollapsedPill({ status, onExpand, onSuggestion, resourceData }) {
+            const STATUS_LABEL = {
+                idle: "Ready",
+                listening: "Listening…",
+                thinking: "Thinking…",
+                success: "Done!",
+                error: "Retrying…",
+            };
+            
+            const suggestions = [
+                "Plan my day",
+                "Help me focus", 
+                "Quick task",
+                "I'm stuck"
+            ];
+            
+            return (
+                <div className="fixed bottom-6 right-6 z-[9999] animate-fade-in">
+                    {/* Suggestion chips float above the pill */}
+                    <div className="mb-2 flex justify-end gap-2">
+                        {suggestions.slice(0, 3).map((suggestion, i) => (
+                            <button
+                                key={i}
+                                onClick={() => onSuggestion(suggestion)}
+                                className="px-3 py-1 text-xs bg-heady-cyan/20 text-heady-cyan rounded-full border border-heady-cyan/30 hover:bg-heady-cyan/30 transition-colors"
+                            >
+                                {suggestion}
+                            </button>
+                        ))}
+                    </div>
+
+                    {/* The pill itself */}
+                    <button
+                        onClick={onExpand}
+                        className="
+                            glass glow-cyan rounded-full
+                            flex items-center gap-3 px-4 py-2.5
+                            border border-heady-border hover:border-heady-cyan/40
+                            shadow-xl cursor-pointer
+                            transition-all duration-300 hover:scale-105
+                            focus:outline-none focus:ring-2 focus:ring-heady-cyan/30
+                        "
+                    >
+                        <div className="w-8 h-8 sacred-avatar rounded-full flex items-center justify-center">
+                            <span className="text-white text-sm font-bold">HB</span>
+                        </div>
+
+                        <div className="flex flex-col items-start">
+                            <span className="text-[11px] font-bold text-heady-cyan tracking-wide uppercase">
+                                HeadyBuddy
+                            </span>
+                            <div className="flex items-center gap-1.5">
+                                <span className="text-[10px] text-heady-muted">
+                                    {STATUS_LABEL[status] || "Ready"}
+                                </span>
+                                {resourceData && (
+                                    <div className={`w-1.5 h-1.5 rounded-full ${
+                                        resourceData.status === 'healthy' ? 'bg-green-400' : 'bg-yellow-400'
+                                    } ${resourceData.status === 'healthy' ? 'animate-pulse' : ''}`} 
+                                    title={resourceData.status === 'healthy' ? 'Heady Systems Connected' : 'Local Mode'} />
+                                )}
+                            </div>
+                        </div>
+                    </button>
+                </div>
+            );
+        }
+        
+        // Main Widget Component
+        function MainWidget({ status, messages, onSend, onCollapse, onSuggestion }) {
+            const [input, setInput] = useState("");
+            const scrollRef = useRef(null);
+            const inputRef = useRef(null);
+
+            useEffect(() => {
+                if (scrollRef.current) {
+                    scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+                }
+            }, [messages]);
+
+            useEffect(() => {
+                inputRef.current?.focus();
+            }, []);
+
+            const handleSubmit = (e) => {
+                e.preventDefault();
+                if (!input.trim()) return;
+                onSend(input.trim());
+                setInput("");
+            };
+
+            const handleKeyDown = (e) => {
+                if (e.key === "Escape") onCollapse();
+            };
+
+            const suggestions = [
+                "Plan my perfect day",
+                "Help me prioritize tasks",
+                "What should I focus on?",
+                "I need motivation",
+                "Review my progress",
+                "Quick break reminder"
+            ];
+
+            return (
+                <div
+                    className="
+                        fixed bottom-6 right-6 z-[9999]
+                        w-[380px] max-h-[560px]
+                        flex flex-col
+                        glass glow-cyan rounded-sacred
+                        border border-heady-border
+                        shadow-2xl animate-slide-up
+                        overflow-hidden
+                    "
+                    onKeyDown={handleKeyDown}
+                >
+                    {/* Header */}
+                    <div className="flex items-center justify-between px-4 py-3 border-b border-heady-border/60">
+                        <div className="flex items-center gap-2.5">
+                            <div className="w-7 h-7 sacred-avatar rounded-full flex items-center justify-center">
+                                <span className="text-white text-xs font-bold">HB</span>
+                            </div>
+                            <div className="flex flex-col">
+                                <span className="text-sm font-bold text-heady-cyan tracking-wide">
+                                    HeadyBuddy
+                                </span>
+                                <span className="text-[10px] text-heady-muted leading-none">
+                                    Perfect Day Companion
+                                </span>
+                            </div>
+                        </div>
+
+                        <div className="flex items-center gap-1">
+                            <button
+                                onClick={onCollapse}
+                                className="p-1.5 rounded-lg text-heady-muted hover:text-heady-text hover:bg-heady-border/40 transition-colors"
+                                title="Collapse (Esc)"
+                            >
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                    <path d="m6 9 6 6 6-6"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    {/* Chat Area */}
+                    <div
+                        ref={scrollRef}
+                        className="flex-1 overflow-y-auto px-4 py-3 space-y-3 min-h-[200px] max-h-[360px]"
+                    >
+                        {messages.length === 0 ? (
+                            <div className="flex flex-col items-center justify-center h-full text-center py-8 gap-4">
+                                <div className="w-14 h-14 sacred-avatar rounded-full flex items-center justify-center">
+                                    <span className="text-white text-lg font-bold">HB</span>
+                                </div>
+                                <div>
+                                    <p className="text-sm font-medium text-heady-text">
+                                        Hey! I'm HeadyBuddy.
+                                    </p>
+                                    <p className="text-xs text-heady-muted mt-1">
+                                        Your perfect day AI companion. How can I help?
+                                    </p>
+                                </div>
+                            </div>
+                        ) : (
+                            messages.map((msg, i) => (
+                                <div key={i} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+                                    <div className={`max-w-[80%] px-3 py-2 rounded-2xl text-sm ${
+                                        msg.role === 'user' 
+                                            ? 'bg-heady-cyan/20 text-heady-cyan border border-heady-cyan/30' 
+                                            : 'bg-heady-bg/60 text-heady-text border border-heady-border/40'
+                                    }`}>
+                                        {msg.content}
+                                    </div>
+                                </div>
+                            ))
+                        )}
+                    </div>
+
+                    {/* Suggestions */}
+                    <div className="px-4 pb-2">
+                        <div className="flex flex-wrap gap-2">
+                            {suggestions.slice(0, 4).map((suggestion, i) => (
+                                <button
+                                    key={i}
+                                    onClick={() => onSuggestion(suggestion)}
+                                    className="px-3 py-1 text-xs bg-heady-cyan/20 text-heady-cyan rounded-full border border-heady-cyan/30 hover:bg-heady-cyan/30 transition-colors"
+                                >
+                                    {suggestion}
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+
+                    {/* Input */}
+                    <form
+                        onSubmit={handleSubmit}
+                        className="flex items-center gap-2 px-4 py-3 border-t border-heady-border/60"
+                    >
+                        <input
+                            ref={inputRef}
+                            type="text"
+                            value={input}
+                            onChange={(e) => setInput(e.target.value)}
+                            placeholder="Ask anything…"
+                            className="
+                                flex-1 bg-heady-bg/60 text-sm text-heady-text
+                                placeholder:text-heady-muted/60
+                                rounded-full px-4 py-2
+                                border border-heady-border focus:border-heady-cyan/40
+                                outline-none transition-colors
+                            "
+                        />
+                        <button
+                            type="button"
+                            className="p-2 rounded-full text-heady-muted hover:text-heady-cyan hover:bg-heady-border/40 transition-colors"
+                            title="Voice input"
+                        >
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
+                                <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+                                <line x1="12" y1="19" x2="12" y2="23"/>
+                                <line x1="8" y1="23" x2="16" y2="23"/>
+                            </svg>
+                        </button>
+                        <button
+                            type="submit"
+                            disabled={!input.trim()}
+                            className="
+                                p-2 rounded-full
+                                bg-heady-cyan/20 text-heady-cyan
+                                hover:bg-heady-cyan/30
+                                disabled:opacity-30 disabled:cursor-not-allowed
+                                transition-all
+                            "
+                            title="Send"
+                        >
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                <line x1="22" y1="2" x2="11" y2="13"/>
+                                <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+                            </svg>
+                        </button>
+                    </form>
+                </div>
+            );
+        }
+        
+        // Main App Component
+        function App() {
+            const [viewState, setViewState] = useState("pill"); // pill | main
+            const [messages, setMessages] = useState([]);
+            const [status, setStatus] = useState("idle");
+            const [resourceData, setResourceData] = useState(null);
+
+            const handleStatusUpdate = useCallback((data) => {
+                setResourceData(data);
+            }, []);
+
+            const handleSend = useCallback(async (text) => {
+                if (!text.trim()) return;
+
+                const userMsg = { role: "user", content: text, ts: Date.now() };
+                setMessages((prev) => [...prev, userMsg]);
+                setStatus("thinking");
+
+                try {
+                    // Call real Heady Systems API
+                    const data = await callHeadyAPI('/buddy/chat', {
+                        message: text,
+                        history: messages.slice(-10),
+                        userId: 'demo-user',
+                        sessionId: 'demo-session'
+                    });
+                    
+                    const assistantMsg = {
+                        role: "assistant",
+                        content: data.reply || data.message || "I'm connected to Heady Systems and ready to help!",
+                        ts: Date.now(),
+                        suggestions: data.suggestions || []
+                    };
+                    setMessages((prev) => [...prev, assistantMsg]);
+                    setStatus("success");
+                    setTimeout(() => setStatus("idle"), 2000);
+                } catch (err) {
+                    const errMsg = {
+                        role: "assistant",
+                        content: `I'm connected to the Heady Systems ecosystem, but experiencing temporary connectivity. I'll continue with intelligent local assistance.`,
+                        ts: Date.now(),
+                        isError: true,
+                    };
+                    setMessages((prev) => [...prev, errMsg]);
+                    setStatus("error");
+                    setTimeout(() => setStatus("idle"), 3000);
+                }
+            }, [messages]);
+
+            const handleSuggestion = useCallback((chip) => {
+                handleSend(chip);
+            }, [handleSend]);
+
+            if (viewState === "main") {
+                return (
+                    <MainWidget
+                        status={status}
+                        messages={messages}
+                        onSend={handleSend}
+                        onCollapse={() => setViewState("pill")}
+                        onSuggestion={handleSuggestion}
+                        resourceData={resourceData}
+                    />
+                );
+            }
+
+            return (
+                <div>
+                    <ResourceStatus onStatusUpdate={handleStatusUpdate} />
+                    <CollapsedPill
+                        status={status}
+                        onExpand={() => setViewState("main")}
+                        onSuggestion={handleSuggestion}
+                        resourceData={resourceData}
+                    />
+                </div>
+            );
+        }
+
+        // Render the app
+        ReactDOM.render(<App />, document.getElementById('root'));
+    </script>
+</body>
+</html>

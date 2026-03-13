@@ -124,6 +124,12 @@ When invoked by the Supervisor during `execute-major-phase`:
 - Use the `@heady/networking` client with `proxy: false` for internal calls.
 - External API calls go through circuit breakers with retry + backoff.
 
+## NAMING STANDARDS FOR AGENTS
+
+When showing URLs or paths to the user, always use canonical domains and abstract roots (HEADY_PROJECT_ROOT, HEADY_DATA_ROOT). Never emit drive letters, api.headysystems.com, raw Render domains, or private IPs.
+
+When you need to be precise for engineers, refer to internal dev hosts as manager.dev.local.headysystems.com:3300 etc., never C:\ or .headysystems.com.
+
 ## CODING CONVENTIONS
 
 - **Brand Header:** All source files start with `HEADY_BRAND:BEGIN` / `HEADY_BRAND:END` block
@@ -170,61 +176,61 @@ drift in future.
 npm start                          # Start heady-manager on port 3300
 
 # Pipeline operations
-curl -X POST localhost:3300/api/pipeline/run     # Trigger pipeline run
-curl localhost:3300/api/pipeline/state            # Current run state
-curl localhost:3300/api/pipeline/config           # Pipeline config summary
-curl localhost:3300/api/pipeline/dag              # Stage dependency graph
-curl localhost:3300/api/pipeline/history          # Run history
-curl localhost:3300/api/pipeline/circuit-breakers # Circuit breaker status
-curl localhost:3300/api/pipeline/log              # Pipeline log entries
+curl -X POST api.headysystems.com:3300/api/pipeline/run     # Trigger pipeline run
+curl api.headysystems.com:3300/api/pipeline/state            # Current run state
+curl api.headysystems.com:3300/api/pipeline/config           # Pipeline config summary
+curl api.headysystems.com:3300/api/pipeline/dag              # Stage dependency graph
+curl api.headysystems.com:3300/api/pipeline/history          # Run history
+curl api.headysystems.com:3300/api/pipeline/circuit-breakers # Circuit breaker status
+curl api.headysystems.com:3300/api/pipeline/log              # Pipeline log entries
 
 # Claude Code direct access
-curl -X POST localhost:3300/api/pipeline/claude -d '{"prompt":"..."}'        # Ad-hoc Claude execution
-curl -X POST localhost:3300/api/pipeline/claude/analyze -d '{"paths":["src/"]}' # Code analysis
-curl -X POST localhost:3300/api/pipeline/claude/security                     # Security audit
+curl -X POST api.headysystems.com:3300/api/pipeline/claude -d '{"prompt":"..."}'        # Ad-hoc Claude execution
+curl -X POST api.headysystems.com:3300/api/pipeline/claude/analyze -d '{"paths":["src/"]}' # Code analysis
+curl -X POST api.headysystems.com:3300/api/pipeline/claude/security                     # Security audit
 
 # Supervisor (multi-agent routing)
-curl localhost:3300/api/supervisor/status                                     # Agent status
-curl -X POST localhost:3300/api/supervisor/route -d '{"type":"build"}'       # Route task to agents
+curl api.headysystems.com:3300/api/supervisor/status                                     # Agent status
+curl -X POST api.headysystems.com:3300/api/supervisor/route -d '{"type":"build"}'       # Route task to agents
 
 # System Brain
-curl localhost:3300/api/brain/status                                         # Brain status + readiness
-curl -X POST localhost:3300/api/brain/tune -d '{"errorRate":0.05}'           # Auto-tune concurrency
-curl -X POST localhost:3300/api/brain/governance-check -d '{"action":"execute","actor":"builder","domain":"build"}'
-curl -X POST localhost:3300/api/brain/evaluate-pattern -d '{"patternId":"circuit-breaker"}'
+curl api.headysystems.com:3300/api/brain/status                                         # Brain status + readiness
+curl -X POST api.headysystems.com:3300/api/brain/tune -d '{"errorRate":0.05}'           # Auto-tune concurrency
+curl -X POST api.headysystems.com:3300/api/brain/governance-check -d '{"action":"execute","actor":"builder","domain":"build"}'
+curl -X POST api.headysystems.com:3300/api/brain/evaluate-pattern -d '{"patternId":"circuit-breaker"}'
 
 # Readiness Evaluator
-curl localhost:3300/api/readiness/evaluate                                   # Run readiness probes
-curl localhost:3300/api/readiness/history                                    # Evaluation history
+curl api.headysystems.com:3300/api/readiness/evaluate                                   # Run readiness probes
+curl api.headysystems.com:3300/api/readiness/history                                    # Evaluation history
 
 # Health Checks
-curl localhost:3300/api/health-checks/snapshot                               # Current health snapshot
-curl -X POST localhost:3300/api/health-checks/run                            # Run all checks now
-curl localhost:3300/api/health-checks/history                                # Check history
+curl api.headysystems.com:3300/api/health-checks/snapshot                               # Current health snapshot
+curl -X POST api.headysystems.com:3300/api/health-checks/run                            # Run all checks now
+curl api.headysystems.com:3300/api/health-checks/history                                # Check history
 
 # Checkpoint Analyzer
-curl -X POST localhost:3300/api/checkpoint/analyze -d '{"stage":"manual"}'   # Run checkpoint analysis
-curl localhost:3300/api/checkpoint/records                                    # Checkpoint records
+curl -X POST api.headysystems.com:3300/api/checkpoint/analyze -d '{"stage":"manual"}'   # Run checkpoint analysis
+curl api.headysystems.com:3300/api/checkpoint/records                                    # Checkpoint records
 
 # Combined overview
-curl localhost:3300/api/subsystems                                           # All subsystem status
-curl localhost:3300/api/agents/claude-code/status                            # Claude Code agent status
+curl api.headysystems.com:3300/api/subsystems                                           # All subsystem status
+curl api.headysystems.com:3300/api/agents/claude-code/status                            # Claude Code agent status
 
 # Registry API
-curl localhost:3300/api/registry                             # Full registry catalog
-curl localhost:3300/api/registry/component/heady-manager      # Lookup component
-curl localhost:3300/api/registry/environments                 # List environments
-curl localhost:3300/api/registry/docs                         # List registered docs
-curl localhost:3300/api/registry/notebooks                    # List registered notebooks
-curl localhost:3300/api/registry/patterns                     # List patterns
-curl localhost:3300/api/registry/workflows                    # List workflows
-curl localhost:3300/api/registry/ai-nodes                     # List AI nodes
+curl api.headysystems.com:3300/api/registry                             # Full registry catalog
+curl api.headysystems.com:3300/api/registry/component/heady-manager      # Lookup component
+curl api.headysystems.com:3300/api/registry/environments                 # List environments
+curl api.headysystems.com:3300/api/registry/docs                         # List registered docs
+curl api.headysystems.com:3300/api/registry/notebooks                    # List registered notebooks
+curl api.headysystems.com:3300/api/registry/patterns                     # List patterns
+curl api.headysystems.com:3300/api/registry/workflows                    # List workflows
+curl api.headysystems.com:3300/api/registry/ai-nodes                     # List AI nodes
 
 # System status
-curl localhost:3300/api/health                    # Health check
-curl localhost:3300/api/system/status             # Full system status
-curl localhost:3300/api/nodes                     # Node status
-curl -X POST localhost:3300/api/system/production # Activate production mode
+curl api.headysystems.com:3300/api/health                    # Health check
+curl api.headysystems.com:3300/api/system/status             # Full system status
+curl api.headysystems.com:3300/api/nodes                     # Node status
+curl -X POST api.headysystems.com:3300/api/system/production # Activate production mode
 
 # Build & Deploy
 .\commit_and_build.ps1             # Local build cycle
@@ -289,4 +295,4 @@ patterns are implemented, which are pending, and which are not applicable.
 Integrate beneficial, legally and ethically acceptable patterns where they
 improve reliability, performance, or safety, without violating Heady's data
 ownership, security, or social impact goals.
-```
+

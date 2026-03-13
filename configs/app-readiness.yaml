@@ -23,7 +23,7 @@ version: "2.0.0"
 probes:
   - name: heady-manager-api
     type: http
-    url: http://localhost:3300/api/health
+    url: https://api.headysystems.com/api/health
     method: GET
     expectedStatus: 200
     expectedBody: { contains: "ok" }
@@ -33,7 +33,7 @@ probes:
 
   - name: heady-manager-pulse
     type: http
-    url: http://localhost:3300/api/pulse
+    url: https://api.headysystems.com/api/pulse
     method: GET
     expectedStatus: 200
     maxLatencyMs: 2000
@@ -42,7 +42,7 @@ probes:
 
   - name: heady-frontend
     type: http
-    url: http://localhost:3300/
+    url: https://app.headysystems.com/
     method: GET
     expectedStatus: 200
     expectedBody: { contains: "Heady" }
@@ -52,7 +52,7 @@ probes:
 
   - name: heady-admin
     type: http
-    url: http://localhost:3300/api/registry
+    url: https://api.headysystems.com/api/registry
     method: GET
     expectedStatus: 200
     maxLatencyMs: 3000
@@ -68,7 +68,7 @@ probes:
 
   - name: render-deployment
     type: http
-    url: https://heady-manager-headysystems.onrender.com/api/health
+    url: https://app.headysystems.com/api/health
     method: GET
     expectedStatus: 200
     maxLatencyMs: 10000
@@ -77,7 +77,7 @@ probes:
 
   - name: headybuddy-api
     type: http
-    url: http://localhost:3300/api/buddy/health
+    url: https://api.headysystems.com/api/buddy/health
     method: GET
     expectedStatus: 200
     expectedBody: { contains: "headybuddy" }
@@ -87,7 +87,7 @@ probes:
 
   - name: headybuddy-widget
     type: http
-    url: http://localhost:3400
+    url: https://buddy.headysystems.com
     method: GET
     expectedStatus: 200
     maxLatencyMs: 3000
@@ -96,7 +96,7 @@ probes:
 
   - name: headybuddy-suggestions
     type: http
-    url: http://localhost:3300/api/buddy/suggestions
+    url: https://api.headysystems.com/api/buddy/suggestions
     method: GET
     expectedStatus: 200
     maxLatencyMs: 2000

@@ -1,0 +1,1064 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Liquid Nodes - HeadyOS</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+            background: linear-gradient(135deg, #0a0e27 0%, #1a1a2e 100%);
+            color: #e0e0e0;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 55px;
+        }
+
+        /* Typography */
+        h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 34px;
+            background: linear-gradient(135deg, #00ffc8 0%, #ff00c8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        h2 {
+            font-size: 2.2rem;
+            margin-bottom: 34px;
+            color: #00ffc8;
+            border-bottom: 2px solid rgba(0, 255, 200, 0.3);
+            padding-bottom: 13px;
+        }
+
+        h3 {
+            font-size: 1.4rem;
+            color: #ff00c8;
+            margin-bottom: 13px;
+        }
+
+        p {
+            font-size: 1rem;
+            margin-bottom: 13px;
+            color: #c0c0c0;
+        }
+
+        /* Hero Section */
+        .hero {
+            position: relative;
+            padding: 89px 55px;
+            margin-bottom: 89px;
+            background: rgba(0, 255, 200, 0.05);
+            border: 1px solid rgba(0, 255, 200, 0.2);
+            border-radius: 21px;
+            backdrop-filter: blur(20px);
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle at 100% 100%, rgba(0, 255, 200, 0.15) 0%, transparent 70%);
+            animation: float 15s ease-in-out infinite;
+            z-index: 0;
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            bottom: -200px;
+            left: -200px;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(255, 0, 200, 0.1) 0%, transparent 70%);
+            animation: floatSlow 20s ease-in-out infinite;
+            z-index: 0;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-30px); }
+        }
+
+        @keyframes floatSlow {
+            0%, 100% { transform: translateX(0px); }
+            50% { transform: translateX(30px); }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero h1 {
+            margin-bottom: 21px;
+            text-shadow: 0 0 30px rgba(0, 255, 200, 0.3);
+        }
+
+        .hero-subtitle {
+            font-size: 1.3rem;
+            color: #00ffc8;
+            margin-bottom: 21px;
+            font-weight: 500;
+        }
+
+        /* Section Spacing */
+        section {
+            margin-bottom: 89px;
+        }
+
+        /* Card Styles */
+        .card {
+            background: rgba(26, 26, 46, 0.7);
+            border: 1px solid rgba(0, 255, 200, 0.2);
+            border-radius: 13px;
+            padding: 34px;
+            backdrop-filter: blur(20px);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            border-color: rgba(0, 255, 200, 0.5);
+            background: rgba(26, 26, 46, 0.9);
+            box-shadow: 0 0 30px rgba(0, 255, 200, 0.2);
+        }
+
+        /* Node Grid */
+        .node-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 21px;
+            margin-bottom: 34px;
+        }
+
+        .node-card {
+            background: rgba(26, 26, 46, 0.8);
+            border: 2px solid rgba(0, 255, 200, 0.2);
+            border-radius: 13px;
+            padding: 34px;
+            backdrop-filter: blur(20px);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .node-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #00ffc8 0%, #ff00c8 100%);
+            opacity: 0.5;
+        }
+
+        .node-card:hover {
+            border-color: rgba(0, 255, 200, 0.5);
+            background: rgba(26, 26, 46, 0.95);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 40px rgba(0, 255, 200, 0.15);
+        }
+
+        .node-card.active {
+            border-color: #00ff7a;
+        }
+
+        .node-card.needs-token {
+            border-color: #ffc107;
+        }
+
+        .node-card.disconnected {
+            border-color: #ff6b6b;
+        }
+
+        .node-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 21px;
+        }
+
+        .node-name {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #ff00c8;
+        }
+
+        .node-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .status-dot.active {
+            background: #00ff7a;
+            box-shadow: 0 0 10px rgba(0, 255, 122, 0.6);
+        }
+
+        .status-dot.needs-token {
+            background: #ffc107;
+            box-shadow: 0 0 10px rgba(255, 193, 7, 0.6);
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        .status-dot.disconnected {
+            background: #ff6b6b;
+            box-shadow: 0 0 10px rgba(255, 107, 107, 0.6);
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .status-active { color: #00ff7a; }
+        .status-needs-token { color: #ffc107; }
+        .status-disconnected { color: #ff6b6b; }
+
+        .node-description {
+            font-size: 0.95rem;
+            color: #b0b0b0;
+            margin-bottom: 21px;
+        }
+
+        .node-type {
+            display: inline-block;
+            background: rgba(0, 255, 200, 0.1);
+            color: #00ffc8;
+            padding: 5px 13px;
+            border-radius: 13px;
+            font-size: 0.8rem;
+            margin-bottom: 13px;
+        }
+
+        .capabilities-list {
+            list-style: none;
+            margin-bottom: 21px;
+        }
+
+        .capabilities-list li {
+            font-size: 0.9rem;
+            color: #a0a0a0;
+            padding: 5px 0;
+            padding-left: 21px;
+            position: relative;
+        }
+
+        .capabilities-list li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: #00ffc8;
+            font-weight: bold;
+        }
+
+        .env-var {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(0, 255, 200, 0.15);
+            padding: 13px;
+            border-radius: 5px;
+            font-family: 'Monaco', 'Courier New', monospace;
+            font-size: 0.85rem;
+            color: #00ffc8;
+            margin-top: 13px;
+            word-break: break-all;
+        }
+
+        /* Connection Flow */
+        .connection-flow {
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            margin: 55px 0;
+            padding: 34px;
+            background: rgba(26, 26, 46, 0.6);
+            border: 1px solid rgba(0, 255, 200, 0.2);
+            border-radius: 13px;
+            flex-wrap: wrap;
+            gap: 21px;
+        }
+
+        .flow-item {
+            text-align: center;
+            flex: 1;
+            min-width: 150px;
+        }
+
+        .flow-icon {
+            font-size: 2.5rem;
+            margin-bottom: 13px;
+            font-weight: 700;
+        }
+
+        .flow-label {
+            font-size: 0.9rem;
+            color: #00ffc8;
+            font-weight: 600;
+        }
+
+        .flow-arrow {
+            font-size: 1.5rem;
+            color: #ff00c8;
+            margin: 0 13px;
+            animation: slideRight 2s ease-in-out infinite;
+        }
+
+        @keyframes slideRight {
+            0%, 100% { transform: translateX(0); opacity: 0.5; }
+            50% { transform: translateX(10px); opacity: 1; }
+        }
+
+        /* Capabilities Matrix */
+        .matrix-container {
+            overflow-x: auto;
+            margin-bottom: 34px;
+        }
+
+        .capabilities-matrix {
+            width: 100%;
+            border-collapse: collapse;
+            background: rgba(26, 26, 46, 0.6);
+            border: 1px solid rgba(0, 255, 200, 0.2);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .capabilities-matrix th,
+        .capabilities-matrix td {
+            padding: 13px 21px;
+            text-align: left;
+            border-bottom: 1px solid rgba(0, 255, 200, 0.1);
+        }
+
+        .capabilities-matrix th {
+            background: rgba(0, 255, 200, 0.1);
+            color: #00ffc8;
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+        }
+
+        .capabilities-matrix tr:hover {
+            background: rgba(0, 255, 200, 0.05);
+        }
+
+        .capabilities-matrix td {
+            color: #c0c0c0;
+        }
+
+        .capabilities-matrix .node-name-cell {
+            color: #ff00c8;
+            font-weight: 600;
+        }
+
+        .checkmark {
+            color: #00ff7a;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .x-mark {
+            color: #ff6b6b;
+            font-weight: bold;
+        }
+
+        /* Setup Guide */
+        .setup-step {
+            background: rgba(26, 26, 46, 0.7);
+            border-left: 4px solid #00ffc8;
+            padding: 21px;
+            margin-bottom: 21px;
+            border-radius: 8px;
+        }
+
+        .step-number {
+            display: inline-block;
+            background: #00ffc8;
+            color: #0a0e27;
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 34px;
+            font-weight: 700;
+            margin-right: 13px;
+            margin-bottom: 8px;
+        }
+
+        .step-title {
+            font-weight: 700;
+            color: #00ffc8;
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+        }
+
+        .step-command {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(0, 255, 200, 0.15);
+            padding: 13px;
+            border-radius: 5px;
+            font-family: 'Monaco', 'Courier New', monospace;
+            font-size: 0.85rem;
+            color: #00ffc8;
+            margin: 13px 0;
+            overflow-x: auto;
+            word-break: break-all;
+        }
+
+        /* Health Monitor */
+        .health-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 21px;
+            margin-bottom: 34px;
+        }
+
+        .health-card {
+            background: rgba(26, 26, 46, 0.7);
+            border: 1px solid rgba(0, 255, 200, 0.15);
+            padding: 21px;
+            border-radius: 8px;
+        }
+
+        .health-metric {
+            margin-bottom: 21px;
+        }
+
+        .metric-label {
+            font-size: 0.9rem;
+            color: #808080;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+
+        .metric-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #00ffc8;
+        }
+
+        .metric-bar {
+            height: 8px;
+            background: rgba(100, 100, 120, 0.3);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 8px;
+        }
+
+        .metric-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #00ffc8 0%, #ff00c8 100%);
+            border-radius: 4px;
+        }
+
+        /* Architecture Diagram */
+        .architecture-diagram {
+            background: rgba(26, 26, 46, 0.7);
+            border: 1px solid rgba(0, 255, 200, 0.2);
+            border-radius: 13px;
+            padding: 34px;
+            margin-bottom: 34px;
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 21px;
+        }
+
+        .arch-box {
+            background: rgba(0, 255, 200, 0.05);
+            border: 2px solid rgba(0, 255, 200, 0.3);
+            padding: 21px;
+            border-radius: 8px;
+            min-width: 150px;
+            text-align: center;
+        }
+
+        .arch-box.vault {
+            border-color: #d4af37;
+            background: rgba(212, 175, 55, 0.05);
+        }
+
+        .arch-box.active {
+            border-color: #00ff7a;
+            background: rgba(0, 255, 122, 0.05);
+        }
+
+        .arch-label {
+            font-weight: 700;
+            font-size: 1rem;
+            margin-bottom: 8px;
+        }
+
+        .arch-box.vault .arch-label {
+            color: #d4af37;
+        }
+
+        .arch-box.active .arch-label {
+            color: #00ff7a;
+        }
+
+        .arch-box:not(.vault):not(.active) .arch-label {
+            color: #00ffc8;
+        }
+
+        .arch-detail {
+            font-size: 0.85rem;
+            color: #a0a0a0;
+        }
+
+        .arch-arrow {
+            color: #ff00c8;
+            font-weight: bold;
+            animation: slideRight 2s ease-in-out infinite;
+        }
+
+        /* Button */
+        .btn {
+            background: linear-gradient(135deg, #00ffc8 0%, #ff00c8 100%);
+            border: none;
+            color: #0a0e27;
+            padding: 13px 34px;
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(0, 255, 200, 0.4);
+        }
+
+        .btn:active {
+            transform: translateY(-1px);
+        }
+
+        @media (max-width: 768px) {
+            h1 { font-size: 2.5rem; }
+            h2 { font-size: 1.6rem; }
+            .container { padding: 34px 21px; }
+            .node-grid { grid-template-columns: 1fr; }
+            .connection-flow { flex-direction: column; }
+            .flow-arrow { margin: 13px 0; animation: none; }
+            .architecture-diagram { flex-direction: column; }
+            .health-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+    <link rel="stylesheet" href="/sacred-geometry.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="hero-content">
+                <h1>Liquid Nodes</h1>
+                <p class="hero-subtitle">MCP-Connected External Interfaces for HeadyOS</p>
+                <p>Liquid Nodes are dynamic connectors that extend HeadyOS capabilities through the Model Context Protocol (MCP). Each node bridges Claude, HeadyManager, and external services—from GitHub repositories to Cloudflare infrastructure to AI inference endpoints—with unified token-based authentication.</p>
+            </div>
+        </section>
+
+        <!-- Node Grid -->
+        <section>
+            <h2>Connected Nodes Overview</h2>
+            <div class="node-grid">
+                <!-- GitHub Node -->
+                <div class="node-card active">
+                    <div class="node-header">
+                        <div class="node-name">GitHub Node</div>
+                        <div class="node-status status-active">
+                            <span class="status-dot active"></span>
+                            <span>ACTIVE</span>
+                        </div>
+                    </div>
+                    <div class="node-type">SCM (Source Control)</div>
+                    <p class="node-description">Repository browsing, code search, and collaboration workflows.</p>
+                    <ul class="capabilities-list">
+                        <li>list-repos</li>
+                        <li>repo-info</li>
+                        <li>search-code</li>
+                    </ul>
+                    <div class="env-var">GITHUB_TOKEN=ghp_xxxxxxxxxxxxx</div>
+                </div>
+
+                <!-- Gists Node -->
+                <div class="node-card active">
+                    <div class="node-header">
+                        <div class="node-name">Gists Node</div>
+                        <div class="node-status status-active">
+                            <span class="status-dot active"></span>
+                            <span>ACTIVE</span>
+                        </div>
+                    </div>
+                    <div class="node-type">Code Snippets</div>
+                    <p class="node-description">Create, retrieve, and manage GitHub Gists for code sharing.</p>
+                    <ul class="capabilities-list">
+                        <li>list-gists</li>
+                        <li>get-gist</li>
+                        <li>create-gist</li>
+                    </ul>
+                    <div class="env-var">GITHUB_TOKEN=ghp_xxxxxxxxxxxxx</div>
+                </div>
+
+                <!-- Cloudflare Node -->
+                <div class="node-card active">
+                    <div class="node-header">
+                        <div class="node-name">Cloudflare Node</div>
+                        <div class="node-status status-active">
+                            <span class="status-dot active"></span>
+                            <span>ACTIVE</span>
+                        </div>
+                    </div>
+                    <div class="node-type">Infrastructure</div>
+                    <p class="node-description">DNS management, Workers, Pages, and zone configuration.</p>
+                    <ul class="capabilities-list">
+                        <li>list-zones</li>
+                        <li>dns-records</li>
+                        <li>workers</li>
+                        <li>pages</li>
+                    </ul>
+                    <div class="env-var">CLOUDFLARE_API_TOKEN=xxxxxxxxxxxxx</div>
+                </div>
+
+                <!-- Vertex AI Node -->
+                <div class="node-card active">
+                    <div class="node-header">
+                        <div class="node-name">Vertex AI Node</div>
+                        <div class="node-status status-active">
+                            <span class="status-dot active"></span>
+                            <span>ACTIVE</span>
+                        </div>
+                    </div>
+                    <div class="node-type">ML Inference</div>
+                    <p class="node-description">Deploy and invoke custom ML models on Google Cloud.</p>
+                    <ul class="capabilities-list">
+                        <li>list-models</li>
+                        <li>list-endpoints</li>
+                        <li>predict</li>
+                    </ul>
+                    <div class="env-var">GCP_PROJECT_ID=xxxxxxxxxxxxx</div>
+                </div>
+
+                <!-- AI Studio Node -->
+                <div class="node-card needs-token">
+                    <div class="node-header">
+                        <div class="node-name">AI Studio Node</div>
+                        <div class="node-status status-needs-token">
+                            <span class="status-dot needs-token"></span>
+                            <span>NEEDS TOKEN</span>
+                        </div>
+                    </div>
+                    <div class="node-type">LLM Generation</div>
+                    <p class="node-description">Generate text using Gemini API from Google AI Studio.</p>
+                    <ul class="capabilities-list">
+                        <li>generate-text</li>
+                    </ul>
+                    <div class="env-var">GOOGLE_AI_API_KEY=xxxxxxxxxxxxx</div>
+                </div>
+
+                <!-- Colab Node -->
+                <div class="node-card active">
+                    <div class="node-header">
+                        <div class="node-name">Colab Node</div>
+                        <div class="node-status status-active">
+                            <span class="status-dot active"></span>
+                            <span>ACTIVE</span>
+                        </div>
+                    </div>
+                    <div class="node-type">Notebooks</div>
+                    <p class="node-description">List and retrieve Google Colab notebooks from Drive.</p>
+                    <ul class="capabilities-list">
+                        <li>list-notebooks</li>
+                        <li>get-notebook</li>
+                    </ul>
+                    <div class="env-var">GOOGLE_DRIVE_ACCESS=authorized</div>
+                </div>
+
+                <!-- Latent Space Node -->
+                <div class="node-card active">
+                    <div class="node-header">
+                        <div class="node-name">Latent Space Node</div>
+                        <div class="node-status status-active">
+                            <span class="status-dot active"></span>
+                            <span>ACTIVE</span>
+                        </div>
+                    </div>
+                    <div class="node-type">Vector Memory</div>
+                    <p class="node-description">Semantic storage and retrieval via vector embeddings.</p>
+                    <ul class="capabilities-list">
+                        <li>store</li>
+                        <li>search</li>
+                        <li>list</li>
+                        <li>delete</li>
+                    </ul>
+                    <div class="env-var">LATENT_SPACE_ENABLED=true</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Connection Flow -->
+        <section>
+            <h2>Protocol Flow Architecture</h2>
+            <div class="card">
+                <p style="margin-bottom: 34px;">Liquid Nodes use MCP protocol to bridge Claude agent threads with external services through HeadyManager orchestration.</p>
+                <div class="connection-flow">
+                    <div class="flow-item">
+                        <div class="flow-icon">🧠</div>
+                        <div class="flow-label">Claude Agent</div>
+                    </div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-item">
+                        <div class="flow-icon">⚙️</div>
+                        <div class="flow-label">HeadyManager</div>
+                    </div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-item">
+                        <div class="flow-icon">💧</div>
+                        <div class="flow-label">Liquid Node</div>
+                    </div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-item">
+                        <div class="flow-icon">🔗</div>
+                        <div class="flow-label">External API</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Capabilities Matrix -->
+        <section>
+            <h2>Capabilities Matrix</h2>
+            <div class="card">
+                <p style="margin-bottom: 21px;">Complete feature breakdown across all 7 Liquid Nodes.</p>
+                <div class="matrix-container">
+                    <table class="capabilities-matrix">
+                        <thead>
+                            <tr>
+                                <th>Node</th>
+                                <th>Repositories</th>
+                                <th>Code Search</th>
+                                <th>Snippets</th>
+                                <th>DNS/Zones</th>
+                                <th>Workers</th>
+                                <th>ML Models</th>
+                                <th>Text Gen</th>
+                                <th>Notebooks</th>
+                                <th>Vector Store</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="node-name-cell">GitHub Node</td>
+                                <td><span class="checkmark">✓</span></td>
+                                <td><span class="checkmark">✓</span></td>
+                                <td><span class="x-mark">—</span></td>
+                                <td><span class="x-mark">—</span></td>
+                                <td><span class="x-mark">—</span></td>
+                                <td><span class="x-mark">—</span></td>
+                                <td><span class="x-mark">—</span></td>
+                                <td><span class="x-mark">—</span></td>
+                                <td><span class="x-mark">—</span></td>
+                            </tr>
+                            <tr>
+                                <td class="node-name-cell">Gists Node</td>
+                                <td><span class="x-mark">—</span></td>
+                                <td><span class="x-mark">—</span></td>
+                                <td><span class="checkmark">✓</span></td>
+                                <td><span class="x-mark">—</span></td>
+                                <td><span class="x-mark">—</span></td>
+                                <td><span class="x-mark">—</span></td>
+                                <td><span class="x-mark">—</span></td>
+                                <td><span class="x-mark">—</span></td>
+                                <td><span class="x-mark">—</span></td>
+                            </tr>
+                            <tr>
+                                <td class="node-name-cell">Cloudflare</td>
+                                <td><span class="x-mark">—</span></td>
+                                <td><span class="x-mark">—</span></td>
+                                <td><span class="x-mark">—</span></td>
+                                <td><span class="checkmark">✓</span></td>
+                                <td><span class="checkmark">✓</span></td>
+                                <td><span class="x-mark">—</span></td>
+                                <td><span class="x-mark">—</span></td>
+                                <td><span class="x-mark">—</span></td>
+                                <td><span class="x-mark">—</span></td>
+                            </tr>
+                            <tr>
+                                <td class="node-name-cell">Vertex AI</td>
+                                <td><span class="x-mark">—</span></td>
+                                <td><span class="x-mark">—</span></td>
+                                <td><span class="x-mark">—</span></td>
+                                <td><span class="x-mark">—</span></td>
+                                <td><span class="x-mark">—</span></td>
+                                <td><span class="checkmark">✓</span></td>
+                                <td><span class="x-mark">—</span></td>
+                                <td><span class="x-mark">—</span></td>
+                                <td><span class="x-mark">—</span></td>
+                            </tr>
+                            <tr>
+                                <td class="node-name-cell">AI Studio</td>
+                                <td><span class="x-mark">—</span></td>
+                                <td><span class="x-mark">—</span></td>
+                                <td><span class="x-mark">—</span></td>
+                                <td><span class="x-mark">—</span></td>
+                                <td><span class="x-mark">—</span></td>
+                                <td><span class="x-mark">—</span></td>
+                                <td><span class="checkmark">✓</span></td>
+                                <td><span class="x-mark">—</span></td>
+                                <td><span class="x-mark">—</span></td>
+                            </tr>
+                            <tr>
+                                <td class="node-name-cell">Colab Node</td>
+                                <td><span class="x-mark">—</span></td>
+                                <td><span class="x-mark">—</span></td>
+                                <td><span class="x-mark">—</span></td>
+                                <td><span class="x-mark">—</span></td>
+                                <td><span class="x-mark">—</span></td>
+                                <td><span class="x-mark">—</span></td>
+                                <td><span class="x-mark">—</span></td>
+                                <td><span class="checkmark">✓</span></td>
+                                <td><span class="x-mark">—</span></td>
+                            </tr>
+                            <tr>
+                                <td class="node-name-cell">Latent Space</td>
+                                <td><span class="x-mark">—</span></td>
+                                <td><span class="x-mark">—</span></td>
+                                <td><span class="x-mark">—</span></td>
+                                <td><span class="x-mark">—</span></td>
+                                <td><span class="x-mark">—</span></td>
+                                <td><span class="x-mark">—</span></td>
+                                <td><span class="x-mark">—</span></td>
+                                <td><span class="x-mark">—</span></td>
+                                <td><span class="checkmark">✓</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- Setup Guide -->
+        <section>
+            <h2>Node Connection Setup Guide</h2>
+            <div class="card">
+                <p style="margin-bottom: 34px;">Step-by-step instructions for connecting each Liquid Node to HeadyOS.</p>
+
+                <div class="setup-step">
+                    <span class="step-number">1</span>
+                    <div class="step-title">GitHub Node (SCM)</div>
+                    <p>Generate a personal access token with repo, gist, and read:org scopes.</p>
+                    <div class="step-command">export GITHUB_TOKEN="ghp_your_token_here"</div>
+                    <p>Verify: <code style="color: #00ffc8;">heady liquid-nodes verify github</code></p>
+                </div>
+
+                <div class="setup-step">
+                    <span class="step-number">2</span>
+                    <div class="step-title">Cloudflare Node (Infrastructure)</div>
+                    <p>Create an API token in Cloudflare dashboard with Zone.Zone:Read and DNS:Edit permissions.</p>
+                    <div class="step-command">export CLOUDFLARE_API_TOKEN="v1.0_your_token_here"</div>
+                    <p>Verify: <code style="color: #00ffc8;">heady liquid-nodes verify cloudflare</code></p>
+                </div>
+
+                <div class="setup-step">
+                    <span class="step-number">3</span>
+                    <div class="step-title">Vertex AI Node (ML)</div>
+                    <p>Set up GCP service account key and configure project ID.</p>
+                    <div class="step-command">export GCP_PROJECT_ID="your-project-id"
+export GOOGLE_APPLICATION_CREDENTIALS="/path/to/service-account.json"</div>
+                    <p>Verify: <code style="color: #00ffc8;">heady liquid-nodes verify vertex-ai</code></p>
+                </div>
+
+                <div class="setup-step">
+                    <span class="step-number">4</span>
+                    <div class="step-title">AI Studio Node (LLM)</div>
+                    <p>Create API key in Google AI Studio console (makersuite.google.com).</p>
+                    <div class="step-command">export GOOGLE_AI_API_KEY="AIzaSyD_your_key_here"</div>
+                    <p>Verify: <code style="color: #00ffc8;">heady liquid-nodes verify ai-studio</code></p>
+                </div>
+
+                <div class="setup-step">
+                    <span class="step-number">5</span>
+                    <div class="step-title">Colab Node (Notebooks)</div>
+                    <p>Authenticate with Google Drive via OAuth flow.</p>
+                    <div class="step-command">heady liquid-nodes auth google-drive</div>
+                    <p>Verify: <code style="color: #00ffc8;">heady liquid-nodes verify colab</code></p>
+                </div>
+
+                <div class="setup-step">
+                    <span class="step-number">6</span>
+                    <div class="step-title">Restart HeadyManager</div>
+                    <p>Apply configuration changes and activate all connected nodes.</p>
+                    <div class="step-command">heady manager restart</div>
+                    <p>Monitor: <code style="color: #00ffc8;">heady liquid-nodes status</code></p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Node Health Monitor -->
+        <section>
+            <h2>Node Health & Performance Metrics</h2>
+            <div class="card">
+                <p style="margin-bottom: 34px;">Real-time monitoring of connection health, latency, and throughput for active nodes.</p>
+                <div class="health-grid">
+                    <div class="health-card">
+                        <h3 style="margin-bottom: 21px; font-size: 1.1rem;">GitHub Node</h3>
+                        <div class="health-metric">
+                            <div class="metric-label">Latency</div>
+                            <div class="metric-value">142 ms</div>
+                            <div class="metric-bar">
+                                <div class="metric-fill" style="width: 28%;"></div>
+                            </div>
+                        </div>
+                        <div class="health-metric">
+                            <div class="metric-label">Uptime</div>
+                            <div class="metric-value">99.98%</div>
+                            <div class="metric-bar">
+                                <div class="metric-fill" style="width: 99%;"></div>
+                            </div>
+                        </div>
+                        <div class="health-metric">
+                            <div class="metric-label">Requests/min</div>
+                            <div class="metric-value">487</div>
+                        </div>
+                    </div>
+
+                    <div class="health-card">
+                        <h3 style="margin-bottom: 21px; font-size: 1.1rem;">Cloudflare Node</h3>
+                        <div class="health-metric">
+                            <div class="metric-label">Latency</div>
+                            <div class="metric-value">89 ms</div>
+                            <div class="metric-bar">
+                                <div class="metric-fill" style="width: 18%;"></div>
+                            </div>
+                        </div>
+                        <div class="health-metric">
+                            <div class="metric-label">Uptime</div>
+                            <div class="metric-value">100%</div>
+                            <div class="metric-bar">
+                                <div class="metric-fill" style="width: 100%;"></div>
+                            </div>
+                        </div>
+                        <div class="health-metric">
+                            <div class="metric-label">Requests/min</div>
+                            <div class="metric-value">156</div>
+                        </div>
+                    </div>
+
+                    <div class="health-card">
+                        <h3 style="margin-bottom: 21px; font-size: 1.1rem;">Vertex AI Node</h3>
+                        <div class="health-metric">
+                            <div class="metric-label">Latency</div>
+                            <div class="metric-value">1,234 ms</div>
+                            <div class="metric-bar">
+                                <div class="metric-fill" style="width: 95%;"></div>
+                            </div>
+                        </div>
+                        <div class="health-metric">
+                            <div class="metric-label">Uptime</div>
+                            <div class="metric-value">99.94%</div>
+                            <div class="metric-bar">
+                                <div class="metric-fill" style="width: 99%;"></div>
+                            </div>
+                        </div>
+                        <div class="health-metric">
+                            <div class="metric-label">Requests/min</div>
+                            <div class="metric-value">23</div>
+                        </div>
+                    </div>
+
+                    <div class="health-card">
+                        <h3 style="margin-bottom: 21px; font-size: 1.1rem;">Latent Space Node</h3>
+                        <div class="health-metric">
+                            <div class="metric-label">Latency</div>
+                            <div class="metric-value">56 ms</div>
+                            <div class="metric-bar">
+                                <div class="metric-fill" style="width: 11%;"></div>
+                            </div>
+                        </div>
+                        <div class="health-metric">
+                            <div class="metric-label">Uptime</div>
+                            <div class="metric-value">100%</div>
+                            <div class="metric-bar">
+                                <div class="metric-fill" style="width: 100%;"></div>
+                            </div>
+                        </div>
+                        <div class="health-metric">
+                            <div class="metric-label">Requests/min</div>
+                            <div class="metric-value">892</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Architecture Diagram -->
+        <section>
+            <h2>Credential & Token Flow Architecture</h2>
+            <div class="architecture-diagram">
+                <div class="arch-box vault">
+                    <div class="arch-label">HeadyVault</div>
+                    <div class="arch-detail">Encrypted credential store</div>
+                </div>
+                <div class="arch-arrow">→</div>
+                <div class="arch-box">
+                    <div class="arch-label">.env File</div>
+                    <div class="arch-detail">Environment variables</div>
+                </div>
+                <div class="arch-arrow">→</div>
+                <div class="arch-box active">
+                    <div class="arch-label">Liquid Node</div>
+                    <div class="arch-detail">MCP adapter</div>
+                </div>
+                <div class="arch-arrow">→</div>
+                <div class="arch-box">
+                    <div class="arch-label">External API</div>
+                    <div class="arch-detail">GitHub, Cloudflare, etc</div>
+                </div>
+            </div>
+            <p style="text-align: center; color: #808080; font-size: 0.95rem; margin-top: 21px;">HeadyVault encrypts all credentials. Liquid Nodes load tokens from environment at runtime. Each node runs isolated MCP adapter process.</p>
+        </section>
+
+        <!-- Footer Info -->
+        <section style="text-align: center; margin-top: 89px; padding-top: 55px; border-top: 1px solid rgba(0, 255, 200, 0.2);">
+            <p style="color: #606060; font-size: 0.95rem;">Liquid Nodes Protocol | HeadyOS by HeadySystems Inc</p>
+            <p style="color: #606060; font-size: 0.85rem; margin-top: 8px;">MCP-based external interfaces with unified token authentication and real-time health monitoring</p>
+        </section>
+    </div>
+
+    <script src="/nav-global.js"></script>
+</body>
+</html>

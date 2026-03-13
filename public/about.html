@@ -1,0 +1,818 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About HeadySystems - Sacred Geometry OS</title>
+    <link rel="stylesheet" href="/sacred-geometry.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #0a0e27 0%, #1a1a2e 50%, #0a0e27 100%);
+            color: #e0e0e0;
+            line-height: 1.6;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Animated background orbs */
+        .orb-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.05;
+            filter: blur(40px);
+            animation: float 20s ease-in-out infinite;
+        }
+
+        .orb-1 {
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, #00ffc8, transparent);
+            top: 10%;
+            left: 10%;
+            animation-duration: 25s;
+        }
+
+        .orb-2 {
+            width: 250px;
+            height: 250px;
+            background: radial-gradient(circle, #ff00c8, transparent);
+            top: 40%;
+            right: 15%;
+            animation-duration: 30s;
+            animation-delay: -5s;
+        }
+
+        .orb-3 {
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, #d4af37, transparent);
+            bottom: 20%;
+            left: 20%;
+            animation-duration: 28s;
+            animation-delay: -10s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0); }
+            25% { transform: translate(30px, -30px); }
+            50% { transform: translate(-20px, 20px); }
+            75% { transform: translate(25px, 15px); }
+        }
+
+        /* Main content */
+        .content-wrapper {
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 55px 21px;
+            text-align: center;
+            background: linear-gradient(180deg, rgba(0, 255, 200, 0.05) 0%, rgba(255, 0, 200, 0.02) 50%, transparent 100%);
+            border-bottom: 1px solid rgba(0, 255, 200, 0.1);
+        }
+
+        .hero-content {
+            max-width: 89vw;
+            backdrop-filter: blur(20px);
+            background: rgba(26, 26, 46, 0.4);
+            padding: 89px 55px;
+            border-radius: 21px;
+            border: 1px solid rgba(0, 255, 200, 0.2);
+            box-shadow: 0 8px 32px rgba(0, 255, 200, 0.1);
+        }
+
+        .hero h1 {
+            font-size: clamp(3rem, 8vw, 5rem);
+            margin-bottom: 21px;
+            background: linear-gradient(135deg, #00ffc8 0%, #ff00c8 50%, #d4af37 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        .hero-tagline {
+            font-size: 1.5rem;
+            color: #00ffc8;
+            margin-bottom: 13px;
+            font-weight: 300;
+            letter-spacing: 0.05em;
+        }
+
+        .hero-description {
+            font-size: 1.1rem;
+            color: #b0b0d0;
+            max-width: 800px;
+            margin: 0 auto 34px;
+            line-height: 1.8;
+        }
+
+        /* Section styles */
+        .section {
+            padding: 89px 55px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            font-size: 2.8rem;
+            margin-bottom: 34px;
+            background: linear-gradient(135deg, #00ffc8 0%, #ff00c8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 700;
+        }
+
+        .section-subtitle {
+            font-size: 1.3rem;
+            color: #b0b0d0;
+            margin-bottom: 34px;
+            line-height: 1.8;
+        }
+
+        /* Mission Section */
+        .mission-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 55px;
+            margin-bottom: 55px;
+        }
+
+        .mission-card {
+            backdrop-filter: blur(20px);
+            background: rgba(0, 255, 200, 0.03);
+            padding: 55px;
+            border-radius: 21px;
+            border: 1px solid rgba(0, 255, 200, 0.15);
+            transition: all 0.3s ease;
+        }
+
+        .mission-card:hover {
+            background: rgba(0, 255, 200, 0.08);
+            border-color: rgba(0, 255, 200, 0.3);
+            transform: translateY(-5px);
+        }
+
+        .mission-card h3 {
+            font-size: 1.8rem;
+            color: #00ffc8;
+            margin-bottom: 21px;
+            font-weight: 600;
+        }
+
+        .mission-card p {
+            font-size: 1.05rem;
+            color: #d0d0e0;
+            line-height: 1.8;
+        }
+
+        /* Sacred Geometry Section */
+        .geometry-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 34px;
+            margin-bottom: 55px;
+        }
+
+        .geometry-item {
+            backdrop-filter: blur(20px);
+            background: rgba(255, 0, 200, 0.03);
+            padding: 34px;
+            border-radius: 13px;
+            border: 1px solid rgba(255, 0, 200, 0.15);
+            text-align: center;
+        }
+
+        .geometry-item h4 {
+            font-size: 1.3rem;
+            color: #ff00c8;
+            margin-bottom: 13px;
+            font-weight: 600;
+        }
+
+        .geometry-item p {
+            font-size: 0.95rem;
+            color: #b0b0d0;
+            line-height: 1.7;
+        }
+
+        .number-badge {
+            font-size: 2rem;
+            color: #d4af37;
+            font-weight: 700;
+            margin-bottom: 8px;
+            font-family: 'Monaco', 'Courier New', monospace;
+        }
+
+        /* Architecture Section */
+        .architecture {
+            margin: 55px 0;
+            backdrop-filter: blur(20px);
+            background: rgba(26, 26, 46, 0.3);
+            padding: 55px;
+            border-radius: 21px;
+            border: 1px solid rgba(0, 255, 200, 0.1);
+        }
+
+        .architecture-diagram {
+            display: flex;
+            flex-direction: column;
+            gap: 21px;
+            margin-top: 34px;
+        }
+
+        .arch-layer {
+            backdrop-filter: blur(15px);
+            background: linear-gradient(90deg, rgba(0, 255, 200, 0.05), rgba(212, 175, 55, 0.05));
+            padding: 21px 34px;
+            border-radius: 13px;
+            border-left: 3px solid #00ffc8;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .arch-layer:hover {
+            background: linear-gradient(90deg, rgba(0, 255, 200, 0.12), rgba(212, 175, 55, 0.12));
+            border-left-color: #ff00c8;
+            transform: translateX(5px);
+        }
+
+        .arch-layer-title {
+            font-size: 1.2rem;
+            color: #00ffc8;
+            font-weight: 600;
+        }
+
+        .arch-layer-desc {
+            font-size: 0.9rem;
+            color: #a0a0c0;
+            flex-grow: 1;
+            margin-left: 34px;
+            max-width: 400px;
+        }
+
+        .arch-arrow {
+            color: #00ffc8;
+            text-align: center;
+            font-size: 1.5rem;
+            opacity: 0.5;
+        }
+
+        /* Patents Section */
+        .patents-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 34px;
+            margin-bottom: 55px;
+        }
+
+        .patent-card {
+            backdrop-filter: blur(20px);
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.05), rgba(0, 255, 200, 0.05));
+            padding: 34px;
+            border-radius: 13px;
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .patent-card:hover {
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.1), rgba(0, 255, 200, 0.1));
+            transform: scale(1.02);
+        }
+
+        .patent-icon {
+            font-size: 2rem;
+            color: #d4af37;
+            margin-bottom: 13px;
+        }
+
+        .patent-card h4 {
+            font-size: 1.1rem;
+            color: #d4af37;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .patent-card p {
+            font-size: 0.9rem;
+            color: #a0a0c0;
+            line-height: 1.6;
+        }
+
+        /* Timeline Section */
+        .timeline {
+            position: relative;
+            padding: 55px 0;
+        }
+
+        .timeline-item {
+            margin-bottom: 55px;
+            padding-left: 55px;
+            position: relative;
+            backdrop-filter: blur(15px);
+            background: rgba(0, 255, 200, 0.02);
+            padding: 34px 34px 34px 55px;
+            border-radius: 13px;
+            border: 1px solid rgba(0, 255, 200, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .timeline-item:hover {
+            background: rgba(0, 255, 200, 0.05);
+            border-color: rgba(0, 255, 200, 0.25);
+        }
+
+        .timeline-dot {
+            position: absolute;
+            left: 0;
+            top: 34px;
+            width: 21px;
+            height: 21px;
+            background: linear-gradient(135deg, #00ffc8, #ff00c8);
+            border-radius: 50%;
+            border: 2px solid #1a1a2e;
+        }
+
+        .timeline-date {
+            font-size: 1.2rem;
+            color: #d4af37;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-family: 'Monaco', 'Courier New', monospace;
+        }
+
+        .timeline-title {
+            font-size: 1.1rem;
+            color: #00ffc8;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .timeline-desc {
+            font-size: 0.95rem;
+            color: #b0b0d0;
+            line-height: 1.6;
+        }
+
+        /* Tech Stack Section */
+        .tech-stack {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 34px;
+            margin-bottom: 55px;
+        }
+
+        .tech-item {
+            backdrop-filter: blur(20px);
+            background: rgba(212, 175, 55, 0.03);
+            padding: 34px;
+            border-radius: 13px;
+            border: 1px solid rgba(212, 175, 55, 0.15);
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .tech-item:hover {
+            background: rgba(212, 175, 55, 0.08);
+            border-color: rgba(212, 175, 55, 0.3);
+        }
+
+        .tech-icon {
+            font-size: 2.5rem;
+            margin-bottom: 13px;
+        }
+
+        .tech-name {
+            font-size: 1.1rem;
+            color: #d4af37;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .tech-desc {
+            font-size: 0.85rem;
+            color: #a0a0c0;
+            line-height: 1.5;
+        }
+
+        /* Statistics Section */
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 34px;
+            margin-bottom: 55px;
+            text-align: center;
+        }
+
+        .stat {
+            backdrop-filter: blur(20px);
+            background: linear-gradient(135deg, rgba(255, 0, 200, 0.05), rgba(0, 255, 200, 0.05));
+            padding: 34px;
+            border-radius: 13px;
+            border: 1px solid rgba(0, 255, 200, 0.15);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            color: #ff00c8;
+            font-weight: 700;
+            margin-bottom: 8px;
+            font-family: 'Monaco', 'Courier New', monospace;
+        }
+
+        .stat-label {
+            font-size: 0.95rem;
+            color: #b0b0d0;
+            font-weight: 500;
+        }
+
+        /* Divider */
+        .divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(0, 255, 200, 0.2), transparent);
+            margin: 55px 0;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .section {
+                padding: 55px 21px;
+            }
+
+            .hero-content {
+                padding: 55px 34px;
+            }
+
+            .mission-grid {
+                grid-template-columns: 1fr;
+                gap: 34px;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .arch-layer {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 13px;
+            }
+
+            .arch-layer-desc {
+                margin-left: 0;
+            }
+
+            .patents-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .geometry-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="orb-container">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
+    </div>
+
+    <div class="content-wrapper">
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="hero-content">
+                <h1>About HeadySystems</h1>
+                <p class="hero-tagline">Sacred Geometry Meets Organic Computing</p>
+                <p class="hero-description">
+                    We are building the operating system for intelligent orchestration. By weaving sacred geometric principles—PHI ratios, Fibonacci sequences, and golden mean harmonics—into every layer of our architecture, we create systems that think, adapt, and scale with organic grace.
+                </p>
+            </div>
+        </section>
+
+        <!-- Mission & Vision -->
+        <section class="section">
+            <h2 class="section-title">Our Mission & Vision</h2>
+            <div class="mission-grid">
+                <div class="mission-card">
+                    <h3>Our Mission</h3>
+                    <p>
+                        To empower organizations with an intelligent operating system that orchestrates complex workflows, integrates disparate systems, and scales seamlessly. We believe that technology should reflect the harmony and balance found in nature—elegant, efficient, and alive.
+                    </p>
+                </div>
+                <div class="mission-card">
+                    <h3>Our Vision</h3>
+                    <p>
+                        A future where every organization has access to an AI-native orchestration platform that learns, adapts, and optimizes in real-time. Where sacred geometry principles guide architectural decisions, creating systems that are not just powerful, but beautiful and sustainable.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <div class="divider"></div>
+
+        <!-- Sacred Geometry Philosophy -->
+        <section class="section">
+            <h2 class="section-title">Sacred Geometry Philosophy</h2>
+            <p class="section-subtitle">
+                Every architectural decision at HeadySystems is informed by the universal principles of sacred geometry—the mathematical harmonies that govern nature itself.
+            </p>
+            <div class="geometry-grid">
+                <div class="geometry-item">
+                    <div class="number-badge">φ</div>
+                    <h4>Golden Ratio (PHI)</h4>
+                    <p>1.618:1 proportions guide our UI layouts, component spacing, and visual hierarchies. Perfect harmony drives user experience.</p>
+                </div>
+                <div class="geometry-item">
+                    <div class="number-badge">∞</div>
+                    <h4>Fibonacci Sequences</h4>
+                    <p>5, 8, 13, 21, 34, 55, 89px spacing creates rhythm and balance across all interfaces. Nature's growth pattern becomes our design language.</p>
+                </div>
+                <div class="geometry-item">
+                    <div class="number-badge">◇</div>
+                    <h4>Sacred Symmetry</h4>
+                    <p>Bilateral and radial symmetry reflect natural order. Our algorithms mirror the recursive patterns found in DNA, crystals, and galaxies.</p>
+                </div>
+                <div class="geometry-item">
+                    <div class="number-badge">⊕</div>
+                    <h4>Harmonic Resonance</h4>
+                    <p>Vector operations optimize for coherence and balance. Every transformation respects the mathematical underpinnings of the universe.</p>
+                </div>
+                <div class="geometry-item">
+                    <div class="number-badge">✧</div>
+                    <h4>Organic Scaling</h4>
+                    <p>Systems scale naturally through emergent behavior, much like ecosystems. Complexity arises from simple, elegant rules applied recursively.</p>
+                </div>
+                <div class="geometry-item">
+                    <div class="number-badge">⟡</div>
+                    <h4>Living Architecture</h4>
+                    <p>Our infrastructure breathes, adapts, and evolves. Dynamic optimization keeps systems in constant harmony with changing demands.</p>
+                </div>
+            </div>
+        </section>
+
+        <div class="divider"></div>
+
+        <!-- Architecture Section -->
+        <section class="section">
+            <h2 class="section-title">The Heady Architecture</h2>
+            <p class="section-subtitle">
+                A layered system where each component orchestrates intelligently with others, creating emergent capabilities that exceed the sum of parts.
+            </p>
+            <div class="architecture">
+                <div class="architecture-diagram">
+                    <div class="arch-layer">
+                        <div class="arch-layer-title">⚡ System Brain</div>
+                        <div class="arch-layer-desc">Central AI decision-making engine that reasons about workflows, optimizes execution paths, and learns from patterns.</div>
+                    </div>
+                    <div class="arch-arrow">↓</div>
+                    <div class="arch-layer">
+                        <div class="arch-layer-title">🔄 HCFullPipeline</div>
+                        <div class="arch-layer-desc">Intelligent pipeline orchestration that executes complex multi-stage workflows with adaptive parallelization and error recovery.</div>
+                    </div>
+                    <div class="arch-arrow">↓</div>
+                    <div class="arch-layer">
+                        <div class="arch-layer-title">🐝 HeadyBee Swarm</div>
+                        <div class="arch-layer-desc">Distributed worker coordination system enabling massively parallel task execution with intelligent load balancing and swarm intelligence.</div>
+                    </div>
+                    <div class="arch-arrow">↓</div>
+                    <div class="arch-layer">
+                        <div class="arch-layer-title">🌊 Liquid Nodes</div>
+                        <div class="arch-layer-desc">Flexible compute and integration nodes that flow to where they're needed, connecting disparate systems through universal protocol translation.</div>
+                    </div>
+                    <div class="arch-arrow">↓</div>
+                    <div class="arch-layer">
+                        <div class="arch-layer-title">🧠 Latent Space</div>
+                        <div class="arch-layer-desc">Vector memory and semantic knowledge store that captures organizational context and enables intelligent decision-making at scale.</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="divider"></div>
+
+        <!-- Patents Section -->
+        <section class="section">
+            <h2 class="section-title">51 Provisional Patents</h2>
+            <p class="section-subtitle">
+                Our intellectual property portfolio covers fundamental innovations in AI orchestration, cryptography, distributed systems, and intelligent workflow management.
+            </p>
+            <div class="stats">
+                <div class="stat">
+                    <div class="stat-number">51</div>
+                    <div class="stat-label">Provisional Patents Filed</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number">4</div>
+                    <div class="stat-label">Major Architecture Versions</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number">∞</div>
+                    <div class="stat-label">Geometric Harmonies</div>
+                </div>
+            </div>
+            <div class="patents-grid">
+                <div class="patent-card">
+                    <div class="patent-icon">🔐</div>
+                    <h4>Post-Quantum Cryptography</h4>
+                    <p>Novel approaches to lattice-based encryption and quantum-resistant key exchange protocols securing distributed orchestration at scale.</p>
+                </div>
+                <div class="patent-card">
+                    <div class="patent-icon">📊</div>
+                    <h4>Vector-Space Operations</h4>
+                    <p>High-dimensional semantic reasoning enabling context-aware decision making, pattern recognition, and intelligent task routing through latent space.</p>
+                </div>
+                <div class="patent-card">
+                    <div class="patent-icon">🐝</div>
+                    <h4>Swarm Intelligence Protocols</h4>
+                    <p>Distributed coordination algorithms enabling massive parallelization with organic emergence, inspired by natural swarm behavior and collective cognition.</p>
+                </div>
+                <div class="patent-card">
+                    <div class="patent-icon">🌉</div>
+                    <h4>Universal Protocol Translation</h4>
+                    <p>Seamless interoperability framework translating between MCP, HTTP, WebSocket, UDP, MIDI, TCP, and proprietary protocols with zero data loss.</p>
+                </div>
+                <div class="patent-card">
+                    <div class="patent-icon">⚙️</div>
+                    <h4>Adaptive Pipeline Optimization</h4>
+                    <p>Real-time workflow optimization using sacred geometry principles, PHI ratios, and Fibonacci-based resource allocation for maximum efficiency.</p>
+                </div>
+                <div class="patent-card">
+                    <div class="patent-icon">🧬</div>
+                    <h4>Genetic Algorithm Scheduling</h4>
+                    <p>Evolutionary task scheduling that adapts execution strategies based on performance metrics, resource availability, and organizational constraints.</p>
+                </div>
+            </div>
+        </section>
+
+        <div class="divider"></div>
+
+        <!-- Timeline Section -->
+        <section class="section">
+            <h2 class="section-title">Our Journey</h2>
+            <p class="section-subtitle">Milestones in the evolution of HeadyOS and Sacred Geometry v4.0</p>
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-date">Q1 2024</div>
+                    <div class="timeline-title">HeadySystems Founded</div>
+                    <div class="timeline-desc">Eric Haywood establishes HeadySystems Inc. with a vision to bring sacred geometry principles to computational orchestration. The first architectural sketches incorporate PHI ratios and Fibonacci sequences into system design.</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-date">Q2 2024</div>
+                    <div class="timeline-title">Sacred Geometry v1.0</div>
+                    <div class="timeline-desc">Initial release of sacred geometry design system. Implementation of golden ratio proportions, Fibonacci spacing, and harmonic color palettes across desktop interface.</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-date">Q3 2024</div>
+                    <div class="timeline-title">HCFullPipeline Launch</div>
+                    <div class="timeline-desc">Deployment of intelligent pipeline orchestration engine. First implementation of adaptive parallelization and sacred geometry-informed optimization algorithms in workflow execution.</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-date">Q4 2024</div>
+                    <div class="timeline-title">HeadyBee Swarm Beta</div>
+                    <div class="timeline-desc">Launch of distributed worker coordination system. Swarm intelligence protocols enable massively parallel task execution with organic load balancing inspired by natural systems.</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-date">Q1 2025</div>
+                    <div class="timeline-title">MCP Integration & 20 Patents</div>
+                    <div class="timeline-desc">Full Model Context Protocol integration. Integration of Anthropic's MCP standard for seamless AI interoperability. 20 provisional patents filed covering core innovations.</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-date">Q2 2025</div>
+                    <div class="timeline-title">Liquid Nodes Framework</div>
+                    <div class="timeline-desc">Release of universal protocol translation framework enabling flexible compute and integration nodes. HeadyTranslator enables seamless communication across MCP, HTTP, WebSocket, UDP, MIDI, and TCP.</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-date">Q3 2025</div>
+                    <div class="timeline-title">Sacred Geometry v4.0 & 51 Patents</div>
+                    <div class="timeline-desc">Latest iteration of sacred geometry design system with enhanced PHI-ratio optimization and Fibonacci-based adaptive spacing. 51 provisional patents now filed across all major system components.</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-date">Q4 2025</div>
+                    <div class="timeline-title">Platform Expansion</div>
+                    <div class="timeline-desc">Mobile application launch, enterprise feature suite expansion, and integration with Google Colab Pro+ for extended computational capabilities. System enters production at scale.</div>
+                </div>
+            </div>
+        </section>
+
+        <div class="divider"></div>
+
+        <!-- Tech Stack Section -->
+        <section class="section">
+            <h2 class="section-title">Technology Stack</h2>
+            <p class="section-subtitle">
+                Built on a foundation of cutting-edge technologies, all unified through sacred geometry principles and intelligent orchestration.
+            </p>
+            <div class="tech-stack">
+                <div class="tech-item">
+                    <div class="tech-icon">🔵</div>
+                    <div class="tech-name">Node.js</div>
+                    <div class="tech-desc">High-performance event-driven runtime for orchestration services and distributed workflows.</div>
+                </div>
+                <div class="tech-item">
+                    <div class="tech-icon">🐍</div>
+                    <div class="tech-name">Python</div>
+                    <div class="tech-desc">Scientific computing, data processing, and AI model integration. TensorFlow, NumPy, Pandas ecosystem.</div>
+                </div>
+                <div class="tech-item">
+                    <div class="tech-icon">☁️</div>
+                    <div class="tech-name">Render</div>
+                    <div class="tech-desc">Infrastructure-as-code platform for containerized deployment and managed services at scale.</div>
+                </div>
+                <div class="tech-item">
+                    <div class="tech-icon">🔒</div>
+                    <div class="tech-name">Cloudflare</div>
+                    <div class="tech-desc">Global CDN, DNS, security, Workers, and edge computing for distributed orchestration.</div>
+                </div>
+                <div class="tech-item">
+                    <div class="tech-icon">📓</div>
+                    <div class="tech-name">Google Colab Pro+</div>
+                    <div class="tech-desc">Jupyter notebooks, GPU acceleration, and computational runtime for analysis and model training workflows.</div>
+                </div>
+                <div class="tech-item">
+                    <div class="tech-icon">🧬</div>
+                    <div class="tech-name">Vector Databases</div>
+                    <div class="tech-desc">Semantic search, embeddings, and latent space operations for contextual AI reasoning and memory.</div>
+                </div>
+                <div class="tech-item">
+                    <div class="tech-icon">📡</div>
+                    <div class="tech-name">MCP Protocol</div>
+                    <div class="tech-desc">Anthropic's Model Context Protocol for unified AI system integration and interoperability.</div>
+                </div>
+                <div class="tech-item">
+                    <div class="tech-icon">🔄</div>
+                    <div class="tech-name">REST & gRPC</div>
+                    <div class="tech-desc">Multiple communication protocols for flexible service-to-service interaction and client connectivity.</div>
+                </div>
+            </div>
+        </section>
+
+        <div class="divider"></div>
+
+        <!-- Foundation Section -->
+        <section class="section">
+            <h2 class="section-title">Built by HeadySystems Inc.</h2>
+            <p class="section-subtitle">
+                Founded by Eric Haywood, HeadySystems combines decades of distributed systems expertise with a vision of technology informed by sacred geometry and organic principles.
+            </p>
+            <div class="mission-grid">
+                <div class="mission-card">
+                    <h3>Our Approach</h3>
+                    <p>
+                        We believe that great technology emerges from understanding universal principles. By weaving mathematics, philosophy, and practical engineering together, we create systems that are not just functional, but harmonious and beautiful. Every line of code, every architectural decision, reflects the patterns found in nature.
+                    </p>
+                </div>
+                <div class="mission-card">
+                    <h3>Looking Forward</h3>
+                    <p>
+                        HeadyOS represents the future of intelligent orchestration—a platform where AI, human creativity, and natural harmony converge. We're building not just software, but a new paradigm for how technology can serve humanity while respecting the mathematical foundations of the universe.
+                    </p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script src="/nav-global.js"></script>
+</body>
+</html>

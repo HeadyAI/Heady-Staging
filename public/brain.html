@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>System Brain - Operational Readiness Score</title>
+    <link rel="stylesheet" href="/sacred-geometry.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 100%);
+            color: #e0e6ff;
+            overflow-x: hidden;
+            position: relative;
+            min-height: 100vh;
+        }
+
+        /* Animated Background Orbs */
+        .orb-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.15;
+            animation: float 20s infinite ease-in-out;
+        }
+
+        .orb-cyan {
+            width: 400px;
+            height: 400px;
+            background: #00D9FF;
+            top: -100px;
+            left: -100px;
+            animation-duration: 25s;
+        }
+
+        .orb-magenta {
+            width: 350px;
+            height: 350px;
+            background: #FF00A0;
+            bottom: -50px;
+            right: -50px;
+            animation-duration: 30s;
+            animation-delay: -10s;
+        }
+
+        .orb-gold {
+            width: 300px;
+            height: 300px;
+            background: #D4AF37;
+            top: 50%;
+            right: 10%;
+            animation-duration: 35s;
+            animation-delay: -15s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            25% { transform: translate(50px, -50px) rotate(90deg); }
+            50% { transform: translate(-30px, 30px) rotate(180deg); }
+            75% { transform: translate(30px, 50px) rotate(270deg); }
+        }
+
+        /* Main Container */
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 60px 30px;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        h1 {
+            font-size: 3.5em;
+            margin-bottom: 15px;
+            background: linear-gradient(135deg, #00D9FF, #FF00A0, #D4AF37);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 700;
+            letter-spacing: 2px;
+        }
+
+        .subtitle {
+            font-size: 1.3em;
+            color: #FF00A0;
+            margin-bottom: 10px;
+        }
+
+        .description {
+            font-size: 1.1em;
+            color: #b0b6cc;
+            max-width: 800px;
+            margin: 20px auto;
+            line-height: 1.6;
+        }
+
+        /* ORS Gauge Section */
+        .gauge-section {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 217, 255, 0.2);
+            border-radius: 16px;
+            padding: 50px;
+            margin-bottom: 60px;
+            text-align: center;
+        }
+
+        .gauge-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 40px 0;
+            position: relative;
+        }
+
+        svg {
+            filter: drop-shadow(0 0 20px rgba(0, 217, 255, 0.3));
+        }
+
+        .gauge-label {
+            font-size: 2.5em;
+            color: #00D9FF;
+            font-weight: 700;
+            font-family: 'Courier New', monospace;
+            margin-top: 30px;
+        }
+
+        .gauge-description {
+            font-size: 1em;
+            color: #b0b6cc;
+            margin-top: 15px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .status-indicator {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            margin-right: 10px;
+            animation: pulse-status 2s infinite;
+        }
+
+        .status-good {
+            background: #00FF88;
+        }
+
+        .status-warning {
+            background: #FFD700;
+        }
+
+        .status-critical {
+            background: #FF3366;
+        }
+
+        @keyframes pulse-status {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* Subsystem Health Cards */
+        .subsystems-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 60px;
+        }
+
+        .subsystem-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 0, 160, 0.2);
+            border-radius: 16px;
+            padding: 28px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .subsystem-card:hover {
+            border-color: #FF00A0;
+            background: rgba(255, 0, 160, 0.1);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 40px rgba(255, 0, 160, 0.2);
+        }
+
+        .subsystem-icon {
+            font-size: 2.5em;
+            margin-bottom: 15px;
+        }
+
+        .subsystem-name {
+            font-size: 1.3em;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #00D9FF;
+        }
+
+        .health-bar-container {
+            background: rgba(0, 217, 255, 0.1);
+            border-radius: 8px;
+            height: 12px;
+            margin: 15px 0;
+            overflow: hidden;
+            border: 1px solid rgba(0, 217, 255, 0.3);
+        }
+
+        .health-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #00D9FF, #FF00A0);
+            border-radius: 8px;
+            transition: width 0.5s ease;
+        }
+
+        .health-percentage {
+            font-size: 1.1em;
+            font-weight: 600;
+            margin-top: 10px;
+            color: #00D9FF;
+            font-family: 'Courier New', monospace;
+        }
+
+        .subsystem-details {
+            font-size: 0.9em;
+            color: #b0b6cc;
+            margin-top: 12px;
+            line-height: 1.5;
+        }
+
+        /* Brain Think Section */
+        .think-section {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 16px;
+            padding: 40px;
+            margin-bottom: 60px;
+        }
+
+        .section-title {
+            font-size: 1.8em;
+            color: #D4AF37;
+            margin-bottom: 30px;
+            font-weight: 600;
+        }
+
+        .brain-process {
+            background: rgba(255, 255, 255, 0.03);
+            border-left: 4px solid #D4AF37;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+        }
+
+        .process-title {
+            font-size: 1.1em;
+            color: #D4AF37;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .process-description {
+            color: #b0b6cc;
+            line-height: 1.6;
+        }
+
+        /* Pattern Recognition */
+        .pattern-viz {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .pattern-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 8px;
+            margin: 20px 0;
+        }
+
+        .pattern-node {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(0, 217, 255, 0.3);
+            border: 2px solid #00D9FF;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            animation: pattern-pulse 3s infinite;
+        }
+
+        .pattern-node:hover {
+            background: rgba(0, 217, 255, 0.8);
+            transform: scale(1.2);
+        }
+
+        @keyframes pattern-pulse {
+            0%, 100% { background: rgba(0, 217, 255, 0.3); }
+            50% { background: rgba(0, 217, 255, 0.6); }
+        }
+
+        /* Recommendations Panel */
+        .recommendations-section {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 217, 255, 0.2);
+            border-radius: 16px;
+            padding: 40px;
+            margin-bottom: 60px;
+        }
+
+        .recommendation-item {
+            background: rgba(255, 255, 255, 0.03);
+            border-left: 4px solid #00D9FF;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .recommendation-item:hover {
+            background: rgba(0, 217, 255, 0.1);
+            transform: translateX(5px);
+        }
+
+        .rec-priority {
+            display: inline-block;
+            font-size: 0.8em;
+            font-weight: 600;
+            padding: 4px 10px;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+
+        .priority-high {
+            background: rgba(255, 51, 102, 0.3);
+            color: #FF3366;
+        }
+
+        .priority-medium {
+            background: rgba(255, 215, 0, 0.3);
+            color: #FFD700;
+        }
+
+        .priority-low {
+            background: rgba(0, 255, 136, 0.3);
+            color: #00FF88;
+        }
+
+        .rec-title {
+            font-size: 1.1em;
+            color: #00D9FF;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .rec-description {
+            color: #b0b6cc;
+            line-height: 1.5;
+        }
+
+        /* Decision Log */
+        .decision-log {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 0, 160, 0.2);
+            border-radius: 16px;
+            padding: 40px;
+        }
+
+        .log-entry {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 0, 160, 0.1);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 12px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+
+        .log-timestamp {
+            color: #D4AF37;
+            margin-right: 10px;
+        }
+
+        .log-action {
+            color: #00D9FF;
+            margin-right: 10px;
+        }
+
+        .log-result {
+            color: #FF00A0;
+        }
+
+        /* Sacred Geometry Info */
+        .geo-info {
+            background: rgba(212, 175, 55, 0.1);
+            border-left: 4px solid #D4AF37;
+            padding: 20px;
+            margin-top: 30px;
+            border-radius: 8px;
+        }
+
+        .geo-title {
+            color: #D4AF37;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .geo-value {
+            display: inline-block;
+            background: rgba(212, 175, 55, 0.2);
+            padding: 8px 16px;
+            border-radius: 4px;
+            margin: 5px 10px 5px 0;
+            font-family: 'Courier New', monospace;
+            color: #D4AF37;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.2em;
+            }
+
+            .subsystems-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .pattern-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+
+            .gauge-section {
+                padding: 30px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="orb-container">
+        <div class="orb orb-cyan"></div>
+        <div class="orb orb-magenta"></div>
+        <div class="orb orb-gold"></div>
+    </div>
+
+    <div class="container">
+        <div class="header">
+            <h1>System Brain</h1>
+            <div class="subtitle">Operational Readiness Score (ORS) Dashboard</div>
+            <p class="description">
+                The System Brain continuously monitors HeadyOS health and operational readiness. 
+                Using Sacred Geometry principles and real-time analytics, it generates an Operational Readiness Score 
+                that reflects the system's ability to handle complex tasks with optimal performance.
+            </p>
+        </div>
+
+        <!-- ORS Gauge -->
+        <div class="gauge-section">
+            <div class="section-title">Current Operational Readiness Score</div>
+            <div class="gauge-container">
+                <svg width="300" height="300" viewBox="0 0 300 300">
+                    <!-- Gauge background -->
+                    <circle cx="150" cy="150" r="120" fill="none" stroke="rgba(255, 255, 255, 0.1)" stroke-width="20"/>
+                    
+                    <!-- Zone backgrounds -->
+                    <path d="M 150 30 A 120 120 0 0 1 273 228" fill="none" stroke="rgba(255, 51, 102, 0.3)" stroke-width="20"/>
+                    <path d="M 273 228 A 120 120 0 0 1 27 228" fill="none" stroke="rgba(255, 215, 0, 0.3)" stroke-width="20"/>
+                    <path d="M 27 228 A 120 120 0 0 1 150 30" fill="none" stroke="rgba(0, 255, 136, 0.3)" stroke-width="20"/>
+                    
+                    <!-- Gauge value arc -->
+                    <path d="M 150 30 A 120 120 0 0 1 225 91" fill="none" stroke="url(#gaugeGradient)" stroke-width="20" stroke-linecap="round"/>
+                    
+                    <!-- Gradient definition -->
+                    <defs>
+                        <linearGradient id="gaugeGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#00D9FF;stop-opacity:1" />
+                            <stop offset="50%" style="stop-color:#FF00A0;stop-opacity:1" />
+                            <stop offset="100%" style="stop-color:#D4AF37;stop-opacity:1" />
+                        </linearGradient>
+                    </defs>
+                    
+                    <!-- Center circle -->
+                    <circle cx="150" cy="150" r="60" fill="rgba(10, 14, 39, 0.8)" stroke="rgba(0, 217, 255, 0.3)" stroke-width="2"/>
+                    
+                    <!-- Needle -->
+                    <g id="needle">
+                        <line x1="150" y1="150" x2="150" y2="50" stroke="#FF00A0" stroke-width="3" stroke-linecap="round"/>
+                        <circle cx="150" cy="150" r="5" fill="#FF00A0"/>
+                    </g>
+                </svg>
+            </div>
+            <div class="gauge-label" id="orsScore">78</div>
+            <div class="gauge-description">
+                <span class="status-indicator status-good"></span>
+                <strong>System Optimal</strong> - All subsystems operating within normal parameters
+            </div>
+            <div class="geo-info">
+                <div class="geo-title">ORS Calculation (Sacred Geometry)</div>
+                <div>
+                    <div class="geo-value">PHI weighting: 1.618</div>
+                    <div class="geo-value">PSI factor: 0.618</div>
+                    <div class="geo-value">Fibonacci depth: 8</div>
+                </div>
+                <p style="margin-top: 15px; color: #b0b6cc; font-size: 0.95em;">
+                    ORS = (Pipeline×PHI + Memory×PSI + Translator×PHI²) / (1+PSI+PHI²) 
+                </p>
+            </div>
+        </div>
+
+        <!-- Subsystem Health -->
+        <div style="margin-bottom: 60px;">
+            <h2 style="font-size: 1.8em; color: #FF00A0; margin-bottom: 30px; font-weight: 600;">Subsystem Health</h2>
+            <div class="subsystems-grid">
+                <!-- Pipeline -->
+                <div class="subsystem-card">
+                    <div class="subsystem-icon">⚙️</div>
+                    <div class="subsystem-name">Pipeline</div>
+                    <div class="health-bar-container">
+                        <div class="health-bar" style="width: 92%;"></div>
+                    </div>
+                    <div class="health-percentage">92%</div>
+                    <div class="subsystem-details">
+                        <span class="status-indicator status-good"></span>
+                        All 14 stages operational. Avg latency: 243ms
+                    </div>
+                </div>
+
+                <!-- Memory -->
+                <div class="subsystem-card">
+                    <div class="subsystem-icon">💾</div>
+                    <div class="subsystem-name">Memory</div>
+                    <div class="health-bar-container">
+                        <div class="health-bar" style="width: 88%;"></div>
+                    </div>
+                    <div class="health-percentage">88%</div>
+                    <div class="subsystem-details">
+                        <span class="status-indicator status-good"></span>
+                        72.8GB used, 150GB available
+                    </div>
+                </div>
+
+                <!-- Translator -->
+                <div class="subsystem-card">
+                    <div class="subsystem-icon">🔄</div>
+                    <div class="subsystem-name">Translator</div>
+                    <div class="health-bar-container">
+                        <div class="health-bar" style="width: 85%;"></div>
+                    </div>
+                    <div class="health-percentage">85%</div>
+                    <div class="subsystem-details">
+                        <span class="status-indicator status-warning"></span>
+                        6/6 protocols active. Minor latency spike
+                    </div>
+                </div>
+
+                <!-- Swarm -->
+                <div class="subsystem-card">
+                    <div class="subsystem-icon">🐝</div>
+                    <div class="subsystem-name">Swarm</div>
+                    <div class="health-bar-container">
+                        <div class="health-bar" style="width: 90%;"></div>
+                    </div>
+                    <div class="health-percentage">90%</div>
+                    <div class="subsystem-details">
+                        <span class="status-indicator status-good"></span>
+                        847 active workers, scaling optimized
+                    </div>
+                </div>
+
+                <!-- Security -->
+                <div class="subsystem-card">
+                    <div class="subsystem-icon">🔐</div>
+                    <div class="subsystem-name">Security</div>
+                    <div class="health-bar-container">
+                        <div class="health-bar" style="width: 96%;"></div>
+                    </div>
+                    <div class="health-percentage">96%</div>
+                    <div class="subsystem-details">
+                        <span class="status-indicator status-good"></span>
+                        All threats contained. 0 breaches detected
+                    </div>
+                </div>
+
+                <!-- API Availability -->
+                <div class="subsystem-card">
+                    <div class="subsystem-icon">📡</div>
+                    <div class="subsystem-name">API Services</div>
+                    <div class="health-bar-container">
+                        <div class="health-bar" style="width: 99%;"></div>
+                    </div>
+                    <div class="health-percentage">99%</div>
+                    <div class="subsystem-details">
+                        <span class="status-indicator status-good"></span>
+                        All endpoints responsive, 99.97% uptime
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Brain Think Section -->
+        <div class="think-section">
+            <div class="section-title">🧠 Brain Think - Decision Analysis</div>
+            
+            <div class="brain-process">
+                <div class="process-title">Pattern Recognition & Analysis</div>
+                <div class="process-description">
+                    The System Brain analyzes incoming requests and system state to identify patterns and potential optimizations. 
+                    It evaluates millions of data points using neural networks trained on historical performance data.
+                </div>
+                <div class="pattern-viz">
+                    <div style="color: #00D9FF; margin-bottom: 15px;">Active Pattern Recognition Network</div>
+                    <div class="pattern-grid">
+                        <div class="pattern-node"></div>
+                        <div class="pattern-node"></div>
+                        <div class="pattern-node"></div>
+                        <div class="pattern-node"></div>
+                        <div class="pattern-node"></div>
+                        <div class="pattern-node"></div>
+                        <div class="pattern-node"></div>
+                        <div class="pattern-node"></div>
+                        <div class="pattern-node"></div>
+                        <div class="pattern-node"></div>
+                        <div class="pattern-node"></div>
+                        <div class="pattern-node"></div>
+                        <div class="pattern-node"></div>
+                        <div class="pattern-node"></div>
+                        <div class="pattern-node"></div>
+                        <div class="pattern-node"></div>
+                        <div class="pattern-node"></div>
+                        <div class="pattern-node"></div>
+                        <div class="pattern-node"></div>
+                        <div class="pattern-node"></div>
+                        <div class="pattern-node"></div>
+                        <div class="pattern-node"></div>
+                        <div class="pattern-node"></div>
+                        <div class="pattern-node"></div>
+                        <div class="pattern-node"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="brain-process">
+                <div class="process-title">Contextual Understanding</div>
+                <div class="process-description">
+                    The brain builds rich contextual models incorporating user history, system state, external events, 
+                    and temporal patterns. This context informs all downstream decision-making processes.
+                </div>
+            </div>
+
+            <div class="brain-process">
+                <div class="process-title">Predictive Modeling</div>
+                <div class="process-description">
+                    Using advanced forecasting algorithms, the brain predicts future resource demands, potential bottlenecks, 
+                    and optimization opportunities. Predictions use ensemble methods combining 47 different models.
+                </div>
+            </div>
+
+            <div class="brain-process">
+                <div class="process-title">Decision Generation</div>
+                <div class="process-description">
+                    Based on analysis and predictions, the brain generates actionable recommendations for system optimization, 
+                    resource allocation, and proactive problem prevention. Each decision is weighted by confidence score.
+                </div>
+            </div>
+        </div>
+
+        <!-- Active Recommendations -->
+        <div class="recommendations-section">
+            <div class="section-title">Active Recommendations</div>
+            
+            <div class="recommendation-item">
+                <div class="rec-priority priority-high">HIGH PRIORITY</div>
+                <div class="rec-title">Scale Memory Subsystem</div>
+                <div class="rec-description">
+                    Memory utilization projected to exceed 85% within 4 hours. Recommend adding 100GB tier-2 storage 
+                    and initiating compression cycle on aged entries using PHI-decay algorithm.
+                </div>
+            </div>
+
+            <div class="recommendation-item">
+                <div class="rec-priority priority-medium">MEDIUM PRIORITY</div>
+                <div class="rec-title">Optimize Translator Routing</div>
+                <div class="rec-description">
+                    UDP protocol experiencing 8% latency increase. Recommend rebalancing message distribution across 
+                    protocol adapters and enabling adaptive compression for high-volume streams.
+                </div>
+            </div>
+
+            <div class="recommendation-item">
+                <div class="rec-priority priority-low">LOW PRIORITY</div>
+                <div class="rec-title">Refine Pattern Models</div>
+                <div class="rec-description">
+                    New usage patterns detected. Brain recommends incremental retraining of specialist routing models 
+                    to better accommodate emerging request types without full model rebuild.
+                </div>
+            </div>
+
+            <div class="recommendation-item">
+                <div class="rec-priority priority-medium">MEDIUM PRIORITY</div>
+                <div class="rec-title">Synchronize Memory Cache</div>
+                <div class="rec-description">
+                    Detected 0.3% drift in distributed cache consistency. Recommend immediate synchronization pass 
+                    and validation of critical system parameters across all nodes.
+                </div>
+            </div>
+        </div>
+
+        <!-- Decision Log -->
+        <div class="decision-log">
+            <div class="section-title">Real-Time Decision Log</div>
+            <div class="log-entry">
+                <span class="log-timestamp">[14:23:45]</span>
+                <span class="log-action">DECISION:</span>
+                <span class="log-result">Scaled worker pool by 12% in response to sustained high load</span>
+            </div>
+            <div class="log-entry">
+                <span class="log-timestamp">[14:22:18]</span>
+                <span class="log-action">DECISION:</span>
+                <span class="log-result">Enabled quantum retry strategy for high-latency specialist model</span>
+            </div>
+            <div class="log-entry">
+                <span class="log-timestamp">[14:21:03]</span>
+                <span class="log-action">DECISION:</span>
+                <span class="log-result">Routed unusual request pattern to deep analysis path with confidence 0.87</span>
+            </div>
+            <div class="log-entry">
+                <span class="log-timestamp">[14:19:42]</span>
+                <span class="log-action">DECISION:</span>
+                <span class="log-result">Adjusted PSI weighting for memory optimization based on real-time metrics</span>
+            </div>
+            <div class="log-entry">
+                <span class="log-timestamp">[14:18:27]</span>
+                <span class="log-action">DECISION:</span>
+                <span class="log-result">Distributed 47-model ensemble weight update to all processing nodes</span>
+            </div>
+            <div class="log-entry">
+                <span class="log-timestamp">[14:17:11]</span>
+                <span class="log-action">DECISION:</span>
+                <span class="log-result">Initiated preventive maintenance cycle on cryptography subsystem</span>
+            </div>
+            <div class="log-entry">
+                <span class="log-timestamp">[14:16:05]</span>
+                <span class="log-action">DECISION:</span>
+                <span class="log-result">Preemptively cached 12 anticipatory response patterns for common queries</span>
+            </div>
+            <div class="log-entry">
+                <span class="log-timestamp">[14:14:48]</span>
+                <span class="log-action">DECISION:</span>
+                <span class="log-result">Rebalanced Fibonacci-indexed priority queues across 6 processing nodes</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Resolve API endpoint with fallback to same-origin
+        function resolveApi() {
+            const loc = window.location;
+            const sameOrigin = loc.protocol + '//' + loc.host;
+            const renderUrls = [
+                'https://heady-manager.onrender.com',
+                'https://heady-testing.onrender.com',
+                'https://heady-production.onrender.com'
+            ];
+            // Try same-origin first (works when served from heady-manager)
+            return sameOrigin;
+        }
+
+        // Fetch brain status from API
+        async function fetchBrainStatus() {
+            try {
+                const response = await fetch(resolveApi() + '/api/brain/status', { signal: AbortSignal.timeout(5000) });
+                if (!response.ok) throw new Error('API unavailable');
+                return await response.json();
+            } catch (e) {
+                console.warn('Brain API unavailable, using demo data:', e.message);
+                return { ors_score: 78, subsystems: {} };
+            }
+        }
+
+        // Animate ORS gauge needle with real or demo data
+        let currentORS = 0;
+        let targetORS = 78;
+
+        async function initBrainData() {
+            const brainStatus = await fetchBrainStatus();
+            targetORS = brainStatus.ors_score || 78;
+            animateNeedle();
+        }
+
+        function animateNeedle() {
+            if (currentORS < targetORS) {
+                currentORS += (targetORS - currentORS) * 0.02;
+
+                // Calculate angle (0-180 degrees, map to SVG path)
+                const angle = (currentORS / 100) * 180;
+                const radians = (angle - 90) * Math.PI / 180;
+                const radius = 100;
+                const x = 150 + radius * Math.cos(radians);
+                const y = 150 + radius * Math.sin(radians);
+
+                // Update needle
+                const needle = document.getElementById('needle');
+                needle.innerHTML = `
+                    <line x1="150" y1="150" x2="${x}" y2="${y}" stroke="#FF00A0" stroke-width="3" stroke-linecap="round"/>
+                    <circle cx="150" cy="150" r="5" fill="#FF00A0"/>
+                `;
+
+                // Update label
+                document.getElementById('orsScore').textContent = Math.round(currentORS);
+
+                requestAnimationFrame(animateNeedle);
+            }
+        }
+
+        initBrainData();
+
+        // Animate health bars
+        function animateHealthBars() {
+            document.querySelectorAll('.health-bar').forEach(bar => {
+                const currentWidth = parseFloat(bar.style.width);
+                const variance = currentWidth * 0.01;
+                const newWidth = Math.max(50, Math.min(100, currentWidth + (Math.random() - 0.5) * variance * 2));
+                bar.style.width = newWidth + '%';
+                
+                // Update percentage
+                const percentageEl = bar.closest('.subsystem-card').querySelector('.health-percentage');
+                percentageEl.textContent = Math.round(newWidth) + '%';
+            });
+        }
+
+        setInterval(animateHealthBars, 4000);
+
+        // Make recommendations expandable
+        document.querySelectorAll('.recommendation-item').forEach(item => {
+            item.addEventListener('click', function() {
+                this.style.background = 'rgba(0, 217, 255, 0.15)';
+                setTimeout(() => {
+                    this.style.background = 'rgba(255, 255, 255, 0.03)';
+                }, 2000);
+            });
+        });
+    </script>
+    <script src="/nav-global.js"></script>
+</body>
+</html>

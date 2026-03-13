@@ -1,0 +1,164 @@
+# HEADY_BRAND:BEGIN
+# ╔══════════════════════════════════════════════════════════════════╗
+# ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
+# ║  ██║  ██║██╔════╝██╔══██╗██╔══██╗╚██╗ ██╔╝                     ║
+# ║  ███████║█████╗  ███████║██║  ██║ ╚████╔╝                      ║
+# ║  ██╔══██║██╔══╝  ██╔══██║██║  ██║  ╚██╔╝                       ║
+# ║  ██║  ██║███████╗██║  ██║██████╔╝   ██║                        ║
+# ║  ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝    ╚═╝                        ║
+# ║                                                                  ║
+# ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
+# ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
+# ║  FILE: configs/microservices-manifest.yaml                                                    ║
+# ║  LAYER: config                                                  ║
+# ╚══════════════════════════════════════════════════════════════════╝
+# HEADY_BRAND:END
+# ╔══════════════════════════════════════════════════════════════════╗
+# ║  HEADY MICROSERVICES MANIFEST v4.0.0                            ║
+# ║  Sacred Geometry Architecture — φ-Scaled Service Decomposition  ║
+# ╚══════════════════════════════════════════════════════════════════╝
+# 
+# God class heady-manager.js (2562 lines) → Thin API Gateway (~850 lines)
+# + 7 extracted microservices
+
+version: "4.0.0"
+architecture: microservices
+decomposition_date: "2026-03-11"
+source_monolith: heady-manager.js
+source_lines: 2562
+gateway_lines: ~850
+
+services:
+  api-gateway:
+    file: heady-manager.js
+    role: "Thin API Gateway — middleware, security, service orchestration"
+    responsibilities:
+      - Express middleware chain (helmet, CORS, rate limiting, sanitization)
+      - Service initialization and dependency wiring
+      - Monte Carlo / Pattern Engine / Story Driver orchestration
+      - External route delegation
+    lines: ~850
+
+  registry-service:
+    file: services/registry/index.js
+    mount_path: /api/registry
+    role: "Component registry CRUD and lookup"
+    endpoints:
+      - "GET / — Full registry"
+      - "GET /component/:id — Component lookup"
+      - "GET /environments — Environment list"
+      - "GET /docs — Documentation list"
+      - "GET /notebooks — Notebook list"
+      - "GET /patterns — Pattern list"
+      - "GET /workflows — Workflow list"
+      - "GET /ai-nodes — AI node list"
+    exports: [router, loadRegistry, saveRegistry]
+
+  buddy-service:
+    file: services/buddy/index.js
+    mount_path: /api/buddy
+    role: "HeadyBuddy AI companion and chat interface"
+    endpoints:
+      - "GET /health — Service health"
+      - "POST /chat — Chat interaction"
+      - "GET /suggestions — Context-aware suggestions"
+      - "GET /orchestrator — System overview"
+      - "POST /pipeline/continuous — Pipeline control"
+      - "POST /state — Update state"
+      - "GET /state — Read state"
+      - "GET /sync-events — Event stream"
+    exports: [router, init, continuousPipeline]
+    dependencies: [loadRegistry, resourceManager, resourceDiagnostics, storyDriver]
+
+  aloha-service:
+    file: services/aloha/index.js
+    mount_path: /api/aloha
+    role: "Aloha Protocol — stability, de-optimization, crash management"
+    endpoints:
+      - "GET /status — Protocol status"
+      - "GET /protocol — Protocol config"
+      - "GET /de-optimization — De-opt config"
+      - "GET /stability — Stability config"
+      - "GET /priorities — Priority list"
+      - "GET /checklist — De-opt checklist"
+      - "POST /crash-report — Report crash"
+      - "POST /de-opt-check — Record de-opt check"
+      - "GET /web-baseline — Web requirements"
+      - "GET /layer — Current layer"
+      - "POST /layer/switch — Switch layer"
+    exports: [router, init, alohaState]
+    dependencies: [alohaProtocol, deOptProtocol, stabilityFirst, loadYamlConfig]
+
+  liquid-nodes-service:
+    file: services/liquid-nodes/index.js
+    mount_path: /api/liquid-nodes
+    role: "Liquid Nodes registry and connectivity management"
+    endpoints:
+      - "GET / — Full node registry"
+      - "GET /:domain — Domain-specific nodes"
+      - "GET /health/check — Connectivity check"
+    exports: [router, LIQUID_NODES_REGISTRY, computeNodeStatus]
+    nodes:
+      colab_slots: 4  # Including dedicated learning runtime (colab-4)
+      domains: [ai-llm, infrastructure, cloud-deploy, scm, finance, auth, latent-space-ops]
+
+  pipeline-service:
+    file: services/pipeline/index.js
+    mount_path: /api/pipeline
+    role: "HCFullPipeline execution and config serving"
+    endpoints:
+      - "GET /config — Pipeline config"
+      - "POST /run — Execute pipeline"
+      - "GET /state — Execution state"
+      - "GET /status — Pipeline status"
+      - "POST /train — Training job"
+      - "GET /spec — IDE specification"
+      - "GET /agents — IDE agents"
+      - "GET /playbook — Build playbook"
+      - "GET /agentic — Agentic config"
+      - "GET /activation — Activation manifest"
+    exports: [router, init, loadYamlConfig]
+    dependencies: [pipeline, mcPlanScheduler, continuousPipeline]
+
+  node-management-service:
+    file: services/node-management/index.js
+    mount_path: /api/nodes
+    role: "Node lifecycle management (activate/deactivate)"
+    endpoints:
+      - "GET / — List all nodes"
+      - "GET /:nodeId — Get specific node"
+      - "POST /:nodeId/activate — Activate node"
+      - "POST /:nodeId/deactivate — Deactivate node"
+    exports: [router, init]
+    dependencies: [loadRegistry, saveRegistry]
+
+  diagnostics-service:
+    file: services/diagnostics/index.js
+    mount_path: /api/system + /api/diagnostics + /health
+    role: "System health, readiness probes, diagnostics"
+    endpoints:
+      - "GET /status — System status"
+      - "POST /production — Production readiness"
+      - "GET /diagnostics — Full diagnostics"
+      - "GET /readiness — K8s readiness probe"
+      - "GET /health — Simple heartbeat"
+      - "GET /pulse — Service pulse"
+    exports: [router, init]
+    dependencies: [loadRegistry, resourceManager, pipeline, mcPlanScheduler, patternEngine]
+
+# ═══ Architecture Principles ═══
+principles:
+  - "Single Responsibility: Each service owns one domain"
+  - "Dependency Injection: Services receive deps via init() functions"
+  - "Shared Nothing: Services don't import each other directly"
+  - "Gateway Orchestration: heady-manager.js wires dependencies"
+  - "Graceful Degradation: try/catch on all service loads"
+  - "φ-Scaled: Sacred Geometry constants preserved throughout"
+
+# ═══ Migration Notes ═══
+migration:
+  from: "heady-manager.js monolith (2562 lines)"
+  to: "API Gateway (~850 lines) + 7 microservices"
+  total_reduction: "~65% reduction in gateway file size"
+  backward_compatible: true
+  breaking_changes: none

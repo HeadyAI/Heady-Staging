@@ -1,0 +1,948 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HeadyOS Documentation</title>
+    <link rel="stylesheet" href="/sacred-geometry.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #0a0e27;
+            color: #e0e0e0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* Animated background orbs */
+        .orbs-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.15;
+        }
+
+        .orb1 {
+            width: 400px;
+            height: 400px;
+            background: #00D9FF;
+            top: -100px;
+            left: -100px;
+            animation: float 20s infinite ease-in-out;
+        }
+
+        .orb2 {
+            width: 300px;
+            height: 300px;
+            background: #FF00A0;
+            bottom: -50px;
+            right: -50px;
+            animation: float 25s infinite ease-in-out reverse;
+        }
+
+        .orb3 {
+            width: 250px;
+            height: 250px;
+            background: #D4AF37;
+            top: 50%;
+            left: 50%;
+            animation: float 30s infinite ease-in-out;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(30px, -30px); }
+        }
+
+        /* Header */
+        header {
+            background: rgba(10, 14, 39, 0.9);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(0, 217, 255, 0.2);
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+            background: linear-gradient(135deg, #00D9FF, #FF00A0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .version-badge {
+            background: rgba(212, 175, 55, 0.2);
+            border: 1px solid #D4AF37;
+            color: #D4AF37;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        /* Search bar */
+        .search-bar {
+            flex: 1;
+            max-width: 400px;
+            margin: 0 40px;
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(0, 217, 255, 0.3);
+            padding: 10px 15px;
+            border-radius: 8px;
+            color: #e0e0e0;
+            font-size: 14px;
+        }
+
+        .search-input::placeholder {
+            color: rgba(224, 224, 224, 0.5);
+        }
+
+        /* Main layout */
+        .container {
+            display: flex;
+            max-width: 1400px;
+            margin: 40px auto;
+            gap: 40px;
+            padding: 0 40px;
+        }
+
+        /* Sidebar TOC */
+        .sidebar {
+            width: 280px;
+            position: sticky;
+            top: 100px;
+            height: fit-content;
+        }
+
+        .toc-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #00D9FF;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .toc-list {
+            list-style: none;
+        }
+
+        .toc-item {
+            margin-bottom: 12px;
+        }
+
+        .toc-link {
+            color: rgba(224, 224, 224, 0.7);
+            text-decoration: none;
+            font-size: 14px;
+            padding: 8px 12px;
+            display: block;
+            border-left: 3px solid transparent;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .toc-link:hover {
+            color: #00D9FF;
+            border-left-color: #00D9FF;
+            background: rgba(0, 217, 255, 0.08);
+        }
+
+        .toc-link.active {
+            color: #00D9FF;
+            border-left-color: #00D9FF;
+            background: rgba(0, 217, 255, 0.1);
+            font-weight: 600;
+        }
+
+        /* Content area */
+        .content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .section {
+            margin-bottom: 60px;
+        }
+
+        .section-title {
+            font-size: 32px;
+            font-weight: bold;
+            color: #00D9FF;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid rgba(0, 217, 255, 0.3);
+        }
+
+        .subsection-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #FF00A0;
+            margin-top: 30px;
+            margin-bottom: 15px;
+        }
+
+        .section p {
+            line-height: 1.8;
+            color: rgba(224, 224, 224, 0.85);
+            margin-bottom: 15px;
+        }
+
+        /* Code blocks */
+        .code-block {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(0, 217, 255, 0.2);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            overflow-x: auto;
+            position: relative;
+        }
+
+        .code-lang {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 12px;
+            color: #D4AF37;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        pre {
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: 13px;
+            line-height: 1.6;
+            color: #00D9FF;
+        }
+
+        code {
+            color: #00D9FF;
+        }
+
+        .code-comment {
+            color: rgba(0, 217, 255, 0.6);
+        }
+
+        /* Glass card */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(0, 217, 255, 0.2);
+            border-radius: 12px;
+            padding: 30px;
+            margin: 20px 0;
+        }
+
+        .glass-card.highlight {
+            border-color: #D4AF37;
+            background: rgba(212, 175, 55, 0.05);
+        }
+
+        .config-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 13px;
+        }
+
+        .config-table th {
+            background: rgba(0, 217, 255, 0.1);
+            border: 1px solid rgba(0, 217, 255, 0.2);
+            padding: 12px;
+            text-align: left;
+            color: #00D9FF;
+            font-weight: 600;
+        }
+
+        .config-table td {
+            border: 1px solid rgba(0, 217, 255, 0.1);
+            padding: 12px;
+        }
+
+        .config-table tr:hover {
+            background: rgba(0, 217, 255, 0.05);
+        }
+
+        .quick-start {
+            background: rgba(255, 0, 160, 0.05);
+            border: 2px solid #FF00A0;
+            border-radius: 12px;
+            padding: 25px;
+            margin: 30px 0;
+        }
+
+        .quick-start-title {
+            color: #FF00A0;
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .step {
+            margin-bottom: 20px;
+            padding-left: 30px;
+            position: relative;
+        }
+
+        .step::before {
+            content: attr(data-step);
+            position: absolute;
+            left: 0;
+            top: 0;
+            background: #FF00A0;
+            color: #0a0e27;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 12px;
+        }
+
+        .list {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .list li {
+            margin-bottom: 10px;
+            padding-left: 25px;
+            position: relative;
+        }
+
+        .list li::before {
+            content: '▸';
+            position: absolute;
+            left: 0;
+            color: #00D9FF;
+            font-size: 16px;
+        }
+
+        /* Footer */
+        footer {
+            border-top: 1px solid rgba(0, 217, 255, 0.2);
+            padding: 40px;
+            text-align: center;
+            color: rgba(224, 224, 224, 0.6);
+            font-size: 13px;
+            margin-top: 80px;
+        }
+
+        @media (max-width: 1024px) {
+            .container {
+                flex-direction: column;
+                gap: 30px;
+            }
+
+            .sidebar {
+                position: static;
+                width: 100%;
+                display: flex;
+                flex-wrap: wrap;
+                gap: 15px;
+            }
+
+            .toc-list {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 10px;
+            }
+
+            header {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .search-bar {
+                max-width: 100%;
+                margin: 15px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="orbs-bg">
+        <div class="orb orb1"></div>
+        <div class="orb orb2"></div>
+        <div class="orb orb3"></div>
+    </div>
+
+    <header>
+        <div class="logo">HeadyOS</div>
+        <div class="search-bar">
+            <input type="text" class="search-input" placeholder="Search documentation...">
+        </div>
+        <div class="version-badge">v3.0.0</div>
+    </header>
+
+    <div class="container">
+        <aside class="sidebar">
+            <div class="toc-title">Documentation</div>
+            <ul class="toc-list">
+                <li class="toc-item"><a class="toc-link active" onclick="scrollToSection('getting-started')">Getting Started</a></li>
+                <li class="toc-item"><a class="toc-link" onclick="scrollToSection('installation')">Installation</a></li>
+                <li class="toc-item"><a class="toc-link" onclick="scrollToSection('configuration')">Configuration</a></li>
+                <li class="toc-item"><a class="toc-link" onclick="scrollToSection('api-reference')">API Reference</a></li>
+                <li class="toc-item"><a class="toc-link" onclick="scrollToSection('architecture')">Architecture Overview</a></li>
+                <li class="toc-item"><a class="toc-link" onclick="scrollToSection('deployment')">Deployment Guide</a></li>
+            </ul>
+        </aside>
+
+        <main class="content">
+            <!-- Getting Started -->
+            <section id="getting-started" class="section">
+                <h1 class="section-title">Getting Started</h1>
+                <p>Welcome to HeadyOS Documentation. HeadyOS is a comprehensive orchestration platform that combines system architecture, AI intelligence, and automation capabilities into a unified framework.</p>
+
+                <div class="quick-start">
+                    <div class="quick-start-title">Quick Start</div>
+                    <div class="step" data-step="1">
+                        <strong>Clone the Repository</strong>
+                        <div class="code-block">
+                            <span class="code-lang">bash</span>
+                            <pre><code>git clone https://github.com/headyos/heady-core.git
+cd heady-core</code></pre>
+                        </div>
+                    </div>
+                    <div class="step" data-step="2">
+                        <strong>Install Dependencies</strong>
+                        <div class="code-block">
+                            <span class="code-lang">bash</span>
+                            <pre><code>npm install
+npm run bootstrap</code></pre>
+                        </div>
+                    </div>
+                    <div class="step" data-step="3">
+                        <strong>Run the System</strong>
+                        <div class="code-block">
+                            <span class="code-lang">bash</span>
+                            <pre><code>npm start</code></pre>
+                        </div>
+                    </div>
+                </div>
+
+                <h3 class="subsection-title">Key Concepts</h3>
+                <p>Before diving deep, understand these core concepts:</p>
+                <ul class="list">
+                    <li><strong>Services:</strong> Autonomous agents providing specific functionality</li>
+                    <li><strong>Pipelines:</strong> Orchestrated workflows combining multiple stages</li>
+                    <li><strong>Latent Space:</strong> Vector memory system for semantic operations</li>
+                    <li><strong>MCP Tools:</strong> Model Context Protocol tools for AI integration</li>
+                    <li><strong>Liquid Nodes:</strong> Protocol-bridging communication nodes</li>
+                </ul>
+            </section>
+
+            <!-- Installation -->
+            <section id="installation" class="section">
+                <h1 class="section-title">Installation</h1>
+
+                <h3 class="subsection-title">System Requirements</h3>
+                <ul class="list">
+                    <li>Node.js 18.x or higher</li>
+                    <li>npm 8.x or higher</li>
+                    <li>Docker 20.10+ (for containerized deployments)</li>
+                    <li>4GB RAM minimum, 8GB recommended</li>
+                    <li>macOS 10.15+, Linux (Ubuntu 20.04+), or Windows 10+</li>
+                </ul>
+
+                <h3 class="subsection-title">Installation Steps</h3>
+                <div class="glass-card">
+                    <h4>1. Install Node.js</h4>
+                    <p>Download from <code>nodejs.org</code> or use a version manager:</p>
+                    <div class="code-block">
+                        <span class="code-lang">bash</span>
+                        <pre><code><span class="code-comment"># Using nvm</span>
+nvm install 18
+nvm use 18</code></pre>
+                    </div>
+                </div>
+
+                <div class="glass-card">
+                    <h4>2. Clone Repository</h4>
+                    <div class="code-block">
+                        <span class="code-lang">bash</span>
+                        <pre><code>git clone https://github.com/headyos/heady-core.git
+cd heady-core
+git checkout main</code></pre>
+                    </div>
+                </div>
+
+                <div class="glass-card">
+                    <h4>3. Install Dependencies</h4>
+                    <div class="code-block">
+                        <span class="code-lang">bash</span>
+                        <pre><code>npm install
+npm run build</code></pre>
+                    </div>
+                </div>
+
+                <h3 class="subsection-title">Docker Installation</h3>
+                <div class="glass-card highlight">
+                    <div class="code-block">
+                        <span class="code-lang">dockerfile</span>
+                        <pre><code>FROM node:18-alpine
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci --only=production
+COPY . .
+EXPOSE 3000
+CMD ["npm", "start"]</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Configuration -->
+            <section id="configuration" class="section">
+                <h1 class="section-title">Configuration</h1>
+                <p>HeadyOS uses YAML-based configuration files to control system behavior. All configs live in the <code>configs/</code> directory.</p>
+
+                <h3 class="subsection-title">service-catalog.yaml</h3>
+                <p>Defines all services available in the system with their endpoints and capabilities.</p>
+                <div class="code-block">
+                    <span class="code-lang">yaml</span>
+                    <pre><code>services:
+  - id: auth-service
+    name: Authentication Service
+    endpoint: http://localhost:3001
+    capabilities:
+      - authenticate
+      - authorize
+      - token-refresh
+    status: active
+  
+  - id: data-pipeline
+    name: Data Processing Pipeline
+    endpoint: http://localhost:3002
+    capabilities:
+      - ingest
+      - transform
+      - export
+    status: active</code></pre>
+                </div>
+
+                <h3 class="subsection-title">hcfullpipeline.yaml</h3>
+                <p>Configures the HC Full Pipeline with stages and transformations.</p>
+                <div class="code-block">
+                    <span class="code-lang">yaml</span>
+                    <pre><code>pipeline:
+  name: hc-full-pipeline
+  version: 3.0.0
+  stages:
+    - name: intake
+      type: source
+      config:
+        retries: 3
+    - name: process
+      type: transform
+      config:
+        timeout: 60000
+    - name: output
+      type: sink
+      config:
+        compression: gzip</code></pre>
+                </div>
+
+                <h3 class="subsection-title">resource-policies.yaml</h3>
+                <p>Defines resource allocation and budgets.</p>
+                <div class="code-block">
+                    <span class="code-lang">yaml</span>
+                    <pre><code>resources:
+  cpu:
+    limit: 4000m
+    request: 1000m
+  memory:
+    limit: 8Gi
+    request: 2Gi
+  storage:
+    limit: 100Gi
+budgets:
+  monthly_compute: 10000
+  monthly_storage: 5000</code></pre>
+                </div>
+
+                <h3 class="subsection-title">Configuration Reference Table</h3>
+                <table class="config-table">
+                    <thead>
+                        <tr>
+                            <th>File</th>
+                            <th>Purpose</th>
+                            <th>Key Sections</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>service-catalog.yaml</td>
+                            <td>Service registry and endpoints</td>
+                            <td>services, capabilities, status</td>
+                        </tr>
+                        <tr>
+                            <td>hcfullpipeline.yaml</td>
+                            <td>Pipeline orchestration</td>
+                            <td>stages, transforms, routing</td>
+                        </tr>
+                        <tr>
+                            <td>resource-policies.yaml</td>
+                            <td>Resource constraints</td>
+                            <td>cpu, memory, storage, budgets</td>
+                        </tr>
+                        <tr>
+                            <td>headymcp.json</td>
+                            <td>MCP configuration</td>
+                            <td>tools, adapters, protocol bridges</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- API Reference -->
+            <section id="api-reference" class="section">
+                <h1 class="section-title">API Reference</h1>
+
+                <h3 class="subsection-title">Core Endpoints</h3>
+                <div class="glass-card">
+                    <h4>GET /api/health</h4>
+                    <p>Check system health status.</p>
+                    <div class="code-block">
+                        <span class="code-lang">bash</span>
+                        <pre><code>curl http://localhost:3000/api/health</code></pre>
+                    </div>
+                </div>
+
+                <div class="glass-card">
+                    <h4>GET /api/services</h4>
+                    <p>List all registered services.</p>
+                    <div class="code-block">
+                        <span class="code-lang">bash</span>
+                        <pre><code>curl http://localhost:3000/api/services \
+  -H "Authorization: Bearer YOUR_TOKEN"</code></pre>
+                    </div>
+                </div>
+
+                <div class="glass-card">
+                    <h4>POST /api/pipeline/execute</h4>
+                    <p>Execute a pipeline with input data.</p>
+                    <div class="code-block">
+                        <span class="code-lang">bash</span>
+                        <pre><code>curl -X POST http://localhost:3000/api/pipeline/execute \
+  -H "Content-Type: application/json" \
+  -d '{
+    "pipeline": "hc-full-pipeline",
+    "data": {"input": "value"}
+  }'</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Architecture Overview -->
+            <section id="architecture" class="section">
+                <h1 class="section-title">Architecture Overview</h1>
+                <p>HeadyOS is built on a modular, service-oriented architecture that emphasizes scalability, flexibility, and integration.</p>
+
+                <h3 class="subsection-title">System Layers</h3>
+                <ul class="list">
+                    <li><strong>API Layer:</strong> HTTP/WebSocket endpoints for external communication</li>
+                    <li><strong>Service Layer:</strong> Autonomous services handling specific domains</li>
+                    <li><strong>Pipeline Layer:</strong> Orchestration and workflow management</li>
+                    <li><strong>Integration Layer:</strong> MCP tools, Liquid Nodes, protocol bridges</li>
+                    <li><strong>Memory Layer:</strong> Latent space vector storage and semantic search</li>
+                    <li><strong>Persistence Layer:</strong> Database, file storage, caching</li>
+                </ul>
+
+                <h3 class="subsection-title">Key Components</h3>
+                <div class="glass-card">
+                    <h4>Service Registry</h4>
+                    <p>Central registry tracking all services, their capabilities, status, and endpoints. Enables dynamic service discovery and load balancing.</p>
+                </div>
+
+                <div class="glass-card">
+                    <h4>Pipeline Engine</h4>
+                    <p>Orchestrates multi-stage workflows with conditional routing, error handling, and rollback capabilities. Supports both linear and DAG-based pipelines.</p>
+                </div>
+
+                <div class="glass-card">
+                    <h4>Latent Space Vector Memory</h4>
+                    <p>Powered by 3 Colab Pro+ runtimes, provides semantic search and vector storage for operation history and knowledge base.</p>
+                </div>
+
+                <div class="glass-card">
+                    <h4>Protocol Bridge (Liquid Nodes)</h4>
+                    <p>Translates between MCP, HTTP, WebSocket, UDP, MIDI, and TCP protocols. Enables seamless integration of diverse systems.</p>
+                </div>
+            </section>
+
+            <!-- Deployment Guide -->
+            <section id="deployment" class="section">
+                <h1 class="section-title">Deployment Guide</h1>
+
+                <h3 class="subsection-title">Development Deployment</h3>
+                <div class="code-block">
+                    <span class="code-lang">bash</span>
+                    <pre><code>npm run dev</code></pre>
+                </div>
+
+                <h3 class="subsection-title">Production Deployment on Render</h3>
+                <p>HeadyOS deploys seamlessly to Render via render.yaml configuration.</p>
+                <div class="glass-card highlight">
+                    <div class="code-block">
+                        <span class="code-lang">bash</span>
+                        <pre><code><span class="code-comment"># Deploy to Render</span>
+render deploy --name heady-core-prod</code></pre>
+                    </div>
+                </div>
+
+                <h3 class="subsection-title">Docker Deployment</h3>
+                <div class="code-block">
+                    <span class="code-lang">bash</span>
+                    <pre><code><span class="code-comment"># Build Docker image</span>
+docker build -t heady-os:latest .
+
+<span class="code-comment"># Run container</span>
+docker run -p 3000:3000 \
+  -e NODE_ENV=production \
+  heady-os:latest</code></pre>
+                </div>
+
+                <h3 class="subsection-title">Kubernetes Deployment</h3>
+                <p>For large-scale deployments, use Kubernetes manifests stored in <code>deploy/k8s/</code>.</p>
+                <div class="code-block">
+                    <span class="code-lang">bash</span>
+                    <pre><code>kubectl apply -f deploy/k8s/namespace.yaml
+kubectl apply -f deploy/k8s/deployment.yaml
+kubectl apply -f deploy/k8s/service.yaml</code></pre>
+                </div>
+
+                <h3 class="subsection-title">Environment Variables</h3>
+                <table class="config-table">
+                    <thead>
+                        <tr>
+                            <th>Variable</th>
+                            <th>Description</th>
+                            <th>Default</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>NODE_ENV</td>
+                            <td>Environment (development/production)</td>
+                            <td>development</td>
+                        </tr>
+                        <tr>
+                            <td>PORT</td>
+                            <td>Server port</td>
+                            <td>3000</td>
+                        </tr>
+                        <tr>
+                            <td>LOG_LEVEL</td>
+                            <td>Logging level (debug/info/warn/error)</td>
+                            <td>info</td>
+                        </tr>
+                        <tr>
+                            <td>DATABASE_URL</td>
+                            <td>Database connection string</td>
+                            <td>sqlite://./data.db</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+        </main>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 HeadyOS. All rights reserved. | Documentation v3.0.0</p>
+    </footer>
+
+    <script>
+        // Resolve API endpoint with fallback to same-origin
+        function resolveApi() {
+            const loc = window.location;
+            const sameOrigin = loc.protocol + '//' + loc.host;
+            const renderUrls = [
+                'https://heady-manager.onrender.com',
+                'https://heady-testing.onrender.com',
+                'https://heady-production.onrender.com'
+            ];
+            // Try same-origin first (works when served from heady-manager)
+            return sameOrigin;
+        }
+
+        // ========== SECTION SCROLL & TOC =========
+        function scrollToSection(sectionId) {
+            const section = document.getElementById(sectionId);
+            if (section) {
+                section.scrollIntoView({ behavior: 'smooth' });
+                updateActiveTOC(sectionId);
+            }
+        }
+
+        function updateActiveTOC(activeId) {
+            document.querySelectorAll('.toc-link').forEach(link => {
+                link.classList.remove('active');
+            });
+            const activeLink = document.querySelector(`[onclick*="${activeId}"]`);
+            if (activeLink) {
+                activeLink.classList.add('active');
+            }
+        }
+
+        // Update TOC on scroll
+        window.addEventListener('scroll', () => {
+            const sections = document.querySelectorAll('.section');
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                if (pageYOffset >= sectionTop - 100) {
+                    current = section.getAttribute('id');
+                }
+            });
+            updateActiveTOC(current);
+        });
+
+        // ========== SEARCH FUNCTIONALITY =========
+        let searchTimeout;
+
+        function initSearch() {
+            const searchInput = document.querySelector('.search-input');
+            if (!searchInput) return;
+
+            searchInput.addEventListener('keyup', () => {
+                clearTimeout(searchTimeout);
+                searchTimeout = setTimeout(() => {
+                    performSearch(searchInput.value.trim());
+                }, 300); // 300ms debounce
+            });
+        }
+
+        function performSearch(query) {
+            const sections = document.querySelectorAll('.section');
+            let visibleCount = 0;
+
+            if (!query) {
+                // Show all sections
+                sections.forEach(section => {
+                    section.style.display = '';
+                    removeSearchHighlight(section);
+                });
+                return;
+            }
+
+            const lowerQuery = query.toLowerCase();
+
+            sections.forEach(section => {
+                const text = section.textContent.toLowerCase();
+                const title = section.querySelector('.section-title')?.textContent.toLowerCase() || '';
+
+                if (text.includes(lowerQuery) || title.includes(lowerQuery)) {
+                    section.style.display = '';
+                    highlightMatches(section, query);
+                    visibleCount++;
+                } else {
+                    section.style.display = 'none';
+                }
+            });
+
+            // Show "No results" message if needed
+            let noResultsDiv = document.getElementById('search-no-results');
+            if (visibleCount === 0) {
+                if (!noResultsDiv) {
+                    noResultsDiv = document.createElement('div');
+                    noResultsDiv.id = 'search-no-results';
+                    noResultsDiv.style.cssText = 'text-align:center;padding:40px 20px;color:rgba(224,224,224,0.5);font-size:16px;';
+                    document.querySelector('.content').appendChild(noResultsDiv);
+                }
+                noResultsDiv.textContent = `No documentation found for "${query}"`;
+                noResultsDiv.style.display = '';
+            } else {
+                if (noResultsDiv) {
+                    noResultsDiv.style.display = 'none';
+                }
+            }
+        }
+
+        function highlightMatches(section, query) {
+            const lowerQuery = query.toLowerCase();
+            const titleEl = section.querySelector('.section-title');
+
+            if (titleEl) {
+                const titleText = titleEl.textContent;
+                if (titleText.toLowerCase().includes(lowerQuery)) {
+                    applyHighlightToElement(titleEl, query);
+                }
+            }
+
+            const paragraphs = section.querySelectorAll('p');
+            paragraphs.forEach(p => {
+                if (p.textContent.toLowerCase().includes(lowerQuery)) {
+                    applyHighlightToElement(p, query);
+                }
+            });
+        }
+
+        function applyHighlightToElement(el, query) {
+            const text = el.textContent;
+            const lowerText = text.toLowerCase();
+            const lowerQuery = query.toLowerCase();
+
+            if (!lowerText.includes(lowerQuery)) return;
+
+            const regex = new RegExp(`(${query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
+            const parts = text.split(regex);
+
+            el.innerHTML = parts.map(part => {
+                if (part.toLowerCase() === query.toLowerCase()) {
+                    return `<span style="text-decoration:underline;text-decoration-color:#d4a574;text-underline-offset:2px;">${part}</span>`;
+                }
+                return part;
+            }).join('');
+        }
+
+        function removeSearchHighlight(section) {
+            const titleEl = section.querySelector('.section-title');
+            if (titleEl) {
+                titleEl.innerHTML = titleEl.textContent;
+            }
+            section.querySelectorAll('p').forEach(p => {
+                p.innerHTML = p.textContent;
+            });
+        }
+
+        // Initialize search on DOM ready
+        document.addEventListener('DOMContentLoaded', () => {
+            initSearch();
+        });
+    </script>
+
+    <script src="/nav-global.js"></script>
+</body>
+</html>

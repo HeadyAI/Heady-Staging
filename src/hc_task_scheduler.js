@@ -55,6 +55,8 @@ const DEFAULT_TIER_ROUTING = {
   "planning":            { defaultTier: "M", maxTier: "L", minTier: "M" },
   "monte_carlo_trial":   { defaultTier: "M", maxTier: "L", minTier: "S" },
   "pipeline_stage":      { defaultTier: "M", maxTier: "L", minTier: "M" },
+  "hcfullpipeline":      { defaultTier: "M", maxTier: "L", minTier: "S" },
+  "user_defined":        { defaultTier: "M", maxTier: "L", minTier: "S" },
 };
 
 // ─── TASK OBJECT ────────────────────────────────────────────────────────

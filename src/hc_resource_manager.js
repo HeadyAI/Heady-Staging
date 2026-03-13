@@ -26,6 +26,8 @@ const fs = require("fs");
 const path = require("path");
 const { EventEmitter } = require("events");
 const { execSync } = require("child_process");
+const ColorfulLogger = require("./hc_colorful_logger");
+const log = new ColorfulLogger({ level: "info" });
 
 // ─── RESOURCE TYPES & SEVERITY ─────────────────────────────────────────────
 
@@ -153,7 +155,7 @@ function collectDisk() {
         };
       }
     }
-  } catch (_) { /* fall through */ }
+  } catch (err) { log.warning("Failed to collect disk metrics", { error: err.message }); }
   return { currentPercent: 0, absoluteValue: 0, capacity: 0, unit: "GB" };
 }
 
@@ -173,7 +175,8 @@ function collectGPU() {
         unit: "MB",
       },
     };
-  } catch (_) {
+  } catch (err) {
+    log.warning("Failed to collect GPU metrics", { error: err.message });
     return null;
   }
 }
@@ -232,7 +235,7 @@ function detectTopContributors() {
         });
       }
     }
-  } catch (_) { /* non-critical */ }
+  } catch (err) { log.warning("Failed to collect process contributors", { error: err.message }); }
   return contributors;
 }
 
@@ -420,7 +423,7 @@ class HCResourceManager extends EventEmitter {
       const dir = path.dirname(this.logFile);
       if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
       fs.appendFileSync(this.logFile, JSON.stringify(event) + "\n");
-    } catch (_) { /* non-critical */ }
+    } catch (err) { log.warning("Failed to persist event", { path: this.logFile, error: err.message }); }
   }
 }
 

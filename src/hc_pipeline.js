@@ -24,6 +24,8 @@ const path = require("path");
 const crypto = require("crypto");
 const yaml = require("js-yaml");
 const EventEmitter = require("events");
+const ColorfulLogger = require("./hc_colorful_logger");
+const log = new ColorfulLogger({ level: "info" });
 
 const CONFIGS_DIR = path.join(__dirname, "..", "configs");
 const LOGS_DIR = path.join(__dirname, "..");
@@ -58,16 +60,16 @@ function loadAllConfigs() {
     concepts: loadYaml("concepts-index.yaml"),
   };
   // Optional configs — new pipeline capabilities
-  try { configs.appReadiness = loadYaml("app-readiness.yaml"); } catch (_) { configs.appReadiness = {}; }
-  try { configs.headyAutoIDE = loadYaml("heady-auto-ide.yaml"); } catch (_) { configs.headyAutoIDE = {}; }
-  try { configs.buildPlaybook = loadYaml("build-playbook.yaml"); } catch (_) { configs.buildPlaybook = {}; }
-  try { configs.agenticCoding = loadYaml("agentic-coding.yaml"); } catch (_) { configs.agenticCoding = {}; }
-  try { configs.publicDomainIntegration = loadYaml("public-domain-integration.yaml"); } catch (_) { configs.publicDomainIntegration = {}; }
-  try { configs.activationManifest = loadYaml("activation-manifest.yaml"); } catch (_) { configs.activationManifest = {}; }
-  try { configs.monteCarlo = loadYaml("monte-carlo-scheduler.yaml"); } catch (_) { configs.monteCarlo = {}; }
-  try { configs.selfAwareness = loadYaml("system-self-awareness.yaml"); } catch (_) { configs.selfAwareness = {}; }
-  try { configs.connectionIntegrity = loadYaml("connection-integrity.yaml"); } catch (_) { configs.connectionIntegrity = {}; }
-  try { configs.extensionPricing = loadYaml("extension-pricing.yaml"); } catch (_) { configs.extensionPricing = {}; }
+  try { configs.appReadiness = loadYaml("app-readiness.yaml"); } catch (err) { log.warning("Optional config not found: app-readiness.yaml", { error: err.message }); configs.appReadiness = {}; }
+  try { configs.headyAutoIDE = loadYaml("heady-auto-ide.yaml"); } catch (err) { log.warning("Optional config not found: heady-auto-ide.yaml", { error: err.message }); configs.headyAutoIDE = {}; }
+  try { configs.buildPlaybook = loadYaml("build-playbook.yaml"); } catch (err) { log.warning("Optional config not found: build-playbook.yaml", { error: err.message }); configs.buildPlaybook = {}; }
+  try { configs.agenticCoding = loadYaml("agentic-coding.yaml"); } catch (err) { log.warning("Optional config not found: agentic-coding.yaml", { error: err.message }); configs.agenticCoding = {}; }
+  try { configs.publicDomainIntegration = loadYaml("public-domain-integration.yaml"); } catch (err) { log.warning("Optional config not found: public-domain-integration.yaml", { error: err.message }); configs.publicDomainIntegration = {}; }
+  try { configs.activationManifest = loadYaml("activation-manifest.yaml"); } catch (err) { log.warning("Optional config not found: activation-manifest.yaml", { error: err.message }); configs.activationManifest = {}; }
+  try { configs.monteCarlo = loadYaml("monte-carlo-scheduler.yaml"); } catch (err) { log.warning("Optional config not found: monte-carlo-scheduler.yaml", { error: err.message }); configs.monteCarlo = {}; }
+  try { configs.selfAwareness = loadYaml("system-self-awareness.yaml"); } catch (err) { log.warning("Optional config not found: system-self-awareness.yaml", { error: err.message }); configs.selfAwareness = {}; }
+  try { configs.connectionIntegrity = loadYaml("connection-integrity.yaml"); } catch (err) { log.warning("Optional config not found: connection-integrity.yaml", { error: err.message }); configs.connectionIntegrity = {}; }
+  try { configs.extensionPricing = loadYaml("extension-pricing.yaml"); } catch (err) { log.warning("Optional config not found: extension-pricing.yaml", { error: err.message }); configs.extensionPricing = {}; }
   try { configs.headyBuddy = loadYaml("heady-buddy.yaml"); } catch (_) { configs.headyBuddy = {}; }
   return configs;
 }
@@ -501,6 +503,12 @@ async function executeStage(stage, state, configs, circuitBreakers) {
 
 async function executeSingleTask(taskName, context, state, circuitBreakers) {
   state.metrics.totalTasks++;
+
+  // Auto-prioritize change-related tasks
+  if (taskName.includes('change_request') || taskName.includes('change')) {
+    taskName.priority = 'high';
+    taskName.tags.push('automated_priority');
+  }
 
   // Check circuit breaker for this task's endpoint category
   const breaker = circuitBreakers ? findBreakerForTask(taskName, circuitBreakers) : null;

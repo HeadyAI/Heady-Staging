@@ -35,6 +35,8 @@ const fs = require("fs");
 const fsp = fs.promises;
 const path = require("path");
 const crypto = require("crypto");
+const ColorfulLogger = require("./hc_colorful_logger");
+const log = new ColorfulLogger({ level: "info" });
 
 const PATTERN_STORE_PATH = path.join(__dirname, "..", ".heady_cache", "pattern_store.json");
 const MAX_PATTERNS = 500;
@@ -76,7 +78,7 @@ function loadPatternStore() {
     if (fs.existsSync(PATTERN_STORE_PATH)) {
       return JSON.parse(fs.readFileSync(PATTERN_STORE_PATH, "utf8"));
     }
-  } catch (_) {}
+  } catch (err) { log.warning("Failed to load pattern store", { path: PATTERN_STORE_PATH, error: err.message }); }
   return { patterns: {}, metadata: { created: new Date().toISOString(), version: "1.0.0" } };
 }
 
@@ -94,7 +96,7 @@ function savePatternStore(store) {
     const dir = path.dirname(PATTERN_STORE_PATH);
     if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
     fs.writeFileSync(PATTERN_STORE_PATH, JSON.stringify(store, null, 2), "utf8");
-  } catch (_) {}
+  } catch (err) { log.warning("Failed to save pattern store sync", { path: PATTERN_STORE_PATH, error: err.message }); }
 }
 
 // ─── STATISTICS HELPERS ──────────────────────────────────────────────
@@ -315,6 +317,18 @@ class HCPatternEngine extends EventEmitter {
     }));
   }
 
+  getPatternsByState(state) {
+    return Object.values(this.store.patterns)
+      .filter(p => p.state === state)
+      .map(p => ({
+        id: p.id,
+        name: p.name,
+        category: p.category,
+        severity: p.metadata?.severity || 'medium',
+        details: p
+      }));
+  }
+
   // ─── Get a single pattern with full detail ─────────────────────────
 
   getPattern(patternId) {
@@ -406,7 +420,7 @@ class HCPatternEngine extends EventEmitter {
 
       if (values.length > 0) {
         pattern.stats = quickStats(values);
-        pattern.trend = trend(values, Math.min(10, Math.floor(values.length / 2)));
+        pattern.trend = this._enhancedTrend(values);
       }
 
       // State machine transitions
@@ -426,11 +440,71 @@ class HCPatternEngine extends EventEmitter {
     });
   }
 
-  // ─── State machine: transition pattern states ──────────────────────
-
+  // ─── Enhanced trend analysis ────────────────────────────────────────
+  _enhancedTrend(values, windowSize = 10) {
+    if (values.length < windowSize * 2) return "insufficient_data";
+    
+    // Split into older and newer windows
+    const older = values.slice(-windowSize * 2, -windowSize);
+    const newer = values.slice(-windowSize);
+    
+    // Calculate means
+    const olderMean = older.reduce((a, b) => a + b, 0) / older.length;
+    const newerMean = newer.reduce((a, b) => a + b, 0) / newer.length;
+    
+    if (olderMean === 0) return "stable";
+    
+    // Calculate percentage change
+    const change = (newerMean - olderMean) / olderMean;
+    
+    // More sensitive detection for small changes
+    if (Math.abs(change) < 0.005) return "flat";
+    if (change < -IMPROVEMENT_THRESHOLD) return "improving";
+    if (change > IMPROVEMENT_THRESHOLD) return "degrading";
+    
+    // Detect micro-trends that might indicate stagnation
+    const microTrend = this._microTrendAnalysis(values, windowSize);
+    if (microTrend === "oscillating" || microTrend === "random") {
+      return "unstable";
+    }
+    
+    return "stable";
+  }
+  
+  // ─── Micro-trend analysis ──────────────────────────────────────────
+  _microTrendAnalysis(values, windowSize) {
+    const segments = [];
+    const segmentSize = Math.floor(windowSize / 3);
+    
+    // Split into 3 segments
+    for (let i = 0; i < 3; i++) {
+      const start = -windowSize + (i * segmentSize);
+      const end = start + segmentSize;
+      segments.push(values.slice(start, end));
+    }
+    
+    // Calculate segment means
+    const means = segments.map(s => s.reduce((a, b) => a + b, 0) / s.length);
+    
+    // Detect oscillation (up-down-up or down-up-down)
+    if ((means[0] < means[1] && means[1] > means[2]) || 
+        (means[0] > means[1] && means[1] < means[2])) {
+      return "oscillating";
+    }
+    
+    // Detect randomness (no clear pattern)
+    const variance = Math.max(...means) - Math.min(...means);
+    if (variance < (means[0] * 0.1)) {
+      return "random";
+    }
+    
+    return "unknown";
+  }
+  
+  // ─── Enhanced state transitions with stagnation focus ───────────────
   _transitionState(pattern, values) {
     const prev = pattern.state;
-
+    
     // Skip locked patterns unless review interval reached
     if (pattern.state === STATE.LOCKED) {
       if (pattern.reviewAfter && pattern.observations.length % pattern.reviewAfter === 0) {
@@ -439,58 +513,72 @@ class HCPatternEngine extends EventEmitter {
       }
       return;
     }
-
-    switch (pattern.trend) {
+    
+    // Use enhanced trend analysis
+    const currentTrend = this._enhancedTrend(values);
+    
+    switch (currentTrend) {
       case "improving":
         pattern.state = STATE.IMPROVING;
         pattern.lastImproved = new Date().toISOString();
         break;
-
+        
       case "degrading":
         pattern.state = STATE.DEGRADING;
         this._createImprovementTask(pattern, "Pattern is degrading — auto-fix needed");
         break;
-
+        
+      case "flat":
+        // Explicit flat trend indicates potential stagnation
+        if (values.length >= STAGNATION_CHECK_WINDOW) {
+          pattern.state = STATE.STAGNANT;
+          this._createImprovementTask(pattern, "Pattern is completely flat — strong stagnation signal");
+        }
+        break;
+        
+      case "unstable":
+        // Unstable patterns need investigation
+        pattern.state = STATE.ACTIVE;
+        pattern.metadata.needsInvestigation = true;
+        break;
+        
       case "stable":
         // Check if converged (low variance, sufficient samples)
         if (this._checkConvergence(values)) {
           pattern.state = STATE.CONVERGED;
           pattern.convergedAt = new Date().toISOString();
-          pattern.reviewAfter = 100; // re-check after 100 more observations
+          pattern.reviewAfter = 100;
           this.emit("pattern:converged", { id: pattern.id, name: pattern.name });
         } else if (pattern.state === STATE.IMPROVING) {
-          // Was improving, now stable — might be near optimal
           pattern.state = STATE.ACTIVE;
-        } else if (pattern.state === STATE.ACTIVE || pattern.state === STATE.DETECTED) {
-          // Stable but not converged — check if stagnant
-          if (values.length >= STAGNATION_CHECK_WINDOW) {
-            pattern.state = STATE.STAGNANT;
-            this._createImprovementTask(pattern, "Pattern is stagnant — not optimal, not improving");
-          }
+        } else if ((pattern.state === STATE.ACTIVE || pattern.state === STATE.DETECTED) && 
+                   values.length >= STAGNATION_CHECK_WINDOW) {
+          pattern.state = STATE.STAGNANT;
+          this._createImprovementTask(pattern, "Pattern is stagnant — not optimal, not improving");
         }
         break;
-
+        
       default:
         if (pattern.state === STATE.DETECTED && values.length >= 5) {
           pattern.state = STATE.ACTIVE;
         }
         break;
     }
-
+    
     if (prev !== pattern.state) {
       this.emit("pattern:state_changed", {
         id: pattern.id, name: pattern.name,
         from: prev, to: pattern.state,
       });
     }
-
+    
     // Mark performance bottlenecks
     if (pattern.category === CATEGORY.PERFORMANCE && pattern.stats) {
       pattern.metadata.isBottleneck = (
         pattern.state === STATE.STAGNANT ||
         pattern.state === STATE.DEGRADING
       ) && pattern.stats.median > 0;
-
+      
       if (pattern.metadata.isBottleneck) {
         pattern.metadata.suggestion = pattern.trend === "degrading"
           ? `${pattern.name} is getting slower. Re-optimize: try parallelization or caching.`

@@ -17,8 +17,8 @@ import { useApi } from "../hooks/useApi";
 import { Circle, Wifi, WifiOff, Cpu, Clock } from "lucide-react";
 
 export default function StatusBar() {
-  const { data: health } = useApi("/health", { poll: 10000 });
-  const { data: system } = useApi("/system/status", { poll: 15000 });
+  const { data: health } = useApi("/api/health", { poll: 10000 });
+  const { data: system } = useApi("/api/system/status", { poll: 15000 });
 
   const isOnline = health?.ok;
   const env = system?.environment || "unknown";

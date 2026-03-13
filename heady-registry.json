@@ -123,6 +123,27 @@
       "lastUpdated": "2025-07-01"
     },
     {
+      "id": "persistent-memory",
+      "name": "PersistentMemory",
+      "type": "memory",
+      "version": "1.0.0",
+      "sourceOfTruth": "HeadyCloud",
+      "responsibilities": ["store_user_inputs", "maintain_complexity_10", "preserve_functionality", "intelligent_orchestration", "persistent_context"],
+      "artifacts": [".heady-memory/persistent-state.json"],
+      "ownership": "HeadyCloud",
+      "status": "active",
+      "criticality": "critical",
+      "lastUpdated": "2026-02-11",
+      "data": {
+        "complexity": 10,
+        "preserve_functionality": true,
+        "user_inputs": ["persistent_memory_request", "maximum_complexity", "full_functionality"],
+        "project_state": "operational",
+        "timestamp": "2026-02-11T23:36:00Z",
+        "storage": "HeadyCloud"
+      }
+    },
+    {
       "id": "hc-checkpoint",
       "name": "HCCheckpoint",
       "type": "checkpoint",
@@ -1011,7 +1032,7 @@
     {
       "id": "local",
       "name": "Local Dev",
-      "endpoint": "http://localhost:3300",
+      "endpoint": "http://api.headysystems.com:3300",
       "color": "green",
       "status": "active",
       "lastHealthCheck": null
@@ -1393,27 +1414,46 @@
     }
   ],
 
+  "registryVersion": "3.2.0",
+  "updatedAt": "2026-02-14T00:44:21.760Z",
+  "description": "HeadyRegistry — Central catalog and control point for the Heady ecosystem",
+  "last_deployment": "",
+
+  "components": [
+  ],
   "repos": [
     {
       "id": "heady-sys",
       "name": "HeadySystems/Heady",
       "url": "git@github.com:HeadySystems/Heady.git",
       "role": "primary",
-      "status": "active"
+      "promotionTargets": [],
+      "branchPolicy": {
+        "main": "protected-prod",
+        "release/*": "frozen"
+      }
     },
     {
       "id": "heady-me",
       "name": "HeadyMe/Heady",
       "url": "git@github.com:HeadyMe/Heady.git",
       "role": "personal-cloud",
-      "status": "active"
+      "promotionTargets": ["heady-sys", "heady-conn"],
+      "branchPolicy": {
+        "main": "protected-prod",
+        "personal/*": "local-only"
+      }
     },
     {
       "id": "heady-conn",
       "name": "HeadyConnection/Heady",
       "url": "https://github.com/HeadySystems/HeadyConnection.git",
       "role": "cross-system-bridge",
-      "status": "active"
+      "promotionTargets": ["heady-sys", "heady-me"],
+      "branchPolicy": {
+        "main": "protected-prod",
+        "tenant/*": "env-specific"
+      }
     },
     {
       "id": "sandbox",

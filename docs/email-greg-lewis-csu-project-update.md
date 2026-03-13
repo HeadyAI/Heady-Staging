@@ -89,7 +89,7 @@ One of the newest and most tangible deliverables is **HeadyBuddy**, a desktop ov
 - **Electron wrapper** for native desktop overlay (always-on-top, hotkey Ctrl+Shift+H)
 - **Full design spec** including WCAG AA accessibility compliance, motion guidelines, and Adaptive Cards templates for Windows Widget integration
 - **API endpoints**: `/api/buddy/chat`, `/api/buddy/health`, `/api/buddy/suggestions`
-- **Distributable Docker Desktop image** — a full Linux desktop environment accessible via browser (noVNC at localhost:6080), bundling HeadyBuddy + HeadyAutoIDE. This means I can ship a demo to anyone with Docker installed.
+- **Distributable Docker Desktop image** — a full Linux desktop environment accessible via browser (noVNC at api.headysystems.com:6080), bundling HeadyBuddy + HeadyAutoIDE. This means I can ship a demo to anyone with Docker installed.
 
 The chat engine currently uses a placeholder response system — the next milestone is wiring it to the PYTHIA node (Hugging Face) or an external LLM for production-quality conversations.
 

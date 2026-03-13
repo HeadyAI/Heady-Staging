@@ -27,8 +27,10 @@ import React, { useState, useCallback, useEffect, useRef } from "react";
 import CollapsedPill from "./components/CollapsedPill";
 import MainWidget from "./components/MainWidget";
 import ExpandedView from "./components/ExpandedView";
+import CrossDeviceSync from "./components/CrossDeviceSync";
+import DemoRepos from "./components/DemoRepos";
 
-const HEADY_API = import.meta.env.VITE_HEADY_API || "http://localhost:3300";
+const HEADY_API = import.meta.env.VITE_HEADY_API || "http://localhost:3301/api";
 const RESOURCE_POLL_MS = 5000;
 const ORCHESTRATOR_POLL_MS = 8000;
 
@@ -90,14 +92,66 @@ function usePipelineState(enabled) {
   return pipelineState;
 }
 
+// ─── State Synchronization ──────────────────────────────────────────────
+const syncState = useCallback(async (state) => {
+  try {
+    await fetch(`${HEADY_API}/api/buddy/state`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(state)
+    });
+  } catch (err) {
+    console.error('State sync failed:', err);
+  }
+}, []);
+
+// On state changes, sync to server
+useEffect(() => {
+  if (viewState === 'pill') return; // Don't sync in minimal state
+  
+  syncState({
+    messages,
+    viewState,
+    pipelineState,
+    config
+  });
+}, [messages, viewState, pipelineState, config, syncState]);
+
+// On startup, fetch state from server
+useEffect(() => {
+  async function fetchState() {
+    try {
+      const res = await fetch(`${HEADY_API}/api/buddy/state`);
+      if (!res.ok) return;
+      
+      const remoteState = await res.json();
+      if (remoteState.messages) setMessages(remoteState.messages);
+      if (remoteState.viewState) setViewState(remoteState.viewState);
+      if (remoteState.pipelineState) setPipelineState(remoteState.pipelineState);
+      if (remoteState.config) setConfig(remoteState.config);
+    } catch (err) {
+      console.error('Failed to fetch state:', err);
+    }
+  }
+  
+  fetchState();
+}, []);
+
 // ─── App ───────────────────────────────────────────────────────────────────
 
 export default function App() {
   const [viewState, setViewState] = useState("pill"); // pill | main | expanded
   const [messages, setMessages] = useState([]);
   const [status, setStatus] = useState("idle"); // idle | listening | thinking | success | error
+  const [config, setConfig] = useState(null);
   const resourceData = useResourceHealth();
   const pipelineState = usePipelineState(viewState === "expanded");
+
+  useEffect(() => {
+    fetch(`${HEADY_API}/api/headybuddy-config`)
+      .then(response => response.json())
+      .then(data => setConfig(data));
+  }, []);
 
   const handleSend = useCallback(async (text) => {
     if (!text.trim()) return;
@@ -150,7 +204,11 @@ export default function App() {
         onCollapse={() => setViewState("main")}
         resourceData={resourceData}
         pipelineState={pipelineState}
-      />
+        config={config}
+      >
+        <CrossDeviceSync userId={config?.user?.id} />
+        <DemoRepos />
+      </ExpandedView>
     );
   }
 
@@ -164,6 +222,7 @@ export default function App() {
         onExpand={() => setViewState("expanded")}
         onSuggestion={handleSuggestion}
         resourceData={resourceData}
+        config={config}
       />
     );
   }
@@ -174,6 +233,7 @@ export default function App() {
       onExpand={() => setViewState("main")}
       onSuggestion={handleSuggestion}
       resourceData={resourceData}
+      config={config}
     />
   );
 }

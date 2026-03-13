@@ -1,0 +1,48 @@
+{
+  "name": "@heady/hc-supervisor",
+  "version": "1.0.0",
+  "description": "Multi-Agent Supervisor for Heady System - Routes tasks to specialized agents based on capability matching",
+  "main": "index.js",
+  "exports": {
+    ".": "./index.js"
+  },
+  "scripts": {
+    "test": "node --test",
+    "lint": "eslint .",
+    "type-check": "tsc --noEmit"
+  },
+  "keywords": [
+    "heady",
+    "supervisor",
+    "agent-routing",
+    "multi-agent",
+    "task-orchestration",
+    "phi-math",
+    "sacred-geometry"
+  ],
+  "author": "Heady Systems",
+  "license": "MIT",
+  "dependencies": {
+    "@heady/phi-math": "^1.0.0",
+    "@heady/structured-logger": "^1.0.0",
+    "@heady/bee": "^1.0.0"
+  },
+  "peerDependencies": {
+    "@heady/phi-math": "^1.0.0",
+    "@heady/structured-logger": "^1.0.0"
+  },
+  "peerDependenciesOptional": {
+    "@heady/bee": "^1.0.0"
+  },
+  "optionalDependencies": {
+    "@heady/bee": "^1.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/HeadySystems/heady.git",
+    "directory": "packages/hc-supervisor"
+  }
+}

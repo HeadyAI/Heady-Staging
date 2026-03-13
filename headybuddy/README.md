@@ -60,7 +60,7 @@ native always-on-top overlay for Windows / macOS / Linux.
 cd headybuddy
 npm install
 npm run dev
-# → http://localhost:3400
+# → http://internal.headyio.com:3400
 ```
 
 ### 2. Full stack (widget + heady-manager API)
@@ -69,12 +69,12 @@ npm run dev
 # Terminal 1 — API
 cd /path/to/Heady
 npm start
-# → http://localhost:3300
+# → http://internal.headyio.com:3300
 
 # Terminal 2 — Widget
 cd headybuddy
 npm run dev
-# → http://localhost:3400
+# → http://internal.headyio.com:3400
 ```
 
 ### 3. Electron overlay (native desktop)
@@ -90,7 +90,7 @@ npm run dev
 
 ```bash
 docker compose -f docker-compose.desktop.yml up --build
-# → http://localhost:6080 (VNC password: heady)
+# → http://internal.headyio.com:6080 (VNC password: heady)
 ```
 
 ---
@@ -155,7 +155,7 @@ docker compose -f docker-compose.desktop.yml up --build
 docker run --rm -p 6080:6080 -p 3300:3300 heady/desktop:latest
 ```
 
-**Access**: Open your browser to **http://localhost:6080**
+**Access**: Open your browser to **http://internal.headyio.com:6080**
 
 You'll see:
 - A full Linux desktop with Heady branding

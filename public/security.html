@@ -1,0 +1,1165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Security & Trust Center - HeadyOS</title>
+    <link rel="stylesheet" href="/sacred-geometry.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 50%, #0a0e27 100%);
+            color: #e0e0e0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow-x: hidden;
+            position: relative;
+            min-height: 100vh;
+        }
+
+        /* Animated Background Orbs */
+        .orb {
+            position: fixed;
+            border-radius: 50%;
+            opacity: 0.1;
+            filter: blur(40px);
+            z-index: 0;
+        }
+
+        .orb-1 {
+            width: 400px;
+            height: 400px;
+            background: #00D9FF;
+            top: -100px;
+            right: -100px;
+            animation: float 8s ease-in-out infinite;
+        }
+
+        .orb-2 {
+            width: 300px;
+            height: 300px;
+            background: #FF00A0;
+            bottom: 10%;
+            left: 5%;
+            animation: float 10s ease-in-out infinite reverse;
+        }
+
+        .orb-3 {
+            width: 350px;
+            height: 350px;
+            background: #D4AF37;
+            top: 50%;
+            right: 10%;
+            animation: float 12s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(30px, -30px); }
+        }
+
+        .content {
+            position: relative;
+            z-index: 1;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 60px 20px;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .header h1 {
+            font-size: 3.5em;
+            background: linear-gradient(135deg, #00D9FF, #D4AF37);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+
+        .header p {
+            font-size: 1.2em;
+            color: #a0a0a0;
+            max-width: 700px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        /* Glass Card */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 40px;
+            margin: 40px 0;
+            transition: all 0.3s ease;
+        }
+
+        .glass-card h2 {
+            font-size: 2em;
+            color: #00D9FF;
+            margin-bottom: 25px;
+            text-shadow: 0 0 20px rgba(0, 217, 255, 0.2);
+        }
+
+        .glass-card h3 {
+            font-size: 1.4em;
+            color: #FF00A0;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 0, 160, 0.2);
+        }
+
+        .glass-card:first-of-type h3 {
+            border-top: none;
+            margin-top: 0;
+            padding-top: 0;
+        }
+
+        .glass-card p {
+            color: #b0b0b0;
+            line-height: 1.8;
+            margin-bottom: 15px;
+            font-size: 1em;
+        }
+
+        .glass-card ul {
+            color: #b0b0b0;
+            line-height: 1.8;
+            margin-left: 25px;
+            margin-bottom: 20px;
+        }
+
+        .glass-card li {
+            margin-bottom: 10px;
+        }
+
+        .glass-card code {
+            background: rgba(0, 217, 255, 0.1);
+            padding: 2px 6px;
+            border-radius: 4px;
+            color: #00D9FF;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+
+        /* Feature Grid */
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin: 50px 0;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            border-radius: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(0, 217, 255, 0.3);
+            transform: translateY(-5px);
+        }
+
+        .feature-card .icon {
+            font-size: 2.5em;
+            margin-bottom: 15px;
+        }
+
+        .feature-card h3 {
+            color: #00D9FF;
+            font-size: 1.3em;
+            margin-bottom: 15px;
+        }
+
+        .feature-card p {
+            color: #a0a0a0;
+            line-height: 1.6;
+            font-size: 0.95em;
+        }
+
+        /* Architecture Diagram */
+        .architecture-diagram {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(0, 217, 255, 0.2);
+            border-radius: 12px;
+            padding: 30px;
+            margin: 30px 0;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 20px;
+        }
+
+        .arch-layer {
+            background: rgba(0, 217, 255, 0.1);
+            border: 1px solid rgba(0, 217, 255, 0.3);
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .arch-layer:hover {
+            background: rgba(0, 217, 255, 0.15);
+            transform: translateY(-3px);
+        }
+
+        .arch-layer h4 {
+            color: #00D9FF;
+            font-size: 1.1em;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .arch-layer p {
+            color: #a0a0a0;
+            font-size: 0.85em;
+            line-height: 1.5;
+        }
+
+        /* Comparison Table */
+        .comparison-table {
+            overflow-x: auto;
+            margin: 30px 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        thead {
+            background: rgba(0, 217, 255, 0.15);
+        }
+
+        th {
+            color: #00D9FF;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+            border-bottom: 1px solid rgba(0, 217, 255, 0.2);
+        }
+
+        td {
+            color: #b0b0b0;
+            padding: 12px 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            font-size: 0.95em;
+        }
+
+        tbody tr:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        /* Workflow Diagram */
+        .workflow-box {
+            background: rgba(255, 0, 160, 0.05);
+            border: 1px solid rgba(255, 0, 160, 0.2);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            position: relative;
+        }
+
+        .workflow-step {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .workflow-step:last-child {
+            margin-bottom: 0;
+        }
+
+        .step-number {
+            background: linear-gradient(135deg, #FF00A0, #D4AF37);
+            color: #0a0e27;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+
+        .step-content {
+            color: #b0b0b0;
+            line-height: 1.6;
+        }
+
+        .step-content strong {
+            color: #e0e0e0;
+        }
+
+        /* Threat Model */
+        .threat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin: 30px 0;
+        }
+
+        .threat-card {
+            background: rgba(255, 0, 160, 0.08);
+            border: 1px solid rgba(255, 0, 160, 0.2);
+            border-radius: 10px;
+            padding: 25px;
+        }
+
+        .threat-card h4 {
+            color: #FF00A0;
+            margin-bottom: 12px;
+            font-size: 1.05em;
+        }
+
+        .threat-card p {
+            color: #a0a0a0;
+            font-size: 0.9em;
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+
+        .mitigation {
+            background: rgba(0, 217, 255, 0.08);
+            border-left: 3px solid #00D9FF;
+            padding: 10px 12px;
+            border-radius: 4px;
+            color: #a0a0a0;
+            font-size: 0.85em;
+            line-height: 1.5;
+        }
+
+        /* Security Metrics Dashboard */
+        .metrics-dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .metric-card {
+            background: rgba(212, 175, 55, 0.08);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 10px;
+            padding: 25px;
+            text-align: center;
+        }
+
+        .metric-label {
+            color: #a0a0a0;
+            font-size: 0.95em;
+            margin-bottom: 10px;
+        }
+
+        .metric-value {
+            color: #D4AF37;
+            font-size: 2em;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .metric-status {
+            color: #7a7a7a;
+            font-size: 0.85em;
+        }
+
+        /* Incident Response */
+        .incident-phases {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .phase-card {
+            background: rgba(0, 217, 255, 0.08);
+            border: 2px solid rgba(0, 217, 255, 0.2);
+            border-radius: 10px;
+            padding: 25px;
+        }
+
+        .phase-number {
+            background: rgba(0, 217, 255, 0.2);
+            color: #00D9FF;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5em;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+
+        .phase-card h4 {
+            color: #00D9FF;
+            margin-bottom: 12px;
+            font-size: 1.1em;
+        }
+
+        .phase-card p {
+            color: #a0a0a0;
+            font-size: 0.9em;
+            line-height: 1.6;
+        }
+
+        /* Compliance Roadmap */
+        .compliance-timeline {
+            position: relative;
+            padding: 20px 0;
+        }
+
+        .timeline-item {
+            display: grid;
+            grid-template-columns: 150px 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
+            align-items: start;
+        }
+
+        .timeline-date {
+            color: #D4AF37;
+            font-weight: 600;
+            font-size: 1.1em;
+        }
+
+        .timeline-content {
+            background: rgba(212, 175, 55, 0.05);
+            border-left: 3px solid #D4AF37;
+            padding: 15px 20px;
+            border-radius: 5px;
+        }
+
+        .timeline-content h4 {
+            color: #FF00A0;
+            margin-bottom: 8px;
+            font-size: 1em;
+        }
+
+        .timeline-content p {
+            color: #a0a0a0;
+            font-size: 0.95em;
+            line-height: 1.6;
+        }
+
+        .cert-badge {
+            display: inline-block;
+            background: rgba(212, 175, 55, 0.15);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            padding: 8px 12px;
+            border-radius: 6px;
+            color: #D4AF37;
+            font-size: 0.85em;
+            margin-top: 8px;
+            margin-right: 8px;
+        }
+
+        /* Penetration Testing */
+        .pentest-info {
+            background: rgba(255, 0, 160, 0.08);
+            border: 1px solid rgba(255, 0, 160, 0.2);
+            border-radius: 10px;
+            padding: 25px;
+            margin: 30px 0;
+        }
+
+        .pentest-info h4 {
+            color: #FF00A0;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+        }
+
+        .pentest-info p {
+            color: #a0a0a0;
+            line-height: 1.7;
+            margin-bottom: 10px;
+        }
+
+        .pentest-info ul {
+            margin-left: 25px;
+            color: #b0b0b0;
+        }
+
+        .pentest-info li {
+            margin-bottom: 8px;
+            line-height: 1.6;
+        }
+
+        /* Contact Info */
+        .security-contact {
+            background: rgba(0, 217, 255, 0.05);
+            border: 2px solid rgba(0, 217, 255, 0.2);
+            border-radius: 15px;
+            padding: 40px;
+            text-align: center;
+            margin-top: 60px;
+        }
+
+        .security-contact h3 {
+            color: #00D9FF;
+            font-size: 1.8em;
+            margin-bottom: 20px;
+        }
+
+        .security-contact p {
+            color: #a0a0a0;
+            font-size: 1.1em;
+            margin-bottom: 15px;
+        }
+
+        .security-contact a {
+            color: #FF00A0;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .security-contact a:hover {
+            color: #00D9FF;
+            text-shadow: 0 0 10px rgba(0, 217, 255, 0.3);
+        }
+
+        /* Security Principles Box */
+        .principles-box {
+            background: rgba(255, 0, 160, 0.05);
+            border: 2px solid rgba(255, 0, 160, 0.2);
+            border-radius: 12px;
+            padding: 25px;
+            margin: 30px 0;
+        }
+
+        .principles-box h4 {
+            color: #FF00A0;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+        }
+
+        .principles-box p {
+            color: #a0a0a0;
+            line-height: 1.7;
+            margin-bottom: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2em;
+            }
+
+            .timeline-item {
+                grid-template-columns: 1fr;
+            }
+
+            .timeline-date {
+                order: -1;
+            }
+
+            .architecture-diagram {
+                grid-template-columns: 1fr;
+            }
+
+            table {
+                font-size: 0.9em;
+            }
+
+            th, td {
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+
+    <div class="content">
+        <div class="header">
+            <h1>Security & Trust Center</h1>
+            <p>HeadyOS is engineered with security at every layer. Learn how we protect your systems against today's threats and tomorrow's quantum computers.</p>
+        </div>
+
+        <!-- Security Architecture Overview -->
+        <div class="glass-card">
+            <h2>🔐 Security Architecture Overview</h2>
+            <p>
+                HeadyOS implements a comprehensive, layered security architecture that protects data, code, and systems across every operational domain. Our approach combines cryptographic robustness with architectural principles derived from Sacred Geometry, ensuring resilience against both known and emerging threats.
+            </p>
+            <p>
+                Every component — from the kernel to userland applications — operates within a zero-trust model where verification is continuous, permissions are minimal, and integrity is cryptographically guaranteed.
+            </p>
+
+            <h3>Core Security Pillars</h3>
+            <ul>
+                <li><strong>Cryptographic Integrity:</strong> All system components are signed with post-quantum cryptography</li>
+                <li><strong>Zero-Trust Architecture:</strong> No component is implicitly trusted; all require continuous verification</li>
+                <li><strong>Quantum Resilience:</strong> Protection against both classical and quantum computing threats</li>
+                <li><strong>Transparent Auditing:</strong> Complete audit trails of all security-relevant events</li>
+                <li><strong>Defense in Depth:</strong> Multiple overlapping security mechanisms prevent single points of failure</li>
+            </ul>
+
+            <h3>Architecture Layers Diagram</h3>
+            <div class="architecture-diagram">
+                <div class="arch-layer">
+                    <h4>🔑 Cryptography Layer</h4>
+                    <p>Post-quantum algorithms, key management, and cryptographic primitives</p>
+                </div>
+                <div class="arch-layer">
+                    <h4>🛡️ Authentication Layer</h4>
+                    <p>Identity verification, certificate management, and credential validation</p>
+                </div>
+                <div class="arch-layer">
+                    <h4>📋 Authorization Layer</h4>
+                    <p>Access control, permission policies, and role-based enforcement</p>
+                </div>
+                <div class="arch-layer">
+                    <h4>🔍 Monitoring Layer</h4>
+                    <p>Anomaly detection, audit logging, and security event correlation</p>
+                </div>
+                <div class="arch-layer">
+                    <h4>🚨 Incident Response Layer</h4>
+                    <p>Alert generation, containment actions, and forensic logging</p>
+                </div>
+                <div class="arch-layer">
+                    <h4>🔄 Recovery Layer</h4>
+                    <p>Disaster recovery, system restoration, and data protection</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Feature Grid -->
+        <div class="feature-grid">
+            <div class="feature-card">
+                <div class="icon">🔑</div>
+                <h3>Post-Quantum Crypto</h3>
+                <p>Protected against quantum computing threats using NIST-standardized lattice-based and hash-based algorithms.</p>
+            </div>
+            <div class="feature-card">
+                <div class="icon">🛡️</div>
+                <h3>Zero-Trust Model</h3>
+                <p>Continuous verification of all system components. Trust is never assumed — it's earned through cryptographic proof.</p>
+            </div>
+            <div class="feature-card">
+                <div class="icon">🔒</div>
+                <h3>Encryption Everywhere</h3>
+                <p>Data is encrypted at rest and in transit using modern ciphers. Encryption keys never exist unprotected in memory.</p>
+            </div>
+            <div class="feature-card">
+                <div class="icon">📋</div>
+                <h3>Code Integrity</h3>
+                <p>All code changes are tracked, hashed, and require explicit approval before deployment through CodeLock.</p>
+            </div>
+            <div class="feature-card">
+                <div class="icon">🔍</div>
+                <h3>Secret Scanning</h3>
+                <p>Automated detection of hardcoded credentials, API keys, and sensitive patterns before code deployment.</p>
+            </div>
+            <div class="feature-card">
+                <div class="icon">⚠️</div>
+                <h3>Vulnerability Management</h3>
+                <p>Continuous scanning for known vulnerabilities with automated patching and security updates.</p>
+            </div>
+        </div>
+
+        <!-- Zero-Trust Architecture -->
+        <div class="glass-card">
+            <h2>🎯 Zero-Trust Architecture</h2>
+            <p>
+                Traditional perimeter-based security assumes that threats are external. Zero-trust assumes no such thing — every request, every user, every device is treated as potentially compromised until proven otherwise. This fundamental shift in security philosophy provides superior protection against insider threats, compromised credentials, and lateral movement attacks.
+            </p>
+
+            <h3>Zero-Trust Model: 5 Core Principles</h3>
+            <div class="principles-box">
+                <h4>1. Verify Everything</h4>
+                <p>Every access request is authenticated and authorized with cryptographic proof. Authentication factors include multi-factor verification, device posture, and behavioral analysis. No implicit trust based on network location or previous authentication.</p>
+            </div>
+            <div class="principles-box">
+                <h4>2. Least Privilege Access</h4>
+                <p>Users and systems receive the minimum permissions necessary to perform their function, strictly scoped by time and context. Permissions are continuously re-evaluated based on current role, device status, and risk signals.</p>
+            </div>
+            <div class="principles-box">
+                <h4>3. Continuous Monitoring</h4>
+                <p>All activities are logged and analyzed for anomalies in real-time. Suspicious behavior—unusual access patterns, impossible travel, privilege escalation—triggers automatic alerts and contextual access revocation.</p>
+            </div>
+            <div class="principles-box">
+                <h4>4. Assume Breach</h4>
+                <p>We design systems assuming that attackers have already obtained some credentials or have lateral network access. Containment, rapid detection, and isolation are therefore paramount. Each microsegment is independently protected.</p>
+            </div>
+            <div class="principles-box">
+                <h4>5. Verify Integrity</h4>
+                <p>Cryptographic hashes verify that code, configuration, and data haven't been modified. Tampering is immediately detected through continuous integrity checks. Immutable audit logs ensure forensic traceability.</p>
+            </div>
+        </div>
+
+        <!-- Post-Quantum Cryptography -->
+        <div class="glass-card">
+            <h2>⚛️ Post-Quantum Cryptography</h2>
+            <p>
+                Traditional public-key cryptography (RSA, ECDSA) will be broken by sufficiently powerful quantum computers. HeadyOS is built with post-quantum algorithms that remain secure even against quantum attackers. These algorithms have been standardized by the National Institute of Standards and Technology (NIST) and are being adopted by major technology organizations worldwide.
+            </p>
+
+            <h3>NIST Post-Quantum Algorithms</h3>
+
+            <h4 style="color: #D4AF37; font-size: 1.2em; margin-top: 25px; margin-bottom: 15px;">1. ML-KEM (Module-Lattice-Based Key-Encapsulation Mechanism) - Kyber</h4>
+            <p>
+                Our primary encryption mechanism uses lattice-based cryptography, which relies on the hardness of the Learning With Errors (LWE) problem. This mathematical problem remains intractable even with quantum computers.
+            </p>
+            <ul>
+                <li><strong>Purpose:</strong> Key encapsulation and symmetric key establishment</li>
+                <li><strong>Security Level:</strong> 256-bit equivalent against quantum adversaries</li>
+                <li><strong>Performance:</strong> Similar computational overhead to elliptic curve cryptography</li>
+                <li><strong>Key Sizes:</strong> Public key ~1,184 bytes, ciphertext ~1,088 bytes</li>
+                <li><strong>Standardization:</strong> NIST FIPS 203 approved (August 2024)</li>
+            </ul>
+
+            <h4 style="color: #D4AF37; font-size: 1.2em; margin-top: 25px; margin-bottom: 15px;">2. SLH-DSA (Stateless Hash-Based Digital Signature Algorithm) - SPHINCS+</h4>
+            <p>
+                For digital signatures, we employ hash-based algorithms that derive security from the collision-resistance of cryptographic hash functions. These remain secure against quantum computers.
+            </p>
+            <ul>
+                <li><strong>Purpose:</strong> Digital signatures and code authentication</li>
+                <li><strong>Security Level:</strong> 256-bit equivalent against quantum adversaries</li>
+                <li><strong>Key Size:</strong> Public key 32 bytes, private key 64 bytes</li>
+                <li><strong>Signature Size:</strong> Approximately 17 KB (vs 64 bytes for ECDSA)</li>
+                <li><strong>Standardization:</strong> NIST FIPS 205 approved (August 2024)</li>
+            </ul>
+
+            <h4 style="color: #D4AF37; font-size: 1.2em; margin-top: 25px; margin-bottom: 15px;">3. FN-DSA (Falcon) - Fast-Fourier Lattice-Based Signatures</h4>
+            <p>
+                Falcon is a lattice-based signature algorithm offering smaller signature sizes than SPHINCS+, making it ideal for resource-constrained environments and high-throughput signing operations.
+            </p>
+            <ul>
+                <li><strong>Purpose:</strong> Efficient digital signatures with compact representation</li>
+                <li><strong>Security Level:</strong> 128-256 bits depending on parameter set</li>
+                <li><strong>Signature Size:</strong> Approximately 666-1,280 bytes</li>
+                <li><strong>Performance:</strong> Very fast signing and verification</li>
+                <li><strong>Use Case:</strong> Protocol signatures, certificate chains, firmware signing</li>
+            </ul>
+
+            <h3>Post-Quantum Algorithm Comparison</h3>
+            <div class="comparison-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Algorithm</th>
+                            <th>Type</th>
+                            <th>Security Level</th>
+                            <th>Key Size</th>
+                            <th>Performance</th>
+                            <th>Best For</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>ML-KEM (Kyber)</strong></td>
+                            <td>Lattice Encryption</td>
+                            <td>256-bit quantum</td>
+                            <td>~1.2 KB</td>
+                            <td>Fast (µs)</td>
+                            <td>Key exchange, TLS</td>
+                        </tr>
+                        <tr>
+                            <td><strong>SLH-DSA (SPHINCS+)</strong></td>
+                            <td>Hash Signature</td>
+                            <td>256-bit quantum</td>
+                            <td>32-64 bytes</td>
+                            <td>Moderate (ms)</td>
+                            <td>Long-term signature storage</td>
+                        </tr>
+                        <tr>
+                            <td><strong>FN-DSA (Falcon)</strong></td>
+                            <td>Lattice Signature</td>
+                            <td>128-256 bits</td>
+                            <td>~1.3 KB</td>
+                            <td>Fast (µs)</td>
+                            <td>TLS, high-volume signing</td>
+                        </tr>
+                        <tr>
+                            <td><strong>RSA-2048 (Legacy)</strong></td>
+                            <td>Factorization</td>
+                            <td>112-bit classical</td>
+                            <td>2 KB</td>
+                            <td>Slow (ms)</td>
+                            <td>Vulnerable to quantum</td>
+                        </tr>
+                        <tr>
+                            <td><strong>ECDSA-256 (Legacy)</strong></td>
+                            <td>Elliptic Curve</td>
+                            <td>128-bit classical</td>
+                            <td>256 bits</td>
+                            <td>Fast (µs)</td>
+                            <td>Vulnerable to quantum</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- CodeLock System -->
+        <div class="glass-card">
+            <h2>🔓 CodeLock: File Integrity & Approval Workflows</h2>
+            <p>
+                CodeLock is HeadyOS's proprietary system for preventing unauthorized code modifications and ensuring deployment safety. It combines cryptographic integrity verification with mandatory human approval workflows, creating an audit trail that satisfies the strictest compliance requirements.
+            </p>
+
+            <h3>How CodeLock Works: Workflow Process</h3>
+            <div class="workflow-box">
+                <div class="workflow-step">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <strong>Baseline Snapshot:</strong> When CodeLock is enabled, a cryptographic hash of all source files is computed using SHA-256 and stored in tamper-proof storage with a digital signature.
+                    </div>
+                </div>
+                <div class="workflow-step">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <strong>Change Detection:</strong> Any modification to protected files triggers immediate detection. The system computes new hashes and compares against the baseline. A change request is automatically generated.
+                    </div>
+                </div>
+                <div class="workflow-step">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <strong>Approval Workflow:</strong> Designated approvers receive notifications and review proposed changes in the CodeLock dashboard. They examine diffs, examine commit messages, and must explicitly authorize before deployment.
+                    </div>
+                </div>
+                <div class="workflow-step">
+                    <div class="step-number">4</div>
+                    <div class="step-content">
+                        <strong>Approval History:</strong> Every approval (or rejection) is recorded with timestamps, approver identity, and cryptographic signatures. This creates an immutable audit trail.
+                    </div>
+                </div>
+                <div class="workflow-step">
+                    <div class="step-number">5</div>
+                    <div class="step-content">
+                        <strong>Deployment & Integrity Verification:</strong> Approved changes are deployed. The system continuously verifies that deployed code matches approved hashes. Any unauthorized changes trigger alerts.
+                    </div>
+                </div>
+                <div class="workflow-step">
+                    <div class="step-number">6</div>
+                    <div class="step-content">
+                        <strong>Automatic Rollback:</strong> If unauthorized changes are detected, the system can automatically revert to the last approved state, preventing exploitation of malicious modifications.
+                    </div>
+                </div>
+            </div>
+
+            <h3>Use Cases</h3>
+            <ul>
+                <li>Protecting critical system files and configuration from unauthorized modification</li>
+                <li>Compliance requirements for change management (SOC 2, ISO 27001, FedRAMP)</li>
+                <li>Multi-team approval workflows requiring sign-off from security and operations</li>
+                <li>Detecting insider threats or detection of compromised developer accounts</li>
+                <li>Post-incident forensics to understand exactly what changed, when, and by whom</li>
+                <li>Regulatory audit requirements showing every modification was authorized</li>
+            </ul>
+        </div>
+
+        <!-- Threat Model -->
+        <div class="glass-card">
+            <h2>🎯 Threat Model & Mitigation Strategies</h2>
+            <p>
+                HeadyOS threat model is comprehensive and adversarial. We consider the capabilities of sophisticated threat actors (nation states, organized crime, insider threats) and design defenses accordingly.
+            </p>
+
+            <div class="threat-grid">
+                <div class="threat-card">
+                    <h4>External Network Attacks</h4>
+                    <p>Threats: DDoS, protocol exploitation, man-in-the-middle, credential theft</p>
+                    <div class="mitigation">
+                        <strong>Mitigations:</strong> TLS 1.3 with post-quantum hybrid key exchange, rate limiting, intrusion detection, certificate pinning
+                    </div>
+                </div>
+                <div class="threat-card">
+                    <h4>Compromised Credentials</h4>
+                    <p>Threats: Stolen passwords, API keys, tokens used for lateral movement</p>
+                    <div class="mitigation">
+                        <strong>Mitigations:</strong> Multi-factor authentication, secret scanning, continuous verification, anomaly detection
+                    </div>
+                </div>
+                <div class="threat-card">
+                    <h4>Insider Threats</h4>
+                    <p>Threats: Malicious or disgruntled employees, privilege escalation, data exfiltration</p>
+                    <div class="mitigation">
+                        <strong>Mitigations:</strong> Least privilege, CodeLock approval workflows, comprehensive audit logging, behavior analytics
+                    </div>
+                </div>
+                <div class="threat-card">
+                    <h4>Supply Chain Compromise</h4>
+                    <p>Threats: Malicious dependencies, compromised development tools, vendor backdoors</p>
+                    <div class="mitigation">
+                        <strong>Mitigations:</strong> Software composition analysis, reproducible builds, code signing, dependency pinning
+                    </div>
+                </div>
+                <div class="threat-card">
+                    <h4>Zero-Day Vulnerabilities</h4>
+                    <p>Threats: Unknown software flaws exploited before patches, kernel bugs, privilege escalation</p>
+                    <div class="mitigation">
+                        <strong>Mitigations:</strong> Defense in depth, exploit mitigations, behavior monitoring, rapid patching processes
+                    </div>
+                </div>
+                <div class="threat-card">
+                    <h4>Quantum Computing</h4>
+                    <p>Threats: Brute-force cryptographic key recovery, collection of encrypted data today for future decryption</p>
+                    <div class="mitigation">
+                        <strong>Mitigations:</strong> Post-quantum cryptography (ML-KEM, SLH-DSA), hybrid classical+PQC key exchange
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Security Metrics Dashboard -->
+        <div class="glass-card">
+            <h2>📊 Security Metrics Dashboard</h2>
+            <p>
+                Transparent security metrics help us track our security posture and demonstrate our commitment to protection. These metrics are updated continuously and monitored by our security team.
+            </p>
+
+            <div class="metrics-dashboard">
+                <div class="metric-card">
+                    <div class="metric-label">CVE Vulnerabilities Patched</div>
+                    <div class="metric-value">99.8%</div>
+                    <div class="metric-status">Within 30 days of disclosure</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Security Scans Per Week</div>
+                    <div class="metric-value">847</div>
+                    <div class="metric-status">SAST + SCA + DAST coverage</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Mean Time to Detection</div>
+                    <div class="metric-value">4.2 min</div>
+                    <div class="metric-status">Security event detection</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Secrets Prevented</div>
+                    <div class="metric-value">1,247</div>
+                    <div class="metric-status">Hardcoded credentials blocked</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">System Uptime</div>
+                    <div class="metric-value">99.99%</div>
+                    <div class="metric-status">No security-related outages</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Code Review Coverage</div>
+                    <div class="metric-value">100%</div>
+                    <div class="metric-status">All changes reviewed + approved</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Penetration Testing & Bug Bounty -->
+        <div class="glass-card">
+            <h2>🎯 Penetration Testing & Bug Bounty Program</h2>
+
+            <div class="pentest-info">
+                <h4>Annual Penetration Testing</h4>
+                <p>
+                    HeadyOS undergoes comprehensive penetration testing by certified security firms. Our Q2 2025 engagement with NCC Group will test our infrastructure, applications, and incident response capabilities against realistic attack scenarios.
+                </p>
+                <ul>
+                    <li>Annual third-party penetration testing by CREST-certified firms</li>
+                    <li>Red team exercises simulating advanced persistent threat (APT) tactics</li>
+                    <li>Physical security assessments of data center facilities</li>
+                    <li>Social engineering assessments of employee training effectiveness</li>
+                    <li>Post-assessment reporting and remediation tracking</li>
+                </ul>
+            </div>
+
+            <div class="pentest-info">
+                <h4>Bug Bounty Program</h4>
+                <p>
+                    We operate a responsible disclosure program and reward security researchers who help us identify and fix vulnerabilities responsibly. Join our community of security researchers making the internet safer.
+                </p>
+                <ul>
+                    <li><strong>Platform:</strong> HackerOne for coordinated vulnerability disclosure</li>
+                    <li><strong>Scope:</strong> All production systems, APIs, and web applications</li>
+                    <li><strong>Rewards:</strong> $500–$50,000 depending on severity and impact</li>
+                    <li><strong>Response:</strong> 24-hour acknowledgment, 7-day fix timeline for critical issues</li>
+                    <li><strong>Hall of Fame:</strong> Recognition for all legitimate submissions</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Incident Response -->
+        <div class="glass-card">
+            <h2>🚨 Incident Response Process</h2>
+            <p>
+                Our incident response program follows industry best practices and enables rapid detection, containment, and recovery from security incidents. We follow a structured 4-phase incident response model:
+            </p>
+
+            <div class="incident-phases">
+                <div class="phase-card">
+                    <div class="phase-number">1</div>
+                    <h4>Detect</h4>
+                    <p>Automated monitoring and user reports trigger alerts. Our SIEM correlates events to identify anomalies. Security team verifies incidents within 15 minutes of initial alert.</p>
+                </div>
+                <div class="phase-card">
+                    <div class="phase-number">2</div>
+                    <h4>Contain</h4>
+                    <p>Affected systems are isolated. Compromised accounts are disabled. Network segmentation limits lateral movement. Preserve evidence for forensic analysis.</p>
+                </div>
+                <div class="phase-card">
+                    <div class="phase-number">3</div>
+                    <h4>Eradicate</h4>
+                    <p>Remove attacker access, patch vulnerabilities, reset credentials. Rebuild systems from known-good backups. Verify integrity through cryptographic verification.</p>
+                </div>
+                <div class="phase-card">
+                    <div class="phase-number">4</div>
+                    <h4>Recover</h4>
+                    <p>Restore services to normal operation. Validate system functionality and security posture. Conduct post-mortem analysis and implement preventive measures.</p>
+                </div>
+            </div>
+
+            <h3>Incident Communications</h3>
+            <ul>
+                <li>Customers notified within 24 hours of confirmed incident affecting their data</li>
+                <li>Regular status updates during investigation and remediation</li>
+                <li>Post-incident report within 30 days (public for serious incidents)</li>
+                <li>Notification to relevant regulatory bodies as required by law</li>
+            </ul>
+        </div>
+
+        <!-- Data Sovereignty & Encryption -->
+        <div class="glass-card">
+            <h2>🌍 Data Sovereignty & Encryption Standards</h2>
+
+            <h3>Data at Rest</h3>
+            <p>
+                All persistent data is encrypted using AES-256-GCM, a symmetric encryption standard approved by the NSA for top-secret information. Encryption keys are managed through a hardware security module (HSM) with automatic key rotation every 90 days.
+            </p>
+            <ul>
+                <li>Database contents encrypted with authenticated encryption (AES-256-GCM)</li>
+                <li>File system encryption with per-file key derivation</li>
+                <li>Backup data encrypted before transmission to archive storage</li>
+                <li>Automatic scrubbing of encryption keys from memory</li>
+                <li>Confidential computing mode available for sensitive data processing</li>
+            </ul>
+
+            <h3>Data In Transit</h3>
+            <p>
+                All network communication uses TLS 1.3 with post-quantum hybrid key exchange. This means each encrypted connection uses both classical (ECDHE) and post-quantum (ML-KEM) key agreement, ensuring security regardless of future quantum breakthroughs.
+            </p>
+            <ul>
+                <li>Mandatory TLS 1.3 for all external connections</li>
+                <li>Hybrid post-quantum key exchange (ECDHE + ML-KEM)</li>
+                <li>Perfect forward secrecy prevents compromised keys from exposing past sessions</li>
+                <li>Certificate pinning prevents man-in-the-middle attacks</li>
+                <li>Automatic downgrade protection prevents protocol downgrades</li>
+                <li>Mutual TLS (mTLS) for all internal service-to-service communication</li>
+            </ul>
+
+            <h3>Encryption Standards Compliance</h3>
+            <ul>
+                <li><strong>FIPS 140-3:</strong> Cryptographic modules validated by NIST</li>
+                <li><strong>NIST SP 800-52:</strong> TLS configuration guidance implementation</li>
+                <li><strong>GCRYPT Library:</strong> NSA-approved cryptographic implementations</li>
+                <li><strong>Key Management Service (KMS):</strong> Centralized, audited key lifecycle management</li>
+            </ul>
+        </div>
+
+        <!-- Compliance Badges Timeline -->
+        <div class="glass-card">
+            <h2>📋 Compliance Roadmap & Certifications</h2>
+            <p>
+                HeadyOS is designed to meet the security and privacy requirements of regulated industries. We're actively pursuing formal compliance certifications:
+            </p>
+
+            <div class="compliance-timeline">
+                <div class="timeline-item">
+                    <div class="timeline-date">Q2 2025</div>
+                    <div class="timeline-content">
+                        <h4>SOC 2 Type I Audit</h4>
+                        <p>Initial compliance audit validating our security controls for confidentiality and integrity. Includes assessment of access controls, monitoring, and change management.</p>
+                        <span class="cert-badge">🔒 In Progress</span>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-date">Q4 2025</div>
+                    <div class="timeline-content">
+                        <h4>SOC 2 Type II Audit</h4>
+                        <p>Extended audit validating sustained compliance over a 6-month period with operational evidence of control effectiveness and incident response capabilities.</p>
+                        <span class="cert-badge">📅 Planned</span>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-date">Q1 2026</div>
+                    <div class="timeline-content">
+                        <h4>ISO 27001 Certification</h4>
+                        <p>International Information Security Management System certification covering all security domains: governance, asset management, access control, cryptography, incident management.</p>
+                        <span class="cert-badge">📅 Planned</span>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-date">Q2 2026</div>
+                    <div class="timeline-content">
+                        <h4>HIPAA Compliance (Healthcare)</h4>
+                        <p>Specialized compliance for healthcare organizations handling protected health information (PHI). Includes business associate agreements and breach notification procedures.</p>
+                        <span class="cert-badge">📅 Planned</span>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-date">Q3 2026</div>
+                    <div class="timeline-content">
+                        <h4>GDPR & CCPA Certification</h4>
+                        <p>Privacy and data protection compliance for European and California regulations. Data processing agreements, DPA mechanisms, and individual rights support.</p>
+                        <span class="cert-badge">📅 Planned</span>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-date">Q4 2026</div>
+                    <div class="timeline-content">
+                        <h4>FedRAMP Authorization</h4>
+                        <p>U.S. Federal government security authorization enabling deployment in government agency environments. Includes continuous compliance monitoring.</p>
+                        <span class="cert-badge">📅 Planned</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Security Contact -->
+        <div class="security-contact">
+            <h3>Security Incident Reporting</h3>
+            <p>Found a security vulnerability? We take security seriously.</p>
+            <p>
+                <strong>Email:</strong> <a href="mailto:security@headysystems.com">security@headysystems.com</a>
+            </p>
+            <p>
+                <strong>HackerOne:</strong> <a href="https://hackerone.com/headysystems" target="_blank">hackerone.com/headysystems</a>
+            </p>
+            <p style="color: #7a7a7a; font-size: 0.95em; margin-top: 20px;">
+                Please do not publicly disclose security vulnerabilities. We commit to responding within 24 hours and working with you on responsible disclosure through coordinated timeline agreements.
+            </p>
+        </div>
+    </div>
+
+    <script src="/nav-global.js"></script>
+</body>
+</html>

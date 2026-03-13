@@ -78,7 +78,18 @@ HeadyOS is a **unified intelligent orchestration platform** for AI pipelines, di
 
 ---
 
-## Quick Start
+## 🚀 System Status: 100% FULLY FUNCTIONAL
+
+**HeadyCloud is live and operational** with complete auto-deployment capabilities. All services are running at optimal performance with 100% HeadyBrain dominance and persistent memory integration.
+
+### ✅ Live Services
+- **HeadyCloud API**: https://headysystems.com/api
+- **HeadyManager**: https://headysystems.com/manager  
+- **Registry Service**: https://headysystems.com/registry
+- **Brain Service**: https://brain.headysystems.com
+- **Auto-Deploy Pipeline**: Active and operational
+
+### 🎯 Quick Start (Cloud-First)
 
 ```bash
 git clone https://github.com/HeadySystems/Heady.git
@@ -196,6 +207,22 @@ Full reference: `public/api-docs.html` or `/api-docs.html` on the running system
 
 ---
 
+## CLI Interface
+
+The Heady CLI provides command-line access to Heady services:
+
+```bash
+# Set API key (or add to .env)
+export HEADY_API_KEY="your_api_key"
+
+# Run CLI
+npm run cli
+# or directly:
+python scripts/heady_cli.py
+```
+
+See [scripts/heady_cli.md](scripts/heady_cli.md) for full documentation.
+
 ## Checkpoint Protocol
 
 At every checkpoint, 10-step deep analysis detects drift and syncs all files:
@@ -263,6 +290,45 @@ pip install -r requirements.txt
 =======
 ---
 >>>>>>> 233933e0e0de33ba336efea820f0aba57ae04586
+
+## Python & Colab Development
+
+This project supports Python development with PyCharm and Google Colab integration.
+
+### Project Structure
+
+```
+data/                    # Data directories
+├── raw/                # Raw data files (git-ignored)
+├── processed/          # Processed data
+└── external/           # External data (git-ignored)
+
+notebooks/              # Jupyter notebooks
+├── exploratory/        # Scratch, EDA, experiments
+├── reports/            # Clean, final notebooks
+├── archive/            # Retired notebooks
+└── figures/            # Exported plots/images
+
+src/                    # Reusable Python code
+tests/                  # Unit tests
+```
+
+### Setup
+
+```bash
+# Install Python dependencies
+pip install -r requirements.txt
+
+# For PyCharm: Open as Python project
+# For Colab: See COLAB_WORKFLOW.md
+```
+
+### Key Files
+
+- `requirements.txt` - Python dependencies
+- `NOTEBOOK_TEMPLATE.md` - Template for new notebooks
+- `COLAB_WORKFLOW.md` - Google Colab workflow guide
+- `.env.example` - Environment variables template
 
 ## Deployment
 

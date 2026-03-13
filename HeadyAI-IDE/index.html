@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>HeadyAI-IDE - Next Generation AI-Powered Development Environment</title>
+    <meta name="description" content="HeadyAI-IDE integrates Heady AI models directly into your coding workflow with sacred geometry design" />
+    <style>
+        /* Loading screen styles */
+        #loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #1e293b, #0f172a);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+        
+        .loading-logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .loading-logo svg {
+            width: 48px;
+            height: 48px;
+            color: #6366f1;
+        }
+        
+        .loading-logo h1 {
+            color: #e2e8f0;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin: 0;
+        }
+        
+        .loading-text {
+            color: #94a3b8;
+            font-size: 0.875rem;
+            margin-bottom: 2rem;
+        }
+        
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid rgba(99, 102, 241, 0.2);
+            border-top: 3px solid #6366f1;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .loading-progress {
+            margin-top: 1rem;
+            width: 200px;
+            height: 4px;
+            background: rgba(99, 102, 241, 0.2);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+        
+        .loading-progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #6366f1, #8b5cf6);
+            border-radius: 2px;
+            animation: progress 2s ease-in-out infinite;
+        }
+        
+        @keyframes progress {
+            0% { width: 0%; }
+            50% { width: 70%; }
+            100% { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+    <div id="loading">
+        <div class="loading-logo">
+            <svg fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 2L2 7v10c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-10-5z"/>
+            </svg>
+            <h1>HeadyAI-IDE</h1>
+        </div>
+        <div class="loading-text">Initializing AI-powered development environment...</div>
+        <div class="loading-spinner"></div>
+        <div class="loading-progress">
+            <div class="loading-progress-bar"></div>
+        </div>
+    </div>
+    
+    <div id="root"></div>
+    
+    <script type="module" src="/src/main.jsx"></script>
+    
+    <script>
+        // Hide loading screen when app is ready
+        window.addEventListener('load', function() {
+            setTimeout(function() {
+                const loading = document.getElementById('loading');
+                if (loading) {
+                    loading.style.opacity = '0';
+                    loading.style.transition = 'opacity 0.5s ease';
+                    setTimeout(() => loading.remove(), 500);
+                }
+            }, 1000);
+        });
+        
+        // Handle unhandled errors
+        window.addEventListener('error', function(e) {
+            console.error('HeadyAI-IDE Error:', e.error);
+        });
+        
+        // Handle unhandled promise rejections
+        window.addEventListener('unhandledrejection', function(e) {
+            console.error('HeadyAI-IDE Unhandled Promise Rejection:', e.reason);
+        });
+    </script>
+</body>
+</html>

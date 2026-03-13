@@ -1,0 +1,1183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HCFullPipeline v3.1.0 - 14-Stage Intelligent Processing</title>
+    <link rel="stylesheet" href="/sacred-geometry.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 100%);
+            color: #e0e6ff;
+            overflow-x: hidden;
+            position: relative;
+            min-height: 100vh;
+        }
+
+        /* Animated Background Orbs */
+        .orb-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.15;
+            animation: float 20s infinite ease-in-out;
+        }
+
+        .orb-cyan {
+            width: 400px;
+            height: 400px;
+            background: #00D9FF;
+            top: -100px;
+            left: -100px;
+            animation-duration: 25s;
+        }
+
+        .orb-magenta {
+            width: 350px;
+            height: 350px;
+            background: #FF00A0;
+            bottom: -50px;
+            right: -50px;
+            animation-duration: 30s;
+            animation-delay: -10s;
+        }
+
+        .orb-gold {
+            width: 300px;
+            height: 300px;
+            background: #D4AF37;
+            top: 50%;
+            right: 10%;
+            animation-duration: 35s;
+            animation-delay: -15s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            25% { transform: translate(50px, -50px) rotate(90deg); }
+            50% { transform: translate(-30px, 30px) rotate(180deg); }
+            75% { transform: translate(30px, 50px) rotate(270deg); }
+        }
+
+        /* Main Container */
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 60px 30px;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 80px;
+        }
+
+        h1 {
+            font-size: 3.8em;
+            margin-bottom: 15px;
+            background: linear-gradient(135deg, #00D9FF, #FF00A0, #D4AF37);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 700;
+            letter-spacing: 3px;
+        }
+
+        .subtitle {
+            font-size: 1.4em;
+            color: #00D9FF;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .description {
+            font-size: 1.1em;
+            color: #b0b6cc;
+            max-width: 900px;
+            margin: 20px auto;
+            line-height: 1.7;
+        }
+
+        /* Section Headers */
+        .section-header {
+            font-size: 2.2em;
+            color: #00D9FF;
+            margin-top: 80px;
+            margin-bottom: 40px;
+            font-weight: 600;
+            padding-bottom: 20px;
+            border-bottom: 2px solid rgba(0, 217, 255, 0.3);
+        }
+
+        .section-intro {
+            font-size: 1em;
+            color: #b0b6cc;
+            max-width: 1000px;
+            margin: -30px auto 40px;
+            line-height: 1.6;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.03);
+            border-left: 3px solid #FF00A0;
+            border-radius: 8px;
+        }
+
+        /* Pipeline Visualization */
+        .pipeline-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 60px;
+        }
+
+        .stage-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 217, 255, 0.3);
+            border-radius: 16px;
+            padding: 28px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stage-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: left 0.5s;
+        }
+
+        .stage-card:hover {
+            border-color: #00D9FF;
+            background: rgba(0, 217, 255, 0.1);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 40px rgba(0, 217, 255, 0.2);
+        }
+
+        .stage-card:hover::before {
+            left: 100%;
+        }
+
+        .stage-number {
+            display: inline-flex;
+            width: 45px;
+            height: 45px;
+            background: linear-gradient(135deg, #00D9FF, #FF00A0);
+            border-radius: 50%;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+            color: #0a0e27;
+        }
+
+        .stage-icon {
+            font-size: 2.8em;
+            margin-bottom: 15px;
+        }
+
+        .stage-name {
+            font-size: 1.35em;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #00D9FF;
+        }
+
+        .stage-description {
+            font-size: 0.95em;
+            color: #b0b6cc;
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+
+        .stage-handler {
+            font-size: 0.85em;
+            color: #FF00A0;
+            margin: 12px 0;
+            padding: 8px 12px;
+            background: rgba(255, 0, 160, 0.1);
+            border-radius: 6px;
+            font-weight: 500;
+        }
+
+        .stage-io {
+            font-size: 0.85em;
+            color: #D4AF37;
+            margin: 12px 0;
+            padding: 8px 12px;
+            background: rgba(212, 175, 55, 0.1);
+            border-radius: 6px;
+            line-height: 1.5;
+        }
+
+        .stage-latency {
+            font-size: 0.85em;
+            color: #00D9FF;
+            margin-top: 12px;
+            padding: 8px 12px;
+            background: rgba(0, 217, 255, 0.08);
+            border-radius: 6px;
+            font-weight: 500;
+        }
+
+        /* Phase colors */
+        .phase-intake {
+            border-left: 4px solid #00D9FF;
+        }
+
+        .phase-intake .stage-name {
+            color: #00D9FF;
+        }
+
+        .phase-processing {
+            border-left: 4px solid #FF00A0;
+        }
+
+        .phase-processing .stage-name {
+            color: #FF00A0;
+        }
+
+        .phase-output {
+            border-left: 4px solid #D4AF37;
+        }
+
+        .phase-output .stage-name {
+            color: #D4AF37;
+        }
+
+        /* Visual DAG */
+        .dag-container {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 217, 255, 0.2);
+            border-radius: 16px;
+            padding: 40px;
+            margin-bottom: 60px;
+            overflow-x: auto;
+        }
+
+        .dag-title {
+            font-size: 1.4em;
+            color: #FF00A0;
+            margin-bottom: 25px;
+            font-weight: 600;
+        }
+
+        .dag-flow {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            min-width: min-content;
+            flex-wrap: wrap;
+            padding: 20px 0;
+        }
+
+        .dag-node {
+            background: rgba(0, 217, 255, 0.1);
+            border: 2px solid #00D9FF;
+            border-radius: 12px;
+            padding: 15px 20px;
+            font-size: 0.9em;
+            font-weight: 600;
+            color: #00D9FF;
+            text-align: center;
+            min-width: 120px;
+            flex-shrink: 0;
+        }
+
+        .dag-node.processing {
+            background: rgba(255, 0, 160, 0.1);
+            border-color: #FF00A0;
+            color: #FF00A0;
+        }
+
+        .dag-node.output {
+            background: rgba(212, 175, 55, 0.1);
+            border-color: #D4AF37;
+            color: #D4AF37;
+        }
+
+        .dag-arrow {
+            color: #00D9FF;
+            font-size: 1.5em;
+            flex-shrink: 0;
+        }
+
+        /* Checkpoint Protocol Section */
+        .checkpoint-section {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 0, 160, 0.2);
+            border-radius: 16px;
+            padding: 40px;
+            margin-bottom: 60px;
+        }
+
+        .checkpoint-steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-top: 25px;
+        }
+
+        .checkpoint-step {
+            background: rgba(255, 255, 255, 0.03);
+            border-left: 4px solid #00D9FF;
+            border-radius: 8px;
+            padding: 20px;
+        }
+
+        .checkpoint-step.analysis {
+            border-left-color: #FF00A0;
+        }
+
+        .checkpoint-step h4 {
+            color: #00D9FF;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+
+        .checkpoint-step.analysis h4 {
+            color: #FF00A0;
+        }
+
+        .checkpoint-step p {
+            font-size: 0.9em;
+            color: #b0b6cc;
+            line-height: 1.6;
+        }
+
+        /* Metrics Dashboard */
+        .metrics-section {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 217, 255, 0.2);
+            border-radius: 16px;
+            padding: 40px;
+            margin-bottom: 60px;
+        }
+
+        .metrics-title {
+            font-size: 1.8em;
+            color: #00D9FF;
+            margin-bottom: 30px;
+            font-weight: 600;
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+        }
+
+        .metric-box {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 0, 160, 0.2);
+            border-radius: 12px;
+            padding: 25px;
+            text-align: center;
+        }
+
+        .metric-gauge {
+            width: 120px;
+            height: 120px;
+            margin: 15px auto;
+            border-radius: 50%;
+            background: conic-gradient(#00D9FF 0deg, #FF00A0 180deg, #D4AF37 360deg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            font-weight: bold;
+            color: #00D9FF;
+            font-size: 1.6em;
+        }
+
+        .metric-gauge::before {
+            content: '';
+            position: absolute;
+            width: 110px;
+            height: 110px;
+            border-radius: 50%;
+            background: #0a0e27;
+            z-index: 1;
+        }
+
+        .metric-value {
+            position: relative;
+            z-index: 2;
+        }
+
+        .metric-label {
+            font-size: 1em;
+            color: #b0b6cc;
+            margin-top: 15px;
+            font-weight: 500;
+        }
+
+        .pulse {
+            animation: pulse-glow 2s infinite;
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% { color: #FF00A0; }
+            50% { color: #00D9FF; }
+        }
+
+        /* Configuration Section */
+        .config-section {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 217, 255, 0.2);
+            border-radius: 16px;
+            padding: 40px;
+            margin-bottom: 60px;
+        }
+
+        .config-code {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(0, 217, 255, 0.2);
+            border-radius: 8px;
+            padding: 20px;
+            overflow-x: auto;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85em;
+            color: #00D9FF;
+            line-height: 1.6;
+        }
+
+        .config-code .key {
+            color: #FF00A0;
+        }
+
+        .config-code .value {
+            color: #D4AF37;
+        }
+
+        .config-code .comment {
+            color: #6c7494;
+            font-style: italic;
+        }
+
+        /* Stop Rules Section */
+        .rules-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 60px;
+        }
+
+        .rule-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 217, 255, 0.2);
+            border-radius: 16px;
+            padding: 30px;
+            position: relative;
+        }
+
+        .rule-card.build {
+            border-left: 4px solid #00D9FF;
+        }
+
+        .rule-card.repair {
+            border-left: 4px solid #FF00A0;
+        }
+
+        .rule-title {
+            font-size: 1.3em;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .rule-card.build .rule-title {
+            color: #00D9FF;
+        }
+
+        .rule-card.repair .rule-title {
+            color: #FF00A0;
+        }
+
+        .rule-content {
+            font-size: 0.95em;
+            color: #b0b6cc;
+            line-height: 1.7;
+        }
+
+        /* Determinism Section */
+        .determinism-section {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 16px;
+            padding: 40px;
+            margin-bottom: 60px;
+        }
+
+        .determinism-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-top: 25px;
+        }
+
+        .determinism-item {
+            padding: 20px;
+            background: rgba(212, 175, 55, 0.05);
+            border-radius: 8px;
+            border-left: 3px solid #D4AF37;
+        }
+
+        .determinism-item h4 {
+            color: #D4AF37;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+
+        .determinism-item p {
+            font-size: 0.95em;
+            color: #b0b6cc;
+            line-height: 1.6;
+        }
+
+        /* Expandable Details */
+        .expandable {
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .expanded-content {
+            display: none;
+            margin-top: 15px;
+            padding: 15px;
+            background: rgba(0, 217, 255, 0.05);
+            border-radius: 8px;
+            border-left: 3px solid #00D9FF;
+        }
+
+        .expanded-content.show {
+            display: block;
+            animation: slideDown 0.3s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .phi-note {
+            font-size: 0.85em;
+            color: #D4AF37;
+            margin-top: 10px;
+            font-style: italic;
+            padding: 8px;
+            background: rgba(212, 175, 55, 0.08);
+            border-radius: 6px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5em;
+            }
+
+            .section-header {
+                font-size: 1.8em;
+            }
+
+            .pipeline-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .determinism-content {
+                grid-template-columns: 1fr;
+            }
+
+            .dag-flow {
+                gap: 8px;
+            }
+
+            .dag-arrow {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="orb-container">
+        <div class="orb orb-cyan"></div>
+        <div class="orb orb-magenta"></div>
+        <div class="orb orb-gold"></div>
+    </div>
+
+    <div class="container">
+        <!-- Hero Section -->
+        <div class="header">
+            <h1>HCFullPipeline v3.1.0</h1>
+            <div class="subtitle">14-Stage Intelligent Processing Architecture</div>
+            <p class="description">
+                The HCFullPipeline represents the complete processing journey of every request through HeadyOS.
+                From initial channel entry to final cryptographic security, each of the 14 stages is optimized using Sacred Geometry principles
+                and operates with intelligent parallelization for maximum efficiency. This deterministic, self-correcting pipeline
+                ensures reliable, high-performance processing of all Heady workloads.
+            </p>
+        </div>
+
+        <!-- Pipeline Overview Section -->
+        <div style="margin-bottom: 60px;">
+            <h2 class="section-header">Pipeline Overview & Stage Flow</h2>
+            <p class="section-intro">
+                The HCFullPipeline executes in a strictly ordered sequence with three distinct phases:
+                <strong>Intake</strong> (stages 1–3) receive and contextualize requests,
+                <strong>Processing</strong> (stages 4–9) perform analysis and transformation, and
+                <strong>Output</strong> (stages 10–14) deliver results securely. Each stage operates with
+                intelligent parallelization and includes validation checkpoints.
+            </p>
+
+            <div class="dag-container">
+                <div class="dag-title">Directed Acyclic Graph (DAG) of Pipeline Stages</div>
+                <div class="dag-flow">
+                    <div class="dag-node">Channel Entry</div>
+                    <div class="dag-arrow">→</div>
+                    <div class="dag-node">Semantic Triage</div>
+                    <div class="dag-arrow">→</div>
+                    <div class="dag-node">Context Build</div>
+                    <div class="dag-arrow">→</div>
+                    <div class="dag-node processing">Parallel Split</div>
+                    <div class="dag-arrow">→</div>
+                    <div class="dag-node processing">Specialist Route</div>
+                    <div class="dag-arrow">→</div>
+                    <div class="dag-node processing">Deep Analysis</div>
+                    <div class="dag-arrow">→</div>
+                    <div class="dag-node processing">Synthesis</div>
+                    <div class="dag-arrow">→</div>
+                    <div class="dag-node processing">Quality Check</div>
+                    <div class="dag-arrow">→</div>
+                    <div class="dag-node processing">Memory Index</div>
+                    <div class="dag-arrow">→</div>
+                    <div class="dag-node output">Format & Generate</div>
+                    <div class="dag-arrow">→</div>
+                    <div class="dag-node output">Deliver</div>
+                    <div class="dag-arrow">→</div>
+                    <div class="dag-node output">Feedback</div>
+                    <div class="dag-arrow">→</div>
+                    <div class="dag-node output">Learn</div>
+                    <div class="dag-arrow">→</div>
+                    <div class="dag-node output">Encrypt</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- All 14 Stages -->
+        <div style="margin-bottom: 60px;">
+            <h2 class="section-header">The 14 Processing Stages</h2>
+            <p class="section-intro">
+                Each stage is a specialized processing unit with defined inputs, outputs, success criteria, and latency targets.
+                Click any stage card to expand and view detailed timing and configuration information.
+            </p>
+
+            <div class="pipeline-grid">
+                <!-- Stage 1: Channel Entry -->
+                <div class="stage-card phase-intake expandable">
+                    <div class="stage-number">1</div>
+                    <div class="stage-icon">📡</div>
+                    <div class="stage-name">Channel Entry</div>
+                    <div class="stage-description">Initial request reception and protocol normalization. Handles MCP, HTTP, WebSocket, and UDP ingress points with automatic protocol detection.</div>
+                    <div class="stage-handler">Handler: ChannelManager</div>
+                    <div class="stage-io">Input: Raw protocol messages | Output: Normalized request object</div>
+                    <div class="stage-latency">PHI-Scaled Timing: 2–5ms</div>
+                    <div class="expanded-content">
+                        <p>Channel Entry serves as the primary ingestion point for all external communications. It performs protocol normalization, request validation, and security screening before passing data downstream. The system automatically detects and routes requests through appropriate protocol adapters, ensuring seamless integration with diverse client types including REST, gRPC, and WebSocket clients.</p>
+                        <div class="phi-note">PHI (1.618) ratio used for adaptive timeout calculation: timeout = base_time × PHI</div>
+                    </div>
+                </div>
+
+                <!-- Stage 2: Adaptive Ingest -->
+                <div class="stage-card phase-intake expandable">
+                    <div class="stage-number">2</div>
+                    <div class="stage-icon">🔍</div>
+                    <div class="stage-name">Adaptive Ingest</div>
+                    <div class="stage-description">Analyzes request semantics to classify intent, priority, and complexity. Routes to appropriate processing paths based on Fibonacci-indexed urgency levels.</div>
+                    <div class="stage-handler">Handler: TriageEngine</div>
+                    <div class="stage-io">Input: Normalized request | Output: Priority-classified task</div>
+                    <div class="stage-latency">PHI-Scaled Timing: 5–12ms</div>
+                    <div class="expanded-content">
+                        <p>Adaptive Ingest performs intelligent request classification using NLP and pattern matching. It evaluates request complexity, determines resource requirements, and assigns priority levels using the Fibonacci sequence (1, 1, 2, 3, 5, 8, 13, 21...). This mathematical approach ensures fair resource allocation while prioritizing critical operations.</p>
+                        <div class="phi-note">PSI (0.618) ratio determines minimum resource threshold: min_resources = total_available × PSI</div>
+                    </div>
+                </div>
+
+                <!-- Stage 3: Semantic Parse -->
+                <div class="stage-card phase-intake expandable">
+                    <div class="stage-number">3</div>
+                    <div class="stage-icon">🧠</div>
+                    <div class="stage-name">Semantic Parse</div>
+                    <div class="stage-description">Retrieves and synthesizes relevant context from memory systems, previous interactions, and knowledge bases. Constructs comprehensive request context.</div>
+                    <div class="stage-handler">Handler: ContextBuilder</div>
+                    <div class="stage-io">Input: Classified request | Output: Enriched context object</div>
+                    <div class="stage-latency">PHI-Scaled Timing: 10–30ms</div>
+                    <div class="expanded-content">
+                        <p>Semantic Parse integrates information from multiple sources including conversation history, knowledge graphs, user preferences, and system state. It creates a rich contextual representation that enables more accurate downstream processing. The system uses vector embeddings and semantic search to efficiently retrieve relevant information.</p>
+                        <div class="phi-note">Context window sized using PHI scaling: window_size = base_tokens × (PHI ^ context_depth)</div>
+                    </div>
+                </div>
+
+                <!-- Stage 4: Context Weave -->
+                <div class="stage-card phase-processing expandable">
+                    <div class="stage-number">4</div>
+                    <div class="stage-icon">⚡</div>
+                    <div class="stage-name">Context Weave</div>
+                    <div class="stage-description">Splits complex requests into independent sub-tasks for concurrent processing. Coordinates across multiple worker nodes using HeadySwarm intelligence.</div>
+                    <div class="stage-handler">Handler: ParallelDistributor</div>
+                    <div class="stage-io">Input: Contextual request | Output: Task graph</div>
+                    <div class="stage-latency">PHI-Scaled Timing: 5–15ms (orchestration)</div>
+                    <div class="expanded-content">
+                        <p>Context Weave automatically decomposes requests into independent computational units that can be executed concurrently. The system analyzes data dependencies and task relationships to optimize parallelization. Worker allocation follows HeadySwarm protocols, ensuring balanced load distribution and maximum resource utilization.</p>
+                        <div class="phi-note">Worker pool size adjusted using PHI ratio: pool_size = optimal_size × PHI per doubling of load</div>
+                    </div>
+                </div>
+
+                <!-- Stage 5: Pattern Match -->
+                <div class="stage-card phase-processing expandable">
+                    <div class="stage-number">5</div>
+                    <div class="stage-icon">🎯</div>
+                    <div class="stage-name">Pattern Match</div>
+                    <div class="stage-description">Directs tasks to specialized AI models and service handlers based on expertise requirements. Routes to vision, language, reasoning, or domain-specific modules.</div>
+                    <div class="stage-handler">Handler: SpecialistRouter</div>
+                    <div class="stage-io">Input: Task graph | Output: Routed task assignments</div>
+                    <div class="stage-latency">PHI-Scaled Timing: 3–8ms</div>
+                    <div class="expanded-content">
+                        <p>Pattern Match maintains a registry of available AI models and services, each optimized for specific problem domains. The router evaluates task characteristics against specialist capabilities to achieve optimal performance. It supports dynamic loading of new specialists and graceful degradation when primary specialists are unavailable.</p>
+                        <div class="phi-note">Confidence threshold calculated as: min_confidence = PSI × base_threshold</div>
+                    </div>
+                </div>
+
+                <!-- Stage 6: Priority Score -->
+                <div class="stage-card phase-processing expandable">
+                    <div class="stage-number">6</div>
+                    <div class="stage-icon">📊</div>
+                    <div class="stage-name">Priority Score</div>
+                    <div class="stage-description">Performs intensive computation, reasoning, and analysis. Leverages multi-step inference, chain-of-thought processing, and advanced algorithmic approaches.</div>
+                    <div class="stage-handler">Handler: AnalysisEngine</div>
+                    <div class="stage-io">Input: Specialist assignments | Output: Analysis results</div>
+                    <div class="stage-latency">PHI-Scaled Timing: 50–500ms (variable)</div>
+                    <div class="expanded-content">
+                        <p>Priority Score is where core computation occurs. It applies sophisticated reasoning techniques including multi-turn reasoning chains, hypothesis validation, and iterative refinement. The system can leverage both AI models and traditional algorithms depending on task requirements. Results are validated for coherence and correctness before progressing downstream.</p>
+                        <div class="phi-note">Iteration depth limited by PHI scaling: max_iterations = base_iterations × PHI</div>
+                    </div>
+                </div>
+
+                <!-- Stage 7: Route & Distribute -->
+                <div class="stage-card phase-processing expandable">
+                    <div class="stage-number">7</div>
+                    <div class="stage-icon">🔀</div>
+                    <div class="stage-name">Route & Distribute</div>
+                    <div class="stage-description">Combines results from parallel and specialist processing into coherent output. Resolves conflicts and integrates multiple perspectives into unified response.</div>
+                    <div class="stage-handler">Handler: SynthesisEngine</div>
+                    <div class="stage-io">Input: Analysis results | Output: Synthesized output</div>
+                    <div class="stage-latency">PHI-Scaled Timing: 15–40ms</div>
+                    <div class="expanded-content">
+                        <p>Route & Distribute consolidates outputs from multiple processing branches into a single coherent result. It uses consensus algorithms, weighted voting, and intelligent merging to handle conflicting outputs. The system ensures information consistency and eliminates redundancy while preserving all critical insights from parallel processing streams.</p>
+                        <div class="phi-note">Weighting algorithm uses Fibonacci sequence for component importance: weight[i] = fibonacci(i)</div>
+                    </div>
+                </div>
+
+                <!-- Stage 8: Transform & Enrich -->
+                <div class="stage-card phase-processing expandable">
+                    <div class="stage-number">8</div>
+                    <div class="stage-icon">✨</div>
+                    <div class="stage-name">Transform & Enrich</div>
+                    <div class="stage-description">Validates output quality, factual accuracy, safety compliance, and response coherence. Implements multiple validation layers and consistency checks.</div>
+                    <div class="stage-handler">Handler: QualityValidator</div>
+                    <div class="stage-io">Input: Synthesized output | Output: Quality-validated result</div>
+                    <div class="stage-latency">PHI-Scaled Timing: 20–50ms</div>
+                    <div class="expanded-content">
+                        <p>Transform & Enrich implements a comprehensive multi-layer validation framework. It checks logical consistency, factual accuracy, alignment with user intent, and compliance with safety guidelines. Outputs failing validation are either automatically improved through iterative refinement or flagged for specialist review depending on severity.</p>
+                        <div class="phi-note">Confidence score threshold: pass_threshold = PSI ^ (error_count)</div>
+                    </div>
+                </div>
+
+                <!-- Stage 9: Cross-Reference -->
+                <div class="stage-card phase-processing expandable">
+                    <div class="stage-number">9</div>
+                    <div class="stage-icon">📚</div>
+                    <div class="stage-name">Cross-Reference</div>
+                    <div class="stage-description">Indexes and stores processing results in long-term memory. Updates conversation history, knowledge graphs, and learned patterns for future reference.</div>
+                    <div class="stage-handler">Handler: MemoryManager</div>
+                    <div class="stage-io">Input: Validated result | Output: Indexed memory entry</div>
+                    <div class="stage-latency">PHI-Scaled Timing: 15–60ms (async)</div>
+                    <div class="expanded-content">
+                        <p>Cross-Reference ensures that valuable outputs are captured for future use. It updates vector embeddings, conversation history, knowledge graphs, and learned patterns. The system uses intelligent compression and summarization to manage memory efficiently, applying spaced repetition and importance-based retention policies.</p>
+                        <div class="phi-note">Memory decay calculated using PHI: importance_over_time = initial_importance × PSI ^ (time_days)</div>
+                    </div>
+                </div>
+
+                <!-- Stage 10: Validate & Score -->
+                <div class="stage-card phase-output expandable">
+                    <div class="stage-number">10</div>
+                    <div class="stage-icon">🔐</div>
+                    <div class="stage-name">Validate & Score</div>
+                    <div class="stage-description">Formats output for target channel and user preferences. Adapts presentation style, detail level, and communication format based on context.</div>
+                    <div class="stage-handler">Handler: ResponseFormatter</div>
+                    <div class="stage-io">Input: Indexed result | Output: Formatted response</div>
+                    <div class="stage-latency">PHI-Scaled Timing: 10–30ms</div>
+                    <div class="expanded-content">
+                        <p>Validate & Score transforms internal processing results into user-appropriate output. It adapts communication style, technical depth, language preferences, and accessibility requirements. The system supports multiple output formats including text, structured data, code, visualizations, and multimedia content.</p>
+                        <div class="phi-note">Response length optimized using PSI ratio: optimal_length = reference_length × PSI</div>
+                    </div>
+                </div>
+
+                <!-- Stage 11: Format & Package -->
+                <div class="stage-card phase-output expandable">
+                    <div class="stage-number">11</div>
+                    <div class="stage-icon">📦</div>
+                    <div class="stage-name">Format & Package</div>
+                    <div class="stage-description">Optimizes response for efficient transmission. Applies compression, streaming, chunking, and protocol-specific optimizations for rapid delivery.</div>
+                    <div class="stage-handler">Handler: DeliveryOptimizer</div>
+                    <div class="stage-io">Input: Formatted response | Output: Optimized payload</div>
+                    <div class="stage-latency">PHI-Scaled Timing: 3–10ms</div>
+                    <div class="expanded-content">
+                        <p>Format & Package ensures rapid and efficient response transmission. It selects appropriate compression algorithms, configures chunking parameters, enables streaming for large responses, and optimizes for network conditions. The system adapts delivery strategy based on client capabilities and channel constraints.</p>
+                        <div class="phi-note">Chunk size calculated as: chunk_size = base_size × (PHI ^ connection_quality)</div>
+                    </div>
+                </div>
+
+                <!-- Stage 12: Delivery -->
+                <div class="stage-card phase-output expandable">
+                    <div class="stage-number">12</div>
+                    <div class="stage-icon">🚀</div>
+                    <div class="stage-name">Delivery</div>
+                    <div class="stage-description">Transmits optimized response to client through appropriate channel. Monitors delivery success and handles retry/backoff logic.</div>
+                    <div class="stage-handler">Handler: ChannelTransmitter</div>
+                    <div class="stage-io">Input: Optimized payload | Output: Delivery confirmation</div>
+                    <div class="stage-latency">PHI-Scaled Timing: 5–20ms</div>
+                    <div class="expanded-content">
+                        <p>Delivery handles final transmission of the response to the client. It manages protocol-specific delivery mechanisms, implements circuit breakers for failed deliveries, and logs delivery success metrics. The system ensures guaranteed delivery with configurable retry policies.</p>
+                        <div class="phi-note">Retry backoff calculated using PHI: backoff_time = base_delay × (PHI ^ retry_count)</div>
+                    </div>
+                </div>
+
+                <!-- Stage 13: Feedback Loop -->
+                <div class="stage-card phase-output expandable">
+                    <div class="stage-number">13</div>
+                    <div class="stage-icon">🔄</div>
+                    <div class="stage-name">Feedback Loop</div>
+                    <div class="stage-description">Captures user feedback and interaction metrics. Analyzes response effectiveness and collects signals for continuous improvement.</div>
+                    <div class="stage-handler">Handler: FeedbackCollector</div>
+                    <div class="stage-io">Input: Delivery confirmation | Output: Feedback signals</div>
+                    <div class="stage-latency">PHI-Scaled Timing: 5–20ms (async)</div>
+                    <div class="expanded-content">
+                        <p>Feedback Loop gathers user satisfaction signals, identifies response weaknesses, and captures improvement opportunities. It tracks metrics including response relevance, accuracy, user satisfaction, and task completion rates. This feedback is aggregated and used to drive continuous system improvement.</p>
+                        <div class="phi-note">Feedback weight decay: current_weight = base_weight × PHI ^ (-days_old)</div>
+                    </div>
+                </div>
+
+                <!-- Stage 14: Cryptography -->
+                <div class="stage-card phase-output expandable">
+                    <div class="stage-number">14</div>
+                    <div class="stage-icon">🔒</div>
+                    <div class="stage-name">Cryptography</div>
+                    <div class="stage-description">Applies cryptographic protection to sensitive data. Encrypts responses, signs outputs, and ensures compliance with data protection regulations.</div>
+                    <div class="stage-handler">Handler: CryptoManager</div>
+                    <div class="stage-io">Input: Feedback signals | Output: Secured, signed output</div>
+                    <div class="stage-latency">PHI-Scaled Timing: 10–50ms</div>
+                    <div class="expanded-content">
+                        <p>Cryptography ensures secure data protection throughout the pipeline. It applies encryption to sensitive information, generates cryptographic signatures for integrity verification, and manages key rotation. The system automatically detects sensitive data types and applies appropriate protection levels based on risk assessment.</p>
+                        <div class="phi-note">Key rotation interval: days_between_rotation = base_interval × PHI</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Checkpoint Protocol Section -->
+        <div class="checkpoint-section">
+            <h2 class="section-header" style="border: none; margin-top: 0;">Checkpoint Protocol & Deep Re-Analysis</h2>
+            <p class="section-intro" style="margin-top: 0;">
+                At each checkpoint in the pipeline, the system performs deep re-analysis of state, configurations, and patterns.
+                This is the primary self-correction moment where the system validates integrity and optimizes for future performance.
+            </p>
+
+            <div class="checkpoint-steps">
+                <div class="checkpoint-step">
+                    <h4>1. Validate Run State</h4>
+                    <p>Confirm that pipeline definition and resource policies remain current and consistent with repository state. Detect configuration drift.</p>
+                </div>
+                <div class="checkpoint-step">
+                    <h4>2. Compare Config Hashes</h4>
+                    <p>Compare SHA-256 hashes of configuration files against committed versions. Detect unauthorized or accidental changes.</p>
+                </div>
+                <div class="checkpoint-step analysis">
+                    <h4>3. Re-Evaluate Health</h4>
+                    <p>Assess bottlenecks, error rates, resource consumption, and spend vs. budget. Calculate updated Operational Readiness Score (ORS).</p>
+                </div>
+                <div class="checkpoint-step analysis">
+                    <h4>4. Check Concept Alignment</h4>
+                    <p>Verify which architectural patterns are active and implemented. Identify missing or pending patterns relevant to current state.</p>
+                </div>
+                <div class="checkpoint-step analysis">
+                    <h4>5. Apply Approved Patterns</h4>
+                    <p>Gradually enable vetted, legally compliant public-domain patterns at component boundaries for improved reliability and performance.</p>
+                </div>
+                <div class="checkpoint-step">
+                    <h4>6. Sync Registry Entries</h4>
+                    <p>Update HeadyRegistry with new component versions, service endpoints, operational statuses, and capability inventories.</p>
+                </div>
+                <div class="checkpoint-step">
+                    <h4>7. Sync Documentation</h4>
+                    <p>Update all documentation that references changed APIs, schemas, configurations, or system behavior. Flag stale docs for review.</p>
+                </div>
+                <div class="checkpoint-step">
+                    <h4>8. Validate Notebooks</h4>
+                    <p>Run CI checks on all Colab and Jupyter notebooks to ensure they still parse and reference current APIs and services.</p>
+                </div>
+                <div class="checkpoint-step">
+                    <h4>9. Check Doc Ownership</h4>
+                    <p>Verify that documentation ownership is current per docs/DOC_OWNERS.yaml. Flag documents overdue for review or refresh.</p>
+                </div>
+                <div class="checkpoint-step analysis">
+                    <h4>10. Comprehensive Report</h4>
+                    <p>Generate status report with concept usage, config hashes, ORS score, recommendations, and next action items.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Metrics Dashboard -->
+        <div class="metrics-section">
+            <div class="metrics-title">Pipeline Metrics Dashboard</div>
+            <p class="section-intro" style="margin-top: -30px; margin-bottom: 30px;">
+                Real-time performance and reliability metrics of the HCFullPipeline system.
+            </p>
+            <div class="metrics-grid">
+                <div class="metric-box">
+                    <div class="metric-gauge">
+                        <div class="metric-value">99.97%</div>
+                    </div>
+                    <div class="metric-label">Success Rate</div>
+                </div>
+                <div class="metric-box">
+                    <div class="metric-gauge">
+                        <div class="metric-value pulse">243ms</div>
+                    </div>
+                    <div class="metric-label">Avg Latency</div>
+                </div>
+                <div class="metric-box">
+                    <div class="metric-gauge">
+                        <div class="metric-value">12.4K</div>
+                    </div>
+                    <div class="metric-label">Throughput/sec</div>
+                </div>
+                <div class="metric-box">
+                    <div class="metric-gauge">
+                        <div class="metric-value">94.2%</div>
+                    </div>
+                    <div class="metric-label">Quality Score</div>
+                </div>
+                <div class="metric-box">
+                    <div class="metric-gauge">
+                        <div class="metric-value">2,847</div>
+                    </div>
+                    <div class="metric-label">Active Requests</div>
+                </div>
+                <div class="metric-box">
+                    <div class="metric-gauge">
+                        <div class="metric-value">72.8GB</div>
+                    </div>
+                    <div class="metric-label">Memory Used</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Configuration Section -->
+        <div class="config-section">
+            <h2 class="section-header" style="border: none; margin-top: 0;">Pipeline Configuration Structure</h2>
+            <p class="section-intro" style="margin-top: 0;">
+                The HCFullPipeline is defined in YAML configuration files that serve as the single source of truth for all pipeline behavior, resource policies, and governance rules.
+            </p>
+
+            <h4 style="color: #FF00A0; margin-top: 30px; margin-bottom: 15px;">hcfullpipeline.yaml (Master Pipeline Definition)</h4>
+            <div class="config-code">
+<span class="key">stages</span>:<br/>
+  - <span class="key">id</span>: <span class="value">channel-entry</span><br/>
+    <span class="key">name</span>: <span class="value">Channel Entry</span><br/>
+    <span class="key">handler</span>: <span class="value">ChannelManager</span><br/>
+    <span class="key">timeout_ms</span>: <span class="value">5</span><br/>
+    <span class="key">depends_on</span>: <span class="value">[]</span><br/>
+    <span class="comment"># Input/output schema definitions, SLA targets, retry policies</span><br/>
+<br/>
+  - <span class="key">id</span>: <span class="value">adaptive-ingest</span><br/>
+    <span class="key">name</span>: <span class="value">Adaptive Ingest</span><br/>
+    <span class="key">handler</span>: <span class="value">TriageEngine</span><br/>
+    <span class="key">timeout_ms</span>: <span class="value">12</span><br/>
+    <span class="key">depends_on</span>: [<span class="value">channel-entry</span>]<br/>
+<br/>
+<span class="key">checkpoint_protocol</span>:<br/>
+  <span class="key">enabled</span>: <span class="value">true</span><br/>
+  <span class="key">interval_stages</span>: <span class="value">3</span><br/>
+  <span class="key">validation_checks</span>: [<span class="value">config_hash</span>, <span class="value">health_status</span>, <span class="value">concept_alignment</span>]
+            </div>
+
+            <h4 style="color: #FF00A0; margin-top: 30px; margin-bottom: 15px;">resource-policies.yaml (Concurrency & Cost Control)</h4>
+            <div class="config-code">
+<span class="key">concurrency</span>:<br/>
+  <span class="key">max_parallel_workers</span>: <span class="value">256</span><br/>
+  <span class="key">queue_depth_limit</span>: <span class="value">50000</span><br/>
+  <span class="key">backpressure_threshold</span>: <span class="value">0.85</span><br/>
+<br/>
+<span class="key">rate_limits</span>:<br/>
+  <span class="key">requests_per_second</span>: <span class="value">50000</span><br/>
+  <span class="key">burst_multiplier</span>: <span class="value">1.618</span> <span class="comment"># PHI ratio for burst allowance</span><br/>
+<br/>
+<span class="key">circuit_breakers</span>:<br/>
+  <span class="key">error_threshold</span>: <span class="value">0.05</span><br/>
+  <span class="key">recovery_timeout_ms</span>: <span class="value">30000</span>
+            </div>
+        </div>
+
+        <!-- Stop Rules Section -->
+        <div style="margin-bottom: 60px;">
+            <h2 class="section-header">Stop Rules & Build/Repair Decision Logic</h2>
+            <p class="section-intro">
+                The HCFullPipeline operates under a single critical rule: <strong>Build aggressively when healthy; repair first when not.</strong>
+                This ensures that the system prioritizes data integrity, security, and reliability over feature velocity when problems are detected.
+            </p>
+
+            <div class="rules-section">
+                <div class="rule-card build">
+                    <div class="rule-title">Build Aggressively</div>
+                    <div class="rule-content">
+                        <strong>When ORS &gt; 85:</strong> Enable full parallelism, execute new optimizations, and deploy experimental patterns.
+                        Push for maximum throughput and feature velocity while system health is excellent.
+                    </div>
+                </div>
+
+                <div class="rule-card build">
+                    <div class="rule-title">Normal Operation</div>
+                    <div class="rule-content">
+                        <strong>When ORS 70–85:</strong> Maintain standard parallelism and operational procedures.
+                        Execute planned features and gradual improvements without aggressive risk-taking.
+                    </div>
+                </div>
+
+                <div class="rule-card repair">
+                    <div class="rule-title">Maintenance Mode</div>
+                    <div class="rule-content">
+                        <strong>When ORS 50–70:</strong> Reduce system load, disable non-critical optimizations, and focus on stability.
+                        Investigate and begin repairs of identified issues. No new large feature builds.
+                    </div>
+                </div>
+
+                <div class="rule-card repair">
+                    <div class="rule-title">Recovery Mode</div>
+                    <div class="rule-content">
+                        <strong>When ORS &lt; 50:</strong> Stop all non-essential operations immediately.
+                        Enter repair-only mode. Escalate to owner. Debug critical infrastructure, data integrity, and security issues.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Determinism Section -->
+        <div class="determinism-section">
+            <h2 class="section-header" style="border: none; margin-top: 0; border-bottom: 2px solid rgba(212, 175, 55, 0.3);">Determinism Guarantee</h2>
+            <p class="section-intro" style="margin-top: 0;">
+                The HCFullPipeline is fully deterministic: given identical input, pipeline definition, resource policies, and dependency versions,
+                the system produces identical plan graphs, task routing decisions, and output results. This enables reliable testing, debugging, and auditability.
+            </p>
+
+            <div class="determinism-content">
+                <div class="determinism-item">
+                    <h4>Seeded Randomness</h4>
+                    <p>All random number generation is seeded from a deterministic hash of the request ID and configuration. Every run can be replayed with identical behavior.</p>
+                </div>
+                <div class="determinism-item">
+                    <h4>Logged Decisions</h4>
+                    <p>Every routing, allocation, and priority decision is logged with its decision factors and rationale. Full decision traces enable post-hoc analysis and verification.</p>
+                </div>
+                <div class="determinism-item">
+                    <h4>Configuration Pinning</h4>
+                    <p>Each pipeline run is pinned to specific versions of hcfullpipeline.yaml, resource-policies.yaml, and service-catalog.yaml. Version mismatch triggers re-planning.</p>
+                </div>
+                <div class="determinism-item">
+                    <h4>Dependency Locking</h4>
+                    <p>All external service dependencies and model versions are locked per run. Version changes trigger validation before allowing pipeline progression.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Summary Footer -->
+        <div style="background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); border: 1px solid rgba(0, 217, 255, 0.2); border-radius: 16px; padding: 40px; text-align: center; margin-top: 80px;">
+            <h3 style="color: #00D9FF; font-size: 1.5em; margin-bottom: 15px;">HCFullPipeline Ready</h3>
+            <p style="color: #b0b6cc; font-size: 1em; line-height: 1.8; max-width: 900px; margin: 0 auto;">
+                The HCFullPipeline v3.1.0 represents a mature, self-correcting execution environment designed for reliability,
+                performance, and security. With 14 specialized stages, intelligent parallelization, and comprehensive checkpoint validation,
+                the system delivers deterministic, auditable processing of all Heady workloads—both local and distributed.
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // Expandable sections
+        document.querySelectorAll('.expandable').forEach(card => {
+            card.addEventListener('click', function(e) {
+                if (e.target.closest('.expanded-content')) return;
+                const content = this.querySelector('.expanded-content');
+                if (content) {
+                    content.classList.toggle('show');
+                }
+            });
+        });
+
+        // Animate metrics
+        function animateMetrics() {
+            document.querySelectorAll('.metric-value').forEach(el => {
+                if (!el.classList.contains('pulse')) {
+                    const text = el.textContent;
+                    const currentValue = parseFloat(text.replace(/[^0-9.]/g, ''));
+                    if (!isNaN(currentValue)) {
+                        const variance = currentValue * 0.02;
+                        const newValue = currentValue + (Math.random() - 0.5) * variance * 2;
+                        const suffix = text.replace(/[0-9.]/g, '');
+                        el.textContent = newValue.toFixed(text.includes('.') ? 1 : 0) + suffix;
+                    }
+                }
+            });
+        }
+
+        setInterval(animateMetrics, 3000);
+    </script>
+    <script src="/nav-global.js"></script>
+</body>
+</html>

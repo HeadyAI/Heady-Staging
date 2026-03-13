@@ -63,7 +63,7 @@ npm start      # Production mode
 ### 3. Verify It's Running
 
 ```bash
-curl http://localhost:3300/api/health
+curl http://api.headysystems.com:3300/api/health
 # → {"ok":true,"service":"heady-manager","ts":"..."}
 ```
 
@@ -71,11 +71,11 @@ curl http://localhost:3300/api/health
 
 | Interface | URL | Description |
 |-----------|-----|-------------|
-| Sacred Geometry UI | http://localhost:3300 | Main dashboard |
-| Admin IDE | http://localhost:3300/admin | Admin management |
-| API Health | http://localhost:3300/api/health | Health check |
-| System Status | http://localhost:3300/api/system/status | Full status |
-| Pipeline State | http://localhost:3300/api/pipeline/state | Pipeline view |
+| Sacred Geometry UI | http://api.headysystems.com:3300 | Main dashboard |
+| Admin IDE | http://api.headysystems.com:3300/admin | Admin management |
+| API Health | http://api.headysystems.com:3300/api/health | Health check |
+| System Status | http://api.headysystems.com:3300/api/system/status | Full status |
+| Pipeline State | http://api.headysystems.com:3300/api/pipeline/state | Pipeline view |
 
 ---
 
@@ -128,10 +128,10 @@ Switch between environments using the Heady Layer Switcher:
 
 | Layer | Endpoint | Color |
 |-------|----------|-------|
-| `local` | localhost:3300 | Green |
-| `cloud-me` | heady-manager-headyme.onrender.com | Cyan |
-| `cloud-sys` | heady-manager-headysystems.onrender.com | Magenta |
-| `cloud-conn` | heady-manager-headyconnection.onrender.com | Yellow |
+| `local` | api.headysystems.com:3300 | Green |
+| `cloud-me` | app.headysystems.com | Cyan |
+| `cloud-sys` | app.headysystems.com | Magenta |
+| `cloud-conn` | app.headysystems.com | Yellow |
 | `hybrid` | Local + Cloud | White |
 
 ```powershell
@@ -146,17 +146,17 @@ hl status          # Current active layer
 
 ### Pipeline Operations
 ```bash
-curl -X POST localhost:3300/api/pipeline/run     # Trigger pipeline
-curl localhost:3300/api/pipeline/state            # Current state
-curl localhost:3300/api/pipeline/config           # Config summary
+curl -X POST api.headysystems.com:3300/api/pipeline/run     # Trigger pipeline
+curl api.headysystems.com:3300/api/pipeline/state            # Current state
+curl api.headysystems.com:3300/api/pipeline/config           # Config summary
 ```
 
 ### System Operations
 ```bash
-curl localhost:3300/api/health                    # Health check
-curl localhost:3300/api/system/status             # Full status
-curl localhost:3300/api/nodes                     # AI node status
-curl localhost:3300/api/registry                  # Registry catalog
+curl api.headysystems.com:3300/api/health                    # Health check
+curl api.headysystems.com:3300/api/system/status             # Full status
+curl api.headysystems.com:3300/api/nodes                     # AI node status
+curl api.headysystems.com:3300/api/registry                  # Registry catalog
 ```
 
 ### Build & Deploy
@@ -170,16 +170,16 @@ curl localhost:3300/api/registry                  # Registry catalog
 
 ## First 10 Tasks to Try
 
-1. **Check system health** — `curl localhost:3300/api/health`
-2. **View pipeline state** — `curl localhost:3300/api/pipeline/state`
-3. **Browse HeadyRegistry** — `curl localhost:3300/api/registry`
-4. **Run a pipeline cycle** — `curl -X POST localhost:3300/api/pipeline/run`
-5. **Check readiness score** — `curl localhost:3300/api/readiness/evaluate`
-6. **View AI nodes** — `curl localhost:3300/api/nodes`
+1. **Check system health** — `curl api.headysystems.com:3300/api/health`
+2. **View pipeline state** — `curl api.headysystems.com:3300/api/pipeline/state`
+3. **Browse HeadyRegistry** — `curl api.headysystems.com:3300/api/registry`
+4. **Run a pipeline cycle** — `curl -X POST api.headysystems.com:3300/api/pipeline/run`
+5. **Check readiness score** — `curl api.headysystems.com:3300/api/readiness/evaluate`
+6. **View AI nodes** — `curl api.headysystems.com:3300/api/nodes`
 7. **Switch cloud layer** — `hl switch cloud-me`
 8. **Run checkpoint sync** — `.\scripts\checkpoint-sync.ps1`
 9. **Open a Colab notebook** — `notebooks/quick-start/heady-quick-start.ipynb`
-10. **View system stories** — `curl localhost:3300/api/stories`
+10. **View system stories** — `curl api.headysystems.com:3300/api/stories`
 
 ---
 
@@ -199,8 +199,8 @@ curl localhost:3300/api/registry                  # Registry catalog
 
 - Ask **HeadyBuddy**: "Show me my current projects in HeadyRegistry"
 - Ask **Story Driver**: "What changed this week?"
-- Check **Readiness**: `curl localhost:3300/api/readiness/evaluate`
-- Run **Diagnostics**: `curl localhost:3300/api/health-checks/run`
+- Check **Readiness**: `curl api.headysystems.com:3300/api/readiness/evaluate`
+- Run **Diagnostics**: `curl api.headysystems.com:3300/api/health-checks/run`
 
 ---
 
