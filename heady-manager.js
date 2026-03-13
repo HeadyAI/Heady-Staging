@@ -694,6 +694,18 @@ app.get("/api/health", (req, res) => {
   });
 });
 
+// ─── Render Health Check Alias (Bug #2 Fix) ─────────────────────────
+app.get("/api/brain/health", (req, res) => {
+  res.json({
+    ok: true,
+    service: "heady-manager",
+    version: "3.0.0",
+    ts: new Date().toISOString(),
+    uptime: process.uptime(),
+    memory: process.memoryUsage(),
+  });
+});
+
 app.get("/api/pulse", (req, res) => {
   res.json({
     ok: true,
@@ -1949,6 +1961,124 @@ try {
   }
 } catch (err) {
   logger.warn(`  ⚠ Secrets/Cloudflare routes not registered: ${err.message}`);
+}
+
+// ─── HeadyBee Agent System (Bug #3 Fix) ──────────────────────────────
+let beeFactory = null;
+try {
+  beeFactory = require("./agents/bee-factory");
+  if (typeof beeFactory.registerBeeRoutes === "function") {
+    beeFactory.registerBeeRoutes(app);
+  }
+  console.log("  ∞ HeadyBee Agent Factory: LOADED");
+} catch (err) {
+  console.warn(`  ⚠ HeadyBee not loaded: ${err.message}`);
+}
+
+// ─── Latent Space / Vector Memory (Bug #4 Fix) ──────────────────────
+let latentSpace = null;
+try {
+  const { HCLatentSpace, registerLatentSpaceRoutes } = require("./src/hc_latent_space");
+  latentSpace = new HCLatentSpace({ backend: "memory" });
+  registerLatentSpaceRoutes(app, latentSpace);
+  console.log("  ∞ Latent Space: LOADED (" + latentSpace.dimensions + "d, " + latentSpace.backend + " backend)");
+} catch (err) {
+  console.warn(`  ⚠ Latent Space not loaded: ${err.message}`);
+}
+
+// ─── Orchestrator Engine (Bug #5 Fix) ────────────────────────────────
+let orchestrator = null;
+try {
+  const orchMod = require("./src/hc_orchestrator");
+  if (orchMod.HCOrchestrator) {
+    orchestrator = new orchMod.HCOrchestrator();
+    if (typeof orchMod.registerOrchestratorRoutes === "function") {
+      orchMod.registerOrchestratorRoutes(app, orchestrator);
+    }
+  } else if (typeof orchMod === "function") {
+    orchestrator = orchMod;
+  } else {
+    orchestrator = orchMod;
+  }
+  console.log("  ∞ Orchestrator Engine: LOADED");
+} catch (err) {
+  console.warn(`  ⚠ Orchestrator not loaded: ${err.message}`);
+}
+
+// ─── Conductor / AI Brain (Bug #6 Fix) ───────────────────────────────
+let conductor = null;
+try {
+  const condMod = require("./src/hc_conductor");
+  if (condMod.HCConductor) {
+    conductor = new condMod.HCConductor();
+    if (typeof condMod.registerConductorRoutes === "function") {
+      condMod.registerConductorRoutes(app, conductor);
+    }
+  } else if (typeof condMod === "function") {
+    conductor = condMod;
+  } else {
+    conductor = condMod;
+  }
+  console.log("  ∞ Conductor (AI Brain): LOADED");
+} catch (err) {
+  console.warn(`  ⚠ Conductor not loaded: ${err.message}`);
+}
+
+// ─── Colab Runtime Manager (Bug #7 Fix) ──────────────────────────────
+let colabRuntimeManager = null;
+try {
+  const colabMod = require("./services/colab-runtime-manager");
+  if (colabMod.ColabRuntimeManager) {
+    colabRuntimeManager = new colabMod.ColabRuntimeManager();
+    if (typeof colabMod.registerColabRoutes === "function") {
+      colabMod.registerColabRoutes(app, colabRuntimeManager);
+    }
+  } else if (typeof colabMod.registerRoutes === "function") {
+    colabMod.registerRoutes(app);
+    colabRuntimeManager = colabMod;
+  } else {
+    colabRuntimeManager = colabMod;
+  }
+  console.log("  ∞ Colab Runtime Manager: LOADED");
+} catch (err) {
+  console.warn(`  ⚠ Colab Runtime Manager not loaded: ${err.message}`);
+}
+
+// ─── HeadyDeploy — Self-Sovereign Deployment Engine ──────────────────
+let headyDeploy = null;
+try {
+  const { HeadyDeploy, registerDeployRoutes } = require("./services/heady-deploy");
+  headyDeploy = new HeadyDeploy();
+  registerDeployRoutes(app, headyDeploy);
+
+  // Verify auth capability on startup
+  if (headyDeploy.serviceAccount) {
+    console.log(`  ∞ HeadyDeploy: LOADED (${headyDeploy.serviceAccount.client_email})`);
+    console.log(`    → Project: ${headyDeploy.projectId} | Region: ${headyDeploy.region}`);
+    console.log(`    → Endpoints: /api/deploy/status, /api/deploy/cloud-run, /api/deploy/full`);
+  } else {
+    console.warn("  ⚠ HeadyDeploy: LOADED but no service account key found");
+  }
+} catch (err) {
+  console.warn(`  ⚠ HeadyDeploy not loaded: ${err.message}`);
+}
+
+// ─── HeadyAuto — Unified Automation Engine ───────────────────────────
+let headyAuto = null;
+try {
+  const { HeadyAuto, registerAutoRoutes } = require("./services/heady-auto");
+  headyAuto = new HeadyAuto();
+  registerAutoRoutes(app, headyAuto);
+
+  // Auto-initialize all subsystems
+  const initResults = headyAuto.init();
+  console.log("  ∞ HeadyAuto: LOADED");
+  console.log(`    → Git credentials: ${initResults.gitCredentials?.ok ? "CONFIGURED" : "needs setup"}`);
+  console.log(`    → Dropzone watcher: ${initResults.dropzoneWatcher?.ok ? "ACTIVE" : "inactive"}`);
+  console.log(`    → Dropzone import: ${initResults.dropzoneImport?.imported || 0} new files`);
+  console.log("    → Endpoints: /api/auto/status, /api/auto/full, /api/auto/deploy");
+} catch (err) {
+  console.warn(`  ⚠ HeadyAuto not loaded: ${err.message}`);
 }
 
 // ─── Aloha Protocol System (Always-On) ───────────────────────────────

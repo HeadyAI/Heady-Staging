@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Submit Resource Links</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 2rem;
+      max-width: 600px;
+    }
+    h1 {
+      margin-bottom: 1rem;
+    }
+    label {
+      font-weight: bold;
+    }
+    #links-input {
+      width: 100%;
+      height: 120px;
+      margin-top: 0.5rem;
+    }
+    #submit-btn {
+      margin-top: 1rem;
+      padding: 0.5rem 1rem;
+      font-size: 1rem;
+    }
+    .message {
+      margin-top: 1rem;
+      padding: 0.5rem;
+      border-radius: 4px;
+      display: none;
+    }
+    .message.success {
+      background-color: #e6ffe6;
+      color: #006600;
+    }
+    .message.error {
+      background-color: #ffe6e6;
+      color: #660000;
+    }
+  </style>
+</head>
+<body>
+  <h1>Submit Resource Links</h1>
+  <form id="link-form">
+    <label for="links-input">Enter one or more URLs (comma or newline separated):</label>
+    <textarea id="links-input" placeholder="https://example.com/first\nhttps://example.com/second"></textarea>
+    <button type="submit" id="submit-btn">Submit</button>
+  </form>
+  <div class="message success" id="success-msg">Links submitted successfully!</div>
+  <div class="message error" id="error-msg">An error occurred. Please try again.</div>
+
+  <script>
+    const form = document.getElementById('link-form');
+    const linksInput = document.getElementById('links-input');
+    const successMsg = document.getElementById('success-msg');
+    const errorMsg = document.getElementById('error-msg');
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      successMsg.style.display = 'none';
+      errorMsg.style.display = 'none';
+
+      // Split input by comma or newline
+      const raw = linksInput.value;
+      const links = raw
+        .split(/[,\n]/)
+        .map((l) => l.trim())
+        .filter((l) => l.length > 0);
+
+      if (links.length === 0) {
+        errorMsg.textContent = 'Please enter at least one valid URL.';
+        errorMsg.style.display = 'block';
+        return;
+      }
+
+      try {
+        const response = await fetch('/api/add-links', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ links }),
+        });
+        const result = await response.json();
+        if (response.ok && result.success) {
+          successMsg.style.display = 'block';
+          linksInput.value = '';
+        } else {
+          errorMsg.textContent = result.message || 'Failed to submit links.';
+          errorMsg.style.display = 'block';
+        }
+      } catch (err) {
+        errorMsg.textContent = 'Network error. Please try again later.';
+        errorMsg.style.display = 'block';
+      }
+    });
+  </script>
+</body>
+</html>

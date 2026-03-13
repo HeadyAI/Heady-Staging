@@ -1,0 +1,14 @@
+{
+    "workspace": "./heady-fleet",
+    "projects": [
+        {
+            "slug": "auth-service",
+            "apex_domain": "auth.heady.io",
+            "trust_domain": "Identity_Root"
+        },
+        {
+            "slug": "guardian-gateway",
+            "vertical": "security"
+        }
+    ]
+}

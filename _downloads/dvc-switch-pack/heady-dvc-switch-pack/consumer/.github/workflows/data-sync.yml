@@ -1,0 +1,33 @@
+name: data-sync
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 6 * * 1"  # Every Monday 6 AM UTC
+env:
+  AWS_ACCESS_KEY_ID: ${{ secrets.HEADY_B2_KEY_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.HEADY_B2_APPLICATION_KEY }}
+  AWS_ENDPOINT_URL_S3: https://s3.us-west-002.backblazeb2.com
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: { token: ${{ secrets.GITHUB_TOKEN }} }
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.11" }
+      - run: pip install "dvc[s3]"
+      - run: dvc update $(find . -name "*.dvc" -not -path "./.dvc/*")
+      - id: changes
+        run: |
+          if git diff --quiet && git diff --cached --quiet; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+      - if: steps.changes.outputs.changed == 'true'
+        run: |
+          git config user.name "heady-bot"
+          git config user.email "heady-bot@headyme.com"
+          git add -A
+          git commit -m "chore: sync data imports from heady-data-registry"
+          git push

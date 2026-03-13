@@ -1,0 +1,973 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HeadyBuddy - Your Guide to the Heady Universe</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #1E1B4B 0%, #0F172A 100%);
+            color: #f1f5f9;
+            overflow-x: hidden;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* Scrollbar styling */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(15, 23, 42, 0.5);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #A855F7;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #D946EF;
+        }
+
+        /* Hero Section */
+        .hero {
+            flex-shrink: 0;
+            padding: 3rem 1rem;
+            text-align: center;
+            background: linear-gradient(to bottom, rgba(168, 85, 247, 0.05), transparent);
+            border-bottom: 1px solid rgba(168, 85, 247, 0.1);
+        }
+
+        .avatar-container {
+            margin-bottom: 2rem;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .avatar {
+            width: 100px;
+            height: 100px;
+            margin: 0 auto;
+            background: linear-gradient(135deg, #A855F7, #EC4899);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 50px;
+            box-shadow: 0 0 30px rgba(168, 85, 247, 0.4);
+            border: 3px solid rgba(236, 72, 153, 0.3);
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, #A855F7, #EC4899, #22D3EE);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .hero p {
+            font-size: 1.1rem;
+            color: #cbd5e1;
+            max-width: 600px;
+            margin: 0 auto 3rem;
+            line-height: 1.6;
+        }
+
+        /* Chat Input Section */
+        .input-section {
+            max-width: 700px;
+            margin: 0 auto 2.5rem;
+            padding: 0 1rem;
+            width: 100%;
+        }
+
+        .chat-input-wrapper {
+            display: flex;
+            gap: 0.5rem;
+            background: rgba(15, 23, 42, 0.4);
+            border: 2px solid rgba(168, 85, 247, 0.2);
+            border-radius: 12px;
+            padding: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .chat-input-wrapper:focus-within {
+            border-color: #A855F7;
+            box-shadow: 0 0 20px rgba(168, 85, 247, 0.3);
+        }
+
+        #chatInput {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: #f1f5f9;
+            padding: 0.875rem;
+            font-size: 1rem;
+            font-family: 'Inter', sans-serif;
+            outline: none;
+        }
+
+        #chatInput::placeholder {
+            color: rgba(203, 213, 225, 0.5);
+        }
+
+        .send-btn {
+            background: linear-gradient(135deg, #A855F7, #EC4899);
+            border: none;
+            color: white;
+            padding: 0.875rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .send-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(168, 85, 247, 0.4);
+        }
+
+        .send-btn:active {
+            transform: translateY(0);
+        }
+
+        /* Suggested Prompts */
+        .suggested-prompts {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 3rem;
+            padding: 0 1rem;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .prompt-pill {
+            background: rgba(168, 85, 247, 0.1);
+            border: 1.5px solid rgba(168, 85, 247, 0.3);
+            color: #cbd5e1;
+            padding: 0.75rem 1.25rem;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .prompt-pill:hover {
+            background: rgba(168, 85, 247, 0.2);
+            border-color: #A855F7;
+            color: #f1f5f9;
+            transform: translateY(-2px);
+        }
+
+        .prompt-pill:active {
+            transform: translateY(0);
+        }
+
+        /* Chat Container */
+        .chat-container {
+            flex: 1;
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+            width: 100%;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .chat-message {
+            display: flex;
+            gap: 1rem;
+            animation: slideIn 0.4s ease;
+            max-width: 100%;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .message-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+
+        .buddy-avatar {
+            background: linear-gradient(135deg, #A855F7, #EC4899);
+            box-shadow: 0 0 15px rgba(168, 85, 247, 0.3);
+        }
+
+        .user-avatar {
+            background: rgba(34, 211, 238, 0.2);
+            border: 2px solid #22D3EE;
+        }
+
+        .message-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .user-message {
+            justify-content: flex-end;
+        }
+
+        .user-message .message-avatar {
+            order: 2;
+        }
+
+        .user-message .message-content {
+            order: 1;
+            align-items: flex-end;
+        }
+
+        .message-bubble {
+            padding: 1rem;
+            border-radius: 12px;
+            line-height: 1.6;
+            word-wrap: break-word;
+        }
+
+        .buddy-message .message-bubble {
+            background: rgba(168, 85, 247, 0.15);
+            border: 1px solid rgba(168, 85, 247, 0.3);
+            color: #f1f5f9;
+        }
+
+        .user-message .message-bubble {
+            background: linear-gradient(135deg, rgba(168, 85, 247, 0.4), rgba(236, 72, 153, 0.3));
+            border: 1px solid rgba(236, 72, 153, 0.4);
+            color: #f1f5f9;
+        }
+
+        .typing-indicator {
+            display: flex;
+            gap: 0.4rem;
+            padding: 1rem;
+            background: rgba(168, 85, 247, 0.15);
+            border: 1px solid rgba(168, 85, 247, 0.3);
+            border-radius: 12px;
+            width: fit-content;
+        }
+
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #A855F7;
+            animation: typing 1.4s infinite;
+        }
+
+        .typing-dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing-dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes typing {
+            0%, 60%, 100% {
+                opacity: 0.5;
+                transform: translateY(0);
+            }
+            30% {
+                opacity: 1;
+                transform: translateY(-8px);
+            }
+        }
+
+        .message-link {
+            color: #22D3EE;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border-bottom: 1px solid rgba(34, 211, 238, 0.3);
+        }
+
+        .message-link:hover {
+            color: #EC4899;
+            border-bottom-color: rgba(236, 72, 153, 0.6);
+        }
+
+        /* Ecosystem Section */
+        .ecosystem-section {
+            padding: 4rem 1rem;
+            background: linear-gradient(to bottom, transparent, rgba(168, 85, 247, 0.03));
+            border-top: 1px solid rgba(168, 85, 247, 0.1);
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 3rem;
+            background: linear-gradient(135deg, #A855F7, #22D3EE);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .ecosystem-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        .ecosystem-card {
+            background: rgba(30, 27, 75, 0.4);
+            border: 1.5px solid rgba(168, 85, 247, 0.2);
+            border-radius: 16px;
+            padding: 2rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .ecosystem-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, transparent, rgba(255, 255, 255, 0.05));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .ecosystem-card:hover {
+            border-color: rgba(236, 72, 153, 0.4);
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(168, 85, 247, 0.2);
+        }
+
+        .ecosystem-card:hover::before {
+            opacity: 1;
+        }
+
+        .card-icon {
+            font-size: 3rem;
+            line-height: 1;
+        }
+
+        .card-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #f1f5f9;
+        }
+
+        .card-description {
+            color: #cbd5e1;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        .card-link {
+            color: #22D3EE;
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .card-link:hover {
+            gap: 1rem;
+            color: #EC4899;
+        }
+
+        .card-features {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: rgba(15, 23, 42, 0.95);
+            padding: 1.5rem;
+            border-radius: 0 0 16px 16px;
+            border-top: 1px solid rgba(168, 85, 247, 0.2);
+            font-size: 0.85rem;
+            color: #cbd5e1;
+            line-height: 1.8;
+        }
+
+        .ecosystem-card:hover .card-features {
+            display: block;
+        }
+
+        /* Quick Links */
+        .quick-links-section {
+            padding: 4rem 1rem;
+            background: rgba(15, 23, 42, 0.2);
+            border-top: 1px solid rgba(168, 85, 247, 0.1);
+        }
+
+        .quick-links-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1.5rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        .quick-link {
+            background: rgba(168, 85, 247, 0.08);
+            border: 1.5px solid rgba(168, 85, 247, 0.2);
+            border-radius: 12px;
+            padding: 1.5rem 1rem;
+            text-align: center;
+            text-decoration: none;
+            color: #f1f5f9;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            align-items: center;
+        }
+
+        .quick-link:hover {
+            border-color: #A855F7;
+            background: rgba(168, 85, 247, 0.15);
+            transform: translateY(-4px);
+            box-shadow: 0 10px 25px rgba(168, 85, 247, 0.15);
+        }
+
+        .quick-link-icon {
+            font-size: 2rem;
+        }
+
+        .quick-link-text {
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        /* Footer */
+        footer {
+            flex-shrink: 0;
+            padding: 3rem 1rem;
+            border-top: 1px solid rgba(168, 85, 247, 0.1);
+            background: rgba(15, 23, 42, 0.3);
+            text-align: center;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .footer-logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #A855F7, #EC4899);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+        }
+
+        .footer-text {
+            color: #cbd5e1;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .footer-link {
+            color: #22D3EE;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.3s ease;
+        }
+
+        .footer-link:hover {
+            color: #EC4899;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .hero p {
+                font-size: 1rem;
+            }
+
+            .avatar {
+                width: 80px;
+                height: 80px;
+                font-size: 40px;
+            }
+
+            .section-title {
+                font-size: 1.75rem;
+            }
+
+            .quick-links-grid {
+                grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+                gap: 1rem;
+            }
+
+            .ecosystem-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .suggested-prompts {
+                gap: 0.75rem;
+            }
+
+            .prompt-pill {
+                font-size: 0.85rem;
+                padding: 0.65rem 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero {
+                padding: 2rem 1rem;
+            }
+
+            .hero h1 {
+                font-size: 1.5rem;
+            }
+
+            .hero p {
+                font-size: 0.95rem;
+            }
+
+            .avatar {
+                width: 70px;
+                height: 70px;
+                font-size: 35px;
+            }
+
+            .chat-input-wrapper {
+                flex-direction: column;
+            }
+
+            .send-btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .suggested-prompts {
+                flex-direction: column;
+            }
+
+            .prompt-pill {
+                width: 100%;
+                text-align: center;
+            }
+
+            #chatInput {
+                padding: 0.75rem;
+            }
+
+            .section-title {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="avatar-container">
+            <div class="avatar">🤖</div>
+        </div>
+        <h1>Hey! I'm HeadyBuddy.</h1>
+        <p>Your guide to the Heady universe. Ask me anything, and I'll take you exactly where you need to go.</p>
+
+        <!-- Chat Input -->
+        <div class="input-section">
+            <div class="chat-input-wrapper">
+                <input
+                    type="text"
+                    id="chatInput"
+                    placeholder="Ask me anything about Heady..."
+                    autocomplete="off"
+                >
+                <button class="send-btn" id="sendBtn" title="Send message">
+                    <span>Send</span>
+                    <span>➜</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Suggested Prompts -->
+        <div class="suggested-prompts">
+            <button class="prompt-pill" data-prompt="What is Heady?">What is Heady?</button>
+            <button class="prompt-pill" data-prompt="Show me the API docs">Show me the API docs</button>
+            <button class="prompt-pill" data-prompt="How do I get started?">How do I get started?</button>
+            <button class="prompt-pill" data-prompt="What's the status?">What's the status?</button>
+        </div>
+    </section>
+
+    <!-- Chat Container -->
+    <div class="chat-container" id="chatContainer"></div>
+
+    <!-- Ecosystem Section -->
+    <section class="ecosystem-section" id="ecosystemSection" style="display: none;">
+        <h2 class="section-title">The Heady Ecosystem</h2>
+        <div class="ecosystem-grid">
+            <!-- HeadyMe Card -->
+            <div class="ecosystem-card">
+                <div class="card-icon">🧠</div>
+                <div class="card-name">HeadyMe</div>
+                <div class="card-description">Your personal AI companion</div>
+                <a href="https://headyme.com" class="card-link" target="_blank">
+                    Explore <span>→</span>
+                </a>
+                <div class="card-features">
+                    • Personalized conversations
+                    • AI-powered insights
+                    • Real-time suggestions
+                    • Privacy-first design
+                </div>
+            </div>
+
+            <!-- HeadySystems Card -->
+            <div class="ecosystem-card">
+                <div class="card-icon">⚙️</div>
+                <div class="card-name">HeadySystems</div>
+                <div class="card-description">Enterprise infrastructure</div>
+                <a href="https://headysystems.com" class="card-link" target="_blank">
+                    Explore <span>→</span>
+                </a>
+                <div class="card-features">
+                    • Scalable architecture
+                    • 99.99% uptime
+                    • Enterprise security
+                    • Global infrastructure
+                </div>
+            </div>
+
+            <!-- HeadyConnection Card -->
+            <div class="ecosystem-card">
+                <div class="card-icon">🤝</div>
+                <div class="card-name">HeadyConnection</div>
+                <div class="card-description">Community & nonprofit</div>
+                <a href="https://headyconnection.com" class="card-link" target="_blank">
+                    Explore <span>→</span>
+                </a>
+                <div class="card-features">
+                    • Community platform
+                    • Nonprofit support
+                    • Collaboration tools
+                    • Impact tracking
+                </div>
+            </div>
+
+            <!-- Heady-AI Card -->
+            <div class="ecosystem-card">
+                <div class="card-icon">🚀</div>
+                <div class="card-name">Heady-AI</div>
+                <div class="card-description">AI models & research</div>
+                <a href="https://heady-ai.com" class="card-link" target="_blank">
+                    Explore <span>→</span>
+                </a>
+                <div class="card-features">
+                    • Cutting-edge models
+                    • Research papers
+                    • Model zoo
+                    • Open source
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Quick Links Section -->
+    <section class="quick-links-section">
+        <div class="ecosystem-grid" style="grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 1.5rem;">
+            <a href="https://docs.heady.com" class="quick-link" target="_blank">
+                <div class="quick-link-icon">📚</div>
+                <div class="quick-link-text">Documentation</div>
+            </a>
+            <a href="https://api.heady.com/reference" class="quick-link" target="_blank">
+                <div class="quick-link-icon">⚡</div>
+                <div class="quick-link-text">API Reference</div>
+            </a>
+            <a href="https://status.heady.com" class="quick-link" target="_blank">
+                <div class="quick-link-icon">📊</div>
+                <div class="quick-link-text">Status Page</div>
+            </a>
+            <a href="https://github.com/headysystems" class="quick-link" target="_blank">
+                <div class="quick-link-icon">💻</div>
+                <div class="quick-link-text">GitHub</div>
+            </a>
+            <a href="https://blog.heady.com" class="quick-link" target="_blank">
+                <div class="quick-link-icon">✍️</div>
+                <div class="quick-link-text">Blog</div>
+            </a>
+            <a href="https://support.heady.com" class="quick-link" target="_blank">
+                <div class="quick-link-icon">🆘</div>
+                <div class="quick-link-text">Support</div>
+            </a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-logo">HeadySystems Inc</div>
+            <p class="footer-text">Powering the Heady ecosystem with AI, infrastructure, and community.</p>
+            <div class="footer-links">
+                <a href="https://heady.com" class="footer-link">Home</a>
+                <a href="https://heady.com/privacy" class="footer-link">Privacy</a>
+                <a href="https://heady.com/terms" class="footer-link">Terms</a>
+                <a href="https://heady.com/contact" class="footer-link">Contact</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Conversation database
+        const conversations = {
+            "What is Heady?": {
+                response: "Heady is a comprehensive ecosystem of interconnected AI and infrastructure products. It includes HeadyMe for personal AI, HeadySystems for enterprise infrastructure, HeadyConnection for community and nonprofits, and Heady-AI for cutting-edge research and models. Each component works together to create a unified, powerful platform.",
+                links: {
+                    "HeadyMe": "https://headyme.com",
+                    "HeadySystems": "https://headysystems.com",
+                    "HeadyConnection": "https://headyconnection.com",
+                    "Heady-AI": "https://heady-ai.com"
+                }
+            },
+            "Show me the API docs": {
+                response: "The Heady API documentation is comprehensive and easy to follow. You can access the full API reference with examples, quick start guides, and best practices. We also have SDKs for Python, JavaScript, and Go to make integration seamless.",
+                links: {
+                    "API Reference": "https://api.heady.com/reference",
+                    "Quick Start": "https://docs.heady.com/quickstart",
+                    "Python SDK": "https://github.com/headysystems/python-sdk",
+                    "JavaScript SDK": "https://github.com/headysystems/js-sdk"
+                }
+            },
+            "How do I get started?": {
+                response: "Getting started is simple! First, sign up for a free account on HeadyMe. Then explore the dashboard, create your first project, and integrate the API using one of our SDKs. Our documentation guides you through each step, and our community forum is always ready to help.",
+                links: {
+                    "Sign Up": "https://headyme.com/signup",
+                    "Getting Started Guide": "https://docs.heady.com/getting-started",
+                    "Community Forum": "https://community.heady.com",
+                    "Tutorial Videos": "https://youtube.com/@headysystems"
+                }
+            },
+            "What's the status?": {
+                response: "You can check the real-time status of all Heady services on our status page. All systems are currently operational. We maintain 99.99% uptime across our entire infrastructure with real-time monitoring and alerts.",
+                links: {
+                    "Status Page": "https://status.heady.com",
+                    "Uptime History": "https://status.heady.com/history",
+                    "Incident Reports": "https://status.heady.com/incidents",
+                    "Maintenance Calendar": "https://status.heady.com/calendar"
+                }
+            }
+        };
+
+        // DOM Elements
+        const chatContainer = document.getElementById('chatContainer');
+        const chatInput = document.getElementById('chatInput');
+        const sendBtn = document.getElementById('sendBtn');
+        const promptPills = document.querySelectorAll('.prompt-pill');
+        const ecosystemSection = document.getElementById('ecosystemSection');
+
+        // Send message
+        function sendMessage() {
+            const message = chatInput.value.trim();
+            if (!message) return;
+
+            // Show user message
+            addUserMessage(message);
+            chatInput.value = '';
+
+            // Show typing indicator and get response
+            showTypingIndicator();
+
+            // Simulate response delay
+            setTimeout(() => {
+                removeTypingIndicator();
+                respondToMessage(message);
+                ecosystemSection.style.display = 'block';
+            }, 1000 + Math.random() * 1000);
+        }
+
+        // Add user message to chat
+        function addUserMessage(text) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'chat-message user-message';
+            messageDiv.innerHTML = `
+                <div class="message-content">
+                    <div class="message-bubble">${escapeHtml(text)}</div>
+                </div>
+                <div class="message-avatar user-avatar">👤</div>
+            `;
+            chatContainer.appendChild(messageDiv);
+            scrollToBottom();
+        }
+
+        // Add bot message to chat
+        function addBotMessage(text, links = {}) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'chat-message buddy-message';
+
+            // Replace link placeholders with actual links
+            let htmlContent = escapeHtml(text);
+            for (const [linkText, url] of Object.entries(links)) {
+                const linkRegex = new RegExp(linkText, 'g');
+                htmlContent = htmlContent.replace(linkRegex, `<a href="${url}" class="message-link" target="_blank">${linkText}</a>`);
+            }
+
+            messageDiv.innerHTML = `
+                <div class="message-avatar buddy-avatar">🤖</div>
+                <div class="message-content">
+                    <div class="message-bubble">${htmlContent}</div>
+                </div>
+            `;
+            chatContainer.appendChild(messageDiv);
+            scrollToBottom();
+        }
+
+        // Show typing indicator
+        function showTypingIndicator() {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'chat-message buddy-message';
+            messageDiv.id = 'typingIndicator';
+            messageDiv.innerHTML = `
+                <div class="message-avatar buddy-avatar">🤖</div>
+                <div class="message-content">
+                    <div class="typing-indicator">
+                        <div class="typing-dot"></div>
+                        <div class="typing-dot"></div>
+                        <div class="typing-dot"></div>
+                    </div>
+                </div>
+            `;
+            chatContainer.appendChild(messageDiv);
+            scrollToBottom();
+        }
+
+        // Remove typing indicator
+        function removeTypingIndicator() {
+            const typing = document.getElementById('typingIndicator');
+            if (typing) typing.remove();
+        }
+
+        // Respond to message
+        function respondToMessage(message) {
+            const lowerMessage = message.toLowerCase();
+
+            // Check for exact match
+            for (const [key, data] of Object.entries(conversations)) {
+                if (lowerMessage.includes(key.toLowerCase())) {
+                    addBotMessage(data.response, data.links);
+                    return;
+                }
+            }
+
+            // Default response
+            const defaultResponse = "I'm not sure about that, but I can help! Try asking me:\n• \"What is Heady?\"\n• \"Show me the API docs\"\n• \"How do I get started?\"\n• \"What's the status?\"";
+            addBotMessage(defaultResponse, {
+                "Documentation": "https://docs.heady.com"
+            });
+        }
+
+        // Scroll to bottom
+        function scrollToBottom() {
+            setTimeout(() => {
+                chatContainer.scrollTop = chatContainer.scrollHeight;
+            }, 0);
+        }
+
+        // Escape HTML
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Event listeners
+        sendBtn.addEventListener('click', sendMessage);
+        chatInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') sendMessage();
+        });
+
+        promptPills.forEach(pill => {
+            pill.addEventListener('click', () => {
+                const prompt = pill.dataset.prompt;
+                chatInput.value = prompt;
+                sendMessage();
+            });
+        });
+
+        // Initial message
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                addBotMessage("Hey there! 👋 I'm HeadyBuddy, your guide to the Heady universe. What would you like to know? Feel free to ask me anything about our products, API, or how to get started!");
+            }, 300);
+        });
+    </script>
+</body>
+</html>

@@ -57,7 +57,13 @@
     "docker:down": "docker compose down",
     "docker:build": "docker compose build",
     "db:migrate": "node scripts/migrate.js",
-    "db:seed": "psql $DATABASE_URL -f scripts/init-db.sql"
+    "db:seed": "psql $DATABASE_URL -f scripts/init-db.sql",
+    "auto:setup": "node scripts/heady-git-setup.js",
+    "auto:push": "node -e \"const {AutoGit}=require('./services/heady-auto');const g=new AutoGit();g.setupCredentials();const r=g.commitAndPush();console.log(JSON.stringify(r,null,2))\"",
+    "auto:deploy": "node -e \"const {AutoDeploy}=require('./services/heady-auto');const d=new AutoDeploy();d.runPipeline({deploy:true}).then(r=>console.log(JSON.stringify(r,null,2)))\"",
+    "auto:import": "node -e \"const {AutoImport}=require('./services/heady-auto');const i=new AutoImport();console.log(JSON.stringify(i.scanAndImport(),null,2))\"",
+    "auto:health": "node -e \"const {AutoHealth}=require('./services/heady-auto');const h=new AutoHealth();h.checkAll().then(r=>console.log(JSON.stringify(r,null,2)))\"",
+    "auto:full": "node -e \"const {HeadyAuto}=require('./services/heady-auto');const a=new HeadyAuto();a.init();const {AutoDeploy}=require('./services/heady-auto');const d=new AutoDeploy();d.runPipeline().then(r=>console.log(JSON.stringify(r,null,2)))\""
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.74.0",
