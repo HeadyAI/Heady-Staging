@@ -1,0 +1,426 @@
+# HEADY_BRAND:BEGIN
+# ╔══════════════════════════════════════════════════════════════════╗
+# ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
+# ║  ██║  ██║██╔════╝██╔══██╗██╔══██╗╚██╗ ██╔╝                     ║
+# ║  ███████║█████╗  ███████║██║  ██║ ╚████╔╝                      ║
+# ║  ██╔══██║██╔══╝  ██╔══██║██║  ██║  ╚██╔╝                       ║
+# ║  ██║  ██║███████╗██║  ██║██████╔╝   ██║                        ║
+# ║  ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝    ╚═╝                        ║
+# ║                                                                  ║
+# ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
+# ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
+# ║  FILE: configs/liquid-os-roles.yaml                              ║
+# ║  LAYER: config                                                   ║
+# ╚══════════════════════════════════════════════════════════════════╝
+# HEADY_BRAND:END
+
+# ═══════════════════════════════════════════════════════════════════
+# Heady Liquid Latent OS — Complete Role Definitions
+# Every node, service, agent, and bee type in the system.
+# All thresholds and constants derive from φ-mathematics.
+# ═══════════════════════════════════════════════════════════════════
+
+version: "2.0.0"
+
+# ─── φ-Constants ──────────────────────────────────────────────────
+constants:
+  phi: 1.618034
+  psi: 0.618034
+  psi2: 0.382
+  embedding_dim: 1536
+  phi_gate_l1: 0.691  # 1 - 1/φ²
+  phi_gate_l2: 0.809  # 1 - 1/φ³
+  phi_gate_l3: 0.882  # 1 - 1/φ⁴
+
+# ─── Orchestration Nodes ──────────────────────────────────────────
+orchestration_nodes:
+  heady-conductor:
+    role: "Master orchestrator, 12 CSL-gated domains, Hot/Warm/Cold pool routing"
+    port: 3300
+    csl_domain: orchestration
+    pool_sizes: { hot: 34, warm: 21, cold: 13 }
+    dependencies: [all-nodes, autocontext]
+
+  heady-orchestrator:
+    role: "Liquid Architecture Engine, 17 swarms, Fibonacci pool pre-warming"
+    port: internal
+    csl_domain: orchestration
+    dependencies: [conductor, bee-factory]
+
+  heady-supervisor:
+    role: "Multi-agent Supervisor, parallel fan-out, task aggregation"
+    port: 3300
+    endpoint: /api/supervisor
+    csl_domain: orchestration
+    dependencies: [all-agents, conductor]
+
+# ─── Intelligence Nodes ───────────────────────────────────────────
+intelligence_nodes:
+  heady-brain:
+    role: "Meta-controller, system prompt authority, cognitive config"
+    port: 3300
+    endpoint: /api/brain
+    csl_domain: intelligence
+    dependencies: [autocontext, memory, csl-engine]
+
+  heady-buddy:
+    role: "Primary AI companion, user-facing, final escalation target"
+    port: 3300
+    endpoint: /api/buddy
+    csl_domain: creative
+    csl_threshold: 0.809  # phiGATE level 2 for user-facing responses
+    dependencies: [brain, autocontext, memory, soul]
+
+  heady-soul:
+    role: "Decision-making authority, ethical gates, value alignment"
+    port: internal
+    csl_domain: security
+    dependencies: [brain, csl-confidence-gate]
+
+  heady-vinci:
+    role: "Learning engine, pattern extraction, wisdom curation"
+    port: internal
+    csl_domain: learning
+    dependencies: [memory-t2, auto-success]
+
+  heady-sims:
+    role: "Monte Carlo simulation, success prediction, resource estimation"
+    port: internal
+    csl_domain: intelligence
+    dependencies: [csl-engine, memory-t1]
+
+  heady-mc:
+    role: "Monte Carlo determinism boundary detection, iteration scaling"
+    port: internal
+    csl_domain: intelligence
+    dependencies: [sims, battle-arena]
+
+# ─── Execution Nodes ──────────────────────────────────────────────
+execution_nodes:
+  heady-battle:
+    role: "Multi-model competitive evaluation (Anthropic/OpenAI/Google/Groq)"
+    port: internal
+    csl_domain: intelligence
+    dependencies: [contestants, judge, consensus-scorer]
+
+  heady-bees:
+    role: "Bee Factory — dynamic creation, CSL routing, swarm coordination"
+    port: internal
+    csl_domain: per-bee
+    dependencies: [csl-engine, autocontext]
+
+  heady-swarms:
+    role: "Swarm lifecycle management, consensus superposition"
+    port: internal
+    csl_domain: per-swarm-composite
+    dependencies: [bee-factory, conductor]
+
+  heady-validator:
+    role: "6-phase testing pipeline: lint, unit, integration, E2E, security, performance"
+    port: ci-cd
+    csl_domain: code
+    phases: [lint, unit-test, integration-test, e2e-test, security-scan, performance-test]
+    dependencies: [pipeline, github-actions]
+
+# ─── Infrastructure Nodes ─────────────────────────────────────────
+infrastructure_nodes:
+  heady-memory:
+    role: "3-tier vector memory (T0/T1/T2), HNSW indexing, φ-decay consolidation"
+    port: internal
+    csl_domain: memory
+    tiers:
+      t0: { name: "Working Memory", storage: "in-memory Map + Redis", cap: 21, ttl: "session-bound" }
+      t1: { name: "Short-Term", storage: "pgvector HNSW", cap: "144K vectors", ttl_hours: 47 }
+      t2: { name: "Long-Term", storage: "pgvector partitioned", cap: "unlimited", ttl: "permanent" }
+    dependencies: [postgresql, pgvector, redis]
+
+  heady-autocontext:
+    role: "5-pass enrichment, universal intelligence middleware"
+    port: 3396
+    csl_domain: intelligence
+    passes:
+      - { name: "Intent Embedding", source: "text-embedding-3-large", gate: null }
+      - { name: "Memory Retrieval", source: "T0→T1→T2", gate_threshold: 0.382 }
+      - { name: "Knowledge Grounding", source: "Graph RAG + wisdom", gate_threshold: 0.618 }
+      - { name: "Context Compression", source: "Passes 1-3", gate: null }
+      - { name: "Confidence Assessment", source: "CSL Gate", gate_threshold: 0.809 }
+    dependencies: [memory, search-service, csl-engine, graph-rag-bee, embedding-service]
+
+  heady-io:
+    role: "API gateway, MCP server, external integration hub"
+    port: 3300
+    csl_domain: orchestration
+    dependencies: [connection-pool, circuit-breaker]
+
+  heady-aware:
+    role: "Self-awareness engine, confidence calibration, bias detection, ORS scoring"
+    port: internal
+    csl_domain: self-awareness
+    dependencies: [memory, csl-engine, auto-success]
+
+  heady-patterns:
+    role: "Pattern recognition, cross-swarm correlation, anti-regression"
+    port: internal
+    csl_domain: learning
+    dependencies: [continuous-action-analyzer]
+
+  heady-corrections:
+    role: "Error handling, 5-whys RCA, recovery strategies, mistake fingerprinting"
+    port: internal
+    csl_domain: security
+    dependencies: [mistake-analyzer-bee]
+
+  heady-qa:
+    role: "Quality assurance, eval pipeline, LLM-as-judge framework"
+    port: internal
+    csl_domain: code
+    dependencies: [eval-pipeline, judge-bee]
+
+# ─── Specialized Nodes ────────────────────────────────────────────
+specialized_nodes:
+  heady-evolution:
+    role: "Controlled mutation, tournament selection, φ-blend crossover"
+    port: internal
+    csl_domain: evolution
+    rollout: [0.01, 0.05, 0.20, 1.00]  # canary percentages
+
+  heady-pqc:
+    role: "Post-quantum cryptography, Kyber-768/Dilithium2, φ-rotation"
+    port: internal
+    csl_domain: security
+
+  heady-graph-rag:
+    role: "Entity-relation graph, multi-hop BFS, φ-decay scoring"
+    port: internal
+    csl_domain: intelligence
+
+# ─── Microservices ────────────────────────────────────────────────
+microservices:
+  heady-manager:
+    port: 3300
+    resources: { cpu: 2, memory: "1Gi", min_instances: 1, max_instances: 10, concurrency: 100 }
+    purpose: "Primary API gateway, MCP server"
+
+  auth-session-server:
+    port: 3395
+    resources: { cpu: 1, memory: "512Mi" }
+    purpose: "OAuth2, session management"
+
+  notification-service:
+    port: 3394
+    resources: { cpu: 1, memory: "512Mi" }
+    purpose: "WebSocket notifications"
+
+  analytics-service:
+    port: 3392
+    resources: { cpu: 1, memory: "512Mi" }
+    purpose: "Event aggregation, funnels"
+
+  search-service:
+    port: 3391
+    resources: { cpu: 2, memory: "1Gi" }
+    purpose: "Semantic search, embeddings"
+
+  scheduler-service:
+    port: 3390
+    resources: { cpu: 1, memory: "512Mi" }
+    purpose: "Distributed cron, locking"
+
+  heady-autocontext-service:
+    port: 3396
+    resources: { cpu: 2, memory: "2Gi" }
+    purpose: "5-pass enrichment (memory-intensive)"
+
+# ─── Bee Types (12 specialized + 5 templates) ─────────────────────
+bee_types:
+  specialized:
+    archiver-bee:
+      template: processor
+      csl_domain: data-sync
+      priority: 0.6
+      capability: "Fibonacci retention tiers (1/3/5/5/144/377 days)"
+
+    anomaly-detector-bee:
+      template: scanner
+      csl_domain: security
+      priority: 0.8
+      capability: "φ-sigma statistical anomaly detection"
+
+    cache-optimizer-bee:
+      template: monitor
+      csl_domain: performance
+      priority: 0.7
+      capability: "LRU tiers L1/L2/L3 (fib 89/377/1597)"
+
+    compliance-auditor-bee:
+      template: scanner
+      csl_domain: compliance
+      priority: 0.9
+      capability: "GDPR/license/PII, φ-harmonic risk scoring"
+
+    cost-tracker-bee:
+      template: monitor
+      csl_domain: cost
+      priority: 0.7
+      capability: "Per-provider AI spend, φ-scaled budgets"
+
+    drift-monitor-bee:
+      template: monitor
+      csl_domain: intelligence
+      priority: 0.8
+      capability: "Cosine embedding comparison, φ-based severity"
+
+    evolution-bee:
+      template: processor
+      csl_domain: evolution
+      priority: 0.6
+      capability: "Tournament selection, φ-blend crossover"
+
+    graph-rag-bee:
+      template: processor
+      csl_domain: intelligence
+      priority: 0.8
+      capability: "Entity-relation graph, multi-hop BFS"
+
+    judge-bee:
+      template: processor
+      csl_domain: intelligence
+      priority: 0.9
+      capability: "Scoring weights: 0.34/0.21/0.21/0.13/0.11"
+
+    mistake-analyzer-bee:
+      template: scanner
+      csl_domain: security
+      priority: 0.8
+      capability: "5-whys RCA, fingerprinted prevention"
+
+    pqc-bee:
+      template: processor
+      csl_domain: security
+      priority: 0.9
+      capability: "Kyber-768/Dilithium2, φ-rotation"
+
+    wisdom-curator-bee:
+      template: processor
+      csl_domain: learning
+      priority: 0.7
+      capability: "wisdom.json management, anti-regression"
+
+  templates:
+    health-check: { purpose: "Probe endpoints", pool: "Hot" }
+    monitor: { purpose: "Metrics + uptime tracking", pool: "Warm" }
+    processor: { purpose: "Data transformation tasks", pool: "Hot" }
+    scanner: { purpose: "Security/compliance scanning", pool: "Warm" }
+    alerter: { purpose: "Threshold-based alerting", pool: "Cold" }
+
+# ─── Skill Definitions ───────────────────────────────────────────
+skills:
+  code-generation:
+    keywords: [code, implement, build, create, function]
+    csl_gate: 0.691  # phiGATE level 1
+    tools: [filesystem, bash, git, test-runner]
+
+  code-analysis:
+    keywords: [analyze, review, audit, refactor, complexity]
+    csl_gate: 0.691
+    tools: [filesystem, eslint, tsc, grep]
+
+  research:
+    keywords: [research, investigate, compare, evaluate]
+    csl_gate: 0.809  # phiGATE level 2
+    tools: [web-search, scraper, memory-query]
+
+  deployment:
+    keywords: [deploy, release, rollback, canary, migration]
+    csl_gate: 0.882  # phiGATE level 3
+    tools: [gcloud, cf-api, docker, cloudbuild]
+
+  security-audit:
+    keywords: [security, vulnerability, CVE, injection, secrets]
+    csl_gate: 0.882
+    tools: [scanner-bees, secret-scanner, npm-audit]
+
+  architecture:
+    keywords: [design, architecture, schema, topology, pattern]
+    csl_gate: 0.809
+    tools: [memory-query, graph-rag, pattern-db]
+
+  debugging:
+    keywords: [debug, error, crash, fix, trace, stacktrace]
+    csl_gate: 0.691
+    tools: [logs, telemetry, circuit-breaker-status]
+
+  learning:
+    keywords: [learn, pattern, wisdom, optimize, improve]
+    csl_gate: 0.809
+    tools: [wisdom-curator, vinci, analyzer]
+
+  communication:
+    keywords: [notify, alert, webhook, message, report]
+    csl_gate: 0.691
+    tools: [notification-service, email, slack]
+
+  self-awareness:
+    keywords: [confidence, bias, drift, calibration, health]
+    csl_gate: 0.809
+    tools: [aware-engine, memory-stats, ors]
+
+# ─── Workflow Definitions ─────────────────────────────────────────
+workflows:
+  hcfullpipeline:
+    stages: 21
+    variants:
+      fast: { stages: [0, 2, 5, 10, 14, 20], use_case: "low-risk operations" }
+      full: { stages: "all 21", use_case: "standard execution" }
+      arena: { stages: "full + battle at 8-9", use_case: "multi-model evaluation" }
+      learning: { stages: "full + autocontext + vinci", use_case: "learning-optimized" }
+
+  auto-success-cycle:
+    categories: 13
+    tasks: 144
+    cycle_time_ms: 29034
+    retry: { max_per_category: 3, max_total: 8, backoff: "φ-exponential" }
+
+  checkpoint-protocol:
+    steps: 10
+    sequence:
+      - validate-run-state
+      - compare-config-hashes
+      - re-evaluate-health
+      - check-concept-alignment
+      - apply-patterns
+      - sync-registry
+      - sync-docs
+      - validate-notebooks
+      - check-doc-ownership
+      - report-status
+
+  validation-pipeline:
+    phases: 6
+    sequence: [lint, unit-test, integration-test, e2e-test, security-scan, performance-test]
+    gates: { testing: "→ staging", staging: "→ main" }
+
+# ─── Memory Consolidation Schedule ────────────────────────────────
+consolidation:
+  t1_to_t2_sweep: { interval_hours: 6.85, note: "φ⁴ hours" }
+  t0_to_t1_eviction: { interval_hours: 21, note: "fib(8) hours" }
+  t2_hot_to_warm: { interval_hours: 55, note: "fib(10) hours" }
+  t2_cold_to_archive: { interval_hours: 144, note: "fib(12) hours, HNSW rebuild" }
+
+# ─── ORS Operational Modes ────────────────────────────────────────
+operational_modes:
+  full: { ors_min: 85, description: "Full parallelism, aggressive building, new optimizations" }
+  normal: { ors_min: 70, description: "Normal operation, standard parallelism" }
+  maintenance: { ors_min: 50, description: "Reduced load, no new large builds" }
+  recovery: { ors_min: 0, description: "Repair only, escalate to owner" }
+
+# ─── Startup Sequence ────────────────────────────────────────────
+startup_sequence:
+  - { order: 1, service: "postgresql-pgvector", note: "HeadyMemory storage" }
+  - { order: 2, service: "redis", note: "T0 working memory cache" }
+  - { order: 3, service: "heady-manager", note: "API gateway, port 3300" }
+  - { order: 4, service: "heady-autocontext", note: "Enrichment pipeline, port 3396" }
+  - { order: 5, service: "search-service", note: "Semantic search, port 3391" }
+  - { order: 6, service: "remaining-services", note: "auth, notifications, analytics, scheduler" }
+  - { order: 7, service: "heady-conductor", note: "Orchestration — needs all services" }
+  - { order: 8, service: "auto-success-engine", note: "Starts 29,034ms heartbeat cycle" }

@@ -1,0 +1,11 @@
+{
+  "name": "@heady/autocontext",
+  "version": "1.0.0",
+  "description": "HeadyAutoContext — Universal Intelligence Middleware with 5-pass enrichment pipeline and CSL confidence gating",
+  "main": "index.js",
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "@heady/memory": "file:../heady-memory"
+  }
+}
