@@ -273,6 +273,41 @@ curl -X POST api.headysystems.com:3300/api/system/production # Activate producti
 | `configs/notebook-ci.yaml` | Notebook CI validation configuration |
 | `notebooks/` | Colab notebooks (quick-start, tutorials, examples) |
 
+## CLAUDE CODE SKILLS & AGENTS
+
+Claude Code skills and agents are defined in `.claude/` and provide deep
+integration with the Heady ecosystem:
+
+### Skills (Slash Commands)
+| Command | Description |
+|---------|-------------|
+| `/heady-checkpoint` | Run HCFullPipeline Checkpoint Protocol |
+| `/heady-health` | System Health & Readiness Assessment |
+| `/heady-pipeline` | Pipeline Operations & Analysis |
+| `/heady-audit` | Security & Compliance Audit |
+| `/heady-brain` | System Brain Meta-Controller |
+| `/heady-supervisor` | Multi-Agent Supervisor & Router |
+| `/heady-build` | Build & Deploy Operations |
+| `/heady-research` | Research Before Build & Pattern Mining |
+| `/heady-critique` | Self-Critique & Improvement Loop |
+| `/heady-drift` | Configuration Drift Detection |
+| `/heady-patterns` | Pattern Recognition & Evolution |
+| `/heady-governance` | Governance & Policy Check |
+
+### Agents (Subagent Definitions)
+| Agent | Role |
+|-------|------|
+| `heady-orchestrator` | HCFullPipeline Orchestrator-Conductor |
+| `heady-builder` | Build & Deploy Agent |
+| `heady-auditor` | Security & Compliance Agent |
+| `heady-researcher` | Knowledge & Pattern Mining Agent |
+| `heady-observer` | Monitoring & Health Agent |
+| `heady-deployer` | Infrastructure Deployment Agent |
+
+### Deep Scan Reference
+Full extraction of all directives, unbreakable laws, skills, tools, and
+workflows is in `.claude/HEADY_DEEP_SCAN.md`.
+
 ## DETERMINISM RULE
 
 Given the same input, `hcfullpipeline.yaml`, `resource-policies.yaml`, and
