@@ -273,6 +273,59 @@ curl -X POST api.headysystems.com:3300/api/system/production # Activate producti
 | `configs/notebook-ci.yaml` | Notebook CI validation configuration |
 | `notebooks/` | Colab notebooks (quick-start, tutorials, examples) |
 
+## CLAUDE CODE SKILLS & AGENTS
+
+Claude Code skills and agents are defined in `.claude/` and provide deep
+integration with the Heady ecosystem:
+
+### Skills (Slash Commands)
+| Command | Description |
+|---------|-------------|
+| `/heady-checkpoint` | Run HCFullPipeline Checkpoint Protocol |
+| `/heady-health` | System Health & Readiness Assessment |
+| `/heady-pipeline` | Pipeline Operations & Analysis |
+| `/heady-audit` | Security & Compliance Audit |
+| `/heady-brain` | System Brain Meta-Controller |
+| `/heady-supervisor` | Multi-Agent Supervisor & Router |
+| `/heady-build` | Build & Deploy Operations |
+| `/heady-research` | Research Before Build & Pattern Mining |
+| `/heady-critique` | Self-Critique & Improvement Loop |
+| `/heady-drift` | Configuration Drift Detection |
+| `/heady-patterns` | Pattern Recognition & Evolution |
+| `/heady-governance` | Governance & Policy Check |
+
+### Agents (Subagent Definitions)
+| Agent | Role |
+|-------|------|
+| `heady-orchestrator` | HCFullPipeline Orchestrator-Conductor |
+| `heady-builder` | Build & Deploy Agent |
+| `heady-auditor` | Security & Compliance Agent |
+| `heady-researcher` | Knowledge & Pattern Mining Agent |
+| `heady-observer` | Monitoring & Health Agent |
+| `heady-deployer` | Infrastructure Deployment Agent |
+| `heady-liquid-brain` | Liquid Latent OS Brain Meta-Controller |
+
+### Liquid Latent OS Skills
+| Command | Description |
+|---------|-------------|
+| `/heady-liquid` | Liquid Latent OS Status & Operations |
+| `/heady-memory` | HeadyMemory 3-Tier Vector Memory Operations |
+| `/heady-autocontext` | AutoContext Universal Intelligence Middleware |
+
+### Liquid Latent OS Architecture
+The system operates as a **Liquid Latent OS** defined in `BUDDY_KERNEL.md`:
+- **Boot Document:** 8-section kernel with φ-constants YAML frontmatter
+- **Memory:** 3-tier vector store (T0 working / T1 short-term / T2 long-term)
+- **Intelligence:** 5-pass AutoContext enrichment (every operation flows through it)
+- **Reasoning:** CSL geometric gates (AND=cos, OR=normalize, NOT=proj, GATE=σ)
+- **Execution:** 9-stage battle-sim pipeline with deterministic replay
+- **Self-Awareness:** 144-task Auto-Success heartbeat every 29,034ms
+- **Evolution:** Controlled mutation with canary rollout (1%→5%→20%→100%)
+
+### Deep Scan Reference
+Full extraction of all directives, unbreakable laws, skills, tools, and
+workflows is in `.claude/HEADY_DEEP_SCAN.md`.
+
 ## DETERMINISM RULE
 
 Given the same input, `hcfullpipeline.yaml`, `resource-policies.yaml`, and

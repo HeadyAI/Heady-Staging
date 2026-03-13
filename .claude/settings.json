@@ -1,0 +1,40 @@
+{
+  "permissions": {
+    "allow": [
+      "Read",
+      "Glob",
+      "Grep",
+      "Agent"
+    ]
+  },
+  "agentDefinitions": {
+    "heady-orchestrator": {
+      "path": ".claude/agents/heady-orchestrator.md",
+      "description": "HCFullPipeline Orchestrator-Conductor — primary system orchestrator for pipeline execution, task routing, checkpoint protocol, and self-critique. Use for complex multi-step operations that span multiple pipeline stages."
+    },
+    "heady-builder": {
+      "path": ".claude/agents/heady-builder.md",
+      "description": "Builder agent — handles build operations, deployment, testing, lint enforcement, and CI/CD. Use when building, testing, or deploying code."
+    },
+    "heady-auditor": {
+      "path": ".claude/agents/heady-auditor.md",
+      "description": "Auditor agent — security scanning, brand compliance, code quality, dependency auditing, and governance enforcement. Use for security reviews and compliance checks."
+    },
+    "heady-researcher": {
+      "path": ".claude/agents/heady-researcher.md",
+      "description": "Researcher agent — knowledge ingestion, concept extraction, trend analysis, public domain pattern mining. Use before building to research best practices."
+    },
+    "heady-observer": {
+      "path": ".claude/agents/heady-observer.md",
+      "description": "Observer agent — health checks, metrics collection, alert evaluation, readiness probing. Use for system monitoring and health assessment."
+    },
+    "heady-deployer": {
+      "path": ".claude/agents/heady-deployer.md",
+      "description": "Deployer agent — infrastructure deployment, environment sync, Render/Docker/Cloudflare operations. Use for deployment and infrastructure tasks."
+    },
+    "heady-liquid-brain": {
+      "path": ".claude/agents/heady-liquid-brain.md",
+      "description": "Liquid Latent OS Brain agent — meta-controller operating BUDDY_KERNEL.md, HeadyMemory consolidation, AutoContext enrichment, CSL gate decisions, and φ-scaled self-awareness. Use for system intelligence, memory operations, and cognitive architecture tasks."
+    }
+  }
+}

@@ -1,0 +1,166 @@
+# HEADY_BRAND:BEGIN
+# Heady Systems - HeadyMemory 3-Tier Vector Memory Architecture
+# HEADY_BRAND:END
+
+version: "4.0.0"
+name: HeadyMemory
+description: >
+  3-tier latent-space vector memory with φ-scaled consolidation between
+  short-term and long-term stores. Every memory is a 1536D vector in a
+  living geometric space with position, access momentum, and φ-decay.
+
+# ─── MEMORY TIERS ────────────────────────────────────────────────────────
+tiers:
+  T0:
+    name: Working Memory
+    description: >
+      Active processing context for current task/conversation. Maps to
+      context-window-manager with 4 φ-scaled token tiers.
+    storage: in-memory (Node.js Map + Redis)
+    capacity: 21  # fib(8) context capsules
+    ttl: session-bound
+    embedding_dim: 1536
+    access_pattern: instant-key-lookup
+    capsule_contents:
+      - task_vector      # 1536D embedding of current task intent
+      - active_bee_roster # Assigned bees with CSL affinity scores
+      - pipeline_stage   # Current position in 21-stage HCFullPipeline
+      - drift_window     # Last 11 output hashes for determinism tracking
+      - confidence_state  # CSL gate classification (EXECUTE/CAUTIOUS/HALT)
+      - autocontext_payload # 5-pass enrichment result
+    eviction:
+      trigger: capsule_count > 21  # fib(8)
+      formula: "f(c) * r(c) * CSL(c_vec, task_vec) / φ"
+      components:
+        f: access_frequency
+        r: "recency (exponential decay at rate ψ)"
+        CSL: "cosine similarity to current task vector"
+      action: consolidate_to_T1_or_discard
+
+  T1:
+    name: Short-Term Memory
+    description: >
+      Staging ground between active context and permanent storage.
+      Holds recent executions, conversation turns, observations.
+    storage: PostgreSQL + pgvector HNSW
+    capacity: 144000  # fib(12) * 1000 vectors
+    ttl_hours: 47  # φ⁸
+    embedding_dim: 1536
+    access_pattern: semantic-search + exact-ID
+    hnsw_config:
+      m: 16
+      ef_construction: 64
+      ef_search: 89  # fib(11)
+    consolidation:
+      weights:
+        access_frequency: 0.415  # φ / Σ
+        reinforcement: 0.256     # 1.0 / Σ
+        importance: 0.159        # ψ / Σ
+        similarity_to_T2: 0.170  # ψ² / Σ
+      promote_threshold: 0.618   # ψ — promote to T2
+      expire_threshold: 0.382    # ψ² — allow to expire
+      extension_hours: 6.85      # φ⁴ — one more window if between thresholds
+    schema:
+      table: heady_memory_t1
+      columns:
+        - { name: id, type: UUID, primary: true }
+        - { name: embedding, type: "vector(1536)", index: hnsw }
+        - { name: content_hash, type: "CHAR(64)" }
+        - { name: content, type: JSONB }
+        - { name: domain, type: "VARCHAR(64)" }
+        - { name: source_node, type: "VARCHAR(64)" }
+        - { name: importance, type: FLOAT, default: 0.618 }
+        - { name: access_count, type: INTEGER, default: 0 }
+        - { name: last_accessed_at, type: TIMESTAMPTZ }
+        - { name: created_at, type: TIMESTAMPTZ }
+        - { name: ttl_expires_at, type: TIMESTAMPTZ }
+        - { name: consolidated, type: BOOLEAN, default: false }
+        - { name: metadata, type: JSONB }
+
+  T2:
+    name: Long-Term Memory
+    description: >
+      Permanent knowledge store partitioned into 3 cognitive sub-spaces:
+      semantic (facts), episodic (experiences), procedural (how-to).
+    storage: PostgreSQL + pgvector HNSW (partitioned)
+    capacity: unlimited (partitioned by epoch)
+    ttl: permanent (φ-decay weighted)
+    embedding_dim: 1536
+    access_pattern: semantic-search + graph-traversal
+    sub_spaces:
+      semantic:
+        description: "Facts, knowledge, learned patterns"
+        sources: [wisdom-curator-bee, learning-category, graph-rag-bee]
+        access: "Pure vector similarity — 'What do I know about X?'"
+        decay_rate: 0.146  # ψ⁴ per epoch — extremely slow
+        reinforcement: "Each access boosts importance by ψ²"
+      episodic:
+        description: "Specific executions, conversations, incidents"
+        sources: [pipeline-traces, battle-arena-results, escalation-events, user-interactions]
+        access: "Temporal + semantic hybrid — 'Have I seen this before?'"
+        decay_rate: 0.382  # ψ² per epoch — moderate
+        consolidation: "Repeated episodes → extracted into semantic patterns"
+      procedural:
+        description: "How to do things, optimal configs per domain"
+        sources: [continuous-action-analyzer, auto-success-baselines]
+        access: "Domain-keyed exact lookup — 'Best config for X tasks?'"
+        decay_rate: 0  # None — write-once-update-only
+        storage: "JSONB with domain key indexing (not vector search)"
+    partitions:
+      - { name: hot, age_days: "0-21", decay: 0, ef_search: 144 }    # fib(8)=21, fib(12)
+      - { name: warm, age_days: "21-55", decay: 0.382, ef_search: 89 } # fib(10)=55, fib(11)
+      - { name: cold, age_days: "55-144", decay: 0.618, ef_search: 55 } # fib(12)=144, fib(10)
+      - { name: archive, age_days: "144+", decay: "ψ² per epoch", ef_search: 34 } # fib(9)
+
+# ─── 3D LATENT SPACE PROJECTION ─────────────────────────────────────────
+projection:
+  description: >
+    Continuous manifold projection of 1536D into navigable 3D for
+    visualization and spatial reasoning. NOT dimensionality reduction for
+    storage — vectors stored at full 1536D. 3D is for UI + field dynamics.
+  axes:
+    x: semantic_domain    # What the memory is about
+    y: temporal_recency   # When it was last accessed
+    z: importance_access  # How important / frequently accessed
+  uses:
+    - spatial_clustering_visualization
+    - neighbor_discovery_fast_approximate
+    - field_dynamics_diffusion_decay_injection
+    - sacred_geometry_ui_rendering
+
+# ─── φ-DECAY MEMORY DYNAMICS (PDE) ──────────────────────────────────────
+field_dynamics:
+  description: >
+    Field-theoretic memory model. Each embedding is a field source on the
+    3D manifold. The field evolves according to a diffusion-decay PDE.
+  equation: "∂ϕ/∂t = D/(1+αI) ∇²ϕ - λ/(1+αI) ϕ + S(x, t)"
+  components:
+    diffusion: "D∇²ϕ — memories spread semantic influence to neighbors"
+    decay: "-λϕ — unaccessed memories fade exponentially"
+    importance_modulation: "(1+αI) — high-importance memories resist spreading and forgetting"
+    source_injection: "S(x,t) — new memories enter as Gaussian perturbations"
+  importance_evolution:
+    equation: "∂I/∂t = -ψ² × I + φ × A(x, t)"
+    decay_rate: 0.382  # ψ² baseline importance decay
+    access_boost: 1.618  # φ boost factor on access event
+
+# ─── CONSOLIDATION CYCLES ────────────────────────────────────────────────
+consolidation:
+  T0_to_T1:
+    interval_hours: 21  # fib(8)
+    trigger: "Stale capsules not accessed within session"
+  T1_to_T2:
+    interval_hours: 6.85  # φ⁴
+    trigger: "Consolidation score evaluation sweep"
+  T2_hot_to_warm:
+    interval_hours: 55  # fib(10)
+    trigger: "Age exceeds 21 days"
+  T2_warm_to_cold:
+    interval_hours: 144  # fib(12)
+    trigger: "Age exceeds 55 days"
+  T2_cold_to_archive:
+    interval_hours: 377  # fib(14)
+    trigger: "Age exceeds 144 days"
+  hnsw_rebuild:
+    interval_hours: 144  # fib(12)
+    trigger: "Archive transition complete"

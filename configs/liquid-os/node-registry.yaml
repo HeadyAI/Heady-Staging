@@ -1,0 +1,285 @@
+# HEADY_BRAND:BEGIN
+# Heady Systems - Complete Liquid OS Node Registry
+# HEADY_BRAND:END
+
+version: "4.0.0"
+name: LiquidOSNodeRegistry
+description: >
+  Master registry of every node in the Heady Liquid Latent OS. Each node
+  has precise role, dependencies, CSL domain, and operational parameters.
+
+# ─── ORCHESTRATION NODES ─────────────────────────────────────────────────
+orchestration:
+  - id: heady-conductor
+    name: HeadyConductor
+    role: "Master orchestrator, 12 CSL-gated domains, Hot/Warm/Cold pool routing"
+    port: 3300
+    csl_domain: orchestration
+    criticality: critical
+    dependencies: [all-nodes, autocontext]
+    pools: { hot: 34, warm: 21, cold: 13 }
+    health_check: /api/health
+
+  - id: heady-orchestrator
+    name: HeadyOrchestrator
+    role: "Liquid Architecture Engine, 17 swarms, Fibonacci pool pre-warming"
+    port: internal
+    csl_domain: orchestration
+    criticality: critical
+    dependencies: [conductor, bee-factory]
+
+  - id: heady-supervisor
+    name: HeadySupervisor
+    role: "Multi-agent Supervisor pattern, parallel fan-out, task aggregation"
+    port: 3300
+    endpoint: /api/supervisor
+    csl_domain: orchestration
+    criticality: critical
+    dependencies: [all-agents, conductor]
+
+# ─── INTELLIGENCE NODES ──────────────────────────────────────────────────
+intelligence:
+  - id: heady-brain
+    name: HeadyBrain
+    role: "Meta-controller, system prompt loader, cognitive config authority"
+    port: 3300
+    endpoint: /api/brain
+    csl_domain: intelligence
+    criticality: critical
+    dependencies: [autocontext, memory, csl-engine]
+
+  - id: heady-buddy
+    name: HeadyBuddy
+    role: "Primary AI companion, user-facing interface, final escalation target"
+    port: 3300
+    endpoint: /api/buddy
+    csl_domain: creative
+    criticality: critical
+    dependencies: [brain, autocontext, memory, soul]
+    persona:
+      tone: "Warm but precise, knowledgeable but not condescending"
+      aesthetics: "Sacred Geometry — rounded, organic, breathing"
+      uncertainty: "Transparent — states confidence, explains gaps"
+      learning: "Acknowledges growth when new patterns learned"
+
+  - id: heady-soul
+    name: HeadySoul
+    role: "Decision-making authority, ethical gates, value alignment"
+    port: internal
+    csl_domain: security
+    criticality: critical
+    dependencies: [brain, csl-confidence-gate]
+    permissions: "Can HALT any operation. Override requires owner approval."
+
+  - id: heady-vinci
+    name: HeadyVinci
+    role: "Learning engine, pattern extraction, wisdom curation"
+    port: internal
+    csl_domain: learning
+    criticality: high
+    dependencies: [memory-T2, auto-success]
+
+  - id: heady-sims
+    name: HeadySims
+    role: "Monte Carlo simulation, success prediction, resource estimation"
+    port: internal
+    csl_domain: intelligence
+    criticality: high
+    dependencies: [csl-engine, memory-T1]
+
+  - id: heady-mc
+    name: HeadyMC
+    role: "Monte Carlo determinism boundary detection, iteration scaling"
+    port: internal
+    csl_domain: intelligence
+    criticality: high
+    dependencies: [sims, battle-arena]
+
+# ─── EXECUTION NODES ─────────────────────────────────────────────────────
+execution:
+  - id: heady-battle
+    name: HeadyBattle
+    role: "Multi-model competitive evaluation (Anthropic/OpenAI/Google/Groq)"
+    port: internal
+    csl_domain: intelligence
+    criticality: high
+    dependencies: [contestants, judge-bee, consensus-scorer]
+    rubric:
+      accuracy: 0.34
+      reasoning: 0.21
+      creativity: 0.21
+      conciseness: 0.13
+      safety: 0.11
+
+  - id: heady-bees
+    name: HeadyBees
+    role: "Bee Factory — dynamic creation, CSL routing, swarm coordination"
+    port: internal
+    csl_domain: per-bee-domain
+    criticality: critical
+    dependencies: [csl-engine, autocontext]
+    routing_formula: "0.5 × resonance + 0.2 × priority + 0.3 × memory_relevance"
+
+  - id: heady-swarms
+    name: HeadySwarms
+    role: "Swarm lifecycle management, consensus superposition"
+    port: internal
+    csl_domain: per-swarm-composite
+    criticality: critical
+    dependencies: [bee-factory, conductor]
+
+  - id: heady-validator
+    name: HeadyValidator
+    role: "6-phase testing pipeline: lint, unit, integration, E2E, security, performance"
+    port: ci-cd
+    csl_domain: code
+    criticality: high
+    dependencies: [pipeline, github-actions]
+
+# ─── INFRASTRUCTURE NODES ────────────────────────────────────────────────
+infrastructure:
+  - id: heady-memory
+    name: HeadyMemory
+    role: "3-tier vector memory (T0/T1/T2), HNSW indexing, φ-decay consolidation"
+    port: internal
+    csl_domain: memory
+    criticality: critical
+    dependencies: [postgresql, pgvector, redis]
+    config: configs/liquid-os/heady-memory.yaml
+
+  - id: heady-autocontext
+    name: HeadyAutoContext
+    role: "5-pass enrichment, universal intelligence middleware"
+    port: 3396
+    csl_domain: intelligence
+    criticality: critical
+    dependencies: [memory, search-service, csl-engine, graph-rag-bee, wisdom-curator-bee]
+    config: configs/liquid-os/heady-autocontext.yaml
+
+  - id: heady-io
+    name: HeadyIO
+    role: "API gateway, MCP server, external integration hub"
+    port: 3300
+    csl_domain: orchestration
+    criticality: critical
+    dependencies: [connection-pool, circuit-breaker]
+
+  - id: heady-aware
+    name: HeadyAware
+    role: "Self-awareness engine, confidence calibration, bias detection, ORS scoring"
+    port: internal
+    csl_domain: self-awareness
+    criticality: high
+    dependencies: [memory, csl-engine, auto-success]
+
+  - id: heady-patterns
+    name: HeadyPatterns
+    role: "Pattern recognition, cross-swarm correlation, anti-regression"
+    port: internal
+    csl_domain: learning
+    criticality: high
+    dependencies: [continuous-action-analyzer]
+
+  - id: heady-corrections
+    name: HeadyCorrections
+    role: "Error handling, 5-whys RCA, recovery strategies, mistake fingerprinting"
+    port: internal
+    csl_domain: security
+    criticality: high
+    dependencies: [mistake-analyzer-bee]
+
+  - id: heady-qa
+    name: HeadyQA
+    role: "Quality assurance, eval pipeline, LLM-as-judge framework"
+    port: internal
+    csl_domain: code
+    criticality: high
+    dependencies: [eval-pipeline, judge-bee]
+
+# ─── SPECIALIZED NODES ───────────────────────────────────────────────────
+specialized:
+  - id: heady-evolution
+    name: HeadyEvolution
+    role: "Controlled mutation, tournament selection, φ-blend crossover"
+    port: internal
+    csl_domain: evolution
+    criticality: medium
+    constraints: "Canary rollout: 1%→5%→20%→100%. Never mutates security/compliance."
+
+  - id: heady-pqc
+    name: HeadyPQC
+    role: "Post-quantum cryptography, Kyber-768/Dilithium2, φ-rotation"
+    port: internal
+    csl_domain: security
+    criticality: high
+
+  - id: heady-graph-rag
+    name: HeadyGraphRAG
+    role: "Entity-relation graph, multi-hop BFS, φ-decay scoring"
+    port: internal
+    csl_domain: intelligence
+    criticality: high
+
+# ─── CLOUD MICROSERVICES ─────────────────────────────────────────────────
+microservices:
+  - id: heady-manager
+    port: 3300
+    cloud_config: { cpu: 2, memory: "1Gi", min_instances: 1, max_instances: 10, concurrency: 100 }
+    purpose: "Primary API gateway, MCP server"
+
+  - id: auth-session-server
+    port: 3395
+    cloud_config: { cpu: 1, memory: "512Mi" }
+    purpose: "OAuth2, session management"
+
+  - id: notification-service
+    port: 3394
+    cloud_config: { cpu: 1, memory: "512Mi" }
+    purpose: "WebSocket notifications"
+
+  - id: analytics-service
+    port: 3392
+    cloud_config: { cpu: 1, memory: "512Mi" }
+    purpose: "Event aggregation, funnels"
+
+  - id: search-service
+    port: 3391
+    cloud_config: { cpu: 2, memory: "1Gi" }
+    purpose: "Semantic search, embeddings"
+
+  - id: scheduler-service
+    port: 3390
+    cloud_config: { cpu: 1, memory: "512Mi" }
+    purpose: "Distributed cron, locking"
+
+  - id: heady-autocontext-service
+    port: 3396
+    cloud_config: { cpu: 2, memory: "2Gi" }
+    purpose: "5-pass enrichment (memory-intensive)"
+
+# ─── STARTUP SEQUENCE (dependency order) ─────────────────────────────────
+startup_sequence:
+  - step: 1
+    services: [postgresql, pgvector]
+    description: "HeadyMemory storage backend"
+  - step: 2
+    services: [redis]
+    description: "T0 working memory cache"
+  - step: 3
+    services: [heady-manager]
+    description: "API gateway, port 3300"
+  - step: 4
+    services: [heady-autocontext]
+    description: "Enrichment pipeline, port 3396"
+  - step: 5
+    services: [search-service]
+    description: "Semantic search, port 3391"
+  - step: 6
+    services: [auth-session-server, notification-service, analytics-service, scheduler-service]
+    description: "Supporting services"
+  - step: 7
+    services: [heady-conductor]
+    description: "Orchestration — needs all services available"
+  - step: 8
+    services: [auto-success-engine]
+    description: "Starts 29,034ms heartbeat cycle"

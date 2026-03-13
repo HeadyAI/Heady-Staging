@@ -1,0 +1,175 @@
+# HEADY_BRAND:BEGIN
+# Heady Systems - HeadyAutoContext Universal Intelligence Middleware
+# HEADY_BRAND:END
+
+version: "4.0.0"
+name: HeadyAutoContext
+description: >
+  Universal intelligence middleware. No operation in the Liquid OS executes
+  without AutoContext enrichment. The 5-pass pipeline embeds intent, retrieves
+  memory, grounds knowledge, compresses context, and assesses confidence —
+  all with progressive CSL gate filtering.
+
+# ─── SERVICE SPECIFICATION ───────────────────────────────────────────────
+service:
+  port: 3396
+  transport:
+    primary: streamable-http
+    realtime: websocket
+    local: stdio
+  dependencies:
+    - heady-memory  # T0, T1, T2 access
+    - search-service  # port 3391, semantic search
+    - csl-engine  # 384D/1536D gate operations
+    - graph-rag-bee  # entity-relation traversal
+    - wisdom-curator-bee  # pattern lookup
+    - embedding-service  # text-embedding-3-large
+  health_check: /context/health
+  criticality: critical
+
+# ─── ENDPOINTS ───────────────────────────────────────────────────────────
+endpoints:
+  - method: POST
+    path: /context/enrich
+    description: "Full 5-pass enrichment pipeline"
+    timeout_ms: 8000
+    rate_limit_per_min: 61.8  # φ × 38.2
+  - method: POST
+    path: /context/enrich-fast
+    description: "Passes 1+2 only (for latency-critical ops)"
+    timeout_ms: 2000
+    rate_limit_per_min: 144  # fib(12)
+  - method: POST
+    path: /context/index-batch
+    description: "Batch-index new content into T1"
+    timeout_ms: 30000
+    rate_limit_per_min: 34  # fib(9)
+  - method: POST
+    path: /context/query
+    description: "Direct semantic search across all tiers"
+    timeout_ms: 5000
+    rate_limit_per_min: 89  # fib(11)
+  - method: DELETE
+    path: /context/remove
+    description: "Remove specific memories by ID or hash"
+    timeout_ms: 5000
+    rate_limit_per_min: 13  # fib(7)
+  - method: GET
+    path: /context/health
+    description: "Service health + memory tier stats"
+    timeout_ms: 1000
+  - method: GET
+    path: /context/stats
+    description: "Enrichment pipeline metrics"
+    timeout_ms: 2000
+
+# ─── 5-PASS ENRICHMENT PIPELINE ─────────────────────────────────────────
+enrichment_pipeline:
+  description: >
+    Every operation requiring intelligence (which is ALL of them) passes
+    through this 5-pass enrichment before execution.
+
+  passes:
+    - pass: 1
+      name: Intent Embedding
+      source: "Raw input → text-embedding-3-large"
+      csl_gate: none  # No gate on input embedding
+      output: "1536D task intent vector"
+      latency_target_ms: 500
+
+    - pass: 2
+      name: Memory Retrieval
+      source: "T0 → T1 → T2 semantic search"
+      csl_gate:
+        operation: GATE
+        threshold: 0.382  # ψ² — wide net
+        purpose: "Cast wide net across memory"
+      output: "Top-k relevant memories, scored"
+      latency_target_ms: 1000
+      k_values:
+        T0: 5   # fib(5)
+        T1: 8   # fib(6)
+        T2: 13  # fib(7)
+
+    - pass: 3
+      name: Knowledge Grounding
+      source: "Graph RAG + wisdom.json + domain docs"
+      csl_gate:
+        operation: GATE
+        threshold: 0.618  # ψ — tight filter
+        purpose: "Only well-grounded knowledge passes"
+      output: "Grounded facts, anti-hallucination anchors"
+      latency_target_ms: 2000
+
+    - pass: 4
+      name: Context Compression
+      source: "Passes 1-3 → summarize + dedup"
+      csl_gate:
+        operation: NOT
+        purpose: "Remove noise vector from compressed context"
+      output: "Token-efficient context capsule"
+      latency_target_ms: 1000
+
+    - pass: 5
+      name: Confidence Assessment
+      source: "CSL Confidence Gate pre-flight"
+      csl_gate:
+        operation: phiGATE
+        level: 2  # MEDIUM threshold (0.809)
+        purpose: "Final go/no-go decision"
+      output: "EXECUTE/CAUTIOUS/HALT + enriched payload"
+      latency_target_ms: 200
+
+# ─── INTEGRATION POINTS ─────────────────────────────────────────────────
+integrations:
+  pipeline:
+    description: "Every HCFullPipeline stage uses AutoContext"
+    stage_0_channel_entry: "First call — produces enriched context capsule"
+    stage_10_csl_gate: "Uses Pass 5 confidence for routing"
+    stage_20_receipt: "Writes trace to AutoContext via /context/index-batch"
+
+  bee_dispatch:
+    description: "Upgrade bee routing from 64D pseudo-embeddings to full 1536D"
+    scoring_formula: "0.5 × resonance + 0.2 × priority + 0.3 × memory_relevance"
+    endpoint: "/context/enrich-fast"
+
+  battle_arena:
+    description: "Enrich tasks with past battle results from episodic memory"
+    pre_round: "Query T2 episodic for similar past battles"
+    enrichment: "Contestants receive enriched prompt, not raw prompt"
+
+  auto_success:
+    description: "Intelligence category queries AutoContext stats"
+    metrics:
+      - embedding_freshness
+      - vector_index_quality
+      - context_retrieval_relevance
+      - hallucination_detection_rate
+
+  continuous_action_analyzer:
+    description: "Every record() call also writes to AutoContext T1"
+    endpoint: "/context/index-batch"
+    purpose: "Pattern learning and semantic memory stay synchronized"
+
+# ─── FUNDAMENTAL RULE ────────────────────────────────────────────────────
+fundamental_rule: >
+  AutoContext is NOT an optional enrichment layer — it IS the intelligence.
+  The feedback loop of enrich → execute → index → consolidate → enrich is
+  what makes Buddy a liquid learner. Every cycle makes Buddy smarter.
+  Every task enriched by memory produces better results. Every result
+  indexed back into memory enriches future tasks.
+
+# ─── DATA FLOW ───────────────────────────────────────────────────────────
+data_flow: |
+  User Input → AutoContext (5-pass enrich) → Memory Retrieval (T0→T1→T2)
+      → CSL Gate → Pipeline Execution → Output
+      → AutoContext (index result) → Memory Write (T1)
+      → Consolidation Engine → Memory Promote (T1→T2)
+      → Next request benefits from all prior knowledge
+
+# ─── CIRCUIT BREAKER ─────────────────────────────────────────────────────
+circuit_breaker:
+  failure_threshold: 5  # fib(5)
+  success_threshold: 3  # fib(4)
+  timeout_ms: 30000
+  half_open_max: 2  # fib(3)

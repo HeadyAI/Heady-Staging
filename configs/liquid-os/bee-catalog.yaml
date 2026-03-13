@@ -1,0 +1,267 @@
+# HEADY_BRAND:BEGIN
+# Heady Systems - Complete Bee Type Catalog for Liquid Latent OS
+# HEADY_BRAND:END
+
+version: "4.0.0"
+name: BeeCatalog
+description: >
+  Complete catalog of all 89 bee types. Each bee has a CSL domain vector,
+  priority classification, template type, and routing parameters.
+  All routing uses multi-resonance scoring with memory enrichment.
+
+# ─── ROUTING FORMULA ─────────────────────────────────────────────────────
+routing:
+  formula: "0.5 × semantic_resonance + 0.2 × priority_activation + 0.3 × memory_relevance"
+  semantic_resonance: "cos(task_vector, bee_domain_vector)"
+  priority_activation: "σ((priority - ψ) / T)"
+  memory_relevance: "max(cos(task_vector, memory_k)) for k in AutoContext retrieved memories"
+  swarm_creation: "Consensus superposition vector + affinity scoring"
+
+# ─── SPECIALIZED BEES (12 Primary Types) ─────────────────────────────────
+specialized:
+  - id: archiver-bee
+    template: processor
+    csl_domain: data-sync
+    priority: 0.6
+    capability: "Fibonacci retention tiers (1/3/5/5/144/377 days)"
+    memory_integration: "Manages T2 partition transitions"
+
+  - id: anomaly-detector-bee
+    template: scanner
+    csl_domain: security
+    priority: 0.8
+    capability: "φ-sigma statistical anomaly detection"
+    memory_integration: "Reads anomaly patterns from T2 semantic sub-space"
+
+  - id: cache-optimizer-bee
+    template: monitor
+    csl_domain: performance
+    priority: 0.7
+    capability: "LRU tiers L1/L2/L3 (fib: 89/377/1597)"
+    memory_integration: "Tracks cache hit patterns in T1"
+
+  - id: compliance-auditor-bee
+    template: scanner
+    csl_domain: compliance
+    priority: 0.9
+    capability: "GDPR/license/PII scanning, φ-harmonic risk scoring"
+    memory_integration: "Stores compliance history in T2 episodic"
+
+  - id: cost-tracker-bee
+    template: monitor
+    csl_domain: cost
+    priority: 0.7
+    capability: "Per-provider AI spend tracking, φ-scaled budgets"
+    memory_integration: "Cost patterns in T2 procedural"
+
+  - id: drift-monitor-bee
+    template: monitor
+    csl_domain: intelligence
+    priority: 0.8
+    capability: "Cosine embedding comparison, φ-based severity classification"
+    memory_integration: "Drift history in T2 episodic, patterns in T2 semantic"
+
+  - id: evolution-bee
+    template: processor
+    csl_domain: evolution
+    priority: 0.6
+    capability: "Tournament selection, φ-blend crossover, canary rollout"
+    memory_integration: "Mutation fitness history in T2 procedural"
+
+  - id: graph-rag-bee
+    template: processor
+    csl_domain: intelligence
+    priority: 0.8
+    capability: "Entity-relation graph construction, multi-hop BFS, φ-decay scoring"
+    memory_integration: "Core dependency of AutoContext Pass 3 (Knowledge Grounding)"
+
+  - id: judge-bee
+    template: processor
+    csl_domain: intelligence
+    priority: 0.9
+    capability: "Battle Arena scoring (weights: 0.34/0.21/0.21/0.13/0.11)"
+    memory_integration: "Past judging decisions in T2 episodic"
+
+  - id: mistake-analyzer-bee
+    template: scanner
+    csl_domain: security
+    priority: 0.8
+    capability: "5-whys RCA, fingerprinted mistake prevention"
+    memory_integration: "Mistake fingerprints in T2 semantic for anti-regression"
+
+  - id: pqc-bee
+    template: processor
+    csl_domain: security
+    priority: 0.9
+    capability: "Kyber-768/Dilithium2 post-quantum crypto, φ-rotation schedule"
+    memory_integration: "Certificate history in T2 procedural"
+
+  - id: wisdom-curator-bee
+    template: processor
+    csl_domain: learning
+    priority: 0.7
+    capability: "wisdom.json management, anti-regression pattern curation"
+    memory_integration: "Core dependency of AutoContext Pass 3 + T2 semantic writes"
+
+# ─── TEMPLATE TYPES (5 Dynamic Creation Templates) ───────────────────────
+templates:
+  - type: health-check
+    purpose: "Probe endpoint health, report status"
+    default_priority: 0.5
+    csl_gate_level: 1  # LOW (0.691)
+    timeout_ms: 5000
+
+  - type: monitor
+    purpose: "Metrics collection, uptime tracking, threshold alerting"
+    default_priority: 0.6
+    csl_gate_level: 1  # LOW (0.691)
+    timeout_ms: 8000
+
+  - type: processor
+    purpose: "Data transformation, computation, analysis tasks"
+    default_priority: 0.7
+    csl_gate_level: 2  # MEDIUM (0.809)
+    timeout_ms: 30000
+
+  - type: scanner
+    purpose: "Security scanning, compliance checking, vulnerability detection"
+    default_priority: 0.8
+    csl_gate_level: 2  # MEDIUM (0.809)
+    timeout_ms: 45000
+
+  - type: alerter
+    purpose: "Threshold-based alerting, notification dispatch"
+    default_priority: 0.9
+    csl_gate_level: 1  # LOW (0.691)
+    timeout_ms: 3000
+
+# ─── SKILL DEFINITIONS (CSL Gate Level per Domain) ───────────────────────
+skills:
+  - id: code-generation
+    keywords: [code, implement, build, create, function, scaffold]
+    csl_gate_level: 1  # LOW (0.691)
+    tools: [filesystem, bash, git, test-runner]
+    autocontext: full  # Full 5-pass enrichment
+
+  - id: code-analysis
+    keywords: [analyze, review, audit, refactor, complexity, quality]
+    csl_gate_level: 1  # LOW (0.691)
+    tools: [filesystem, eslint, tsc, grep]
+    autocontext: full
+
+  - id: research
+    keywords: [research, investigate, compare, evaluate, benchmark]
+    csl_gate_level: 2  # MEDIUM (0.809)
+    tools: [web-search, scraper, memory-query]
+    autocontext: full
+
+  - id: deployment
+    keywords: [deploy, release, rollback, canary, migrate, production]
+    csl_gate_level: 3  # HIGH (0.882)
+    tools: [gcloud, cf-api, docker, cloudbuild]
+    autocontext: full
+    requires_approval: true
+
+  - id: security-audit
+    keywords: [security, vulnerability, CVE, injection, secrets, exploit]
+    csl_gate_level: 3  # HIGH (0.882)
+    tools: [scanner-bees, secret-scanner, npm-audit]
+    autocontext: full
+    requires_approval: true
+
+  - id: architecture
+    keywords: [design, architecture, schema, topology, pattern, system]
+    csl_gate_level: 2  # MEDIUM (0.809)
+    tools: [memory-query, graph-rag, pattern-db]
+    autocontext: full
+
+  - id: debugging
+    keywords: [debug, error, crash, fix, trace, stacktrace, exception]
+    csl_gate_level: 1  # LOW (0.691)
+    tools: [logs, telemetry, circuit-breaker-status]
+    autocontext: fast  # Passes 1+2 only for speed
+
+  - id: learning
+    keywords: [learn, pattern, wisdom, optimize, improve, evolve]
+    csl_gate_level: 2  # MEDIUM (0.809)
+    tools: [wisdom-curator, vinci, analyzer]
+    autocontext: full
+
+  - id: communication
+    keywords: [notify, alert, webhook, message, report, email]
+    csl_gate_level: 1  # LOW (0.691)
+    tools: [notification-service, email, slack]
+    autocontext: fast
+
+  - id: self-awareness
+    keywords: [confidence, bias, drift, calibration, health, ORS]
+    csl_gate_level: 2  # MEDIUM (0.809)
+    tools: [aware-engine, memory-stats, ors]
+    autocontext: full
+
+# ─── WORKFLOW DEFINITIONS ────────────────────────────────────────────────
+workflows:
+  hcfullpipeline:
+    description: "Master execution pipeline"
+    variants:
+      fast:
+        stages: [0, 2, 5, 10, 14, 20]
+        description: "Minimal path for low-risk operations"
+      full:
+        stages: all  # All 21 stages
+        description: "Standard execution path"
+      arena:
+        stages: "all + Battle Arena at stages 8-9"
+        description: "Multi-model evaluation"
+      learning:
+        stages: "all + AutoContext write-back + Vinci pattern extraction"
+        description: "Learning-optimized execution"
+
+  auto_success:
+    description: "144 tasks, 13 categories, 29,034ms cycle"
+    categories:
+      - CodeQuality
+      - Security
+      - Performance
+      - Availability
+      - Compliance
+      - Learning
+      - Communication
+      - Infrastructure
+      - Intelligence
+      - DataSync
+      - CostOptimization
+      - SelfAwareness
+      - Evolution
+    tasks_per_category: 11  # 144/13 ≈ 11
+    timeout_ms: 4236  # φ² × 1618
+    retry:
+      max_per_category: 3
+      max_total: 8
+      backoff_ms: [1618, 2618, 4236]
+    escalation: HeadyBuddy
+
+  checkpoint_protocol:
+    description: "10-step validation at every checkpoint"
+    steps:
+      - validate_run_state
+      - compare_config_hashes
+      - reevaluate_health
+      - check_concept_alignment
+      - apply_patterns
+      - sync_registry
+      - sync_docs
+      - validate_notebooks
+      - check_doc_ownership
+      - report_status
+
+  validation_pipeline:
+    description: "6-phase quality gate"
+    phases:
+      - lint
+      - unit_test
+      - integration_test
+      - e2e_test
+      - security_scan
+      - performance_test
+    promotion: "Testing → Staging → Main (with approval checkpoints)"
