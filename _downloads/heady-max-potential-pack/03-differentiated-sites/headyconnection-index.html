@@ -1,0 +1,1194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HeadyConnection - Intelligence That Connects</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-dark: #1A1A2E;
+            --primary-green: #10B981;
+            --accent-orange: #F97316;
+            --secondary-blue: #38BDF8;
+            --text-light: #F5F5F5;
+            --text-muted: #D1D5DB;
+            --border-color: #374151;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(26, 26, 46, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-color);
+            z-index: 1000;
+            padding: 1rem 2rem;
+        }
+
+        nav .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary-green), var(--secondary-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        nav .menu {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+            list-style: none;
+        }
+
+        nav a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        nav a:hover {
+            color: var(--primary-green);
+        }
+
+        .nav-cta {
+            background: var(--primary-green);
+            color: var(--bg-dark) !important;
+            padding: 0.6rem 1.2rem;
+            border-radius: 0.5rem;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .nav-cta:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(16, 185, 129, 0.3);
+        }
+
+        /* Brand Selector */
+        .brand-selector {
+            display: flex;
+            gap: 0.5rem;
+            border-left: 1px solid var(--border-color);
+            padding-left: 2rem;
+        }
+
+        .brand-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .brand-dot.active {
+            transform: scale(1.3);
+        }
+
+        .brand-dot.hc { background: var(--primary-green); }
+        .brand-dot.hb { background: var(--secondary-blue); }
+        .brand-dot.ho { background: #8B5CF6; }
+
+        @media (max-width: 768px) {
+            nav .menu {
+                gap: 1rem;
+            }
+            .brand-selector {
+                display: none;
+            }
+        }
+
+        /* Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            margin-top: 60px;
+        }
+
+        .hero-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 20% 50%, rgba(16, 185, 129, 0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 80%, rgba(56, 189, 248, 0.1) 0%, transparent 50%);
+            z-index: 0;
+        }
+
+        .network-animation {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            opacity: 0.15;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            max-width: 900px;
+        }
+
+        .hero-content h1 {
+            font-size: clamp(2.5rem, 8vw, 4rem);
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+            background: linear-gradient(135deg, var(--primary-green), var(--secondary-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-content p {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            margin-bottom: 2.5rem;
+            line-height: 1.8;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .cta-group {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 1rem 2.5rem;
+            border-radius: 0.75rem;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: var(--primary-green);
+            color: var(--bg-dark);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(16, 185, 129, 0.4);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border-color: var(--accent-orange);
+            color: var(--accent-orange);
+        }
+
+        .btn-outline:hover {
+            background: var(--accent-orange);
+            color: var(--bg-dark);
+            transform: translateY(-3px);
+        }
+
+        /* Section Spacing */
+        section {
+            padding: 5rem 0;
+        }
+
+        section h2 {
+            font-size: clamp(2rem, 5vw, 3rem);
+            margin-bottom: 1rem;
+            font-weight: 800;
+        }
+
+        .section-subtitle {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            max-width: 600px;
+            margin-bottom: 3rem;
+        }
+
+        /* Mission Section */
+        .mission {
+            background: linear-gradient(180deg, rgba(16, 185, 129, 0.05) 0%, transparent 100%);
+            border-top: 1px solid var(--border-color);
+        }
+
+        .mission h2 {
+            text-align: center;
+            margin-bottom: 4rem;
+            background: linear-gradient(135deg, var(--primary-green), var(--secondary-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .pillars {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .pillar {
+            background: rgba(16, 185, 129, 0.08);
+            border: 1px solid var(--border-color);
+            padding: 2.5rem;
+            border-radius: 1.5rem;
+            transition: all 0.3s;
+        }
+
+        .pillar:hover {
+            background: rgba(16, 185, 129, 0.12);
+            border-color: var(--primary-green);
+            transform: translateY(-8px);
+        }
+
+        .pillar h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--primary-green);
+        }
+
+        .pillar p {
+            color: var(--text-muted);
+            line-height: 1.7;
+        }
+
+        /* Impact Dashboard */
+        .impact {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(56, 189, 248, 0.1) 100%);
+            border: 1px solid var(--border-color);
+            border-radius: 2rem;
+            padding: 4rem 2rem;
+        }
+
+        .impact h2 {
+            text-align: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .impact-intro {
+            text-align: center;
+            color: var(--text-muted);
+            margin-bottom: 3rem;
+        }
+
+        .metrics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .metric {
+            text-align: center;
+            padding: 2rem;
+            background: rgba(16, 185, 129, 0.08);
+            border-radius: 1rem;
+            border: 1px solid var(--border-color);
+        }
+
+        .metric-number {
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary-green), var(--secondary-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+
+        .metric-label {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+
+        .map-placeholder {
+            width: 100%;
+            height: 300px;
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.15), rgba(56, 189, 248, 0.15));
+            border-radius: 1.5rem;
+            border: 2px dashed var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        /* Programs Section */
+        .programs {
+            background: linear-gradient(180deg, transparent 0%, rgba(249, 115, 22, 0.05) 100%);
+        }
+
+        .programs h2 {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .programs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .program-card {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(56, 189, 248, 0.05));
+            border: 1px solid var(--border-color);
+            border-radius: 1.5rem;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+
+        .program-card:hover {
+            border-color: var(--primary-green);
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(16, 185, 129, 0.2);
+        }
+
+        .program-image {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(135deg, var(--primary-green), var(--accent-orange));
+            opacity: 0.8;
+        }
+
+        .program-content {
+            padding: 2rem;
+        }
+
+        .program-content h3 {
+            font-size: 1.4rem;
+            margin-bottom: 1rem;
+            color: var(--primary-green);
+        }
+
+        .program-content p {
+            color: var(--text-muted);
+            margin-bottom: 1.5rem;
+            line-height: 1.7;
+        }
+
+        .program-content a {
+            color: var(--secondary-blue);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+
+        .program-content a:hover {
+            color: var(--primary-green);
+        }
+
+        /* Get Involved Section */
+        .get-involved {
+            background: linear-gradient(135deg, rgba(56, 189, 248, 0.1) 0%, rgba(16, 185, 129, 0.1) 100%);
+            border: 1px solid var(--border-color);
+            border-radius: 2rem;
+            padding: 4rem 2rem;
+        }
+
+        .get-involved h2 {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .involvement-paths {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .path {
+            text-align: center;
+            padding: 2rem;
+            background: rgba(26, 26, 46, 0.5);
+            border-radius: 1.5rem;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s;
+        }
+
+        .path:hover {
+            border-color: var(--primary-green);
+            background: rgba(16, 185, 129, 0.1);
+        }
+
+        .path-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .path h3 {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            color: var(--primary-green);
+        }
+
+        .path p {
+            color: var(--text-muted);
+            margin-bottom: 1.5rem;
+            line-height: 1.7;
+        }
+
+        /* Stories Section */
+        .stories {
+            background: linear-gradient(180deg, rgba(249, 115, 22, 0.05) 0%, transparent 100%);
+        }
+
+        .stories h2 {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .stories-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .story-card {
+            background: rgba(16, 185, 129, 0.08);
+            border: 1px solid var(--border-color);
+            border-radius: 1.5rem;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+
+        .story-card:hover {
+            border-color: var(--accent-orange);
+            transform: translateY(-8px);
+        }
+
+        .story-image {
+            width: 100%;
+            height: 180px;
+            background: linear-gradient(135deg, var(--secondary-blue), var(--accent-orange));
+            opacity: 0.7;
+        }
+
+        .story-content {
+            padding: 2rem;
+        }
+
+        .story-quote {
+            color: var(--primary-green);
+            font-style: italic;
+            margin-bottom: 1rem;
+            line-height: 1.7;
+        }
+
+        .story-author {
+            color: var(--text-muted);
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        /* HeadyBuddy Widget */
+        .heady-buddy {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            z-index: 999;
+        }
+
+        .buddy-btn {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-green), var(--secondary-blue));
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            transition: all 0.3s;
+            box-shadow: 0 10px 30px rgba(16, 185, 129, 0.4);
+        }
+
+        .buddy-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 15px 40px rgba(16, 185, 129, 0.6);
+        }
+
+        .buddy-popup {
+            position: absolute;
+            bottom: 80px;
+            right: 0;
+            background: rgba(26, 26, 46, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border-color);
+            border-radius: 1.5rem;
+            padding: 1.5rem;
+            width: 300px;
+            display: none;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        .buddy-popup.active {
+            display: block;
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .buddy-popup h3 {
+            color: var(--primary-green);
+            margin-bottom: 1rem;
+        }
+
+        .buddy-popup p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            margin-bottom: 1rem;
+        }
+
+        .buddy-input {
+            width: 100%;
+            padding: 0.7rem;
+            border: 1px solid var(--border-color);
+            border-radius: 0.5rem;
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-light);
+            margin-bottom: 1rem;
+            font-family: inherit;
+        }
+
+        .buddy-input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .buddy-send {
+            width: 100%;
+            padding: 0.7rem;
+            background: var(--primary-green);
+            color: var(--bg-dark);
+            border: none;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .buddy-send:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);
+        }
+
+        /* Footer */
+        footer {
+            background: rgba(0, 0, 0, 0.3);
+            border-top: 1px solid var(--border-color);
+            padding: 3rem 0 1rem;
+            margin-top: 4rem;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .footer-col h4 {
+            color: var(--primary-green);
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        .footer-col ul {
+            list-style: none;
+        }
+
+        .footer-col ul li {
+            margin-bottom: 0.7rem;
+        }
+
+        .footer-col a {
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-col a:hover {
+            color: var(--primary-green);
+        }
+
+        .footer-bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 2rem;
+        }
+
+        .footer-info {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .social-links a {
+            color: var(--text-muted);
+            font-size: 1.2rem;
+            transition: color 0.3s;
+        }
+
+        .social-links a:hover {
+            color: var(--primary-green);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            nav .menu {
+                display: none;
+            }
+
+            .cta-group {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .btn {
+                width: 100%;
+                max-width: 300px;
+            }
+
+            section {
+                padding: 3rem 0;
+            }
+
+            section h2 {
+                font-size: 1.8rem;
+            }
+
+            .pillars,
+            .programs-grid,
+            .stories-grid,
+            .involvement-paths {
+                grid-template-columns: 1fr;
+            }
+
+            .heady-buddy {
+                bottom: 1rem;
+                right: 1rem;
+            }
+
+            .buddy-popup {
+                width: 250px;
+            }
+
+            .footer-bottom {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+
+        /* Animation Classes */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-on-scroll {
+            opacity: 0;
+            animation: fadeInUp 0.6s ease forwards;
+        }
+
+        /* Network Background Animation */
+        svg.network-svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .network-node {
+            fill: var(--primary-green);
+            opacity: 0.6;
+            animation: pulse 3s ease-in-out infinite;
+        }
+
+        .network-line {
+            stroke: var(--primary-green);
+            stroke-width: 1;
+            opacity: 0.3;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 0.3; }
+        }
+
+        /* Skip Navigation */
+        .skip-link {
+            position: absolute;
+            top: -40px;
+            left: 0;
+            background: var(--primary-green);
+            color: var(--bg-dark);
+            padding: 0.5rem 1rem;
+            text-decoration: none;
+            border-radius: 0.5rem;
+        }
+
+        .skip-link:focus {
+            top: 0;
+        }
+    </style>
+</head>
+<body>
+    <a href="#main" class="skip-link">Skip to main content</a>
+
+    <!-- Navigation -->
+    <nav>
+        <div class="container">
+            <div class="logo">HeadyConnection</div>
+            <ul class="menu">
+                <li><a href="#mission">Mission</a></li>
+                <li><a href="#impact">Impact</a></li>
+                <li><a href="#programs">Programs</a></li>
+                <li><a href="#stories">Stories</a></li>
+                <li><a href="#involved" class="nav-cta">Join Us</a></li>
+            </ul>
+            <div class="brand-selector">
+                <div class="brand-dot hc active" title="HeadyConnection"></div>
+                <div class="brand-dot hb" title="HeadyBuilds"></div>
+                <div class="brand-dot ho" title="HeadyOfficial"></div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero" id="hero">
+        <div class="hero-background"></div>
+        <svg class="network-animation" viewBox="0 0 800 600" preserveAspectRatio="xMidYMid slice">
+            <circle class="network-line" cx="200" cy="150" r="80"/>
+            <circle class="network-line" cx="600" cy="200" r="100"/>
+            <circle class="network-line" cx="400" cy="450" r="90"/>
+            <circle class="network-node" cx="150" cy="100" r="4"/>
+            <circle class="network-node" cx="250" cy="200" r="4"/>
+            <circle class="network-node" cx="650" cy="150" r="4"/>
+            <circle class="network-node" cx="550" cy="300" r="4"/>
+            <circle class="network-node" cx="350" cy="400" r="4"/>
+            <circle class="network-node" cx="500" cy="500" r="4"/>
+            <line class="network-line" x1="150" y1="100" x2="250" y2="200"/>
+            <line class="network-line" x1="250" y1="200" x2="650" y2="150"/>
+            <line class="network-line" x1="650" y1="150" x2="550" y2="300"/>
+            <line class="network-line" x1="550" y1="300" x2="350" y2="400"/>
+            <line class="network-line" x1="350" y1="400" x2="500" y2="500"/>
+        </svg>
+        <div class="hero-content">
+            <h1>Intelligence That Connects</h1>
+            <p>Bridging the AI divide. Empowering communities with sovereign intelligence. Because access to AI shouldn't depend on your zip code.</p>
+            <div class="cta-group">
+                <button class="btn btn-primary" onclick="document.getElementById('involved').scrollIntoView({behavior: 'smooth'})">Join the Mission</button>
+                <button class="btn btn-outline" onclick="document.getElementById('impact').scrollIntoView({behavior: 'smooth'})">See Our Impact</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main id="main">
+        <!-- Mission Section -->
+        <section class="mission" id="mission">
+            <div class="container">
+                <h2>Every community deserves access to transformative AI</h2>
+                <div class="pillars">
+                    <div class="pillar">
+                        <h3>Digital Equity</h3>
+                        <p>Free AI tools and resources for underserved communities, ensuring no one is left behind in the intelligence revolution.</p>
+                    </div>
+                    <div class="pillar">
+                        <h3>AI Literacy</h3>
+                        <p>Comprehensive education programs teaching AI skills, demystifying technology, and building confident technologists.</p>
+                    </div>
+                    <div class="pillar">
+                        <h3>Community Intelligence</h3>
+                        <p>Shared AI resources tailored to serve local needs, from healthcare to education to economic development.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Impact Dashboard -->
+        <section class="impact-section" id="impact" style="padding: 3rem 0;">
+            <div class="container">
+                <div class="impact">
+                    <h2>Our Impact by the Numbers</h2>
+                    <p class="impact-intro">Real change in communities across the globe</p>
+                    
+                    <div class="metrics">
+                        <div class="metric">
+                            <div class="metric-number" data-target="12400">0</div>
+                            <div class="metric-label">Community Members</div>
+                        </div>
+                        <div class="metric">
+                            <div class="metric-number" data-target="48">0</div>
+                            <div class="metric-label">Communities Served</div>
+                        </div>
+                        <div class="metric">
+                            <div class="metric-number" data-target="156">0</div>
+                            <div class="metric-label">AI Workshops Delivered</div>
+                        </div>
+                        <div class="metric">
+                            <div class="metric-number" data-target="2400000">0</div>
+                            <div class="metric-label">Resources Deployed ($)</div>
+                        </div>
+                    </div>
+
+                    <div class="map-placeholder">
+                        🌍 Community Connection Map
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Programs Section -->
+        <section class="programs" id="programs">
+            <div class="container">
+                <h2 style="text-align: center;">Featured Programs</h2>
+                <div class="programs-grid">
+                    <div class="program-card">
+                        <div class="program-image"></div>
+                        <div class="program-content">
+                            <h3>HeadyScholar</h3>
+                            <p>Free AI-powered tutoring and mentorship for students in underserved areas, breaking barriers to education.</p>
+                            <a href="#learn-more">Learn more →</a>
+                        </div>
+                    </div>
+                    <div class="program-card">
+                        <div class="program-image" style="background: linear-gradient(135deg, var(--secondary-blue), var(--accent-orange));"></div>
+                        <div class="program-content">
+                            <h3>HeadyBridge</h3>
+                            <p>Technology infrastructure grants connecting rural and urban communities, bridging the digital divide.</p>
+                            <a href="#learn-more">Learn more →</a>
+                        </div>
+                    </div>
+                    <div class="program-card">
+                        <div class="program-image" style="background: linear-gradient(135deg, var(--accent-orange), var(--primary-green));"></div>
+                        <div class="program-content">
+                            <h3>HeadyVoice</h3>
+                            <p>AI-powered accessibility tools for people with disabilities, ensuring technology serves everyone.</p>
+                            <a href="#learn-more">Learn more →</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Get Involved Section -->
+        <section class="get-involved" id="involved" style="margin: 4rem 0;">
+            <div class="container">
+                <h2>How to Get Involved</h2>
+                <div class="involvement-paths">
+                    <div class="path">
+                        <div class="path-icon">💚</div>
+                        <h3>Donate</h3>
+                        <p>Support our programs with a tax-deductible contribution. Every dollar multiplies community impact.</p>
+                        <button class="btn btn-primary" style="width: 100%;">Donate Now</button>
+                    </div>
+                    <div class="path">
+                        <div class="path-icon">🤝</div>
+                        <h3>Volunteer</h3>
+                        <p>Share your expertise by mentoring students, teaching workshops, or developing resources.</p>
+                        <button class="btn btn-primary" style="width: 100%;">Apply Today</button>
+                    </div>
+                    <div class="path">
+                        <div class="path-icon">🌐</div>
+                        <h3>Partner</h3>
+                        <p>Work with us to bring intelligent solutions to your community or organization.</p>
+                        <button class="btn btn-primary" style="width: 100%;">Partner With Us</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Stories Section -->
+        <section class="stories" id="stories">
+            <div class="container">
+                <h2>Community Stories</h2>
+                <div class="stories-grid">
+                    <div class="story-card">
+                        <div class="story-image"></div>
+                        <div class="story-content">
+                            <p class="story-quote">"HeadyScholar helped me learn AI while I work full-time. Now I'm building tools for my community."</p>
+                            <p class="story-author">— Maria S., Chicago, IL</p>
+                        </div>
+                    </div>
+                    <div class="story-card">
+                        <div class="story-image" style="background: linear-gradient(135deg, var(--accent-orange), var(--primary-green));"></div>
+                        <div class="story-content">
+                            <p class="story-quote">"The HeadyBridge grant brought high-speed internet to our rural clinic. AI diagnostics saved lives."</p>
+                            <p class="story-author">— Dr. James T., rural Alabama</p>
+                        </div>
+                    </div>
+                    <div class="story-card">
+                        <div class="story-image" style="background: linear-gradient(135deg, var(--secondary-blue), var(--accent-orange));"></div>
+                        <div class="story-content">
+                            <p class="story-quote">"HeadyVoice's accessibility tools let me work independently. I'm no longer held back by technology."</p>
+                            <p class="story-author">— Alex M., Portland, OR</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- HeadyBuddy Widget -->
+    <div class="heady-buddy">
+        <button class="buddy-btn" id="buddy-toggle" onclick="toggleBuddy()">🤖</button>
+        <div class="buddy-popup" id="buddy-popup">
+            <h3>HeadyBuddy</h3>
+            <p>Questions about our programs? I'm here to help!</p>
+            <input type="text" class="buddy-input" placeholder="Ask me anything..." id="buddy-input">
+            <button class="buddy-send" onclick="sendBuddyMessage()">Send</button>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-col">
+                    <h4>About</h4>
+                    <ul>
+                        <li><a href="#mission">Our Mission</a></li>
+                        <li><a href="#programs">Programs</a></li>
+                        <li><a href="#stories">Stories</a></li>
+                        <li><a href="#">Team</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Get Involved</h4>
+                    <ul>
+                        <li><a href="#">Donate</a></li>
+                        <li><a href="#">Volunteer</a></li>
+                        <li><a href="#">Partner</a></li>
+                        <li><a href="#">Newsletter</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Brands</h4>
+                    <ul>
+                        <li><a href="#">HeadyConnection</a></li>
+                        <li><a href="#">HeadyBuilds</a></li>
+                        <li><a href="#">HeadyOfficial</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Contact</h4>
+                    <ul>
+                        <li><a href="mailto:hello@headyconnection.com">hello@headyconnection.com</a></li>
+                        <li><a href="#">Twitter</a></li>
+                        <li><a href="#">LinkedIn</a></li>
+                        <li><a href="#">GitHub</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <div class="footer-info">
+                    <p><strong>HeadyConnection</strong> is a 501(c)(3) nonprofit organization.</p>
+                    <p>EIN: XX-XXXXXXX | Founded 2024</p>
+                    <p>&copy; 2026 HeadyConnection. All rights reserved. | <a href="#" style="color: var(--primary-green);">Privacy Policy</a> | <a href="#" style="color: var(--primary-green);">Terms of Service</a></p>
+                </div>
+                <div class="social-links">
+                    <a href="#" title="Twitter">𝕏</a>
+                    <a href="#" title="LinkedIn">in</a>
+                    <a href="#" title="Facebook">f</a>
+                    <a href="#" title="Instagram">📷</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Animate counter numbers on scroll
+        function animateCounters() {
+            const metrics = document.querySelectorAll('.metric-number');
+            metrics.forEach(metric => {
+                const target = parseInt(metric.dataset.target);
+                let current = 0;
+                const increment = target / 50;
+                const timer = setInterval(() => {
+                    current += increment;
+                    if (current >= target) {
+                        metric.textContent = target.toLocaleString();
+                        clearInterval(timer);
+                    } else {
+                        metric.textContent = Math.floor(current).toLocaleString();
+                    }
+                }, 30);
+            });
+        }
+
+        // Trigger counter animation when impact section comes into view
+        const impactSection = document.getElementById('impact');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting && !entry.target.dataset.animated) {
+                    animateCounters();
+                    entry.target.dataset.animated = 'true';
+                }
+            });
+        });
+
+        if (impactSection) {
+            observer.observe(impactSection);
+        }
+
+        // Animate elements on scroll
+        const animateOnScroll = () => {
+            const elements = document.querySelectorAll('.pillar, .program-card, .story-card, .path');
+            const checkInView = () => {
+                elements.forEach(element => {
+                    const rect = element.getBoundingClientRect();
+                    if (rect.top < window.innerHeight * 0.8) {
+                        element.classList.add('animate-on-scroll');
+                    }
+                });
+            };
+            window.addEventListener('scroll', checkInView);
+            checkInView();
+        };
+
+        animateOnScroll();
+
+        // HeadyBuddy functionality
+        function toggleBuddy() {
+            const popup = document.getElementById('buddy-popup');
+            popup.classList.toggle('active');
+            if (popup.classList.contains('active')) {
+                document.getElementById('buddy-input').focus();
+            }
+        }
+
+        function sendBuddyMessage() {
+            const input = document.getElementById('buddy-input');
+            const message = input.value.trim();
+            
+            if (message) {
+                input.value = '';
+                // Simulate response
+                setTimeout(() => {
+                    alert('Thanks for your question! Our team will respond shortly.\n\nMessage: ' + message);
+                }, 500);
+            }
+        }
+
+        // Allow Enter key to send message
+        document.getElementById('buddy-input').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                sendBuddyMessage();
+            }
+        });
+
+        // Close buddy popup when clicking outside
+        document.addEventListener('click', (e) => {
+            const buddy = document.querySelector('.heady-buddy');
+            const popup = document.getElementById('buddy-popup');
+            if (!buddy.contains(e.target) && popup.classList.contains('active')) {
+                popup.classList.remove('active');
+            }
+        });
+
+        // Smooth scroll polyfill for older browsers
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                const href = this.getAttribute('href');
+                if (href !== '#' && document.querySelector(href)) {
+                    e.preventDefault();
+                    document.querySelector(href).scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // Active nav link tracking
+        window.addEventListener('scroll', () => {
+            const sections = document.querySelectorAll('section');
+            let current = '';
+            
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if (pageYOffset >= sectionTop - 200) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            document.querySelectorAll('nav a').forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href').slice(1) === current) {
+                    link.classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

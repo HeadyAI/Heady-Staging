@@ -1,0 +1,1233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HeadyMe - Your Sovereign Intelligence</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0F172A;
+            color: #E5E7EB;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Color Palette */
+        :root {
+            --navy: #0F172A;
+            --gold: #F59E0B;
+            --teal: #14B8A6;
+            --rose: #F43F5E;
+            --light-navy: #1E293B;
+            --dark-navy: #020617;
+        }
+
+        /* ===== NAVIGATION ===== */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 2rem;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(245, 158, 11, 0.1);
+        }
+
+        nav.scrolled {
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #F59E0B, #14B8A6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -1px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: #E5E7EB;
+            text-decoration: none;
+            font-size: 0.95rem;
+            font-weight: 500;
+            position: relative;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: #F59E0B;
+        }
+
+        .nav-links a.active {
+            color: #F59E0B;
+            font-weight: 700;
+        }
+
+        .nav-links a.active::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #F59E0B, #14B8A6);
+            border-radius: 1px;
+        }
+
+        .nav-secondary {
+            display: flex;
+            gap: 1.5rem;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            nav {
+                padding: 1rem;
+            }
+
+            .nav-links {
+                gap: 1rem;
+                font-size: 0.9rem;
+            }
+
+            .nav-secondary {
+                gap: 1rem;
+                font-size: 0.8rem;
+            }
+
+            .logo {
+                font-size: 1.2rem;
+            }
+        }
+
+        /* ===== HERO SECTION ===== */
+        .hero {
+            margin-top: 80px;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            padding: 2rem;
+        }
+
+        .aurora-bg {
+            position: absolute;
+            inset: 0;
+            overflow: hidden;
+        }
+
+        .aurora {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.15;
+            filter: blur(80px);
+            animation: float 20s ease-in-out infinite;
+        }
+
+        .aurora-gold {
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, #F59E0B, transparent);
+            top: 10%;
+            left: 10%;
+        }
+
+        .aurora-teal {
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, #14B8A6, transparent);
+            top: 30%;
+            right: 5%;
+            animation-delay: -5s;
+        }
+
+        .aurora-rose {
+            width: 350px;
+            height: 350px;
+            background: radial-gradient(circle, #F43F5E, transparent);
+            bottom: 10%;
+            left: 20%;
+            animation-delay: -10s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(30px, -30px); }
+        }
+
+        .particles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+
+        .particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: #F59E0B;
+            border-radius: 50%;
+            opacity: 0.3;
+            animation: twinkle 3s ease-in-out infinite;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.1; }
+            50% { opacity: 0.4; }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            max-width: 900px;
+        }
+
+        .hero h1 {
+            font-size: 4rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            line-height: 1.1;
+            background: linear-gradient(135deg, #F59E0B, #14B8A6, #F59E0B);
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradientShift 6s ease infinite;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            color: #CBD5E1;
+            margin-bottom: 3rem;
+            line-height: 1.8;
+            font-weight: 400;
+        }
+
+        .cta-group {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 4rem;
+        }
+
+        .btn {
+            padding: 0.95rem 2rem;
+            font-size: 1rem;
+            font-weight: 600;
+            border: none;
+            border-radius: 0.75rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Inter', sans-serif;
+            letter-spacing: 0.3px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #F59E0B, #D97706);
+            color: #0F172A;
+            box-shadow: 0 10px 30px rgba(245, 158, 11, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(245, 158, 11, 0.4);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: #F59E0B;
+            border: 2px solid #F59E0B;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(245, 158, 11, 0.1);
+            transform: translateY(-3px);
+        }
+
+        @media (max-width: 768px) {
+            .hero {
+                margin-top: 60px;
+                min-height: auto;
+                padding-top: 4rem;
+                padding-bottom: 4rem;
+            }
+
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero p {
+                font-size: 1.1rem;
+            }
+
+            .cta-group {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+        }
+
+        /* ===== SECTION CONTAINER ===== */
+        section {
+            padding: 6rem 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        section h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #F59E0B, #14B8A6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        section > p {
+            font-size: 1.1rem;
+            color: #CBD5E1;
+            margin-bottom: 3rem;
+            max-width: 700px;
+        }
+
+        /* ===== PERSONAL VAULT SECTION ===== */
+        .vault-section {
+            background: linear-gradient(180deg, rgba(30, 41, 59, 0.5), rgba(15, 23, 42, 0.3));
+            border-radius: 1.5rem;
+            border: 1px solid rgba(245, 158, 11, 0.1);
+            padding: 4rem;
+        }
+
+        .vault-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .vault-icons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        .vault-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            padding: 2rem;
+            background: rgba(245, 158, 11, 0.05);
+            border-radius: 1rem;
+            border: 1px solid rgba(245, 158, 11, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .vault-item:hover {
+            background: rgba(20, 184, 166, 0.1);
+            border-color: rgba(20, 184, 166, 0.3);
+            transform: translateY(-5px);
+        }
+
+        .vault-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #F59E0B, #14B8A6);
+            border-radius: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+            font-size: 1.8rem;
+        }
+
+        .vault-item h3 {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            color: #F5F5F5;
+        }
+
+        .vault-item p {
+            font-size: 0.9rem;
+            color: #A0AEC0;
+        }
+
+        @media (max-width: 768px) {
+            .vault-content {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .vault-section {
+                padding: 2rem;
+            }
+
+            .vault-icons {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        /* ===== CAPABILITIES SECTION ===== */
+        .capabilities-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .capability-card {
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.6), rgba(15, 23, 42, 0.4));
+            border: 1px solid rgba(245, 158, 11, 0.15);
+            border-radius: 1.25rem;
+            padding: 2.5rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .capability-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #F59E0B, #14B8A6);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.3s ease;
+        }
+
+        .capability-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .capability-card:hover {
+            transform: translateY(-10px);
+            border-color: rgba(245, 158, 11, 0.3);
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.8), rgba(20, 184, 166, 0.1));
+            box-shadow: 0 20px 50px rgba(245, 158, 11, 0.15);
+        }
+
+        .capability-card h3 {
+            font-size: 1.4rem;
+            margin-bottom: 1rem;
+            color: #F5F5F5;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .capability-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #F59E0B, #14B8A6);
+            border-radius: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .capability-card p {
+            color: #CBD5E1;
+            line-height: 1.7;
+            font-size: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .capabilities-grid {
+                grid-template-columns: 1fr;
+            }
+
+            section h2 {
+                font-size: 2rem;
+            }
+        }
+
+        /* ===== DAILY FLOW SECTION ===== */
+        .timeline {
+            margin-top: 3rem;
+        }
+
+        .timeline-item {
+            display: grid;
+            grid-template-columns: 200px 1fr;
+            gap: 3rem;
+            margin-bottom: 3rem;
+            padding: 2rem;
+            background: rgba(30, 41, 59, 0.4);
+            border-left: 3px solid #F59E0B;
+            border-radius: 0.75rem;
+            transition: all 0.3s ease;
+            position: relative;
+            left: 0;
+        }
+
+        .timeline-item:hover {
+            left: 10px;
+            background: rgba(30, 41, 59, 0.6);
+            border-left-color: #14B8A6;
+            box-shadow: 0 10px 30px rgba(245, 158, 11, 0.1);
+        }
+
+        .timeline-time {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #F59E0B;
+        }
+
+        .timeline-content h3 {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+            color: #F5F5F5;
+        }
+
+        .timeline-content p {
+            color: #A0AEC0;
+            font-size: 1rem;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 768px) {
+            .timeline-item {
+                grid-template-columns: 100px 1fr;
+                gap: 1.5rem;
+                padding: 1.5rem;
+            }
+
+            .timeline-time {
+                font-size: 1rem;
+            }
+
+            .timeline-content h3 {
+                font-size: 1rem;
+            }
+        }
+
+        /* ===== TESTIMONIAL SECTION ===== */
+        .testimonial-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .testimonial-card {
+            background: linear-gradient(135deg, rgba(20, 184, 166, 0.1), rgba(244, 63, 94, 0.05));
+            border: 1px solid rgba(245, 158, 11, 0.15);
+            border-radius: 1.25rem;
+            padding: 2.5rem;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .testimonial-card::before {
+            content: '"';
+            position: absolute;
+            top: 1rem;
+            left: 1.5rem;
+            font-size: 3rem;
+            color: rgba(245, 158, 11, 0.2);
+            font-weight: 800;
+        }
+
+        .testimonial-card:hover {
+            transform: translateY(-8px);
+            border-color: rgba(245, 158, 11, 0.3);
+            box-shadow: 0 15px 40px rgba(245, 158, 11, 0.1);
+        }
+
+        .testimonial-text {
+            font-size: 1.05rem;
+            color: #CBD5E1;
+            margin-bottom: 1.5rem;
+            line-height: 1.8;
+            font-style: italic;
+        }
+
+        .testimonial-title {
+            font-weight: 700;
+            color: #F59E0B;
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        @media (max-width: 768px) {
+            .testimonial-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .testimonial-card {
+                padding: 2rem;
+            }
+
+            .testimonial-text {
+                font-size: 1rem;
+            }
+        }
+
+        /* ===== FOOTER ===== */
+        footer {
+            background: rgba(2, 6, 23, 0.8);
+            border-top: 1px solid rgba(245, 158, 11, 0.1);
+            padding: 4rem 2rem 2rem;
+            margin-top: 6rem;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        .footer-section h4 {
+            color: #F59E0B;
+            margin-bottom: 1rem;
+            font-size: 1rem;
+            font-weight: 700;
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section a {
+            color: #A0AEC0;
+            text-decoration: none;
+            font-size: 0.95rem;
+            transition: color 0.3s ease;
+            display: inline-block;
+            margin-bottom: 0.75rem;
+        }
+
+        .footer-section a:hover {
+            color: #F59E0B;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .social-link {
+            width: 40px;
+            height: 40px;
+            background: rgba(245, 158, 11, 0.1);
+            border: 1px solid rgba(245, 158, 11, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #F59E0B;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-size: 1.2rem;
+        }
+
+        .social-link:hover {
+            background: #F59E0B;
+            color: #0F172A;
+            transform: translateY(-3px);
+        }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(245, 158, 11, 0.1);
+            padding-top: 2rem;
+            text-align: center;
+            color: #64748B;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            footer {
+                padding: 2rem;
+            }
+
+            .footer-content {
+                gap: 2rem;
+            }
+        }
+
+        /* ===== FLOATING CHAT WIDGET ===== */
+        .chat-widget {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            z-index: 999;
+        }
+
+        .chat-bubble {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #F59E0B, #D97706);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 10px 30px rgba(245, 158, 11, 0.3);
+            transition: all 0.3s ease;
+            color: #0F172A;
+            font-size: 1.8rem;
+            border: none;
+            font-weight: 700;
+        }
+
+        .chat-bubble:hover {
+            transform: scale(1.1) translateY(-5px);
+            box-shadow: 0 15px 40px rgba(245, 158, 11, 0.4);
+        }
+
+        .chat-bubble.active {
+            width: 320px;
+            height: auto;
+            border-radius: 1.25rem;
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.95), rgba(15, 23, 42, 0.95));
+            border: 1px solid rgba(245, 158, 11, 0.2);
+            backdrop-filter: blur(10px);
+            padding: 1.5rem;
+        }
+
+        .chat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            color: #F5F5F5;
+        }
+
+        .chat-header h3 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #F59E0B;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: #A0AEC0;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .close-btn:hover {
+            color: #F59E0B;
+        }
+
+        .chat-messages {
+            height: 250px;
+            overflow-y: auto;
+            margin-bottom: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .message {
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .message.bot {
+            background: rgba(245, 158, 11, 0.1);
+            color: #E5E7EB;
+            border-left: 3px solid #F59E0B;
+        }
+
+        .message.user {
+            background: rgba(20, 184, 166, 0.15);
+            color: #E5E7EB;
+            text-align: right;
+            border-right: 3px solid #14B8A6;
+        }
+
+        .chat-input {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .chat-input input {
+            flex: 1;
+            background: rgba(245, 158, 11, 0.05);
+            border: 1px solid rgba(245, 158, 11, 0.2);
+            border-radius: 0.5rem;
+            padding: 0.75rem;
+            color: #E5E7EB;
+            font-size: 0.9rem;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.3s ease;
+        }
+
+        .chat-input input:focus {
+            outline: none;
+            border-color: #F59E0B;
+            background: rgba(245, 158, 11, 0.1);
+        }
+
+        .chat-input button {
+            background: linear-gradient(135deg, #F59E0B, #D97706);
+            color: #0F172A;
+            border: none;
+            border-radius: 0.5rem;
+            padding: 0.75rem 1.25rem;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .chat-input button:hover {
+            transform: scale(1.05);
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* ===== SCROLL ANIMATIONS ===== */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.6s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ===== UTILITY ===== */
+        .text-center {
+            text-align: center;
+        }
+
+        .mt-4 {
+            margin-top: 2rem;
+        }
+
+        .divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(245, 158, 11, 0.3), transparent);
+            margin: 4rem 0;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <nav-container>
+            <div class="logo">HeadyMe</div>
+            <ul class="nav-links">
+                <li><a href="#" class="active">HeadyMe</a></li>
+                <li><a href="#">HeadySystems</a></li>
+                <li><a href="#">HeadyConnection</a></li>
+                <li><a href="#">Heady-AI</a></li>
+                <div class="nav-secondary">
+                    <a href="#">Docs</a>
+                    <a href="#">Status</a>
+                    <a href="#">HeadyBuddy</a>
+                </div>
+            </ul>
+        </nav-container>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="aurora-bg">
+            <div class="aurora aurora-gold"></div>
+            <div class="aurora aurora-teal"></div>
+            <div class="aurora aurora-rose"></div>
+            <div class="particles" id="particles"></div>
+        </div>
+        <div class="hero-content">
+            <h1>Your Sovereign Intelligence</h1>
+            <p>HeadyMe learns how you think, remembers what matters, and evolves with you. Your AI, your data, your rules.</p>
+            <div class="cta-group">
+                <button class="btn btn-primary">Start Your Journey</button>
+                <button class="btn btn-secondary">See How It Works</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Personal Vault Section -->
+    <section class="text-center fade-in">
+        <h2>Your Personal Vault</h2>
+        <p>Your memories, preferences, and patterns — encrypted, sovereign, and always accessible.</p>
+        <div class="vault-section">
+            <div class="vault-content">
+                <div class="vault-icons">
+                    <div class="vault-item fade-in">
+                        <div class="vault-icon">📝</div>
+                        <h3>Secure Notes</h3>
+                        <p>Encrypted thoughts and ideas</p>
+                    </div>
+                    <div class="vault-item fade-in">
+                        <div class="vault-icon">🎙️</div>
+                        <h3>Voice Memos</h3>
+                        <p>Quick voice-to-text insights</p>
+                    </div>
+                    <div class="vault-item fade-in">
+                        <div class="vault-icon">📄</div>
+                        <h3>Documents</h3>
+                        <p>Your knowledge base</p>
+                    </div>
+                    <div class="vault-item fade-in">
+                        <div class="vault-icon">🎯</div>
+                        <h3>Goals & Habits</h3>
+                        <p>Track what matters most</p>
+                    </div>
+                </div>
+                <div>
+                    <h3 style="font-size: 1.5rem; color: #F5F5F5; margin-bottom: 1.5rem;">Everything Protected</h3>
+                    <p style="color: #CBD5E1; font-size: 1.05rem; line-height: 1.8; margin-bottom: 1.5rem;">End-to-end encryption means your data stays yours. Zero-knowledge architecture ensures even we can't access your private information. You maintain complete sovereignty over every insight, preference, and memory.</p>
+                    <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+                        <div style="flex: 1;">
+                            <div style="font-size: 1.5rem; color: #F59E0B; font-weight: 700;">256-bit</div>
+                            <div style="color: #A0AEC0; font-size: 0.9rem;">Encryption</div>
+                        </div>
+                        <div style="flex: 1;">
+                            <div style="font-size: 1.5rem; color: #14B8A6; font-weight: 700;">Zero</div>
+                            <div style="color: #A0AEC0; font-size: 0.9rem;">Knowledge Access</div>
+                        </div>
+                        <div style="flex: 1;">
+                            <div style="font-size: 1.5rem; color: #F43F5E; font-weight: 700;">100%</div>
+                            <div style="color: #A0AEC0; font-size: 0.9rem;">Your Control</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- Capabilities Section -->
+    <section class="fade-in">
+        <h2>What HeadyMe Can Do</h2>
+        <p>Powered by the world's best AI models, adapted to your unique needs.</p>
+        <div class="capabilities-grid">
+            <div class="capability-card fade-in">
+                <h3><span class="capability-icon">🧠</span>Personal Memory</h3>
+                <p>HeadyMe remembers every conversation, every preference, every insight. Your AI builds a persistent understanding of who you are, learning your communication style, values, and goals over time.</p>
+            </div>
+            <div class="capability-card fade-in">
+                <h3><span class="capability-icon">⚡</span>Adaptive Intelligence</h3>
+                <p>The more you use HeadyMe, the smarter it gets. Personalized responses, proactive suggestions, anticipatory actions. It evolves with you, becoming more intuitive and helpful every day.</p>
+            </div>
+            <div class="capability-card fade-in">
+                <h3><span class="capability-icon">🔐</span>Sovereign Data</h3>
+                <p>Your data never leaves your control. End-to-end encryption, zero-knowledge architecture, you own everything. Sovereignty isn't just a feature—it's our foundation.</p>
+            </div>
+            <div class="capability-card fade-in">
+                <h3><span class="capability-icon">🚀</span>Multi-Model Mind</h3>
+                <p>Powered by Claude, GPT-4, Gemini and more—HeadyMe routes to the best AI for each task, seamlessly. You get the perfect tool for every moment, without friction.</p>
+            </div>
+        </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- Daily Flow Section -->
+    <section class="fade-in">
+        <h2>A Day With HeadyMe</h2>
+        <p>See how HeadyMe integrates into your daily rhythm, understanding you better with each interaction.</p>
+        <div class="timeline">
+            <div class="timeline-item fade-in">
+                <div class="timeline-time">7:00 AM</div>
+                <div class="timeline-content">
+                    <h3>Morning Briefing</h3>
+                    <p>HeadyMe wakes you up with curated news, calendar overview, and today's priorities—all personalized to your interests and goals.</p>
+                </div>
+            </div>
+            <div class="timeline-item fade-in">
+                <div class="timeline-time">10:00 AM</div>
+                <div class="timeline-content">
+                    <h3>Deep Work Assistant</h3>
+                    <p>Writing, research, or coding? HeadyMe understands your project context, remembers your preferences, and becomes your thinking partner for complex work.</p>
+                </div>
+            </div>
+            <div class="timeline-item fade-in">
+                <div class="timeline-time">1:00 PM</div>
+                <div class="timeline-content">
+                    <h3>Meeting Prep</h3>
+                    <p>Before important meetings, HeadyMe surfaces relevant context, prepares talking points, and reminds you of previous conversations with this person.</p>
+                </div>
+            </div>
+            <div class="timeline-item fade-in">
+                <div class="timeline-time">5:00 PM</div>
+                <div class="timeline-content">
+                    <h3>Daily Review</h3>
+                    <p>Reflect on accomplishments, capture lessons learned, and plan tomorrow. HeadyMe helps you celebrate wins and refine your approach.</p>
+                </div>
+            </div>
+            <div class="timeline-item fade-in">
+                <div class="timeline-time">9:00 PM</div>
+                <div class="timeline-content">
+                    <h3>Evening Reflection</h3>
+                    <p>Journal your day, explore insights, capture growth moments. HeadyMe helps you make sense of your experiences and track your evolution.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- Testimonial Section -->
+    <section class="fade-in">
+        <h2 class="text-center">What HeadyMe Feels Like</h2>
+        <p class="text-center">First-person moments of truly personal AI.</p>
+        <div class="testimonial-grid">
+            <div class="testimonial-card fade-in">
+                <p class="testimonial-text">I asked HeadyMe about that idea I mentioned three weeks ago—and it didn't just remember it. It connected it to things I'd learned since then, asked clarifying questions in exactly my style, and helped me think bigger. It's not just remembering; it's actually understanding me.</p>
+                <p class="testimonial-title">The Researcher</p>
+            </div>
+            <div class="testimonial-card fade-in">
+                <p class="testimonial-text">Every morning, my briefing is different because HeadyMe learns what I actually care about. No generic news. No fluff. Just the things that matter to me, presented in a way that respects my time. It's like having a personal editor for reality.</p>
+                <p class="testimonial-title">The Executive</p>
+            </div>
+            <div class="testimonial-card fade-in">
+                <p class="testimonial-text">What got me wasn't the intelligence—it's that it feels private. My vault isn't someone else's data. My patterns aren't someone else's product. I actually control my AI. For the first time, that feels true.</p>
+                <p class="testimonial-title">The Privacy Advocate</p>
+            </div>
+        </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- CTA Section -->
+    <section class="text-center fade-in">
+        <h2>Ready for Sovereign Intelligence?</h2>
+        <p style="margin-bottom: 2rem;">Experience AI that truly knows you. Your data. Your rules. Your intelligence.</p>
+        <div class="cta-group">
+            <button class="btn btn-primary">Start Your Journey</button>
+            <button class="btn btn-secondary">Book a Demo</button>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>Product</h4>
+                <ul>
+                    <li><a href="#">Features</a></li>
+                    <li><a href="#">Pricing</a></li>
+                    <li><a href="#">Security</a></li>
+                    <li><a href="#">Roadmap</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Company</h4>
+                <ul>
+                    <li><a href="#">About</a></li>
+                    <li><a href="#">Blog</a></li>
+                    <li><a href="#">Careers</a></li>
+                    <li><a href="#">Contact</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Legal</h4>
+                <ul>
+                    <li><a href="#">Privacy Policy</a></li>
+                    <li><a href="#">Terms of Service</a></li>
+                    <li><a href="#">Cookie Policy</a></li>
+                    <li><a href="#">GDPR</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Connect</h4>
+                <div class="social-links">
+                    <a href="#" class="social-link">X</a>
+                    <a href="#" class="social-link">Y</a>
+                    <a href="#" class="social-link">Z</a>
+                </div>
+                <p style="color: #A0AEC0; margin-top: 1.5rem; font-size: 0.9rem;">Part of the Heady ecosystem.<br/>Building sovereign intelligence.<br/>For everyone.</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 HeadySystems Inc. All rights reserved. | <a href="#" style="color: #64748B; text-decoration: none;">Privacy</a> | <a href="#" style="color: #64748B; text-decoration: none;">Terms</a></p>
+        </div>
+    </footer>
+
+    <!-- HeadyBuddy Chat Widget -->
+    <div class="chat-widget">
+        <button class="chat-bubble" id="chatToggle">💬</button>
+        <div class="chat-window hidden" id="chatWindow">
+            <div class="chat-header">
+                <h3>HeadyBuddy</h3>
+                <button class="close-btn" id="closeChat">×</button>
+            </div>
+            <div class="chat-messages" id="chatMessages">
+                <div class="message bot">Hey! I'm HeadyBuddy, your personal AI assistant. How can I help you today?</div>
+            </div>
+            <div class="chat-input">
+                <input type="text" id="chatInput" placeholder="Ask me anything...">
+                <button id="sendBtn">Send</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Particle Generation
+        function generateParticles() {
+            const container = document.getElementById('particles');
+            const particleCount = 50;
+
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.top = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 3 + 's';
+                container.appendChild(particle);
+            }
+        }
+        generateParticles();
+
+        // Scroll Animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.fade-in').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Navigation Scroll Effect
+        window.addEventListener('scroll', () => {
+            const nav = document.querySelector('nav');
+            if (window.scrollY > 50) {
+                nav.classList.add('scrolled');
+            } else {
+                nav.classList.remove('scrolled');
+            }
+        });
+
+        // Chat Widget
+        const chatToggle = document.getElementById('chatToggle');
+        const chatWindow = document.getElementById('chatWindow');
+        const closeChat = document.getElementById('closeChat');
+        const sendBtn = document.getElementById('sendBtn');
+        const chatInput = document.getElementById('chatInput');
+        const chatMessages = document.getElementById('chatMessages');
+
+        chatToggle.addEventListener('click', () => {
+            chatToggle.classList.toggle('active');
+            chatWindow.classList.toggle('hidden');
+            if (!chatWindow.classList.contains('hidden')) {
+                chatInput.focus();
+            }
+        });
+
+        closeChat.addEventListener('click', () => {
+            chatToggle.classList.remove('active');
+            chatWindow.classList.add('hidden');
+        });
+
+        sendBtn.addEventListener('click', sendMessage);
+        chatInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+
+        function sendMessage() {
+            const message = chatInput.value.trim();
+            if (!message) return;
+
+            // User message
+            const userMsg = document.createElement('div');
+            userMsg.className = 'message user';
+            userMsg.textContent = message;
+            chatMessages.appendChild(userMsg);
+
+            chatInput.value = '';
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+
+            // Bot response (simulated)
+            setTimeout(() => {
+                const botMsg = document.createElement('div');
+                botMsg.className = 'message bot';
+                const responses = [
+                    "That's a great question! I'm learning more about you every day.",
+                    "I've noted that. This helps me understand what matters to you.",
+                    "I'll remember that. It helps me serve you better.",
+                    "Interesting perspective. Let me think about how to help with that.",
+                    "I'm here to help. What else would you like to explore?"
+                ];
+                botMsg.textContent = responses[Math.floor(Math.random() * responses.length)];
+                chatMessages.appendChild(botMsg);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }, 600);
+        }
+
+        // Button interactions
+        document.querySelectorAll('.btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                console.log('Button clicked:', btn.textContent);
+            });
+        });
+    </script>
+</body>
+</html>

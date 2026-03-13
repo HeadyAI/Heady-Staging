@@ -1,0 +1,1245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Heady Documentation</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #F9FAFB;
+            color: #1F2937;
+            line-height: 1.6;
+        }
+
+        .container {
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 280px;
+            background: #111827;
+            color: white;
+            overflow-y: auto;
+            border-right: 1px solid #374151;
+            flex-shrink: 0;
+        }
+
+        .sidebar-header {
+            padding: 24px 16px;
+            border-bottom: 1px solid #374151;
+            font-size: 20px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .sidebar-search {
+            padding: 12px 16px;
+            border-bottom: 1px solid #374151;
+        }
+
+        .sidebar-search input {
+            width: 100%;
+            padding: 8px 12px;
+            background: #1F2937;
+            border: 1px solid #374151;
+            border-radius: 6px;
+            color: white;
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+        }
+
+        .sidebar-search input::placeholder {
+            color: #9CA3AF;
+        }
+
+        .sidebar-section {
+            padding: 16px 0;
+            border-bottom: 1px solid #374151;
+        }
+
+        .sidebar-section:last-child {
+            border-bottom: none;
+        }
+
+        .sidebar-section-title {
+            padding: 8px 16px;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: #9CA3AF;
+            letter-spacing: 0.5px;
+        }
+
+        .sidebar-link {
+            padding: 10px 16px;
+            color: #D1D5DB;
+            text-decoration: none;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+            border-left: 3px solid transparent;
+            display: block;
+        }
+
+        .sidebar-link:hover {
+            background: #1F2937;
+            color: white;
+            border-left-color: #3B82F6;
+        }
+
+        .sidebar-link.active {
+            background: #1F2937;
+            color: white;
+            border-left-color: #3B82F6;
+            font-weight: 500;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .top-bar {
+            background: white;
+            border-bottom: 1px solid #E5E7EB;
+            padding: 16px 32px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0;
+        }
+
+        .top-bar-left h1 {
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .edit-github {
+            color: #3B82F6;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .edit-github:hover {
+            text-decoration: underline;
+        }
+
+        .breadcrumb {
+            padding: 16px 32px;
+            font-size: 13px;
+            color: #6B7280;
+            background: white;
+            border-bottom: 1px solid #E5E7EB;
+            flex-shrink: 0;
+        }
+
+        .breadcrumb a {
+            color: #3B82F6;
+            text-decoration: none;
+        }
+
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+
+        .content-scroll {
+            flex: 1;
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+
+        .content {
+            padding: 32px;
+            max-width: 900px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .content h1 {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: #111827;
+        }
+
+        .content-subtitle {
+            font-size: 16px;
+            color: #6B7280;
+            margin-bottom: 32px;
+            padding-bottom: 32px;
+            border-bottom: 1px solid #E5E7EB;
+        }
+
+        .content h2 {
+            font-size: 24px;
+            font-weight: 700;
+            margin: 32px 0 16px 0;
+            color: #111827;
+        }
+
+        .content h3 {
+            font-size: 18px;
+            font-weight: 600;
+            margin: 24px 0 12px 0;
+            color: #1F2937;
+        }
+
+        .content p {
+            margin-bottom: 16px;
+            color: #374151;
+        }
+
+        .content ul, .content ol {
+            margin: 16px 0 16px 24px;
+            color: #374151;
+        }
+
+        .content li {
+            margin-bottom: 8px;
+        }
+
+        .content code {
+            background: #F3F4F6;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+            color: #DC2626;
+        }
+
+        .code-block {
+            background: #1F2937;
+            color: #E5E7EB;
+            padding: 16px;
+            border-radius: 8px;
+            margin: 16px 0;
+            overflow-x: auto;
+            position: relative;
+        }
+
+        .code-block-header {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            color: #9CA3AF;
+            margin-bottom: 8px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .code-block pre {
+            margin: 0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .code-block code {
+            background: none;
+            color: inherit;
+            padding: 0;
+        }
+
+        .copy-btn {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: #374151;
+            color: #D1D5DB;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .copy-btn:hover {
+            background: #4B5563;
+            color: white;
+        }
+
+        .info-box {
+            background: #DBEAFE;
+            border-left: 4px solid #3B82F6;
+            padding: 16px;
+            border-radius: 4px;
+            margin: 16px 0;
+            color: #1E40AF;
+        }
+
+        .warning-box {
+            background: #FEF3C7;
+            border-left: 4px solid #F59E0B;
+            padding: 16px;
+            border-radius: 4px;
+            margin: 16px 0;
+            color: #92400E;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 16px 0;
+            background: white;
+            border: 1px solid #E5E7EB;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        th {
+            background: #F3F4F6;
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+            color: #1F2937;
+            border-bottom: 2px solid #E5E7EB;
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #E5E7EB;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover {
+            background: #F9FAFB;
+        }
+
+        .step {
+            background: white;
+            border: 1px solid #E5E7EB;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 16px 0;
+        }
+
+        .step-number {
+            display: inline-block;
+            background: #3B82F6;
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 32px;
+            font-weight: 700;
+            margin-right: 12px;
+        }
+
+        .step h3 {
+            display: inline-block;
+            margin: 0;
+        }
+
+        .coming-soon {
+            text-align: center;
+            padding: 80px 32px;
+            color: #9CA3AF;
+        }
+
+        .coming-soon-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+        }
+
+        .coming-soon h2 {
+            color: #6B7280;
+            margin: 16px 0;
+        }
+
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 48px;
+            padding-top: 32px;
+            border-top: 1px solid #E5E7EB;
+        }
+
+        .nav-btn {
+            padding: 10px 20px;
+            background: #3B82F6;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+            text-decoration: none;
+            display: inline-block;
+            transition: background 0.2s;
+        }
+
+        .nav-btn:hover {
+            background: #2563EB;
+        }
+
+        .nav-btn:disabled {
+            background: #D1D5DB;
+            cursor: not-allowed;
+        }
+
+        .mobile-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: #1F2937;
+            cursor: pointer;
+            font-size: 24px;
+            padding: 8px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                height: auto;
+                max-height: 0;
+                overflow: hidden;
+                transition: max-height 0.3s;
+                position: absolute;
+                top: 60px;
+                left: 0;
+                right: 0;
+                z-index: 100;
+                border-right: none;
+                border-bottom: 1px solid #374151;
+            }
+
+            .sidebar.open {
+                max-height: 100vh;
+            }
+
+            .mobile-toggle {
+                display: block;
+            }
+
+            .top-bar {
+                justify-content: space-between;
+            }
+
+            .main-content {
+                flex: 1;
+            }
+
+            .content {
+                padding: 16px;
+            }
+
+            .content h1 {
+                font-size: 24px;
+            }
+
+            .content h2 {
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">Heady Docs</div>
+
+            <div class="sidebar-search">
+                <input type="text" id="searchInput" placeholder="Search docs...">
+            </div>
+
+            <!-- Getting Started -->
+            <div class="sidebar-section">
+                <div class="sidebar-section-title">Getting Started</div>
+                <a class="sidebar-link active" data-page="quick-start">Quick Start Guide</a>
+                <a class="sidebar-link" data-page="authentication">Authentication</a>
+                <a class="sidebar-link" data-page="first-api-call">Your First API Call</a>
+            </div>
+
+            <!-- API Reference -->
+            <div class="sidebar-section">
+                <div class="sidebar-section-title">API Reference</div>
+                <a class="sidebar-link" data-page="inference-endpoint">Inference Endpoint</a>
+                <a class="sidebar-link" data-page="chat-endpoint">Chat Endpoint</a>
+                <a class="sidebar-link" data-page="models-endpoint">Models Endpoint</a>
+                <a class="sidebar-link" data-page="webhooks">Webhooks</a>
+            </div>
+
+            <!-- MCP Protocol -->
+            <div class="sidebar-section">
+                <div class="sidebar-section-title">MCP Protocol</div>
+                <a class="sidebar-link" data-page="mcp-overview">Overview</a>
+                <a class="sidebar-link" data-page="mcp-message-format">Message Format</a>
+                <a class="sidebar-link" data-page="mcp-node-communication">Node Communication</a>
+                <a class="sidebar-link" data-page="mcp-integration">Integration Guide</a>
+            </div>
+
+            <!-- Architecture -->
+            <div class="sidebar-section">
+                <div class="sidebar-section-title">Architecture</div>
+                <a class="sidebar-link" data-page="six-layer-mesh">6-Layer Mesh</a>
+                <a class="sidebar-link" data-page="headybee-swarms">HeadyBee Swarms</a>
+                <a class="sidebar-link" data-page="vector-memory">Vector Memory</a>
+                <a class="sidebar-link" data-page="self-healing">Self-Healing</a>
+            </div>
+
+            <!-- SDKs -->
+            <div class="sidebar-section">
+                <div class="sidebar-section-title">SDKs</div>
+                <a class="sidebar-link" data-page="sdk-javascript">JavaScript</a>
+                <a class="sidebar-link" data-page="sdk-python">Python</a>
+                <a class="sidebar-link" data-page="sdk-cli">CLI</a>
+            </div>
+
+            <!-- Guides -->
+            <div class="sidebar-section">
+                <div class="sidebar-section-title">Guides</div>
+                <a class="sidebar-link" data-page="multi-model-routing">Multi-Model Routing</a>
+                <a class="sidebar-link" data-page="fine-tuning">Fine-Tuning</a>
+                <a class="sidebar-link" data-page="edge-deployment">Edge Deployment</a>
+                <a class="sidebar-link" data-page="security-encryption">Security & Encryption</a>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <div class="main-content">
+            <div class="top-bar">
+                <button class="mobile-toggle" id="mobileToggle">☰</button>
+                <div class="top-bar-left">
+                    <h1 id="pageTitle">Quick Start Guide</h1>
+                </div>
+                <a href="https://github.com/heady/heady-docs" class="edit-github" target="_blank">Edit on GitHub</a>
+            </div>
+
+            <div class="breadcrumb" id="breadcrumb">
+                <a href="#" data-page="quick-start">Docs</a> / Quick Start Guide
+            </div>
+
+            <div class="content-scroll">
+                <div class="content">
+                    <!-- Quick Start Guide -->
+                    <section id="quick-start" class="page-content">
+                        <h1>Quick Start Guide</h1>
+                        <p class="content-subtitle">Get up and running with Heady in 5 minutes</p>
+
+                        <div class="step">
+                            <span class="step-number">1</span>
+                            <h3>Sign Up for an Account</h3>
+                            <p style="margin-top: 12px;">Visit <a href="https://headysystems.com/signup" target="_blank">headysystems.com/signup</a> to create your free Heady account. You'll have instant access to the dashboard and all developer tools.</p>
+                        </div>
+
+                        <div class="step">
+                            <span class="step-number">2</span>
+                            <h3>Get Your API Key</h3>
+                            <p style="margin-top: 12px;">Once logged in, navigate to <strong>Settings → API Keys</strong> in the dashboard. Click <strong>Generate New Key</strong> and copy your API key to a secure location. You'll use this to authenticate all API requests.</p>
+                        </div>
+
+                        <div class="step">
+                            <span class="step-number">3</span>
+                            <h3>Make Your First API Call</h3>
+                            <p style="margin-top: 12px;">Let's test the Inference API with a simple cURL request:</p>
+
+                            <div class="code-block">
+                                <div class="code-block-header">cURL</div>
+                                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                                <pre><code>curl -X POST https://api.headysystems.com/v1/inference \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "prompt": "Explain quantum computing in simple terms",
+    "strategy": "best-quality",
+    "max_tokens": 256
+  }'</code></pre>
+                            </div>
+
+                            <p><strong>Expected Response:</strong></p>
+                            <div class="code-block">
+                                <div class="code-block-header">JSON</div>
+                                <pre><code>{
+  "id": "inf_1a2b3c4d5e6f",
+  "object": "inference.result",
+  "created": 1678886400,
+  "model": "heady-v3-large",
+  "usage": {
+    "prompt_tokens": 8,
+    "completion_tokens": 142,
+    "total_tokens": 150
+  },
+  "choices": [
+    {
+      "text": "Quantum computing uses quantum bits (qubits) that can exist in multiple states simultaneously...",
+      "finish_reason": "stop"
+    }
+  ]
+}</code></pre>
+                            </div>
+
+                            <div class="info-box">
+                                <strong>Tip:</strong> Replace <code>YOUR_API_KEY</code> with your actual API key from the dashboard.
+                            </div>
+                        </div>
+
+                        <div class="step">
+                            <span class="step-number">4</span>
+                            <h3>Try Multi-Model Routing</h3>
+                            <p style="margin-top: 12px;">Heady automatically routes your requests to the best model based on your strategy. Try the <code>lowest-cost</code> strategy:</p>
+
+                            <div class="code-block">
+                                <div class="code-block-header">cURL</div>
+                                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                                <pre><code>curl -X POST https://api.headysystems.com/v1/inference \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "prompt": "What are the benefits of remote work?",
+    "strategy": "lowest-cost",
+    "max_tokens": 200
+  }'</code></pre>
+                            </div>
+
+                            <p><strong>Available Strategies:</strong></p>
+                            <ul>
+                                <li><code>best-quality</code> - Uses the most capable model (higher cost)</li>
+                                <li><code>lowest-latency</code> - Optimizes for speed (moderate cost)</li>
+                                <li><code>lowest-cost</code> - Most economical option</li>
+                                <li><code>specific-model</code> - Routes to a specific model ID</li>
+                            </ul>
+                        </div>
+
+                        <div class="step">
+                            <span class="step-number">5</span>
+                            <h3>Connect HeadyBuddy Widget</h3>
+                            <p style="margin-top: 12px;">Embed the Heady chat widget on your website in just two lines of code:</p>
+
+                            <div class="code-block">
+                                <div class="code-block-header">HTML</div>
+                                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                                <pre><code>&lt;script src="https://headybuddy.com/widget.js"&gt;&lt;/script&gt;
+&lt;script&gt;
+  HeadyBuddy.init({
+    apiKey: 'YOUR_API_KEY',
+    position: 'bottom-right',
+    theme: 'light'
+  });
+&lt;/script&gt;</code></pre>
+                            </div>
+
+                            <p>Your chat widget is now live! Customize colors, position, and behavior in the <a href="https://headysystems.com/dashboard/widgets" target="_blank">Widget Settings</a>.</p>
+                        </div>
+
+                        <h2>What's Next?</h2>
+                        <ul>
+                            <li><a href="#" data-page="inference-endpoint">Explore the Inference API</a> - Learn all available parameters and options</li>
+                            <li><a href="#" data-page="sdk-javascript">Use the JavaScript SDK</a> - Simplify integration in your apps</li>
+                            <li><a href="#" data-page="multi-model-routing">Master Multi-Model Routing</a> - Optimize costs and performance</li>
+                            <li><a href="#" data-page="security-encryption">Security Best Practices</a> - Protect your API keys and data</li>
+                        </ul>
+
+                        <div class="nav-buttons">
+                            <button class="nav-btn" disabled>← Previous</button>
+                            <button class="nav-btn" onclick="navigateToPage('authentication')">Next: Authentication →</button>
+                        </div>
+                    </section>
+
+                    <!-- Authentication -->
+                    <section id="authentication" class="page-content" style="display: none;">
+                        <h1>Authentication</h1>
+                        <p class="content-subtitle">Secure your API requests with Heady's authentication methods</p>
+
+                        <h2>API Key Authentication</h2>
+                        <p>The simplest way to authenticate with Heady is using your API key. Include it in the <code>Authorization</code> header of every request.</p>
+
+                        <h3>Header Format</h3>
+                        <div class="code-block">
+                            <div class="code-block-header">HTTP Header</div>
+                            <pre><code>Authorization: Bearer sk_live_4eC39HqLyjWDarhtT...</code></pre>
+                        </div>
+
+                        <h3>Example Request</h3>
+                        <div class="code-block">
+                            <div class="code-block-header">cURL</div>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                            <pre><code>curl -X POST https://api.headysystems.com/v1/inference \
+  -H "Authorization: Bearer sk_live_4eC39HqLyjWDarhtT..." \
+  -H "Content-Type: application/json" \
+  -d '{
+    "prompt": "Hello, world!"
+  }'</code></pre>
+                        </div>
+
+                        <div class="warning-box">
+                            <strong>Security:</strong> Never commit your API keys to version control. Use environment variables instead.
+                        </div>
+
+                        <h2>OAuth 2.0 Authentication</h2>
+                        <p>For third-party integrations, use OAuth 2.0 with the Authorization Code flow.</p>
+
+                        <h3>Authorization Code Flow</h3>
+                        <p><strong>Step 1:</strong> Redirect the user to Heady's authorization endpoint:</p>
+                        <div class="code-block">
+                            <div class="code-block-header">URL</div>
+                            <pre><code>https://auth.headysystems.com/oauth/authorize?
+  client_id=YOUR_CLIENT_ID&
+  redirect_uri=https://yourapp.com/callback&
+  response_type=code&
+  scope=inference:read,chat:write&
+  state=random_state_string</code></pre>
+                        </div>
+
+                        <p><strong>Step 2:</strong> User authorizes your app and gets redirected with an authorization code.</p>
+
+                        <p><strong>Step 3:</strong> Exchange the code for an access token:</p>
+                        <div class="code-block">
+                            <div class="code-block-header">cURL</div>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                            <pre><code>curl -X POST https://auth.headysystems.com/oauth/token \
+  -H "Content-Type: application/x-www-form-urlencoded" \
+  -d "grant_type=authorization_code&
+       code=AUTH_CODE&
+       client_id=YOUR_CLIENT_ID&
+       client_secret=YOUR_CLIENT_SECRET&
+       redirect_uri=https://yourapp.com/callback"</code></pre>
+                        </div>
+
+                        <p><strong>Response:</strong></p>
+                        <div class="code-block">
+                            <div class="code-block-header">JSON</div>
+                            <pre><code>{
+  "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "token_type": "Bearer",
+  "expires_in": 3600,
+  "refresh_token": "ref_1a2b3c4d5e6f...",
+  "scope": "inference:read chat:write"
+}</code></pre>
+                        </div>
+
+                        <h2>Token Lifecycle</h2>
+                        <table>
+                            <tr>
+                                <th>Property</th>
+                                <th>Description</th>
+                                <th>Value</th>
+                            </tr>
+                            <tr>
+                                <td><strong>Access Token Expiry</strong></td>
+                                <td>Time until access token expires</td>
+                                <td>1 hour (3600 seconds)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Refresh Token Expiry</strong></td>
+                                <td>Time until refresh token expires</td>
+                                <td>30 days</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Refresh Endpoint</strong></td>
+                                <td>URL to refresh expired tokens</td>
+                                <td>POST /oauth/token</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Revocation</strong></td>
+                                <td>Immediately invalidate a token</td>
+                                <td>POST /oauth/revoke</td>
+                            </tr>
+                        </table>
+
+                        <h3>Refreshing an Access Token</h3>
+                        <p>When your access token expires, use the refresh token to get a new one:</p>
+                        <div class="code-block">
+                            <div class="code-block-header">cURL</div>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                            <pre><code>curl -X POST https://auth.headysystems.com/oauth/token \
+  -H "Content-Type: application/x-www-form-urlencoded" \
+  -d "grant_type=refresh_token&
+       refresh_token=ref_1a2b3c4d5e6f...&
+       client_id=YOUR_CLIENT_ID&
+       client_secret=YOUR_CLIENT_SECRET"</code></pre>
+                        </div>
+
+                        <h3>Revoking a Token</h3>
+                        <p>Immediately invalidate a token:</p>
+                        <div class="code-block">
+                            <div class="code-block-header">cURL</div>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                            <pre><code>curl -X POST https://auth.headysystems.com/oauth/revoke \
+  -H "Content-Type: application/x-www-form-urlencoded" \
+  -d "token=YOUR_TOKEN&
+       client_id=YOUR_CLIENT_ID&
+       client_secret=YOUR_CLIENT_SECRET"</code></pre>
+                        </div>
+
+                        <h2>Rate Limits</h2>
+                        <p>API rate limits vary by authentication method and tier:</p>
+                        <table>
+                            <tr>
+                                <th>Tier</th>
+                                <th>Requests/Minute</th>
+                                <th>Monthly Limit</th>
+                                <th>Concurrent Requests</th>
+                            </tr>
+                            <tr>
+                                <td><strong>Free</strong></td>
+                                <td>10</td>
+                                <td>10,000</td>
+                                <td>1</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Pro</strong></td>
+                                <td>100</td>
+                                <td>1,000,000</td>
+                                <td>10</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Enterprise</strong></td>
+                                <td>1,000</td>
+                                <td>Unlimited</td>
+                                <td>100</td>
+                            </tr>
+                        </table>
+
+                        <div class="info-box">
+                            <strong>Rate Limit Headers:</strong> Check your remaining quota using the <code>X-RateLimit-Remaining</code> header in all API responses.
+                        </div>
+
+                        <h2>Error Codes</h2>
+                        <p>When authentication fails, you'll receive one of these error codes:</p>
+                        <table>
+                            <tr>
+                                <th>Code</th>
+                                <th>HTTP Status</th>
+                                <th>Description</th>
+                                <th>Solution</th>
+                            </tr>
+                            <tr>
+                                <td><code>invalid_api_key</code></td>
+                                <td>401</td>
+                                <td>API key is missing or invalid</td>
+                                <td>Check your API key and try again</td>
+                            </tr>
+                            <tr>
+                                <td><code>expired_token</code></td>
+                                <td>401</td>
+                                <td>OAuth token has expired</td>
+                                <td>Refresh the token using your refresh token</td>
+                            </tr>
+                            <tr>
+                                <td><code>insufficient_scope</code></td>
+                                <td>403</td>
+                                <td>Token lacks required permissions</td>
+                                <td>Request new auth with required scopes</td>
+                            </tr>
+                            <tr>
+                                <td><code>rate_limit_exceeded</code></td>
+                                <td>429</td>
+                                <td>Too many requests in short time</td>
+                                <td>Wait before retrying or upgrade plan</td>
+                            </tr>
+                            <tr>
+                                <td><code>revoked_token</code></td>
+                                <td>401</td>
+                                <td>Token has been revoked</td>
+                                <td>Authenticate again with new credentials</td>
+                            </tr>
+                            <tr>
+                                <td><code>invalid_grant</code></td>
+                                <td>400</td>
+                                <td>Authorization code or refresh token invalid</td>
+                                <td>Restart OAuth flow or check token validity</td>
+                            </tr>
+                        </table>
+
+                        <div class="nav-buttons">
+                            <button class="nav-btn" onclick="navigateToPage('quick-start')">← Previous: Quick Start</button>
+                            <button class="nav-btn" onclick="navigateToPage('inference-endpoint')">Next: Inference Endpoint →</button>
+                        </div>
+                    </section>
+
+                    <!-- Inference Endpoint -->
+                    <section id="inference-endpoint" class="page-content" style="display: none;">
+                        <h1>Inference Endpoint</h1>
+                        <p class="content-subtitle">Generate text completions with the Heady inference engine</p>
+
+                        <h2>Endpoint</h2>
+                        <div class="code-block">
+                            <div class="code-block-header">HTTP</div>
+                            <pre><code>POST /v1/inference</code></pre>
+                        </div>
+
+                        <h2>Request Body</h2>
+                        <table>
+                            <tr>
+                                <th>Parameter</th>
+                                <th>Type</th>
+                                <th>Required</th>
+                                <th>Description</th>
+                            </tr>
+                            <tr>
+                                <td><code>prompt</code></td>
+                                <td>string</td>
+                                <td>Yes</td>
+                                <td>The input text to generate from (max 8,000 tokens)</td>
+                            </tr>
+                            <tr>
+                                <td><code>strategy</code></td>
+                                <td>string</td>
+                                <td>No</td>
+                                <td>Routing strategy: best-quality, lowest-latency, lowest-cost, specific-model (default: best-quality)</td>
+                            </tr>
+                            <tr>
+                                <td><code>model</code></td>
+                                <td>string</td>
+                                <td>No</td>
+                                <td>Model ID when using specific-model strategy</td>
+                            </tr>
+                            <tr>
+                                <td><code>max_tokens</code></td>
+                                <td>integer</td>
+                                <td>No</td>
+                                <td>Maximum tokens to generate (1-4096, default: 256)</td>
+                            </tr>
+                            <tr>
+                                <td><code>temperature</code></td>
+                                <td>float</td>
+                                <td>No</td>
+                                <td>Sampling temperature (0.0-2.0, default: 0.7)</td>
+                            </tr>
+                            <tr>
+                                <td><code>top_p</code></td>
+                                <td>float</td>
+                                <td>No</td>
+                                <td>Nucleus sampling parameter (0.0-1.0, default: 1.0)</td>
+                            </tr>
+                            <tr>
+                                <td><code>stop_sequences</code></td>
+                                <td>array</td>
+                                <td>No</td>
+                                <td>Strings that stop generation when encountered</td>
+                            </tr>
+                            <tr>
+                                <td><code>stream</code></td>
+                                <td>boolean</td>
+                                <td>No</td>
+                                <td>Stream response tokens as they're generated (default: false)</td>
+                            </tr>
+                        </table>
+
+                        <h2>Response Schema</h2>
+                        <div class="code-block">
+                            <div class="code-block-header">JSON</div>
+                            <pre><code>{
+  "id": "string",                    // Unique inference ID
+  "object": "inference.result",
+  "created": number,                 // Unix timestamp
+  "model": "string",                 // Model used for generation
+  "usage": {
+    "prompt_tokens": number,
+    "completion_tokens": number,
+    "total_tokens": number
+  },
+  "choices": [
+    {
+      "text": "string",               // Generated text
+      "finish_reason": "stop",       // stop, length, or error
+      "index": 0
+    }
+  ]
+}</code></pre>
+                        </div>
+
+                        <h2>Strategy Options</h2>
+
+                        <h3>best-quality</h3>
+                        <p>Selects the most capable model available. Best for complex tasks, reasoning, and creative work. Higher latency and cost.</p>
+
+                        <h3>lowest-latency</h3>
+                        <p>Optimizes for response speed with good quality. Ideal for real-time applications and chat interfaces.</p>
+
+                        <h3>lowest-cost</h3>
+                        <p>Uses the most economical model that meets quality thresholds. Best for high-volume applications.</p>
+
+                        <h3>specific-model</h3>
+                        <p>Routes to a specific model by ID. Requires the <code>model</code> parameter.</p>
+
+                        <h2>Code Examples</h2>
+
+                        <h3>cURL</h3>
+                        <div class="code-block">
+                            <div class="code-block-header">cURL</div>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                            <pre><code>curl -X POST https://api.headysystems.com/v1/inference \
+  -H "Authorization: Bearer sk_live_..." \
+  -H "Content-Type: application/json" \
+  -d '{
+    "prompt": "Write a haiku about programming",
+    "strategy": "best-quality",
+    "max_tokens": 100,
+    "temperature": 0.8
+  }'</code></pre>
+                        </div>
+
+                        <h3>JavaScript</h3>
+                        <div class="code-block">
+                            <div class="code-block-header">JavaScript</div>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                            <pre><code>const response = await fetch(
+  'https://api.headysystems.com/v1/inference',
+  {
+    method: 'POST',
+    headers: {
+      'Authorization': 'Bearer sk_live_...',
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      prompt: 'What are the benefits of TypeScript?',
+      strategy: 'best-quality',
+      max_tokens: 256,
+      temperature: 0.7
+    })
+  }
+);
+
+const data = await response.json();
+console.log(data.choices[0].text);</code></pre>
+                        </div>
+
+                        <h3>Python</h3>
+                        <div class="code-block">
+                            <div class="code-block-header">Python</div>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                            <pre><code>import requests
+
+response = requests.post(
+  'https://api.headysystems.com/v1/inference',
+  headers={
+    'Authorization': 'Bearer sk_live_...',
+    'Content-Type': 'application/json'
+  },
+  json={
+    'prompt': 'Explain machine learning to a beginner',
+    'strategy': 'best-quality',
+    'max_tokens': 256,
+    'temperature': 0.7
+  }
+)
+
+data = response.json()
+print(data['choices'][0]['text'])</code></pre>
+                        </div>
+
+                        <h2>Error Responses</h2>
+                        <table>
+                            <tr>
+                                <th>Status</th>
+                                <th>Error Code</th>
+                                <th>Description</th>
+                            </tr>
+                            <tr>
+                                <td>400</td>
+                                <td><code>invalid_request</code></td>
+                                <td>Request body is malformed or missing required fields</td>
+                            </tr>
+                            <tr>
+                                <td>401</td>
+                                <td><code>unauthorized</code></td>
+                                <td>Missing or invalid authentication</td>
+                            </tr>
+                            <tr>
+                                <td>429</td>
+                                <td><code>rate_limit_exceeded</code></td>
+                                <td>Rate limit exceeded for your plan</td>
+                            </tr>
+                            <tr>
+                                <td>500</td>
+                                <td><code>internal_error</code></td>
+                                <td>Server error during inference</td>
+                            </tr>
+                            <tr>
+                                <td>503</td>
+                                <td><code>service_unavailable</code></td>
+                                <td>Heady service is temporarily unavailable</td>
+                            </tr>
+                        </table>
+
+                        <h2>Example Error Response</h2>
+                        <div class="code-block">
+                            <div class="code-block-header">JSON</div>
+                            <pre><code>{
+  "error": {
+    "message": "rate_limit_exceeded",
+    "type": "invalid_request_error",
+    "param": null,
+    "code": "rate_limit_exceeded"
+  }
+}</code></pre>
+                        </div>
+
+                        <div class="nav-buttons">
+                            <button class="nav-btn" onclick="navigateToPage('authentication')">← Previous: Authentication</button>
+                            <button class="nav-btn" onclick="navigateToPage('chat-endpoint')">Next: Chat Endpoint →</button>
+                        </div>
+                    </section>
+
+                    <!-- Coming Soon Placeholder -->
+                    <section id="coming-soon" class="page-content" style="display: none;">
+                        <div class="coming-soon">
+                            <div class="coming-soon-icon">🚀</div>
+                            <h2>Coming Soon</h2>
+                            <p>This page is under development. Check back soon for more documentation.</p>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Page navigation
+        const pages = {
+            'quick-start': 'Quick Start Guide',
+            'authentication': 'Authentication',
+            'first-api-call': 'Your First API Call',
+            'inference-endpoint': 'Inference Endpoint',
+            'chat-endpoint': 'Chat Endpoint',
+            'models-endpoint': 'Models Endpoint',
+            'webhooks': 'Webhooks',
+            'mcp-overview': 'MCP Overview',
+            'mcp-message-format': 'Message Format',
+            'mcp-node-communication': 'Node Communication',
+            'mcp-integration': 'Integration Guide',
+            'six-layer-mesh': '6-Layer Mesh',
+            'headybee-swarms': 'HeadyBee Swarms',
+            'vector-memory': 'Vector Memory',
+            'self-healing': 'Self-Healing',
+            'sdk-javascript': 'JavaScript SDK',
+            'sdk-python': 'Python SDK',
+            'sdk-cli': 'CLI',
+            'multi-model-routing': 'Multi-Model Routing',
+            'fine-tuning': 'Fine-Tuning',
+            'edge-deployment': 'Edge Deployment',
+            'security-encryption': 'Security & Encryption'
+        };
+
+        const implementedPages = ['quick-start', 'authentication', 'inference-endpoint'];
+
+        function showPage(pageId) {
+            // Hide all pages
+            document.querySelectorAll('.page-content').forEach(el => {
+                el.style.display = 'none';
+            });
+
+            // Deactivate all sidebar links
+            document.querySelectorAll('.sidebar-link').forEach(el => {
+                el.classList.remove('active');
+            });
+
+            // Show selected page or coming soon
+            const pageEl = document.getElementById(pageId);
+            if (pageEl) {
+                pageEl.style.display = 'block';
+            } else {
+                document.getElementById('coming-soon').style.display = 'block';
+            }
+
+            // Activate sidebar link
+            const link = document.querySelector(`[data-page="${pageId}"]`);
+            if (link) {
+                link.classList.add('active');
+            }
+
+            // Update title and breadcrumb
+            const title = pages[pageId] || 'Page';
+            document.getElementById('pageTitle').textContent = title;
+            document.getElementById('breadcrumb').innerHTML = `
+                <a href="#" data-page="quick-start">Docs</a> / ${title}
+            `;
+
+            // Re-highlight code blocks
+            document.querySelectorAll('pre code').forEach(el => {
+                hljs.highlightElement(el);
+            });
+
+            // Close mobile sidebar
+            document.getElementById('sidebar').classList.remove('open');
+
+            // Scroll to top
+            document.querySelector('.content-scroll').scrollTop = 0;
+        }
+
+        function navigateToPage(pageId) {
+            showPage(pageId);
+        }
+
+        function copyCode(button) {
+            const codeBlock = button.closest('.code-block');
+            const code = codeBlock.querySelector('code').textContent;
+            navigator.clipboard.writeText(code).then(() => {
+                const originalText = button.textContent;
+                button.textContent = 'Copied!';
+                setTimeout(() => {
+                    button.textContent = originalText;
+                }, 2000);
+            });
+        }
+
+        // Sidebar links
+        document.querySelectorAll('.sidebar-link').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const pageId = link.dataset.page;
+                showPage(pageId);
+            });
+        });
+
+        // Mobile toggle
+        document.getElementById('mobileToggle').addEventListener('click', () => {
+            document.getElementById('sidebar').classList.toggle('open');
+        });
+
+        // Search functionality
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+            const query = e.target.value.toLowerCase();
+            document.querySelectorAll('.sidebar-link').forEach(link => {
+                const text = link.textContent.toLowerCase();
+                if (query === '' || text.includes(query)) {
+                    link.style.display = 'block';
+                } else {
+                    link.style.display = 'none';
+                }
+            });
+        });
+
+        // Breadcrumb navigation
+        document.addEventListener('click', (e) => {
+            if (e.target.matches('[data-page]')) {
+                e.preventDefault();
+                const pageId = e.target.dataset.page;
+                showPage(pageId);
+            }
+        });
+
+        // Initialize
+        showPage('quick-start');
+    </script>
+</body>
+</html>

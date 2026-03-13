@@ -1,0 +1,1094 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Heady-AI - The Intelligence Hub | AI Research & Models</title>
+    <meta name="description" content="The unified API for every AI model that matters. Multi-model routing, fine-tuning pipelines, and edge inference in one platform.">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0D0D1A;
+            color: #E5E5E7;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+            background: rgba(13, 13, 26, 0.8);
+            border-bottom: 1px solid rgba(139, 92, 246, 0.1);
+            padding: 1rem 2rem;
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #8B5CF6, #EC4899);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: #E5E5E7;
+            text-decoration: none;
+            font-size: 0.95rem;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: #8B5CF6;
+        }
+
+        .nav-cta {
+            padding: 0.6rem 1.5rem;
+            background: linear-gradient(135deg, #8B5CF6, #EC4899);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: transform 0.2s, box-shadow 0.2s;
+            font-size: 0.9rem;
+        }
+
+        .nav-cta:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(139, 92, 246, 0.3);
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            padding: 2rem;
+            margin-top: 60px;
+        }
+
+        .hero-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        .neural-network {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            opacity: 0.15;
+        }
+
+        .hero-content {
+            text-align: center;
+            max-width: 900px;
+            z-index: 1;
+        }
+
+        .hero-title {
+            font-size: clamp(2.5rem, 8vw, 4.5rem);
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, #8B5CF6, #EC4899, #3B82F6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        .hero-subtitle {
+            font-size: clamp(1rem, 2.5vw, 1.25rem);
+            color: #B0B0B8;
+            margin-bottom: 2.5rem;
+            line-height: 1.8;
+            animation: fadeInUp 0.8s ease-out 0.2s backwards;
+        }
+
+        .hero-ctas {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            animation: fadeInUp 0.8s ease-out 0.4s backwards;
+        }
+
+        .cta-primary, .cta-secondary {
+            padding: 1rem 2.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1rem;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .cta-primary {
+            background: linear-gradient(135deg, #8B5CF6, #EC4899);
+            color: white;
+            box-shadow: 0 10px 30px rgba(139, 92, 246, 0.3);
+        }
+
+        .cta-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(139, 92, 246, 0.5);
+        }
+
+        .cta-secondary {
+            background: transparent;
+            color: #8B5CF6;
+            border: 2px solid #8B5CF6;
+        }
+
+        .cta-secondary:hover {
+            background: rgba(139, 92, 246, 0.1);
+            transform: translateY(-3px);
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Sections */
+        section {
+            padding: 4rem 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 3rem;
+            background: linear-gradient(135deg, #8B5CF6, #EC4899);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-align: center;
+        }
+
+        /* Model Router Section */
+        .model-router {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.05), rgba(236, 72, 153, 0.05));
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            border-radius: 12px;
+            padding: 3rem;
+            margin: 3rem 0;
+        }
+
+        .router-flow {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 2rem;
+            margin: 2rem 0 3rem 0;
+            flex-wrap: wrap;
+        }
+
+        .flow-item {
+            text-align: center;
+        }
+
+        .flow-input {
+            padding: 1.5rem;
+            background: rgba(139, 92, 246, 0.1);
+            border: 2px solid #8B5CF6;
+            border-radius: 8px;
+            min-width: 150px;
+        }
+
+        .flow-input span {
+            font-weight: 600;
+            color: #8B5CF6;
+        }
+
+        .flow-arrow {
+            font-size: 2rem;
+            color: #EC4899;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+
+        .provider-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .provider-card {
+            padding: 1.5rem;
+            background: rgba(59, 130, 246, 0.08);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            border-radius: 8px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .provider-card:hover {
+            background: rgba(59, 130, 246, 0.15);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(59, 130, 246, 0.2);
+        }
+
+        .provider-name {
+            font-weight: 600;
+            color: #3B82F6;
+            margin-bottom: 0.5rem;
+        }
+
+        .provider-desc {
+            font-size: 0.9rem;
+            color: #A0A0A8;
+        }
+
+        .routing-logic {
+            background: rgba(13, 13, 26, 0.5);
+            border-left: 4px solid #8B5CF6;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-top: 2rem;
+            font-style: italic;
+            color: #B0B0B8;
+        }
+
+        /* Capabilities */
+        .capabilities-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .capability-card {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(59, 130, 246, 0.05));
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            border-radius: 12px;
+            padding: 2rem;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .capability-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #8B5CF6, #EC4899);
+        }
+
+        .capability-card:hover {
+            transform: translateY(-10px);
+            border-color: rgba(139, 92, 246, 0.4);
+            box-shadow: 0 20px 40px rgba(139, 92, 246, 0.2);
+        }
+
+        .capability-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .capability-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 0.8rem;
+            color: #E5E5E7;
+        }
+
+        .capability-desc {
+            color: #B0B0B8;
+            line-height: 1.7;
+        }
+
+        /* Code Section */
+        .code-section {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.05), rgba(236, 72, 153, 0.05));
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            border-radius: 12px;
+            padding: 3rem;
+            margin: 3rem 0;
+        }
+
+        .code-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .code-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .code-block {
+            background: #1A1A2E;
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            border-radius: 8px;
+            padding: 1.5rem;
+            overflow-x: auto;
+            position: relative;
+        }
+
+        .code-label {
+            color: #8B5CF6;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .code-content {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            line-height: 1.6;
+            color: #E5E5E7;
+        }
+
+        .code-keyword { color: #EC4899; }
+        .code-string { color: #3B82F6; }
+        .code-property { color: #8B5CF6; }
+        .code-value { color: #10B981; }
+        .code-comment { color: #6B7280; }
+
+        /* Benchmarks Section */
+        .benchmarks-section {
+            margin: 3rem 0;
+        }
+
+        .benchmark-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: rgba(139, 92, 246, 0.05);
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid rgba(139, 92, 246, 0.2);
+        }
+
+        .benchmark-table th {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(236, 72, 153, 0.1));
+            color: #8B5CF6;
+            padding: 1.2rem;
+            text-align: left;
+            font-weight: 600;
+            border-bottom: 1px solid rgba(139, 92, 246, 0.3);
+        }
+
+        .benchmark-table td {
+            padding: 1.2rem;
+            border-bottom: 1px solid rgba(139, 92, 246, 0.1);
+        }
+
+        .benchmark-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .benchmark-table tr:hover {
+            background: rgba(139, 92, 246, 0.1);
+        }
+
+        .metric-heady {
+            color: #10B981;
+            font-weight: 600;
+        }
+
+        .metric-standard {
+            color: #6B7280;
+        }
+
+        /* Footer */
+        footer {
+            background: rgba(139, 92, 246, 0.05);
+            border-top: 1px solid rgba(139, 92, 246, 0.2);
+            padding: 3rem 2rem;
+            margin-top: 4rem;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section h3 {
+            color: #8B5CF6;
+            margin-bottom: 1rem;
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .footer-section a {
+            color: #B0B0B8;
+            text-decoration: none;
+            font-size: 0.9rem;
+            display: block;
+            margin-bottom: 0.5rem;
+            transition: color 0.3s;
+        }
+
+        .footer-section a:hover {
+            color: #8B5CF6;
+        }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(139, 92, 246, 0.1);
+            padding-top: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .ecosystem-links {
+            display: flex;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .ecosystem-badge {
+            padding: 0.5rem 1rem;
+            background: rgba(139, 92, 246, 0.1);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            border-radius: 6px;
+            font-size: 0.85rem;
+            color: #8B5CF6;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .ecosystem-badge:hover {
+            background: rgba(139, 92, 246, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .copyright {
+            color: #6B7280;
+            font-size: 0.85rem;
+        }
+
+        /* HeadyBuddy Widget */
+        .headybuddy-widget {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            z-index: 999;
+        }
+
+        .widget-button {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #8B5CF6, #EC4899);
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            box-shadow: 0 10px 30px rgba(139, 92, 246, 0.4);
+            transition: all 0.3s;
+        }
+
+        .widget-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 15px 40px rgba(139, 92, 246, 0.6);
+        }
+
+        .widget-popup {
+            position: absolute;
+            bottom: 80px;
+            right: 0;
+            background: #1A1A2E;
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            border-radius: 12px;
+            padding: 1.5rem;
+            min-width: 280px;
+            max-width: 350px;
+            display: none;
+            box-shadow: 0 20px 50px rgba(139, 92, 246, 0.3);
+        }
+
+        .widget-popup.active {
+            display: block;
+            animation: slideUp 0.3s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .widget-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            color: #8B5CF6;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .widget-title {
+            color: #8B5CF6;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            padding-right: 1.5rem;
+        }
+
+        .widget-desc {
+            color: #B0B0B8;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .widget-input {
+            width: 100%;
+            padding: 0.8rem;
+            background: rgba(139, 92, 246, 0.1);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            border-radius: 6px;
+            color: #E5E5E7;
+            font-family: 'Inter', sans-serif;
+            margin-bottom: 0.8rem;
+        }
+
+        .widget-input::placeholder {
+            color: #6B7280;
+        }
+
+        .widget-input:focus {
+            outline: none;
+            border-color: #8B5CF6;
+            box-shadow: 0 0 10px rgba(139, 92, 246, 0.2);
+        }
+
+        .widget-send {
+            width: 100%;
+            padding: 0.8rem;
+            background: linear-gradient(135deg, #8B5CF6, #EC4899);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .widget-send:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(139, 92, 246, 0.3);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            nav {
+                padding: 1rem;
+            }
+
+            .nav-links {
+                gap: 1rem;
+                display: none;
+            }
+
+            .nav-links.active {
+                display: flex;
+                flex-direction: column;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background: rgba(13, 13, 26, 0.95);
+                padding: 1rem;
+            }
+
+            section {
+                padding: 2rem 1rem;
+            }
+
+            .section-title {
+                font-size: 1.8rem;
+            }
+
+            .router-flow {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .code-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-bottom {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .headybuddy-widget {
+                bottom: 1rem;
+                right: 1rem;
+            }
+
+            .widget-popup {
+                max-width: calc(100vw - 2rem);
+            }
+        }
+
+        /* Neural Network Animation */
+        .constellation-dot {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: #8B5CF6;
+            border-radius: 50%;
+            opacity: 0.3;
+            animation: float 20s infinite ease-in-out;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .constellation-line {
+            position: absolute;
+            height: 1px;
+            background: linear-gradient(90deg, rgba(139, 92, 246, 0.5), transparent);
+            opacity: 0.2;
+            animation: shimmer 3s infinite;
+        }
+
+        @keyframes shimmer {
+            0%, 100% { opacity: 0.1; }
+            50% { opacity: 0.3; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-container">
+            <div class="logo">Heady-AI</div>
+            <ul class="nav-links">
+                <li><a href="#models">Models</a></li>
+                <li><a href="#capabilities">Capabilities</a></li>
+                <li><a href="#benchmarks">Benchmarks</a></li>
+                <li><a href="#docs">Docs</a></li>
+            </ul>
+            <button class="nav-cta">Get API Key</button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-background">
+            <svg class="neural-network" viewBox="0 0 1200 800" preserveAspectRatio="none">
+                <defs>
+                    <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" style="stop-color:#8B5CF6;stop-opacity:0.3" />
+                        <stop offset="100%" style="stop-color:#EC4899;stop-opacity:0.1" />
+                    </linearGradient>
+                </defs>
+                <circle cx="100" cy="100" r="3" fill="url(#grad1)" opacity="0.6"/>
+                <circle cx="300" cy="200" r="4" fill="url(#grad1)" opacity="0.5"/>
+                <circle cx="600" cy="150" r="3" fill="url(#grad1)" opacity="0.6"/>
+                <circle cx="900" cy="250" r="3" fill="url(#grad1)" opacity="0.5"/>
+                <circle cx="1100" cy="100" r="4" fill="url(#grad1)" opacity="0.6"/>
+                <circle cx="200" cy="500" r="3" fill="url(#grad1)" opacity="0.5"/>
+                <circle cx="600" cy="600" r="4" fill="url(#grad1)" opacity="0.6"/>
+                <circle cx="1000" cy="550" r="3" fill="url(#grad1)" opacity="0.5"/>
+
+                <line x1="100" y1="100" x2="300" y2="200" stroke="url(#grad1)" stroke-width="0.5" opacity="0.3"/>
+                <line x1="300" y1="200" x2="600" y2="150" stroke="url(#grad1)" stroke-width="0.5" opacity="0.3"/>
+                <line x1="600" y1="150" x2="900" y2="250" stroke="url(#grad1)" stroke-width="0.5" opacity="0.3"/>
+                <line x1="600" y1="600" x2="1000" y2="550" stroke="url(#grad1)" stroke-width="0.5" opacity="0.2"/>
+            </svg>
+        </div>
+        <div class="hero-content">
+            <h1 class="hero-title">The Intelligence Hub</h1>
+            <p class="hero-subtitle">
+                Multi-model routing. Fine-tuning pipelines. Edge inference. The unified API for every AI model that matters.
+            </p>
+            <div class="hero-ctas">
+                <button class="cta-primary">Try the API</button>
+                <button class="cta-secondary">Explore Models</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Model Router Section -->
+    <section id="models">
+        <h2 class="section-title">Intelligent Model Routing</h2>
+        <div class="model-router">
+            <div class="router-flow">
+                <div class="flow-item">
+                    <div class="flow-input">
+                        <span>Your Query</span>
+                    </div>
+                </div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-item">
+                    <div class="flow-input">
+                        <span>HeadyAI Router</span>
+                    </div>
+                </div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-item">
+                    <div class="flow-input">
+                        <span>Best Model</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="provider-grid">
+                <div class="provider-card">
+                    <div class="provider-name">Claude</div>
+                    <div class="provider-desc">Anthropic's reasoning powerhouse</div>
+                </div>
+                <div class="provider-card">
+                    <div class="provider-name">GPT-4</div>
+                    <div class="provider-desc">OpenAI's multimodal expert</div>
+                </div>
+                <div class="provider-card">
+                    <div class="provider-name">Gemini</div>
+                    <div class="provider-desc">Google's multimodal model</div>
+                </div>
+                <div class="provider-card">
+                    <div class="provider-name">Groq</div>
+                    <div class="provider-desc">Lightning-fast LPU inference</div>
+                </div>
+                <div class="provider-card">
+                    <div class="provider-name">Perplexity</div>
+                    <div class="provider-desc">Real-time knowledge access</div>
+                </div>
+                <div class="provider-card">
+                    <div class="provider-name">HuggingFace</div>
+                    <div class="provider-desc">Open-source model ecosystem</div>
+                </div>
+            </div>
+
+            <div class="routing-logic">
+                ✨ HeadyAI selects the optimal model based on task type, latency requirements, cost constraints, and quality targets. If Claude is slow, GPT-4 picks up. If GPT-4 is down, Gemini steps in. Your API never fails.
+            </div>
+        </div>
+    </section>
+
+    <!-- Capabilities Section -->
+    <section id="capabilities">
+        <h2 class="section-title">Capabilities</h2>
+        <div class="capabilities-grid">
+            <div class="capability-card">
+                <div class="capability-icon">🔀</div>
+                <div class="capability-title">Multi-Model Inference</div>
+                <div class="capability-desc">
+                    One API, every model. Intelligent routing with automatic failover. If Claude is slow, GPT-4 picks up. If GPT-4 is down, Gemini steps in. Build once, scale forever.
+                </div>
+            </div>
+            <div class="capability-card">
+                <div class="capability-icon">⚙️</div>
+                <div class="capability-title">Fine-Tuning Pipeline</div>
+                <div class="capability-desc">
+                    Train custom models on your data with a single API call. Automated dataset preparation, distributed training, and one-click deployment. Your models, perfected.
+                </div>
+            </div>
+            <div class="capability-card">
+                <div class="capability-icon">⚡</div>
+                <div class="capability-title">Edge AI (Cloudflare Workers)</div>
+                <div class="capability-desc">
+                    Run inference at the edge, sub-100ms globally. Models deployed to 300+ data centers via Cloudflare Workers. Zero-latency responses, anywhere on Earth.
+                </div>
+            </div>
+            <div class="capability-card">
+                <div class="capability-icon">🧠</div>
+                <div class="capability-title">Vector Intelligence</div>
+                <div class="capability-desc">
+                    Persistent vector memory powered by Pinecone. Your AI remembers everything, retrieves anything, connects the dots. Long-context made scalable and efficient.
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Code Example Section -->
+    <section class="code-section" id="docs">
+        <h2 class="section-title">Get Started in Minutes</h2>
+        <div class="code-grid">
+            <div>
+                <div class="code-block">
+                    <div class="code-label">API Request</div>
+                    <pre class="code-content"><span class="code-keyword">curl</span> -X POST https://api.heady-ai.com/v1/inference \
+  -H <span class="code-string">"Authorization: Bearer HY-xxx"</span> \
+  -H <span class="code-string">"Content-Type: application/json"</span> \
+  -d <span class="code-string">'</span>{
+    <span class="code-property">"prompt"</span>: <span class="code-string">"Explain quantum computing"</span>,
+    <span class="code-property">"strategy"</span>: <span class="code-string">"best-quality"</span>,
+    <span class="code-property">"max_tokens"</span>: <span class="code-value">1000</span>,
+    <span class="code-property">"temperature"</span>: <span class="code-value">0.7</span>
+  }<span class="code-string">'</span></pre>
+                </div>
+            </div>
+            <div>
+                <div class="code-block">
+                    <div class="code-label">API Response</div>
+                    <pre class="code-content">{
+  <span class="code-property">"id"</span>: <span class="code-string">"inf_abc123xyz"</span>,
+  <span class="code-property">"model_used"</span>: <span class="code-string">"claude-3-opus"</span>,
+  <span class="code-property">"provider"</span>: <span class="code-string">"anthropic"</span>,
+  <span class="code-property">"response"</span>: <span class="code-string">"Quantum computing..."</span>,
+  <span class="code-property">"latency_ms"</span>: <span class="code-value">245</span>,
+  <span class="code-property">"cost_usd"</span>: <span class="code-value">0.0032</span>,
+  <span class="code-property">"routing_reason"</span>: <span class="code-string">"best-quality matched claude"</span>
+}</pre>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Benchmarks Section -->
+    <section class="benchmarks-section" id="benchmarks">
+        <h2 class="section-title">Why HeadyAI Wins</h2>
+        <table class="benchmark-table">
+            <thead>
+                <tr>
+                    <th>Metric</th>
+                    <th>HeadyAI</th>
+                    <th>Single Provider</th>
+                    <th>Improvement</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Average Latency</td>
+                    <td class="metric-heady">145ms</td>
+                    <td class="metric-standard">320ms</td>
+                    <td class="metric-heady">↓ 55%</td>
+                </tr>
+                <tr>
+                    <td>Uptime SLA</td>
+                    <td class="metric-heady">99.99%</td>
+                    <td class="metric-standard">99.5%</td>
+                    <td class="metric-heady">↑ 0.49%</td>
+                </tr>
+                <tr>
+                    <td>Cost per 1K tokens</td>
+                    <td class="metric-heady">$0.0008</td>
+                    <td class="metric-standard">$0.0015</td>
+                    <td class="metric-heady">↓ 47%</td>
+                </tr>
+                <tr>
+                    <td>Quality Score</td>
+                    <td class="metric-heady">9.2/10</td>
+                    <td class="metric-standard">7.8/10</td>
+                    <td class="metric-heady">↑ 1.4pts</td>
+                </tr>
+                <tr>
+                    <td>Failover Time</td>
+                    <td class="metric-heady">8ms</td>
+                    <td class="metric-standard">5000ms+</td>
+                    <td class="metric-heady">↓ 99.8%</td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-grid">
+                <div class="footer-section">
+                    <h3>Product</h3>
+                    <a href="#">API Documentation</a>
+                    <a href="#">Model Explorer</a>
+                    <a href="#">Pricing</a>
+                    <a href="#">Status</a>
+                </div>
+                <div class="footer-section">
+                    <h3>Heady Ecosystem</h3>
+                    <a href="#">Heady</a>
+                    <a href="#">Heady Compute</a>
+                    <a href="#">Heady Analytics</a>
+                    <a href="#">Heady Cloud</a>
+                </div>
+                <div class="footer-section">
+                    <h3>Resources</h3>
+                    <a href="#">Blog</a>
+                    <a href="#">Research</a>
+                    <a href="#">Community</a>
+                    <a href="#">Support</a>
+                </div>
+                <div class="footer-section">
+                    <h3>Company</h3>
+                    <a href="#">About</a>
+                    <a href="#">Careers</a>
+                    <a href="#">Contact</a>
+                    <a href="#">Privacy</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <div class="ecosystem-links">
+                    <a href="#" class="ecosystem-badge">🏠 Heady</a>
+                    <a href="#" class="ecosystem-badge">💻 Heady Compute</a>
+                    <a href="#" class="ecosystem-badge">📊 Heady Analytics</a>
+                    <a href="#" class="ecosystem-badge">☁️ Heady Cloud</a>
+                </div>
+                <div class="copyright">
+                    © 2026 Heady. All rights reserved.
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- HeadyBuddy Widget -->
+    <div class="headybuddy-widget">
+        <button class="widget-button" id="headybuddy-toggle">💬</button>
+        <div class="widget-popup" id="headybuddy-popup">
+            <button class="widget-close" onclick="document.getElementById('headybuddy-popup').classList.remove('active')">✕</button>
+            <div class="widget-title">HeadyBuddy</div>
+            <div class="widget-desc">Have questions? Chat with our AI assistant.</div>
+            <input type="text" class="widget-input" placeholder="Ask me anything..." id="buddy-input">
+            <button class="widget-send" onclick="sendBuddyMessage()">Send</button>
+        </div>
+    </div>
+
+    <script>
+        // HeadyBuddy Widget Toggle
+        document.getElementById('headybuddy-toggle').addEventListener('click', function() {
+            const popup = document.getElementById('headybuddy-popup');
+            popup.classList.toggle('active');
+            if (popup.classList.contains('active')) {
+                document.getElementById('buddy-input').focus();
+            }
+        });
+
+        function sendBuddyMessage() {
+            const input = document.getElementById('buddy-input');
+            if (input.value.trim()) {
+                alert('Message sent: ' + input.value + '\n\nHeadyBuddy is coming soon!');
+                input.value = '';
+            }
+        }
+
+        document.getElementById('buddy-input').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                sendBuddyMessage();
+            }
+        });
+
+        // Smooth scroll for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                const href = this.getAttribute('href');
+                if (href !== '#' && document.querySelector(href)) {
+                    e.preventDefault();
+                    document.querySelector(href).scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // CTA Button Handlers
+        document.querySelectorAll('.cta-primary, .nav-cta').forEach(btn => {
+            btn.addEventListener('click', function() {
+                alert('Redirecting to API Dashboard...\n\nIntegration point: /auth/signup');
+            });
+        });
+
+        document.querySelector('.cta-secondary').addEventListener('click', function() {
+            document.getElementById('models').scrollIntoView({ behavior: 'smooth' });
+        });
+
+        // Scroll reveal animations (simple)
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -100px 0px'
+        };
+
+        const observer = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.animation = 'fadeInUp 0.6s ease-out forwards';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.capability-card, .provider-card').forEach(el => {
+            el.style.opacity = '0';
+            observer.observe(el);
+        });
+    </script>
+</body>
+</html>

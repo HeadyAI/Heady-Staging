@@ -109,7 +109,7 @@ jobs:
           <?xml version="1.0" encoding="UTF-8" standalone="no"?>
           <configuration>
             <context>
-              <name>HeadyMe</name>
+              <name>HeadyConnection</name>
               <desc>Heady™ Systems main application</desc>
               <inscope>true</inscope>
               <incregexes>${{ needs.setup.outputs.target_url }}.*</incregexes>

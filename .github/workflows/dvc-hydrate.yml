@@ -1,0 +1,26 @@
+name: DVC Hydrate
+on:
+  push: { branches: [main, develop] }
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  hydrate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: { fetch-depth: 0 }
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.11" }
+      - run: pip install "dvc[s3]"
+      - name: Pull data (if secrets exist)
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.HEADY_B2_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.HEADY_B2_APPLICATION_KEY }}
+          AWS_ENDPOINT_URL_S3: https://s3.us-west-002.backblazeb2.com
+        run: |
+          if [[ -n "${AWS_ACCESS_KEY_ID}" && -n "${AWS_SECRET_ACCESS_KEY}" ]]; then
+            dvc pull
+          else
+            echo "No secrets; skipping dvc pull."
+          fi
