@@ -57,20 +57,36 @@ _changelog:
       - "Added evolution stage with controlled mutation"
 
 # ─── VERSION ──────────────────────────────────────────────────────────────────
-version: "4.0.0"
+version: "8.0.0"
 pipeline:
   name: HCFullPipeline
+  mode: event-driven              # NOT polling. NOT interval. NEVER interval.
   description: >
     21-stage (fib(8)) intelligent, parallel, dynamically distributed, self-aware,
     self-optimizing, trial-and-error capable, continuously learning execution pipeline
-    for all Heady workloads (local and remote). Integrates HeadySims plan selection,
-    pattern recognition, self-critique, reconnaissance scanning, mistake analysis,
-    controlled evolution, multi-channel routing (Heady™ Buddy), public domain
-    inspiration mining, bottleneck diagnostics, optimization ops scanning,
-    and continuous monitoring feedback loops.
+    for all Heady workloads (local and remote). v8.0.0: Event-driven latent space
+    instantaneous execution — tasks propagate instantly via EventSpine, zero polling.
+    Integrates HeadySims plan selection, pattern recognition, self-critique,
+    reconnaissance scanning, mistake analysis, controlled evolution, multi-channel
+    routing (Heady™ Buddy), public domain inspiration mining, bottleneck diagnostics,
+    optimization ops scanning, and continuous monitoring feedback loops.
     Treat this as the single source of truth for every idea, service, flow,
     metric, integration, and improvement in the Heady™ ecosystem.
     Stage IDs canonically match MASTER_DIRECTIVES §7.2 (v4.0.0+).
+
+  # ─── EVENT SPINE (v8.0.0 — Instantaneous Push, No Polling) ──────────────────
+  event-spine:
+    provider: redis-streams        # or cloudflare-queues for edge deployment
+    stream-key: "heady:events"
+    consumer-group: "hcfp-consumers"
+    block-timeout: 0               # BLOCK 0 = instantaneous, no polling
+
+  # ─── EXECUTION MODEL (v8.0.0) ───────────────────────────────────────────────
+  execution:
+    concurrency: unbounded         # No artificial concurrency cap — all independent tasks run NOW
+    dispatch-model: push           # Tasks are pushed to nodes, not pulled on a schedule
+    dependency-resolution: dag     # Topological order, immediate dispatch on unblock
+    implementation: src/orchestration/hcfullpipeline.js
 
   # ─── GLOBAL RULES ───────────────────────────────────────────────────────────
   global:
