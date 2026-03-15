@@ -43,7 +43,7 @@ headycloud:
     compatibility_mode: "full"
     cloud_native: true
     deployment_mode: "auto-deploy"
-    
+
   # Intelligent routing with failover
   routing:
     primary: "headysystems.com"
@@ -90,7 +90,7 @@ windsurf:
     dominance_monitoring: true
     external_models_blocked: true  # ENFORCED
     override_capability: false  # DISABLED
-    
+
   # Model selection — Heady is the ONLY model (100% enforcement)
   model_selection:
     default_model: "heady-brain"

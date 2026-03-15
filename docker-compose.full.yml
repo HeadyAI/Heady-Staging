@@ -13,10 +13,12 @@
 # ║  LAYER: root                                                  ║
 # ╚══════════════════════════════════════════════════════════════════╝
 # HEADY_BRAND:END
-version: '3.8'
+#
+# Full-stack compose — all Heady services + infra + monitoring.
+# Usage: docker compose -f docker-compose.full.yml up -d
 
 services:
-  # Core Heady Manager
+  # ─── Core Heady Manager ────────────────────────────────────────
   heady-manager:
     build: .
     container_name: heady-manager
@@ -27,9 +29,9 @@ services:
       - PORT=3300
       - HEADY_TARGET=Docker
       - HEADY_VERSION=3.0.0
-      - POSTGRES_HOST=heady-postgres
-      - REDIS_HOST=heady-redis
-      - OLLAMA_HOST=heady-ollama
+      - DATABASE_URL=postgresql://heady:heady_secret@heady-postgres:5432/heady
+      - REDIS_URL=redis://heady-redis:6379
+      - OLLAMA_HOST=http://heady-ollama:11434
     volumes:
       - heady-data:/app/.heady-memory
       - ./configs:/app/configs:ro
@@ -37,17 +39,19 @@ services:
     networks:
       - heady-net
     depends_on:
-      - heady-postgres
-      - heady-redis
-      - heady-ollama
+      heady-postgres:
+        condition: service_healthy
+      heady-redis:
+        condition: service_healthy
     healthcheck:
       test: ["CMD", "wget", "-qO-", "http://localhost:3300/api/health"]
       interval: 30s
       timeout: 10s
       retries: 3
+      start_period: 40s
     restart: unless-stopped
 
-  # Database Layer
+  # ─── Database Layer ────────────────────────────────────────────
   heady-postgres:
     image: pgvector/pgvector:pg16
     container_name: heady-postgres
@@ -60,7 +64,8 @@ services:
       - "5432:5432"
     volumes:
       - heady-postgres:/var/lib/postgresql/data
-      - ./backend/sql/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    ports:
+      - "5432:5432"
     networks:
       - heady-net
     healthcheck:
@@ -77,6 +82,8 @@ services:
       - "6379:6379"
     volumes:
       - heady-redis:/data
+    ports:
+      - "6379:6379"
     networks:
       - heady-net
     healthcheck:
@@ -86,7 +93,7 @@ services:
       retries: 3
     restart: unless-stopped
 
-  # AI/ML Services
+  # ─── AI/ML Services ───────────────────────────────────────────
   heady-ollama:
     image: ollama/ollama:latest
     container_name: heady-ollama
@@ -94,6 +101,8 @@ services:
       - "11434:11434"
     volumes:
       - heady-ollama:/root/.ollama
+    ports:
+      - "11434:11434"
     networks:
       - heady-net
     environment:
@@ -253,7 +262,7 @@ services:
       - heady-redis
     restart: unless-stopped
 
-  # Monitoring & Observability
+  # ─── Monitoring & Observability ────────────────────────────────
   heady-grafana:
     image: grafana/grafana:latest
     container_name: heady-grafana
@@ -264,7 +273,6 @@ services:
       - GF_INSTALL_PLUGINS=grafana-clock-panel,grafana-simple-json-datasource
     volumes:
       - heady-grafana:/var/lib/grafana
-      - ./configs/grafana/provisioning:/etc/grafana/provisioning:ro
     networks:
       - heady-net
     restart: unless-stopped
@@ -275,13 +283,9 @@ services:
     ports:
       - "9090:9090"
     volumes:
-      - ./configs/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
       - heady-prometheus:/prometheus
     command:
-      - '--config.file=/etc/prometheus/prometheus.yml'
       - '--storage.tsdb.path=/prometheus'
-      - '--web.console.libraries=/etc/prometheus/console_libraries'
-      - '--web.console.templates=/etc/prometheus/consoles'
       - '--storage.tsdb.retention.time=200h'
       - '--web.enable-lifecycle'
     networks:
@@ -323,7 +327,6 @@ services:
     restart: unless-stopped
 
 volumes:
-  # Data Persistence
   heady-data:
     driver: local
   heady-postgres:
@@ -332,23 +335,11 @@ volumes:
     driver: local
   heady-ollama:
     driver: local
-  heady-rag:
-    driver: local
-  heady-mcp:
-    driver: local
-  heady-buddy:
-    driver: local
-  heady-voice:
-    driver: local
   heady-pgadmin:
     driver: local
   heady-grafana:
     driver: local
   heady-prometheus:
-    driver: local
-  heady-nginx:
-    driver: local
-  heady-consul:
     driver: local
 
 networks:

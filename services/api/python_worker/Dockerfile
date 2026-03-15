@@ -10,7 +10,7 @@
 # ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
 # ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
 # ║  FILE: services/api/python_worker/Dockerfile                                                    ║
-# ║  LAYER: root                                                  ║
+# ║  LAYER: services                                                  ║
 # ╚══════════════════════════════════════════════════════════════════╝
 # HEADY_BRAND:END
 # ╔═══════════════════════════════════════════════════════════════╗
@@ -35,6 +35,6 @@ COPY . .
 EXPOSE 5000
 
 HEALTHCHECK --interval=30s --timeout=10s --retries=3 \
-  CMD python -c "import urllib.request; urllib.request.urlopen('https://api.headysystems.com/health')" || exit 1
+  CMD python -c "import urllib.request; urllib.request.urlopen('http://localhost:5000/health')" || exit 1
 
 CMD ["python", "-m", "heady_project.api"]

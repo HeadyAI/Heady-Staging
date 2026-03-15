@@ -1,8 +1,8 @@
 # Drupal 11 with PHP 8.2
 FROM drupal:11-php8.2-apache
 
-# Install dependencies
-RUN apt-get update && apt-get install -y \
+# Install dependencies (sqlite3 for local dev, git for composer)
+RUN apt-get update && apt-get install -y --no-install-recommends \
     git \
     unzip \
     && rm -rf /var/lib/apt/lists/*
