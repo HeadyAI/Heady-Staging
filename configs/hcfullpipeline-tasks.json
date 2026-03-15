@@ -1,26 +1,26 @@
 {
   "$schema": "heady://pipeline/task-queue",
-  "version": "5.8.0",
+  "version": "5.9.0",
   "pipeline": "hcfullpipeline",
   "generatedAt": "2026-03-10T05:41:52Z",
-  "lastFineTuned": "2026-03-15T11:46:00Z",
+  "lastFineTuned": "2026-03-15T11:53:00Z",
   "phi": 1.618033988749895,
-  "description": "Complete task queue for HCFullPipeline — dual-scan reconciled + report-extracted (25) + strategic-roadmap-extracted (18) tasks",
-  "taskCount": 181,
+  "description": "Complete task queue for HCFullPipeline — dual-scan reconciled + report-extracted (25) + strategic (18) + HeadyWeb (16) tasks",
+  "taskCount": 197,
   "concurrentEquals": true,
   "paradigm": "All tasks are concurrent-equals. No ranking, no priority tiering. CSL resonance determines contextual relevance, not importance hierarchy.",
   "categories": {
     "SECURITY": {
       "csl_resonance": 1.0,
-      "tasks": 25
+      "tasks": 27
     },
     "INFRASTRUCTURE": {
       "csl_resonance": 1.0,
-      "tasks": 29
+      "tasks": 33
     },
     "ARCHITECTURE": {
       "csl_resonance": 1.0,
-      "tasks": 23
+      "tasks": 25
     },
     "QUALITY": {
       "csl_resonance": 1.0,
@@ -28,15 +28,15 @@
     },
     "DOCUMENTATION": {
       "csl_resonance": 1.0,
-      "tasks": 28
+      "tasks": 29
     },
     "SCALING": {
       "csl_resonance": 1.0,
-      "tasks": 16
+      "tasks": 17
     },
     "FEATURES": {
       "csl_resonance": 1.0,
-      "tasks": 24
+      "tasks": 30
     },
     "REMEDIATION": {
       "csl_resonance": 1.0,
@@ -1834,6 +1834,179 @@
       "csl_confidence": 0.718,
       "estimated_hours": 8,
       "source": "Strategic Value Assessment — 'Developer Evangelism is immediate focus' + SDK docs as CRITICAL/$5M uplift"
+    },
+    {
+      "id": "FEAT-026",
+      "category": "FEATURES",
+      "title": "Scaffold HeadyWeb Electron project with electron-vite + electron-forge",
+      "description": "Initialize HeadyWeb AI-native browser project: Electron 33+, electron-vite for HMR, electron-forge for packaging. Vanilla JS/Web Components UI (no React). Install core deps: zustand, immer, pino, @modelcontextprotocol/sdk",
+      "status": "pending",
+      "csl_confidence": 0.718,
+      "estimated_hours": 3,
+      "source": "HeadyWeb Build Manual — Part 2 Step 1: Scaffold"
+    },
+    {
+      "id": "FEAT-027",
+      "category": "FEATURES",
+      "title": "BaseWindow + WebContentsView multi-tab browser core",
+      "description": "Implement BaseWindow layout container with WebContentsView children: ToolbarView (address bar, tab strip), TabView[0..N] (one Chromium renderer per tab), SidecarView (HeadyBuddy panel). φ-derived layout: TOOLBAR_HEIGHT=55, SIDECAR_WIDTH=fib(14)=377",
+      "status": "pending",
+      "blockedBy": ["FEAT-026"],
+      "csl_confidence": 0.718,
+      "estimated_hours": 8,
+      "source": "HeadyWeb Build Manual — Part 2 Step 3: BaseWindow + Multi-Tab Core"
+    },
+    {
+      "id": "FEAT-028",
+      "category": "FEATURES",
+      "title": "HeadyBuddy sidecar panel — AI copilot for every page",
+      "description": "Build HeadyBuddy sidecar as vanilla JS Web Component in WebContentsView. Implement Comet dual-channel: SSE for conversation, WebSocket for automation. Register 7 MCP tools: browser_click, browser_type, browser_navigate, browser_read_page, browser_screenshot, browser_accessibility, webmcp_discover",
+      "status": "pending",
+      "blockedBy": ["FEAT-027"],
+      "csl_confidence": 0.718,
+      "estimated_hours": 10,
+      "source": "HeadyWeb Build Manual — Part 2 Step 5: HeadyBuddy Sidecar"
+    },
+    {
+      "id": "FEAT-029",
+      "category": "FEATURES",
+      "title": "CDP Bridge — Chrome DevTools Protocol AI browser automation",
+      "description": "Implement CDP bridge for AI actions indistinguishable from human input via webContents.executeJavaScript. Support: clickByRef, typeText, discoverWebMCPTools. Build __headyNodes reference map with MutationObserver re-indexing. Max fib(13)=233 nodes per page",
+      "status": "pending",
+      "blockedBy": ["FEAT-027"],
+      "csl_confidence": 0.718,
+      "estimated_hours": 6,
+      "source": "HeadyWeb Build Manual — Part 2 Steps 6-7: CDP Bridge + Page Injection"
+    },
+    {
+      "id": "FEAT-030",
+      "category": "FEATURES",
+      "title": "WebMCP navigator.modelContext progressive enhancement",
+      "description": "Integrate Chrome 146+ WebMCP (navigator.modelContext) for structured tool discovery on WebMCP-enabled sites. Fallback to hybrid DOM/accessibility for non-WebMCP sites. Enable via --enable-features=WebMCP flag. Target: 67% compute reduction on supported sites",
+      "status": "pending",
+      "blockedBy": ["FEAT-029"],
+      "csl_confidence": 0.618,
+      "estimated_hours": 4,
+      "source": "HeadyWeb Build Manual — Part 3: WebMCP Integration"
+    },
+    {
+      "id": "FEAT-031",
+      "category": "FEATURES",
+      "title": "HeadyAutoContext v2 browser page indexer",
+      "description": "Implement browser-aware HeadyAutoContext: extract simplified DOM on every navigation (max 233 interactable nodes), send to sidecar + vector memory. Hybrid understanding: primary accessibility tree + secondary annotated DOM + fallback screenshot. 93% fewer tokens than full Playwright dumps",
+      "status": "pending",
+      "blockedBy": ["FEAT-027"],
+      "csl_confidence": 0.618,
+      "estimated_hours": 5,
+      "source": "HeadyWeb Build Manual — Part 3: AI Agent Wiring"
+    },
+    {
+      "id": "INFRA-030",
+      "category": "INFRASTRUCTURE",
+      "title": "Native MCP server in Electron main process — 4 transports",
+      "description": "Run @modelcontextprotocol/sdk Server inside Electron main process for sub-millisecond tool call latency. Expose via streamable-HTTP (external), stdio (local Claude/Windsurf), SSE (legacy), and WebSocket simultaneously per Liquid Latent OS Layer 0 spec",
+      "status": "pending",
+      "blockedBy": ["FEAT-026"],
+      "csl_confidence": 0.718,
+      "estimated_hours": 5,
+      "source": "HeadyWeb Build Manual — Part 4: MCP Server Integration"
+    },
+    {
+      "id": "INFRA-031",
+      "category": "INFRASTRUCTURE",
+      "title": "Electron packaging — macOS .dmg, Windows .exe, Linux .deb/AppImage",
+      "description": "Configure electron-forge makers: Squirrel (Windows), DMG (macOS), DEB/RPM (Linux). Enable ASAR packaging, code signing, and executable naming. Test cross-platform builds and verify binary sizes",
+      "status": "pending",
+      "blockedBy": ["FEAT-027"],
+      "csl_confidence": 0.618,
+      "estimated_hours": 4,
+      "source": "HeadyWeb Build Manual — Part 7: Deployment & Packaging"
+    },
+    {
+      "id": "INFRA-032",
+      "category": "INFRASTRUCTURE",
+      "title": "HeadyWeb auto-updater via Cloudflare R2 release channel",
+      "description": "Configure electron-forge publisher-generic to publish releases to Cloudflare R2 at releases.headysystems.com. Implement auto-update checking on app launch with φ-scaled check intervals",
+      "status": "pending",
+      "blockedBy": ["INFRA-031"],
+      "csl_confidence": 0.618,
+      "estimated_hours": 3,
+      "source": "HeadyWeb Build Manual — Part 7: Auto-Updater via Cloudflare R2"
+    },
+    {
+      "id": "INFRA-033",
+      "category": "INFRASTRUCTURE",
+      "title": "HeadyWeb /health endpoint for uptime monitoring",
+      "description": "Expose /health at localhost:3034/health returning JSON with: status, tabs_open, sidecar_active, mcp_connected, cdp_port, autocontext_files_indexed, vector_memory_entries, active_layer, uptime_ms, heartbeat_interval_ms",
+      "status": "pending",
+      "blockedBy": ["INFRA-030"],
+      "csl_confidence": 0.618,
+      "estimated_hours": 2,
+      "source": "HeadyWeb Build Manual — Part 8: Health Endpoint"
+    },
+    {
+      "id": "SEC-026",
+      "category": "SECURITY",
+      "title": "8-layer sanitization pipeline for HeadyBuddy browser inputs",
+      "description": "Implement full sanitization chain: (1) Zod schema validation, (2) max-length 4236 chars (φ²×1618), (3) DOMPurify on HTML, (4) parameterized queries, (5) CSP headers, (6) URL allowlist for SSRF, (7) path.resolve() jail, (8) secret pattern detection before logging",
+      "status": "pending",
+      "blockedBy": ["FEAT-028"],
+      "csl_confidence": 0.927,
+      "estimated_hours": 5,
+      "source": "HeadyWeb Build Manual — Part 5: 8 Sanitization Layers"
+    },
+    {
+      "id": "SEC-027",
+      "category": "SECURITY",
+      "title": "Per-tab session isolation + Zero-Trust permission handlers",
+      "description": "Implement session.fromPartition() per tab with 4 partition types: persist:tab-{id}, persist:heady-profile, incognito-{uuid}, persist:auth-headysystems. Default-deny permission handlers; whitelist only notifications, media, geolocation. Apply CSP/HSTS headers at session level",
+      "status": "pending",
+      "blockedBy": ["FEAT-027"],
+      "csl_confidence": 0.927,
+      "estimated_hours": 4,
+      "source": "HeadyWeb Build Manual — Part 5: Session Management & Security"
+    },
+    {
+      "id": "ARCH-024",
+      "category": "ARCHITECTURE",
+      "title": "φ-scaled system constants module — zero magic numbers in HeadyWeb",
+      "description": "Create src/main/constants/phi.ts with all φ-derived constants: layout (TOOLBAR_HEIGHT, SIDECAR_WIDTH, BORDER_RADIUS), timing (HEARTBEAT_MS, TASK_TIMEOUT_MS, BACKOFF_MS array), CSL thresholds (include=0.382, boost=0.618, inject=0.718), Chromium flags. Every number in HeadyWeb traces to φ or Fibonacci",
+      "status": "pending",
+      "csl_confidence": 0.718,
+      "estimated_hours": 2,
+      "source": "HeadyWeb Build Manual — Part 2 Step 8: φ-Scaled Constants"
+    },
+    {
+      "id": "ARCH-025",
+      "category": "ARCHITECTURE",
+      "title": "Vanilla JS Web Components for toolbar, sidecar, settings (no React)",
+      "description": "Build all HeadyWeb UI as native Web Components: <heady-toolbar> (tab strip + address bar), <heady-sidecar> (HeadyBuddy chat panel), <heady-settings>. CSL-compatible (each component is semantic, isolated, composable). Zero framework overhead",
+      "status": "pending",
+      "blockedBy": ["FEAT-026"],
+      "csl_confidence": 0.718,
+      "estimated_hours": 8,
+      "source": "HeadyWeb Build Manual — User correction: vanilla JS/Web Components, no React"
+    },
+    {
+      "id": "SCALE-017",
+      "category": "SCALING",
+      "title": "Tab suspension + V8 snapshots for Electron memory optimization",
+      "description": "Implement tab suspension for background WebContentsViews (stop rendering/executing). Apply V8 snapshots for pre-compiled modules. Route-based code splitting across renderer processes. Session cache limits on φ⁸ intervals. Target: <500MB for 5 tabs + sidecar",
+      "status": "pending",
+      "blockedBy": ["FEAT-027"],
+      "csl_confidence": 0.618,
+      "estimated_hours": 6,
+      "source": "HeadyWeb Build Manual — Part 6: Performance & Optimization"
+    },
+    {
+      "id": "DOC-029",
+      "category": "DOCUMENTATION",
+      "title": "HeadyWeb Build & Operations Manual committed to docs/",
+      "description": "Complete build guide covering: architecture overview (Chromium-Beta + Comet-Beta hybrid), 10-step build instructions, AI agent wiring, MCP integration, session security, performance optimization, deployment packaging, and HeadyBuddy operating instructions. Vanilla JS stack, no React",
+      "status": "completed",
+      "csl_confidence": 0.718,
+      "estimated_hours": 4,
+      "source": "HeadyWeb Build Manual — user-provided comprehensive document, saved to docs/headyweb-build-manual.md"
     }
   ]
 }

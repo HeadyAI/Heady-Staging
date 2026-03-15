@@ -305,6 +305,82 @@
 
 ---
 
+# HeadyWeb — Cinematic Video Prompts (NotebookLM)
+
+> Upload `docs/headyweb-build-manual.md` + `hcfullpipeline.json` as sources before running.
+
+### HeadyWeb Video 1: The Browser That Thinks
+
+> "Create a cinematic documentary-style overview of HeadyWeb — the AI-native browser. Open with the problem: browsers are dumb rendering engines. Transition to the solution: every tab runs an isolated Chromium process while HeadyBuddy watches, understands, and acts. Show the Electron architecture — BaseWindow spawning WebContentsView children like neurons branching. The sidecar panel slides in, the CDP bridge fires, and HeadyBuddy books a flight by reading the DOM, clicking, typing, and verifying — indistinguishable from a human. Close with WebMCP: websites exposing structured tool contracts to the browser. Hans Zimmer-style tension. 4K cinematic."
+
+### HeadyWeb Video 2: Comet Meets Sacred Geometry
+
+> "Produce a thrilling reverse-engineering reveal — how Perplexity Comet's four-component architecture was decoded and re-engineered through the lens of Sacred Geometry. AI backend → HeadyBrain, Sidecar → HeadyBuddy panel, Extensions → MCP+CDP bridge. Show the CDP bridge translating model commands into human-indistinguishable browser actions. Golden ratio spirals emerge from the layout constants: toolbar at φ×34, sidecar at fib(14)=377. Dramatic, precise, technically grounded. Dark UI mockups with glowing wireframes."
+
+### HeadyWeb Video 3: The Sidecar — AI Copilot for Every Page
+
+> "Create a cinematic walkthrough of HeadyBuddy's sidecar panel in action. User visits a restaurant website → sidecar extracts 233 interactable nodes → user says 'Book a table for 2 tonight' → HeadyBuddy decomposes the task → CDP clicks, types, navigates, screenshots to verify → reservation confirmed. The sidecar panel glows with context-awareness — it knows what's on the page without the user explaining. Show the node reference map building in real-time. Warm interior lighting meets holographic UI overlays."
+
+### HeadyWeb Video 4: Session Isolation — Every Tab a Fortress
+
+> "Create a security-focused cinematic showing HeadyWeb's per-tab session isolation. Visualize session.fromPartition() as individual crystal vaults — cookies, storage, and permissions physically separated. Show the 8 sanitization layers as successive energy shields: Zod validation → max-length → DOMPurify → parameterized queries → CSP → URL allowlist → path jail → secret scanning. A malicious payload tries to breach — blocked at layer 3. Zero-trust particles dissolving threats. Dark, dramatic, cybersecurity aesthetic."
+
+### HeadyWeb Video 5: CDP Bridge — The Ghost in the Machine
+
+> "Produce a thriller-style overview of Chrome DevTools Protocol as HeadyBuddy's invisible hands. Show executeJavaScript injecting clicks that are impossible to distinguish from human input. The accessibility tree becomes a semantic map of every page. A headless AI agent navigates a complex multi-step form — filling, selecting, uploading, submitting — all through CDP. Counter shows: '93% fewer tokens than full DOM dumps.' The browser becomes the AI's body. Dark atmosphere, terminal green overlays, pulsing network traces."
+
+### HeadyWeb Video 6: WebMCP — The Future of Web Intelligence
+
+> "Create a visionary overview of WebMCP (navigator.modelContext) — the proposed W3C standard where websites expose structured tool contracts to AI agents. Show a HeadyWeb tab visiting a WebMCP-enabled airline site → webmcp_discover returns typed tools (buyTicket, checkIn, changeSeat) → HeadyBuddy calls them directly, bypassing DOM scraping entirely. Counter: '67% compute reduction.' Show the progressive enhancement fallback — non-WebMCP sites still work via hybrid DOM/accessibility. Split between present (scraping) and future (structured). Clean, optimistic, futuristic."
+
+### HeadyWeb Video 7: From Zero to AI Browser
+
+> "Create a developer-focused cinematic of building HeadyWeb from scratch. Terminal in a 3D void: npx create-electron-app. Directory structure crystallizes — main/, preload/, renderer/. BaseWindow spawns ToolbarView + TabView + SidecarView as nested layers. IPC channels wire like golden neural pathways. The browser launches — tabs open, sidecar slides, HeadyBuddy greets. First AI action: read page → click link → verify screenshot. Developer aesthetic meets cinematic depth. Split-screen: code left, running browser right."
+
+### HeadyWeb Video 8: The φ-Native Browser OS
+
+> "Cinematic montage. Every constant in HeadyWeb derives from φ. Show: TOOLBAR_HEIGHT = 55 = φ×34, SIDECAR_WIDTH = fib(14) = 377, HEARTBEAT_MS = φ⁷×1000 = 29034, BACKOFF = Fibonacci sequence. Camera pulls through the codebase — every number glows golden as its φ derivation reveals. Zero magic numbers. The browser's layout, timing, and thresholds all emerge from one mathematical constant. Close on the golden ratio spiral forming the HeadyWeb logo. Ethereal, mathematical beauty. 4K."
+
+---
+
+# HeadyWeb — Report Prompts (NotebookLM)
+
+> Upload `docs/headyweb-build-manual.md` + relevant source files before running.
+
+### Report 1: HeadyWeb vs Comet Architecture Comparison
+
+> "Generate a technical architecture comparison between HeadyWeb and Perplexity Comet. Map component-for-component: AI backend, sidecar panel, CDP execution layer, session management, WebMCP support. Identify where HeadyWeb extends beyond Comet: native MCP server in main process, φ-scaled constants, 8-layer sanitization, HeadyAutoContext v2 indexer. Highlight convergence points and divergence. Include architectural diagrams described in text."
+
+### Report 2: HeadyWeb Security Audit
+
+> "Produce a security audit of HeadyWeb's browser architecture. Evaluate: per-tab session.fromPartition() isolation, CSP header injection at session level, the 8-layer sanitization pipeline, CDP access controls, preload contextIsolation enforcement, URL allowlisting for SSRF prevention, secret pattern scanning in tool call arguments. Map against OWASP Top 10. Identify gaps and generate remediation priorities."
+
+### Report 3: Electron Performance Optimization Report
+
+> "Create a performance analysis of HeadyWeb's Electron architecture. Baseline: ~700MB for 5 tabs + sidecar. Evaluate mitigation strategies: V8 snapshots, route-based code splitting, Web Worker indexer offloading, tab suspension, session cache limits on φ⁸ intervals. Benchmark electron-vite build performance. Compare HeadyWeb's expected footprint against VS Code, Slack, and Discord Electron apps. Produce optimization priority matrix."
+
+### Report 4: CDP + MCP Integration Blueprint
+
+> "Generate a technical blueprint for HeadyWeb's CDP-to-MCP bridge architecture. Document: tool registration patterns, the relationship between simplified DOM node refs and CDP actions, WebMCP progressive enhancement, the 4-transport MCP gateway (streamable-http, sse, websocket, stdio). Include sequence diagrams for a complete user query → tool execution → verification flow."
+
+### Report 5: HeadyWeb Developer Onboarding Guide
+
+> "Produce a step-by-step developer onboarding guide for contributing to HeadyWeb. Cover: project scaffold with electron-vite, directory structure walkthrough, BaseWindow + WebContentsView architecture, IPC channel wiring patterns, preload security model (contextIsolation + contextBridge), adding new sidecar tools, testing with Playwright MCP, and packaging with electron-forge. Include common pitfalls and debugging tips."
+
+### Report 6: WebMCP Readiness Assessment
+
+> "Create an assessment of WebMCP (navigator.modelContext) readiness for HeadyWeb deployment. Cover: current Chrome Canary support status, W3C specification progress, expected timeline for stable Chrome release, HeadyWeb's implementation approach (progressive enhancement), fallback strategy for non-WebMCP sites, token efficiency gains (67% reduction), and strategic positioning of HeadyWeb as an early WebMCP adopter."
+
+### Report 7: HeadyWeb Cross-Platform Packaging Report
+
+> "Generate a report on HeadyWeb's cross-platform distribution strategy. Cover: electron-forge maker configuration (Squirrel for Windows, DMG for macOS, DEB/RPM for Linux), Cloudflare R2 auto-updater, code signing requirements per platform, native OS integration (traffic light buttons, frame:false, titleBarStyle), and estimated binary sizes. Include a release pipeline flowchart."
+
+### Report 8: HeadyAutoContext Browser Integration Analysis
+
+> "Produce an analysis of HeadyAutoContext v2's browser integration in HeadyWeb. Cover: page injection via preload scripts, MutationObserver-based re-indexing, the 233-node limit (fib(13)) and its token efficiency rationale, CSL-gated relevance filtering for page context, vector memory enrichment pipeline, and the relationship between browser-extracted context and the broader HeadyAutoContext workspace indexer."
+
+---
+
 ## Usage Tips
 
 ### NotebookLM
