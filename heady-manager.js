@@ -171,7 +171,6 @@ try {
 
   // Register non-Cloudflare secrets from manifest
   const manifestSecrets = [
-    { id: "render_api_key", name: "Render API Key", envVar: "RENDER_API_KEY", tags: ["render", "api-key"], dependents: ["render-deploy"] },
     { id: "heady_api_key", name: "Heady API Key", envVar: "HEADY_API_KEY", tags: ["heady", "auth"], dependents: ["api-gateway"] },
     { id: "admin_token", name: "Admin Token", envVar: "ADMIN_TOKEN", tags: ["heady", "admin"], dependents: ["admin-panel"] },
     { id: "database_url", name: "PostgreSQL Connection", envVar: "DATABASE_URL", tags: ["database"], dependents: ["persistence"] },
@@ -278,7 +277,6 @@ try {
 
   // Register non-Cloudflare secrets from manifest
   const manifestSecrets = [
-    { id: "render_api_key", name: "Render API Key", envVar: "RENDER_API_KEY", tags: ["render", "api-key"], dependents: ["render-deploy"] },
     { id: "heady_api_key", name: "Heady API Key", envVar: "HEADY_API_KEY", tags: ["heady", "auth"], dependents: ["api-gateway"] },
     { id: "admin_token", name: "Admin Token", envVar: "ADMIN_TOKEN", tags: ["heady", "admin"], dependents: ["admin-panel"] },
     { id: "database_url", name: "PostgreSQL Connection", envVar: "DATABASE_URL", tags: ["database"], dependents: ["persistence"] },
@@ -378,10 +376,10 @@ const allowedOrigins = [
   'https://headyfinance.com',
   'https://www.headyfinance.com',
 
-  // Render.com deployment domains
-  'https://heady-manager.onrender.com',
-  'https://heady-testing.onrender.com',
-  'https://heady-production.onrender.com',
+  // Cloud Run deployment domains
+  'https://heady-manager-bf4q4zywhq-uc.a.run.app',
+  'https://heady-edge-gateway-bf4q4zywhq-uc.a.run.app',
+  'https://heady-onboarding-bf4q4zywhq-ue.a.run.app',
 
   // Development localhost (ports 3000-3400)
   'http://localhost:3000',
@@ -398,9 +396,9 @@ const allowedOrigins = [
 app.use((req, res, next) => {
   const origin = req.get('origin');
 
-  // Check if origin is in whitelist or matches *.onrender.com pattern
+  // Check if origin is in whitelist or matches *.a.run.app pattern
   const isAllowed = allowedOrigins.includes(origin) ||
-    (origin && origin.endsWith('.onrender.com'));
+    (origin && origin.endsWith('.a.run.app'));
 
   if (isAllowed) {
     res.setHeader('Access-Control-Allow-Origin', origin);
@@ -708,7 +706,7 @@ app.get("/api/health", (req, res) => {
   });
 });
 
-// ─── Render Health Check Alias (Bug #2 Fix) ─────────────────────────
+// ─── Brain Health Check Alias ────────────────────────────────────────
 app.get("/api/brain/health", (req, res) => {
   res.json({
     ok: true,

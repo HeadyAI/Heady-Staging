@@ -93,13 +93,13 @@ services:
     critical: false
     tags: [cdn, dns, integration]
 
-  render:
-    url: "https://api.render.com/v1"
+  cloudrun:
+    url: "https://run.googleapis.com/v2"
     timeout_ms: 30000
     retry_attempts: 2
     retry_backoff_ms: 2000
     critical: false
-    tags: [deployment, paas]
+    tags: [deployment, serverless]
 
   # Heady Internal Services
   heady_sys:

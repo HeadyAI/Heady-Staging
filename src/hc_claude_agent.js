@@ -362,7 +362,7 @@ function registerClaudeHandlers(registerFn) {
 
   registerFn("ingest_external_apis", withFallback("ingest_external_apis", async (ctx) => {
     const result = await claudeExecute(
-      "Check external API availability: 1) curl -s https://api.render.com/health 2) curl -s https://api.github.com/rate_limit 3) curl -s https://huggingface.co/api/models?limit=1. Report reachability and latency. Return JSON: {\"apis\": [{\"name\": \"...\", \"reachable\": true|false, \"latencyMs\": N}], \"allHealthy\": true|false}",
+      "Check external API availability: 1) curl -s https://heady-manager-bf4q4zywhq-uc.a.run.app/api/health 2) curl -s https://api.github.com/rate_limit 3) curl -s https://huggingface.co/api/models?limit=1. Report reachability and latency. Return JSON: {\\\"apis\\\": [{\\\"name\\\": \\\"...\\\", \\\"reachable\\\": true|false, \\\"latencyMs\\\": N}], \\\"allHealthy\\\": true|false}",
       { allowedTools: ["Bash(curl:*)"], maxBudgetUsd: 0.10, timeoutMs: 60000 }
     );
     return { task: "ingest_external_apis", status: result.ok ? "completed" : "failed", output: result.output, durationMs: result.durationMs };

@@ -156,9 +156,9 @@ robocopy distribution/ E:/distribution /MIR
 # 🌐 Cloud Layers
 
 - local     → manager.dev.local.heady.internal:3300 [Green]
-- cloud-me  → heady-manager-headyme.onrender.com [Cyan]
-- cloud-sys → heady-manager-headysystems.onrender.com [Magenta]
-- cloud-conn→ heady-manager-headyconnection.onrender.com [Yellow]
+- cloud-me  → heady-manager-bf4q4zywhq-uc.a.run.app [Cyan]
+- cloud-sys → heady-edge-gateway-bf4q4zywhq-uc.a.run.app [Magenta]
+- cloud-conn→ heady-onboarding-bf4q4zywhq-ue.a.run.app [Yellow]
 - hybrid    → .env.hybrid mode [White]
 
 # 📞 Support

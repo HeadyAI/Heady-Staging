@@ -124,8 +124,8 @@ env_vars:
   optional:
     - name: ADMIN_TOKEN
       description: "Admin panel auth token"
-    - name: RENDER_API_KEY
-      description: "Render.com deploy key"
+    - name: GCP_PROJECT_ID
+      description: "GCP project ID for Cloud Run deployments"
     - name: HF_TOKEN
       description: "Hugging Face inference token"
     - name: GITHUB_TOKEN

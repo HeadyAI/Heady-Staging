@@ -24,18 +24,18 @@
 # ═══════════════════════════════════════════════════════════════════════════════
 cloud:
   me:
-    domain: heady-manager-headyme.onrender.com
-    provider: render
+    domain: heady-manager-bf4q4zywhq-uc.a.run.app
+    provider: cloudrun
     layer: cyan
     
   sys:
-    domain: heady-manager-headysystems.onrender.com
-    provider: render
+    domain: heady-edge-gateway-bf4q4zywhq-uc.a.run.app
+    provider: cloudrun
     layer: magenta
     
   conn:
-    domain: heady-manager-headyconnection.onrender.com
-    provider: render
+    domain: heady-onboarding-bf4q4zywhq-ue.a.run.app
+    provider: cloudrun
     layer: yellow
 
 # ═══════════════════════════════════════════════════════════════════════════════

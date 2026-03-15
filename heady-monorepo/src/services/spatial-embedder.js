@@ -56,7 +56,7 @@ function deterministicReceipt(data) {
 const DOMAIN_KEYWORDS = {
     deepInfra: {
         score: -1.0,
-        terms: ['dockerfile', 'ci/cd', 'github-actions', 'deploy', 'terraform', 'helm', 'k8s', 'kubernetes', 'nginx', 'cloudflare', 'render.yaml', 'migration', 'pnpm-lock', 'package-lock'],
+        terms: ['dockerfile', 'ci/cd', 'github-actions', 'deploy', 'terraform', 'helm', 'k8s', 'kubernetes', 'nginx', 'cloudflare', 'docker-compose', 'migration', 'pnpm-lock', 'package-lock'],
     },
     backend: {
         score: -0.5,

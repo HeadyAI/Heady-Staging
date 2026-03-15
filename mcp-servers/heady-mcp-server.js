@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 // HEADY_BRAND:BEGIN
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
@@ -13,7 +14,6 @@
 // ║  LAYER: root                                                  ║
 // ╚══════════════════════════════════════════════════════════════════╝
 // HEADY_BRAND:END
-#!/usr/bin/env node
 /**
  * Heady MCP Server — Clean, functional MCP server for Claude Desktop
  * Uses @modelcontextprotocol/sdk with stdio transport
@@ -509,10 +509,10 @@ class HeadyMCPServer {
           description: 'Project code statistics — lines of code, file counts, language breakdown, largest files',
           inputSchema: { type: 'object', properties: {} }
         },
-        // ── Render Cloud ──────────────────────────────────
+        // ── Cloud Run ──────────────────────────────────
         {
-          name: 'heady_render_status',
-          description: 'Parse render.yaml and show all deployed services, databases, and environment groups',
+          name: 'heady_cloudrun_status',
+          description: 'Show Cloud Run deployment status and service URLs',
           inputSchema: { type: 'object', properties: {} }
         },
         // ── Doc Freshness ─────────────────────────────────
@@ -620,8 +620,8 @@ class HeadyMCPServer {
           case 'heady_registry_lookup': return await this.registryLookup(args.name);
           // Code Stats
           case 'heady_code_stats': return await this.codeStats();
-          // Render
-          case 'heady_render_status': return await this.renderStatus();
+          // Cloud Run
+          case 'heady_cloudrun_status': return await this.cloudrunStatus();
           // Docs Freshness
           case 'heady_docs_freshness': return await this.docsFreshness();
           // Quick Fix
@@ -1722,18 +1722,16 @@ class HeadyMCPServer {
     return { content: [{ type: 'text', text: `# Code Statistics\n\nTotal: ${stats.totalFiles.toLocaleString()} files, ${stats.totalLines.toLocaleString()} lines\n\n## By Language\n${extLines.join('\n')}\n\n## Largest Files\n${top10.join('\n')}` }] };
   }
 
-  // --- Render Status ---
+  // --- Cloud Run Status ---
 
-  async renderStatus() {
-    const renderPath = path.join(HEADY_ROOT, 'render.yaml');
-    if (!fs.existsSync(renderPath)) {
-      return { content: [{ type: 'text', text: '⚠️ render.yaml not found' }] };
+  async cloudrunStatus() {
+    const discoveryPath = path.join(CONFIGS_DIR, 'service-discovery.yaml');
+    if (!fs.existsSync(discoveryPath)) {
+      return { content: [{ type: 'text', text: '⚠️ service-discovery.yaml not found' }] };
     }
-    const render = yaml.load(fs.readFileSync(renderPath, 'utf8'));
-    const services = (render.services || []).map(s => `• ${s.name} [${s.type}] — ${s.env || 'no env'} — ${s.plan || 'free'}`);
-    const dbs = (render.databases || []).map(d => `• ${d.name} [${d.plan || 'free'}]`);
-    const envGroups = (render.envVarGroups || []).map(g => `• ${g.name} (${(g.envVars || []).length} vars)`);
-    return { content: [{ type: 'text', text: `# Render Deployment\n\n## Services (${services.length})\n${services.join('\n')}\n\n## Databases (${dbs.length})\n${dbs.join('\n') || 'None'}\n\n## Env Groups (${envGroups.length})\n${envGroups.join('\n') || 'None'}` }] };
+    const discovery = yaml.load(fs.readFileSync(discoveryPath, 'utf8'));
+    const services = Object.entries(discovery.services || {}).map(([name, s]) => `• ${name} — ${s.host || 'N/A'}:${s.port || 'N/A'}`);
+    return { content: [{ type: 'text', text: `# Cloud Run Deployment\n\n## Services (${services.length})\n${services.join('\n')}\n\nDeployment platform: GCP Cloud Run\nDeploy method: git push → Cloud Build → Cloud Run` }] };
   }
 
   // --- Docs Freshness ---

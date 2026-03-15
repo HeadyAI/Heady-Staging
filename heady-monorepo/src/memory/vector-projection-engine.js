@@ -17,7 +17,6 @@
  *     → Cloud Run (compute projection)
  *     → HF Spaces (frontend projection)
  *     → Cloudflare Edge (network projection)
- *     → Render (resilience projection)
  *
  * The Projection Engine manages:
  *   1. Secret hydration from vector vault → process.env
@@ -97,14 +96,6 @@ const PROJECTION_TARGETS = [
         type: 'network-projection',
         url: 'https://api.headysystems.com',
         tier: 2,
-        autonomous: true,
-    },
-    {
-        id: 'render',
-        name: 'Render Backup',
-        type: 'resilience-projection',
-        url: 'https://heady-manager.onrender.com',
-        tier: 3,
         autonomous: true,
     },
 ];
@@ -238,7 +229,7 @@ function getProjectionMap() {
         tiers: {
             1: 'Vector Space → Code (GitHub)',
             2: 'Code → Compute/Frontend/Network (Cloud Run, HF, Edge)',
-            3: 'Code → Resilience (Render backup)',
+            3: 'Code → Resilience (Azure DevOps backup)',
         },
         targets: {},
     };

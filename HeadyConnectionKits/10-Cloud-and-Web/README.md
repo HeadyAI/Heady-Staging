@@ -29,9 +29,9 @@
 | Environment | URL | Status |
 |---|---|---|
 | Local Dev | http://localhost:3300 | For development |
-| Cloud HeadyMe | https://heady-manager-headyme.onrender.com | Active |
-| Cloud HeadySystems | https://heady-manager-headysystems.onrender.com | Active |
-| Cloud HeadyConnection | https://heady-manager-headyconnection.onrender.com | Active |
+| Cloud HeadyMe | https://heady-manager-bf4q4zywhq-uc.a.run.app | Active |
+| Cloud HeadySystems | https://heady-edge-gateway-bf4q4zywhq-uc.a.run.app | Active |
+| Cloud HeadyConnection | https://heady-onboarding-bf4q4zywhq-ue.a.run.app | Active |
 
 ## Onboarding Checklist
 

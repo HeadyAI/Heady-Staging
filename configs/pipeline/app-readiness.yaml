@@ -66,7 +66,7 @@ probes:
     interval: 120
     criticality: low
 
-  - name: render-deployment
+  - name: cloudrun-deployment
     type: http
     url: https://app.headysystems.com/api/health
     method: GET

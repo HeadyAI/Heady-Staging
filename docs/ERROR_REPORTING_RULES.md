@@ -30,11 +30,12 @@
   - Full error message and stack trace
   - Current environment
 
-## 3. Onrender.com and api.headysystems.com usage are banned
+## 3. Non-branded domain usage is banned
 - Banned targets:
-  - api.headysystems.com, api.headysystems.com, 0.0.0.0
-  - *.headysystems.com
+  - api.headysystems.com, 0.0.0.0
+  - Any raw platform URLs (*.onrender.com, *.run.app, etc.)
   - Any local-only port binding
+- Only custom branded domains are allowed in production config
 - First occurrence: Fail task with clear message
 - Second occurrence: Escalate to critical blocking state
 

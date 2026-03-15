@@ -12,7 +12,7 @@
 4. [Docker Compose (Local/Staging)](#docker-compose)
 5. [Google Cloud Run](#google-cloud-run)
 6. [Cloudflare Workers (Edge)](#cloudflare-workers)
-7. [Render.com](#render)
+7. [Azure DevOps](#azure-devops)
 8. [Kubernetes (Helm)](#kubernetes)
 9. [Monitoring & Observability](#monitoring)
 10. [Secrets Management](#secrets-management)
@@ -242,29 +242,16 @@ The worker routes requests to the nearest Cloud Run region and applies edge-leve
 
 ---
 
-## Render
+## Azure DevOps
+
+HeadyStack uses Azure DevOps as a secondary remote for CI/CD and staging deployments.
 
 ### Setup
 
-1. Connect your GitHub repository in the Render dashboard
-2. Create a new **Web Service**
-3. Set build command: `npm install`
-4. Set start command: `npm start`
-5. Set environment variables from `.env.example`
-6. Create a **PostgreSQL** database (Render managed)
-7. Create a **Redis** instance (Render managed)
-8. Set `DATABASE_URL` and `REDIS_URL` from Render connection strings
-
-### Auto-Deploy
-
-Render auto-deploys on push to `main`. Trigger manually:
-
-```bash
-curl -X POST https://api.render.com/v1/services/$RENDER_SERVICE_ID/deploys \
-  -H "Authorization: Bearer $RENDER_API_KEY" \
-  -H "Content-Type: application/json" \
-  -d '{"clearCache": "clear"}'
-```
+1. Create an Azure DevOps project under the HeadyMe organization
+2. Add the Azure Repos remote: `git remote add azure https://dev.azure.com/HeadyMe/HeadyStack/_git/HeadyStack`
+3. Push branches: `git push azure main staging testing`
+4. Configure Azure Pipelines for staging deployments
 
 ---
 

@@ -150,12 +150,12 @@ const LIQUID_NODES_REGISTRY = {
       description: 'Sentry error and performance monitoring'
     },
     {
-      name: 'render',
+      name: 'cloud-run',
       domain: 'cloud-deploy',
       port: null,
-      envKeys: ['RENDER_API_KEY'],
-      capabilities: ['deployment', 'autoscaling', 'databases', 'services'],
-      description: 'Render.com deployment platform'
+      envKeys: ['GCP_PROJECT_ID'],
+      capabilities: ['deployment', 'autoscaling', 'containers', 'services'],
+      description: 'Google Cloud Run deployment platform'
     }
   ],
   'scm': [

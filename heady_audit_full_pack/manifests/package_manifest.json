@@ -1,0 +1,35 @@
+{
+  "package_name": "heady_audit_full_pack",
+  "created_at": "2026-03-10",
+  "bases": {
+    "attached_zips": [
+      "heady-perplexity-full-system-context.zip",
+      "heady-system-build-current-state.zip",
+      "heady-full-rebuild-context.zip"
+    ],
+    "public_remote_repo": "https://github.com/HeadyMe/Heady-pre-production-9f2f0642",
+    "local_skills_root": "/home/user/workspace/skills"
+  },
+  "included_report_files": [
+    "extracted_bundle_domain_inventory.md",
+    "extracted_bundle_governance_inventory.md",
+    "extracted_bundle_service_inventory.md",
+    "local_skills_application_map.md",
+    "local_skills_inventory.md",
+    "remote_repo_capabilities_scan.md",
+    "remote_repo_governance_scan.md",
+    "remote_repo_overview.md"
+  ],
+  "included_source_snapshots": [
+    "00-HEADY-FULL-REBUILD-PROMPT.md",
+    "02-SYSTEM_PRIME_DIRECTIVE.md",
+    "03-UNBREAKABLE_LAWS.md",
+    "04-MASTER_DIRECTIVES.md",
+    "12-heady-registry.json",
+    "SERVICE_INDEX.json"
+  ],
+  "included_basis_directories": [
+    "repo_basis/local_skills",
+    "repo_basis/remote_repo_selected"
+  ]
+}

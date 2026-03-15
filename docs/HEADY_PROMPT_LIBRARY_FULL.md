@@ -250,9 +250,9 @@ Available layer endpoints:
 
 Behavior rules by layer:
 - LOCAL_DEV: Use internal domain names (*.dev.local.heady.internal). Full debug logging enabled. Mutations are safe. Hot reload expected.
-- CLOUD_HEADYME: Production command center. Read-heavy. Mutations require APPROVE stage. Use https://heady-manager-headyme.onrender.com.
-- CLOUD_HEADYSYSTEMS: R&D and core engine layer. Experimental features allowed with governance flag. Use https://heady-manager-headysystems.onrender.com.
-- CLOUD_HEADYCONNECTION: Nonprofit and community layer. Social impact scoring mandatory. Use https://heady-manager-headyconnection.onrender.com.
+- CLOUD_HEADYME: Production command center. Read-heavy. Mutations require APPROVE stage. Use https://heady-manager-bf4q4zywhq-uc.a.run.app.
+- CLOUD_HEADYSYSTEMS: R&D and core engine layer. Experimental features allowed with governance flag. Use https://heady-edge-gateway-bf4q4zywhq-uc.a.run.app.
+- CLOUD_HEADYCONNECTION: Nonprofit and community layer. Social impact scoring mandatory. Use https://heady-onboarding-bf4q4zywhq-ue.a.run.app.
 
 Never hardcode localhost. Never assume which layer you are on — always check {{CURRENT_LAYER}} and route accordingly.
 ```

@@ -39,7 +39,7 @@ All production code, configuration, migrations, documentation, and CI/CD pipelin
 - **Purpose:** The heady.me consumer product, powered by Heady™Stack APIs
 - **Relationship:** Consumes HeadyStack as a dependency/API, not a code fork
 - **Sync:** Pull upstream changes from `heady-sys/main` weekly via merge commit
-- **Deploy:** Render.com web service
+- **Deploy:** Cloud Run web service
 
 ### heady-conn (Community)
 

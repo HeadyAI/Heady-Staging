@@ -195,7 +195,7 @@ usage_enforcement:
   external_service_blocking:
     enabled: true
     allowed_external_services:
-      - "render.com"  # For deployment
+      - "cloud.google.com"  # For Cloud Run deployment
       - "github.com"  # For source control
       - "npmjs.com"   # For packages
     blocked_services:

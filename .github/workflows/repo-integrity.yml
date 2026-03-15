@@ -45,7 +45,7 @@ jobs:
           echo "Validating YAML configs..."
           npm install --no-save js-yaml 2>/dev/null
           FAILED=0
-          for f in $(find configs -name '*.yaml' -o -name '*.yml' 2>/dev/null) render.yaml; do
+          for f in $(find configs -name '*.yaml' -o -name '*.yml' 2>/dev/null) docker-compose.yml; do
             if [ -f "$f" ]; then
               if ! node -e "require('js-yaml').load(require('fs').readFileSync('$f','utf8'));" 2>/dev/null; then
                 echo "::error::Invalid YAML: $f"

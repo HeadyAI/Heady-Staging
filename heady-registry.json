@@ -1079,13 +1079,7 @@
       "sourceOfTruth": "Dockerfile",
       "status": "active"
     },
-    {
-      "id": "render-blueprint",
-      "name": "Render Blueprint",
-      "type": "iac",
-      "sourceOfTruth": "render.yaml",
-      "status": "active"
-    },
+
     {
       "id": "docker-compose-stack",
       "name": "Docker Compose Stack",

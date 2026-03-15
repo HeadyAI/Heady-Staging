@@ -97,14 +97,14 @@ export default {
     }
 
     // Build upstream URL
-    const upstreamUrl = `https://${route.upstream}.${env.RENDER_BASE_DOMAIN || 'onrender.com'}${url.pathname}${url.search}`;
+    const upstreamUrl = `https://${route.upstream}.${env.CLOUDRUN_BASE_DOMAIN || 'a.run.app'}${url.pathname}${url.search}`;
 
     try {
       const upstreamResponse = await fetch(upstreamUrl, {
         method: request.method,
         headers: {
           ...Object.fromEntries(request.headers),
-          'Host': `${route.upstream}.${env.RENDER_BASE_DOMAIN || 'onrender.com'}`,
+          'Host': `${route.upstream}.${env.CLOUDRUN_BASE_DOMAIN || 'a.run.app'}`,
           'X-Forwarded-Host': hostname,
           'X-Forwarded-Proto': 'https',
           'X-Heady-Service': route.upstream,

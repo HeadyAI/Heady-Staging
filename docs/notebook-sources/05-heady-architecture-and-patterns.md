@@ -1,134 +1,73 @@
-# Heady™ Architecture, Design Patterns & Security Philosophy
+# Heady™ Architecture & Intelligence Engine — NotebookLM Source
+**Version:** 5.0 | **Updated:** March 15, 2026
 
-> © 2026 Heady™Systems Inc.. All Rights Reserved.
+## HCFullPipeline v7.0 — 21-Stage Autonomous Orchestration
+The nervous system of Heady. Every task flows through up to 21 stages with pipeline variants: Fast Path (7 stages), Full Path (21 stages), Arena Path (9 stages), Learning Path (7 stages).
 
-## Six-Layer Architecture Stack
+**Stages:**
+0. CHANNEL_ENTRY — Multi-channel gateway, identity resolution, cross-device sync
+1. RECON — Deep scan of codebase, configs, services, attack surface, drift
+2. INTAKE — Async semantic barrier, blocks until 3D vector context retrieved (completeness ≥ 0.92)
+3. CLASSIFY — Intent classification via CSL Resonance Gate (cos(intent, swarm) ≥ 0.618)
+4. TRIAGE — Route by CSL domain match (NOT priority), swarm assignment
+5. DECOMPOSE — Task decomposition into subtask DAG via Rabbit layer
+6. TRIAL_AND_ERROR — Sandboxed execution with auto-rollback (≥ 2 trials succeed)
+7. ORCHESTRATE — Bee spawning, resource allocation, dependency wiring
+8. MONTE_CARLO — HeadySims risk simulation (1K+ scenarios, pass rate ≥ 80%)
+9. ARENA — Multi-candidate competition with seeded PRNG (winner ≥ 5% above runner-up)
+10. JUDGE — Scoring: correctness 34%, safety 21%, perf 21%, quality 13%, elegance 11% (composite ≥ 0.7)
+11. APPROVE — Human gate for specific risk criteria (Eric's explicit approval)
+12. EXECUTE — Metacognitive Gate, HeadyBuddy confidence assessment (≥ 20%)
+13. VERIFY — Post-execution validation, integration tests, health checks
+14. SELF_AWARENESS — Confidence calibration, blind spot detection, bias checks
+15. SELF_CRITIQUE — Review own run: bottlenecks, weaknesses, gaps, resource waste
+16. MISTAKE_ANALYSIS — Root cause analysis, recurring pattern detection, prevention rules
+17. OPTIMIZATION_OPS — Dead code/waste detection, optimization ranking by CSL ROI
+18. CONTINUOUS_SEARCH — Search for new tools, research, innovations, security advisories
+19. EVOLUTION — Controlled pipeline mutation: mutate, simulate, measure, promote
+20. RECEIPT — Trust receipt, audit log, evolution history, wisdom.json update (signed Ed25519)
 
-Heady's architecture is organized into six distinct layers, each handling a specific concern:
+## 17-Swarm Matrix v4.0
+Decentralized intelligence via Continuous Semantic Logic (CSL) geometric gates:
 
-| Layer | Name | Responsibility |
-|---|---|---|
-| 1 | **Edge Layer** | Global CDN, DDoS protection, edge AI inference, SSL termination |
-| 2 | **Gateway Layer** | Request routing, authentication, rate limiting, mTLS enforcement |
-| 3 | **Orchestration Layer** | Agent coordination, swarm management, task decomposition |
-| 4 | **Intelligence Layer** | Multi-model AI inference, ternary reasoning, pattern recognition |
-| 5 | **Memory Layer** | 3D vector storage, continuous embedding, semantic retrieval |
-| 6 | **Persistence Layer** | Durable storage, audit trails, configuration management |
+**Decision Core:** Overmind (goal decomposition, task routing), Governance (policy, secrets, compliance)
+**Operational Core:** Forge (AST mutation, hologram generation), Emissary (docs, MCP bridging, SDK), Foundry (dataset curation, model tuning), Studio (MIDI/SysEx bridge)
+**Business:** Arbiter (IP protection, patent harvesting), Diplomat (B2B procurement), Oracle (economic guardrails), Quant (trading, portfolio optimization)
+**Applied Reality:** Fabricator (IoT, CAD), Persona (biometric sync), Sentinel (threat detection, self-healing), Nexus (smart contracts), Dreamer (Monte Carlo sims)
+**Mathematical Core:** Tensor Swarm (ResonanceBee/SuperpositionBee/OrthogonalBee), Topology Swarm (ManifoldBee/EntanglementBee)
 
-## Liquid Architecture — The Three Runtime Planes
+## Continuous Semantic Logic (CSL) Gates
+All system logic is geometric operations in high-dimensional vector space:
+- AND: cos(a, b) — Semantic alignment
+- OR: normalize(a + b) — Superposition
+- NOT: a - proj_b(a) — Negation
+- GATE: σ((cos - τ) / T) — Threshold activation
+- IMPLY: proj_b(a) — Material implication
+- CONSENSUS: normalize(Σwᵢaᵢ) — Multi-agent agreement
+- XOR: Exclusive difference — Novelty detection
+- ANALOGY: normalize(b - a + c) — Cross-domain transfer
 
-### Projection Plane
+## Liquid Latent OS Kernel (6-Layer Boot)
+Layer 0: Edge Gateway (4 MCP transports, pool min=2 max=13 idle=89s)
+Layer 1: Orchestration (21-stage HCFullPipeline, checkpoint every stage)
+Layer 2: Intelligence (CSL Engine 384D quick / 1536D full, all 8 gates)
+Layer 3: Memory (3-tier: T0 working 21h / T1 short-term 47h / T2 long-term 144h)
+Layer 4: Persistence (Checkpoint Protocol, 14 responsibilities, 13 config hash sources)
+Layer 5: Evolution (Auto-Success Engine, 144 tasks, 13 categories, 29,034ms heartbeat)
 
-- Dynamic UI generation from vector state
-- No static frontend codebases
-- Interfaces evolve as context changes
-- Sacred Geometry mathematical ratios govern all visual elements
+## 9-Stage Battle-Sim Pipeline
+SimPreflight → CSLGate → BattleRace → MCSampling → BeeDispatch → SwarmRoute → ResultCapture → DriftCheck → AuditLog
 
-### Builder Plane
+## φ-Scaled Governance (Golden Ratio = 1.618)
+CSL Include threshold: ≥ 0.382. CSL Boost: ≥ 0.618. CSL Critical: ≥ 0.718.
+Default timeout: 16,180ms. Retry backoff: Fibonacci (1→2→3→5→8→13→21→34s).
+Cycle interval: 29,034ms (φ⁷). Tasks per cycle: 144 (fib(12)). Categories: 13 (fib(7)).
+Hot/Warm/Cold pools: 34/21/13. Connection pool: min 2 / max 13. Idle timeout: 89s.
 
-- Autonomous code generation and modification
-- Template injection from vector memory
-- Self-modifying system components
-- Continuous integration and deployment
-
-### Orchestration Plane
-
-- Multi-agent coordination and task routing
-- Swarm lifecycle management
-- Health monitoring and self-healing
-- Policy enforcement and governance gates
-
-## Implemented Design Patterns
-
-Heady implements 24+ production-grade architectural patterns:
-
-### Core Patterns
-
-- **Conductor Pattern** — Central orchestrator with fine control over multi-agent coordination
-- **Sacred Geometry Aesthetics** — Mathematical ratios for organic, breathing UI patterns
-- **Deterministic Execution** — Same inputs produce same outputs across all environments
-- **Direct Agent Routing** — Parallel fan-out with aggregation for maximum throughput
-
-### Resilience Patterns
-
-- **Circuit Breaker** — Stop calling failing services after threshold; periodically test recovery
-- **Retry with Exponential Backoff + Jitter** — Avoid thundering herd; respect rate limits
-- **Bulkhead Isolation** — Separate critical from noisy workloads to prevent starvation
-- **Idempotency** — Safe retries without side effects on duplicate execution
-
-### Data Patterns
-
-- **Event Sourcing** — Store all state changes as immutable events for replay and audit
-- **CQRS** — Separate read and write models for optimal query performance
-- **Semantic Dehydration** — 70% compression on incoming data with instant rehydration
-- **Spatial Indexing** — 8-octant 3D partitioning where distance equals semantic similarity
-
-### Operational Patterns
-
-- **Checkpoint/Rollback** — Pipeline state checkpoints with rollback capability
-- **Self-Tuning** — Periodic analysis of concurrency, batch sizes, cost to self-optimize
-- **Priority Lanes** — Separate queues for latency-sensitive vs. async work
-- **Skill-Based Routing** — Match tasks to agents by capability tags, not hardcoded names
-
-## Security Philosophy
-
-Heady's security architecture operates on the principle of **defense in depth** with zero-trust assumptions:
-
-### Authentication & Authorization
-
-- Multi-method authentication (API keys, OAuth, biometric)
-- 9-tier subscription system with granular rate limiting
-- Scoped Personal Access Tokens for all Git operations
-- Mutual TLS (mTLS) for inter-service communication
-
-### Cryptographic Foundation
-
-- Post-quantum cryptography readiness
-- SHA-256 audit trails for all agent actions
-- Immutable event logs for forensic analysis
-- Key rotation schedules with automated alerts
-
-### Operational Security
-
-- GitHub Advanced Security for secret scanning
-- Static Application Security Testing (SAST) in CI/CD
-- Automated dependency audits (npm audit)
-- Strict .gitignore rules preventing credential exposure
-- "Done means Done" protocol — zero-error validation before deployment
-
-### Data Protection
-
-- Vector memory encryption at rest and in transit
-- Secure inter-process communication via Tailscale mesh VPN
-- DDoS protection via Cloudflare enterprise
-- Per-tenant data isolation in multi-user scenarios
-
-## VSA Computing — Hyperdimensional Intelligence
-
-Heady is pioneering the use of **Vector-Symbolic Architecture (VSA)** computing:
-
-- Operations on 10,000-dimensional hypervectors replace traditional if/else code branches
-- Mathematical binding, bundling, and permutation operations
-- Pattern matching through cosine similarity in high-dimensional space
-- Noise-tolerant computation — graceful degradation under imperfect data
-
-## Distributed GPU Cluster
-
-Each Colab Pro+ account supports 3–4 concurrent runtimes, forming a unified supercomputer:
-
-| Node | GPU | Memory | Role |
-|---|---|---|---|
-| Node 0 | T4 (16GB VRAM) | 51GB RAM | Primary inference, model hosting |
-| Node 1 | T4 (16GB VRAM) | 51GB RAM | Embedding, vector operations |
-| Node 2 | A100 (40GB VRAM) | 80GB RAM | Heavy training, fine-tuning |
-| Node 3 *(optional)* | T4/A100 | 51–80GB RAM | Burst compute, overflow capacity |
-
-Connected via Tailscale mesh VPN with Redis for sub-millisecond inter-node messaging.
-
-## Developer Onboarding (5-Step Flow)
-
-1. **Authenticate** → API key generation at headyme.com
-2. **Configure** → IDE MCP setup pointing to Heady edge server
-3. **Verify** → System health check via `heady doctor`
-4. **Explore** → Tool discovery and interactive documentation
-5. **Create** → First HeadyBee deployment and autonomous task execution
+## Deterministic Optimization Loop
+Every error becomes permanent structural armor:
+1. Error Detection — Intercept failing thread, halt, freeze state
+2. State Extraction — Extract objective reality (dep graph, call stack, config)
+3. Equivalence Analysis — Replay failing call graph, seeded PRNGs
+4. Root-Cause Derivation — Trace constraint violations backward
+5. Rule Synthesis — Synthesize Learned Rule, append to registry, enforce before future writes

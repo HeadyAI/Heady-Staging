@@ -104,13 +104,13 @@ backend_services:
       - redis://cache.heady.local:6379
       - postgres://db.heady.local:5432
 
-  render_mcp_server:
-    description: "Render.com MCP server"
+  cloudrun_deployment:
+    description: "Cloud Run deployment management"
     ports:
       http: 3500
     domains:
-      local: "render.heady.local"
-      staging: "render.staging.internal.heady.systems"
+      local: "cloudrun.heady.local"
+      staging: "cloudrun.staging.internal.heady.systems"
     protocols:
       - http
       - mcp_protocol

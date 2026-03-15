@@ -41,16 +41,6 @@
       },
       "tools": ["*"],
       "_comment": "Cloudflare server using API token and Account ID from secrets."
-    },
-    "render": {
-      "type": "local",
-      "command": "node",
-      "args": ["mcp-servers/render-mcp-server.js"],
-      "env": {
-        "RENDER_API_KEY": "${{ secrets.RENDER_API_KEY }}"
-      },
-      "tools": ["*"],
-      "description": "Render MCP Server - Deploy and manage Render services via API"
     }
   }
 }
@@ -97,16 +87,6 @@
       },
       "tools": ["*"],
       "description": "Cloudflare DNS, Workers, and edge services"
-    },
-    "render": {
-      "type": "local",
-      "command": "node",
-      "args": ["mcp-servers/render-mcp-server.js"],
-      "env": {
-        "RENDER_API_KEY": "${{ secrets.RENDER_API_KEY }}"
-      },
-      "tools": ["*"],
-      "description": "Render MCP Server - Deploy and manage Render services via API"
     },
     "docker": {
       "type": "local",

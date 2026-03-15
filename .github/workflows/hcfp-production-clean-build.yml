@@ -373,17 +373,23 @@ jobs:
         run: |
           echo "🔍 Validating deployment configuration..."
           
-          # Check render.yaml exists and is valid
-          if [ -f render.yaml ]; then
-            echo "✅ render.yaml found"
-            # Validate YAML syntax
-            python3 -c "import yaml; yaml.safe_load(open('render.yaml'))" || {
-              echo "::error::render.yaml has syntax issues"
+          # Check docker-compose.yml exists and is valid
+          if [ -f docker-compose.yml ]; then
+            echo "✅ docker-compose.yml found"
+            python3 -c "import yaml; yaml.safe_load(open('docker-compose.yml'))" || {
+              echo "::error::docker-compose.yml has syntax issues"
               exit 1
             }
-            echo "✅ render.yaml syntax valid"
+            echo "✅ docker-compose.yml syntax valid"
           else
-            echo "⚠️ render.yaml not found - deployment may fail"
+            echo "⚠️ docker-compose.yml not found"
+          fi
+          
+          # Check Dockerfile exists
+          if [ -f Dockerfile ]; then
+            echo "✅ Dockerfile found"
+          else
+            echo "⚠️ Dockerfile not found - Cloud Run deployment may fail"
           fi
           
           # Check service-discovery.yaml exists
@@ -413,12 +419,12 @@ jobs:
           done
           
           # Validate no localhost in production configs
-          if grep -rE "localhost|127\.0\.0\.1|0\.0\.0\.0" render.yaml docker-compose*.yml configs/*.yaml 2>/dev/null | grep -v "#" | grep -v "test" | grep -v "local" | grep -v "development"; then
+          if grep -rE "localhost|127\.0\.0\.1|0\.0\.0\.0" docker-compose*.yml configs/*.yaml 2>/dev/null | grep -v "#" | grep -v "test" | grep -v "local" | grep -v "development"; then
             echo "::warning::Found localhost references in deployment configs"
           fi
           
           # Validate no api.headysystems.com hardcoded (should use service discovery)
-          if grep -rE "api\.headysystems\.com" render.yaml docker-compose*.yml 2>/dev/null | grep -v "#"; then
+          if grep -rE "api\.headysystems\.com" docker-compose*.yml 2>/dev/null | grep -v "#"; then
             echo "::error::Found hardcoded api.headysystems.com - use service-discovery.yaml instead"
             exit 1
           fi
@@ -429,13 +435,13 @@ jobs:
             echo "::warning::Potential hardcoded secrets found in configs"
           fi
           
-          # Check for required environment variables
-          echo "🔍 Checking required environment variables in render.yaml..."
-          if [ -f render.yaml ]; then
+          # Check for required environment variables in docker-compose.yml
+          echo "🔍 Checking required environment variables in docker-compose.yml..."
+          if [ -f docker-compose.yml ]; then
             REQUIRED_VARS=("DATABASE_URL" "NODE_ENV")
             for var in "${REQUIRED_VARS[@]}"; do
-              if ! grep -q "$var" render.yaml; then
-                echo "::warning::Required environment variable $var not found in render.yaml"
+              if ! grep -q "$var" docker-compose.yml; then
+                echo "::warning::Required environment variable $var not found in docker-compose.yml"
               fi
             done
           fi

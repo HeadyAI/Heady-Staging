@@ -1,0 +1,889 @@
+{
+  "remote_repo_path": "/home/user/workspace/remote-headyme-main",
+  "public_origin": "https://github.com/HeadyMe/Heady-pre-production-9f2f0642",
+  "file_count_estimate": 14557,
+  "top_extensions": [
+    [
+      ".js",
+      4800
+    ],
+    [
+      ".md",
+      1600
+    ],
+    [
+      ".json",
+      1585
+    ],
+    [
+      ".d.ts",
+      991
+    ],
+    [
+      ".d.ts.map",
+      990
+    ],
+    [
+      ".yaml",
+      762
+    ],
+    [
+      ".test.js",
+      414
+    ],
+    [
+      ".html",
+      366
+    ],
+    [
+      "<no_ext>",
+      267
+    ],
+    [
+      ".ts",
+      267
+    ],
+    [
+      ".sh",
+      254
+    ],
+    [
+      ".yml",
+      202
+    ],
+    [
+      ".py",
+      188
+    ],
+    [
+      ".jsx",
+      143
+    ],
+    [
+      ".frm",
+      132
+    ],
+    [
+      ".css",
+      116
+    ],
+    [
+      ".png",
+      92
+    ],
+    [
+      ".txt",
+      78
+    ],
+    [
+      ".ZIP",
+      68
+    ],
+    [
+      ".docx",
+      65
+    ]
+  ],
+  "top_level_entries": [
+    {
+      "name": "..bfg-report",
+      "type": "dir"
+    },
+    {
+      "name": ".agents",
+      "type": "dir"
+    },
+    {
+      "name": ".benchmarks",
+      "type": "dir"
+    },
+    {
+      "name": ".dockerignore",
+      "type": "file"
+    },
+    {
+      "name": ".dockerignore.monorepo",
+      "type": "file"
+    },
+    {
+      "name": ".env",
+      "type": "file"
+    },
+    {
+      "name": ".env.example",
+      "type": "file"
+    },
+    {
+      "name": ".env.rebuild.example",
+      "type": "file"
+    },
+    {
+      "name": ".env.template",
+      "type": "file"
+    },
+    {
+      "name": ".gcloudignore",
+      "type": "file"
+    },
+    {
+      "name": ".gemini",
+      "type": "dir"
+    },
+    {
+      "name": ".githooks",
+      "type": "dir"
+    },
+    {
+      "name": ".github",
+      "type": "dir"
+    },
+    {
+      "name": ".gitignore",
+      "type": "file"
+    },
+    {
+      "name": ".heady",
+      "type": "dir"
+    },
+    {
+      "name": ".npmrc",
+      "type": "file"
+    },
+    {
+      "name": ".prettierrc",
+      "type": "file"
+    },
+    {
+      "name": ".prettierrc.aether",
+      "type": "file"
+    },
+    {
+      "name": ".vscode",
+      "type": "dir"
+    },
+    {
+      "name": ".windsurfrules",
+      "type": "file"
+    },
+    {
+      "name": "01-foundations",
+      "type": "dir"
+    },
+    {
+      "name": "02-implementation-references",
+      "type": "dir"
+    },
+    {
+      "name": "_archive",
+      "type": "dir"
+    },
+    {
+      "name": "_downloads",
+      "type": "dir"
+    },
+    {
+      "name": "adapters",
+      "type": "dir"
+    },
+    {
+      "name": "AGENTS.md",
+      "type": "file"
+    },
+    {
+      "name": "apps",
+      "type": "dir"
+    },
+    {
+      "name": "archetypes",
+      "type": "dir"
+    },
+    {
+      "name": "archive",
+      "type": "dir"
+    },
+    {
+      "name": "assets",
+      "type": "dir"
+    },
+    {
+      "name": "auto-success-engine.ts",
+      "type": "file"
+    },
+    {
+      "name": "backend",
+      "type": "dir"
+    },
+    {
+      "name": "battle-arena-protocol.js",
+      "type": "file"
+    },
+    {
+      "name": "battle-sim-orchestrator.test.js",
+      "type": "file"
+    },
+    {
+      "name": "battle-sim-task-orchestrator.js",
+      "type": "file"
+    },
+    {
+      "name": "bee-factory.js",
+      "type": "file"
+    },
+    {
+      "name": "benchmarks",
+      "type": "dir"
+    },
+    {
+      "name": "bin",
+      "type": "dir"
+    },
+    {
+      "name": "branch-protection",
+      "type": "dir"
+    },
+    {
+      "name": "BUILD_MANIFEST.md",
+      "type": "file"
+    },
+    {
+      "name": "BUNDLE_MANIFEST.json",
+      "type": "file"
+    },
+    {
+      "name": "certs",
+      "type": "dir"
+    },
+    {
+      "name": "CHANGELOG.md",
+      "type": "file"
+    },
+    {
+      "name": "CHANGES.md",
+      "type": "file"
+    },
+    {
+      "name": "ci-pipelines",
+      "type": "dir"
+    },
+    {
+      "name": "circuit-breaker",
+      "type": "dir"
+    },
+    {
+      "name": "circuit-breaker.js",
+      "type": "file"
+    },
+    {
+      "name": "CLAUDE.md",
+      "type": "file"
+    },
+    {
+      "name": "cloudbuild.yaml",
+      "type": "file"
+    },
+    {
+      "name": "cloudflare",
+      "type": "dir"
+    },
+    {
+      "name": "colab",
+      "type": "dir"
+    },
+    {
+      "name": "compliance-templates",
+      "type": "dir"
+    },
+    {
+      "name": "config",
+      "type": "dir"
+    },
+    {
+      "name": "configs",
+      "type": "dir"
+    },
+    {
+      "name": "connection-pool.js",
+      "type": "file"
+    },
+    {
+      "name": "content",
+      "type": "dir"
+    },
+    {
+      "name": "continuous-action-analyzer.js",
+      "type": "file"
+    },
+    {
+      "name": "CONTRIBUTING.md",
+      "type": "file"
+    },
+    {
+      "name": "coverage",
+      "type": "dir"
+    },
+    {
+      "name": "credential-rotation",
+      "type": "dir"
+    },
+    {
+      "name": "csl-confidence-gate.js",
+      "type": "file"
+    },
+    {
+      "name": "csl-engine.js",
+      "type": "file"
+    },
+    {
+      "name": "csl-service-integration.js",
+      "type": "file"
+    },
+    {
+      "name": "data",
+      "type": "dir"
+    },
+    {
+      "name": "db",
+      "type": "dir"
+    },
+    {
+      "name": "DEEP-SCAN-AUDIT-REPORT.md",
+      "type": "file"
+    },
+    {
+      "name": "deployment",
+      "type": "dir"
+    },
+    {
+      "name": "DEPRECATED.md",
+      "type": "file"
+    },
+    {
+      "name": "desktop-overlay",
+      "type": "dir"
+    },
+    {
+      "name": "deterministic-prompt-executor.js",
+      "type": "file"
+    },
+    {
+      "name": "deterministic-prompts.test.js",
+      "type": "file"
+    },
+    {
+      "name": "directives",
+      "type": "dir"
+    },
+    {
+      "name": "dist",
+      "type": "dir"
+    },
+    {
+      "name": "distribution",
+      "type": "dir"
+    },
+    {
+      "name": "docker-compose.full.yml",
+      "type": "file"
+    },
+    {
+      "name": "docker-compose.production.yml",
+      "type": "file"
+    },
+    {
+      "name": "docker-compose.rebuild.yml",
+      "type": "file"
+    },
+    {
+      "name": "docker-compose.yml",
+      "type": "file"
+    },
+    {
+      "name": "Dockerfile",
+      "type": "file"
+    },
+    {
+      "name": "Dockerfile.monorepo",
+      "type": "file"
+    },
+    {
+      "name": "Dockerfile.production",
+      "type": "file"
+    },
+    {
+      "name": "Dockerfile.universal",
+      "type": "file"
+    },
+    {
+      "name": "docs",
+      "type": "dir"
+    },
+    {
+      "name": "drupal",
+      "type": "dir"
+    },
+    {
+      "name": "drupal-config",
+      "type": "dir"
+    },
+    {
+      "name": "E-README.md",
+      "type": "file"
+    },
+    {
+      "name": "ecosystem.config.cjs",
+      "type": "file"
+    },
+    {
+      "name": "enterprise",
+      "type": "dir"
+    },
+    {
+      "name": "eslint.config.mjs",
+      "type": "file"
+    },
+    {
+      "name": "evidence",
+      "type": "dir"
+    },
+    {
+      "name": "examples",
+      "type": "dir"
+    },
+    {
+      "name": "EXECUTIVE_SUMMARY.md",
+      "type": "file"
+    },
+    {
+      "name": "extensions",
+      "type": "dir"
+    },
+    {
+      "name": "frontend",
+      "type": "dir"
+    },
+    {
+      "name": "GAPS_FOUND.md",
+      "type": "file"
+    },
+    {
+      "name": "generate-sites.py",
+      "type": "file"
+    },
+    {
+      "name": "gitignore-configs",
+      "type": "dir"
+    },
+    {
+      "name": "hcfullpipeline.json",
+      "type": "file"
+    },
+    {
+      "name": "heady-10-10",
+      "type": "dir"
+    },
+    {
+      "name": "heady-a2a-protocol",
+      "type": "dir"
+    },
+    {
+      "name": "heady-academic-research",
+      "type": "dir"
+    },
+    {
+      "name": "heady-bee-swarm-ops",
+      "type": "dir"
+    },
+    {
+      "name": "heady-buddy",
+      "type": "dir"
+    },
+    {
+      "name": "heady-buddy-device",
+      "type": "dir"
+    },
+    {
+      "name": "heady-build",
+      "type": "dir"
+    },
+    {
+      "name": "heady-cloud-orchestrator",
+      "type": "dir"
+    },
+    {
+      "name": "heady-cognition",
+      "type": "dir"
+    },
+    {
+      "name": "heady-cognitive-config.json",
+      "type": "file"
+    },
+    {
+      "name": "heady-cognitive-runtime",
+      "type": "dir"
+    },
+    {
+      "name": "heady-connector-vault",
+      "type": "dir"
+    },
+    {
+      "name": "heady-context-v3.2.3.md",
+      "type": "file"
+    },
+    {
+      "name": "heady-db-infra",
+      "type": "dir"
+    },
+    {
+      "name": "heady-deploy",
+      "type": "dir"
+    },
+    {
+      "name": "heady-digital-presence",
+      "type": "dir"
+    },
+    {
+      "name": "heady-drift-detection",
+      "type": "dir"
+    },
+    {
+      "name": "heady-enterprise",
+      "type": "dir"
+    },
+    {
+      "name": "heady-fintech-trading",
+      "type": "dir"
+    },
+    {
+      "name": "heady-full-rebuild",
+      "type": "dir"
+    },
+    {
+      "name": "heady-hf-space",
+      "type": "dir"
+    },
+    {
+      "name": "heady-hf-space-connection",
+      "type": "dir"
+    },
+    {
+      "name": "heady-hf-space-systems",
+      "type": "dir"
+    },
+    {
+      "name": "heady-hive-sdk",
+      "type": "dir"
+    },
+    {
+      "name": "heady-ide-ui",
+      "type": "dir"
+    },
+    {
+      "name": "heady-implementation",
+      "type": "dir"
+    },
+    {
+      "name": "heady-improvements",
+      "type": "dir"
+    },
+    {
+      "name": "heady-incident-ops",
+      "type": "dir"
+    },
+    {
+      "name": "heady-infra-hardening",
+      "type": "dir"
+    },
+    {
+      "name": "heady-init.sh",
+      "type": "file"
+    },
+    {
+      "name": "heady-intelligence-analytics",
+      "type": "dir"
+    },
+    {
+      "name": "heady-latent-os",
+      "type": "dir"
+    },
+    {
+      "name": "heady-latent-os-runtime-bundle",
+      "type": "dir"
+    },
+    {
+      "name": "heady-manager.js",
+      "type": "file"
+    },
+    {
+      "name": "heady-mcp-security",
+      "type": "dir"
+    },
+    {
+      "name": "heady-microfrontend-portal",
+      "type": "dir"
+    },
+    {
+      "name": "heady-middleware-armor",
+      "type": "dir"
+    },
+    {
+      "name": "heady-midi-creative",
+      "type": "dir"
+    },
+    {
+      "name": "heady-monorepo",
+      "type": "dir"
+    },
+    {
+      "name": "heady-native-services",
+      "type": "dir"
+    },
+    {
+      "name": "heady-nonprofit-ops",
+      "type": "dir"
+    },
+    {
+      "name": "heady-output",
+      "type": "dir"
+    },
+    {
+      "name": "heady-patent-implementations",
+      "type": "dir"
+    },
+    {
+      "name": "heady-platform-fixes",
+      "type": "dir"
+    },
+    {
+      "name": "heady-pqc-security",
+      "type": "dir"
+    },
+    {
+      "name": "Heady-pre-production-9f2f0642-main",
+      "type": "dir"
+    },
+    {
+      "name": "heady-projection",
+      "type": "dir"
+    },
+    {
+      "name": "heady-registry-sovereign.json",
+      "type": "file"
+    },
+    {
+      "name": "heady-registry.json",
+      "type": "file"
+    },
+    {
+      "name": "heady-resilience-cache",
+      "type": "dir"
+    },
+    {
+      "name": "heady-sandbox-execution",
+      "type": "dir"
+    },
+    {
+      "name": "heady-system-context.md",
+      "type": "file"
+    },
+    {
+      "name": "heady-system-fix",
+      "type": "dir"
+    },
+    {
+      "name": "heady-vector-projection",
+      "type": "dir"
+    },
+    {
+      "name": "heady-voice-relay",
+      "type": "dir"
+    },
+    {
+      "name": "heady-vsa-integration",
+      "type": "dir"
+    },
+    {
+      "name": "HEADY_CONTEXT.md",
+      "type": "file"
+    },
+    {
+      "name": "HeadyBattle-service.js",
+      "type": "file"
+    },
+    {
+      "name": "headybuddy",
+      "type": "dir"
+    },
+    {
+      "name": "headyconnection-web",
+      "type": "dir"
+    },
+    {
+      "name": "HeadyConnectionKits",
+      "type": "dir"
+    },
+    {
+      "name": "headyme-qa-architecture-analysis.md",
+      "type": "file"
+    },
+    {
+      "name": "HeadySims-service.js",
+      "type": "file"
+    },
+    {
+      "name": "hypervector.js",
+      "type": "file"
+    },
+    {
+      "name": "IMPLEMENTATION_GUIDE.md",
+      "type": "file"
+    },
+    {
+      "name": "import-recent-zips.sh",
+      "type": "file"
+    },
+    {
+      "name": "IMPROVEMENTS.md",
+      "type": "file"
+    },
+    {
+      "name": "in",
+      "type": "dir"
+    },
+    {
+      "name": "infra",
+      "type": "dir"
+    },
+    {
+      "name": "infrastructure",
+      "type": "dir"
+    },
+    {
+      "name": "integrations",
+      "type": "dir"
+    },
+    {
+      "name": "jest.config.js",
+      "type": "file"
+    },
+    {
+      "name": "launchers",
+      "type": "dir"
+    },
+    {
+      "name": "LAW-07-auto-success-engine.md",
+      "type": "file"
+    },
+    {
+      "name": "logs",
+      "type": "dir"
+    },
+    {
+      "name": "Makefile",
+      "type": "file"
+    },
+    {
+      "name": "manifest.json",
+      "type": "file"
+    },
+    {
+      "name": "MANIFEST.md",
+      "type": "file"
+    },
+    {
+      "name": "manifest.monorepo.json",
+      "type": "file"
+    },
+    {
+      "name": "mcp-gateway.js",
+      "type": "file"
+    },
+    {
+      "name": "memories",
+      "type": "dir"
+    },
+    {
+      "name": "migrations",
+      "type": "dir"
+    },
+    {
+      "name": "node_modules",
+      "type": "dir"
+    },
+    {
+      "name": "notebooks",
+      "type": "dir"
+    },
+    {
+      "name": "otel-wrappers",
+      "type": "dir"
+    },
+    {
+      "name": "package.json",
+      "type": "file"
+    },
+    {
+      "name": "package.json.additions",
+      "type": "file"
+    },
+    {
+      "name": "packages",
+      "type": "dir"
+    },
+    {
+      "name": "pages",
+      "type": "dir"
+    },
+    {
+      "name": "perplexity-research.js",
+      "type": "file"
+    },
+    {
+      "name": "platform-fixes",
+      "type": "dir"
+    },
+    {
+      "name": "pnpm-lock.yaml",
+      "type": "file"
+    },
+    {
+      "name": "pnpm-workspace.yaml",
+      "type": "file"
+    },
+    {
+      "name": "prisma",
+      "type": "dir"
+    },
+    {
+      "name": "projections",
+      "type": "dir"
+    },
+    {
+      "name": "public",
+      "type": "dir"
+    },
+    {
+      "name": "python",
+      "type": "dir"
+    },
+    {
+      "name": "quick-server.js",
+      "type": "file"
+    },
+    {
+      "name": "QUICK_REFERENCE.md",
+      "type": "file"
+    },
+    {
+      "name": "rbac-manager.js",
+      "type": "file"
+    },
+    {
+      "name": "README.md",
+      "type": "file"
+    },
+    {
+      "name": "RECONCILIATION-MATRIX.md",
+      "type": "file"
+    }
+  ]
+}

@@ -48,7 +48,7 @@
 10. [Scripts & CLI](#10-scripts--cli)
 11. [Git Remotes & Sync](#11-git-remotes--sync)
 12. [MCP Servers](#12-mcp-servers)
-13. [Deployment (Render.com)](#13-deployment-rendercom)
+13. [Deployment (Cloud Run)](#13-deployment-cloud-run)
 14. [App Readiness & Health Monitoring](#14-app-readiness--health-monitoring)
 15. [HCFullPipeline — Archive & Rebuild](#15-hcfullpipeline--archive--rebuild)
 16. [Environment Variables](#16-environment-variables)
@@ -145,7 +145,7 @@ npm run dev
 | **HeadyBuddy Docker Desktop** | noVNC + Chromium | 6080 | `curl api.headysystems.com:6080` | Active |
 | **python-worker** | Python background worker | 5000 | N/A | Available |
 | **MCP Server (stdio)** | Model Context Protocol | stdio | N/A | Active |
-| **Render MCP Server** | MCP over stdio | stdio | N/A | Active |
+| **Heady MCP Server** | MCP over stdio | stdio | N/A | Active |
 | **Story Driver** | Narrative intelligence | — (in-process) | `GET /api/stories/summary` | Active |
 | **Postgres** | Database | 5432 | TCP connection | Available |
 | **Redis** | Cache | 6379 | TCP connection | Available |
@@ -174,19 +174,19 @@ https://app.headysystems.com/api/{endpoint}
 
 Heady exposes MCP servers for IDE integration (Copilot, Windsurf, Claude):
 
-**Render MCP Server** (`mcp-servers/render-mcp-server.js`):
+**Heady MCP Server** (`mcp-servers/heady-mcp-server.js`):
 - Transport: stdio
-- Tools: `render_list_services`, `render_deploy_service`, `render_get_service`, `render_deploy_latest_commit`
-- Requires: `RENDER_API_KEY` env var
+- Tools: `heady_cloudrun_deploy`, `heady_cloudrun_status`, `heady_system_pulse`
+- Requires: `GCP_PROJECT_ID` env var
 
 **Usage in Copilot/Windsurf:**
 ```json
 {
   "servers": {
-    "render": {
+    "heady": {
       "command": "node",
-      "args": ["mcp-servers/render-mcp-server.js"],
-      "env": { "RENDER_API_KEY": "${RENDER_API_KEY}" }
+      "args": ["mcp-servers/heady-mcp-server.js"],
+      "env": { "GCP_PROJECT_ID": "${GCP_PROJECT_ID}" }
     }
   }
 }
@@ -329,7 +329,7 @@ git clone git@github.com:HeadySystems/sandbox.git
 
 | Method | Path | Description |
 |--------|------|-------------|
-| `GET` | `/api/admin/config/render-yaml` | Render.yaml configuration |
+| `GET` | `/api/admin/config/deployment` | Deployment configuration |
 | `GET` | `/api/admin/config/mcp` | MCP configuration |
 | `GET` | `/api/admin/settings/gpu` | GPU settings |
 | `POST` | `/api/admin/gpu/infer` | GPU inference |
@@ -696,20 +696,19 @@ npm run sync
 
 ## 12. MCP Servers
 
-### Render MCP Server
+### Heady MCP Server
 
-**File:** `mcp-servers/render-mcp-server.js`
+**File:** `mcp-servers/heady-mcp-server.js`
 
 | Tool | Description |
 |------|-------------|
-| `render_list_services` | List all Render services |
-| `render_deploy_service` | Trigger deploy by service ID |
-| `render_get_service` | Get service details |
-| `render_deploy_latest_commit` | Deploy latest commit by service name |
+| `heady_cloudrun_deploy` | Trigger Cloud Run deployment |
+| `heady_cloudrun_status` | Get Cloud Run service status |
+| `heady_system_pulse` | Get full system health |
 
 **Run standalone:**
 ```bash
-RENDER_API_KEY=your-key node mcp-servers/render-mcp-server.js
+GCP_PROJECT_ID=your-project node mcp-servers/heady-mcp-server.js
 ```
 
 ### Other MCP Integrations (via `.github/copilot-mcp-config.json`)
@@ -727,29 +726,20 @@ RENDER_API_KEY=your-key node mcp-servers/render-mcp-server.js
 
 ---
 
-## 13. Deployment (Render.com)
+## 13. Deployment (Cloud Run)
 
-### render.yaml Blueprint
+### Dockerfile + Cloud Build
 
 ```yaml
-services:
-  - type: web
-    name: heady-manager
-    runtime: node
-    buildCommand: npm install && npm run build
-    startCommand: node heady-manager.js
-    envVars:
-      PORT: 3300
-      NODE_ENV: production
-      ENABLE_CODEMAP: true
-      JULES_ENABLED: true
-      OBSERVER_ENABLED: true
-      BUILDER_ENABLED: true
-      ATLAS_ENABLED: true
-      DATABASE_URL: (from secret)
-      HEADY_API_KEY: (from secret)
-      HF_TOKEN: (from env)
+# Deployed via Cloud Run with Dockerfile at root
+# Build: gcloud builds submit --tag gcr.io/PROJECT/heady-manager
+# Deploy: gcloud run deploy heady-manager --image gcr.io/PROJECT/heady-manager
 ```
+
+Configuration is managed via:
+- `Dockerfile` — container build
+- `docker-compose.yml` — local orchestration
+- GCP Secret Manager — production secrets
 
 ### Deploy Targets
 
@@ -762,13 +752,13 @@ services:
 ### Deploy via MCP
 
 ```bash
-# Using Render MCP Server
-render_deploy_latest_commit --serviceName heady-manager-headysystems
+# Using Heady MCP Server
+heady_cloudrun_deploy --serviceName heady-manager --region us-central1
 ```
 
 ### Deploy via Git Push
 
-Render auto-deploys when you push to the connected branch:
+Cloud Build triggers deploy when you push to the connected branch:
 ```bash
 git push origin main    # Triggers HeadySystems deploy
 git push heady-me main  # Triggers HeadyMe deploy

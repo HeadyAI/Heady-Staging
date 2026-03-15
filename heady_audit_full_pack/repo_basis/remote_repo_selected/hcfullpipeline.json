@@ -1,0 +1,1911 @@
+{
+  "_meta": {
+    "name": "HCFullPipeline",
+    "version": "4.0.0",
+    "description": "Heady™ AI Platform 21-Stage (fib(8)) Cognitive Pipeline — φ-scaled throughout, zero magic numbers",
+    "copyright": "© 2026-2026 HeadySystems Inc. All Rights Reserved.",
+    "updatedAt": "2026-03-08T00:00:00Z",
+    "audit": "All constants φ-derived per FIXED-VALUE-AUDIT and phi-math-foundation"
+  },
+  "pipeline": {
+    "id": "hcfullpipeline",
+    "displayName": "HCFullPipeline",
+    "mode": "sequential_with_parallel_stages",
+    "maxDuration": 300000,
+    "defaultTimeout": 29034,
+    "defaultTimeout_source": "φ⁷ × 1000 (replaces arbitrary 30000)",
+    "retryPolicy": {
+      "maxRetries": 3,
+      "maxRetries_source": "fib(4)",
+      "backoffStrategy": "phi_exponential",
+      "backoffMs": [
+        1618,
+        2618,
+        4236
+      ],
+      "backoffMs_source": "φ¹×1000, φ²×1000, φ³×1000 (replaces 1000/2000/4000)",
+      "maxBackoffMs": 11090,
+      "maxBackoffMs_source": "φ⁵ × 1000 (replaces arbitrary 10000)"
+    }
+  },
+  "fullAutoMode": {
+    "enabled": false,
+    "description": "When enabled, pipeline executes all stages autonomously without human checkpoints",
+    "envOverride": "PIPELINE_FULL_AUTO",
+    "requiresGovernancePass": true,
+    "maxBudgetUSD": 5.00,
+    "allowedScopes": [
+      "read",
+      "analyze",
+      "generate"
+    ],
+    "prohibitedScopes": [
+      "deploy",
+      "delete",
+      "external_write"
+    ],
+    "confirmationBypass": false
+  },
+  "stages": [
+    {
+      "id": "stage_channel_entry",
+      "name": "Channel Entry (Stage 0)",
+      "order": 0,
+      "required": true,
+      "timeout": 4236,
+      "timeout_source": "φ³ × 1000",
+      "parallel": true,
+      "steps": [
+        {
+          "id": "scan_vector_storage",
+          "name": "Scan 3D persistent vector storage (MUST run first)",
+          "node": "HeadyMemory",
+          "action": "scan",
+          "failFast": true,
+          "params": {
+            "scope": "full",
+            "timeout": 5000
+          }
+        },
+        {
+          "id": "resolve_channel",
+          "name": "Resolve channel and user identity",
+          "node": "HeadyBuddy",
+          "action": "resolveChannel"
+        },
+        {
+          "id": "sync_cross_device",
+          "name": "Sync cross-device context",
+          "node": "HeadyBuddy",
+          "action": "syncContext"
+        },
+        {
+          "id": "route_pipeline_branch",
+          "name": "Route to pipeline branch",
+          "node": "HeadyConductor",
+          "action": "route"
+        }
+      ]
+    },
+    {
+      "id": "stage_recon",
+      "name": "Reconnaissance & Deep Scan (Stage 1)",
+      "order": 1,
+      "required": true,
+      "timeout": 6854,
+      "timeout_source": "φ⁴ × 1000",
+      "parallel": true,
+      "steps": [
+        {
+          "id": "scan_codebase",
+          "name": "Scan codebase state and config drift",
+          "node": "HeadyDeepScan",
+          "action": "scan",
+          "params": {
+            "scope": "full",
+            "driftThreshold": 0.618
+          }
+        },
+        {
+          "id": "scan_services",
+          "name": "Scan all service health and attack surface",
+          "node": "HeadyHealth",
+          "action": "matrix",
+          "params": {
+            "includeAttackSurface": true
+          }
+        },
+        {
+          "id": "scan_dependencies",
+          "name": "Scan dependency freshness and vulnerabilities",
+          "node": "HeadyGuard",
+          "action": "auditDeps",
+          "params": {
+            "freshnessWindowDays": 13,
+            "freshnessWindowDays_source": "fib(7)"
+          }
+        },
+        {
+          "id": "build_env_map",
+          "name": "Build unified environment map",
+          "node": "HeadyConductor",
+          "action": "buildEnvMap"
+        }
+      ]
+    },
+    {
+      "id": "stage_intake",
+      "name": "Task Intake & Classification (Stage 2)",
+      "order": 2,
+      "required": true,
+      "timeout": 4236,
+      "timeout_source": "φ³ × 1000",
+      "parallel": false,
+      "steps": [
+        {
+          "id": "parse_task",
+          "name": "Parse and normalize task input",
+          "node": "HeadyConductor",
+          "action": "parse",
+          "failFast": true
+        },
+        {
+          "id": "classify_intent",
+          "name": "Classify intent via CSL Resonance Gate",
+          "node": "HeadySoul",
+          "action": "analyze",
+          "params": {
+            "depth": "shallow",
+            "cslThreshold": 0.618
+          }
+        },
+        {
+          "id": "governance_pre",
+          "name": "Pre-execution governance check",
+          "node": "HeadyGovernance",
+          "action": "validate",
+          "failFast": true,
+          "params": {
+            "phase": "pre"
+          }
+        }
+      ]
+    },
+    {
+      "id": "stage_memory",
+      "name": "Memory & Context Retrieval (Stage 3)",
+      "order": 3,
+      "required": true,
+      "timeout": 6854,
+      "timeout_source": "φ⁴ × 1000",
+      "parallel": true,
+      "steps": [
+        {
+          "id": "vector_search",
+          "name": "Semantic memory search",
+          "node": "HeadyMemory",
+          "action": "search",
+          "params": {
+            "limit": 13,
+            "limit_source": "fib(7)",
+            "minScore": 0.618
+          }
+        },
+        {
+          "id": "pattern_lookup",
+          "name": "Pattern recognition lookup",
+          "node": "HeadyVinci",
+          "action": "recognize",
+          "params": {
+            "mode": "fast"
+          }
+        },
+        {
+          "id": "story_context",
+          "name": "Retrieve narrative context",
+          "node": "HeadyAutobiographer",
+          "action": "getStory",
+          "params": {
+            "limit": 21,
+            "limit_source": "fib(8)"
+          }
+        }
+      ]
+    },
+    {
+      "id": "stage_triage",
+      "name": "Priority Triage (Stage 4)",
+      "order": 4,
+      "required": true,
+      "timeout": 4236,
+      "timeout_source": "φ³ × 1000",
+      "parallel": false,
+      "steps": [
+        {
+          "id": "compute_risk",
+          "name": "Compute risk score and priority",
+          "node": "HeadyBrains",
+          "action": "triage",
+          "params": {
+            "levels": [
+              "LOW",
+              "MEDIUM",
+              "HIGH",
+              "CRITICAL"
+            ]
+          }
+        },
+        {
+          "id": "assign_swarm",
+          "name": "Assign to swarm based on CSL scoring",
+          "node": "HeadyConductor",
+          "action": "assignSwarm"
+        }
+      ]
+    },
+    {
+      "id": "stage_decompose",
+      "name": "Task Decomposition (Stage 5)",
+      "order": 5,
+      "required": true,
+      "timeout": 6854,
+      "timeout_source": "φ⁴ × 1000",
+      "parallel": false,
+      "steps": [
+        {
+          "id": "decompose_dag",
+          "name": "Decompose into subtask DAG via Rabbit layer",
+          "node": "HeadyBrains",
+          "action": "decompose",
+          "params": {
+            "maxDepth": 5,
+            "maxDepth_source": "fib(5)"
+          }
+        },
+        {
+          "id": "plan_execution",
+          "name": "Generate execution plan",
+          "node": "HeadyBrains",
+          "action": "plan",
+          "params": {
+            "maxSteps": 13,
+            "maxSteps_source": "fib(7)"
+          }
+        }
+      ]
+    },
+    {
+      "id": "stage_trial_and_error",
+      "name": "Trial & Error Sandbox (Stage 6)",
+      "order": 6,
+      "required": false,
+      "timeout": 17944,
+      "timeout_source": "φ⁶ × 1000",
+      "parallel": true,
+      "enabledWhen": "task.allowTrials === true || task.complexity >= 'high'",
+      "steps": [
+        {
+          "id": "generate_candidates",
+          "name": "Generate candidate solutions",
+          "node": "HeadyBrains",
+          "action": "generateCandidates",
+          "params": {
+            "maxCandidates": 5,
+            "maxCandidates_source": "fib(5)"
+          }
+        },
+        {
+          "id": "execute_trials",
+          "name": "Execute trials in sandbox",
+          "node": "HeadyBee",
+          "action": "sandboxExecute",
+          "params": {
+            "isolation": "docker",
+            "autoRollback": true
+          }
+        },
+        {
+          "id": "score_trials",
+          "name": "Score trial outcomes via CSL",
+          "node": "HeadyArena",
+          "action": "scoreCandidates",
+          "params": {
+            "criteria": [
+              "correctness",
+              "performance",
+              "safety",
+              "elegance"
+            ],
+            "weights": {
+              "correctness": 0.34,
+              "performance": 0.21,
+              "safety": 0.21,
+              "elegance": 0.13,
+              "resource_efficiency": 0.11
+            }
+          }
+        },
+        {
+          "id": "record_trial_learnings",
+          "name": "Record trial learnings to vector memory",
+          "node": "HeadyMemory",
+          "action": "store",
+          "params": {
+            "namespace": "trial_learnings"
+          }
+        }
+      ]
+    },
+    {
+      "id": "stage_orchestrate",
+      "name": "Orchestration & Execution (Stage 7)",
+      "order": 7,
+      "required": true,
+      "timeout": 120000,
+      "parallel": false,
+      "steps": [
+        {
+          "id": "execute",
+          "name": "Execute primary task with Soul",
+          "node": "HeadySoul",
+          "action": "execute",
+          "params": {
+            "maxTokens": 16000
+          }
+        },
+        {
+          "id": "bee_spawn_if_needed",
+          "name": "Spawn bee workers if parallel subtasks exist",
+          "node": "HeadyBee",
+          "action": "spawn",
+          "conditional": "plan.parallelSubtasks.length > 0",
+          "params": {
+            "maxBees": 8,
+            "maxBees_source": "fib(6)"
+          }
+        }
+      ]
+    },
+    {
+      "id": "stage_monte_carlo",
+      "name": "Monte Carlo Simulation (Stage 8)",
+      "order": 8,
+      "required": false,
+      "timeout": 11090,
+      "timeout_source": "φ⁵ × 1000",
+      "parallel": false,
+      "enabledWhen": "task.requiresConfidence === true",
+      "steps": [
+        {
+          "id": "monte_carlo",
+          "name": "Monte Carlo confidence estimation (1K+ scenarios)",
+          "node": "HeadyConductor",
+          "action": "monteCarlo",
+          "params": {
+            "iterations": 987,
+            "iterations_source": "fib(16)",
+            "passThreshold": 0.80
+          }
+        }
+      ]
+    },
+    {
+      "id": "stage_arena",
+      "name": "Arena Evaluation (Stage 9)",
+      "order": 9,
+      "required": false,
+      "timeout": 17944,
+      "timeout_source": "φ⁶ × 1000",
+      "parallel": false,
+      "enabledWhen": "task.requiresEvaluation === true || task.type === 'generation'",
+      "steps": [
+        {
+          "id": "arena_battle",
+          "name": "Run arena battle for quality selection",
+          "node": "HeadyArena",
+          "action": "battle",
+          "params": {
+            "rounds": 3,
+            "criteria": [
+              "accuracy",
+              "quality",
+              "efficiency",
+              "safety"
+            ],
+            "winnerMargin": 0.05
+          }
+        }
+      ]
+    },
+    {
+      "id": "stage_judge",
+      "name": "Quantitative Judging (Stage 10)",
+      "order": 10,
+      "required": true,
+      "timeout": 6854,
+      "timeout_source": "φ⁴ × 1000",
+      "parallel": false,
+      "steps": [
+        {
+          "id": "score_composite",
+          "name": "Score output: correctness(34%), safety(21%), perf(21%), quality(13%), elegance(11%)",
+          "node": "HeadyArena",
+          "action": "judgeComposite",
+          "params": {
+            "weights": {
+              "correctness": 0.34,
+              "safety": 0.21,
+              "performance": 0.21,
+              "quality": 0.13,
+              "elegance": 0.11
+            },
+            "passThreshold": 0.618,
+            "passThreshold_source": "1/φ (CSL default gate)"
+          }
+        }
+      ]
+    },
+    {
+      "id": "stage_approve",
+      "name": "Human Approval Gate (Stage 11)",
+      "order": 11,
+      "required": false,
+      "timeout": 300000,
+      "parallel": false,
+      "enabledWhen": "task.riskLevel === 'HIGH' || task.riskLevel === 'CRITICAL'",
+      "steps": [
+        {
+          "id": "human_approval",
+          "name": "Request explicit approval from Eric",
+          "node": "HeadyBuddy",
+          "action": "requestApproval",
+          "params": {
+            "requiredApprover": "eric"
+          }
+        }
+      ]
+    },
+    {
+      "id": "stage_execute_verified",
+      "name": "Metacognitive Execute (Stage 12)",
+      "order": 12,
+      "required": true,
+      "timeout": 120000,
+      "parallel": false,
+      "steps": [
+        {
+          "id": "metacognitive_gate",
+          "name": "HeadyBuddy assesses state confidence (min 20%)",
+          "node": "HeadyBuddy",
+          "action": "assessConfidence",
+          "params": {
+            "minConfidence": 0.20
+          }
+        },
+        {
+          "id": "execute_final",
+          "name": "Execute with full context and confidence",
+          "node": "HeadySoul",
+          "action": "executeFinal"
+        }
+      ]
+    },
+    {
+      "id": "stage_verify",
+      "name": "Post-Execution Verification (Stage 13)",
+      "order": 13,
+      "required": true,
+      "timeout": 11090,
+      "timeout_source": "φ⁵ × 1000",
+      "parallel": true,
+      "steps": [
+        {
+          "id": "integration_tests",
+          "name": "Run integration tests and health checks",
+          "node": "HeadyCheck",
+          "action": "verify"
+        },
+        {
+          "id": "assertions",
+          "name": "Validate all assertions pass",
+          "node": "HeadyAssure",
+          "action": "certify"
+        }
+      ]
+    },
+    {
+      "id": "stage_self_awareness",
+      "name": "Self-Awareness Assessment (Stage 14)",
+      "order": 14,
+      "required": true,
+      "timeout": 11090,
+      "timeout_source": "φ⁵ × 1000",
+      "parallel": false,
+      "steps": [
+        {
+          "id": "calibrate_confidence",
+          "name": "Assess confidence calibration accuracy",
+          "node": "HeadySoul",
+          "action": "introspect",
+          "params": {
+            "window": 21,
+            "window_source": "fib(8)",
+            "accuracyThreshold": 0.618
+          }
+        },
+        {
+          "id": "detect_blind_spots",
+          "name": "Identify cognitive blind spots and biases",
+          "node": "HeadyVinci",
+          "action": "detectBiases",
+          "params": {
+            "methods": [
+              "confirmation",
+              "anchoring",
+              "availability",
+              "survivorship"
+            ]
+          }
+        },
+        {
+          "id": "measure_predictions",
+          "name": "Measure prediction accuracy vs actuals",
+          "node": "HeadyConductor",
+          "action": "measurePredictions",
+          "params": {
+            "lookbackRuns": 21,
+            "lookbackRuns_source": "fib(8)"
+          }
+        }
+      ]
+    },
+    {
+      "id": "stage_self_critique",
+      "name": "Self-Critique (Stage 15)",
+      "order": 15,
+      "required": true,
+      "timeout": 11090,
+      "timeout_source": "φ⁵ × 1000",
+      "parallel": false,
+      "steps": [
+        {
+          "id": "critique_run",
+          "name": "Review own run — bottlenecks, weaknesses, gaps",
+          "node": "HeadyBrains",
+          "action": "selfCritique",
+          "params": {
+            "useAwarenessReport": true
+          }
+        }
+      ]
+    },
+    {
+      "id": "stage_mistake_analysis",
+      "name": "Mistake Analysis & Prevention (Stage 16)",
+      "order": 16,
+      "required": true,
+      "timeout": 11090,
+      "timeout_source": "φ⁵ × 1000",
+      "parallel": false,
+      "steps": [
+        {
+          "id": "catalog_failures",
+          "name": "Catalog current and historical failures",
+          "node": "HeadyMemory",
+          "action": "search",
+          "params": {
+            "namespace": "failures",
+            "limit": 89,
+            "limit_source": "fib(11)"
+          }
+        },
+        {
+          "id": "root_cause",
+          "name": "Perform root cause analysis (5-whys + fishbone)",
+          "node": "HeadyBrains",
+          "action": "rootCause",
+          "params": {
+            "method": "five_whys_plus_fishbone"
+          }
+        },
+        {
+          "id": "generate_guards",
+          "name": "Generate prevention rules and anti-regression guards",
+          "node": "HeadyGuard",
+          "action": "generatePreventionRules",
+          "params": {
+            "format": "csl_gate"
+          }
+        },
+        {
+          "id": "immunize",
+          "name": "Inject guards into pipeline and update wisdom.json",
+          "node": "HeadyVinci",
+          "action": "immunize",
+          "params": {
+            "updateWisdom": true,
+            "updateRecon": true
+          }
+        }
+      ]
+    },
+    {
+      "id": "stage_optimization_ops",
+      "name": "Optimization Ops Scanning (Stage 17)",
+      "order": 17,
+      "required": true,
+      "timeout": 17944,
+      "timeout_source": "φ⁶ × 1000",
+      "parallel": true,
+      "steps": [
+        {
+          "id": "profile_performance",
+          "name": "Profile service latency p50/p95/p99",
+          "node": "HeadyHealth",
+          "action": "profile",
+          "params": {
+            "windowMinutes": 55,
+            "windowMinutes_source": "fib(10)"
+          }
+        },
+        {
+          "id": "detect_waste",
+          "name": "Detect dead code, unused services, cost waste",
+          "node": "HeadyDeepScan",
+          "action": "detectWaste",
+          "params": {
+            "methods": [
+              "ast_reachability",
+              "traffic_analysis",
+              "cost_per_request"
+            ]
+          }
+        },
+        {
+          "id": "rank_optimizations",
+          "name": "Rank optimization opportunities by CSL impact score",
+          "node": "HeadyConductor",
+          "action": "rankOptimizations",
+          "params": {
+            "costWeight": 0.382,
+            "perfWeight": 0.382,
+            "reliabilityWeight": 0.236
+          }
+        }
+      ]
+    },
+    {
+      "id": "stage_continuous_search",
+      "name": "Continuous Search & Discovery (Stage 18)",
+      "order": 18,
+      "required": false,
+      "timeout": 29034,
+      "timeout_source": "φ⁷ × 1000",
+      "parallel": true,
+      "steps": [
+        {
+          "id": "search_innovations",
+          "name": "Search for new tools, research, and patterns",
+          "node": "HeadyPerplexity",
+          "action": "search",
+          "params": {
+            "categories": [
+              "npm",
+              "arxiv",
+              "github",
+              "security"
+            ],
+            "maxResults": 8,
+            "maxResults_source": "fib(6)"
+          }
+        },
+        {
+          "id": "evaluate_discoveries",
+          "name": "CSL-score relevance and applicability",
+          "node": "HeadySoul",
+          "action": "evaluate",
+          "params": {
+            "threshold": 0.618
+          }
+        },
+        {
+          "id": "absorb_findings",
+          "name": "Embed high-value findings into knowledge",
+          "node": "HeadyMemory",
+          "action": "store",
+          "params": {
+            "namespace": "discoveries"
+          }
+        }
+      ]
+    },
+    {
+      "id": "stage_evolution",
+      "name": "Evolution & Mutation (Stage 19)",
+      "order": 19,
+      "required": false,
+      "timeout": 29034,
+      "timeout_source": "φ⁷ × 1000",
+      "parallel": false,
+      "enabledWhen": "pipeline.evolutionEnabled === true",
+      "steps": [
+        {
+          "id": "generate_mutations",
+          "name": "Generate controlled parameter mutations",
+          "node": "HeadyBrains",
+          "action": "mutate",
+          "params": {
+            "rate": 0.0618,
+            "populationSize": 8,
+            "maxMagnitude": 0.13
+          }
+        },
+        {
+          "id": "simulate_mutations",
+          "name": "Simulate mutations via HeadySims",
+          "node": "HeadyConductor",
+          "action": "monteCarlo",
+          "params": {
+            "iterations": 500,
+            "compareToBaseline": true
+          }
+        },
+        {
+          "id": "promote_winners",
+          "name": "Promote beneficial mutations to config",
+          "node": "HeadyGovernance",
+          "action": "promoteIfBeneficial",
+          "params": {
+            "rollbackThreshold": 0.05,
+            "approvalThreshold": 0.08
+          }
+        },
+        {
+          "id": "record_evolution",
+          "name": "Record evolution history",
+          "node": "HeadyAutobiographer",
+          "action": "record",
+          "params": {
+            "events": [
+              "mutation_generated",
+              "mutation_tested",
+              "mutation_promoted",
+              "mutation_discarded"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "stage_receipt",
+      "name": "Trust Receipt & Audit (Stage 20)",
+      "order": 20,
+      "required": true,
+      "timeout": 6854,
+      "timeout_source": "φ⁴ × 1000",
+      "parallel": true,
+      "steps": [
+        {
+          "id": "embed_result",
+          "name": "Embed and store result in vector memory",
+          "node": "HeadyMemory",
+          "action": "store",
+          "params": {
+            "namespace": "pipeline_results"
+          }
+        },
+        {
+          "id": "vinci_learn",
+          "name": "Update Vinci pattern model",
+          "node": "HeadyVinci",
+          "action": "learn",
+          "params": {
+            "updateBaseline": true
+          }
+        },
+        {
+          "id": "governance_post",
+          "name": "Post-execution governance audit",
+          "node": "HeadyGovernance",
+          "action": "audit",
+          "params": {
+            "phase": "post"
+          }
+        },
+        {
+          "id": "drift_check",
+          "name": "Check semantic drift",
+          "node": "HeadyConductor",
+          "action": "driftCheck"
+        },
+        {
+          "id": "record_story",
+          "name": "Log execution to autobiographer",
+          "node": "HeadyAutobiographer",
+          "action": "record",
+          "params": {
+            "events": [
+              "pipeline_run",
+              "decision_made",
+              "learning_captured"
+            ]
+          }
+        },
+        {
+          "id": "emit_receipt",
+          "name": "Emit trust receipt signed with Ed25519",
+          "node": "HeadyGovernance",
+          "action": "emitReceipt",
+          "params": {
+            "signAlgorithm": "Ed25519"
+          }
+        }
+      ]
+    }
+  ],
+  "pipelineVariants": {
+    "fast_path": {
+      "description": "For LOW risk, pre-approved patterns",
+      "stages": [
+        0,
+        1,
+        2,
+        7,
+        12,
+        13,
+        20
+      ]
+    },
+    "full_path": {
+      "description": "All 21 stages for HIGH/CRITICAL or novel patterns",
+      "stages": "all"
+    },
+    "arena_path": {
+      "description": "Competitive evaluation without execution",
+      "stages": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        8,
+        9,
+        10,
+        20
+      ]
+    },
+    "learning_path": {
+      "description": "Continuous improvement without task execution",
+      "stages": [
+        0,
+        1,
+        16,
+        17,
+        18,
+        19,
+        20
+      ]
+    }
+  },
+  "pools": {
+    "llm_tokens": {
+      "description": "LLM token budget per pipeline run",
+      "default": 50000,
+      "max": 200000,
+      "warningThreshold": 40000,
+      "byStage": {
+        "stage_channel_entry": 1597,
+        "stage_recon": 2584,
+        "stage_intake": 1597,
+        "stage_memory": 2584,
+        "stage_triage": 1597,
+        "stage_decompose": 2584,
+        "stage_trial_and_error": 6765,
+        "stage_orchestrate": 17711,
+        "stage_monte_carlo": 2584,
+        "stage_arena": 6765,
+        "stage_judge": 1597,
+        "stage_approve": 987,
+        "stage_execute_verified": 17711,
+        "stage_verify": 2584,
+        "stage_self_awareness": 4181,
+        "stage_self_critique": 2584,
+        "stage_mistake_analysis": 2584,
+        "stage_optimization_ops": 2584,
+        "stage_continuous_search": 4181,
+        "stage_evolution": 6765,
+        "stage_receipt": 2584
+      },
+      "byStage_note": "All token budgets are Fibonacci numbers: fib(16)=987, fib(17)=1597, fib(18)=2584, fib(19)=4181, fib(20)=6765, fib(22)=17711"
+    },
+    "concurrent_requests": {
+      "description": "Max concurrent LLM/API requests",
+      "default": 5,
+      "max": 21,
+      "max_source": "fib(8)",
+      "perNode": {
+        "HeadySoul": 3,
+        "HeadyBrains": 3,
+        "HeadyVinci": 5,
+        "HeadyArena": 5,
+        "HeadyBee": 13,
+        "HeadyBee_source": "fib(7)"
+      }
+    },
+    "bee_workers": {
+      "description": "Max bee worker agents per pipeline run",
+      "default": 5,
+      "default_source": "fib(5)",
+      "max": 13,
+      "max_source": "fib(7)",
+      "ttl": 300
+    },
+    "cost_usd": {
+      "description": "Max cost per pipeline run in USD",
+      "default": 1.00,
+      "max": 10.00,
+      "fullAutoMax": 5.00,
+      "trackingEnabled": true
+    }
+  },
+  "timeouts": {
+    "total_pipeline": 300000,
+    "per_stage_default": 29034,
+    "per_stage_default_source": "φ⁷ × 1000",
+    "per_step_default": 11090,
+    "per_step_default_source": "φ⁵ × 1000",
+    "llm_call": 46979,
+    "llm_call_source": "φ⁸ × 1000",
+    "embedding": 6854,
+    "embedding_source": "φ⁴ × 1000",
+    "db_query": 4236,
+    "db_query_source": "φ³ × 1000",
+    "governance_check": 4236,
+    "governance_check_source": "φ³ × 1000",
+    "bee_spawn": 6854,
+    "bee_spawn_source": "φ⁴ × 1000",
+    "bee_task": 120000,
+    "recon_scan": 6854,
+    "trial_sandbox": 17944,
+    "self_awareness": 11090,
+    "mistake_analysis": 11090,
+    "optimization_ops": 17944,
+    "continuous_search": 29034,
+    "evolution_simulation": 29034
+  },
+  "errorHandling": {
+    "onStageFailure": "skip_optional_continue_required",
+    "onStepFailure": "retry_then_skip",
+    "onGovernanceDeny": "halt_immediately",
+    "onBudgetExceeded": "halt_and_alert",
+    "retryBackoff": "phi_exponential",
+    "retryBackoffMs": [
+      1618,
+      2618,
+      4236
+    ],
+    "alertChannels": [
+      "story_driver",
+      "log",
+      "webhook"
+    ],
+    "webhookUrl": "${ALERT_WEBHOOK_URL}"
+  },
+  "hooks": {
+    "onPipelineStart": [
+      "story_driver.record",
+      "budget.checkpoint"
+    ],
+    "onStageStart": [
+      "budget.checkpoint"
+    ],
+    "onStageComplete": [
+      "story_driver.record"
+    ],
+    "onPipelineComplete": [
+      "story_driver.record",
+      "budget.finalize",
+      "coherence.update"
+    ],
+    "onPipelineError": [
+      "story_driver.record",
+      "budget.finalize",
+      "alert.send"
+    ]
+  },
+  "taskQueuePolicy": {
+    "rule": "LAW_9_ALL_TASKS_THROUGH_PIPELINE",
+    "description": "Every task — discovered, extracted, generated, assigned, or manually created — MUST be registered in this taskQueue and processed through the 21-stage pipeline. No task may bypass the pipeline. No exceptions.",
+    "enforcement": "ABSOLUTE_IMMUTABLE",
+    "sources": [
+      "in/ folder zip extractions",
+      "IMPROVEMENTS.md",
+      "GAPS_FOUND.md",
+      "CHANGES.md",
+      "deep-scan discoveries",
+      "drift detection findings",
+      "optimization ops recommendations",
+      "agent/bee/swarm generated tasks",
+      "human direction",
+      "continuous search discoveries"
+    ],
+    "onNewTaskDiscovered": "auto_register_to_taskQueue",
+    "onTaskComplete": "emit_trust_receipt",
+    "onTaskFailed": "retry_phi_backoff_then_escalate"
+  },
+  "taskQueue": {
+    "_meta": {
+      "loadedAt": "2026-03-09T19:38:00Z",
+      "source": "in/heady-system-build.zip + in/heady-perplexity-full-system-context.zip",
+      "totalTasks": 109,
+      "law": "LAW 9 — ALL TASKS THROUGH HCFULLPIPELINE"
+    },
+    "tasks": [
+      {
+        "id": "BUNDLE-001",
+        "domain": "deployment",
+        "name": "Copy 53 service implementations from bundle into monorepo services/",
+        "status": "pending",
+        "swarm": "deploy-forge",
+        "subtasks": 53
+      },
+      {
+        "id": "BUNDLE-002",
+        "domain": "deployment",
+        "name": "Copy 14 skill files from bundle into .agents/skills/",
+        "status": "pending",
+        "swarm": "deploy-forge",
+        "subtasks": 14
+      },
+      {
+        "id": "BUNDLE-003",
+        "domain": "deployment",
+        "name": "Copy 10 app HTML surfaces from bundle into services/heady-web/sites/",
+        "status": "pending",
+        "swarm": "deploy-forge",
+        "subtasks": 10
+      },
+      {
+        "id": "BUNDLE-004",
+        "domain": "deployment",
+        "name": "Copy 6 shared packages from bundle into packages/",
+        "status": "pending",
+        "swarm": "deploy-forge",
+        "subtasks": 6
+      },
+      {
+        "id": "BUNDLE-005",
+        "domain": "deployment",
+        "name": "Copy 3 shared service libs (phi-math.js, auto-context-middleware.js, service-base.js) into shared/",
+        "status": "pending",
+        "swarm": "deploy-forge"
+      },
+      {
+        "id": "BUNDLE-006",
+        "domain": "documentation",
+        "name": "Copy docs/ tree (architecture, ADRs, runbooks, onboarding, security) into docs/",
+        "status": "pending",
+        "swarm": "doc-scribe"
+      },
+      {
+        "id": "BUNDLE-007",
+        "domain": "deployment",
+        "name": "Copy infra/ configs (Envoy, Consul, OTel, K8s) into infra/",
+        "status": "pending",
+        "swarm": "deploy-forge"
+      },
+      {
+        "id": "BUNDLE-008",
+        "domain": "testing",
+        "name": "Copy 4 contract tests into tests/",
+        "status": "pending",
+        "swarm": "test-prover"
+      },
+      {
+        "id": "BUNDLE-009",
+        "domain": "deployment",
+        "name": "Copy validation script (validate_bundle.py) into scripts/",
+        "status": "pending",
+        "swarm": "deploy-forge"
+      },
+      {
+        "id": "BUNDLE-010",
+        "domain": "documentation",
+        "name": "Copy reports/ into reports/",
+        "status": "pending",
+        "swarm": "doc-scribe"
+      },
+      {
+        "id": "SVC-001",
+        "domain": "orchestration",
+        "name": "Wire heady-brain (port 8100) — central AI reasoning engine",
+        "status": "pending",
+        "swarm": "csl-gateway"
+      },
+      {
+        "id": "SVC-002",
+        "domain": "orchestration",
+        "name": "Wire heady-brains (port 8101) — multi-brain federation",
+        "status": "pending",
+        "swarm": "csl-gateway"
+      },
+      {
+        "id": "SVC-003",
+        "domain": "orchestration",
+        "name": "Wire heady-soul (port 8102) — orchestration core",
+        "status": "pending",
+        "swarm": "heady-soul"
+      },
+      {
+        "id": "SVC-004",
+        "domain": "orchestration",
+        "name": "Wire heady-conductor (port 8103) — pipeline conductor",
+        "status": "pending",
+        "swarm": "heady-soul"
+      },
+      {
+        "id": "SVC-005",
+        "domain": "inference",
+        "name": "Wire heady-infer (port 8104) — inference engine",
+        "status": "pending",
+        "swarm": "csl-gateway"
+      },
+      {
+        "id": "SVC-006",
+        "domain": "inference",
+        "name": "Wire heady-embed (port 8105) — 384-dim embedding service",
+        "status": "pending",
+        "swarm": "vector-weaver"
+      },
+      {
+        "id": "SVC-007",
+        "domain": "memory",
+        "name": "Wire heady-memory (port 8106) — pgvector long-term storage",
+        "status": "pending",
+        "swarm": "vector-weaver"
+      },
+      {
+        "id": "SVC-008",
+        "domain": "memory",
+        "name": "Wire heady-vector (port 8107) — vector operations + octree",
+        "status": "pending",
+        "swarm": "vector-weaver"
+      },
+      {
+        "id": "SVC-009",
+        "domain": "memory",
+        "name": "Wire heady-projection (port 8108) — VALU tensor bridge",
+        "status": "pending",
+        "swarm": "vector-weaver"
+      },
+      {
+        "id": "SVC-010",
+        "domain": "orchestration",
+        "name": "Wire heady-bee-factory (port 8200) — dynamic bee creation",
+        "status": "pending",
+        "swarm": "heady-soul"
+      },
+      {
+        "id": "SVC-011",
+        "domain": "orchestration",
+        "name": "Wire heady-hive (port 8201) — bee coordination hub",
+        "status": "pending",
+        "swarm": "heady-soul"
+      },
+      {
+        "id": "SVC-012",
+        "domain": "orchestration",
+        "name": "Wire heady-orchestration (port 8202) — 17-swarm coordinator",
+        "status": "pending",
+        "swarm": "heady-soul"
+      },
+      {
+        "id": "SVC-013",
+        "domain": "orchestration",
+        "name": "Wire heady-federation (port 8203) — agent capability federation",
+        "status": "pending",
+        "swarm": "bridge-keeper"
+      },
+      {
+        "id": "SVC-014",
+        "domain": "security",
+        "name": "Wire heady-guard (port 8300) — zero-trust sanitization",
+        "status": "pending",
+        "swarm": "security-hive"
+      },
+      {
+        "id": "SVC-015",
+        "domain": "security",
+        "name": "Wire heady-security (port 8301) — vuln scanning + TruffleHog",
+        "status": "pending",
+        "swarm": "security-hive"
+      },
+      {
+        "id": "SVC-016",
+        "domain": "governance",
+        "name": "Wire heady-governance (port 8302) — policy + Ed25519 receipts",
+        "status": "pending",
+        "swarm": "policy-sentinel"
+      },
+      {
+        "id": "SVC-017",
+        "domain": "monitoring",
+        "name": "Wire heady-health (port 8400) — aggregate health monitoring",
+        "status": "pending",
+        "swarm": "monitor-pulse"
+      },
+      {
+        "id": "SVC-018",
+        "domain": "monitoring",
+        "name": "Wire heady-eval (port 8401) — agent evaluation metrics",
+        "status": "pending",
+        "swarm": "monitor-pulse"
+      },
+      {
+        "id": "SVC-019",
+        "domain": "reliability",
+        "name": "Wire heady-maintenance (port 8402) — self-healing + drift recovery",
+        "status": "pending",
+        "swarm": "heal-smith"
+      },
+      {
+        "id": "SVC-020",
+        "domain": "testing",
+        "name": "Wire heady-testing (port 8403) — integration tests + Arena Mode",
+        "status": "pending",
+        "swarm": "test-prover"
+      },
+      {
+        "id": "SVC-021",
+        "domain": "deployment",
+        "name": "Wire heady-web (port 8500) — web platform SSR",
+        "status": "pending",
+        "swarm": "deploy-forge"
+      },
+      {
+        "id": "SVC-022",
+        "domain": "context",
+        "name": "Wire heady-buddy (port 8501) — companion widget",
+        "status": "pending",
+        "swarm": "context-shepherd"
+      },
+      {
+        "id": "SVC-023",
+        "domain": "deployment",
+        "name": "Wire heady-ui (port 8502) — UI component library",
+        "status": "pending",
+        "swarm": "deploy-forge"
+      },
+      {
+        "id": "SVC-024",
+        "domain": "deployment",
+        "name": "Wire heady-onboarding (port 8503) — user onboarding",
+        "status": "pending",
+        "swarm": "deploy-forge"
+      },
+      {
+        "id": "SVC-025",
+        "domain": "deployment",
+        "name": "Wire heady-pilot-onboarding (port 8504) — pilot program",
+        "status": "pending",
+        "swarm": "deploy-forge"
+      },
+      {
+        "id": "SVC-026",
+        "domain": "deployment",
+        "name": "Wire heady-task-browser (port 8505) — task management UI",
+        "status": "pending",
+        "swarm": "deploy-forge"
+      },
+      {
+        "id": "SVC-027",
+        "domain": "security",
+        "name": "Wire heady-auth (port 8510) — central auth relay + signed cookies",
+        "status": "pending",
+        "swarm": "security-hive"
+      },
+      {
+        "id": "SVC-028",
+        "domain": "orchestration",
+        "name": "Wire auto-success-engine (port 8600) — φ-scaled resource allocation",
+        "status": "pending",
+        "swarm": "heady-soul"
+      },
+      {
+        "id": "SVC-029",
+        "domain": "orchestration",
+        "name": "Wire hcfullpipeline-executor (port 8601) — 21-stage state machine",
+        "status": "pending",
+        "swarm": "heady-soul"
+      },
+      {
+        "id": "SVC-030",
+        "domain": "orchestration",
+        "name": "Wire heady-chain (port 8602) — DAG subtask chaining",
+        "status": "pending",
+        "swarm": "heady-soul"
+      },
+      {
+        "id": "SVC-031",
+        "domain": "orchestration",
+        "name": "Wire heady-cache (port 8603) — hot-cold cache + Fibonacci TTL",
+        "status": "pending",
+        "swarm": "heady-soul"
+      },
+      {
+        "id": "SVC-032",
+        "domain": "inference",
+        "name": "Wire ai-router (port 8700) — CSL-scored multi-provider routing",
+        "status": "pending",
+        "swarm": "csl-gateway"
+      },
+      {
+        "id": "SVC-033",
+        "domain": "inference",
+        "name": "Wire api-gateway (port 8701) — request routing + rate limiting",
+        "status": "pending",
+        "swarm": "csl-gateway"
+      },
+      {
+        "id": "SVC-034",
+        "domain": "inference",
+        "name": "Wire model-gateway (port 8702) — capability vector matching",
+        "status": "pending",
+        "swarm": "csl-gateway"
+      },
+      {
+        "id": "SVC-035",
+        "domain": "inference",
+        "name": "Wire domain-router (port 8703) — 9-site + aliases resolver",
+        "status": "pending",
+        "swarm": "csl-gateway"
+      },
+      {
+        "id": "SVC-036",
+        "domain": "integration",
+        "name": "Wire mcp-server (port 8800) — JSON-RPC 2.0 over SSE/stdio",
+        "status": "pending",
+        "swarm": "bridge-keeper"
+      },
+      {
+        "id": "SVC-037",
+        "domain": "integration",
+        "name": "Wire google-mcp (port 8801) — Google Workspace tool adapters",
+        "status": "pending",
+        "swarm": "bridge-keeper"
+      },
+      {
+        "id": "SVC-038",
+        "domain": "integration",
+        "name": "Wire memory-mcp (port 8802) — vector memory as MCP endpoints",
+        "status": "pending",
+        "swarm": "bridge-keeper"
+      },
+      {
+        "id": "SVC-039",
+        "domain": "integration",
+        "name": "Wire perplexity-mcp (port 8803) — Sonar Pro research via MCP",
+        "status": "pending",
+        "swarm": "bridge-keeper"
+      },
+      {
+        "id": "SVC-040",
+        "domain": "integration",
+        "name": "Wire jules-mcp (port 8804) — Jules AI async code delegation",
+        "status": "pending",
+        "swarm": "bridge-keeper"
+      },
+      {
+        "id": "SVC-041",
+        "domain": "integration",
+        "name": "Wire huggingface-gateway (port 8805) — HuggingFace inference",
+        "status": "pending",
+        "swarm": "bridge-keeper"
+      },
+      {
+        "id": "SVC-042",
+        "domain": "integration",
+        "name": "Wire colab-gateway (port 8806) — notebook execution dispatch",
+        "status": "pending",
+        "swarm": "bridge-keeper"
+      },
+      {
+        "id": "SVC-043",
+        "domain": "edge",
+        "name": "Wire silicon-bridge (port 8807) — Cloudflare Workers AI edge routing",
+        "status": "pending",
+        "swarm": "edge-runner"
+      },
+      {
+        "id": "SVC-044",
+        "domain": "integration",
+        "name": "Wire discord-bot (port 8808) — Discord slash commands + webhooks",
+        "status": "pending",
+        "swarm": "bridge-keeper"
+      },
+      {
+        "id": "SVC-045",
+        "domain": "data",
+        "name": "Wire drupal-sync (port 8809) — Drupal webhook/polling vector sync",
+        "status": "pending",
+        "swarm": "data-sculptor"
+      },
+      {
+        "id": "SVC-046",
+        "domain": "analysis",
+        "name": "Wire heady-vinci (port 8900) — pattern learning engine",
+        "status": "pending",
+        "swarm": "pattern-scout"
+      },
+      {
+        "id": "SVC-047",
+        "domain": "documentation",
+        "name": "Wire heady-autobiographer (port 8901) — auto-documentation",
+        "status": "pending",
+        "swarm": "doc-scribe"
+      },
+      {
+        "id": "SVC-048",
+        "domain": "integration",
+        "name": "Wire heady-midi (port 8902) — MIDI/creative CC→MCP bridge",
+        "status": "pending",
+        "swarm": "bridge-keeper"
+      },
+      {
+        "id": "SVC-049",
+        "domain": "fintech",
+        "name": "Wire budget-tracker (port 8903) — AI provider spend metering",
+        "status": "pending",
+        "swarm": "trade-wind"
+      },
+      {
+        "id": "SVC-050",
+        "domain": "deployment",
+        "name": "Wire cli-service (port 8904) — interactive OAuth CLI",
+        "status": "pending",
+        "swarm": "deploy-forge"
+      },
+      {
+        "id": "SVC-051",
+        "domain": "orchestration",
+        "name": "Wire prompt-manager (port 8905) — 64-prompt catalogue",
+        "status": "pending",
+        "swarm": "heady-soul"
+      },
+      {
+        "id": "SVC-052",
+        "domain": "security",
+        "name": "Wire secret-gateway (port 8906) — Vault-backed secret management",
+        "status": "pending",
+        "swarm": "security-hive"
+      },
+      {
+        "id": "SVC-053",
+        "domain": "context",
+        "name": "Wire heady-auto-context (port 8907) — AutoContext primary service",
+        "status": "pending",
+        "swarm": "context-shepherd"
+      },
+      {
+        "id": "SITE-001",
+        "domain": "deployment",
+        "name": "Deploy headyme.com — Cloudflare Pages + sacred geometry (Flower of Life)",
+        "status": "pending",
+        "swarm": "deploy-forge"
+      },
+      {
+        "id": "SITE-002",
+        "domain": "deployment",
+        "name": "Deploy headysystems.com — Cloudflare Pages + sacred geometry (Metatron's Cube)",
+        "status": "pending",
+        "swarm": "deploy-forge"
+      },
+      {
+        "id": "SITE-003",
+        "domain": "deployment",
+        "name": "Deploy heady-ai.com — Cloudflare Pages + sacred geometry (Sri Yantra)",
+        "status": "pending",
+        "swarm": "deploy-forge"
+      },
+      {
+        "id": "SITE-004",
+        "domain": "deployment",
+        "name": "Deploy headyos.com — Cloudflare Pages + sacred geometry (Torus)",
+        "status": "pending",
+        "swarm": "deploy-forge"
+      },
+      {
+        "id": "SITE-005",
+        "domain": "deployment",
+        "name": "Deploy headyconnection.org — Cloudflare Pages + Drupal sync",
+        "status": "pending",
+        "swarm": "deploy-forge"
+      },
+      {
+        "id": "SITE-006",
+        "domain": "deployment",
+        "name": "Deploy headyconnection.com — Cloudflare Pages + community portal",
+        "status": "pending",
+        "swarm": "deploy-forge"
+      },
+      {
+        "id": "SITE-007",
+        "domain": "deployment",
+        "name": "Deploy headyex.com — Cloudflare Pages + marketplace (Fibonacci Spiral)",
+        "status": "pending",
+        "swarm": "deploy-forge"
+      },
+      {
+        "id": "SITE-008",
+        "domain": "deployment",
+        "name": "Deploy headyfinance.com — Cloudflare Pages + investor relations",
+        "status": "pending",
+        "swarm": "deploy-forge"
+      },
+      {
+        "id": "SITE-009",
+        "domain": "deployment",
+        "name": "Deploy admin.headysystems.com — protected admin portal",
+        "status": "pending",
+        "swarm": "deploy-forge"
+      },
+      {
+        "id": "SITE-010",
+        "domain": "security",
+        "name": "Deploy auth.headysystems.com — Cloud Run central auth relay",
+        "status": "pending",
+        "swarm": "security-hive"
+      },
+      {
+        "id": "AUTH-001",
+        "domain": "security",
+        "name": "Register OAuth callback URLs in Google developer console",
+        "status": "pending",
+        "swarm": "security-hive"
+      },
+      {
+        "id": "AUTH-002",
+        "domain": "security",
+        "name": "Register OAuth callback URLs in GitHub developer console",
+        "status": "pending",
+        "swarm": "security-hive"
+      },
+      {
+        "id": "AUTH-003",
+        "domain": "security",
+        "name": "Configure Firebase project with valid FIREBASE_API_KEY",
+        "status": "pending",
+        "swarm": "security-hive"
+      },
+      {
+        "id": "AUTH-004",
+        "domain": "security",
+        "name": "Finalize cross-domain cookie exchange pattern for production DNS/TLS",
+        "status": "pending",
+        "swarm": "security-hive"
+      },
+      {
+        "id": "GAP-001",
+        "domain": "documentation",
+        "name": "Verify CHANGES.md, GAPS_FOUND.md, IMPROVEMENTS.md exist at repo root",
+        "status": "pending",
+        "swarm": "doc-scribe"
+      },
+      {
+        "id": "GAP-002",
+        "domain": "documentation",
+        "name": "Verify docs/ hierarchy: architecture, ADRs, runbooks, onboarding, security",
+        "status": "pending",
+        "swarm": "doc-scribe"
+      },
+      {
+        "id": "GAP-003",
+        "domain": "context",
+        "name": "Verify heady-auto-context exposes /context/enrich, /index-batch, /remove, /query",
+        "status": "pending",
+        "swarm": "context-shepherd"
+      },
+      {
+        "id": "GAP-004",
+        "domain": "security",
+        "name": "Verify auth service implements /oauth/google and /oauth/github routes",
+        "status": "pending",
+        "swarm": "security-hive"
+      },
+      {
+        "id": "GAP-005",
+        "domain": "deployment",
+        "name": "Verify site generator has no legacy browser-storage or alert-driven OAuth",
+        "status": "pending",
+        "swarm": "deploy-forge"
+      },
+      {
+        "id": "INFRA-001",
+        "domain": "deployment",
+        "name": "Deploy Envoy config — mTLS, φ-circuit breakers, EDS→Consul",
+        "status": "pending",
+        "swarm": "deploy-forge"
+      },
+      {
+        "id": "INFRA-002",
+        "domain": "deployment",
+        "name": "Deploy Consul config — 3-node bootstrap, ACL, Connect mesh",
+        "status": "pending",
+        "swarm": "deploy-forge"
+      },
+      {
+        "id": "INFRA-003",
+        "domain": "monitoring",
+        "name": "Deploy OpenTelemetry collector — traces → Google Cloud Trace",
+        "status": "pending",
+        "swarm": "monitor-pulse"
+      },
+      {
+        "id": "INFRA-004",
+        "domain": "deployment",
+        "name": "Deploy Kubernetes manifests — 54 manifests, phi-scaled HPA, PDB",
+        "status": "pending",
+        "swarm": "deploy-forge"
+      },
+      {
+        "id": "INFRA-005",
+        "domain": "deployment",
+        "name": "Configure Docker Compose dev stack — Consul, PostgreSQL/pgvector, OTel",
+        "status": "pending",
+        "swarm": "deploy-forge"
+      },
+      {
+        "id": "SKILL-001",
+        "domain": "orchestration",
+        "name": "Install skill: heady-perplexity-computer-use",
+        "status": "pending",
+        "swarm": "heady-soul"
+      },
+      {
+        "id": "SKILL-002",
+        "domain": "research",
+        "name": "Install skill: heady-perplexity-deep-research",
+        "status": "pending",
+        "swarm": "research-herald"
+      },
+      {
+        "id": "SKILL-003",
+        "domain": "governance",
+        "name": "Install skill: heady-perplexity-code-review",
+        "status": "pending",
+        "swarm": "policy-sentinel"
+      },
+      {
+        "id": "SKILL-004",
+        "domain": "deployment",
+        "name": "Install skill: heady-perplexity-content-generation",
+        "status": "pending",
+        "swarm": "deploy-forge"
+      },
+      {
+        "id": "SKILL-005",
+        "domain": "research",
+        "name": "Install skill: heady-perplexity-patent-search",
+        "status": "pending",
+        "swarm": "research-herald"
+      },
+      {
+        "id": "SKILL-006",
+        "domain": "research",
+        "name": "Install skill: heady-perplexity-competitor-intel",
+        "status": "pending",
+        "swarm": "research-herald"
+      },
+      {
+        "id": "SKILL-007",
+        "domain": "data",
+        "name": "Install skill: heady-drupal-content-sync",
+        "status": "pending",
+        "swarm": "data-sculptor"
+      },
+      {
+        "id": "SKILL-008",
+        "domain": "security",
+        "name": "Install skill: heady-firebase-auth-orchestrator",
+        "status": "pending",
+        "swarm": "security-hive"
+      },
+      {
+        "id": "SKILL-009",
+        "domain": "deployment",
+        "name": "Install skill: heady-sacred-geometry-css-generator",
+        "status": "pending",
+        "swarm": "deploy-forge"
+      },
+      {
+        "id": "SKILL-010",
+        "domain": "monitoring",
+        "name": "Install skill: heady-perplexity-eval-orchestrator",
+        "status": "pending",
+        "swarm": "monitor-pulse"
+      },
+      {
+        "id": "SKILL-011",
+        "domain": "analysis",
+        "name": "Install skill: heady-perplexity-rag-optimizer",
+        "status": "pending",
+        "swarm": "pattern-scout"
+      },
+      {
+        "id": "SKILL-012",
+        "domain": "monitoring",
+        "name": "Install skill: heady-perplexity-feedback-loop",
+        "status": "pending",
+        "swarm": "monitor-pulse"
+      },
+      {
+        "id": "SKILL-013",
+        "domain": "testing",
+        "name": "Install skill: heady-perplexity-multi-agent-eval",
+        "status": "pending",
+        "swarm": "test-prover"
+      },
+      {
+        "id": "SKILL-014",
+        "domain": "monitoring",
+        "name": "Install skill: heady-perplexity-domain-benchmarker",
+        "status": "pending",
+        "swarm": "monitor-pulse"
+      },
+      {
+        "id": "ORCH-001",
+        "domain": "orchestration",
+        "name": "Verify swarm-coordinator-refactored.js merged — CSL domain routing replaces priority queues",
+        "status": "pending",
+        "swarm": "heady-soul"
+      },
+      {
+        "id": "ORCH-002",
+        "domain": "orchestration",
+        "name": "Verify bee-factory-refactored.js merged — concurrent equal-status bees",
+        "status": "pending",
+        "swarm": "heady-soul"
+      },
+      {
+        "id": "ORCH-003",
+        "domain": "orchestration",
+        "name": "Verify hcfullpipeline-stage4-refactored.js merged — TRIAGE by CSL domain only",
+        "status": "pending",
+        "swarm": "heady-soul"
+      },
+      {
+        "id": "EXT-001",
+        "domain": "testing",
+        "name": "Integrate promptfoo — LLM eval + hallucination detection",
+        "status": "pending",
+        "swarm": "test-prover"
+      },
+      {
+        "id": "EXT-002",
+        "domain": "monitoring",
+        "name": "Integrate wandb/weave — agent metrics dashboard",
+        "status": "pending",
+        "swarm": "monitor-pulse"
+      },
+      {
+        "id": "EXT-003",
+        "domain": "testing",
+        "name": "Integrate langchain-ai/agentevals — trajectory evaluation",
+        "status": "pending",
+        "swarm": "test-prover"
+      },
+      {
+        "id": "EXT-004",
+        "domain": "testing",
+        "name": "Integrate microsoft/autogen — multi-agent benchmark suites",
+        "status": "pending",
+        "swarm": "test-prover"
+      },
+      {
+        "id": "EXT-005",
+        "domain": "edge",
+        "name": "Integrate Cloudflare Workers AI — edge inference + BGE embeddings",
+        "status": "pending",
+        "swarm": "edge-runner"
+      },
+      {
+        "id": "EXT-006",
+        "domain": "integration",
+        "name": "Integrate Firebase Extensions — vector search, email triggers",
+        "status": "pending",
+        "swarm": "bridge-keeper"
+      },
+      {
+        "id": "DRUPAL-001",
+        "domain": "data",
+        "name": "Deploy drupal-sync service with HMAC-SHA256 webhook verification",
+        "status": "pending",
+        "swarm": "data-sculptor"
+      },
+      {
+        "id": "DRUPAL-002",
+        "domain": "data",
+        "name": "Configure 13 Drupal content types for tracking",
+        "status": "pending",
+        "swarm": "data-sculptor"
+      },
+      {
+        "id": "DRUPAL-003",
+        "domain": "data",
+        "name": "Configure phi-adaptive polling fallback (5-15 min)",
+        "status": "pending",
+        "swarm": "data-sculptor"
+      },
+      {
+        "id": "TEST-001",
+        "domain": "testing",
+        "name": "Run scripts/validate_bundle.py against merged repo",
+        "status": "pending",
+        "swarm": "test-prover"
+      },
+      {
+        "id": "TEST-002",
+        "domain": "testing",
+        "name": "Run tests/auto_context_contract.test.js",
+        "status": "pending",
+        "swarm": "test-prover"
+      },
+      {
+        "id": "TEST-003",
+        "domain": "testing",
+        "name": "Run tests/auth_runtime_contract.test.js",
+        "status": "pending",
+        "swarm": "test-prover"
+      },
+      {
+        "id": "TEST-004",
+        "domain": "testing",
+        "name": "Run tests/storage_policy.test.js",
+        "status": "pending",
+        "swarm": "test-prover"
+      },
+      {
+        "id": "TEST-005",
+        "domain": "testing",
+        "name": "Run tests/docs_presence.test.js",
+        "status": "pending",
+        "swarm": "test-prover"
+      },
+      {
+        "id": "GLOBAL-001",
+        "domain": "governance",
+        "name": "Enforce: No priority/ranking language in runtime routing, queues, enums, or task classification",
+        "status": "pending",
+        "swarm": "policy-sentinel"
+      },
+      {
+        "id": "GLOBAL-002",
+        "domain": "context",
+        "name": "Enforce: HeadyAutoContext enriches every request path, site, API call, agent workflow",
+        "status": "pending",
+        "swarm": "context-shepherd"
+      },
+      {
+        "id": "GLOBAL-003",
+        "domain": "governance",
+        "name": "Enforce: CSL used for domain relevance matching and gating only, not importance ordering",
+        "status": "pending",
+        "swarm": "policy-sentinel"
+      },
+      {
+        "id": "GLOBAL-004",
+        "domain": "security",
+        "name": "Enforce: Central auth from auth.headysystems.com with httpOnly/Secure/SameSite=Strict cookies",
+        "status": "pending",
+        "swarm": "security-hive"
+      },
+      {
+        "id": "GLOBAL-005",
+        "domain": "monitoring",
+        "name": "Enforce: Every service emits health status + tracing metadata + registers into service discovery",
+        "status": "pending",
+        "swarm": "monitor-pulse"
+      }
+    ]
+  }
+}

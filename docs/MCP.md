@@ -476,23 +476,24 @@ Purge Cloudflare cache (by URLs or everything).
 
 ---
 
-### 27. `heady_render_deploy`
+### 27. `heady_cloudrun_deploy`
 
-Trigger a Render.com deployment.
+Trigger a Cloud Run deployment.
 
 **Input:**
 ```json
 {
-  "serviceId": { "type": "string" },
-  "clearCache": { "type": "boolean", "default": false }
+  "serviceName": { "type": "string" },
+  "region": { "type": "string", "default": "us-central1" },
+  "imageTag": { "type": "string", "optional": true }
 }
 ```
 
 ---
 
-### 28. `heady_render_service_list`
+### 28. `heady_cloudrun_status`
 
-List all Render.com services.
+Get status of all Cloud Run services.
 
 **Input:** `{}`
 

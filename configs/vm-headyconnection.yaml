@@ -120,10 +120,7 @@ configs:
       REDIS_URL: "redis://internal.headyio.com:6379"
       NODE_ENV: "production"
       
-  render:
-    source: "render.yaml"
-    target: "/home/heady/Heady/render.yaml"
-    
+  
   mcp:
     source: ".github/copilot-mcp-config.json"
     target: "/home/heady/Heady/.github/copilot-mcp-config.json"
@@ -187,7 +184,7 @@ startup:
       type: "systemd"
       user: "heady"
       working_dir: "/home/heady/Heady/mcp-servers"
-      command: "node render-mcp-server.js"
+      command: "node heady-manager.js"
 
 # Health Checks
 health:

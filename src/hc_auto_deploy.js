@@ -3,7 +3,7 @@ const { logger } = require('./utils/logger');
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  Heady Auto-Deploy Engine                                        ║
 // ║  ∞ SACRED GEOMETRY ∞  Automatic Git + Deploy Pipeline           ║
-// ║  Handles: commit, push, multi-remote sync, Render deploy        ║
+// ║  Handles: commit, push, multi-remote sync, Cloud Run deploy     ║
 // ╚══════════════════════════════════════════════════════════════════╝
 // HEADY_BRAND:END
 
@@ -11,7 +11,7 @@ const { logger } = require('./utils/logger');
  * HCAutoDeploy — The missing auto-deploy implementation for Heady.
  *
  * Consumes: AUTO_DEPLOY, AUTO_TRAIN from .env
- * Integrates: git commit/push, multi-remote sync, Render deploy triggers
+ * Integrates: git commit/push, multi-remote sync, Cloud Run auto-deploy
  * Schedule: Configurable via cron expressions or programmatic triggers
  *
  * Usage:
@@ -70,7 +70,7 @@ function loadConfig() {
   return {
     autoDeployEnabled: (process.env.AUTO_DEPLOY || env.AUTO_DEPLOY || 'false') === 'true',
     autoTrainEnabled: (process.env.AUTO_TRAIN || env.AUTO_TRAIN || 'false') === 'true',
-    renderApiKey: process.env.RENDER_API_KEY || env.RENDER_API_KEY || '',
+
     githubToken: process.env.GITHUB_TOKEN || env.GITHUB_TOKEN || '',
     remotes: {
       primary: process.env.GIT_REMOTE_PRIMARY || env.GIT_REMOTE_PRIMARY || 'heady-me',
@@ -265,43 +265,7 @@ async function evaluateProductionGate(config) {
   };
 }
 
-// ─── Render Deploy Trigger ────────────────────────────────────────
-async function triggerRenderDeploy(serviceId, apiKey) {
-  if (!apiKey || apiKey === 'placeholder') {
-    log('warn', 'Render API key not configured, skipping deploy trigger');
-    return { triggered: false, reason: 'No API key' };
-  }
 
-  return new Promise((resolve, reject) => {
-    const body = JSON.stringify({});
-    const req = https.request({
-      hostname: 'api.render.com',
-      path: `/v1/services/${serviceId}/deploys`,
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${apiKey}`,
-        'Content-Type': 'application/json',
-        'Content-Length': body.length
-      }
-    }, (res) => {
-      let data = '';
-      res.on('data', chunk => { data += chunk; });
-      res.on('end', () => {
-        if (res.statusCode === 201) {
-          log('info', 'Render deploy triggered', { serviceId });
-          resolve({ triggered: true, status: res.statusCode });
-        } else {
-          log('error', 'Render deploy failed', { status: res.statusCode, response: data.substring(0, 200) });
-          resolve({ triggered: false, status: res.statusCode, error: data.substring(0, 200) });
-        }
-      });
-    });
-
-    req.on('error', (e) => resolve({ triggered: false, error: e.message }));
-    req.write(body);
-    req.end();
-  });
-}
 
 // ─── Main Deploy Cycle ────────────────────────────────────────────
 async function runDeployCycle(options = {}) {
@@ -366,20 +330,7 @@ async function runDeployCycle(options = {}) {
     return results;
   }
 
-  // Step 6: Trigger Render deploy (if configured)
-  if (config.renderApiKey && config.renderApiKey !== 'placeholder') {
-    try {
-      // Get service IDs from render.yaml
-      const renderServices = loadRenderServices();
-      for (const svc of renderServices) {
-        const deployResult = await triggerRenderDeploy(svc.id, config.renderApiKey);
-        results.steps.renderDeploy = results.steps.renderDeploy || [];
-        results.steps.renderDeploy.push({ service: svc.name, ...deployResult });
-      }
-    } catch (error) {
-      log('warn', 'Render deploy trigger skipped', { error: error.message });
-    }
-  }
+  // Step 6: Cloud Run auto-deploys from git push — no manual trigger needed
 
   // Step 7: Record result
   results.outcome = 'success';
@@ -396,16 +347,7 @@ async function runDeployCycle(options = {}) {
   return results;
 }
 
-function loadRenderServices() {
-  try {
-    const yaml = require('js-yaml');
-    const renderYaml = fs.readFileSync(path.join(HEADY_ROOT, 'render.yaml'), 'utf8');
-    const config = yaml.load(renderYaml);
-    return (config.services || []).map(s => ({ name: s.name, id: s.name }));
-  } catch (e) {
-    return [];
-  }
-}
+
 
 function saveDeployRecord(record) {
   const recordsDir = path.join(HEADY_ROOT, 'data', 'deploy-records');
@@ -509,7 +451,7 @@ function getStatus() {
     cloudEndpoints: Object.fromEntries(
       Object.entries(config.cloudEndpoints).map(([k, v]) => [k, v ? 'configured' : 'missing'])
     ),
-    renderApiKey: config.renderApiKey && config.renderApiKey !== 'placeholder' ? 'configured' : 'missing',
+
     recentDeploys: recentDeploys.map(d => ({
       timestamp: d.timestamp, outcome: d.outcome, duration: d.duration
     }))

@@ -1,26 +1,26 @@
 {
   "$schema": "heady://pipeline/task-queue",
-  "version": "5.7.0",
+  "version": "5.8.0",
   "pipeline": "hcfullpipeline",
   "generatedAt": "2026-03-10T05:41:52Z",
-  "lastFineTuned": "2026-03-15T11:30:00Z",
+  "lastFineTuned": "2026-03-15T11:46:00Z",
   "phi": 1.618033988749895,
-  "description": "Complete task queue for HCFullPipeline — dual-scan reconciled + report-extracted tasks (25 net-new from 12 platform reports)",
-  "taskCount": 163,
+  "description": "Complete task queue for HCFullPipeline — dual-scan reconciled + report-extracted (25) + strategic-roadmap-extracted (18) tasks",
+  "taskCount": 181,
   "concurrentEquals": true,
   "paradigm": "All tasks are concurrent-equals. No ranking, no priority tiering. CSL resonance determines contextual relevance, not importance hierarchy.",
   "categories": {
     "SECURITY": {
       "csl_resonance": 1.0,
-      "tasks": 23
+      "tasks": 25
     },
     "INFRASTRUCTURE": {
       "csl_resonance": 1.0,
-      "tasks": 27
+      "tasks": 29
     },
     "ARCHITECTURE": {
       "csl_resonance": 1.0,
-      "tasks": 20
+      "tasks": 23
     },
     "QUALITY": {
       "csl_resonance": 1.0,
@@ -28,15 +28,15 @@
     },
     "DOCUMENTATION": {
       "csl_resonance": 1.0,
-      "tasks": 25
+      "tasks": 28
     },
     "SCALING": {
       "csl_resonance": 1.0,
-      "tasks": 14
+      "tasks": 16
     },
     "FEATURES": {
       "csl_resonance": 1.0,
-      "tasks": 19
+      "tasks": 24
     },
     "REMEDIATION": {
       "csl_resonance": 1.0,
@@ -1649,10 +1649,191 @@
       "category": "DOCUMENTATION",
       "title": "Create auto-extract-tasks workflow — extract tasks from any new docs/reports",
       "description": "Workflow/script that scans new or modified docs/ files, cross-references findings against hcfullpipeline-tasks.json, and surfaces net-new tasks for merging. Run on every doc commit",
-      "status": "pending",
+      "status": "completed",
       "csl_confidence": 0.718,
       "estimated_hours": 3,
       "source": "User directive 2026-03-15 — 'set it up to be that way no matter the significance'"
+    },
+    {
+      "id": "SEC-024",
+      "category": "SECURITY",
+      "title": "Global purge of .env.hybrid sensitive history across all 5 repositories",
+      "description": "Execute BFG or git-filter-repo to scrub .env.hybrid and any embedded credentials from commit history across HeadyAI, HeadySystems, HeadyConnection, Heady-pre-production, and HeadyMe repos. Force-push cleaned history",
+      "status": "pending",
+      "csl_confidence": 0.927,
+      "estimated_hours": 4,
+      "source": "Strategic Roadmap Phase 1 — 'Ecosystem Sanitation' + Security Debt section"
+    },
+    {
+      "id": "SEC-025",
+      "category": "SECURITY",
+      "title": "Centralized encrypted vault in HeadySystems for all credentials",
+      "description": "Implement unified secret management vault (Google Secret Manager or HashiCorp Vault) in HeadySystems repo. Migrate all credentials from .env files across 5 repos. Blocked by SEC-024 (history purge first)",
+      "status": "pending",
+      "blockedBy": ["SEC-024"],
+      "csl_confidence": 0.927,
+      "estimated_hours": 5,
+      "source": "Strategic Roadmap Phase 1 — centralized encrypted vault requirement"
+    },
+    {
+      "id": "INFRA-028",
+      "category": "INFRASTRUCTURE",
+      "title": "Finalize unified heady.ps1 CLI for one-click environment setup",
+      "description": "Complete the heady.ps1 PowerShell script in HeadySystems to enable simultaneous environment setup across all 5 pillars. Include: repo cloning, dependency installation, secrets provisioning, health checks",
+      "status": "pending",
+      "csl_confidence": 0.718,
+      "estimated_hours": 6,
+      "source": "Strategic Roadmap Phase 1 — Unified CLI Implementation"
+    },
+    {
+      "id": "ARCH-021",
+      "category": "ARCHITECTURE",
+      "title": "TypeScript shared interfaces between HeadyAI and HeadyMe",
+      "description": "Create @heady/spatial-types package with shared TypeScript interfaces for 3D vector coordinates, ensuring precision and type-safety during transmission between reasoning kernel and visualization layer",
+      "status": "pending",
+      "csl_confidence": 0.718,
+      "estimated_hours": 4,
+      "source": "Strategic Roadmap Phase 1 — TypeScript Standardization"
+    },
+    {
+      "id": "ARCH-022",
+      "category": "ARCHITECTURE",
+      "title": "Decompose HeadyAI God Classes into SpatialRegistry, Orchestrator, Dispatcher",
+      "description": "Extract remaining monolithic logic from God Classes in HeadyAI into three distinct services: SpatialRegistry (coordinate management), Orchestrator (flow control), Dispatcher (execution routing)",
+      "status": "pending",
+      "csl_confidence": 0.718,
+      "estimated_hours": 8,
+      "source": "Strategic Roadmap Phase 1 — Architecture Decomposition"
+    },
+    {
+      "id": "FEAT-020",
+      "category": "FEATURES",
+      "title": "Deterministic Projection Dispatcher — real-time 3D coordinate deployment",
+      "description": "Finalize ProjectionService to handle real-time, state-tracked deployment of agent logic into specific 3D coordinates. Include coordinate validation, collision detection, and projection history",
+      "status": "pending",
+      "csl_confidence": 0.618,
+      "estimated_hours": 8,
+      "source": "Strategic Roadmap Phase 2 — Spatial Deployment"
+    },
+    {
+      "id": "FEAT-021",
+      "category": "FEATURES",
+      "title": "'Eye of Heady' Three.js 3D visualization dashboard",
+      "description": "Launch Three.js-based visualizer in HeadyMe to track Projections and vector trajectories in real-time. Display agent positions, movement paths, and spatial relationships in interactive 3D space",
+      "status": "pending",
+      "csl_confidence": 0.618,
+      "estimated_hours": 10,
+      "source": "Strategic Roadmap Phase 2 — 'Eye of Heady' Dashboard"
+    },
+    {
+      "id": "ARCH-023",
+      "category": "ARCHITECTURE",
+      "title": "Define Spatial MCP Standards for spatially-aware agent communication",
+      "description": "Use HeadyConnection to define and document the industry standard for spatially-aware Model Context Protocol servers. Include spatial coordinate headers, proximity-based routing, and 3D-aware discovery",
+      "status": "pending",
+      "csl_confidence": 0.618,
+      "estimated_hours": 6,
+      "source": "Strategic Roadmap Phase 2 — Spatial MCP Standards"
+    },
+    {
+      "id": "SCALE-015",
+      "category": "SCALING",
+      "title": "Heady-Core NPM/PyPI release — package core logic for distribution",
+      "description": "Package core reasoning logic from HeadyAI and integration layer from HeadyConnection as @heady/core (NPM) and heady-core (PyPI) for early-access partners. Include docs, examples, and CI publishing",
+      "status": "pending",
+      "csl_confidence": 0.618,
+      "estimated_hours": 8,
+      "source": "Strategic Roadmap Phase 3 — Market Explosion & Public SDK"
+    },
+    {
+      "id": "INFRA-029",
+      "category": "INFRASTRUCTURE",
+      "title": "Redis Spatial Indexing for high-frequency agent coordinate tracking",
+      "description": "Implement Redis GEOSPATIAL commands for tracking thousands of simultaneous agent movements without drift. Include GEOADD, GEODIST, GEORADIUS for proximity queries. Target: <5ms per coordinate update",
+      "status": "pending",
+      "csl_confidence": 0.618,
+      "estimated_hours": 5,
+      "source": "Strategic Roadmap Phase 3 — Redis Spatial Indexing"
+    },
+    {
+      "id": "DOC-026",
+      "category": "DOCUMENTATION",
+      "title": "Sacred Geometry Technical Whitepaper",
+      "description": "Write formal technical whitepaper codifying Sacred Geometry orchestration logic, CSL foundations, φ-math, and concurrent-equals paradigm. Target: academic-quality publication establishing thought leadership",
+      "status": "pending",
+      "csl_confidence": 0.618,
+      "estimated_hours": 10,
+      "source": "Strategic Roadmap Phase 3 — Technical Whitepaper for thought leadership"
+    },
+    {
+      "id": "SCALE-016",
+      "category": "SCALING",
+      "title": "HeadyMe multi-tenant cloud launch with global scaling",
+      "description": "Migrate HeadyMe from host-based execution to multi-tenant cloud environment. Implement tenant isolation, per-tenant resource quotas, and global CDN distribution",
+      "status": "pending",
+      "csl_confidence": 0.618,
+      "estimated_hours": 12,
+      "source": "Strategic Roadmap Phase 4 — HeadyMe Cloud Launch"
+    },
+    {
+      "id": "FEAT-022",
+      "category": "FEATURES",
+      "title": "3D-Aware Telemetry — Agent Drift, Collision Avoidance, Projection Efficiency",
+      "description": "Implement metrics engine monitoring spatial AI behaviors: Agent Drift (deviation from expected trajectory), Collision Avoidance (coordinate conflict resolution), and Projection Efficiency (execution accuracy)",
+      "status": "pending",
+      "csl_confidence": 0.618,
+      "estimated_hours": 6,
+      "source": "Strategic Roadmap Phase 4 — 3D-Aware Telemetry"
+    },
+    {
+      "id": "FEAT-023",
+      "category": "FEATURES",
+      "title": "State Consistency Kernel — sub-30ms global state sync",
+      "description": "Achieve sub-30ms latency for global state-syncing across distributed agent clusters. Implement CRDT-based conflict resolution and optimistic replication across regions",
+      "status": "pending",
+      "csl_confidence": 0.618,
+      "estimated_hours": 8,
+      "source": "Strategic Roadmap Phase 4 — State Consistency Kernel"
+    },
+    {
+      "id": "FEAT-024",
+      "category": "FEATURES",
+      "title": "Real-Time 990 Monitoring — live webhook IRS data ingestion",
+      "description": "Transition from batch 990 PDF parsing to live webhook ingestion of IRS data. Implement real-time filing alerts, trend detection, and automated compliance checking. Valuation uplift: +$10M",
+      "status": "pending",
+      "csl_confidence": 0.718,
+      "estimated_hours": 10,
+      "source": "Strategic Value Assessment — URGENT priority, valuation uplift +$10M"
+    },
+    {
+      "id": "FEAT-025",
+      "category": "FEATURES",
+      "title": "Decentralized Trust Ledger — P2P agent registry with 100% uptime",
+      "description": "Move Agent Registry to a peer-to-peer ledger for auditability and uptime guarantees. Implement consensus mechanism for Trust Score propagation across distributed nodes. Valuation uplift: +$25M",
+      "status": "pending",
+      "csl_confidence": 0.618,
+      "estimated_hours": 15,
+      "source": "Strategic Value Assessment — STRATEGIC priority, valuation uplift +$25M"
+    },
+    {
+      "id": "DOC-027",
+      "category": "DOCUMENTATION",
+      "title": "Orion Documentation Sprint — architecture guides for 14 service groups",
+      "description": "Write architecture guides explaining the 14 HeadySystems service groups to new contributors. Cover: service responsibilities, inter-service communication, health monitoring, and troubleshooting",
+      "status": "pending",
+      "csl_confidence": 0.718,
+      "estimated_hours": 6,
+      "source": "Success Analysis — Strategic Recommendation #1"
+    },
+    {
+      "id": "DOC-028",
+      "category": "DOCUMENTATION",
+      "title": "SDK Developer Evangelism program — external partner onboarding",
+      "description": "Create developer evangelism package: SDK getting-started guide, tutorial videos, example integrations, community Discord/Slack, and partner outreach materials. Target: 10 external SDK integrations in 90 days",
+      "status": "pending",
+      "csl_confidence": 0.718,
+      "estimated_hours": 8,
+      "source": "Strategic Value Assessment — 'Developer Evangelism is immediate focus' + SDK docs as CRITICAL/$5M uplift"
     }
   ]
 }

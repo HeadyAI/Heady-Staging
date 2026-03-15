@@ -1,0 +1,303 @@
+# ═══════════════════════════════════════════════════════════════════════════════
+# Heady™ Production CI/CD — GitHub Actions
+# ═══════════════════════════════════════════════════════════════════════════════
+# Full pipeline: Security → Validate → Build → Deploy Cloud Run → Deploy Edge
+#
+# Triggers:
+#   - Push to main (full deploy)
+#   - Pull request (validate only)
+#   - Manual dispatch (selective targets)
+#
+# Required GitHub Secrets:
+#   GCP_SA_KEY           - GCP service account JSON key
+#   GCP_PROJECT_ID       - GCP project ID (heady-production)
+#   CF_API_TOKEN         - Cloudflare API token
+#   CF_ACCOUNT_ID        - Cloudflare account ID
+#   HF_TOKEN             - Hugging Face token
+#
+# © 2026 Heady™Systems Inc. — Proprietary
+# ═══════════════════════════════════════════════════════════════════════════════
+
+name: Heady™ Production Deploy
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      target:
+        description: 'Deploy target'
+        default: 'all'
+        type: choice
+        options: [all, cloudrun, edge, validate-only]
+      canary_percent:
+        description: 'Canary traffic percentage (0 = full deploy)'
+        default: '0'
+        type: string
+
+concurrency:
+  group: production-deploy-${{ github.sha }}
+  cancel-in-progress: false
+
+env:
+  NODE_VERSION: '22'
+  GCP_REGION: us-central1
+  SERVICE_NAME: heady-manager
+  DOCKER_REPO: heady-docker-repo
+
+permissions:
+  contents: read
+  security-events: write
+
+# ═══════════════════════════════════════════════════════════════════════════════
+jobs:
+
+  # ─────────────────────────────────────────────────────────────────────────────
+  # Phase 0: Security Scanning
+  # ─────────────────────────────────────────────────────────────────────────────
+  security-scan:
+    name: Security Scan
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Secret Detection (TruffleHog)
+        uses: trufflesecurity/trufflehog@main
+        with:
+          extra_args: --only-verified
+
+      - name: CodeQL Initialize
+        uses: github/codeql-action/init@v3
+        with:
+          languages: javascript
+
+      - name: CodeQL Analyze
+        uses: github/codeql-action/analyze@v3
+
+      - name: Dependency Audit
+        run: |
+          npm install --ignore-scripts 2>/dev/null || true
+          npm audit --production --audit-level=critical || echo "Audit warnings (non-blocking)"
+
+  # ─────────────────────────────────────────────────────────────────────────────
+  # Phase 1: Validate (lint, typecheck, test)
+  # ─────────────────────────────────────────────────────────────────────────────
+  validate:
+    name: Validate
+    needs: security-scan
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install Dependencies
+        run: npm ci || npm install
+
+      - name: Lint
+        run: npm run lint 2>/dev/null || echo "Lint not configured"
+
+      - name: Test
+        run: npm test
+
+  # ─────────────────────────────────────────────────────────────────────────────
+  # Phase 2: Build & Push Docker Image
+  # ─────────────────────────────────────────────────────────────────────────────
+  build:
+    name: Build Docker Image
+    needs: validate
+    if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    outputs:
+      image_tag: ${{ steps.meta.outputs.tags }}
+      image_digest: ${{ steps.build.outputs.digest }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Authenticate to GCP
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+
+      - name: Configure Docker for Artifact Registry
+        run: gcloud auth configure-docker ${{ env.GCP_REGION }}-docker.pkg.dev
+
+      - name: Docker Metadata
+        id: meta
+        run: |
+          SHORT_SHA=$(echo "${{ github.sha }}" | cut -c1-7)
+          IMAGE="${{ env.GCP_REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/${{ env.DOCKER_REPO }}/${{ env.SERVICE_NAME }}"
+          echo "image=${IMAGE}" >> $GITHUB_OUTPUT
+          echo "tags=${IMAGE}:${SHORT_SHA},${IMAGE}:latest" >> $GITHUB_OUTPUT
+          echo "short_sha=${SHORT_SHA}" >> $GITHUB_OUTPUT
+
+      - name: Build and Push
+        id: build
+        run: |
+          IMAGE="${{ env.GCP_REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/${{ env.DOCKER_REPO }}/${{ env.SERVICE_NAME }}"
+          SHORT_SHA=$(echo "${{ github.sha }}" | cut -c1-7)
+
+          docker build \
+            --cache-from "${IMAGE}:latest" \
+            -t "${IMAGE}:${SHORT_SHA}" \
+            -t "${IMAGE}:latest" \
+            --build-arg NODE_VERSION=${{ env.NODE_VERSION }} \
+            --label "org.opencontainers.image.revision=${{ github.sha }}" \
+            --label "org.opencontainers.image.created=$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
+            .
+
+          docker push "${IMAGE}:${SHORT_SHA}"
+          docker push "${IMAGE}:latest"
+
+          DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' "${IMAGE}:${SHORT_SHA}" | cut -d@ -f2)
+          echo "digest=${DIGEST}" >> $GITHUB_OUTPUT
+
+  # ─────────────────────────────────────────────────────────────────────────────
+  # Phase 3: Deploy to Cloud Run
+  # ─────────────────────────────────────────────────────────────────────────────
+  deploy-cloudrun:
+    name: Deploy Cloud Run
+    needs: build
+    if: |
+      (github.event_name == 'push' || github.event_name == 'workflow_dispatch') &&
+      (github.event.inputs.target == 'all' || github.event.inputs.target == 'cloudrun' || github.event.inputs.target == '')
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Authenticate to GCP
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+
+      - name: Deploy
+        run: |
+          IMAGE="${{ env.GCP_REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/${{ env.DOCKER_REPO }}/${{ env.SERVICE_NAME }}"
+          SHORT_SHA=$(echo "${{ github.sha }}" | cut -c1-7)
+          CANARY="${{ github.event.inputs.canary_percent || '0' }}"
+
+          if [ "$CANARY" != "0" ] && [ -n "$CANARY" ]; then
+            echo "Canary deploy: ${CANARY}% traffic"
+            gcloud run deploy ${{ env.SERVICE_NAME }} \
+              --image "${IMAGE}:${SHORT_SHA}" \
+              --region ${{ env.GCP_REGION }} \
+              --platform managed \
+              --no-traffic \
+              --tag canary \
+              --quiet
+
+            gcloud run services update-traffic ${{ env.SERVICE_NAME }} \
+              --region ${{ env.GCP_REGION }} \
+              --to-tags "canary=${CANARY}" \
+              --quiet
+          else
+            echo "Full deploy: 100% traffic"
+            gcloud run deploy ${{ env.SERVICE_NAME }} \
+              --image "${IMAGE}:${SHORT_SHA}" \
+              --region ${{ env.GCP_REGION }} \
+              --platform managed \
+              --allow-unauthenticated \
+              --min-instances 1 \
+              --max-instances 10 \
+              --cpu 2 \
+              --memory 1Gi \
+              --timeout 300 \
+              --concurrency 100 \
+              --cpu-boost \
+              --execution-environment gen2 \
+              --set-env-vars "NODE_ENV=production,HEADY_SERVICE_NAME=${{ env.SERVICE_NAME }},HEADY_VERSION=3.1.0" \
+              --update-secrets "DATABASE_URL=DATABASE_URL:latest,HEADY_API_KEY=HEADY_API_KEY:latest,PERPLEXITY_API_KEY=PERPLEXITY_API_KEY:latest,GEMINI_API_KEY=GEMINI_API_KEY:latest,OPENAI_API_KEY=OPENAI_API_KEY:latest,CLAUDE_API_KEY=CLAUDE_API_KEY:latest,GROQ_API_KEY=GROQ_API_KEY:latest,GITHUB_TOKEN=GITHUB_TOKEN:latest,CLOUDFLARE_API_TOKEN=CLOUDFLARE_API_TOKEN:latest,SENTRY_DSN=SENTRY_DSN:latest,JWT_SECRET=JWT_SECRET:latest,SESSION_SECRET=SESSION_SECRET:latest" \
+              --quiet
+          fi
+
+      - name: Verify Health
+        run: |
+          SERVICE_URL=$(gcloud run services describe ${{ env.SERVICE_NAME }} \
+            --region ${{ env.GCP_REGION }} --format 'value(status.url)')
+
+          for i in 1 2 3 4 5 6; do
+            HTTP_CODE=$(curl -sf -o /dev/null -w "%{http_code}" "${SERVICE_URL}/health/live" || echo "000")
+            if [ "$HTTP_CODE" = "200" ]; then
+              echo "Health check passed (HTTP ${HTTP_CODE})"
+              exit 0
+            fi
+            echo "Attempt ${i}: HTTP ${HTTP_CODE} — retrying in 10s..."
+            sleep 10
+          done
+          echo "Health check failed after 6 attempts"
+          exit 1
+
+  # ─────────────────────────────────────────────────────────────────────────────
+  # Phase 4: Deploy Cloudflare Edge Worker
+  # ─────────────────────────────────────────────────────────────────────────────
+  deploy-edge:
+    name: Deploy Edge Worker
+    needs: validate
+    if: |
+      (github.event_name == 'push' || github.event_name == 'workflow_dispatch') &&
+      (github.event.inputs.target == 'all' || github.event.inputs.target == 'edge' || github.event.inputs.target == '')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Deploy Worker
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CF_API_TOKEN }}
+          accountId: ${{ secrets.CF_ACCOUNT_ID }}
+          command: deploy infra/cloudflare/heady-edge-worker.js --name heady-edge --config infra/cloudflare/wrangler.toml
+
+  # ─────────────────────────────────────────────────────────────────────────────
+  # Phase 5: Post-Deploy Verification
+  # ─────────────────────────────────────────────────────────────────────────────
+  post-deploy:
+    name: Post-Deploy Verify
+    needs: [deploy-cloudrun, deploy-edge]
+    if: always() && (needs.deploy-cloudrun.result == 'success' || needs.deploy-edge.result == 'success')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Verify All Domains
+        run: |
+          DOMAINS="headyme.com headysystems.com headyconnection.org headyconnection.com headybuddy.org headymcp.com headyio.com headybot.com headyapi.com heady-ai.com headyos.com headyfinance.com headymusic.com headycloud.com headystore.com headyex.com"
+          FAILED=0
+
+          for domain in $DOMAINS; do
+            HTTP_CODE=$(curl -sf -o /dev/null -w "%{http_code}" "https://${domain}/health/edge" --max-time 10 || echo "000")
+            if [ "$HTTP_CODE" = "200" ]; then
+              echo "  PASS  ${domain} → HTTP ${HTTP_CODE}"
+            else
+              echo "  FAIL  ${domain} → HTTP ${HTTP_CODE}"
+              FAILED=$((FAILED + 1))
+            fi
+          done
+
+          if [ $FAILED -gt 0 ]; then
+            echo "WARNING: ${FAILED} domain(s) not responding"
+          fi
+
+      - name: Deploy Summary
+        run: |
+          echo "## Deployment Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- **Commit:** ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Branch:** ${{ github.ref_name }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Triggered by:** ${{ github.actor }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Cloud Run:** ${{ needs.deploy-cloudrun.result }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Edge Worker:** ${{ needs.deploy-edge.result }}" >> $GITHUB_STEP_SUMMARY

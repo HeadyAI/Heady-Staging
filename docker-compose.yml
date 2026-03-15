@@ -29,7 +29,6 @@ services:
       - REDIS_URL=${REDIS_URL:-}
       - HEADY_API_KEY=${HEADY_API_KEY:-}
       - ADMIN_TOKEN=${ADMIN_TOKEN:-}
-      - RENDER_API_KEY=${RENDER_API_KEY:-}
       - HF_TOKEN=${HF_TOKEN:-}
       - USE_HEADY_MANAGER=${USE_HEADY_MANAGER:-true}
       - HEADY_TARGET=${HEADY_TARGET:-CloudOnly}
@@ -289,17 +288,13 @@ volumes:
     driver: local
   heady-pgadmin:
     driver: local
+  heady-logs:
+    driver: local
+  heady-cache:
+    driver: local
 
 # ─── Networks ────────────────────────────────────────────────────────────────
 
 networks:
   heady-net:
     driver: bridge
-
-volumes:
-  heady-data:
-    driver: local
-  heady-logs:
-    driver: local
-  heady-cache:
-    driver: local

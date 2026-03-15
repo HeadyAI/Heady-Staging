@@ -43,15 +43,15 @@ headyos_forms:
       hybrid:
         description: "Local orchestrator + remote models"
         default_endpoint: "http://manager.dev.local.heady.internal:3300"
-        fallback_endpoints: ["https://heady-manager-headysystems.onrender.com"]
+        fallback_endpoints: ["https://heady-edge-gateway-bf4q4zywhq-uc.a.run.app"]
       cloud:
         description: "Cloud-only mode"
-        default_endpoint: "https://heady-manager-headysystems.onrender.com"
+        default_endpoint: "https://heady-edge-gateway-bf4q4zywhq-uc.a.run.app"
     
   web_shell:
     name: "HeadyOS Web Shell"
     description: "Full OS-like web UI served from web app"
-    deployment_targets: [vercel, netlify, render, self_hosted]
+    deployment_targets: [cloudrun, vercel, netlify, self_hosted]
     
   mobile_shell:
     name: "HeadyOS Mobile Shell"
@@ -68,12 +68,12 @@ browser_extensions:
   chrome:
     manifest_version: 3
     permissions: [storage, activeTab, sidePanel, scripting, tabs]
-    host_permissions: ["http://manager.dev.local.heady.internal:3300/*", "https://*.onrender.com/*"]
+    host_permissions: ["http://manager.dev.local.heady.internal:3300/*", "https://*.a.run.app/*"]
     
   edge:
     manifest_version: 3
     permissions: [storage, activeTab, sidePanel, scripting, tabs]
-    host_permissions: ["http://manager.dev.local.heady.internal:3300/*", "https://*.onrender.com/*"]
+    host_permissions: ["http://manager.dev.local.heady.internal:3300/*", "https://*.a.run.app/*"]
     
   firefox:
     manifest_version: 2
@@ -82,7 +82,7 @@ browser_extensions:
   safari:
     manifest_version: 3
     permissions: [storage, activeTab, tabs]
-    host_permissions: ["http://manager.dev.local.heady.internal:3300/*", "https://*.onrender.com/*"]
+    host_permissions: ["http://manager.dev.local.heady.internal:3300/*", "https://*.a.run.app/*"]
 
 # ============================================
 # IDE EXTENSIONS
@@ -277,7 +277,7 @@ bundles:
 channels:
   web_saas:
     template: "web-saas-template"
-    deploy_targets: [render, vercel, netlify, fly_io, railway]
+    deploy_targets: [cloudrun, vercel, netlify, fly_io, railway]
     
   desktop:
     template: "desktop-template"
@@ -289,7 +289,7 @@ channels:
     
   api_only:
     template: "api-only-template"
-    deploy_targets: [render, fly_io, aws, gcp, azure]
+    deploy_targets: [cloudrun, fly_io, aws, gcp, azure]
     
   mobile:
     stores: [play_store, app_store, f_droid, direct_apk]

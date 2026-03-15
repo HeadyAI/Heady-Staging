@@ -101,7 +101,7 @@ This guide implements Zero Trust Architecture (ZTA), multi-layer defense-in-dept
 **Target Systems:**
 - Parrot OS 7 (VMware Linux VM)
 - Ryzen 9 mini-computer (32GB RAM, local render)
-- Render.com containers
+- Cloud Run containers
 - Google Colab Pro+ instances
 
 **Python Framework for Multi-Vendor Hardening (Nornir):**

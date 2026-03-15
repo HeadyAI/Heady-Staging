@@ -7,13 +7,6 @@
         "Authorization": "Bearer ${HEADY_API_KEY}"
       }
     },
-    "heady-render": {
-      "command": "node",
-      "args": ["../../../mcp-servers/render-mcp-server.js"],
-      "env": {
-        "RENDER_API_KEY": "${RENDER_API_KEY}"
-      }
-    },
     "filesystem": {
       "command": "npx",
       "args": [

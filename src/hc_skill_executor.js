@@ -123,8 +123,8 @@ class SkillExecutor extends EventEmitter {
     this.registerAction('deploy_production', async (params) => {
       const verifyFirst = params.verify !== false;
       if (verifyFirst) {
-        const healthOk = fsSync.existsSync(path.join(projectRoot, 'render.yaml'));
-        if (!healthOk) return { success: false, error: 'render.yaml missing — cannot deploy' };
+        const healthOk = fsSync.existsSync(path.join(projectRoot, 'docker-compose.yml'));
+        if (!healthOk) return { success: false, error: 'docker-compose.yml missing — cannot deploy' };
       }
       try {
         execSync('git push origin main 2>&1 || true', { cwd: projectRoot, timeout: 30000, stdio: 'pipe' });
@@ -146,9 +146,9 @@ class SkillExecutor extends EventEmitter {
 
     // Validation actions
     this.registerAction('validate_state', async (params) => {
-      const checks = { registryExists: false, configsValid: false, renderYaml: false };
+      const checks = { registryExists: false, configsValid: false, dockerCompose: false };
       checks.registryExists = fsSync.existsSync(path.join(projectRoot, 'heady-registry.json'));
-      checks.renderYaml = fsSync.existsSync(path.join(projectRoot, 'render.yaml'));
+      checks.dockerCompose = fsSync.existsSync(path.join(projectRoot, 'docker-compose.yml'));
       const configDir = path.join(projectRoot, 'configs');
       if (fsSync.existsSync(configDir)) {
         const yamls = fsSync.readdirSync(configDir).filter(f => f.endsWith('.yaml'));

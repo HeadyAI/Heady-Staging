@@ -1,0 +1,808 @@
+{
+  "version": "3.2.3",
+  "generated": "2026-03-09",
+  "service_count": 50,
+  "phi": 1.618033988749895,
+  "csl_threshold": 0.618,
+  "services": [
+    {
+      "id": "heady-manager",
+      "port": 3301,
+      "domain": "headysystems.com",
+      "description": "Primary orchestration manager \u2014 21-stage pipeline controller",
+      "upstreams": [
+        "heady-gateway",
+        "heady-mcp",
+        "heady-brain"
+      ],
+      "health_endpoints": [
+        "http://heady-manager:3301/health",
+        "http://heady-manager:3301/health/live",
+        "http://heady-manager:3301/health/ready",
+        "http://heady-manager:3301/health/startup",
+        "http://heady-manager:3301/health/details"
+      ]
+    },
+    {
+      "id": "heady-gateway",
+      "port": 3302,
+      "domain": "headyapi.com",
+      "description": "API Gateway \u2014 unified layer with rate limiting, auth, CSL routing",
+      "upstreams": [
+        "heady-manager",
+        "heady-auth",
+        "heady-router"
+      ],
+      "health_endpoints": [
+        "http://heady-gateway:3302/health",
+        "http://heady-gateway:3302/health/live",
+        "http://heady-gateway:3302/health/ready",
+        "http://heady-gateway:3302/health/startup",
+        "http://heady-gateway:3302/health/details"
+      ]
+    },
+    {
+      "id": "heady-mcp",
+      "port": 3303,
+      "domain": "headymcp.com",
+      "description": "MCP Gateway \u2014 42 registered MCP tools, JSON-RPC 2.0 server",
+      "upstreams": [
+        "heady-manager",
+        "heady-auth"
+      ],
+      "health_endpoints": [
+        "http://heady-mcp:3303/health",
+        "http://heady-mcp:3303/health/live",
+        "http://heady-mcp:3303/health/ready",
+        "http://heady-mcp:3303/health/startup",
+        "http://heady-mcp:3303/health/details"
+      ]
+    },
+    {
+      "id": "heady-brain",
+      "port": 3304,
+      "domain": "headysystems.com",
+      "description": "HeadyBrain \u2014 7-archetype cognitive orchestration, CSL fusion",
+      "upstreams": [
+        "heady-vector-memory",
+        "heady-inference-gateway"
+      ],
+      "health_endpoints": [
+        "http://heady-brain:3304/health",
+        "http://heady-brain:3304/health/live",
+        "http://heady-brain:3304/health/ready",
+        "http://heady-brain:3304/health/startup",
+        "http://heady-brain:3304/health/details"
+      ]
+    },
+    {
+      "id": "heady-soul",
+      "port": 3305,
+      "domain": "headyme.com",
+      "description": "HeadySoul \u2014 user intent control plane, pipeline entry point",
+      "upstreams": [
+        "heady-brain",
+        "heady-manager"
+      ],
+      "health_endpoints": [
+        "http://heady-soul:3305/health",
+        "http://heady-soul:3305/health/live",
+        "http://heady-soul:3305/health/ready",
+        "http://heady-soul:3305/health/startup",
+        "http://heady-soul:3305/health/details"
+      ]
+    },
+    {
+      "id": "heady-hive",
+      "port": 3306,
+      "domain": "headybee.co",
+      "description": "HeadyHive \u2014 bee factory, spawning/managing 10K concurrent bees",
+      "upstreams": [
+        "heady-swarm-coordinator",
+        "heady-seventeen-swarm"
+      ],
+      "health_endpoints": [
+        "http://heady-hive:3306/health",
+        "http://heady-hive:3306/health/live",
+        "http://heady-hive:3306/health/ready",
+        "http://heady-hive:3306/health/startup",
+        "http://heady-hive:3306/health/details"
+      ]
+    },
+    {
+      "id": "heady-orchestration",
+      "port": 3307,
+      "domain": "headysystems.com",
+      "description": "Orchestration layer \u2014 task DAG execution, stage transitions, gates",
+      "upstreams": [
+        "heady-manager",
+        "heady-hive",
+        "heady-pipeline-core"
+      ],
+      "health_endpoints": [
+        "http://heady-orchestration:3307/health",
+        "http://heady-orchestration:3307/health/live",
+        "http://heady-orchestration:3307/health/ready",
+        "http://heady-orchestration:3307/health/startup",
+        "http://heady-orchestration:3307/health/details"
+      ]
+    },
+    {
+      "id": "heady-router",
+      "port": 3308,
+      "domain": "headysystems.com",
+      "description": "Domain router \u2014 CSL cosine matching across concurrent-equals domains",
+      "upstreams": [
+        "heady-brain",
+        "heady-vector-memory"
+      ],
+      "health_endpoints": [
+        "http://heady-router:3308/health",
+        "http://heady-router:3308/health/live",
+        "http://heady-router:3308/health/ready",
+        "http://heady-router:3308/health/startup",
+        "http://heady-router:3308/health/details"
+      ]
+    },
+    {
+      "id": "heady-auth",
+      "port": 3309,
+      "domain": "headysystems.com",
+      "description": "Auth service \u2014 JWT/Ed25519 validation, mTLS, service identity",
+      "upstreams": [],
+      "health_endpoints": [
+        "http://heady-auth:3309/health",
+        "http://heady-auth:3309/health/live",
+        "http://heady-auth:3309/health/ready",
+        "http://heady-auth:3309/health/startup",
+        "http://heady-auth:3309/health/details"
+      ]
+    },
+    {
+      "id": "heady-drupal",
+      "port": 3310,
+      "domain": "headyconnection.org",
+      "description": "Drupal integration \u2014 headyconnection.org CMS bridge and proxy",
+      "upstreams": [
+        "heady-auth",
+        "heady-cache"
+      ],
+      "health_endpoints": [
+        "http://heady-drupal:3310/health",
+        "http://heady-drupal:3310/health/live",
+        "http://heady-drupal:3310/health/ready",
+        "http://heady-drupal:3310/health/startup",
+        "http://heady-drupal:3310/health/details"
+      ]
+    },
+    {
+      "id": "heady-vector-memory",
+      "port": 3311,
+      "domain": "headysystems.com",
+      "description": "3D spatial vector memory \u2014 pgvector backed RAG with Graph traversal",
+      "upstreams": [
+        "heady-embeddings"
+      ],
+      "health_endpoints": [
+        "http://heady-vector-memory:3311/health",
+        "http://heady-vector-memory:3311/health/live",
+        "http://heady-vector-memory:3311/health/ready",
+        "http://heady-vector-memory:3311/health/startup",
+        "http://heady-vector-memory:3311/health/details"
+      ]
+    },
+    {
+      "id": "heady-embeddings",
+      "port": 3312,
+      "domain": "headysystems.com",
+      "description": "Embedding service \u2014 local + Vertex AI embedding generation",
+      "upstreams": [],
+      "health_endpoints": [
+        "http://heady-embeddings:3312/health",
+        "http://heady-embeddings:3312/health/live",
+        "http://heady-embeddings:3312/health/ready",
+        "http://heady-embeddings:3312/health/startup",
+        "http://heady-embeddings:3312/health/details"
+      ]
+    },
+    {
+      "id": "heady-inference-gateway",
+      "port": 3313,
+      "domain": "headysystems.com",
+      "description": "Inference gateway \u2014 multi-model routing: Claude/GPT/Gemini/Groq/Ollama",
+      "upstreams": [],
+      "health_endpoints": [
+        "http://heady-inference-gateway:3313/health",
+        "http://heady-inference-gateway:3313/health/live",
+        "http://heady-inference-gateway:3313/health/ready",
+        "http://heady-inference-gateway:3313/health/startup",
+        "http://heady-inference-gateway:3313/health/details"
+      ]
+    },
+    {
+      "id": "heady-model-router",
+      "port": 3314,
+      "domain": "headysystems.com",
+      "description": "Model router \u2014 CSL-based model selection, capability matching",
+      "upstreams": [
+        "heady-inference-gateway",
+        "heady-brain"
+      ],
+      "health_endpoints": [
+        "http://heady-model-router:3314/health",
+        "http://heady-model-router:3314/health/live",
+        "http://heady-model-router:3314/health/ready",
+        "http://heady-model-router:3314/health/startup",
+        "http://heady-model-router:3314/health/details"
+      ]
+    },
+    {
+      "id": "heady-buddy",
+      "port": 3315,
+      "domain": "headybuddy.com",
+      "description": "HeadyBuddy \u2014 AI companion, persistent memory, empathic personas",
+      "upstreams": [
+        "heady-brain",
+        "heady-vector-memory",
+        "heady-soul"
+      ],
+      "health_endpoints": [
+        "http://heady-buddy:3315/health",
+        "http://heady-buddy:3315/health/live",
+        "http://heady-buddy:3315/health/ready",
+        "http://heady-buddy:3315/health/startup",
+        "http://heady-buddy:3315/health/details"
+      ]
+    },
+    {
+      "id": "heady-coder",
+      "port": 3316,
+      "domain": "heady.io",
+      "description": "HeadyCoder \u2014 autonomous code generation, review, and testing",
+      "upstreams": [
+        "heady-brain",
+        "heady-inference-gateway"
+      ],
+      "health_endpoints": [
+        "http://heady-coder:3316/health",
+        "http://heady-coder:3316/health/live",
+        "http://heady-coder:3316/health/ready",
+        "http://heady-coder:3316/health/startup",
+        "http://heady-coder:3316/health/details"
+      ]
+    },
+    {
+      "id": "heady-researcher",
+      "port": 3317,
+      "domain": "heady.io",
+      "description": "HeadyResearcher \u2014 Perplexity-powered research and synthesis",
+      "upstreams": [
+        "heady-inference-gateway",
+        "heady-vector-memory"
+      ],
+      "health_endpoints": [
+        "http://heady-researcher:3317/health",
+        "http://heady-researcher:3317/health/live",
+        "http://heady-researcher:3317/health/ready",
+        "http://heady-researcher:3317/health/startup",
+        "http://heady-researcher:3317/health/details"
+      ]
+    },
+    {
+      "id": "heady-battle",
+      "port": 3318,
+      "domain": "headysystems.com",
+      "description": "HeadyBattle \u2014 Arena mode multi-model competition, Monte Carlo eval",
+      "upstreams": [
+        "heady-inference-gateway",
+        "heady-brain"
+      ],
+      "health_endpoints": [
+        "http://heady-battle:3318/health",
+        "http://heady-battle:3318/health/live",
+        "http://heady-battle:3318/health/ready",
+        "http://heady-battle:3318/health/startup",
+        "http://heady-battle:3318/health/details"
+      ]
+    },
+    {
+      "id": "heady-council",
+      "port": 3319,
+      "domain": "headysystems.com",
+      "description": "HeadyCouncil \u2014 7-model deliberation, CSL consensus gate",
+      "upstreams": [
+        "heady-inference-gateway",
+        "heady-brain"
+      ],
+      "health_endpoints": [
+        "http://heady-council:3319/health",
+        "http://heady-council:3319/health/live",
+        "http://heady-council:3319/health/ready",
+        "http://heady-council:3319/health/startup",
+        "http://heady-council:3319/health/details"
+      ]
+    },
+    {
+      "id": "heady-mc",
+      "port": 3320,
+      "domain": "headysystems.com",
+      "description": "HeadyMC \u2014 Monte Carlo simulation, 1K+ scenario evaluation",
+      "upstreams": [
+        "heady-brain"
+      ],
+      "health_endpoints": [
+        "http://heady-mc:3320/health",
+        "http://heady-mc:3320/health/live",
+        "http://heady-mc:3320/health/ready",
+        "http://heady-mc:3320/health/startup",
+        "http://heady-mc:3320/health/details"
+      ]
+    },
+    {
+      "id": "heady-circuit-breaker",
+      "port": 3321,
+      "domain": "headysystems.com",
+      "description": "Circuit breaker service \u2014 flow, pause, and probe recovery state machine",
+      "upstreams": [],
+      "health_endpoints": [
+        "http://heady-circuit-breaker:3321/health",
+        "http://heady-circuit-breaker:3321/health/live",
+        "http://heady-circuit-breaker:3321/health/ready",
+        "http://heady-circuit-breaker:3321/health/startup",
+        "http://heady-circuit-breaker:3321/health/details"
+      ]
+    },
+    {
+      "id": "heady-saga",
+      "port": 3322,
+      "domain": "headysystems.com",
+      "description": "Saga orchestrator \u2014 distributed transactions with compensating txns",
+      "upstreams": [
+        "heady-event-store",
+        "heady-cqrs"
+      ],
+      "health_endpoints": [
+        "http://heady-saga:3322/health",
+        "http://heady-saga:3322/health/live",
+        "http://heady-saga:3322/health/ready",
+        "http://heady-saga:3322/health/startup",
+        "http://heady-saga:3322/health/details"
+      ]
+    },
+    {
+      "id": "heady-bulkhead",
+      "port": 3323,
+      "domain": "headysystems.com",
+      "description": "Bulkhead isolation \u2014 resource pool partitioning, Fibonacci-snapped",
+      "upstreams": [],
+      "health_endpoints": [
+        "http://heady-bulkhead:3323/health",
+        "http://heady-bulkhead:3323/health/live",
+        "http://heady-bulkhead:3323/health/ready",
+        "http://heady-bulkhead:3323/health/startup",
+        "http://heady-bulkhead:3323/health/details"
+      ]
+    },
+    {
+      "id": "heady-event-store",
+      "port": 3324,
+      "domain": "headysystems.com",
+      "description": "Event store \u2014 immutable event sourcing, time-travel debug replay",
+      "upstreams": [],
+      "health_endpoints": [
+        "http://heady-event-store:3324/health",
+        "http://heady-event-store:3324/health/live",
+        "http://heady-event-store:3324/health/ready",
+        "http://heady-event-store:3324/health/startup",
+        "http://heady-event-store:3324/health/details"
+      ]
+    },
+    {
+      "id": "heady-cqrs",
+      "port": 3325,
+      "domain": "headysystems.com",
+      "description": "CQRS bus \u2014 command/query separation, read/write path optimization",
+      "upstreams": [
+        "heady-event-store"
+      ],
+      "health_endpoints": [
+        "http://heady-cqrs:3325/health",
+        "http://heady-cqrs:3325/health/live",
+        "http://heady-cqrs:3325/health/ready",
+        "http://heady-cqrs:3325/health/startup",
+        "http://heady-cqrs:3325/health/details"
+      ]
+    },
+    {
+      "id": "heady-self-healing",
+      "port": 3326,
+      "domain": "headysystems.com",
+      "description": "Self-healing mesh \u2014 auto-discovery, register, recovery from partition",
+      "upstreams": [],
+      "health_endpoints": [
+        "http://heady-self-healing:3326/health",
+        "http://heady-self-healing:3326/health/live",
+        "http://heady-self-healing:3326/health/ready",
+        "http://heady-self-healing:3326/health/startup",
+        "http://heady-self-healing:3326/health/details"
+      ]
+    },
+    {
+      "id": "heady-auto-tuner",
+      "port": 3327,
+      "domain": "headysystems.com",
+      "description": "Auto-tuner \u2014 runtime \u03c6-scaling of concurrency, timeout, batch size",
+      "upstreams": [
+        "heady-observability"
+      ],
+      "health_endpoints": [
+        "http://heady-auto-tuner:3327/health",
+        "http://heady-auto-tuner:3327/health/live",
+        "http://heady-auto-tuner:3327/health/ready",
+        "http://heady-auto-tuner:3327/health/startup",
+        "http://heady-auto-tuner:3327/health/details"
+      ]
+    },
+    {
+      "id": "heady-pool-router",
+      "port": 3328,
+      "domain": "headysystems.com",
+      "description": "Concurrent pool router \u2014 Fibonacci-ratio allocation across active, shared, buffer, and reserve execution lanes",
+      "upstreams": [
+        "heady-vector-memory"
+      ],
+      "health_endpoints": [
+        "http://heady-pool-router:3328/health",
+        "http://heady-pool-router:3328/health/live",
+        "http://heady-pool-router:3328/health/ready",
+        "http://heady-pool-router:3328/health/startup",
+        "http://heady-pool-router:3328/health/details"
+      ]
+    },
+    {
+      "id": "heady-bee-factory",
+      "port": 3329,
+      "domain": "headybee.co",
+      "description": "Bee factory \u2014 spawn/manage/retire 10,000 concurrent bees, 89 types",
+      "upstreams": [
+        "heady-hive"
+      ],
+      "health_endpoints": [
+        "http://heady-bee-factory:3329/health",
+        "http://heady-bee-factory:3329/health/live",
+        "http://heady-bee-factory:3329/health/ready",
+        "http://heady-bee-factory:3329/health/startup",
+        "http://heady-bee-factory:3329/health/details"
+      ]
+    },
+    {
+      "id": "heady-swarm-coordinator",
+      "port": 3330,
+      "domain": "headybee.co",
+      "description": "Swarm coordinator \u2014 cross-swarm messaging, < 10ms latency target",
+      "upstreams": [
+        "heady-hive"
+      ],
+      "health_endpoints": [
+        "http://heady-swarm-coordinator:3330/health",
+        "http://heady-swarm-coordinator:3330/health/live",
+        "http://heady-swarm-coordinator:3330/health/ready",
+        "http://heady-swarm-coordinator:3330/health/startup",
+        "http://heady-swarm-coordinator:3330/health/details"
+      ]
+    },
+    {
+      "id": "heady-seventeen-swarm",
+      "port": 3331,
+      "domain": "headybee.co",
+      "description": "17-swarm orchestrator \u2014 golden-angle ring topology, CSL gates",
+      "upstreams": [
+        "heady-swarm-coordinator",
+        "heady-bee-factory"
+      ],
+      "health_endpoints": [
+        "http://heady-seventeen-swarm:3331/health",
+        "http://heady-seventeen-swarm:3331/health/live",
+        "http://heady-seventeen-swarm:3331/health/ready",
+        "http://heady-seventeen-swarm:3331/health/startup",
+        "http://heady-seventeen-swarm:3331/health/details"
+      ]
+    },
+    {
+      "id": "heady-pipeline-core",
+      "port": 3332,
+      "domain": "headysystems.com",
+      "description": "Pipeline core \u2014 21-stage HCFullPipeline v4.0, phi-scaled timeouts",
+      "upstreams": [
+        "heady-manager",
+        "heady-brain"
+      ],
+      "health_endpoints": [
+        "http://heady-pipeline-core:3332/health",
+        "http://heady-pipeline-core:3332/health/live",
+        "http://heady-pipeline-core:3332/health/ready",
+        "http://heady-pipeline-core:3332/health/startup",
+        "http://heady-pipeline-core:3332/health/details"
+      ]
+    },
+    {
+      "id": "heady-csl-judge",
+      "port": 3333,
+      "domain": "headysystems.com",
+      "description": "CSL judge/scorer \u2014 semantic gate evaluation, ternary logic, receipts",
+      "upstreams": [
+        "heady-vector-memory"
+      ],
+      "health_endpoints": [
+        "http://heady-csl-judge:3333/health",
+        "http://heady-csl-judge:3333/health/live",
+        "http://heady-csl-judge:3333/health/ready",
+        "http://heady-csl-judge:3333/health/startup",
+        "http://heady-csl-judge:3333/health/details"
+      ]
+    },
+    {
+      "id": "heady-auto-success",
+      "port": 3334,
+      "domain": "headysystems.com",
+      "description": "Auto-Success Engine \u2014 \u03c6\u2077-cycle (29,034ms) background task orchestration",
+      "upstreams": [
+        "heady-manager"
+      ],
+      "health_endpoints": [
+        "http://heady-auto-success:3334/health",
+        "http://heady-auto-success:3334/health/live",
+        "http://heady-auto-success:3334/health/ready",
+        "http://heady-auto-success:3334/health/startup",
+        "http://heady-auto-success:3334/health/details"
+      ]
+    },
+    {
+      "id": "heady-hallucination-watchdog",
+      "port": 3335,
+      "domain": "headysystems.com",
+      "description": "Hallucination detection watchdog \u2014 real-time output quality monitoring",
+      "upstreams": [
+        "heady-inference-gateway"
+      ],
+      "health_endpoints": [
+        "http://heady-hallucination-watchdog:3335/health",
+        "http://heady-hallucination-watchdog:3335/health/live",
+        "http://heady-hallucination-watchdog:3335/health/ready",
+        "http://heady-hallucination-watchdog:3335/health/startup",
+        "http://heady-hallucination-watchdog:3335/health/details"
+      ]
+    },
+    {
+      "id": "heady-evolution-engine",
+      "port": 3336,
+      "domain": "headysystems.com",
+      "description": "Evolution engine \u2014 continuous learning, pattern database updates",
+      "upstreams": [
+        "heady-vector-memory",
+        "heady-event-store"
+      ],
+      "health_endpoints": [
+        "http://heady-evolution-engine:3336/health",
+        "http://heady-evolution-engine:3336/health/live",
+        "http://heady-evolution-engine:3336/health/ready",
+        "http://heady-evolution-engine:3336/health/startup",
+        "http://heady-evolution-engine:3336/health/details"
+      ]
+    },
+    {
+      "id": "heady-budget-tracker",
+      "port": 3337,
+      "domain": "headysystems.com",
+      "description": "Budget tracker \u2014 token/cost tracking per bee, swarm, pipeline stage",
+      "upstreams": [],
+      "health_endpoints": [
+        "http://heady-budget-tracker:3337/health",
+        "http://heady-budget-tracker:3337/health/live",
+        "http://heady-budget-tracker:3337/health/ready",
+        "http://heady-budget-tracker:3337/health/startup",
+        "http://heady-budget-tracker:3337/health/details"
+      ]
+    },
+    {
+      "id": "heady-receipt-signer",
+      "port": 3338,
+      "domain": "headysystems.com",
+      "description": "Receipt signer \u2014 Ed25519 cryptographic audit trail for every action",
+      "upstreams": [],
+      "health_endpoints": [
+        "http://heady-receipt-signer:3338/health",
+        "http://heady-receipt-signer:3338/health/live",
+        "http://heady-receipt-signer:3338/health/ready",
+        "http://heady-receipt-signer:3338/health/startup",
+        "http://heady-receipt-signer:3338/health/details"
+      ]
+    },
+    {
+      "id": "heady-persona-router",
+      "port": 3339,
+      "domain": "headyme.com",
+      "description": "Persona router \u2014 10 animal archetypes, CSL empathic adaptation",
+      "upstreams": [
+        "heady-brain",
+        "heady-soul"
+      ],
+      "health_endpoints": [
+        "http://heady-persona-router:3339/health",
+        "http://heady-persona-router:3339/health/live",
+        "http://heady-persona-router:3339/health/ready",
+        "http://heady-persona-router:3339/health/startup",
+        "http://heady-persona-router:3339/health/details"
+      ]
+    },
+    {
+      "id": "heady-observability",
+      "port": 3340,
+      "domain": "headysystems.com",
+      "description": "Observability kernel \u2014 self-awareness telemetry, confidence monitoring",
+      "upstreams": [],
+      "health_endpoints": [
+        "http://heady-observability:3340/health",
+        "http://heady-observability:3340/health/live",
+        "http://heady-observability:3340/health/ready",
+        "http://heady-observability:3340/health/startup",
+        "http://heady-observability:3340/health/details"
+      ]
+    },
+    {
+      "id": "heady-telemetry",
+      "port": 3341,
+      "domain": "headysystems.com",
+      "description": "Telemetry aggregator \u2014 OTLP collector, Prometheus scrape, Grafana feed",
+      "upstreams": [
+        "heady-observability"
+      ],
+      "health_endpoints": [
+        "http://heady-telemetry:3341/health",
+        "http://heady-telemetry:3341/health/live",
+        "http://heady-telemetry:3341/health/ready",
+        "http://heady-telemetry:3341/health/startup",
+        "http://heady-telemetry:3341/health/details"
+      ]
+    },
+    {
+      "id": "heady-drupal-proxy",
+      "port": 3342,
+      "domain": "headyconnection.org",
+      "description": "Drupal reverse proxy \u2014 headyconnection.org content delivery layer",
+      "upstreams": [
+        "heady-drupal",
+        "heady-auth"
+      ],
+      "health_endpoints": [
+        "http://heady-drupal-proxy:3342/health",
+        "http://heady-drupal-proxy:3342/health/live",
+        "http://heady-drupal-proxy:3342/health/ready",
+        "http://heady-drupal-proxy:3342/health/startup",
+        "http://heady-drupal-proxy:3342/health/details"
+      ]
+    },
+    {
+      "id": "heady-cf-worker",
+      "port": 3343,
+      "domain": "headysystems.com",
+      "description": "Cloudflare Worker bridge \u2014 edge KV, Durable Objects, D1 integration",
+      "upstreams": [],
+      "health_endpoints": [
+        "http://heady-cf-worker:3343/health",
+        "http://heady-cf-worker:3343/health/live",
+        "http://heady-cf-worker:3343/health/ready",
+        "http://heady-cf-worker:3343/health/startup",
+        "http://heady-cf-worker:3343/health/details"
+      ]
+    },
+    {
+      "id": "heady-federation",
+      "port": 3344,
+      "domain": "heady.io",
+      "description": "Module federation \u2014 micro-frontend composition, versioned contracts",
+      "upstreams": [],
+      "health_endpoints": [
+        "http://heady-federation:3344/health",
+        "http://heady-federation:3344/health/live",
+        "http://heady-federation:3344/health/ready",
+        "http://heady-federation:3344/health/startup",
+        "http://heady-federation:3344/health/details"
+      ]
+    },
+    {
+      "id": "heady-snapshot",
+      "port": 3345,
+      "domain": "headysystems.com",
+      "description": "Snapshot service \u2014 point-in-time state capture, time-travel restore",
+      "upstreams": [
+        "heady-event-store"
+      ],
+      "health_endpoints": [
+        "http://heady-snapshot:3345/health",
+        "http://heady-snapshot:3345/health/live",
+        "http://heady-snapshot:3345/health/ready",
+        "http://heady-snapshot:3345/health/startup",
+        "http://heady-snapshot:3345/health/details"
+      ]
+    },
+    {
+      "id": "heady-sandbox",
+      "port": 3346,
+      "domain": "heady.io",
+      "description": "Sandbox service \u2014 isolated execution environment for code evaluation",
+      "upstreams": [],
+      "health_endpoints": [
+        "http://heady-sandbox:3346/health",
+        "http://heady-sandbox:3346/health/live",
+        "http://heady-sandbox:3346/health/ready",
+        "http://heady-sandbox:3346/health/startup",
+        "http://heady-sandbox:3346/health/details"
+      ]
+    },
+    {
+      "id": "heady-trader",
+      "port": 3347,
+      "domain": "headyme.com",
+      "description": "Heady Trader \u2014 autonomous trading intelligence, phi-scaled market safeguards",
+      "upstreams": [
+        "heady-brain",
+        "heady-mc"
+      ],
+      "health_endpoints": [
+        "http://heady-trader:3347/health",
+        "http://heady-trader:3347/health/live",
+        "http://heady-trader:3347/health/ready",
+        "http://heady-trader:3347/health/startup",
+        "http://heady-trader:3347/health/details"
+      ]
+    },
+    {
+      "id": "heady-ableton",
+      "port": 3348,
+      "domain": "headyme.com",
+      "description": "Ableton edge \u2014 Cloud MIDI sequencer, SysEx edge node integration",
+      "upstreams": [
+        "heady-brain"
+      ],
+      "health_endpoints": [
+        "http://heady-ableton:3348/health",
+        "http://heady-ableton:3348/health/live",
+        "http://heady-ableton:3348/health/ready",
+        "http://heady-ableton:3348/health/startup",
+        "http://heady-ableton:3348/health/details"
+      ]
+    },
+    {
+      "id": "heady-lens",
+      "port": 3349,
+      "domain": "headylens.ai",
+      "description": "HeadyLens \u2014 AR overlay intelligence, real-time visual context",
+      "upstreams": [
+        "heady-brain",
+        "heady-inference-gateway"
+      ],
+      "health_endpoints": [
+        "http://heady-lens:3349/health",
+        "http://heady-lens:3349/health/live",
+        "http://heady-lens:3349/health/ready",
+        "http://heady-lens:3349/health/startup",
+        "http://heady-lens:3349/health/details"
+      ]
+    },
+    {
+      "id": "heady-cache",
+      "port": 3350,
+      "domain": "headysystems.com",
+      "description": "Cache service \u2014 \u03c6\u2078-TTL distributed cache, CSL-keyed invalidation",
+      "upstreams": [],
+      "health_endpoints": [
+        "http://heady-cache:3350/health",
+        "http://heady-cache:3350/health/live",
+        "http://heady-cache:3350/health/ready",
+        "http://heady-cache:3350/health/startup",
+        "http://heady-cache:3350/health/details"
+      ]
+    }
+  ]
+}

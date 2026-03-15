@@ -1027,10 +1027,10 @@
       "status": "active"
     },
     {
-      "id": "render-blueprint",
-      "name": "Render Blueprint",
+      "id": "cloudrun-deployment",
+      "name": "Cloud Run Deployment",
       "type": "iac",
-      "sourceOfTruth": "render.yaml",
+      "sourceOfTruth": "Dockerfile",
       "status": "active"
     },
     {

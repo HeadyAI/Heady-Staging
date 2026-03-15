@@ -69,7 +69,6 @@ function loadLockState() {
       protectedPaths: [
         'configs/',
         '.env',
-        'render.yaml',
         'docker-compose.yml',
         'heady-manager.js',
         'mcp-servers/',
@@ -106,7 +105,6 @@ function loadOwners() {
         { pattern: 'mcp-servers/*', owners: ['erich'], approval: 'required' },
         { pattern: 'src/*', owners: ['erich'], approval: 'required' },
         { pattern: 'scripts/*', owners: ['erich'], approval: 'required', protected: true },
-        { pattern: 'render.yaml', owners: ['erich'], approval: 'required', protected: true },
         { pattern: 'docs/*', owners: ['erich'], approval: 'review' },
         { pattern: 'frontend/*', owners: ['erich'], approval: 'review' },
         { pattern: 'public/*', owners: ['erich'], approval: 'review' },

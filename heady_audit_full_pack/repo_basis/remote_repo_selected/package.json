@@ -1,0 +1,58 @@
+{
+  "name": "heady-liquid-latent-os",
+  "version": "4.0.0",
+  "private": true,
+  "bin": {
+    "heady": "./bin/heady-cli.js"
+  },
+  "packageManager": "pnpm@10.6.0",
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "scripts": {
+    "build": "turbo run build",
+    "build:production": "NODE_ENV=production turbo run build:production",
+    "dev": "turbo run dev --parallel",
+    "lint": "turbo run lint",
+    "test": "turbo run test",
+    "typecheck": "turbo run typecheck",
+    "clean": "turbo run clean",
+    "predeploy": "node ./scripts/predeploy-check.mjs",
+    "smoke": "node ./scripts/smoke-test.mjs",
+    "validate:no-localhost": "node ./scripts/validate-no-localhost.mjs",
+    "generate:service-map": "node ./scripts/generate-service-manifests.mjs",
+    "test:shared-config": "node --test tests/shared-config.node.test.mjs",
+    "rebuild:bundle": "python3 scripts/rebuild_sacred_genesis.py",
+    "rebuild:zip": "python3 scripts/make_zip.py",
+    "rebuild:audit": "node scripts/audit-naming-conventions.js",
+    "rebuild:audit:strict": "node --experimental-vm-modules scripts/naming-convention-audit.mjs --strict",
+    "rebuild:all": "npm run rebuild:audit && npm run rebuild:bundle",
+    "rebuild:liquid-latent": "node scripts/autonomous/rebuild-liquid-latent-os.js",
+    "deploy:sites": "bash ../scripts/deploy-all-sites.sh",
+    "deploy:cloud-run": "bash ../scripts/deploy-cloud-run.sh",
+    "deploy:workers": "turbo run deploy --filter='./workers/*'",
+    "deploy:all": "npm run build:production && npm run deploy:cloud-run && npm run deploy:workers && npm run deploy:sites",
+    "health:check": "bash ../scripts/health-check-all.sh",
+    "start:production": "pm2 start ecosystem.config.cjs --env production",
+    "stop:production": "pm2 stop ecosystem.config.cjs",
+    "logs:production": "pm2 logs --lines 100",
+    "docker:up": "docker compose up -d",
+    "docker:down": "docker compose down",
+    "docker:build": "docker compose build",
+    "db:migrate": "node scripts/migrate.js",
+    "db:seed": "psql $DATABASE_URL -f scripts/init-db.sql"
+  },
+  "devDependencies": {
+    "@types/node": "^22.13.9",
+    "tsx": "^4.19.3",
+    "turbo": "^2.4.4",
+    "typescript": "^5.8.2",
+    "vitest": "^3.0.8",
+    "yaml": "^2.7.0"
+  },
+  "dependencies": {
+    "fastify": "^5.2.1",
+    "pino": "^9.6.0",
+    "zod": "^3.24.2"
+  }
+}

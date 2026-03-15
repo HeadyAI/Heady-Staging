@@ -29,7 +29,7 @@
  *   - headyjules-code: AI code generation, analysis, refactoring, debugging
  *   - builder:     Build, deploy, test, lint operations
  *   - researcher:  News ingestion, concept extraction, trend analysis
- *   - deployer:    Render deploy, docker, cloud bridge, env sync
+ *   - deployer:    Cloud Run deploy, docker, cloud bridge, env sync
  *   - auditor:     Code audit, security scan, brand check, dependency audit
  *   - observer:    Health checks, metrics, alerts, readiness probes
  */
@@ -198,7 +198,7 @@ class ResearcherAgent extends BaseAgent {
 class DeployerAgent extends BaseAgent {
   constructor() {
     super("deployer", [
-      "render-deploy", "docker-build", "cloud-bridge", "env-sync",
+      "cloudrun-deploy", "docker-build", "cloud-bridge", "env-sync",
       "k8s-deploy", "helm-chart", "kustomize-overlay", "pod-scale",
       "service-mesh", "ingress-config", "load-balancer", "auto-scale",
       "terraform-plan", "terraform-apply", "pulumi-stack", "cloudformation",

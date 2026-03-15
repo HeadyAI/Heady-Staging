@@ -84,8 +84,6 @@ const FILE_TYPES = {
   dockerfile: { prefix: '#', suffix: '' },
   'docker-compose.yml': { prefix: '#', suffix: '' },
   'docker-compose.yaml': { prefix: '#', suffix: '' },
-  'render.yml': { prefix: '#', suffix: '' },
-  'render.yaml': { prefix: '#', suffix: '' },
   'gitignore': { prefix: '#', suffix: '' },
   'gitattributes': { prefix: '#', suffix: '' },
   'requirements.txt': { prefix: '#', suffix: '' },

@@ -102,7 +102,6 @@ jobs:
               - 'docs/**'
               - '*.md'
             infrastructure:
-              - 'render.yaml'
               - 'docker-compose.yml'
               - 'Dockerfile'
               - '.github/workflows/**'
@@ -299,7 +298,7 @@ jobs:
           echo "🔍 Checking for api.headysystems.com references in production configs..."
           
           # Define production-bound files
-          PROD_FILES="render.yaml docker-compose.yml Dockerfile"
+          PROD_FILES="docker-compose.yml Dockerfile"
           
           for file in $PROD_FILES; do
             if [ -f "$file" ]; then

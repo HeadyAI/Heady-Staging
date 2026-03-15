@@ -100,7 +100,7 @@ npm start
 curl localhost:3300/api/health
 ```
 
-Cloud deploy: Connect to [Render.com](https://render.com) — the included `render.yaml` provisions everything automatically.
+Cloud deploy: Deploy to GCP Cloud Run via `npm run deploy:cloud-run` or use the included GitHub Actions workflows.
 
 ---
 >>>>>>> 233933e0e0de33ba336efea820f0aba57ae04586
@@ -336,7 +336,7 @@ pip install -r requirements.txt
 .\nexus_deploy.ps1       # Push to all remotes
 ```
 
-Render.com blueprint: `render.yaml`
+Cloud Run deploy: `npm run deploy:cloud-run`
 
 ---
 

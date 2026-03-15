@@ -1,0 +1,289 @@
+# ═══════════════════════════════════════════════════════════════════════════════
+# Heady™ CI/CD Pipeline — .github/workflows/ci-cd.yaml
+# ═══════════════════════════════════════════════════════════════════════════════
+#
+# Full pipeline: lint → test → security scan → build → deploy
+# Triggers: push to main, pull requests, manual dispatch
+#
+# © HeadySystems Inc.
+
+name: Heady™ CI/CD Pipeline
+
+on:
+  push:
+    branches: [main, production]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      deploy_target:
+        description: "Deploy target"
+        required: false
+        default: "cloud-run"
+        type: choice
+        options:
+          - cloud-run
+          - cloudflare
+          - huggingface
+          - all
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  NODE_VERSION: "22"
+  GCP_PROJECT: heady-production
+  GCP_REGION: us-central1
+  CLOUD_RUN_SERVICE: heady-manager
+  REGISTRY: us-central1-docker.pkg.dev
+
+jobs:
+  # ─── Lint & Test ──────────────────────────────────────────────────────────
+
+  lint-test:
+    name: Lint & Test
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "npm"
+
+      - run: npm ci
+
+      - name: Lint
+        run: npm run lint --if-present
+
+      - name: Test
+        run: npm test -- --coverage --forceExit
+        env:
+          NODE_ENV: test
+
+      - name: Upload coverage
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage
+          path: coverage/
+
+  # ─── Security Scan ────────────────────────────────────────────────────────
+
+  security:
+    name: Security Scan
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    needs: lint-test
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: TruffleHog — Secret Detection
+        uses: trufflesecurity/trufflehog@main
+        with:
+          extra_args: --only-verified
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "npm"
+
+      - run: npm ci
+
+      - name: npm audit
+        run: npm audit --audit-level=high
+        continue-on-error: true
+
+      - name: Generate SBOM (CycloneDX)
+        run: npx @cyclonedx/cyclonedx-npm --output-file sbom.json
+        continue-on-error: true
+
+      - name: Upload SBOM
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: sbom
+          path: sbom.json
+
+  # ─── Build Docker Image ───────────────────────────────────────────────────
+
+  build:
+    name: Build & Push Image
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    needs: [lint-test, security]
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/production'
+
+    permissions:
+      contents: read
+      id-token: write
+
+    outputs:
+      image: ${{ steps.meta.outputs.tags }}
+      digest: ${{ steps.build-push.outputs.digest }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Authenticate to GCP
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ secrets.GCP_WIF_PROVIDER }}
+          service_account: ${{ secrets.GCP_SA_EMAIL }}
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Configure Docker for Artifact Registry
+        run: gcloud auth configure-docker ${{ env.GCP_REGION }}-docker.pkg.dev
+
+      - name: Docker metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.GCP_PROJECT }}/heady/${{ env.CLOUD_RUN_SERVICE }}
+          tags: |
+            type=sha,prefix=
+            type=raw,value=latest,enable={{is_default_branch}}
+
+      - name: Build and push
+        id: build-push
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          platforms: linux/amd64
+
+  # ─── Deploy to Cloud Run ──────────────────────────────────────────────────
+
+  deploy-cloud-run:
+    name: Deploy to Cloud Run
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    needs: build
+    if: |
+      (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/production') &&
+      (github.event.inputs.deploy_target == 'cloud-run' || github.event.inputs.deploy_target == 'all' || github.event.inputs.deploy_target == '')
+
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Authenticate to GCP
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ secrets.GCP_WIF_PROVIDER }}
+          service_account: ${{ secrets.GCP_SA_EMAIL }}
+
+      - name: Deploy to Cloud Run
+        uses: google-github-actions/deploy-cloudrun@v2
+        with:
+          service: ${{ env.CLOUD_RUN_SERVICE }}
+          region: ${{ env.GCP_REGION }}
+          image: ${{ needs.build.outputs.image }}
+          flags: |
+            --min-instances=1
+            --max-instances=8
+            --concurrency=34
+            --cpu=2
+            --memory=512Mi
+            --timeout=300
+            --cpu-boost
+            --session-affinity
+            --execution-environment=gen2
+
+      - name: Verify deployment
+        run: |
+          SERVICE_URL=$(gcloud run services describe ${{ env.CLOUD_RUN_SERVICE }} \
+            --region=${{ env.GCP_REGION }} \
+            --format='value(status.url)')
+          echo "Service URL: $SERVICE_URL"
+
+          # Health check
+          for i in 1 2 3 4 5; do
+            STATUS=$(curl -s -o /dev/null -w "%{http_code}" "$SERVICE_URL/health/live" || echo "000")
+            if [ "$STATUS" = "200" ]; then
+              echo "✅ Health check passed"
+              exit 0
+            fi
+            echo "⏳ Attempt $i: status=$STATUS, waiting..."
+            sleep 5
+          done
+          echo "❌ Health check failed after 5 attempts"
+          exit 1
+
+  # ─── Deploy Cloudflare Workers ────────────────────────────────────────────
+
+  deploy-cloudflare:
+    name: Deploy to Cloudflare
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    needs: lint-test
+    if: |
+      github.ref == 'refs/heads/main' &&
+      (github.event.inputs.deploy_target == 'cloudflare' || github.event.inputs.deploy_target == 'all')
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Deploy Edge Proxy
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          workingDirectory: src/edge
+          command: deploy --name heady-edge-proxy
+
+  # ─── Post-Deploy Domain Verification ──────────────────────────────────────
+
+  verify-domains:
+    name: Verify Domains
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    needs: [deploy-cloud-run]
+    if: always() && needs.deploy-cloud-run.result == 'success'
+
+    steps:
+      - name: Check domain connectivity
+        run: |
+          DOMAINS=(
+            "headyme.com"
+            "headysystems.com"
+            "headyconnection.org"
+            "headybuddy.org"
+            "headymcp.com"
+            "headyio.com"
+            "headybot.com"
+            "headyapi.com"
+            "heady-ai.com"
+          )
+
+          FAILED=0
+          for domain in "${DOMAINS[@]}"; do
+            STATUS=$(curl -s -o /dev/null -w "%{http_code}" -L "https://${domain}" --max-time 10 || echo "000")
+            if [ "$STATUS" = "200" ] || [ "$STATUS" = "301" ] || [ "$STATUS" = "302" ]; then
+              echo "✅ ${domain} — HTTP ${STATUS}"
+            else
+              echo "⚠️ ${domain} — HTTP ${STATUS}"
+              FAILED=$((FAILED + 1))
+            fi
+          done
+
+          if [ $FAILED -gt 0 ]; then
+            echo "::warning::${FAILED} domain(s) returned unexpected status"
+          fi

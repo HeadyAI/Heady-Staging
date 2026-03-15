@@ -559,24 +559,24 @@ discovery:
 # CLOUD DEPLOYMENTS
 # ═══════════════════════════════════════════════════════════════════════════════
 cloud:
-  render-me:
+  cloudrun-me:
     domain: me.heady.io
     alt_domains:
-      - headyme.onrender.com
+      - heady-manager-bf4q4zywhq-uc.a.run.app
     port: 443
     branding: "🌟 HeadyMe Cloud"
     
-  render-sys:
+  cloudrun-sys:
     domain: sys.heady.io
     alt_domains:
-      - headysystems.onrender.com
+      - heady-edge-gateway-bf4q4zywhq-uc.a.run.app
     port: 443
     branding: "💜 HeadySystems Cloud"
     
-  render-conn:
+  cloudrun-conn:
     domain: conn.heady.io
     alt_domains:
-      - headyconnection.onrender.com
+      - heady-onboarding-bf4q4zywhq-ue.a.run.app
     port: 443
     branding: "💛 HeadyConnection Cloud"
 

@@ -38,7 +38,7 @@
 │              Port 3301 • Express • Sacred Geometry           │
 ├─────────────────────────────────────────────────────────────┤
 │  Services: Brain | Conductor | Imagination | Monte Carlo    │
-│  Infra:    Docker | Cloudflare | Render | GitHub Actions    │
+│  Infra:    Docker | Cloudflare | Cloud Run | GitHub Actions  │
 │  Data:     PostgreSQL | Redis | Heady Registry JSON         │
 └─────────────────────────────────────────────────────────────┘
 ```
