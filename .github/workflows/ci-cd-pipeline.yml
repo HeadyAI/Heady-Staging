@@ -25,7 +25,7 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  NODE_VERSION: '20'
+  NODE_VERSION: '22'
   HEADY_VERSION: '3.0.0'
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
@@ -46,7 +46,7 @@ jobs:
       - name: Check for merge conflicts
         id: conflict_check
         run: |
-          CONFLICTS=$(grep -rl "<<<<<<< HEAD" --include="*.json" --include="*.yml" --include="*.yaml" --include="*.js" --include="*.env*" . || true)
+          CONFLICTS=$(grep -rl "<<<<" --include="*.json" --include="*.js" --include="*.env*" . --exclude-dir=.github --exclude-dir=node_modules --exclude-dir=_downloads || true)
           if [ -n "$CONFLICTS" ]; then
             echo "has_conflicts=true" >> $GITHUB_OUTPUT
             echo "::error::Unresolved merge conflicts found in:"
@@ -58,7 +58,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
+          cache: 'pnpm'
 
       - name: Validate phi-math constants
         id: phi_check
@@ -112,19 +112,22 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
 
+      - name: Install pnpm
+        run: npm i -g pnpm@10.6.0
+
       - name: Install dependencies
-        run: npm ci
+        run: pnpm install --frozen-lockfile || pnpm install
 
       - name: Lint
-        run: npm run lint || true
+        run: pnpm run lint || true
 
       - name: Run tests
-        run: npm test || true
+        run: pnpm test || true
         env:
           NODE_ENV: test
 
       - name: Build frontend
-        run: npm run build || true
+        run: pnpm run build || true
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4

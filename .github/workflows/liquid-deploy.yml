@@ -22,7 +22,7 @@ concurrency:
   cancel-in-progress: false   # Never cancel in-flight projections
 
 env:
-  NODE_VERSION: '20'
+  NODE_VERSION: '22'
   BOT_USER_NAME: heady-bot
   BOT_USER_EMAIL: bot@headyme.com
 

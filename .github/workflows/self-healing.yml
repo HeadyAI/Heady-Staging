@@ -28,7 +28,7 @@ concurrency:
   cancel-in-progress: true    # Cancel stale health check runs
 
 env:
-  NODE_VERSION: '20'
+  NODE_VERSION: '22'
   PRODUCTION_BASE: https://heady-production-uc.a.run.app
   # Per-domain health endpoints (Cloudflare edge)
   DOMAINS: >

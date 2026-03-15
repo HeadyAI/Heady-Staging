@@ -40,7 +40,7 @@ on:
           - production
 
 env:
-  NODE_VERSION: '20'
+  NODE_VERSION: '22'
   GCP_PROJECT: gen-lang-client-0920560496
   CF_ACCOUNT_ID: 8b1fa38f282c691423c6399247d53323
 

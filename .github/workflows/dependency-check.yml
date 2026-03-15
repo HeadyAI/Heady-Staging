@@ -38,7 +38,7 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  NODE_VERSION: '20'
+  NODE_VERSION: '22'
   # Approved license allowlist (SPDX identifiers)
   ALLOWED_LICENSES: "MIT,Apache-2.0,ISC,BSD-2-Clause,BSD-3-Clause,0BSD,Unlicense,CC0-1.0,BlueOak-1.0.0"
   # CVSS threshold for automatic issue creation
