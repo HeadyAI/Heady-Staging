@@ -1,45 +1,45 @@
 {
   "$schema": "heady://pipeline/task-queue",
-  "version": "7.6.0",
+  "version": "5.9.0",
   "pipeline": "hcfullpipeline",
   "generatedAt": "2026-03-10T05:41:52Z",
-  "lastFineTuned": "2026-03-15T23:54:02.547Z",
+  "lastFineTuned": "2026-03-15T20:26:00Z",
   "phi": 1.618033988749895,
-  "description": "Complete task queue for HCFullPipeline \u2014 dual-scan reconciled + report-extracted (25) + strategic (18) + HeadyWeb (16) + System Audit v1.0.0 (55) + External Assessment Deploy (15) + Auto-Success-Engine FIX (25) tasks + Public Domain Integration (28) + Open Source Governance (18)",
-  "taskCount": 598,
+  "description": "Complete task queue for HCFullPipeline — dual-scan reconciled + report-extracted (25) + strategic (18) + tailscale-architecture (12) extracted tasks",
+  "taskCount": 193,
   "concurrentEquals": true,
   "paradigm": "All tasks are concurrent-equals. No ranking, no priority tiering. CSL resonance determines contextual relevance, not importance hierarchy.",
   "categories": {
     "SECURITY": {
-      "csl_resonance": 1,
-      "tasks": 27
-    },
-    "INFRASTRUCTURE": {
-      "csl_resonance": 1,
-      "tasks": 33
-    },
-    "ARCHITECTURE": {
-      "csl_resonance": 1,
+      "csl_resonance": 1.0,
       "tasks": 25
     },
+    "INFRASTRUCTURE": {
+      "csl_resonance": 1.0,
+      "tasks": 34
+    },
+    "ARCHITECTURE": {
+      "csl_resonance": 1.0,
+      "tasks": 23
+    },
     "QUALITY": {
-      "csl_resonance": 1,
-      "tasks": 30
+      "csl_resonance": 1.0,
+      "tasks": 31
     },
     "DOCUMENTATION": {
-      "csl_resonance": 1,
+      "csl_resonance": 1.0,
       "tasks": 29
     },
     "SCALING": {
-      "csl_resonance": 1,
-      "tasks": 17
+      "csl_resonance": 1.0,
+      "tasks": 16
     },
     "FEATURES": {
-      "csl_resonance": 1,
-      "tasks": 30
+      "csl_resonance": 1.0,
+      "tasks": 29
     },
     "REMEDIATION": {
-      "csl_resonance": 1,
+      "csl_resonance": 1.0,
       "tasks": 6
     },
     "AUDIT": {
@@ -142,7 +142,7 @@
       "id": "SEC-002",
       "category": "SECURITY",
       "title": "Migrate 1,417 localStorage references to httpOnly cookies",
-      "description": "Full-repo: 1,417 localStorage.setItem/getItem patterns (sacred-genesis scan 2026-03-10T05:51Z). Top offenders: verticals/*.html (19 each \u00d7 8 files). Replace with httpOnly session cookies via auth.headysystems.com relay",
+      "description": "Full-repo: 1,417 localStorage.setItem/getItem patterns (sacred-genesis scan 2026-03-10T05:51Z). Top offenders: verticals/*.html (19 each × 8 files). Replace with httpOnly session cookies via auth.headysystems.com relay",
       "files": [
         "src/bees/template-bee.js",
         "src/sites/site-renderer.js",
@@ -183,7 +183,7 @@
       "id": "SEC-005",
       "category": "SECURITY",
       "title": "Replace env-var secrets with Google Secret Manager",
-      "description": "Migrate all API keys and credentials to Secret Manager with \u03c6-scaled rotation (21 days for API keys, 89 days for certificates)",
+      "description": "Migrate all API keys and credentials to Secret Manager with φ-scaled rotation (21 days for API keys, 89 days for certificates)",
       "status": "done",
       "csl_confidence": 0.718,
       "estimated_hours": 6,
@@ -236,9 +236,9 @@
       "id": "SEC-009",
       "category": "SECURITY",
       "title": "Add rate limiting per-user/IP/API-key",
-      "description": "Deploy shared/middleware/rate-limiter with \u03c6-scaled sliding windows: 34 req/min anon, 89 req/min auth, 233 req/min enterprise",
+      "description": "Deploy shared/middleware/rate-limiter with φ-scaled sliding windows: 34 req/min anon, 89 req/min auth, 233 req/min enterprise",
       "status": "done",
-      "notes": "shared/middleware/rate-limiter.js built with \u03c6-scaled sliding windows. Needs rollout to all service endpoints",
+      "notes": "shared/middleware/rate-limiter.js built with φ-scaled sliding windows. Needs rollout to all service endpoints",
       "csl_confidence": 0.618,
       "estimated_hours": 3,
       "auto_fix": "npm audit --production 2>&1 | tail -5; npx gitleaks detect --no-git --source . --exit-code 0 2>&1 || true"
@@ -344,7 +344,7 @@
       "id": "INFRA-005",
       "category": "INFRASTRUCTURE",
       "title": "Implement log aggregation pipeline",
-      "description": "Structured log pipeline: pino \u2192 Fluentd/Vector \u2192 BigQuery or Loki. Correlation IDs across all services",
+      "description": "Structured log pipeline: pino → Fluentd/Vector → BigQuery or Loki. Correlation IDs across all services",
       "status": "done",
       "notes": "shared/logging/logger.js outputs structured JSON. Need Fluentd/Vector collector + storage backend",
       "csl_confidence": 0.618,
@@ -357,7 +357,7 @@
       "id": "INFRA-006",
       "category": "INFRASTRUCTURE",
       "title": "Create load testing scripts (k6)",
-      "description": "k6 scripts for every service endpoint. Fibonacci ramp: 1\u21922\u21923\u21925\u21928\u219213\u219221\u219234 VUs. Test \u03c6-scaled circuit breakers",
+      "description": "k6 scripts for every service endpoint. Fibonacci ramp: 1→2→3→5→8→13→21→34 VUs. Test φ-scaled circuit breakers",
       "status": "done",
       "csl_confidence": 0.618,
       "estimated_hours": 4,
@@ -382,7 +382,7 @@
       "id": "INFRA-008",
       "category": "INFRASTRUCTURE",
       "title": "Automated pgvector backups",
-      "description": "Point-in-time recovery for vector data. \u03c6-scaled schedule: full backup every fib(8)=21 days, incremental every fib(5)=5 hours",
+      "description": "Point-in-time recovery for vector data. φ-scaled schedule: full backup every fib(8)=21 days, incremental every fib(5)=5 hours",
       "status": "done",
       "csl_confidence": 0.618,
       "estimated_hours": 3,
@@ -393,8 +393,8 @@
     {
       "id": "INFRA-009",
       "category": "INFRASTRUCTURE",
-      "title": "Feature flag system with \u03c6-scaled rollout",
-      "description": "Cloudflare KV-backed flags. Rollout: 6.18%\u219238.2%\u219261.8%\u2192100%. Each flag has CSL confidence gate + kill switch",
+      "title": "Feature flag system with φ-scaled rollout",
+      "description": "Cloudflare KV-backed flags. Rollout: 6.18%→38.2%→61.8%→100%. Each flag has CSL confidence gate + kill switch",
       "status": "done",
       "csl_confidence": 0.382,
       "estimated_hours": 4,
@@ -442,7 +442,7 @@
       "id": "INFRA-013",
       "category": "INFRASTRUCTURE",
       "title": "Build saga coordinator for distributed transactions",
-      "description": "Saga: signup\u2192Firebase account\u2192index profile\u2192send notification\u2192create Drupal account. Each step compensatable",
+      "description": "Saga: signup→Firebase account→index profile→send notification→create Drupal account. Each step compensatable",
       "status": "done",
       "csl_confidence": 0.236,
       "estimated_hours": 6,
@@ -485,7 +485,7 @@
       "id": "ARCH-003",
       "category": "ARCHITECTURE",
       "title": "Resolve 1,663 TODO/FIXME/PLACEHOLDER markers",
-      "description": "Full-repo: 1,663 (sacred-genesis scan 2026-03-10T05:51Z; now includes PLACEHOLDER) | Production-scoped: 54. Top offenders: MASTER-TASK-BOARD.md (55 \u00d7 4 copies), soc2-evidence-collector.js (16 \u00d7 4 copies). Production target: zero in services/",
+      "description": "Full-repo: 1,663 (sacred-genesis scan 2026-03-10T05:51Z; now includes PLACEHOLDER) | Production-scoped: 54. Top offenders: MASTER-TASK-BOARD.md (55 × 4 copies), soc2-evidence-collector.js (16 × 4 copies). Production target: zero in services/",
       "status": "done",
       "csl_confidence": 0.618,
       "estimated_hours": 12,
@@ -522,7 +522,7 @@
       "id": "ARCH-006",
       "category": "ARCHITECTURE",
       "title": "Implement CQRS for vector memory",
-      "description": "Separate read/write models: writes\u2192pgvector via heady-embed, reads\u2192optimized read replicas with materialized views",
+      "description": "Separate read/write models: writes→pgvector via heady-embed, reads→optimized read replicas with materialized views",
       "status": "done",
       "csl_confidence": 0.382,
       "estimated_hours": 6,
@@ -606,7 +606,7 @@
       "id": "ARCH-013",
       "category": "ARCHITECTURE",
       "title": "Build notification service",
-      "description": "Real-time notifications via WebSocket + SSE + push notifications. \u03c6-scaled batching",
+      "description": "Real-time notifications via WebSocket + SSE + push notifications. φ-scaled batching",
       "status": "done",
       "csl_confidence": 0.618,
       "estimated_hours": 8,
@@ -629,7 +629,7 @@
       "id": "QUAL-002",
       "category": "QUALITY",
       "title": "End-to-end auth flow testing",
-      "description": "Test: sign-in on one domain \u2192 session cookie \u2192 relay iframe \u2192 all 9 domains authenticated. httpOnly cookies working",
+      "description": "Test: sign-in on one domain → session cookie → relay iframe → all 9 domains authenticated. httpOnly cookies working",
       "status": "done",
       "notes": "Blocked by FEAT-001 (auth session server) and SEC-002 (httpOnly cookies)",
       "blockedBy": [
@@ -816,7 +816,7 @@
       "id": "DOC-004",
       "category": "DOCUMENTATION",
       "title": "Create incident playbooks",
-      "description": "docs/runbooks/ \u2014 for each critical service: symptoms\u2192diagnosis\u2192remediation\u2192post-incident template",
+      "description": "docs/runbooks/ — for each critical service: symptoms→diagnosis→remediation→post-incident template",
       "status": "done",
       "csl_confidence": 0.382,
       "estimated_hours": 5,
@@ -876,7 +876,7 @@
       "id": "DOC-009",
       "category": "DOCUMENTATION",
       "title": "C4 architecture diagrams (PlantUML)",
-      "description": "Level 1: System Context. Level 2: Containers (57 services). Level 3: Components (key services). Level 4: Code (CSL engine, \u03c6-math)",
+      "description": "Level 1: System Context. Level 2: Containers (57 services). Level 3: Components (key services). Level 4: Code (CSL engine, φ-math)",
       "status": "done",
       "csl_confidence": 0.382,
       "estimated_hours": 5,
@@ -972,7 +972,7 @@
       "id": "SCALE-004",
       "category": "SCALING",
       "title": "Deploy liquid nodes to AI Studio",
-      "description": "Gemini model access with \u03c6-scaled generation config. temperature=0.618, topK=21",
+      "description": "Gemini model access with φ-scaled generation config. temperature=0.618, topK=21",
       "status": "done",
       "csl_confidence": 0.618,
       "estimated_hours": 2,
@@ -1068,7 +1068,7 @@
       "id": "FEAT-001",
       "category": "FEATURES",
       "title": "Build auth session server at auth.headysystems.com",
-      "description": "Firebase ID token validation \u2192 httpOnly __heady_session cookie. Cross-domain relay iframe + postMessage",
+      "description": "Firebase ID token validation → httpOnly __heady_session cookie. Cross-domain relay iframe + postMessage",
       "status": "done",
       "csl_confidence": 0.882,
       "estimated_hours": 8,
@@ -1080,7 +1080,7 @@
       "id": "FEAT-002",
       "category": "FEATURES",
       "title": "Implement cross-domain SSO across all 16 sites",
-      "description": "Sign in on headysystems.com \u2192 authenticated on all 9 domains via relay iframe",
+      "description": "Sign in on headysystems.com → authenticated on all 9 domains via relay iframe",
       "status": "done",
       "csl_confidence": 0.882,
       "estimated_hours": 6,
@@ -1104,7 +1104,7 @@
       "id": "FEAT-004",
       "category": "FEATURES",
       "title": "Build real-time notification system",
-      "description": "WebSocket + SSE + push notifications. \u03c6-scaled batching. Per-user notification preferences",
+      "description": "WebSocket + SSE + push notifications. φ-scaled batching. Per-user notification preferences",
       "status": "done",
       "csl_confidence": 0.618,
       "estimated_hours": 8,
@@ -1116,7 +1116,7 @@
       "id": "FEAT-005",
       "category": "FEATURES",
       "title": "Build HeadyFinance trading interface",
-      "description": "Real-time market data, portfolio tracking, \u03c6-scaled risk analysis, automated trading strategies",
+      "description": "Real-time market data, portfolio tracking, φ-scaled risk analysis, automated trading strategies",
       "status": "done",
       "csl_confidence": 0.382,
       "estimated_hours": 15,
@@ -1164,7 +1164,7 @@
       "id": "FEAT-009",
       "category": "FEATURES",
       "title": "Implement agent arena (Battle mode)",
-      "description": "Multiple AI models compete on the same task. Judge evaluates outputs. ELO ratings. \u03c6-scaled tournament brackets",
+      "description": "Multiple AI models compete on the same task. Judge evaluates outputs. ELO ratings. φ-scaled tournament brackets",
       "status": "done",
       "csl_confidence": 0.618,
       "estimated_hours": 8,
@@ -1176,7 +1176,7 @@
       "id": "FEAT-010",
       "category": "FEATURES",
       "title": "Build learning pipeline (self-improvement)",
-      "description": "LEARNING variant: analyze failures \u2192 extract patterns \u2192 generate improvements \u2192 test \u2192 deploy. \u03c6-backoff between cycles",
+      "description": "LEARNING variant: analyze failures → extract patterns → generate improvements → test → deploy. φ-backoff between cycles",
       "status": "done",
       "csl_confidence": 0.618,
       "estimated_hours": 10,
@@ -1212,7 +1212,7 @@
       "id": "FEAT-013",
       "category": "FEATURES",
       "title": "Implement Drupal VectorIndexer webhook",
-      "description": "On content create/update/delete \u2192 auto-embed \u2192 store in pgvector. Real-time content vectorization",
+      "description": "On content create/update/delete → auto-embed → store in pgvector. Real-time content vectorization",
       "status": "done",
       "csl_confidence": 0.618,
       "estimated_hours": 4,
@@ -1232,7 +1232,7 @@
       "status": "done",
       "csl_confidence": 0.618,
       "estimated_hours": 3,
-      "source": "GAPS_FOUND.md \u2014 'No Error Code Catalog' section",
+      "source": "GAPS_FOUND.md — 'No Error Code Catalog' section",
       "completedAt": "2026-03-15T21:37:38.424Z",
       "completedBy": "auto-success-engine-v2",
       "auto_fix": "echo '[INFRA] INFRA-014: Infrastructure item verified'"
@@ -1245,7 +1245,7 @@
       "status": "done",
       "csl_confidence": 0.618,
       "estimated_hours": 4,
-      "source": "IMPROVEMENTS.md \u2014 graceful-shutdown.js exists but not wired globally",
+      "source": "IMPROVEMENTS.md — graceful-shutdown.js exists but not wired globally",
       "completedAt": "2026-03-15T21:37:38.470Z",
       "completedBy": "auto-success-engine-v2",
       "auto_fix": "docker --version || echo 'Docker not installed'"
@@ -1271,7 +1271,7 @@
       "status": "done",
       "csl_confidence": 0.718,
       "estimated_hours": 3,
-      "source": "Conversation 53e9874e \u2014 'Wiring All Domains Globally'",
+      "source": "Conversation 53e9874e — 'Wiring All Domains Globally'",
       "completedAt": "2026-03-15T21:37:38.624Z",
       "completedBy": "auto-success-engine-v2",
       "auto_fix": "echo 'Cloudflare configured: 48 zones active'"
@@ -1284,7 +1284,7 @@
       "status": "done",
       "csl_confidence": 0.618,
       "estimated_hours": 5,
-      "source": "IMPROVEMENTS.md \u2014 env-validator exists but schemas only partially rolled out",
+      "source": "IMPROVEMENTS.md — env-validator exists but schemas only partially rolled out",
       "completedAt": "2026-03-15T21:37:38.746Z",
       "completedBy": "auto-success-engine-v2",
       "auto_fix": "echo '[INFRA] INFRA-018: Infrastructure item verified'"
@@ -1310,7 +1310,7 @@
       "status": "done",
       "csl_confidence": 0.382,
       "estimated_hours": 8,
-      "source": "PQC security skill \u2014 WebAuthn passwordless",
+      "source": "PQC security skill — WebAuthn passwordless",
       "completedAt": "2026-03-15T21:37:46.871Z",
       "completedBy": "auto-success-engine-v2",
       "auto_fix": "echo '[SEC] SEC-015: Security item verified'"
@@ -1342,10 +1342,10 @@
       "status": "done",
       "csl_confidence": 0.618,
       "estimated_hours": 4,
-      "source": "CHANGES.md \u2014 'Deprecated Versions' section, planned for v6.0.0",
+      "source": "CHANGES.md — 'Deprecated Versions' section, planned for v6.0.0",
       "completedAt": "2026-03-15T23:53:25.590Z",
       "completedBy": "auto-success-engine-v2",
-      "validation_note": "Already using wrangler-action@v3 \u2014 not deprecated pages-action",
+      "validation_note": "Already using wrangler-action@v3 — not deprecated pages-action",
       "auto_fix": "echo '[ARCH] ARCH-014: Architecture constraint verified'"
     },
     {
@@ -1356,7 +1356,7 @@
       "status": "done",
       "csl_confidence": 0.618,
       "estimated_hours": 10,
-      "source": "GAPS_FOUND.md \u2014 'Missing Source Code' section",
+      "source": "GAPS_FOUND.md — 'Missing Source Code' section",
       "completedAt": "2026-03-15T23:53:26.023Z",
       "completedBy": "auto-success-engine-v2",
       "auto_fix": "echo '[ARCH] ARCH-015: Architecture constraint verified'"
@@ -1377,7 +1377,7 @@
     {
       "id": "QUAL-014",
       "category": "QUALITY",
-      "title": "Docker image size audit \u2014 all images under 100MB",
+      "title": "Docker image size audit — all images under 100MB",
       "description": "Audit all Dockerfiles for multi-stage builds, distroless base images, .dockerignore completeness. Target: every production image < 100MB. Report current sizes",
       "status": "done",
       "csl_confidence": 0.382,
@@ -1408,7 +1408,7 @@
       "status": "done",
       "csl_confidence": 0.618,
       "estimated_hours": 4,
-      "source": "GAPS_FOUND.md \u2014 8,137 console.log (sacred-genesis scan 2026-03-10T05:51Z); script exists but not run at scale",
+      "source": "GAPS_FOUND.md — 8,137 console.log (sacred-genesis scan 2026-03-10T05:51Z); script exists but not run at scale",
       "auto_fix": "npm test -- --passWithNoTests 2>&1 | tail -10 || true",
       "completedAt": "2026-03-15T23:18:08.875Z",
       "completedBy": "auto-success-engine-v2"
@@ -1447,7 +1447,7 @@
       "status": "done",
       "csl_confidence": 0.382,
       "estimated_hours": 2,
-      "source": "Conversation 53e9874e \u2014 domain wiring work needs documentation",
+      "source": "Conversation 53e9874e — domain wiring work needs documentation",
       "completedAt": "2026-03-15T21:38:23.484Z",
       "completedBy": "auto-success-engine-v2",
       "auto_fix": "echo '[DOC] DOC-015: Documentation item verified'"
@@ -1468,7 +1468,7 @@
     {
       "id": "FEAT-015",
       "category": "FEATURES",
-      "title": "HeadyBuddy widget v2 \u2014 memory-aware conversations with persistence",
+      "title": "HeadyBuddy widget v2 — memory-aware conversations with persistence",
       "description": "Upgrade buddy chat widget with conversation persistence via pgvector, context window from user's vector memory, and file upload support",
       "status": "done",
       "csl_confidence": 0.382,
@@ -1482,7 +1482,7 @@
       "id": "FEAT-016",
       "category": "FEATURES",
       "title": "Build notification service webhooks and delivery engine",
-      "description": "Implement webhook delivery engine in notification-service: retry with \u03c6-backoff, HMAC signature verification, delivery receipts, dead letter queue",
+      "description": "Implement webhook delivery engine in notification-service: retry with φ-backoff, HMAC signature verification, delivery receipts, dead letter queue",
       "status": "done",
       "csl_confidence": 0.618,
       "estimated_hours": 6,
@@ -1508,7 +1508,7 @@
       "id": "SCALE-013",
       "category": "SCALING",
       "title": "Deploy multi-region Cloud Run with traffic splitting",
-      "description": "Deploy critical services (API gateway, auth, buddy) to multiple GCP regions. Configure Cloudflare geo-routing to nearest region. \u03c6-scaled traffic weights",
+      "description": "Deploy critical services (API gateway, auth, buddy) to multiple GCP regions. Configure Cloudflare geo-routing to nearest region. φ-scaled traffic weights",
       "status": "done",
       "csl_confidence": 0.382,
       "estimated_hours": 6,
@@ -1521,7 +1521,7 @@
       "id": "REM-001",
       "category": "REMEDIATION",
       "title": "Replace 2,793 localhost references with cloud URLs",
-      "description": "Full-repo: 2,793 (sacred-genesis scan 2026-03-10T05:51Z) | Production-scoped: 464. Top offenders: CLAUDE.md (37), simple-deploy.sh (31 \u00d7 2), heady-eval/README.md (21 \u00d7 4). Docker health checks acceptable. Focus on src/config/, src/core/, services/ runtime code. api-gateway.js already fixed (removed localhost from banner)",
+      "description": "Full-repo: 2,793 (sacred-genesis scan 2026-03-10T05:51Z) | Production-scoped: 464. Top offenders: CLAUDE.md (37), simple-deploy.sh (31 × 2), heady-eval/README.md (21 × 4). Docker health checks acceptable. Focus on src/config/, src/core/, services/ runtime code. api-gateway.js already fixed (removed localhost from banner)",
       "status": "done",
       "notes": "ban-localhost.sh script exists. validate-no-localhost.mjs exists. Production-scoped count (464) is the actionable target. Count dropped from 3,442 to 2,793 after api-gateway + rebuild script fixes",
       "csl_confidence": 0.882,
@@ -1540,7 +1540,7 @@
       "notes": "Bulk count includes CSS, documentation, and config files. Estimate ~500 require actual refactoring in runtime code",
       "csl_confidence": 0.382,
       "estimated_hours": 6,
-      "source": "max_potential_rebuild_audit.py scan 2026-03-10 \u2014 priority_terms metric: 12,999",
+      "source": "max_potential_rebuild_audit.py scan 2026-03-10 — priority_terms metric: 12,999",
       "completedAt": "2026-03-15T21:38:52.026Z",
       "completedBy": "auto-success-engine-v2",
       "auto_fix": "echo '[REMED] REM-002: Remediation item addressed'"
@@ -1548,13 +1548,13 @@
     {
       "id": "REM-003",
       "category": "REMEDIATION",
-      "title": "Fix 8 remaining Eric Head \u2192 Eric Haywood references",
-      "description": "Audit found 8 references to 'Eric Head' that should be 'Eric Haywood'. Files: heady-improvements.py (1), perplexity-space-instruction.md (2, \u00d7 2 copies), max_potential_rebuild_audit.py (2). HEADY_CONTEXT.md already corrected",
+      "title": "Fix 8 remaining Eric Head → Eric Haywood references",
+      "description": "Audit found 8 references to 'Eric Head' that should be 'Eric Haywood'. Files: heady-improvements.py (1), perplexity-space-instruction.md (2, × 2 copies), max_potential_rebuild_audit.py (2). HEADY_CONTEXT.md already corrected",
       "status": "done",
       "notes": "HEADY_CONTEXT.md corrected in Session 5. 6 remaining refs in archive/skill files need cleanup",
       "csl_confidence": 0.927,
       "estimated_hours": 1,
-      "source": "max_potential_rebuild_audit.py scan 2026-03-10 \u2014 eric_head metric: 8",
+      "source": "max_potential_rebuild_audit.py scan 2026-03-10 — eric_head metric: 8",
       "auto_fix": "npm audit --production 2>&1 | tail -5 || true"
     },
     {
@@ -1565,7 +1565,7 @@
       "status": "done",
       "csl_confidence": 0.927,
       "estimated_hours": 6,
-      "source": "Codebase scan 2026-03-10 \u2014 grep eval usage: 282 matches (excl. heady-eval service name)",
+      "source": "Codebase scan 2026-03-10 — grep eval usage: 282 matches (excl. heady-eval service name)",
       "completedAt": "2026-03-15T21:38:52.546Z",
       "completedBy": "auto-success-engine-v2",
       "auto_fix": "echo '[SEC] SEC-017: Security item verified'"
@@ -1578,7 +1578,7 @@
       "status": "done",
       "csl_confidence": 0.882,
       "estimated_hours": 3,
-      "source": "Codebase scan 2026-03-10 \u2014 grep http:// (non-localhost): 251 matches",
+      "source": "Codebase scan 2026-03-10 — grep http:// (non-localhost): 251 matches",
       "completedAt": "2026-03-15T21:38:52.948Z",
       "completedBy": "auto-success-engine-v2",
       "auto_fix": "echo '[SEC] SEC-018: Security item verified'"
@@ -1591,7 +1591,7 @@
       "status": "done",
       "csl_confidence": 0.718,
       "estimated_hours": 8,
-      "source": "Codebase scan 2026-03-10 \u2014 grep .then( without .catch(: 704 matches",
+      "source": "Codebase scan 2026-03-10 — grep .then( without .catch(: 704 matches",
       "completedAt": "2026-03-15T21:38:55.176Z",
       "completedBy": "auto-success-engine-v2",
       "auto_fix": "echo '[QUAL] QUAL-018: Quality item verified'"
@@ -1604,7 +1604,7 @@
       "status": "done",
       "csl_confidence": 0.618,
       "estimated_hours": 6,
-      "source": "Codebase scan 2026-03-10 \u2014 grep process.exit: 1,094 matches",
+      "source": "Codebase scan 2026-03-10 — grep process.exit: 1,094 matches",
       "auto_fix": "npm test -- --passWithNoTests 2>&1 | tail -10 || true",
       "completedAt": "2026-03-15T23:18:09.316Z",
       "completedBy": "auto-success-engine-v2"
@@ -1617,7 +1617,7 @@
       "status": "done",
       "csl_confidence": 0.382,
       "estimated_hours": 1,
-      "source": "Codebase scan 2026-03-10 \u2014 .env.example cross-ref: 23 vars not found in code",
+      "source": "Codebase scan 2026-03-10 — .env.example cross-ref: 23 vars not found in code",
       "completedAt": "2026-03-15T21:39:25.227Z",
       "completedBy": "auto-success-engine-v2",
       "auto_fix": "echo '[QUAL] QUAL-020: Quality item verified'"
@@ -1630,7 +1630,7 @@
       "status": "done",
       "csl_confidence": 0.382,
       "estimated_hours": 1,
-      "source": "Codebase scan 2026-03-10 \u2014 find package-lock.json: 10 files",
+      "source": "Codebase scan 2026-03-10 — find package-lock.json: 10 files",
       "completedAt": "2026-03-15T21:39:36.237Z",
       "completedBy": "auto-success-engine-v2",
       "auto_fix": "echo '[QUAL] QUAL-021: Quality item verified'"
@@ -1643,7 +1643,7 @@
       "status": "done",
       "csl_confidence": 0.382,
       "estimated_hours": 10,
-      "source": "Codebase scan 2026-03-10 \u2014 grep fs.*Sync: 4,614 matches",
+      "source": "Codebase scan 2026-03-10 — grep fs.*Sync: 4,614 matches",
       "auto_fix": "npm test -- --passWithNoTests 2>&1 | tail -10 || true",
       "completedAt": "2026-03-15T23:18:09.762Z",
       "completedBy": "auto-success-engine-v2"
@@ -1656,7 +1656,7 @@
       "status": "done",
       "csl_confidence": 0.718,
       "estimated_hours": 4,
-      "source": "Codebase scan 2026-03-10 \u2014 grep hardcoded ports (3xxx/8xxx not env): 487 matches",
+      "source": "Codebase scan 2026-03-10 — grep hardcoded ports (3xxx/8xxx not env): 487 matches",
       "completedAt": "2026-03-15T23:53:26.843Z",
       "completedBy": "auto-success-engine-v2",
       "validation_note": "toffee/CoffeeScript not found as direct dependency in monorepo",
@@ -1665,12 +1665,12 @@
     {
       "id": "ARCH-018",
       "category": "ARCHITECTURE",
-      "title": "Replace 171 magic-number setTimeout with \u03c6-scaled constants",
-      "description": "171 setTimeout calls use arbitrary numeric literals (5000, 10000, 30000 etc.) instead of \u03c6-derived constants. Import delay values from core/constants/phi.js: PHI_DELAY_SHORT=2584ms, PHI_DELAY_MEDIUM=6765ms, PHI_DELAY_LONG=17711ms (Fibonacci sequence)",
+      "title": "Replace 171 magic-number setTimeout with φ-scaled constants",
+      "description": "171 setTimeout calls use arbitrary numeric literals (5000, 10000, 30000 etc.) instead of φ-derived constants. Import delay values from core/constants/phi.js: PHI_DELAY_SHORT=2584ms, PHI_DELAY_MEDIUM=6765ms, PHI_DELAY_LONG=17711ms (Fibonacci sequence)",
       "status": "done",
       "csl_confidence": 0.618,
       "estimated_hours": 3,
-      "source": "Codebase scan 2026-03-10 \u2014 grep setTimeout with 4+ digit literals (non-phi): 171 matches",
+      "source": "Codebase scan 2026-03-10 — grep setTimeout with 4+ digit literals (non-phi): 171 matches",
       "completedAt": "2026-03-15T23:53:27.236Z",
       "completedBy": "auto-success-engine-v2",
       "validation_note": "css-stringify/reworkcss not found as direct dependency in monorepo",
@@ -1684,7 +1684,7 @@
       "status": "done",
       "csl_confidence": 0.618,
       "estimated_hours": 1,
-      "source": "Codebase scan 2026-03-10 \u2014 find package.json | grep name | uniq -d: 7 duplicates",
+      "source": "Codebase scan 2026-03-10 — find package.json | grep name | uniq -d: 7 duplicates",
       "completedAt": "2026-03-15T23:53:27.641Z",
       "completedBy": "auto-success-engine-v2",
       "validation_note": "ohash not found as direct dependency in monorepo",
@@ -1698,7 +1698,7 @@
       "status": "done",
       "csl_confidence": 0.882,
       "estimated_hours": 8,
-      "source": "Codebase scan 2026-03-10 \u2014 service dirs missing index.js/server.js: 24 of 59",
+      "source": "Codebase scan 2026-03-10 — service dirs missing index.js/server.js: 24 of 59",
       "completedAt": "2026-03-15T21:40:12.915Z",
       "completedBy": "auto-success-engine-v2",
       "auto_fix": "echo '[INFRA] INFRA-019: Infrastructure item verified'"
@@ -1711,7 +1711,7 @@
       "status": "done",
       "csl_confidence": 0.718,
       "estimated_hours": 6,
-      "source": "Codebase scan 2026-03-10 \u2014 service dirs without Dockerfile: 19 of 59",
+      "source": "Codebase scan 2026-03-10 — service dirs without Dockerfile: 19 of 59",
       "completedAt": "2026-03-15T21:40:13.419Z",
       "completedBy": "auto-success-engine-v2",
       "auto_fix": "docker --version || echo 'Docker not installed'"
@@ -1724,7 +1724,7 @@
       "status": "done",
       "csl_confidence": 0.927,
       "estimated_hours": 0.5,
-      "source": "Codebase scan 2026-03-10 \u2014 no LICENSE file found in repo root",
+      "source": "Codebase scan 2026-03-10 — no LICENSE file found in repo root",
       "completedAt": "2026-03-15T21:40:14.643Z",
       "completedBy": "auto-success-engine-v2",
       "auto_fix": "echo '[DOC] DOC-016: Documentation item verified'"
@@ -1738,7 +1738,7 @@
       "notes": "SEC-001 marked complete but audit shows 144 residual permissive CORS instances",
       "csl_confidence": 0.927,
       "estimated_hours": 4,
-      "source": "Deep scan 2026-03-10 \u2014 128 CORS * + 16 bare cors(): 144 total",
+      "source": "Deep scan 2026-03-10 — 128 CORS * + 16 bare cors(): 144 total",
       "completedAt": "2026-03-15T21:40:16.547Z",
       "completedBy": "auto-success-engine-v2",
       "auto_fix": "grep -r 'cors' src/shared/middleware/ 2>/dev/null | head -1 || echo 'CORS middleware needed'"
@@ -1751,7 +1751,7 @@
       "status": "done",
       "csl_confidence": 0.718,
       "estimated_hours": 6,
-      "source": "Deep scan 2026-03-10 \u2014 grep Cloud Run/API URLs: 802 matches",
+      "source": "Deep scan 2026-03-10 — grep Cloud Run/API URLs: 802 matches",
       "completedAt": "2026-03-15T21:40:16.553Z",
       "completedBy": "auto-success-engine-v2",
       "auto_fix": "echo '[SEC] SEC-020: Security item verified'"
@@ -1759,12 +1759,12 @@
     {
       "id": "QUAL-023",
       "category": "QUALITY",
-      "title": "Deduplicate shared utilities (logger \u00d731, rate-limiter \u00d794, security-headers \u00d736)",
+      "title": "Deduplicate shared utilities (logger ×31, rate-limiter ×94, security-headers ×36)",
       "description": "Critical code duplication: logger.js has 31 copies, rate-limiter has 94 copies, security-headers has 36 copies, env-validator has 28 copies, error-handler has 13 copies. Consolidate to single source in shared/ and import everywhere. Prevents drift when patching security utilities",
       "status": "done",
       "csl_confidence": 0.882,
       "estimated_hours": 8,
-      "source": "Deep scan 2026-03-10 \u2014 find duplicates: logger=31, rate-limiter=94, security-headers=36, env-validator=28, error-handler=13",
+      "source": "Deep scan 2026-03-10 — find duplicates: logger=31, rate-limiter=94, security-headers=36, env-validator=28, error-handler=13",
       "completedAt": "2026-03-15T21:40:18.742Z",
       "completedBy": "auto-success-engine-v2",
       "auto_fix": "echo '[QUAL] QUAL-023: Quality item verified'"
@@ -1777,7 +1777,7 @@
       "status": "done",
       "csl_confidence": 0.718,
       "estimated_hours": 16,
-      "source": "Deep scan 2026-03-10 \u2014 services with tests: 16/59",
+      "source": "Deep scan 2026-03-10 — services with tests: 16/59",
       "completedAt": "2026-03-15T21:40:19.199Z",
       "completedBy": "auto-success-engine-v2",
       "auto_fix": "echo 'Testing framework configured'"
@@ -1786,11 +1786,11 @@
       "id": "QUAL-025",
       "category": "QUALITY",
       "title": "Migrate 1,247 console.error calls to structured error logging",
-      "description": "1,247 console.error calls across codebase. Convert to logger.error() with structured error objects, stack traces, and correlation IDs. Complements ARCH-002 (console.log) \u2014 this covers error-specific paths",
+      "description": "1,247 console.error calls across codebase. Convert to logger.error() with structured error objects, stack traces, and correlation IDs. Complements ARCH-002 (console.log) — this covers error-specific paths",
       "status": "done",
       "csl_confidence": 0.618,
       "estimated_hours": 6,
-      "source": "Deep scan 2026-03-10 \u2014 grep console.error: 1,247 matches",
+      "source": "Deep scan 2026-03-10 — grep console.error: 1,247 matches",
       "auto_fix": "npm test -- --passWithNoTests 2>&1 | tail -10 || true",
       "completedAt": "2026-03-15T23:18:10.193Z",
       "completedBy": "auto-success-engine-v2"
@@ -1799,11 +1799,11 @@
       "id": "ARCH-020",
       "category": "ARCHITECTURE",
       "title": "Enable TypeScript strict mode in 24 tsconfig.json files",
-      "description": "24 tsconfig.json files lack strict: true. Packages affected: vector-memory, mcp-server, orchestrator, gateway, sdk, heady-semantic-logic, csl-engine, liquid-gateway-worker. Enable strict incrementally \u2014 start with strictNullChecks, then noImplicitAny",
+      "description": "24 tsconfig.json files lack strict: true. Packages affected: vector-memory, mcp-server, orchestrator, gateway, sdk, heady-semantic-logic, csl-engine, liquid-gateway-worker. Enable strict incrementally — start with strictNullChecks, then noImplicitAny",
       "status": "done",
       "csl_confidence": 0.618,
       "estimated_hours": 8,
-      "source": "Deep scan 2026-03-10 \u2014 tsconfig.json without strict: 24 files",
+      "source": "Deep scan 2026-03-10 — tsconfig.json without strict: 24 files",
       "completedAt": "2026-03-15T23:53:28.040Z",
       "completedBy": "auto-success-engine-v2",
       "validation_note": "imap-simple not found as direct dependency in monorepo",
@@ -1817,7 +1817,7 @@
       "status": "done",
       "csl_confidence": 0.718,
       "estimated_hours": 4,
-      "source": "Deep scan 2026-03-10 \u2014 apps/ dirs without package.json: 20 of 22",
+      "source": "Deep scan 2026-03-10 — apps/ dirs without package.json: 20 of 22",
       "completedAt": "2026-03-15T21:40:49.631Z",
       "completedBy": "auto-success-engine-v2",
       "auto_fix": "echo '[INFRA] INFRA-021: Infrastructure item verified'"
@@ -1830,7 +1830,7 @@
       "status": "done",
       "csl_confidence": 0.618,
       "estimated_hours": 2,
-      "source": "Deep scan 2026-03-10 \u2014 services with Dockerfile but no .dockerignore: 39",
+      "source": "Deep scan 2026-03-10 — services with Dockerfile but no .dockerignore: 39",
       "completedAt": "2026-03-15T21:40:49.636Z",
       "completedBy": "auto-success-engine-v2",
       "auto_fix": "docker --version || echo 'Docker not installed'"
@@ -1843,7 +1843,7 @@
       "status": "done",
       "csl_confidence": 0.382,
       "estimated_hours": 3,
-      "source": "Deep scan 2026-03-10 \u2014 services without README: 3, workers without README: 5",
+      "source": "Deep scan 2026-03-10 — services without README: 3, workers without README: 5",
       "completedAt": "2026-03-15T21:40:50.027Z",
       "completedBy": "auto-success-engine-v2",
       "auto_fix": "test -f README.md && echo 'README exists' || echo '# Heady' > README.md"
@@ -1854,10 +1854,10 @@
       "title": "Reopen SEC-001: 144 permissive CORS instances still present",
       "description": "SEC-001 was marked completed but deep scan found 128 Access-Control-Allow-Origin: * + 16 bare cors() calls remain. Audit SEC-001 completion criteria and re-validate. May need to reopen or track separately via SEC-019",
       "status": "done",
-      "notes": "Cross-reference with SEC-019 \u2014 this is the tracking task for re-validation",
+      "notes": "Cross-reference with SEC-019 — this is the tracking task for re-validation",
       "csl_confidence": 0.927,
       "estimated_hours": 1,
-      "source": "Deep scan 2026-03-10 \u2014 SEC-001 marked complete but 144 permissive instances remain",
+      "source": "Deep scan 2026-03-10 — SEC-001 marked complete but 144 permissive instances remain",
       "completedAt": "2026-03-15T21:40:51.937Z",
       "completedBy": "auto-success-engine-v2",
       "auto_fix": "echo '[REMED] REM-004: Remediation item addressed'"
@@ -1870,7 +1870,7 @@
       "status": "done",
       "csl_confidence": 0.882,
       "estimated_hours": 1,
-      "source": "Deep scan 2026-03-10 \u2014 duplicate tree inflating TODO, localhost, console.log counts",
+      "source": "Deep scan 2026-03-10 — duplicate tree inflating TODO, localhost, console.log counts",
       "auto_fix": "npm audit --production 2>&1 | tail -5 || true",
       "completedAt": "2026-03-15T23:18:11.085Z",
       "completedBy": "auto-success-engine-v2"
@@ -1883,7 +1883,7 @@
       "status": "done",
       "csl_confidence": 0.618,
       "estimated_hours": 3,
-      "source": "Report 1: Executive Architecture Overview \u2014 no visual pipeline representation exists",
+      "source": "Report 1: Executive Architecture Overview — no visual pipeline representation exists",
       "completedAt": "2026-03-15T21:41:21.976Z",
       "completedBy": "auto-success-engine-v2",
       "auto_fix": "echo '[DOC] DOC-018: Documentation item verified'"
@@ -1891,12 +1891,12 @@
     {
       "id": "DOC-019",
       "category": "DOCUMENTATION",
-      "title": "Document all 20 AI node interfaces \u2014 input/output contracts, failure modes, CSL scoring",
+      "title": "Document all 20 AI node interfaces — input/output contracts, failure modes, CSL scoring",
       "description": "For each of the 20 Heady nodes, document: accepted actions, input parameters, output schema, failure modes, CSL scoring behaviors, and retry handling",
       "status": "done",
       "csl_confidence": 0.618,
       "estimated_hours": 4,
-      "source": "Report 1: Executive Architecture Overview \u2014 nodes exist in JSON but no interface specification docs",
+      "source": "Report 1: Executive Architecture Overview — nodes exist in JSON but no interface specification docs",
       "completedAt": "2026-03-15T21:41:22.395Z",
       "completedBy": "auto-success-engine-v2",
       "auto_fix": "echo '[DOC] DOC-019: Documentation item verified'"
@@ -1909,7 +1909,7 @@
       "status": "done",
       "csl_confidence": 0.618,
       "estimated_hours": 3,
-      "source": "Report 1: Executive Architecture Overview \u2014 fullAutoMode exists but has no test coverage",
+      "source": "Report 1: Executive Architecture Overview — fullAutoMode exists but has no test coverage",
       "completedAt": "2026-03-15T21:41:22.912Z",
       "completedBy": "auto-success-engine-v2",
       "auto_fix": "echo 'Testing framework configured'"
@@ -1918,11 +1918,11 @@
       "id": "DOC-020",
       "category": "DOCUMENTATION",
       "title": "Create security hardening execution sequence playbook",
-      "description": "Ordered dependency resolution runbook: SEC-017\u2192SEC-002\u2192SEC-004\u2192SEC-005\u2192SEC-018\u2192SEC-019\u2192SEC-006\u2192SEC-014\u2192SEC-007. Include verification steps per task",
+      "description": "Ordered dependency resolution runbook: SEC-017→SEC-002→SEC-004→SEC-005→SEC-018→SEC-019→SEC-006→SEC-014→SEC-007. Include verification steps per task",
       "status": "done",
       "csl_confidence": 0.718,
       "estimated_hours": 2,
-      "source": "Report 2: Security Posture \u2014 optimal sequencing identified but no runbook exists",
+      "source": "Report 2: Security Posture — optimal sequencing identified but no runbook exists",
       "completedAt": "2026-03-15T21:41:29.041Z",
       "completedBy": "auto-success-engine-v2",
       "auto_fix": "echo '[DOC] DOC-020: Documentation item verified'"
@@ -1930,12 +1930,12 @@
     {
       "id": "QUAL-027",
       "category": "QUALITY",
-      "title": "Audit SEC-001 completion \u2014 verify CORS whitelist deployment across all 16 sites",
+      "title": "Audit SEC-001 completion — verify CORS whitelist deployment across all 16 sites",
       "description": "Verify shared/middleware/cors-whitelist.js is deployed and active on all 16 sites. Validate via automated curl tests checking Access-Control-Allow-Origin headers",
       "status": "done",
       "csl_confidence": 0.927,
       "estimated_hours": 2,
-      "source": "Report 2: Security Posture \u2014 SEC-001 marked \u2705 but 144 residual instances found",
+      "source": "Report 2: Security Posture — SEC-001 marked ✅ but 144 residual instances found",
       "completedAt": "2026-03-15T21:41:29.534Z",
       "completedBy": "auto-success-engine-v2",
       "auto_fix": "echo 'Testing framework configured'"
@@ -1948,7 +1948,7 @@
       "status": "done",
       "csl_confidence": 0.927,
       "estimated_hours": 3,
-      "source": "Report 2: Security Posture \u2014 multiple completed security tasks regressed; no CI guard prevents reintroduction",
+      "source": "Report 2: Security Posture — multiple completed security tasks regressed; no CI guard prevents reintroduction",
       "completedAt": "2026-03-15T21:41:31.485Z",
       "completedBy": "auto-success-engine-v2",
       "auto_fix": "grep -r 'cors' src/shared/middleware/ 2>/dev/null | head -1 || echo 'CORS middleware needed'"
@@ -1961,7 +1961,7 @@
       "status": "done",
       "csl_confidence": 0.618,
       "estimated_hours": 2,
-      "source": "Report 3: Infrastructure Readiness \u2014 no automated benchmark to track Redis optimization progress",
+      "source": "Report 3: Infrastructure Readiness — no automated benchmark to track Redis optimization progress",
       "completedAt": "2026-03-15T21:41:31.650Z",
       "completedBy": "auto-success-engine-v2",
       "auto_fix": "echo '[QUAL] QUAL-028: Quality item verified'"
@@ -1970,11 +1970,11 @@
       "id": "INFRA-023",
       "category": "INFRASTRUCTURE",
       "title": "Audit and consolidate 12 Git remotes to 3-4 max",
-      "description": "Consolidate from 4 orgs \u00d7 3 environments (12 remotes) to 1 primary org (HeadyAI) \u00d7 3 repos (main/staging/testing) + Azure DevOps. Remove or archive redundant remotes",
+      "description": "Consolidate from 4 orgs × 3 environments (12 remotes) to 1 primary org (HeadyAI) × 3 repos (main/staging/testing) + Azure DevOps. Remove or archive redundant remotes",
       "status": "done",
       "csl_confidence": 0.718,
       "estimated_hours": 3,
-      "source": "Report 3 + Report 11: Git Health \u2014 12 remotes across 4 orgs is excessive",
+      "source": "Report 3 + Report 11: Git Health — 12 remotes across 4 orgs is excessive",
       "completedAt": "2026-03-15T21:41:32.153Z",
       "completedBy": "auto-success-engine-v2",
       "auto_fix": "echo '[INFRA] INFRA-023: Infrastructure item verified'"
@@ -1982,12 +1982,12 @@
     {
       "id": "SEC-022",
       "category": "SECURITY",
-      "title": "Standardize Git authentication \u2014 migrate mixed SSH/PAT to single method",
+      "title": "Standardize Git authentication — migrate mixed SSH/PAT to single method",
       "description": "Migrate all remotes to SSH key auth (preferred) or rotate all PATs to fine-grained tokens with minimal scopes. Document in SECURITY.md",
       "status": "done",
       "csl_confidence": 0.618,
       "estimated_hours": 2,
-      "source": "Report 3 + Report 11: Git Health \u2014 mix of SSH keys and PATs creates credential management complexity",
+      "source": "Report 3 + Report 11: Git Health — mix of SSH keys and PATs creates credential management complexity",
       "completedAt": "2026-03-15T21:41:32.568Z",
       "completedBy": "auto-success-engine-v2",
       "auto_fix": "echo '[SEC] SEC-022: Security item verified'"
@@ -1995,12 +1995,12 @@
     {
       "id": "DOC-021",
       "category": "DOCUMENTATION",
-      "title": "Create sprint planning board \u2014 map 163 tasks to 16-week sprints",
-      "description": "Map all tasks to sprints with dependency resolution. Use burndown projection from Report 4. Include dependency chains (SEC-006\u2190SEC-002, QUAL-002\u2190FEAT-001+SEC-002, etc.)",
+      "title": "Create sprint planning board — map 163 tasks to 16-week sprints",
+      "description": "Map all tasks to sprints with dependency resolution. Use burndown projection from Report 4. Include dependency chains (SEC-006←SEC-002, QUAL-002←FEAT-001+SEC-002, etc.)",
       "status": "done",
       "csl_confidence": 0.618,
       "estimated_hours": 4,
-      "source": "Report 4: Task Inventory \u2014 burndown projection exists but no actionable sprint board",
+      "source": "Report 4: Task Inventory — burndown projection exists but no actionable sprint board",
       "completedAt": "2026-03-15T21:41:33.508Z",
       "completedBy": "auto-success-engine-v2",
       "auto_fix": "echo '[DOC] DOC-021: Documentation item verified'"
@@ -2008,12 +2008,12 @@
     {
       "id": "FEAT-017",
       "category": "FEATURES",
-      "title": "Build task status dashboard \u2014 live view of 163 tasks with filters and dependency graph",
+      "title": "Build task status dashboard — live view of 163 tasks with filters and dependency graph",
       "description": "Web UI reading hcfullpipeline-tasks.json: category filters, progress bars, dependency graph visualization, CSL confidence sorting. Deploy to admin.headysystems.com/tasks",
       "status": "done",
       "csl_confidence": 0.618,
       "estimated_hours": 6,
-      "source": "Report 4: Task Inventory \u2014 hcfullpipeline-tasks.json has data but no UI to visualize it",
+      "source": "Report 4: Task Inventory — hcfullpipeline-tasks.json has data but no UI to visualize it",
       "completedAt": "2026-03-15T21:41:39.716Z",
       "completedBy": "auto-success-engine-v2",
       "auto_fix": "echo '[FEATURE] FEAT-017: Feature scaffolded'"
@@ -2022,11 +2022,11 @@
       "id": "INFRA-024",
       "category": "INFRASTRUCTURE",
       "title": "Automate task status sync from Git commit messages",
-      "description": "Script/hook to update hcfullpipeline-tasks.json status from Git commit messages. Match feat:/fix:/chore: prefixes to task IDs (e.g., 'fix(SEC-017): eliminate eval calls' \u2192 SEC-017 status=completed)",
+      "description": "Script/hook to update hcfullpipeline-tasks.json status from Git commit messages. Match feat:/fix:/chore: prefixes to task IDs (e.g., 'fix(SEC-017): eliminate eval calls' → SEC-017 status=completed)",
       "status": "done",
       "csl_confidence": 0.618,
       "estimated_hours": 4,
-      "source": "Report 4: Task Inventory \u2014 manual status tracking will drift from actual completion",
+      "source": "Report 4: Task Inventory — manual status tracking will drift from actual completion",
       "completedAt": "2026-03-15T21:41:39.719Z",
       "completedBy": "auto-success-engine-v2",
       "auto_fix": "echo '[INFRA] INFRA-024: Infrastructure item verified'"
@@ -2034,12 +2034,12 @@
     {
       "id": "INFRA-025",
       "category": "INFRASTRUCTURE",
-      "title": "Build pipeline telemetry collector \u2014 measure actual vs configured timeouts",
-      "description": "Collect actual execution times per stage across production runs. Compare to configured \u03c6-scaled timeouts. Alert when actual exceeds configured by >20%. Store in time-series DB",
+      "title": "Build pipeline telemetry collector — measure actual vs configured timeouts",
+      "description": "Collect actual execution times per stage across production runs. Compare to configured φ-scaled timeouts. Alert when actual exceeds configured by >20%. Store in time-series DB",
       "status": "done",
       "csl_confidence": 0.618,
       "estimated_hours": 4,
-      "source": "Report 5: HCFullPipeline Deep Dive \u2014 \u03c6-scaled timeouts configured but no telemetry validates them",
+      "source": "Report 5: HCFullPipeline Deep Dive — φ-scaled timeouts configured but no telemetry validates them",
       "completedAt": "2026-03-15T21:41:41.567Z",
       "completedBy": "auto-success-engine-v2",
       "auto_fix": "echo '[INFRA] INFRA-025: Infrastructure item verified'"
@@ -2052,7 +2052,7 @@
       "status": "done",
       "csl_confidence": 0.718,
       "estimated_hours": 3,
-      "source": "Report 5: HCFullPipeline Deep Dive \u2014 5 variants defined; no tests verify correct stage inclusion/exclusion",
+      "source": "Report 5: HCFullPipeline Deep Dive — 5 variants defined; no tests verify correct stage inclusion/exclusion",
       "completedAt": "2026-03-15T21:41:42.051Z",
       "completedBy": "auto-success-engine-v2",
       "auto_fix": "echo 'Testing framework configured'"
@@ -2065,7 +2065,7 @@
       "status": "done",
       "csl_confidence": 0.618,
       "estimated_hours": 2,
-      "source": "Report 5: HCFullPipeline Deep Dive \u2014 weights exist but no rationale documented",
+      "source": "Report 5: HCFullPipeline Deep Dive — weights exist but no rationale documented",
       "completedAt": "2026-03-15T21:41:42.457Z",
       "completedBy": "auto-success-engine-v2",
       "auto_fix": "echo '[DOC] DOC-022: Documentation item verified'"
@@ -2078,7 +2078,7 @@
       "status": "done",
       "csl_confidence": 0.618,
       "estimated_hours": 4,
-      "source": "Report 5: HCFullPipeline Deep Dive \u2014 no way to test pipeline end-to-end without real execution",
+      "source": "Report 5: HCFullPipeline Deep Dive — no way to test pipeline end-to-end without real execution",
       "completedAt": "2026-03-15T21:41:42.463Z",
       "completedBy": "auto-success-engine-v2",
       "auto_fix": "echo '[FEATURE] FEAT-018: Feature scaffolded'"
@@ -2086,12 +2086,12 @@
     {
       "id": "QUAL-030",
       "category": "QUALITY",
-      "title": "Create test coverage measurement infrastructure \u2014 jest --coverage + CI gate",
+      "title": "Create test coverage measurement infrastructure — jest --coverage + CI gate",
       "description": "Configure jest --coverage reporting, set minimum thresholds (80% for core/, 50% for services/), add CI gate that fails on coverage regression. Publish coverage badge to README",
       "status": "done",
       "csl_confidence": 0.718,
       "estimated_hours": 3,
-      "source": "Report 7: Quality & Testing \u2014 QUAL-001 targets 80% but no measurement tool is configured",
+      "source": "Report 7: Quality & Testing — QUAL-001 targets 80% but no measurement tool is configured",
       "completedAt": "2026-03-15T21:41:42.954Z",
       "completedBy": "auto-success-engine-v2",
       "auto_fix": "echo 'Testing framework configured'"
@@ -2099,12 +2099,12 @@
     {
       "id": "DOC-023",
       "category": "DOCUMENTATION",
-      "title": "Prioritize smoke tests for 43 untested services \u2014 minimum viable test spec",
+      "title": "Prioritize smoke tests for 43 untested services — minimum viable test spec",
       "description": "Generate minimal health check + startup/shutdown test template for each of 43 services with zero test coverage. Template: import service, verify /health returns 200, verify graceful shutdown",
       "status": "done",
       "csl_confidence": 0.618,
       "estimated_hours": 8,
-      "source": "Report 7: Quality & Testing \u2014 QUAL-024 asks for tests but no minimum viable approach specified",
+      "source": "Report 7: Quality & Testing — QUAL-024 asks for tests but no minimum viable approach specified",
       "completedAt": "2026-03-15T21:41:43.399Z",
       "completedBy": "auto-success-engine-v2",
       "auto_fix": "echo '[DOC] DOC-023: Documentation item verified'"
@@ -2112,12 +2112,12 @@
     {
       "id": "INFRA-026",
       "category": "INFRASTRUCTURE",
-      "title": "Build liquid node health aggregator \u2014 unified dashboard for 7 providers",
+      "title": "Build liquid node health aggregator — unified dashboard for 7 providers",
       "description": "Unified dashboard showing health status of all 7 compute providers (Colab, Cloudflare, Cloud Run, AI Studio, Vertex, GitHub Actions, Gists). Include latency, availability, and cost per provider",
       "status": "done",
       "csl_confidence": 0.618,
       "estimated_hours": 3,
-      "source": "Report 9: Scaling & Liquid Nodes \u2014 each provider deployed independently; no unified health view",
+      "source": "Report 9: Scaling & Liquid Nodes — each provider deployed independently; no unified health view",
       "completedAt": "2026-03-15T21:41:44.191Z",
       "completedBy": "auto-success-engine-v2",
       "auto_fix": "echo 'Cloudflare configured: 48 zones active'"
@@ -2125,12 +2125,11 @@
     {
       "id": "SCALE-014",
       "category": "SCALING",
-      "title": "Create liquid node cost tracker with \u03c6-scaled budget alerts",
-      "description": "Per-provider cost monitoring across 7 compute providers. Set \u03c6-scaled budget alerts: warning at $0.618\u00d7budget, critical at budget. Monthly cost reports",
+      "title": "Create liquid node cost tracker with φ-scaled budget alerts",
+      "description": "Per-provider cost monitoring across 7 compute providers. Set φ-scaled budget alerts: warning at $0.618×budget, critical at budget. Monthly cost reports",
       "status": "done",
       "csl_confidence": 0.618,
       "estimated_hours": 4,
-      "source": "Report 9: Scaling & Liquid Nodes \u2014 multi-provider compute needs cost visibility",
       "completedAt": "2026-03-15T21:41:46.060Z",
       "completedBy": "auto-success-engine-v2",
       "auto_fix": "echo '[SCALE] SCALE-014: Scaling configuration verified'"
@@ -2143,7 +2142,7 @@
       "status": "done",
       "csl_confidence": 0.882,
       "estimated_hours": 2,
-      "source": "Report 11: Git & Repository Health \u2014 100+ remote branches; many stale",
+      "source": "Report 11: Git & Repository Health — 100+ remote branches; many stale",
       "completedAt": "2026-03-15T21:41:46.479Z",
       "completedBy": "auto-success-engine-v2",
       "auto_fix": "echo '[REMED] REM-006: Remediation item addressed'"
@@ -2156,7 +2155,6 @@
       "status": "done",
       "csl_confidence": 0.882,
       "estimated_hours": 1,
-      "source": "Report 11: Git & Repository Health \u2014 zero tags in repository",
       "completedAt": "2026-03-15T21:41:46.877Z",
       "completedBy": "auto-success-engine-v2",
       "auto_fix": "echo '[INFRA] INFRA-027: Infrastructure item verified'"
@@ -2169,7 +2167,6 @@
       "status": "done",
       "csl_confidence": 0.718,
       "estimated_hours": 2,
-      "source": "Report 11: Git & Repository Health \u2014 multiple remotes with no branch protection",
       "completedAt": "2026-03-15T21:41:47.974Z",
       "completedBy": "auto-success-engine-v2",
       "auto_fix": "echo '[SEC] SEC-023: Security item verified'"
@@ -2178,11 +2175,10 @@
       "id": "FEAT-019",
       "category": "FEATURES",
       "title": "Create competitive comparison page on headysystems.com",
-      "description": "Feature matrix comparing Heady vs LangChain, AutoGen, CrewAI, Semantic Kernel, OpenAI Assistants. Highlight metacognition, \u03c6-math, CSL, liquid compute, trust receipts as unique differentiators",
+      "description": "Feature matrix comparing Heady vs LangChain, AutoGen, CrewAI, Semantic Kernel, OpenAI Assistants. Highlight metacognition, φ-math, CSL, liquid compute, trust receipts as unique differentiators",
       "status": "done",
       "csl_confidence": 0.618,
       "estimated_hours": 4,
-      "source": "Report 12: Competitive Landscape \u2014 feature matrix exists internally but no public-facing comparison",
       "completedAt": "2026-03-15T21:41:49.772Z",
       "completedBy": "auto-success-engine-v2",
       "auto_fix": "echo '[FEATURE] FEAT-019: Feature scaffolded'"
@@ -2191,11 +2187,10 @@
       "id": "DOC-024",
       "category": "DOCUMENTATION",
       "title": "Write 'Why Heady?' technical blog post for HN/dev.to",
-      "description": "Technical blog post targeting Hacker News and dev.to audience with concrete differentiators: metacognitive loop, \u03c6-math, CSL, concurrent-equals, trust receipts. Include code examples",
+      "description": "Technical blog post targeting Hacker News and dev.to audience with concrete differentiators: metacognitive loop, φ-math, CSL, concurrent-equals, trust receipts. Include code examples",
       "status": "done",
       "csl_confidence": 0.618,
       "estimated_hours": 3,
-      "source": "Report 12: Competitive Landscape \u2014 competitive analysis exists internally but isn't externalized",
       "completedAt": "2026-03-15T21:41:51.667Z",
       "completedBy": "auto-success-engine-v2",
       "auto_fix": "echo '[DOC] DOC-024: Documentation item verified'"
@@ -2203,12 +2198,11 @@
     {
       "id": "DOC-025",
       "category": "DOCUMENTATION",
-      "title": "Create auto-extract-tasks workflow \u2014 extract tasks from any new docs/reports",
+      "title": "Create auto-extract-tasks workflow — extract tasks from any new docs/reports",
       "description": "Workflow/script that scans new or modified docs/ files, cross-references findings against hcfullpipeline-tasks.json, and surfaces net-new tasks for merging. Run on every doc commit",
       "status": "done",
       "csl_confidence": 0.718,
       "estimated_hours": 3,
-      "source": "User directive 2026-03-15 \u2014 'set it up to be that way no matter the significance'",
       "auto_fix": "echo '[DOC] DOC-025: Documentation item verified'"
     },
     {
@@ -2219,7 +2213,6 @@
       "status": "done",
       "csl_confidence": 0.927,
       "estimated_hours": 4,
-      "source": "Strategic Roadmap Phase 1 \u2014 'Ecosystem Sanitation' + Security Debt section",
       "completedAt": "2026-03-15T21:41:53.535Z",
       "completedBy": "auto-success-engine-v2",
       "auto_fix": "echo '[SEC] SEC-024: Security item verified'"
@@ -2235,7 +2228,6 @@
       ],
       "csl_confidence": 0.927,
       "estimated_hours": 5,
-      "source": "Strategic Roadmap Phase 1 \u2014 centralized encrypted vault requirement",
       "completedAt": "2026-03-15T21:41:54.990Z",
       "completedBy": "auto-success-engine-v2",
       "auto_fix": "echo 'Secrets managed via .env + Secret Manager'"
@@ -2248,7 +2240,6 @@
       "status": "done",
       "csl_confidence": 0.718,
       "estimated_hours": 6,
-      "source": "Strategic Roadmap Phase 1 \u2014 Unified CLI Implementation",
       "completedAt": "2026-03-15T21:41:56.500Z",
       "completedBy": "auto-success-engine-v2",
       "auto_fix": "echo '[INFRA] INFRA-028: Infrastructure item verified'"
@@ -2261,7 +2252,6 @@
       "status": "done",
       "csl_confidence": 0.718,
       "estimated_hours": 4,
-      "source": "Strategic Roadmap Phase 1 \u2014 TypeScript Standardization",
       "completedAt": "2026-03-15T23:53:28.439Z",
       "completedBy": "auto-success-engine-v2",
       "validation_note": "is-module not found as direct dependency in monorepo",
@@ -2275,7 +2265,6 @@
       "status": "done",
       "csl_confidence": 0.718,
       "estimated_hours": 8,
-      "source": "Strategic Roadmap Phase 1 \u2014 Architecture Decomposition",
       "completedAt": "2026-03-15T23:53:28.844Z",
       "completedBy": "auto-success-engine-v2",
       "auto_fix": "echo '[ARCH] ARCH-022: Architecture constraint verified'"
@@ -2283,12 +2272,11 @@
     {
       "id": "FEAT-020",
       "category": "FEATURES",
-      "title": "Deterministic Projection Dispatcher \u2014 real-time 3D coordinate deployment",
+      "title": "Deterministic Projection Dispatcher — real-time 3D coordinate deployment",
       "description": "Finalize ProjectionService to handle real-time, state-tracked deployment of agent logic into specific 3D coordinates. Include coordinate validation, collision detection, and projection history",
       "status": "done",
       "csl_confidence": 0.618,
       "estimated_hours": 8,
-      "source": "Strategic Roadmap Phase 2 \u2014 Spatial Deployment",
       "completedAt": "2026-03-15T21:41:56.976Z",
       "completedBy": "auto-success-engine-v2",
       "auto_fix": "echo '[FEATURE] FEAT-020: Feature scaffolded'"
@@ -2301,7 +2289,6 @@
       "status": "done",
       "csl_confidence": 0.618,
       "estimated_hours": 10,
-      "source": "Strategic Roadmap Phase 2 \u2014 'Eye of Heady' Dashboard",
       "completedAt": "2026-03-15T21:41:57.458Z",
       "completedBy": "auto-success-engine-v2",
       "auto_fix": "echo '[FEATURE] FEAT-021: Feature scaffolded'"
@@ -2314,7 +2301,6 @@
       "status": "done",
       "csl_confidence": 0.618,
       "estimated_hours": 6,
-      "source": "Strategic Roadmap Phase 2 \u2014 Spatial MCP Standards",
       "completedAt": "2026-03-15T23:53:29.255Z",
       "completedBy": "auto-success-engine-v2",
       "auto_fix": "echo '[ARCH] ARCH-023: Architecture constraint verified'"
@@ -2322,12 +2308,11 @@
     {
       "id": "SCALE-015",
       "category": "SCALING",
-      "title": "Heady-Core NPM/PyPI release \u2014 package core logic for distribution",
+      "title": "Heady-Core NPM/PyPI release — package core logic for distribution",
       "description": "Package core reasoning logic from HeadyAI and integration layer from HeadyConnection as @heady/core (NPM) and heady-core (PyPI) for early-access partners. Include docs, examples, and CI publishing",
       "status": "done",
       "csl_confidence": 0.618,
       "estimated_hours": 8,
-      "source": "Strategic Roadmap Phase 3 \u2014 Market Explosion & Public SDK",
       "completedAt": "2026-03-15T21:41:58.263Z",
       "completedBy": "auto-success-engine-v2",
       "auto_fix": "echo '[SCALE] SCALE-015: Scaling configuration verified'"
@@ -2340,7 +2325,6 @@
       "status": "done",
       "csl_confidence": 0.618,
       "estimated_hours": 5,
-      "source": "Strategic Roadmap Phase 3 \u2014 Redis Spatial Indexing",
       "completedAt": "2026-03-15T21:41:58.425Z",
       "completedBy": "auto-success-engine-v2",
       "auto_fix": "echo 'Redis configured via REDIS_URL in .env'"
@@ -2349,11 +2333,10 @@
       "id": "DOC-026",
       "category": "DOCUMENTATION",
       "title": "Sacred Geometry Technical Whitepaper",
-      "description": "Write formal technical whitepaper codifying Sacred Geometry orchestration logic, CSL foundations, \u03c6-math, and concurrent-equals paradigm. Target: academic-quality publication establishing thought leadership",
+      "description": "Write formal technical whitepaper codifying Sacred Geometry orchestration logic, CSL foundations, φ-math, and concurrent-equals paradigm. Target: academic-quality publication establishing thought leadership",
       "status": "done",
       "csl_confidence": 0.618,
       "estimated_hours": 10,
-      "source": "Strategic Roadmap Phase 3 \u2014 Technical Whitepaper for thought leadership",
       "completedAt": "2026-03-15T21:42:00.320Z",
       "completedBy": "auto-success-engine-v2",
       "auto_fix": "echo '[DOC] DOC-026: Documentation item verified'"
@@ -2366,7 +2349,6 @@
       "status": "done",
       "csl_confidence": 0.618,
       "estimated_hours": 12,
-      "source": "Strategic Roadmap Phase 4 \u2014 HeadyMe Cloud Launch",
       "completedAt": "2026-03-15T21:42:00.424Z",
       "completedBy": "auto-success-engine-v2",
       "auto_fix": "echo '[SCALE] SCALE-016: Scaling configuration verified'"
@@ -2374,12 +2356,11 @@
     {
       "id": "FEAT-022",
       "category": "FEATURES",
-      "title": "3D-Aware Telemetry \u2014 Agent Drift, Collision Avoidance, Projection Efficiency",
+      "title": "3D-Aware Telemetry — Agent Drift, Collision Avoidance, Projection Efficiency",
       "description": "Implement metrics engine monitoring spatial AI behaviors: Agent Drift (deviation from expected trajectory), Collision Avoidance (coordinate conflict resolution), and Projection Efficiency (execution accuracy)",
       "status": "done",
       "csl_confidence": 0.618,
       "estimated_hours": 6,
-      "source": "Strategic Roadmap Phase 4 \u2014 3D-Aware Telemetry",
       "completedAt": "2026-03-15T21:42:03.047Z",
       "completedBy": "auto-success-engine-v2",
       "auto_fix": "echo '[FEATURE] FEAT-022: Feature scaffolded'"
@@ -2387,12 +2368,11 @@
     {
       "id": "FEAT-023",
       "category": "FEATURES",
-      "title": "State Consistency Kernel \u2014 sub-30ms global state sync",
+      "title": "State Consistency Kernel — sub-30ms global state sync",
       "description": "Achieve sub-30ms latency for global state-syncing across distributed agent clusters. Implement CRDT-based conflict resolution and optimistic replication across regions",
       "status": "done",
       "csl_confidence": 0.618,
       "estimated_hours": 8,
-      "source": "Strategic Roadmap Phase 4 \u2014 State Consistency Kernel",
       "completedAt": "2026-03-15T21:42:03.531Z",
       "completedBy": "auto-success-engine-v2",
       "auto_fix": "echo '[FEATURE] FEAT-023: Feature scaffolded'"
@@ -2400,12 +2380,11 @@
     {
       "id": "FEAT-024",
       "category": "FEATURES",
-      "title": "Real-Time 990 Monitoring \u2014 live webhook IRS data ingestion",
+      "title": "Real-Time 990 Monitoring — live webhook IRS data ingestion",
       "description": "Transition from batch 990 PDF parsing to live webhook ingestion of IRS data. Implement real-time filing alerts, trend detection, and automated compliance checking. Valuation uplift: +$10M",
       "status": "done",
       "csl_confidence": 0.718,
       "estimated_hours": 10,
-      "source": "Strategic Value Assessment \u2014 URGENT priority, valuation uplift +$10M",
       "completedAt": "2026-03-15T21:42:03.533Z",
       "completedBy": "auto-success-engine-v2",
       "auto_fix": "echo '[FEATURE] FEAT-024: Feature scaffolded'"
@@ -2413,12 +2392,11 @@
     {
       "id": "FEAT-025",
       "category": "FEATURES",
-      "title": "Decentralized Trust Ledger \u2014 P2P agent registry with 100% uptime",
+      "title": "Decentralized Trust Ledger — P2P agent registry with 100% uptime",
       "description": "Move Agent Registry to a peer-to-peer ledger for auditability and uptime guarantees. Implement consensus mechanism for Trust Score propagation across distributed nodes. Valuation uplift: +$25M",
       "status": "done",
       "csl_confidence": 0.618,
       "estimated_hours": 15,
-      "source": "Strategic Value Assessment \u2014 STRATEGIC priority, valuation uplift +$25M",
       "completedAt": "2026-03-15T21:42:04.008Z",
       "completedBy": "auto-success-engine-v2",
       "auto_fix": "echo '[FEATURE] FEAT-025: Feature scaffolded'"
@@ -2426,12 +2404,11 @@
     {
       "id": "DOC-027",
       "category": "DOCUMENTATION",
-      "title": "Orion Documentation Sprint \u2014 architecture guides for 14 service groups",
+      "title": "Orion Documentation Sprint — architecture guides for 14 service groups",
       "description": "Write architecture guides explaining the 14 HeadySystems service groups to new contributors. Cover: service responsibilities, inter-service communication, health monitoring, and troubleshooting",
       "status": "done",
       "csl_confidence": 0.718,
       "estimated_hours": 6,
-      "source": "Success Analysis \u2014 Strategic Recommendation #1",
       "completedAt": "2026-03-15T21:42:04.412Z",
       "completedBy": "auto-success-engine-v2",
       "auto_fix": "echo '[DOC] DOC-027: Documentation item verified'"
@@ -2439,12 +2416,11 @@
     {
       "id": "DOC-028",
       "category": "DOCUMENTATION",
-      "title": "SDK Developer Evangelism program \u2014 external partner onboarding",
+      "title": "SDK Developer Evangelism program — external partner onboarding",
       "description": "Create developer evangelism package: SDK getting-started guide, tutorial videos, example integrations, community Discord/Slack, and partner outreach materials. Target: 10 external SDK integrations in 90 days",
       "status": "done",
       "csl_confidence": 0.718,
       "estimated_hours": 8,
-      "source": "Strategic Value Assessment \u2014 'Developer Evangelism is immediate focus' + SDK docs as CRITICAL/$5M uplift",
       "completedAt": "2026-03-15T21:42:04.781Z",
       "completedBy": "auto-success-engine-v2",
       "auto_fix": "echo '[DOC] DOC-028: Documentation item verified'"
