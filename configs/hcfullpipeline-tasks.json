@@ -1,45 +1,45 @@
 {
   "$schema": "heady://pipeline/task-queue",
-  "version": "6.0.0",
+  "version": "7.0.0",
   "pipeline": "hcfullpipeline",
   "generatedAt": "2026-03-10T05:41:52Z",
-  "lastFineTuned": "2026-03-16T02:42:06.000Z",
+  "lastFineTuned": "2026-03-16T03:32:02.963Z",
   "phi": 1.618033988749895,
-  "description": "Complete task queue for HCFullPipeline — dual-scan reconciled + report-extracted (25) + strategic (18) + tailscale-architecture (12) extracted tasks + HeadyBuddy v7.0 Liquid Soul (22)",
-  "taskCount": 620,
+  "description": "Complete task queue for HCFullPipeline — v7.0 includes 42 new tasks from Super Prompt v6.0 gap analysis (ASE stubs, SP capabilities, PL stage tasks, SYS cross-cutting)",
+  "taskCount": 662,
   "concurrentEquals": true,
   "paradigm": "All tasks are concurrent-equals. No ranking, no priority tiering. CSL resonance determines contextual relevance, not importance hierarchy.",
   "categories": {
     "SECURITY": {
-      "csl_resonance": 1.0,
-      "tasks": 34
+      "csl_resonance": 1,
+      "tasks": 39
     },
     "INFRASTRUCTURE": {
-      "csl_resonance": 1.0,
-      "tasks": 82
+      "csl_resonance": 1,
+      "tasks": 93
     },
     "ARCHITECTURE": {
-      "csl_resonance": 1.0,
-      "tasks": 38
+      "csl_resonance": 1,
+      "tasks": 44
     },
     "QUALITY": {
-      "csl_resonance": 1.0,
-      "tasks": 61
+      "csl_resonance": 1,
+      "tasks": 72
     },
     "DOCUMENTATION": {
-      "csl_resonance": 1.0,
-      "tasks": 34
+      "csl_resonance": 1,
+      "tasks": 35
     },
     "SCALING": {
-      "csl_resonance": 1.0,
-      "tasks": 17
+      "csl_resonance": 1,
+      "tasks": 19
     },
     "FEATURES": {
-      "csl_resonance": 1.0,
-      "tasks": 51
+      "csl_resonance": 1,
+      "tasks": 57
     },
     "REMEDIATION": {
-      "csl_resonance": 1.0,
+      "csl_resonance": 1,
       "tasks": 6
     },
     "AUDIT": {
@@ -7897,6 +7897,468 @@
       "completedAt": "2026-03-16T02:42:06.000Z",
       "completedBy": "auto-success-engine-v2",
       "auto_fix": "echo '[DOCUMENTATION] BUDDY-022: verified'"
+    },
+    {
+      "id": "ASE-001",
+      "category": "INFRASTRUCTURE",
+      "title": "Implement p50/p95/p99 latency collection from Cloud Run metrics API",
+      "description": "Replace stub in monitorPerformance() — currently returns passed:true with no real check. Collect actual response times from Cloud Run custom metrics.",
+      "status": "pending",
+      "csl_confidence": 0.85,
+      "estimated_hours": 3,
+      "source": "Super Prompt v6.0 §16 Layer 5 — Auto-Success Engine gap analysis",
+      "auto_fix": "curl -s https://headysystems.com/health | jq '.latency'"
+    },
+    {
+      "id": "ASE-002",
+      "category": "INFRASTRUCTURE",
+      "title": "Implement cache hit ratio tracker via Upstash Redis INFO stats",
+      "description": "Replace stub in monitorPerformance() cache check — query Upstash Redis INFO command for keyspace_hits/keyspace_misses ratio.",
+      "status": "pending",
+      "csl_confidence": 0.85,
+      "estimated_hours": 3,
+      "source": "Super Prompt v6.0 §18 Upstash Redis endpoint",
+      "auto_fix": "redis-cli -u $REDIS_URL info stats | grep hit_rate"
+    },
+    {
+      "id": "ASE-003",
+      "category": "INFRASTRUCTURE",
+      "title": "Implement API throughput counter (requests/sec rolling window)",
+      "description": "Replace stub throughput check — track requests per second using rolling window counter in Redis or in-memory circular buffer.",
+      "status": "pending",
+      "csl_confidence": 0.85,
+      "estimated_hours": 3,
+      "source": "Super Prompt v6.0 §12 heady-manager topology",
+      "auto_fix": "curl -s https://headyapi.com/metrics | jq '.rps'"
+    },
+    {
+      "id": "ASE-004",
+      "category": "QUALITY",
+      "title": "Implement webhook delivery health check (Stripe/GitHub webhook validation)",
+      "description": "Replace stub in runCommunicationChecks() — validate Stripe webhook endpoint returns 200, check GitHub webhook deliveries.",
+      "status": "pending",
+      "csl_confidence": 0.82,
+      "estimated_hours": 3,
+      "source": "Super Prompt v6.0 §18 Stripe webhook",
+      "auto_fix": "curl -s -o /dev/null -w '%{http_code}' https://headyapi.com/webhooks/health"
+    },
+    {
+      "id": "ASE-005",
+      "category": "DOCUMENTATION",
+      "title": "Implement API documentation freshness check (OpenAPI spec age vs code)",
+      "description": "Replace stub in runCommunicationChecks() — compare OpenAPI spec modification date against latest code changes.",
+      "status": "pending",
+      "csl_confidence": 0.75,
+      "estimated_hours": 2,
+      "source": "Super Prompt v6.0 §4 Law 4 — Implementation Completeness",
+      "auto_fix": "find docs/ -name 'openapi*' -mtime +21 | wc -l"
+    },
+    {
+      "id": "ASE-006",
+      "category": "QUALITY",
+      "title": "Implement changelog auto-trigger detection (commits without CHANGELOG)",
+      "description": "Replace stub — detect commits that should have CHANGELOG entries but don't.",
+      "status": "pending",
+      "csl_confidence": 0.75,
+      "estimated_hours": 2,
+      "source": "Super Prompt v6.0 §2 Glass Box Mandate",
+      "auto_fix": "git log --oneline -5 | grep -v CHANGELOG"
+    },
+    {
+      "id": "ASE-007",
+      "category": "SECURITY",
+      "title": "Implement SSL cert expiry monitoring for all 9 production domains",
+      "description": "Replace stub in runInfrastructureChecks() — check cert expiry for headyme.com, headyapi.com, headysystems.com, headyconnection.org, headybuddy.org, headymcp.com, headyio.com, headybot.com, headyos.com.",
+      "status": "pending",
+      "csl_confidence": 0.92,
+      "estimated_hours": 4,
+      "source": "Super Prompt v6.0 §13 Domain Map — 10 core domains",
+      "auto_fix": "echo | openssl s_client -servername headysystems.com -connect headysystems.com:443 2>/dev/null | openssl x509 -noout -dates"
+    },
+    {
+      "id": "ASE-008",
+      "category": "INFRASTRUCTURE",
+      "title": "Implement Cloud Run revision count and age checker",
+      "description": "Replace stub — list active Cloud Run revisions and flag stale ones (>21 days old per fib(8)).",
+      "status": "pending",
+      "csl_confidence": 0.8,
+      "estimated_hours": 2,
+      "source": "Super Prompt v6.0 §18 Cloud Run infra",
+      "auto_fix": "gcloud run revisions list --service heady-manager --format='value(name,status.conditions)' 2>/dev/null | head -3"
+    },
+    {
+      "id": "ASE-009",
+      "category": "INFRASTRUCTURE",
+      "title": "Implement CDN cache warmth probe (Cloudflare cache-hit headers)",
+      "description": "Replace stub — test cache-hit headers on static assets via cf-cache-status header.",
+      "status": "pending",
+      "csl_confidence": 0.78,
+      "estimated_hours": 2,
+      "source": "Super Prompt v6.0 §18 Cloudflare edge",
+      "auto_fix": "curl -sI https://headysystems.com/assets/logo.svg | grep cf-cache-status"
+    },
+    {
+      "id": "ASE-010",
+      "category": "QUALITY",
+      "title": "Implement embedding freshness check — autocontext-vectors.jsonl age",
+      "description": "Replace stub in runIntelligenceChecks() — check modification date of .heady/autocontext-vectors.jsonl, flag if >7 days stale.",
+      "status": "pending",
+      "csl_confidence": 0.88,
+      "estimated_hours": 2,
+      "source": "Super Prompt v6.0 §20 HeadyAutoContext v2",
+      "auto_fix": "find .heady -name 'autocontext-vectors*' -mtime +7 | wc -l"
+    },
+    {
+      "id": "ASE-011",
+      "category": "QUALITY",
+      "title": "Implement vector index quality metric — recall@10 on known-good queries",
+      "description": "Replace stub — measure vector search quality using reference queries with known expected results.",
+      "status": "pending",
+      "csl_confidence": 0.82,
+      "estimated_hours": 4,
+      "source": "Super Prompt v6.0 §12.3 Qdrant Vector Memory",
+      "auto_fix": "node -e \"require('./shared/csl-engine-v2').healthCheck()\""
+    },
+    {
+      "id": "ASE-012",
+      "category": "QUALITY",
+      "title": "Implement multi-model agreement check across AI providers",
+      "description": "Replace stub — send identical prompt to Claude/GPT/Gemini and measure CSL similarity of outputs.",
+      "status": "pending",
+      "csl_confidence": 0.78,
+      "estimated_hours": 4,
+      "source": "Super Prompt v6.0 §14 AI Provider Routing Mesh",
+      "auto_fix": "echo 'Multi-model council health check'"
+    },
+    {
+      "id": "ASE-013",
+      "category": "SCALING",
+      "title": "Implement per-provider API cost tracker (Anthropic/OpenAI/Groq/Perplexity)",
+      "description": "Replace stub in optimizeCosts() — track API spending per provider with phi-scaled budget alerts.",
+      "status": "pending",
+      "csl_confidence": 0.88,
+      "estimated_hours": 4,
+      "source": "Super Prompt v6.0 §9 Oracle swarm — CostTrackerBee",
+      "auto_fix": "grep -rn 'ANTHROPIC_API_KEY\\|OPENAI_API_KEY' .env 2>/dev/null | wc -l"
+    },
+    {
+      "id": "ASE-014",
+      "category": "INFRASTRUCTURE",
+      "title": "Implement over-provisioned Cloud Run instance detector",
+      "description": "Replace stub — detect Cloud Run instances with low utilization that can be scaled down.",
+      "status": "pending",
+      "csl_confidence": 0.8,
+      "estimated_hours": 2,
+      "source": "Super Prompt v6.0 §18 Cloud Run ops",
+      "auto_fix": "gcloud run services describe heady-manager --format='value(spec.template.spec.containerConcurrency)' 2>/dev/null"
+    },
+    {
+      "id": "ASE-015",
+      "category": "QUALITY",
+      "title": "Implement stale embedding detector — vectors older than fib(8)=21 days",
+      "description": "Replace stub — scan data/memory for embeddings older than 21 days and flag for rebuild.",
+      "status": "pending",
+      "csl_confidence": 0.82,
+      "estimated_hours": 2,
+      "source": "Super Prompt v6.0 §17 φ-scaled governance",
+      "auto_fix": "find data/memory -name '*.jsonl' -mtime +21 | wc -l"
+    },
+    {
+      "id": "ASE-016",
+      "category": "QUALITY",
+      "title": "Implement knowledge gap analysis — stages with zero learnings",
+      "description": "Replace stub in processLearningEvents() — identify pipeline stages that have never recorded a learning event.",
+      "status": "pending",
+      "csl_confidence": 0.78,
+      "estimated_hours": 3,
+      "source": "Super Prompt v6.0 §8 Stage 20 RECEIPT — wisdom.json update",
+      "auto_fix": "node -e \"const w=require('./wisdom.json');console.log(Object.keys(w.gaps||{}).length)\""
+    },
+    {
+      "id": "ASE-017",
+      "category": "QUALITY",
+      "title": "Implement fine-tune data preparation check",
+      "description": "Replace stub — validate training data format and completeness for Colab fine-tune jobs.",
+      "status": "pending",
+      "csl_confidence": 0.72,
+      "estimated_hours": 2,
+      "source": "Super Prompt v6.0 §28 Colab Pro+ cluster",
+      "auto_fix": "find data/ -name 'finetune*' 2>/dev/null | wc -l"
+    },
+    {
+      "id": "SP-001",
+      "category": "FEATURES",
+      "title": "Wire fs.watch indexer on src/configs/packages with 13s debounced rescan",
+      "description": "Super Prompt §20 mandates always-on HeadyAutoContext v2 indexer — fs.watch on src/, configs/, packages/, apps/, services/ with 13s debounce. Currently not implemented.",
+      "status": "pending",
+      "csl_confidence": 0.92,
+      "estimated_hours": 8,
+      "source": "Super Prompt v6.0 §20 HeadyAutoContext v2 — Always-On Indexer",
+      "auto_fix": "node -e \"const ac=require('./src/core/05-auto-context/index');console.log(typeof ac.startWatcher)\""
+    },
+    {
+      "id": "SP-002",
+      "category": "ARCHITECTURE",
+      "title": "Implement gateway middleware wrapGateway() for transparent context enrichment",
+      "description": "Super Prompt §20 specifies wrapGateway(gateway) that transparently enriches complete(), battle(), and race() with CSL-gated context. Zero code changes required by callers.",
+      "status": "pending",
+      "csl_confidence": 0.88,
+      "estimated_hours": 8,
+      "source": "Super Prompt v6.0 §20 Gateway Middleware",
+      "auto_fix": "grep -rn 'wrapGateway' src/ 2>/dev/null | head -3"
+    },
+    {
+      "id": "SP-003",
+      "category": "FEATURES",
+      "title": "Auto-index user profiles into vector memory on auth sign-in events",
+      "description": "Super Prompt §20 Mandatory Integration Point: Every auth event → index user profile into vector memory on sign-in. Currently not wired.",
+      "status": "pending",
+      "csl_confidence": 0.85,
+      "estimated_hours": 6,
+      "source": "Super Prompt v6.0 §20 Mandatory Integration Points",
+      "auto_fix": "grep -rn 'onAuthStateChanged' src/auth/ 2>/dev/null | head -3"
+    },
+    {
+      "id": "SP-004",
+      "category": "ARCHITECTURE",
+      "title": "Implement 5-Phase Buddy Deterministic Optimization Loop",
+      "description": "Super Prompt §21 defines Error Detection → State Extraction → Equivalence Analysis → Root-Cause Derivation → Rule Synthesis. No pipeline task tracks this.",
+      "status": "pending",
+      "csl_confidence": 0.88,
+      "estimated_hours": 12,
+      "source": "Super Prompt v6.0 §21 Buddy Deterministic Optimization Loop",
+      "auto_fix": "grep -rn 'optimization.*loop\\|OptimizationLoop' src/ 2>/dev/null | head -3"
+    },
+    {
+      "id": "SP-005",
+      "category": "QUALITY",
+      "title": "Build Learned Rule registry and enforcement check in auto-success-engine",
+      "description": "Super Prompt §21 lists 6 active Learned Rules (LR-001 to LR-006) with no enforcement mechanism. Build registry that checks rules before code writes.",
+      "status": "pending",
+      "csl_confidence": 0.85,
+      "estimated_hours": 6,
+      "source": "Super Prompt v6.0 §21 Active Learned Rules",
+      "auto_fix": "grep -rn 'LR-00' src/ configs/ 2>/dev/null | wc -l"
+    },
+    {
+      "id": "SP-006",
+      "category": "INFRASTRUCTURE",
+      "title": "Build Colab α/β/γ/δ liquid node /pulse health endpoint polling",
+      "description": "Super Prompt §28 defines 4 GPU runtimes as liquid nodes with /pulse endpoints. No health monitoring currently polls them.",
+      "status": "pending",
+      "csl_confidence": 0.82,
+      "estimated_hours": 6,
+      "source": "Super Prompt v6.0 §28 Colab Pro+ GPU Cluster",
+      "auto_fix": "grep -rn 'colab.*pulse\\|ColabRuntime' src/ 2>/dev/null | head -3"
+    },
+    {
+      "id": "SP-007",
+      "category": "FEATURES",
+      "title": "Implement SwarmDispatch → Colab runtime routing based on CSL scoring",
+      "description": "Super Prompt §28 specifies HeadySwarm dispatches GPU-bound tasks to Colab cluster based on CSL scoring and load.",
+      "status": "pending",
+      "csl_confidence": 0.8,
+      "estimated_hours": 10,
+      "source": "Super Prompt v6.0 §28 SwarmDispatch integration",
+      "auto_fix": "grep -rn 'SwarmDispatch\\|colab.*dispatch' src/ 2>/dev/null | head -3"
+    },
+    {
+      "id": "SP-008",
+      "category": "SECURITY",
+      "title": "Implement Sentinel swarm — ThreatDetectorBee, VulnScannerBee, IncidentResponderBee",
+      "description": "Super Prompt §9 defines Sentinel swarm for threat detection and self-healing. No matching service or task exists.",
+      "status": "pending",
+      "csl_confidence": 0.88,
+      "estimated_hours": 12,
+      "source": "Super Prompt v6.0 §9 17-Swarm Matrix — Sentinel",
+      "auto_fix": "find src/bees/ -name '*sentinel*' -o -name '*threat*' -o -name '*vuln*' 2>/dev/null | wc -l"
+    },
+    {
+      "id": "SP-009",
+      "category": "FEATURES",
+      "title": "Implement Quant swarm — MarketAnalyzerBee, RiskManagerBee for trading",
+      "description": "Super Prompt §9 defines Quant swarm for trading strategy and portfolio optimization. Linked to heady-fintech-trading skill but no task tracks implementation.",
+      "status": "pending",
+      "csl_confidence": 0.72,
+      "estimated_hours": 10,
+      "source": "Super Prompt v6.0 §9 17-Swarm Matrix — Quant",
+      "auto_fix": "find src/bees/ -name '*market*' -o -name '*trading*' 2>/dev/null | wc -l"
+    },
+    {
+      "id": "SP-010",
+      "category": "FEATURES",
+      "title": "Implement Diplomat swarm — ProcurementBee, RateLimitNegotiatorBee for B2B",
+      "description": "Super Prompt §9 defines Diplomat swarm for autonomous B2B procurement and rate limit negotiation.",
+      "status": "pending",
+      "csl_confidence": 0.68,
+      "estimated_hours": 8,
+      "source": "Super Prompt v6.0 §9 17-Swarm Matrix — Diplomat",
+      "auto_fix": "find src/bees/ -name '*procurement*' -o -name '*diplomat*' 2>/dev/null | wc -l"
+    },
+    {
+      "id": "PL-001",
+      "category": "INFRASTRUCTURE",
+      "title": "Implement scan_3d_persistent_vector_storage task for channel-entry stage",
+      "description": "hcfullpipeline.yaml stage 0 lists scan_3d_persistent_vector_storage task — no implementation exists.",
+      "status": "pending",
+      "csl_confidence": 0.8,
+      "estimated_hours": 4,
+      "source": "hcfullpipeline.yaml stage 0 channel-entry",
+      "auto_fix": "grep -rn 'scan_3d_persistent' src/ 2>/dev/null | head -3"
+    },
+    {
+      "id": "PL-002",
+      "category": "SECURITY",
+      "title": "Implement scan_attack_surface task for recon stage",
+      "description": "hcfullpipeline.yaml stage 1 lists scan_attack_surface — exposed endpoints, open ports, public secrets. Not implemented.",
+      "status": "pending",
+      "csl_confidence": 0.92,
+      "estimated_hours": 4,
+      "source": "hcfullpipeline.yaml stage 1 recon",
+      "auto_fix": "grep -rn 'scan_attack_surface\\|attack.*surface' src/ 2>/dev/null | head -3"
+    },
+    {
+      "id": "PL-003",
+      "category": "SCALING",
+      "title": "Implement scan_cost_trajectory task for recon stage",
+      "description": "hcfullpipeline.yaml stage 1 lists scan_cost_trajectory — current spend rate vs budget. Not implemented.",
+      "status": "pending",
+      "csl_confidence": 0.85,
+      "estimated_hours": 3,
+      "source": "hcfullpipeline.yaml stage 1 recon",
+      "auto_fix": "grep -rn 'cost_trajectory\\|scan_cost' src/ 2>/dev/null | head -3"
+    },
+    {
+      "id": "PL-004",
+      "category": "ARCHITECTURE",
+      "title": "Implement compute_csl_resonance task for classify stage",
+      "description": "hcfullpipeline.yaml stage 3 lists compute_csl_resonance — cos(intent_vector, swarm_capability_vector). Not wired to CSL engine.",
+      "status": "pending",
+      "csl_confidence": 0.88,
+      "estimated_hours": 3,
+      "source": "hcfullpipeline.yaml stage 3 classify",
+      "auto_fix": "grep -rn 'compute_csl_resonance\\|csl_resonance' src/ 2>/dev/null | head -3"
+    },
+    {
+      "id": "PL-005",
+      "category": "FEATURES",
+      "title": "Implement check_public_domain_inspiration task for classify stage",
+      "description": "hcfullpipeline.yaml stage 3 lists check_public_domain_inspiration — mine best-practice patterns. Not implemented.",
+      "status": "pending",
+      "csl_confidence": 0.72,
+      "estimated_hours": 2,
+      "source": "hcfullpipeline.yaml stage 3 classify",
+      "auto_fix": "grep -rn 'public_domain_inspiration' src/ 2>/dev/null | head -3"
+    },
+    {
+      "id": "PL-006",
+      "category": "QUALITY",
+      "title": "Implement validate_governance_policies task for triage stage",
+      "description": "hcfullpipeline.yaml stage 4 lists validate_governance_policies — check against governance-policies.yaml. Not implemented.",
+      "status": "pending",
+      "csl_confidence": 0.85,
+      "estimated_hours": 3,
+      "source": "hcfullpipeline.yaml stage 4 triage",
+      "auto_fix": "find configs/governance -name 'governance-policies*' 2>/dev/null | head -3"
+    },
+    {
+      "id": "PL-007",
+      "category": "INFRASTRUCTURE",
+      "title": "Implement setup_sandbox_environments task for trial-and-error stage",
+      "description": "hcfullpipeline.yaml stage 6 lists setup_sandbox_environments — isolated Docker sandbox per candidate. Not implemented.",
+      "status": "pending",
+      "csl_confidence": 0.82,
+      "estimated_hours": 4,
+      "source": "hcfullpipeline.yaml stage 6 trial-and-error",
+      "auto_fix": "grep -rn 'setup_sandbox\\|sandbox_env' src/ 2>/dev/null | head -3"
+    },
+    {
+      "id": "PL-008",
+      "category": "INFRASTRUCTURE",
+      "title": "Implement cleanup_sandboxes task for trial-and-error stage",
+      "description": "hcfullpipeline.yaml stage 6 lists cleanup_sandboxes — tear down sandbox environments post-trial. Not implemented.",
+      "status": "pending",
+      "csl_confidence": 0.78,
+      "estimated_hours": 2,
+      "source": "hcfullpipeline.yaml stage 6 trial-and-error",
+      "auto_fix": "grep -rn 'cleanup_sandbox' src/ 2>/dev/null | head -3"
+    },
+    {
+      "id": "PL-009",
+      "category": "QUALITY",
+      "title": "Implement assess_metacognitive_confidence for execute stage",
+      "description": "hcfullpipeline.yaml stage 12 lists metacognitive confidence check — HeadyBuddy assesses confidence ≥ 20%. Not implemented.",
+      "status": "pending",
+      "csl_confidence": 0.85,
+      "estimated_hours": 3,
+      "source": "hcfullpipeline.yaml stage 12 execute",
+      "auto_fix": "grep -rn 'metacognitive\\|assess_confidence' src/ 2>/dev/null | head -3"
+    },
+    {
+      "id": "PL-010",
+      "category": "ARCHITECTURE",
+      "title": "Implement immunize_pipeline task for mistake-analysis stage",
+      "description": "hcfullpipeline.yaml stage 16 lists prevention guard injection into future pipeline runs. Not implemented.",
+      "status": "pending",
+      "csl_confidence": 0.88,
+      "estimated_hours": 3,
+      "source": "hcfullpipeline.yaml stage 16 mistake-analysis",
+      "auto_fix": "grep -rn 'immunize_pipeline\\|prevention_guard' src/ 2>/dev/null | head -3"
+    },
+    {
+      "id": "SYS-001",
+      "category": "INFRASTRUCTURE",
+      "title": "Implement Event Spine (Redis Streams consumer group hcfp-consumers)",
+      "description": "hcfullpipeline.yaml defines event-spine with Redis Streams consumer group and concurrency: unbounded. Not implemented — no consumer group exists.",
+      "status": "pending",
+      "csl_confidence": 0.95,
+      "estimated_hours": 10,
+      "source": "hcfullpipeline.yaml event-spine section",
+      "auto_fix": "redis-cli -u $REDIS_URL XINFO GROUPS hcfullpipeline-stream 2>/dev/null || echo 'Event Spine not configured'"
+    },
+    {
+      "id": "SYS-002",
+      "category": "ARCHITECTURE",
+      "title": "Build src/orchestration/hcfullpipeline.js — the actual pipeline execution engine",
+      "description": "hcfullpipeline.yaml execution.implementation points to src/orchestration/hcfullpipeline.js which does not exist. This is the core pipeline runner.",
+      "status": "pending",
+      "csl_confidence": 0.98,
+      "estimated_hours": 12,
+      "source": "hcfullpipeline.yaml execution.implementation",
+      "auto_fix": "test -f src/orchestration/hcfullpipeline.js && echo 'exists' || echo 'MISSING: pipeline execution engine'"
+    },
+    {
+      "id": "SYS-003",
+      "category": "SECURITY",
+      "title": "Implement Ed25519 trust receipt signing in pipeline receipt stage",
+      "description": "Pipeline stage 20 RECEIPT requires Ed25519-signed trust receipts. No signing code exists.",
+      "status": "pending",
+      "csl_confidence": 0.9,
+      "estimated_hours": 6,
+      "source": "Super Prompt v6.0 §8 Stage 20 RECEIPT + hcfullpipeline.yaml",
+      "auto_fix": "find configs/pki -name '*ed25519*' 2>/dev/null | wc -l"
+    },
+    {
+      "id": "SYS-004",
+      "category": "ARCHITECTURE",
+      "title": "Wire CSL Engine v2 (shared/csl-engine-v2.js) into pipeline classify and judge stages",
+      "description": "CSL engine file exists at shared/csl-engine-v2.js but pipeline stages 3 (classify) and 10 (judge) don't import or use it.",
+      "status": "pending",
+      "csl_confidence": 0.92,
+      "estimated_hours": 6,
+      "source": "Super Prompt v6.0 §10 CSL Gates + pipeline YAML stages 3,10",
+      "auto_fix": "grep -rn 'csl-engine' src/orchestration/ 2>/dev/null | head -3"
+    },
+    {
+      "id": "SYS-005",
+      "category": "SECURITY",
+      "title": "Create configs/pki/ed25519-receipt-key.pem key generation script",
+      "description": "Pipeline references Ed25519 signing key for trust receipts. Key file and generation script don't exist.",
+      "status": "pending",
+      "csl_confidence": 0.88,
+      "estimated_hours": 2,
+      "source": "hcfullpipeline.yaml receipt stage signing config",
+      "auto_fix": "test -f configs/pki/ed25519-receipt-key.pem && echo 'Key exists' || echo 'MISSING: Ed25519 key'"
     }
   ]
 }
