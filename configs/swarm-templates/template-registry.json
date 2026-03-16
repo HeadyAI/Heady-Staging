@@ -1,0 +1,131 @@
+{
+  "version": "1.0",
+  "description": "Heady™ Swarm Template Registry — 13 reusable templates from §33.1",
+  "templates": [
+    {
+      "id": "template-connector-oauth",
+      "name": "OAuth2 API Connector",
+      "category": "connector",
+      "bees": ["APIDiscoveryBee", "SchemaExtractionBee", "AuthPatternBee", "ConnectorCodeGenBee", "SecurityScanBee", "IntegrationTestBee", "DeploymentBee"],
+      "auth_type": "oauth2",
+      "output": "MCP server deployed to CF Worker",
+      "target_time_seconds": 60,
+      "score": 0.85
+    },
+    {
+      "id": "template-connector-apikey",
+      "name": "API Key Connector",
+      "category": "connector",
+      "bees": ["APIDiscoveryBee", "SchemaExtractionBee", "ConnectorCodeGenBee", "SecurityScanBee", "IntegrationTestBee", "DeploymentBee"],
+      "auth_type": "api_key",
+      "output": "MCP server deployed to CF Worker",
+      "target_time_seconds": 45,
+      "score": 0.90
+    },
+    {
+      "id": "template-connector-webhook",
+      "name": "Webhook Handler",
+      "category": "connector",
+      "bees": ["SchemaExtractionBee", "ConnectorCodeGenBee", "SecurityScanBee", "DeploymentBee"],
+      "auth_type": "webhook_secret",
+      "output": "Webhook endpoint on CF Worker",
+      "target_time_seconds": 30,
+      "score": 0.92
+    },
+    {
+      "id": "template-connector-scraper",
+      "name": "Web Scraping Connector",
+      "category": "connector",
+      "bees": ["APIDiscoveryBee", "SchemaExtractionBee", "ConnectorCodeGenBee", "SecurityScanBee", "IntegrationTestBee", "DeploymentBee"],
+      "auth_type": "none",
+      "output": "Scraper MCP server with rate limiting",
+      "target_time_seconds": 120,
+      "score": 0.70
+    },
+    {
+      "id": "template-app-nextjs",
+      "name": "Next.js Full-Stack App",
+      "category": "app",
+      "bees": ["ScaffoldBee", "UIGenerationBee", "APIRoutesBee", "DatabaseBee", "DeploymentBee"],
+      "framework": "nextjs",
+      "output": "Deployed Next.js app on Cloud Run",
+      "target_time_seconds": 180,
+      "score": 0.88
+    },
+    {
+      "id": "template-app-worker",
+      "name": "Cloudflare Worker",
+      "category": "app",
+      "bees": ["ScaffoldBee", "CodeGenBee", "SecurityScanBee", "DeploymentBee"],
+      "framework": "cloudflare-workers",
+      "output": "Deployed CF Worker with KV/D1",
+      "target_time_seconds": 60,
+      "score": 0.93
+    },
+    {
+      "id": "template-app-bot",
+      "name": "Chat Bot (Discord/Slack/Telegram)",
+      "category": "app",
+      "bees": ["ScaffoldBee", "BotLogicBee", "CommandRegistrationBee", "DeploymentBee"],
+      "platforms": ["discord", "slack", "telegram"],
+      "output": "Deployed bot on Cloud Run",
+      "target_time_seconds": 120,
+      "score": 0.87
+    },
+    {
+      "id": "template-app-extension",
+      "name": "Browser/IDE Extension",
+      "category": "app",
+      "bees": ["ScaffoldBee", "ManifestBee", "UIGenerationBee", "PackageBee"],
+      "targets": ["chrome-mv3", "vscode", "jetbrains"],
+      "output": "Packaged extension ready for store submission",
+      "target_time_seconds": 240,
+      "score": 0.80
+    },
+    {
+      "id": "template-bee-custom",
+      "name": "Custom Bee Type",
+      "category": "bee",
+      "bees": ["ManifestBee", "ImplementationBee", "SandboxTestBee", "RegistrationBee"],
+      "output": "Registered bee type in bee-factory-v2",
+      "target_time_seconds": 90,
+      "score": 0.82
+    },
+    {
+      "id": "template-skill-prompt",
+      "name": "Prompt-Based Skill",
+      "category": "skill",
+      "bees": ["IntentAnalysisBee", "SkillWriterBee", "ValidationBee", "RegistrationBee"],
+      "output": "SKILL.md in .agents/skills/",
+      "target_time_seconds": 30,
+      "score": 0.95
+    },
+    {
+      "id": "template-mcp-server",
+      "name": "MCP Server from OpenAPI",
+      "category": "connector",
+      "bees": ["SpecParserBee", "CodeGenBee", "TypeValidationBee", "SecurityScanBee", "DeploymentBee"],
+      "output": "MCP server with typed tools",
+      "target_time_seconds": 60,
+      "score": 0.88
+    },
+    {
+      "id": "template-swarm-bee",
+      "name": "Multi-Bee Swarm",
+      "category": "swarm",
+      "bees": ["DAGDesignBee", "BeeAllocationBee", "ExecutionBee", "ConvergenceBee", "TemplateExtractionBee"],
+      "output": "Executable swarm DAG with template",
+      "target_time_seconds": 120,
+      "score": 0.83
+    },
+    {
+      "id": "template-heady-ui",
+      "name": "HeadyOS UI Component",
+      "category": "ui",
+      "bees": ["DesignBee", "ComponentBee", "CSSSacredGeometryBee", "AccessibilityBee", "DeploymentBee"],
+      "output": "Premium dark-mode UI component with φ-scaling",
+      "target_time_seconds": 90,
+      "score": 0.86
+    }
+  ]
+}
