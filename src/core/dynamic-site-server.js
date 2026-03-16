@@ -575,7 +575,6 @@ function renderSite(site, host) {
   <script>
     const SITE_HOST = '${host}';
     const SITE_BRAND = '${site.brand}';
-    const AUTH_SERVER = 'https://auth.headysystems.com';
     let currentSession = null;
     let currentKeyProvider = null;
 
@@ -605,20 +604,41 @@ function renderSite(site, host) {
     function closeAuth() { document.getElementById('authOverlay').classList.remove('active'); }
 
     function oauthLogin(provider) {
-      // Try real OAuth redirect first, fall back to in-app signup
-      const returnUrl = encodeURIComponent(window.location.origin + '/onboarding');
-      const authUrl = AUTH_SERVER + '/api/provider/start?provider=' + encodeURIComponent(provider) + '&return=' + returnUrl;
-      // Check if auth server is reachable
-      fetch(AUTH_SERVER + '/health',{mode:'cors',signal:AbortSignal.timeout(3000)})
-        .then(r=>{ if(r.ok) window.location.href = authUrl; else fallbackSignup(provider); })
-        .catch(()=>fallbackSignup(provider));
-    }
-    function fallbackSignup(provider) {
-      fetch('/api/signup', {
-        method:'POST', headers:{'Content-Type':'application/json'},
-        body: JSON.stringify({email:provider+'@heady.oauth', password:'oauth-'+Date.now(), displayName:provider+' User', provider})
-      }).then(r=>r.json()).then(d=>{ if(!d.error) showSuccess(d,provider); else alert(d.error); })
-      .catch(()=>showSuccess({user:{displayName:provider+' User',apiKey:'HY-demo-'+provider,tier:'spark'},token:'demo'},provider));
+      // Open real OAuth popup via dynamic-auth-router on this server
+      const w = 500, h = 600;
+      const left = (screen.width - w) / 2, top = (screen.height - h) / 2;
+      const popup = window.open(
+        '/api/auth/' + provider,
+        'heady_oauth_' + provider,
+        'width='+w+',height='+h+',left='+left+',top='+top+',menubar=no,toolbar=no'
+      );
+      if (!popup) { alert('Please allow popups for OAuth sign-in.'); return; }
+
+      // Listen for postMessage from the callback page
+      function onMessage(e) {
+        if (!e.data || e.data.type !== 'heady_auth_success') return;
+        window.removeEventListener('message', onMessage);
+        const { token, user } = e.data;
+        // Save session and show success
+        currentSession = token;
+        document.cookie = 'heady_session='+token+';path=/;max-age=86400;SameSite=Strict';
+        closeAuth();
+        document.getElementById('successTitle').textContent = 'Welcome, '+(user.name || user.email);
+        document.getElementById('successSub').textContent = 'Connected via '+provider+' on '+SITE_BRAND;
+        document.getElementById('apiKeyVal').textContent = token.substring(0,20)+'...';
+        document.getElementById('successOverlay').classList.add('active');
+        const nav = document.getElementById('navSignIn');
+        if(nav){nav.textContent='✓ '+(user.name||user.email);nav.style.background='#10b981';}
+      }
+      window.addEventListener('message', onMessage);
+
+      // Poll for popup close (user cancelled)
+      const check = setInterval(function() {
+        if (popup.closed) {
+          clearInterval(check);
+          window.removeEventListener('message', onMessage);
+        }
+      }, 500);
     }
 
     function showKeyInput(provider,name,prefix) {
@@ -733,6 +753,114 @@ const server = http.createServer((req, res) => {
   }
 
   // ── API Routes ──────────────────────────────────────────
+
+  // ── OAuth Routes (real provider redirects + callbacks) ──
+  const OAUTH_REGISTRY = {
+    google:    { envKey:'GOOGLE_CLIENT_ID', envSecret:'GOOGLE_CLIENT_SECRET', authUrl:'https://accounts.google.com/o/oauth2/v2/auth', tokenUrl:'https://oauth2.googleapis.com/token', profileUrl:null, scope:'openid email profile', extra:{access_type:'offline'}, extractUser:(tok)=>{ const p=JSON.parse(Buffer.from(tok.id_token.split('.')[1],'base64').toString()); return {email:p.email,name:p.name,photo:p.picture}; } },
+    github:    { envKey:'GITHUB_CLIENT_ID', envSecret:'GITHUB_CLIENT_SECRET', authUrl:'https://github.com/login/oauth/authorize', tokenUrl:'https://github.com/login/oauth/access_token', profileUrl:'https://api.github.com/user', scope:'read:user user:email', extractUser:(_tok,prof)=>({email:prof.email||prof.login+'@github.noreply',name:prof.name||prof.login,photo:prof.avatar_url}) },
+    microsoft: { envKey:'MICROSOFT_CLIENT_ID', envSecret:'MICROSOFT_CLIENT_SECRET', authUrl:'https://login.microsoftonline.com/common/oauth2/v2.0/authorize', tokenUrl:'https://login.microsoftonline.com/common/oauth2/v2.0/token', profileUrl:'https://graph.microsoft.com/v1.0/me', scope:'openid email profile User.Read', extra:{response_mode:'query'}, extractUser:(_tok,prof)=>({email:prof.mail||prof.userPrincipalName,name:prof.displayName,photo:null}) },
+    apple:     { envKey:'APPLE_CLIENT_ID', envSecret:'APPLE_CLIENT_SECRET', authUrl:'https://appleid.apple.com/auth/authorize', tokenUrl:'https://appleid.apple.com/auth/token', profileUrl:null, scope:'name email', extra:{response_mode:'form_post'}, extractUser:(tok)=>{ const p=JSON.parse(Buffer.from(tok.id_token.split('.')[1],'base64').toString()); return {email:p.email,name:p.email?.split('@')[0],photo:null}; } },
+    facebook:  { envKey:'FACEBOOK_APP_ID', envSecret:'FACEBOOK_APP_SECRET', authUrl:'https://www.facebook.com/v19.0/dialog/oauth', tokenUrl:'https://graph.facebook.com/v19.0/oauth/access_token', profileUrl:'https://graph.facebook.com/v19.0/me?fields=id,name,email,picture.type(large)', scope:'email,public_profile', extractUser:(_tok,prof)=>({email:prof.email,name:prof.name,photo:prof.picture?.data?.url}) },
+    amazon:    { envKey:'AMAZON_CLIENT_ID', envSecret:'AMAZON_CLIENT_SECRET', authUrl:'https://www.amazon.com/ap/oa', tokenUrl:'https://api.amazon.com/auth/o2/token', profileUrl:'https://api.amazon.com/user/profile', scope:'profile', extractUser:(_tok,prof)=>({email:prof.email,name:prof.name,photo:null}) },
+    discord:   { envKey:'DISCORD_CLIENT_ID', envSecret:'DISCORD_CLIENT_SECRET', authUrl:'https://discord.com/api/oauth2/authorize', tokenUrl:'https://discord.com/api/oauth2/token', profileUrl:'https://discord.com/api/users/@me', scope:'identify email', extractUser:(_tok,prof)=>({email:prof.email,name:prof.global_name||prof.username,photo:prof.avatar?`https://cdn.discordapp.com/avatars/${prof.id}/${prof.avatar}.png`:null}) },
+    slack:     { envKey:'SLACK_CLIENT_ID', envSecret:'SLACK_CLIENT_SECRET', authUrl:'https://slack.com/openid/connect/authorize', tokenUrl:'https://slack.com/api/openid.connect.token', profileUrl:'https://slack.com/api/openid.connect.userInfo', scope:'openid email profile', extractUser:(_tok,prof)=>({email:prof.email,name:prof.name,photo:prof.picture}) },
+    linkedin:  { envKey:'LINKEDIN_CLIENT_ID', envSecret:'LINKEDIN_CLIENT_SECRET', authUrl:'https://www.linkedin.com/oauth/v2/authorization', tokenUrl:'https://www.linkedin.com/oauth/v2/accessToken', profileUrl:'https://api.linkedin.com/v2/userinfo', scope:'openid profile email', extractUser:(_tok,prof)=>({email:prof.email,name:prof.name,photo:prof.picture}) },
+    twitter:   { envKey:'TWITTER_CLIENT_ID', envSecret:'TWITTER_CLIENT_SECRET', authUrl:'https://twitter.com/i/oauth2/authorize', tokenUrl:'https://api.twitter.com/2/oauth2/token', profileUrl:'https://api.twitter.com/2/users/me?user.fields=profile_image_url', scope:'users.read tweet.read', tokenAuth:'basic', extra:{code_challenge:'challenge',code_challenge_method:'plain'}, extractUser:(_tok,prof)=>({email:null,name:prof.data?.name,photo:prof.data?.profile_image_url}) },
+    spotify:   { envKey:'SPOTIFY_CLIENT_ID', envSecret:'SPOTIFY_CLIENT_SECRET', authUrl:'https://accounts.spotify.com/authorize', tokenUrl:'https://accounts.spotify.com/api/token', profileUrl:'https://api.spotify.com/v1/me', scope:'user-read-email user-read-private', tokenAuth:'basic', extractUser:(_tok,prof)=>({email:prof.email,name:prof.display_name,photo:prof.images?.[0]?.url}) },
+    huggingface:{ envKey:'HUGGINGFACE_CLIENT_ID', envSecret:'HUGGINGFACE_CLIENT_SECRET', authUrl:'https://huggingface.co/oauth/authorize', tokenUrl:'https://huggingface.co/oauth/token', profileUrl:'https://huggingface.co/api/whoami-v2', scope:'openid profile email', extractUser:(_tok,prof)=>({email:prof.email,name:prof.name||prof.fullname,photo:prof.avatarUrl}) },
+  };
+
+  // Helper: postMessage success/error pages
+  function _authSuccessPage(token, user) {
+    const payload = JSON.stringify({ type: 'heady_auth_success', token, user });
+    return `<!DOCTYPE html><html><head><title>Heady — Connected</title>
+<style>body{background:#0a0a0f;color:#e2e8f0;font-family:system-ui;display:flex;align-items:center;justify-content:center;height:100vh;margin:0}
+.box{text-align:center;padding:40px;border-radius:24px;background:rgba(15,15,25,0.95);border:1px solid rgba(255,255,255,0.08)}
+h2{color:#818cf8;margin-bottom:8px}p{opacity:0.7;font-size:0.9rem}</style></head>
+<body><div class="box"><h2>✅ Connected to Heady</h2><p>This window will close automatically...</p></div>
+<script>try{window.opener.postMessage(${payload},'*')}catch(e){}setTimeout(function(){window.close()},1500)</script></body></html>`;
+  }
+  function _authErrorPage(msg) {
+    return `<!DOCTYPE html><html><head><title>Heady — Auth Error</title>
+<style>body{background:#0a0a0f;color:#e2e8f0;font-family:system-ui;display:flex;align-items:center;justify-content:center;height:100vh;margin:0}
+.box{text-align:center;padding:40px;border-radius:24px;background:rgba(15,15,25,0.95);border:1px solid rgba(255,255,255,0.08)}
+h2{color:#ef4444;margin-bottom:8px}p{opacity:0.7;font-size:0.9rem}
+.btn{margin-top:16px;padding:10px 24px;border-radius:12px;background:#818cf8;color:#000;border:none;cursor:pointer;font-weight:700}</style></head>
+<body><div class="box"><h2>⚠️ Auth Error</h2><p>${msg}</p><button class="btn" onclick="window.close()">Close</button></div></body></html>`;
+  }
+
+  // GET /api/auth/:provider — redirect to OAuth provider
+  const authMatch = url.pathname.match(/^\/api\/auth\/([a-z]+)$/);
+  if (authMatch && req.method === 'GET') {
+    const providerKey = authMatch[1];
+    const provider = OAUTH_REGISTRY[providerKey];
+    if (!provider) { res.writeHead(404); res.end(_authErrorPage('Unknown provider: ' + providerKey)); return; }
+    const clientId = process.env[provider.envKey];
+    if (!clientId) { res.writeHead(200, {'Content-Type':'text/html'}); res.end(_authErrorPage(`${providerKey} OAuth not configured — set ${provider.envKey} environment variable`)); return; }
+    const redirect = `https://${host}/api/auth/${providerKey}/callback`;
+    const params = new URLSearchParams({
+      client_id: clientId,
+      redirect_uri: redirect,
+      response_type: 'code',
+      scope: provider.scope,
+      ...(provider.extra || {}),
+    });
+    res.writeHead(302, { Location: `${provider.authUrl}?${params.toString()}` });
+    res.end();
+    return;
+  }
+
+  // GET /api/auth/:provider/callback — exchange code, extract user, postMessage
+  const cbMatch = url.pathname.match(/^\/api\/auth\/([a-z]+)\/callback$/);
+  if (cbMatch && req.method === 'GET') {
+    const providerKey = cbMatch[1];
+    const provider = OAUTH_REGISTRY[providerKey];
+    const code = url.searchParams.get('code');
+    if (!provider) { res.writeHead(200, {'Content-Type':'text/html'}); res.end(_authErrorPage('Unknown provider')); return; }
+    if (!code) { res.writeHead(200, {'Content-Type':'text/html'}); res.end(_authErrorPage('Missing authorization code')); return; }
+    (async () => {
+      try {
+        const redirect = `https://${host}/api/auth/${providerKey}/callback`;
+        const tokenBody = new URLSearchParams({
+          client_id: process.env[provider.envKey],
+          client_secret: process.env[provider.envSecret],
+          code,
+          redirect_uri: redirect,
+          grant_type: 'authorization_code',
+        });
+        const tokenHeaders = { 'Content-Type': 'application/x-www-form-urlencoded', 'Accept': 'application/json' };
+        if (provider.tokenAuth === 'basic') {
+          tokenHeaders['Authorization'] = 'Basic ' + Buffer.from(process.env[provider.envKey]+':'+process.env[provider.envSecret]).toString('base64');
+        }
+        const tokenRes = await fetch(provider.tokenUrl, { method: 'POST', headers: tokenHeaders, body: tokenBody.toString() });
+        const tokens = await tokenRes.json();
+        if (tokens.error) throw new Error(tokens.error_description || tokens.error);
+
+        let profile = null;
+        if (provider.profileUrl) {
+          const profRes = await fetch(provider.profileUrl, { headers: { 'Authorization': `Bearer ${tokens.access_token}`, 'Accept': 'application/json', 'User-Agent': 'HeadyMe/3.2' } });
+          profile = await profRes.json();
+        }
+
+        const user = provider.extractUser(tokens, profile);
+        user.provider = providerKey;
+        const sessionToken = `hdy_${providerKey}_${Date.now()}_${crypto.randomBytes(8).toString('hex')}`;
+
+        // Store session in-memory
+        sessions.set(sessionToken, { userId: crypto.randomUUID(), email: user.email, provider: providerKey });
+
+        logger.info(`[OAuth] ${providerKey} success`, { email: user.email });
+        res.writeHead(200, { 'Content-Type': 'text/html' });
+        res.end(_authSuccessPage(sessionToken, user));
+      } catch (err) {
+        logger.error(`[OAuth] ${providerKey} failed`, { error: err.message });
+        res.writeHead(200, { 'Content-Type': 'text/html' });
+        res.end(_authErrorPage(`${providerKey} sign-in failed: ${err.message}`));
+      }
+    })();
+    return;
+  }
+
   if (url.pathname === '/api/providers') {
     res.writeHead(200, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify(AUTH_PROVIDERS));
