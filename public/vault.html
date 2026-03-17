@@ -1,0 +1,822 @@
+<!-- HEADY_BRAND:BEGIN
+     HEADY SYSTEMS | vault.html | Sacred Geometry v5.0
+     Personal Sovereign Data Store — your data, your rules
+     (c) 2026 HeadySystems Inc. - Eric Haywood, Founder
+HEADY_BRAND:END -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Heady Vault — Personal Sovereign Data Store</title>
+    <meta name="description" content="Heady Vault — ZK-proof sovereign data store. Your data, your rules. Cryptographic integrity at every layer.">
+    <meta name="theme-color" content="#050510">
+    <link rel="stylesheet" href="/sacred-geometry.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', system-ui, sans-serif;
+            background: linear-gradient(160deg, #050510 0%, #0A0A1A 50%, #1A1A3E 100%);
+            color: #FAFAFA;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Background orbs */
+        .orb-container {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 0; pointer-events: none; overflow: hidden;
+        }
+        .orb {
+            position: absolute; border-radius: 50%;
+            filter: blur(90px); opacity: 0.12;
+            animation: orbFloat 28s ease-in-out infinite;
+        }
+        .orb-gold  { width: 480px; height: 480px; background: #D4AF37; top: -120px; left: -80px; animation-duration: 32s; }
+        .orb-cyan  { width: 380px; height: 380px; background: #00D9FF; bottom: 5%; right: -60px; animation-duration: 26s; animation-delay: -12s; }
+        .orb-mag   { width: 320px; height: 320px; background: #FF00A0; top: 45%; left: 30%; animation-duration: 38s; animation-delay: -8s; }
+
+        @keyframes orbFloat {
+            0%, 100% { transform: translate(0,0) scale(1); }
+            33%       { transform: translate(40px,-60px) scale(1.05); }
+            66%       { transform: translate(-30px,40px) scale(0.97); }
+        }
+
+        /* Layout */
+        .page-wrap {
+            position: relative; z-index: 1;
+            max-width: 1400px; margin: 0 auto;
+            padding: 80px 24px 40px;
+        }
+
+        /* ── VAULT SEAL ── */
+        .vault-hero {
+            text-align: center;
+            padding: 48px 0 36px;
+        }
+        .seal-wrap {
+            display: inline-block; position: relative;
+            width: 120px; height: 120px; margin-bottom: 24px;
+        }
+        .seal-svg {
+            width: 120px; height: 120px;
+            animation: sealSpin 40s linear infinite;
+            filter: drop-shadow(0 0 18px rgba(212,175,55,0.55));
+        }
+        @keyframes sealSpin {
+            from { transform: rotate(0deg); }
+            to   { transform: rotate(360deg); }
+        }
+        .vault-hero h1 {
+            font-size: clamp(28px, 4vw, 48px);
+            font-weight: 700; letter-spacing: -0.5px;
+            background: linear-gradient(135deg, #D4AF37 0%, #FAFAFA 50%, #00D9FF 100%);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .vault-hero p {
+            color: rgba(250,250,250,0.55); font-size: 15px; margin-top: 10px;
+        }
+
+        /* ── PRIVACY METER ── */
+        .privacy-meter-wrap {
+            background: rgba(26,26,62,0.6);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(212,175,55,0.2);
+            border-radius: 16px;
+            padding: 18px 28px;
+            margin-bottom: 32px;
+            display: flex; align-items: center; gap: 20px;
+        }
+        .privacy-label { font-size: 13px; color: rgba(250,250,250,0.5); white-space: nowrap; min-width: 100px; }
+        .meter-bar {
+            flex: 1; height: 10px; border-radius: 99px;
+            background: rgba(255,255,255,0.08);
+            position: relative; overflow: hidden;
+        }
+        .meter-fill {
+            height: 100%; border-radius: 99px;
+            background: linear-gradient(90deg, #D4AF37 0%, #00D9FF var(--pct, 78%), rgba(255,0,160,0.3) 100%);
+            width: var(--pct, 78%);
+            transition: width 0.8s cubic-bezier(0.618,0,0.382,1);
+        }
+        .meter-stats { font-size: 13px; color: #D4AF37; white-space: nowrap; }
+
+        /* ── CATEGORY CARDS ── */
+        .section-title {
+            font-size: 13px; letter-spacing: 2px; text-transform: uppercase;
+            color: rgba(250,250,250,0.4); margin-bottom: 16px;
+        }
+        .categories-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin-bottom: 36px;
+        }
+        @media (max-width: 700px) { .categories-grid { grid-template-columns: repeat(2, 1fr); } }
+        .cat-card {
+            background: rgba(26,26,62,0.6);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.07);
+            border-radius: 16px;
+            padding: 20px;
+            cursor: pointer;
+            transition: transform 0.25s cubic-bezier(0.618,0,0.382,1), border-color 0.25s, box-shadow 0.25s;
+            position: relative; overflow: hidden;
+        }
+        .cat-card::before {
+            content: '';
+            position: absolute; inset: 0; border-radius: 16px;
+            opacity: 0; transition: opacity 0.3s;
+            background: radial-gradient(circle at 50% 0%, var(--glow) 0%, transparent 70%);
+        }
+        .cat-card:hover { transform: translateY(-3px); border-color: var(--glow); box-shadow: 0 8px 32px rgba(0,0,0,0.3); }
+        .cat-card:hover::before { opacity: 0.15; }
+        .cat-icon { font-size: 28px; margin-bottom: 10px; }
+        .cat-name { font-size: 14px; font-weight: 600; color: var(--glow); margin-bottom: 4px; }
+        .cat-count { font-size: 24px; font-weight: 700; color: #FAFAFA; }
+        .cat-sub  { font-size: 11px; color: rgba(250,250,250,0.4); margin-top: 2px; }
+
+        /* ── MAIN BODY: entries + sidebar ── */
+        .body-layout {
+            display: grid;
+            grid-template-columns: 1fr 340px;
+            gap: 24px;
+            align-items: start;
+        }
+        @media (max-width: 1000px) { .body-layout { grid-template-columns: 1fr; } }
+
+        /* ── ENTRY LIST ── */
+        .entries-panel {
+            background: rgba(26,26,62,0.6);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.07);
+            border-radius: 20px;
+            overflow: hidden;
+        }
+        .panel-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+            display: flex; align-items: center; justify-content: space-between;
+        }
+        .panel-title { font-size: 16px; font-weight: 600; }
+        .entry-count-badge {
+            background: rgba(0,217,255,0.15);
+            color: #00D9FF; border-radius: 99px;
+            padding: 3px 10px; font-size: 12px;
+        }
+        .entry-list { list-style: none; }
+        .entry-row {
+            padding: 16px 24px;
+            border-bottom: 1px solid rgba(255,255,255,0.04);
+            display: flex; align-items: center; gap: 14px;
+            cursor: pointer;
+            transition: background 0.2s;
+            border-left: 3px solid var(--cat-color, rgba(255,255,255,0.1));
+            position: relative;
+        }
+        .entry-row:hover { background: rgba(255,255,255,0.03); }
+        .entry-row:last-child { border-bottom: none; }
+        .entry-name { font-size: 14px; font-weight: 500; flex: 1; }
+        .entry-meta { display: flex; flex-direction: column; gap: 3px; align-items: flex-end; }
+        .cat-badge {
+            font-size: 10px; border-radius: 6px; padding: 2px 8px;
+            background: rgba(255,255,255,0.07);
+            color: var(--cat-color, rgba(250,250,250,0.5));
+            border: 1px solid rgba(255,255,255,0.1);
+            text-transform: uppercase; letter-spacing: 0.5px;
+        }
+        .entry-hash { font-size: 10px; color: rgba(250,250,250,0.3); font-family: 'Courier New', monospace; }
+        .entry-date { font-size: 11px; color: rgba(250,250,250,0.35); }
+        .entry-access { font-size: 11px; color: rgba(212,175,55,0.7); }
+
+        /* Expandable detail */
+        .entry-detail {
+            display: none;
+            background: rgba(10,10,30,0.5);
+            padding: 16px 24px 16px 43px;
+            border-bottom: 1px solid rgba(255,255,255,0.04);
+            font-size: 13px;
+            color: rgba(250,250,250,0.6);
+            animation: fadeIn 0.2s ease;
+        }
+        .entry-detail.open { display: block; }
+        @keyframes fadeIn { from { opacity:0; transform: translateY(-6px); } to { opacity:1; transform:none; } }
+        .detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 24px; margin-bottom: 12px; }
+        .detail-row label { color: rgba(250,250,250,0.35); font-size: 11px; display: block; margin-bottom: 2px; }
+        .detail-row span  { font-family: 'Courier New', monospace; font-size: 12px; color: #FAFAFA; word-break: break-all; }
+        .disclosure-history { margin-top: 10px; }
+        .dh-title { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: rgba(250,250,250,0.3); margin-bottom: 6px; }
+        .dh-item { font-size: 12px; padding: 5px 0; border-bottom: 1px solid rgba(255,255,255,0.04); color: rgba(250,250,250,0.55); }
+
+        /* ── SIDEBAR ── */
+        .sidebar { display: flex; flex-direction: column; gap: 20px; }
+        .sidebar-card {
+            background: rgba(26,26,62,0.6);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.07);
+            border-radius: 20px;
+            overflow: hidden;
+        }
+        .sidebar-card .panel-header { padding: 16px 20px; }
+        .sidebar-card .panel-title { font-size: 14px; }
+
+        /* Disclosure items */
+        .disclosure-list { list-style: none; }
+        .disc-item {
+            padding: 14px 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.04);
+            font-size: 12px;
+        }
+        .disc-item:last-child { border-bottom: none; }
+        .disc-name { font-weight: 600; font-size: 13px; margin-bottom: 4px; }
+        .disc-meta { color: rgba(250,250,250,0.4); display: flex; flex-direction: column; gap: 2px; }
+        .disc-proof-badge {
+            display: inline-block; font-size: 10px;
+            padding: 2px 7px; border-radius: 6px;
+            background: rgba(255,0,160,0.12); color: #FF00A0;
+            border: 1px solid rgba(255,0,160,0.3);
+            margin-bottom: 4px;
+        }
+        .disc-hash { font-family: 'Courier New', monospace; font-size: 10px; color: rgba(250,250,250,0.25); }
+
+        /* Disclose form */
+        .disclose-form { padding: 16px 20px; display: none; }
+        .disclose-form.open { display: block; }
+        .form-group { margin-bottom: 12px; }
+        .form-label { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: rgba(250,250,250,0.4); margin-bottom: 6px; display: block; }
+        .form-control {
+            width: 100%; background: rgba(10,10,30,0.6);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 10px; padding: 10px 14px;
+            color: #FAFAFA; font-family: inherit; font-size: 13px;
+            outline: none; transition: border-color 0.2s;
+        }
+        .form-control:focus { border-color: rgba(0,217,255,0.5); }
+        select.form-control option { background: #0A0A1A; }
+        .btn {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 10px 20px; border-radius: 12px; border: none;
+            font-family: inherit; font-size: 13px; font-weight: 600;
+            cursor: pointer; transition: all 0.25s cubic-bezier(0.618,0,0.382,1);
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #D4AF37, #b8961e);
+            color: #050510;
+        }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(212,175,55,0.4); }
+        .btn-cyan {
+            background: linear-gradient(135deg, #00D9FF, #0099cc);
+            color: #050510;
+        }
+        .btn-cyan:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,217,255,0.4); }
+        .btn-outline {
+            background: transparent;
+            border: 1px solid rgba(255,255,255,0.15);
+            color: rgba(250,250,250,0.7);
+        }
+        .btn-outline:hover { border-color: #00D9FF; color: #00D9FF; }
+        .btn-sm { padding: 7px 14px; font-size: 12px; border-radius: 9px; }
+        .btn-block { width: 100%; justify-content: center; }
+        .btn-disclose-toggle {
+            width: calc(100% - 40px); margin: 0 20px 16px;
+        }
+
+        /* ── MODAL ── */
+        .modal-backdrop {
+            display: none; position: fixed; inset: 0; z-index: 1000;
+            background: rgba(5,5,16,0.85); backdrop-filter: blur(6px);
+            align-items: center; justify-content: center;
+        }
+        .modal-backdrop.open { display: flex; }
+        .modal {
+            background: rgba(20,20,50,0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(212,175,55,0.3);
+            border-radius: 24px;
+            width: 100%; max-width: 540px;
+            padding: 32px;
+            position: relative;
+            animation: modalIn 0.3s cubic-bezier(0.618,0,0.382,1);
+            max-height: 90vh; overflow-y: auto;
+        }
+        @keyframes modalIn {
+            from { opacity: 0; transform: scale(0.92) translateY(20px); }
+            to   { opacity: 1; transform: none; }
+        }
+        .modal-close {
+            position: absolute; top: 16px; right: 16px;
+            background: rgba(255,255,255,0.07); border: none;
+            color: rgba(250,250,250,0.6); border-radius: 50%;
+            width: 32px; height: 32px; font-size: 16px;
+            cursor: pointer; display: flex; align-items: center; justify-content: center;
+            transition: background 0.2s;
+        }
+        .modal-close:hover { background: rgba(255,0,160,0.2); color: #FF00A0; }
+        .modal-title { font-size: 20px; font-weight: 700; margin-bottom: 24px; }
+        .kv-row { display: flex; gap: 8px; margin-bottom: 8px; }
+        .kv-row .form-control { flex: 1; }
+        .kv-remove {
+            background: rgba(255,0,160,0.1); border: 1px solid rgba(255,0,160,0.2);
+            color: #FF00A0; border-radius: 8px; padding: 0 12px;
+            cursor: pointer; font-size: 18px; line-height: 1;
+            flex-shrink: 0;
+        }
+        .kv-remove:hover { background: rgba(255,0,160,0.25); }
+        .add-kv-btn {
+            background: none; border: 1px dashed rgba(255,255,255,0.15);
+            color: rgba(250,250,250,0.5); border-radius: 8px;
+            padding: 8px 14px; font-size: 12px; cursor: pointer; width: 100%;
+            transition: all 0.2s; font-family: inherit;
+        }
+        .add-kv-btn:hover { border-color: #00D9FF; color: #00D9FF; }
+        .modal-actions { display: flex; gap: 12px; margin-top: 24px; }
+
+        /* Seal stamp animation */
+        .seal-stamp {
+            display: none;
+            position: fixed; inset: 0; z-index: 2000;
+            align-items: center; justify-content: center; pointer-events: none;
+        }
+        .seal-stamp.active { display: flex; }
+        .seal-stamp-svg {
+            animation: stampIn 0.6s cubic-bezier(0.618,0,0.382,1) forwards;
+            opacity: 0;
+        }
+        @keyframes stampIn {
+            0%   { opacity: 0; transform: scale(2.5) rotate(-20deg); }
+            60%  { opacity: 1; transform: scale(0.9) rotate(2deg); }
+            80%  { transform: scale(1.05) rotate(-1deg); }
+            100% { opacity: 1; transform: scale(1) rotate(0deg); }
+        }
+
+        /* ── FAB ── */
+        .fab {
+            position: fixed; bottom: 32px; right: 32px; z-index: 100;
+            background: linear-gradient(135deg, #D4AF37, #b8961e);
+            color: #050510; border: none; border-radius: 50px;
+            padding: 14px 24px; font-size: 14px; font-weight: 700;
+            font-family: inherit; cursor: pointer;
+            box-shadow: 0 8px 32px rgba(212,175,55,0.45);
+            display: flex; align-items: center; gap: 8px;
+            transition: all 0.25s cubic-bezier(0.618,0,0.382,1);
+        }
+        .fab:hover { transform: translateY(-3px) scale(1.04); box-shadow: 0 12px 40px rgba(212,175,55,0.6); }
+
+        /* Success toast */
+        .toast {
+            position: fixed; bottom: 90px; right: 32px; z-index: 500;
+            background: rgba(26,26,62,0.95); backdrop-filter: blur(20px);
+            border: 1px solid rgba(212,175,55,0.4);
+            border-radius: 14px; padding: 14px 20px;
+            font-size: 13px; color: #D4AF37;
+            display: flex; align-items: center; gap: 10px;
+            transform: translateY(20px); opacity: 0;
+            transition: all 0.3s cubic-bezier(0.618,0,0.382,1);
+            pointer-events: none;
+        }
+        .toast.show { transform: none; opacity: 1; }
+
+        /* Status indicator */
+        .status-dot {
+            width: 8px; height: 8px; border-radius: 50%;
+            background: #00D9FF;
+            box-shadow: 0 0 8px #00D9FF;
+            animation: pulse 2s ease-in-out infinite;
+            display: inline-block;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50%       { opacity: 0.5; transform: scale(0.8); }
+        }
+    </style>
+</head>
+<body>
+<script src="/nav-global.js"></script>
+
+<!-- Background -->
+<div class="orb-container">
+    <div class="orb orb-gold"></div>
+    <div class="orb orb-cyan"></div>
+    <div class="orb orb-mag"></div>
+</div>
+
+<div class="page-wrap">
+
+    <!-- VAULT HERO -->
+    <div class="vault-hero">
+        <div class="seal-wrap">
+            <svg class="seal-svg" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <!-- Flower of Life overlapping circles -->
+                <circle cx="60" cy="60" r="20" stroke="#D4AF37" stroke-width="0.8" fill="none" opacity="0.7"/>
+                <circle cx="60" cy="40" r="20" stroke="#D4AF37" stroke-width="0.8" fill="none" opacity="0.7"/>
+                <circle cx="60" cy="80" r="20" stroke="#D4AF37" stroke-width="0.8" fill="none" opacity="0.7"/>
+                <circle cx="77.3" cy="50" r="20" stroke="#D4AF37" stroke-width="0.8" fill="none" opacity="0.7"/>
+                <circle cx="77.3" cy="70" r="20" stroke="#D4AF37" stroke-width="0.8" fill="none" opacity="0.7"/>
+                <circle cx="42.7" cy="50" r="20" stroke="#D4AF37" stroke-width="0.8" fill="none" opacity="0.7"/>
+                <circle cx="42.7" cy="70" r="20" stroke="#D4AF37" stroke-width="0.8" fill="none" opacity="0.7"/>
+                <!-- Outer ring -->
+                <circle cx="60" cy="60" r="55" stroke="#D4AF37" stroke-width="0.5" fill="none" opacity="0.4" stroke-dasharray="4 3"/>
+                <!-- Center dot -->
+                <circle cx="60" cy="60" r="4" fill="#D4AF37" opacity="0.9"/>
+                <!-- ZK shield -->
+                <text x="60" y="115" text-anchor="middle" font-size="7" fill="#D4AF37" opacity="0.6" font-family="Inter,system-ui,sans-serif" letter-spacing="2">ZK-VAULT</text>
+            </svg>
+        </div>
+        <h1>Heady Vault</h1>
+        <p>Personal Sovereign Data Store &mdash; ZK-proof disclosure controls &mdash; <span class="status-dot"></span> Encrypted at rest</p>
+    </div>
+
+    <!-- PRIVACY METER -->
+    <div class="privacy-meter-wrap">
+        <span class="privacy-label">Privacy Score</span>
+        <div class="meter-bar"><div class="meter-fill" id="privacyFill" style="--pct: 78%"></div></div>
+        <span class="meter-stats" id="privacyStats">78% Private &bull; 22% Disclosed</span>
+    </div>
+
+    <!-- CATEGORY OVERVIEW -->
+    <p class="section-title">Vault Categories</p>
+    <div class="categories-grid" id="categoriesGrid">
+        <!-- Populated by JS -->
+    </div>
+
+    <!-- MAIN BODY -->
+    <div class="body-layout">
+        <!-- Entries panel -->
+        <div class="entries-panel">
+            <div class="panel-header">
+                <span class="panel-title">Stored Entries</span>
+                <span class="entry-count-badge" id="entryCountBadge">0 entries</span>
+            </div>
+            <ul class="entry-list" id="entryList">
+                <!-- Populated by JS -->
+            </ul>
+        </div>
+
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <!-- Disclosure panel -->
+            <div class="sidebar-card">
+                <div class="panel-header">
+                    <span class="panel-title">Recent Disclosures</span>
+                    <span class="status-dot"></span>
+                </div>
+                <ul class="disclosure-list" id="disclosureList">
+                    <!-- Populated by JS -->
+                </ul>
+                <button class="btn btn-outline btn-sm btn-block btn-disclose-toggle" onclick="toggleDiscloseForm()">+ New Selective Disclosure</button>
+                <div class="disclose-form" id="discloseForm">
+                    <div class="form-group">
+                        <label class="form-label">Entry</label>
+                        <select class="form-control" id="discEntry"></select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Requestor</label>
+                        <input class="form-control" id="discRequestor" type="text" placeholder="e.g. HealthApp Inc.">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Proof Type</label>
+                        <select class="form-control" id="discProofType">
+                            <option value="ZK-SNARK">ZK-SNARK</option>
+                            <option value="ZK-STARK">ZK-STARK</option>
+                            <option value="Merkle Proof">Merkle Proof</option>
+                            <option value="Selective Reveal">Selective Reveal</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-cyan btn-sm btn-block" onclick="submitDisclosure()">Generate Proof &amp; Disclose</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- FAB -->
+<button class="fab" onclick="openModal()">
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 2a.75.75 0 0 1 .75.75V7.25h4.5a.75.75 0 0 1 0 1.5H8.75v4.5a.75.75 0 0 1-1.5 0V8.75H2.75a.75.75 0 0 1 0-1.5H7.25V2.75A.75.75 0 0 1 8 2Z"/></svg>
+    Add to Vault
+</button>
+
+<!-- Toast -->
+<div class="toast" id="toast">
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="#D4AF37"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.75.75 0 0 1 1.06-1.06L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"/></svg>
+    <span id="toastMsg">Stored with cryptographic hash.</span>
+</div>
+
+<!-- Store Modal -->
+<div class="modal-backdrop" id="storeModal">
+    <div class="modal">
+        <button class="modal-close" onclick="closeModal()">&times;</button>
+        <div class="modal-title">Add to Vault</div>
+        <div class="form-group">
+            <label class="form-label">Entry Name</label>
+            <input class="form-control" id="entryName" type="text" placeholder="e.g. Passport Hash">
+        </div>
+        <div class="form-group">
+            <label class="form-label">Category</label>
+            <select class="form-control" id="entryCat">
+                <option value="Credentials">Credentials</option>
+                <option value="Preferences">Preferences</option>
+                <option value="Health">Health</option>
+                <option value="Financial">Financial</option>
+                <option value="Documents">Documents</option>
+                <option value="Keys">Keys</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label class="form-label">Metadata</label>
+            <div id="kvPairs">
+                <div class="kv-row">
+                    <input class="form-control" type="text" placeholder="key" style="flex:0 0 38%">
+                    <input class="form-control" type="text" placeholder="value">
+                    <button class="kv-remove" onclick="removeKv(this)">-</button>
+                </div>
+            </div>
+            <button class="add-kv-btn" onclick="addKvRow()">+ Add Metadata Field</button>
+        </div>
+        <div class="modal-actions">
+            <button class="btn btn-primary" style="flex:1" onclick="storeEntry()">
+                <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M8 1a2 2 0 0 1 2 2v1h1.5A1.5 1.5 0 0 1 13 5.5v7A1.5 1.5 0 0 1 11.5 14h-7A1.5 1.5 0 0 1 3 12.5v-7A1.5 1.5 0 0 1 4.5 4H6V3a2 2 0 0 1 2-2Zm0 1.5A.5.5 0 0 0 7.5 3v1h1V3A.5.5 0 0 0 8 2.5Z"/></svg>
+                Store with Cryptographic Hash
+            </button>
+            <button class="btn btn-outline" onclick="closeModal()">Cancel</button>
+        </div>
+    </div>
+</div>
+
+<!-- Seal stamp overlay -->
+<div class="seal-stamp" id="sealStamp">
+    <svg class="seal-stamp-svg" width="220" height="220" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="60" cy="60" r="55" stroke="#D4AF37" stroke-width="1.5" fill="rgba(212,175,55,0.07)" stroke-dasharray="4 3"/>
+        <circle cx="60" cy="60" r="20" stroke="#D4AF37" stroke-width="1" fill="none" opacity="0.8"/>
+        <circle cx="60" cy="40" r="20" stroke="#D4AF37" stroke-width="1" fill="none" opacity="0.8"/>
+        <circle cx="60" cy="80" r="20" stroke="#D4AF37" stroke-width="1" fill="none" opacity="0.8"/>
+        <circle cx="77.3" cy="50" r="20" stroke="#D4AF37" stroke-width="1" fill="none" opacity="0.8"/>
+        <circle cx="77.3" cy="70" r="20" stroke="#D4AF37" stroke-width="1" fill="none" opacity="0.8"/>
+        <circle cx="42.7" cy="50" r="20" stroke="#D4AF37" stroke-width="1" fill="none" opacity="0.8"/>
+        <circle cx="42.7" cy="70" r="20" stroke="#D4AF37" stroke-width="1" fill="none" opacity="0.8"/>
+        <circle cx="60" cy="60" r="5" fill="#D4AF37"/>
+        <text x="60" y="115" text-anchor="middle" font-size="7" fill="#D4AF37" font-family="Inter,system-ui,sans-serif" letter-spacing="2">VAULT SEALED</text>
+    </svg>
+</div>
+
+<script>
+// ── Data ──────────────────────────────────────────────────────────────────────
+const CAT_CONFIG = {
+    Credentials: { icon: '🔑', glow: '#D4AF37',  color: '#D4AF37' },
+    Preferences:  { icon: '⚙️', glow: '#00D9FF',  color: '#00D9FF' },
+    Health:       { icon: '❤️', glow: '#FF00A0',  color: '#FF00A0' },
+    Financial:    { icon: '💵', glow: '#4ADE80',  color: '#4ADE80' },
+    Documents:    { icon: '📄', glow: '#A78BFA',  color: '#A78BFA' },
+    Keys:         { icon: '🔒', glow: '#FB923C',  color: '#FB923C' },
+};
+
+function fakeHash(seed) {
+    let h = 0;
+    for (let i = 0; i < seed.length; i++) h = Math.imul(31, h) + seed.charCodeAt(i) | 0;
+    return (Math.abs(h) >>> 0).toString(16).padStart(8,'0');
+}
+function shortHash(s) { return fakeHash(s).substring(0,8) + '...' + fakeHash(s+s).substring(0,4); }
+function fmtDate(d) { return d.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}); }
+
+let entries = [
+    { id:'e1', name:'Passport Number Hash',   cat:'Credentials', date: new Date('2025-11-03'), access: 2, meta:{issuer:'US State Dept',expires:'2034-11-01'}, disclosures:['HealthApp — ZK-SNARK — 2026-01-12'] },
+    { id:'e2', name:'Blood Type & Allergies', cat:'Health',       date: new Date('2025-12-15'), access: 1, meta:{type:'O+',allergies:'penicillin'}, disclosures:[] },
+    { id:'e3', name:'PGP Public Key',         cat:'Keys',         date: new Date('2026-01-07'), access: 0, meta:{algorithm:'Ed25519',fingerprint:'AB12...FF99'}, disclosures:[] },
+    { id:'e4', name:'Credit Score Range',     cat:'Financial',    date: new Date('2026-02-01'), access: 3, meta:{range:'750-800',bureau:'Experian'}, disclosures:['LoanCo — Merkle Proof — 2026-02-14','InsureCo — ZK-SNARK — 2026-03-01'] },
+    { id:'e5', name:'Tax ID (Hashed)',        cat:'Documents',    date: new Date('2026-02-20'), access: 1, meta:{jurisdiction:'US',year:'2025'}, disclosures:[] },
+    { id:'e6', name:'UI Theme Preference',   cat:'Preferences',  date: new Date('2026-03-10'), access: 0, meta:{theme:'dark',lang:'en-US'}, disclosures:[] },
+];
+
+let disclosures = [
+    { entry:'Passport Number Hash',   requestor:'HealthApp Inc.',    proof:'ZK-SNARK',       ts:'2026-01-12 09:41', hash:'a3f8b2c1' },
+    { entry:'Credit Score Range',     requestor:'LoanCo Financial',  proof:'Merkle Proof',   ts:'2026-02-14 14:22', hash:'d92e4a07' },
+    { entry:'Credit Score Range',     requestor:'InsureCo',          proof:'ZK-SNARK',       ts:'2026-03-01 10:05', hash:'f17c3b88' },
+];
+
+// ── Render helpers ─────────────────────────────────────────────────────────────
+function renderCategories() {
+    const grid = document.getElementById('categoriesGrid');
+    const counts = {};
+    entries.forEach(e => counts[e.cat] = (counts[e.cat]||0)+1);
+    grid.innerHTML = Object.entries(CAT_CONFIG).map(([cat,cfg]) => `
+        <div class="cat-card" style="--glow:${cfg.glow}" onclick="filterByCategory('${cat}')">
+            <div class="cat-icon">${cfg.icon}</div>
+            <div class="cat-name">${cat}</div>
+            <div class="cat-count">${counts[cat]||0}</div>
+            <div class="cat-sub">entries</div>
+        </div>
+    `).join('');
+}
+
+let activeFilter = null;
+
+function filterByCategory(cat) {
+    activeFilter = activeFilter === cat ? null : cat;
+    renderEntries();
+}
+
+function renderEntries() {
+    const list = document.getElementById('entryList');
+    const badge = document.getElementById('entryCountBadge');
+    const filtered = activeFilter ? entries.filter(e => e.cat === activeFilter) : entries;
+    badge.textContent = filtered.length + ' entr' + (filtered.length === 1 ? 'y' : 'ies');
+    list.innerHTML = filtered.map(e => {
+        const cfg = CAT_CONFIG[e.cat] || {};
+        const h = shortHash(e.id + e.name);
+        return `
+        <li>
+            <div class="entry-row" style="--cat-color:${cfg.color||'#fff'}" onclick="toggleEntry('detail-${e.id}')">
+                <span style="font-size:20px">${cfg.icon||'📦'}</span>
+                <span class="entry-name">${e.name}</span>
+                <div class="entry-meta">
+                    <span class="cat-badge" style="--cat-color:${cfg.color||'#fff'}">${e.cat}</span>
+                    <span class="entry-hash">${h}</span>
+                    <span class="entry-date">${fmtDate(e.date)}</span>
+                    <span class="entry-access">${e.access} access${e.access!==1?'es':''}</span>
+                </div>
+            </div>
+            <div class="entry-detail" id="detail-${e.id}">
+                <div class="detail-grid">
+                    <div class="detail-row"><label>Entry ID</label><span>${e.id}</span></div>
+                    <div class="detail-row"><label>Category</label><span>${e.cat}</span></div>
+                    <div class="detail-row"><label>Hash (SHA-256 preview)</label><span>${fakeHash(e.id+e.name+e.cat)}${fakeHash(e.name+e.date)}</span></div>
+                    <div class="detail-row"><label>Stored</label><span>${fmtDate(e.date)}</span></div>
+                    ${Object.entries(e.meta||{}).map(([k,v])=>`<div class="detail-row"><label>${k}</label><span>${v}</span></div>`).join('')}
+                </div>
+                <div class="disclosure-history">
+                    <div class="dh-title">Disclosure History (${e.disclosures.length})</div>
+                    ${e.disclosures.length ? e.disclosures.map(d=>`<div class="dh-item">${d}</div>`).join('') : '<div class="dh-item" style="color:rgba(250,250,250,0.25)">No disclosures yet</div>'}
+                </div>
+            </div>
+        </li>`;
+    }).join('');
+}
+
+function toggleEntry(id) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.classList.toggle('open');
+}
+
+function renderDisclosures() {
+    const list = document.getElementById('disclosureList');
+    list.innerHTML = disclosures.slice().reverse().slice(0,6).map(d => `
+        <li class="disc-item">
+            <div class="disc-name">${d.entry}</div>
+            <div class="disc-meta">
+                <span class="disc-proof-badge">${d.proof}</span>
+                <span>Requestor: ${d.requestor}</span>
+                <span>${d.ts}</span>
+                <span class="disc-hash">Proof: 0x${d.hash}</span>
+            </div>
+        </li>
+    `).join('') || '<li class="disc-item" style="color:rgba(250,250,250,0.3);font-size:12px;text-align:center;padding:20px">No disclosures yet</li>';
+}
+
+function renderDiscEntryOptions() {
+    const sel = document.getElementById('discEntry');
+    sel.innerHTML = entries.map(e => `<option value="${e.id}">${e.name}</option>`).join('');
+}
+
+function updatePrivacyMeter() {
+    const total = entries.reduce((sum,e) => sum + 1 + e.disclosures.length, 0);
+    const disclosed = disclosures.length;
+    const pct = total > 0 ? Math.max(10, Math.round((1 - disclosed / (total * 1.5)) * 100)) : 100;
+    const fill = document.getElementById('privacyFill');
+    const stats = document.getElementById('privacyStats');
+    fill.style.setProperty('--pct', pct + '%');
+    stats.textContent = `${pct}% Private \u2022 ${100-pct}% Disclosed`;
+}
+
+// ── Modal ──────────────────────────────────────────────────────────────────────
+function openModal() {
+    document.getElementById('storeModal').classList.add('open');
+    document.getElementById('entryName').focus();
+}
+function closeModal() {
+    document.getElementById('storeModal').classList.remove('open');
+}
+document.getElementById('storeModal').addEventListener('click', function(e) {
+    if (e.target === this) closeModal();
+});
+
+function addKvRow() {
+    const row = document.createElement('div');
+    row.className = 'kv-row';
+    row.innerHTML = `<input class="form-control" type="text" placeholder="key" style="flex:0 0 38%"><input class="form-control" type="text" placeholder="value"><button class="kv-remove" onclick="removeKv(this)">-</button>`;
+    document.getElementById('kvPairs').appendChild(row);
+}
+function removeKv(btn) {
+    const container = document.getElementById('kvPairs');
+    if (container.children.length > 1) btn.closest('.kv-row').remove();
+}
+
+function storeEntry() {
+    const name = document.getElementById('entryName').value.trim();
+    const cat  = document.getElementById('entryCat').value;
+    if (!name) { document.getElementById('entryName').focus(); return; }
+
+    const meta = {};
+    document.querySelectorAll('#kvPairs .kv-row').forEach(row => {
+        const inputs = row.querySelectorAll('input');
+        if (inputs[0].value.trim()) meta[inputs[0].value.trim()] = inputs[1].value.trim();
+    });
+
+    const newEntry = { id: 'e' + Date.now(), name, cat, date: new Date(), access: 0, meta, disclosures: [] };
+    entries.unshift(newEntry);
+
+    closeModal();
+    playStampAnimation();
+    renderAll();
+
+    document.getElementById('entryName').value = '';
+    document.getElementById('kvPairs').innerHTML = `<div class="kv-row"><input class="form-control" type="text" placeholder="key" style="flex:0 0 38%"><input class="form-control" type="text" placeholder="value"><button class="kv-remove" onclick="removeKv(this)">-</button></div>`;
+
+    showToast('Stored with cryptographic hash.');
+
+    fetch('/api/features/vault/store', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, cat, meta })
+    }).catch(() => {});
+}
+
+function playStampAnimation() {
+    const el = document.getElementById('sealStamp');
+    el.classList.add('active');
+    setTimeout(() => el.classList.remove('active'), 1200);
+}
+
+function showToast(msg) {
+    const t = document.getElementById('toast');
+    document.getElementById('toastMsg').textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+// ── Disclose ───────────────────────────────────────────────────────────────────
+function toggleDiscloseForm() {
+    document.getElementById('discloseForm').classList.toggle('open');
+}
+
+function submitDisclosure() {
+    const entryId   = document.getElementById('discEntry').value;
+    const requestor = document.getElementById('discRequestor').value.trim();
+    const proof     = document.getElementById('discProofType').value;
+    if (!requestor) { document.getElementById('discRequestor').focus(); return; }
+
+    const entry = entries.find(e => e.id === entryId);
+    if (!entry) return;
+
+    const h = fakeHash(entryId + requestor + Date.now());
+    const now = new Date();
+    const ts  = now.toISOString().slice(0,16).replace('T',' ');
+
+    const disc = { entry: entry.name, requestor, proof, ts, hash: h };
+    disclosures.push(disc);
+    entry.disclosures.push(`${requestor} \u2014 ${proof} \u2014 ${ts}`);
+    entry.access += 1;
+
+    document.getElementById('discRequestor').value = '';
+    document.getElementById('discloseForm').classList.remove('open');
+    renderAll();
+    showToast('Proof generated. Selective disclosure sent.');
+
+    fetch('/api/features/vault/disclose', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ entryId, requestor, proof })
+    }).catch(() => {});
+}
+
+// ── Boot ───────────────────────────────────────────────────────────────────────
+function renderAll() {
+    renderCategories();
+    renderEntries();
+    renderDisclosures();
+    renderDiscEntryOptions();
+    updatePrivacyMeter();
+}
+
+// Attempt to load from API, fall back to mock data
+fetch('/api/features/vault')
+    .then(r => r.ok ? r.json() : Promise.reject())
+    .then(data => {
+        if (data.entries && Array.isArray(data.entries)) {
+            entries = data.entries.map(e => ({
+                ...e,
+                date: new Date(e.date || Date.now()),
+                disclosures: e.disclosures || []
+            }));
+        }
+        if (data.disclosures && Array.isArray(data.disclosures)) {
+            disclosures = data.disclosures;
+        }
+    })
+    .catch(() => { /* use mock data */ })
+    .finally(() => renderAll());
+</script>
+</body>
+</html>

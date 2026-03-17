@@ -1,0 +1,1145 @@
+<!-- HEADY_BRAND:BEGIN
+     HEADY SYSTEMS | pulse.html | Sacred Geometry v5.0
+     Ambient Intelligence Dashboard — phi-timed, living interface
+     (c) 2026 HeadySystems Inc. - Eric Haywood, Founder
+HEADY_BRAND:END -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Heady Pulse — Ambient Intelligence Dashboard. A living interface you feel rather than read.">
+  <meta name="theme-color" content="#050510">
+  <title>Heady Pulse — Ambient Intelligence</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/sacred-geometry.css">
+  <style>
+    /* ── Reset & Base ─────────────────────────────────────────────────── */
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --phi: 1.618033988749895;
+      --gold:    #D4AF37;
+      --cyan:    #00D9FF;
+      --magenta: #FF00A0;
+      --purple:  #9B59FF;
+      --void:    #050510;
+      --deep:    #0A0A1A;
+      --nebula:  #1A1A3E;
+      --white:   #FAFAFA;
+      --gray:    rgba(255,255,255,0.6);
+      --glass:   rgba(26,26,62,0.6);
+      --border:  rgba(255,255,255,0.08);
+      --ease-phi: cubic-bezier(0.618,0,0.382,1);
+      /* mood vars — overridden by JS */
+      --mood-color:   #00D9FF;
+      --mood-glow:    rgba(0,217,255,0.5);
+      --mood-glow-2:  rgba(0,217,255,0.15);
+      --mood-dur:     4.236s;
+      --orb1-color:   rgba(0,217,255,0.18);
+      --orb2-color:   rgba(155,89,255,0.12);
+      --orb3-color:   rgba(212,175,55,0.10);
+    }
+
+    html, body {
+      width: 100%; height: 100%;
+      overflow-x: hidden;
+    }
+
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      background: var(--void);
+      color: var(--white);
+      min-height: 100vh;
+      position: relative;
+    }
+
+    /* ── Breathing Background Orbs ────────────────────────────────────── */
+    .bg-orbs {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .bg-orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(100px);
+      transition: background 2s var(--ease-phi);
+    }
+
+    .bg-orb-1 {
+      width: 700px; height: 700px;
+      top: -200px; left: -150px;
+      background: var(--orb1-color);
+      animation: floatOrb1 20s var(--ease-phi) infinite alternate;
+    }
+
+    .bg-orb-2 {
+      width: 600px; height: 600px;
+      bottom: -100px; right: -100px;
+      background: var(--orb2-color);
+      animation: floatOrb2 32.36s var(--ease-phi) infinite alternate;
+    }
+
+    .bg-orb-3 {
+      width: 500px; height: 500px;
+      top: 40%; left: 50%;
+      transform: translate(-50%, -50%);
+      background: var(--orb3-color);
+      animation: floatOrb3 52.36s var(--ease-phi) infinite alternate;
+    }
+
+    @keyframes floatOrb1 {
+      0%   { transform: translate(0, 0) scale(1); }
+      50%  { transform: translate(80px, 60px) scale(1.1); }
+      100% { transform: translate(40px, 120px) scale(0.95); }
+    }
+    @keyframes floatOrb2 {
+      0%   { transform: translate(0, 0) scale(1); }
+      50%  { transform: translate(-60px, -80px) scale(1.08); }
+      100% { transform: translate(-120px, -40px) scale(0.92); }
+    }
+    @keyframes floatOrb3 {
+      0%   { transform: translate(-50%, -50%) scale(1); }
+      50%  { transform: translate(-50%, -50%) scale(1.15); }
+      100% { transform: translate(-46%, -54%) scale(0.88); }
+    }
+
+    /* ── Navigation ───────────────────────────────────────────────────── */
+    .nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 34px;
+      height: 60px;
+      background: rgba(5,5,16,0.7);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-logo {
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      background: linear-gradient(90deg, var(--gold), var(--cyan));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-decoration: none;
+      flex-shrink: 0;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      list-style: none;
+      overflow-x: auto;
+      scrollbar-width: none;
+      padding: 0 16px;
+    }
+
+    .nav-links::-webkit-scrollbar { display: none; }
+
+    .nav-links a {
+      display: block;
+      padding: 6px 13px;
+      border-radius: 9999px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--gray);
+      text-decoration: none;
+      white-space: nowrap;
+      transition: color 0.382s var(--ease-phi), background 0.382s var(--ease-phi);
+    }
+
+    .nav-links a:hover {
+      color: var(--white);
+      background: rgba(255,255,255,0.07);
+    }
+
+    .nav-links a.active {
+      color: var(--cyan);
+      background: rgba(0,217,255,0.1);
+      border: 1px solid rgba(0,217,255,0.2);
+    }
+
+    .nav-sound-btn {
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      padding: 7px 16px;
+      border-radius: 9999px;
+      border: 1px solid var(--border);
+      background: var(--glass);
+      color: var(--gray);
+      font-family: 'Inter', system-ui, sans-serif;
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.382s var(--ease-phi);
+      backdrop-filter: blur(20px);
+    }
+
+    .nav-sound-btn:hover {
+      color: var(--white);
+      border-color: rgba(0,217,255,0.3);
+      box-shadow: 0 0 14px rgba(0,217,255,0.15);
+    }
+
+    .nav-sound-btn.active {
+      color: var(--cyan);
+      border-color: rgba(0,217,255,0.4);
+      background: rgba(0,217,255,0.1);
+    }
+
+    .sound-dot {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: var(--gray);
+      transition: background 0.382s var(--ease-phi), box-shadow 0.382s var(--ease-phi);
+    }
+
+    .nav-sound-btn.active .sound-dot {
+      background: var(--cyan);
+      box-shadow: 0 0 8px var(--cyan);
+      animation: soundPulse 1.618s var(--ease-phi) infinite;
+    }
+
+    @keyframes soundPulse {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50%       { transform: scale(1.5); opacity: 0.7; }
+    }
+
+    /* ── Main Stage ───────────────────────────────────────────────────── */
+    .stage {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 80px 24px 160px;
+    }
+
+    /* ── Mood Label ───────────────────────────────────────────────────── */
+    .mood-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 5px 18px;
+      border-radius: 9999px;
+      border: 1px solid rgba(255,255,255,0.1);
+      background: var(--glass);
+      backdrop-filter: blur(20px);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--mood-color);
+      margin-bottom: 40px;
+      transition: color 1.618s var(--ease-phi), border-color 1.618s var(--ease-phi);
+    }
+
+    .mood-pip {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--mood-color);
+      box-shadow: 0 0 8px var(--mood-color);
+      animation: moodPip var(--mood-dur) var(--ease-phi) infinite;
+      transition: background 1.618s var(--ease-phi);
+    }
+
+    @keyframes moodPip {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0.3; }
+    }
+
+    /* ── Central Orb + ORS Ring ───────────────────────────────────────── */
+    .orb-stage {
+      position: relative;
+      width: 320px;
+      height: 320px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* SVG ORS ring sits behind the orb */
+    .ors-ring {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      transform: rotate(-90deg);
+    }
+
+    .ors-ring-track {
+      fill: none;
+      stroke: rgba(255,255,255,0.06);
+      stroke-width: 3;
+    }
+
+    .ors-ring-fill {
+      fill: none;
+      stroke: var(--cyan);
+      stroke-width: 3;
+      stroke-linecap: round;
+      transition: stroke-dashoffset 1.618s var(--ease-phi),
+                  stroke 1.618s var(--ease-phi);
+    }
+
+    /* ORS score label — centered in ring, above orb */
+    .ors-center {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      pointer-events: none;
+      z-index: 10;
+    }
+
+    .ors-number {
+      font-size: 48px;
+      font-weight: 700;
+      letter-spacing: -0.04em;
+      color: var(--mood-color);
+      text-shadow: 0 0 30px var(--mood-glow);
+      line-height: 1;
+      transition: color 1.618s var(--ease-phi), text-shadow 1.618s var(--ease-phi);
+    }
+
+    .ors-label {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--gray);
+      margin-top: 3px;
+    }
+
+    /* The orb itself */
+    .central-orb {
+      position: absolute;
+      width: 200px;
+      height: 200px;
+      border-radius: 50%;
+      background: conic-gradient(
+        from 0deg,
+        var(--mood-glow-2),
+        var(--mood-color),
+        var(--mood-glow-2),
+        var(--mood-color),
+        var(--mood-glow-2)
+      );
+      box-shadow:
+        0 0 60px var(--mood-glow),
+        0 0 120px var(--mood-glow-2),
+        inset 0 0 40px var(--mood-glow-2);
+      animation:
+        orbBreathe var(--mood-dur) var(--ease-phi) infinite alternate,
+        orbSpin 20s linear infinite;
+      transition:
+        box-shadow 1.618s var(--ease-phi),
+        background 1.618s var(--ease-phi);
+    }
+
+    /* Inner glow layer */
+    .central-orb::before {
+      content: '';
+      position: absolute;
+      inset: 16px;
+      border-radius: 50%;
+      background: radial-gradient(
+        circle at 38% 38%,
+        rgba(255,255,255,0.18) 0%,
+        var(--mood-glow-2) 40%,
+        transparent 70%
+      );
+      animation: orbBreathe var(--mood-dur) var(--ease-phi) infinite alternate-reverse;
+    }
+
+    /* Outer corona */
+    .central-orb::after {
+      content: '';
+      position: absolute;
+      inset: -24px;
+      border-radius: 50%;
+      background: radial-gradient(
+        circle,
+        transparent 55%,
+        var(--mood-glow-2) 70%,
+        transparent 100%
+      );
+      animation: coronaPulse calc(var(--mood-dur) * 1.618) var(--ease-phi) infinite;
+    }
+
+    @keyframes orbBreathe {
+      0%   { transform: scale(0.93); }
+      100% { transform: scale(1.07); }
+    }
+
+    @keyframes orbSpin {
+      from { filter: hue-rotate(0deg); }
+      to   { filter: hue-rotate(360deg); }
+    }
+
+    @keyframes coronaPulse {
+      0%, 100% { opacity: 0.4; transform: scale(1); }
+      50%       { opacity: 0.9; transform: scale(1.05); }
+    }
+
+    /* Dreaming mood special override */
+    .mood-dreaming .central-orb {
+      animation:
+        orbBreathe 4.236s var(--ease-phi) infinite alternate,
+        orbSpin 8s linear infinite,
+        dreamShift 6.854s var(--ease-phi) infinite;
+    }
+
+    @keyframes dreamShift {
+      0%   { filter: hue-rotate(0deg) saturate(1.2); }
+      33%  { filter: hue-rotate(120deg) saturate(1.5); }
+      66%  { filter: hue-rotate(240deg) saturate(1.3); }
+      100% { filter: hue-rotate(360deg) saturate(1.2); }
+    }
+
+    /* ── Service Aura Dots (golden-spiral orbit) ──────────────────────── */
+    .aura-orbit {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+
+    .aura-dot {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      transform-origin: 50% 50%;
+      cursor: pointer;
+      pointer-events: all;
+      transition: opacity 0.618s var(--ease-phi), box-shadow 0.618s var(--ease-phi);
+    }
+
+    .aura-dot.healthy {
+      background: var(--cyan);
+      box-shadow: 0 0 12px rgba(0,217,255,0.8);
+      animation: dotGlow 4.236s var(--ease-phi) infinite;
+    }
+
+    .aura-dot.degraded {
+      background: var(--gold);
+      box-shadow: 0 0 8px rgba(212,175,55,0.6);
+      opacity: 0.7;
+      animation: dotGlow 2.618s var(--ease-phi) infinite;
+    }
+
+    .aura-dot.down {
+      background: var(--magenta);
+      box-shadow: 0 0 14px rgba(255,0,160,0.8);
+      animation: dotDown 1.618s var(--ease-phi) infinite;
+    }
+
+    @keyframes dotGlow {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50%       { opacity: 0.6; transform: scale(0.8); }
+    }
+
+    @keyframes dotDown {
+      0%, 100% { opacity: 1; box-shadow: 0 0 14px rgba(255,0,160,0.9); }
+      50%       { opacity: 0.3; box-shadow: 0 0 4px rgba(255,0,160,0.3); }
+    }
+
+    /* Tooltip */
+    .dot-tooltip {
+      position: fixed;
+      z-index: 200;
+      padding: 8px 14px;
+      border-radius: 12px;
+      background: rgba(10,10,26,0.92);
+      border: 1px solid var(--border);
+      backdrop-filter: blur(20px);
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--white);
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.236s var(--ease-phi);
+      white-space: nowrap;
+    }
+
+    .dot-tooltip.visible { opacity: 1; }
+
+    .dot-tooltip-status {
+      display: inline-block;
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      margin-right: 6px;
+      vertical-align: middle;
+    }
+
+    /* ── Stats Bar ────────────────────────────────────────────────────── */
+    .stats-bar {
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: stretch;
+      justify-content: center;
+      gap: 1px;
+      height: 88px;
+      background: rgba(5,5,16,0.6);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-top: 1px solid var(--border);
+    }
+
+    .stat-cell {
+      flex: 1;
+      max-width: 220px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      padding: 0 21px;
+      border-right: 1px solid var(--border);
+      transition: background 0.382s var(--ease-phi);
+    }
+
+    .stat-cell:last-child { border-right: none; }
+
+    .stat-cell:hover {
+      background: rgba(255,255,255,0.03);
+    }
+
+    .stat-value {
+      font-size: 24px;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      color: var(--white);
+      line-height: 1;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .stat-label {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--gray);
+    }
+
+    .stat-bar-mini {
+      width: 80%;
+      height: 2px;
+      border-radius: 9999px;
+      background: rgba(255,255,255,0.08);
+      margin-top: 4px;
+      overflow: hidden;
+    }
+
+    .stat-bar-fill {
+      height: 100%;
+      border-radius: 9999px;
+      background: linear-gradient(90deg, var(--cyan), var(--gold));
+      transition: width 1.618s var(--ease-phi);
+    }
+
+    /* ── Connection Status Pill ───────────────────────────────────────── */
+    .conn-pill {
+      position: fixed;
+      top: 72px;
+      right: 24px;
+      z-index: 99;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 13px;
+      border-radius: 9999px;
+      border: 1px solid var(--border);
+      background: var(--glass);
+      backdrop-filter: blur(20px);
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--gray);
+      transition: all 0.618s var(--ease-phi);
+    }
+
+    .conn-pip {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--gray);
+      transition: background 0.618s var(--ease-phi), box-shadow 0.618s var(--ease-phi);
+    }
+
+    .conn-pill.sse .conn-pip {
+      background: var(--cyan);
+      box-shadow: 0 0 8px var(--cyan);
+      animation: soundPulse 2s ease infinite;
+    }
+
+    .conn-pill.polling .conn-pip {
+      background: var(--gold);
+      box-shadow: 0 0 8px var(--gold);
+    }
+
+    .conn-pill.error .conn-pip {
+      background: var(--magenta);
+      box-shadow: 0 0 8px var(--magenta);
+    }
+
+    /* ── Responsive ───────────────────────────────────────────────────── */
+    @media (max-width: 640px) {
+      .nav-links { display: none; }
+      .stat-cell { padding: 0 13px; }
+      .stat-value { font-size: 18px; }
+      .orb-stage { width: 260px; height: 260px; }
+      .central-orb { width: 160px; height: 160px; }
+      .ors-number { font-size: 38px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Background Breathing Orbs -->
+  <div class="bg-orbs" id="bgOrbs">
+    <div class="bg-orb bg-orb-1" id="bgOrb1"></div>
+    <div class="bg-orb bg-orb-2" id="bgOrb2"></div>
+    <div class="bg-orb bg-orb-3" id="bgOrb3"></div>
+  </div>
+
+  <!-- Navigation -->
+  <nav class="nav">
+    <a href="/index.html" class="nav-logo">HEADY</a>
+    <ul class="nav-links">
+      <li><a href="/pulse.html" class="active">Pulse</a></li>
+      <li><a href="/sacred-geometry.html">Constellation</a></li>
+      <li><a href="/swarm.html">Arena</a></li>
+      <li><a href="/headyos-desktop.html">Voice</a></li>
+      <li><a href="/pipeline.html">Timeline</a></li>
+      <li><a href="/latent-space.html">Dreams</a></li>
+      <li><a href="/liquid-nodes.html">Forge</a></li>
+      <li><a href="/ecosystem.html">Marketplace</a></li>
+      <li><a href="/mcp-dashboard.html">Gateway</a></li>
+      <li><a href="/brain.html">Briefing</a></li>
+    </ul>
+    <button class="nav-sound-btn" id="soundToggle" onclick="toggleSound()">
+      <span class="sound-dot" id="soundDot"></span>
+      <span id="soundLabel">Sound</span>
+    </button>
+  </nav>
+
+  <!-- Connection Status -->
+  <div class="conn-pill" id="connPill">
+    <span class="conn-pip" id="connPip"></span>
+    <span id="connText">Connecting...</span>
+  </div>
+
+  <!-- Main Stage -->
+  <main class="stage" id="stage">
+
+    <!-- Mood Label -->
+    <div class="mood-label" id="moodLabel">
+      <span class="mood-pip" id="moodPip"></span>
+      <span id="moodText">INITIALIZING</span>
+    </div>
+
+    <!-- Central Orb + ORS Ring -->
+    <div class="orb-stage" id="orbStage">
+
+      <!-- ORS SVG Ring -->
+      <svg class="ors-ring" viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg">
+        <circle class="ors-ring-track" cx="160" cy="160" r="152"/>
+        <circle class="ors-ring-fill" id="orsRingFill" cx="160" cy="160" r="152"
+          stroke-dasharray="955.04"
+          stroke-dashoffset="955.04"/>
+      </svg>
+
+      <!-- Aura Orbit Dots (populated by JS) -->
+      <div class="aura-orbit" id="auraOrbit"></div>
+
+      <!-- Central Orb -->
+      <div class="central-orb" id="centralOrb"></div>
+
+      <!-- ORS Center Score -->
+      <div class="ors-center">
+        <div class="ors-number" id="orsNumber">--</div>
+        <div class="ors-label">ORS</div>
+      </div>
+
+    </div><!-- /orb-stage -->
+
+  </main>
+
+  <!-- Stats Bar -->
+  <div class="stats-bar">
+    <div class="stat-cell">
+      <div class="stat-value" id="statUptime">--</div>
+      <div class="stat-label">Uptime</div>
+      <div class="stat-bar-mini"><div class="stat-bar-fill" id="statUptimeFill" style="width:0%"></div></div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-value" id="statAgents">--</div>
+      <div class="stat-label">Active Agents</div>
+      <div class="stat-bar-mini"><div class="stat-bar-fill" id="statAgentsFill" style="width:0%"></div></div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-value" id="statThroughput">--</div>
+      <div class="stat-label">Pipeline Throughput</div>
+      <div class="stat-bar-mini"><div class="stat-bar-fill" id="statThroughputFill" style="width:0%"></div></div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-value" id="statMemory">--</div>
+      <div class="stat-label">Memory Usage</div>
+      <div class="stat-bar-mini"><div class="stat-bar-fill" id="statMemoryFill" style="width:0%"></div></div>
+    </div>
+  </div>
+
+  <!-- Tooltip (singleton) -->
+  <div class="dot-tooltip" id="dotTooltip"></div>
+
+  <script>
+    /* ══════════════════════════════════════════════════════════
+       HEADY PULSE — Ambient Intelligence Dashboard
+       Sacred Geometry v5.0  |  phi-timed, living interface
+    ══════════════════════════════════════════════════════════ */
+
+    // ── Constants ──────────────────────────────────────────────
+    const PHI       = 1.618033988749895;
+    const POLL_MS   = 1618;   // phi milliseconds
+    const SSE_URL   = '/api/features/pulse/stream';
+    const POLL_URL  = '/api/features/pulse';
+    const ORS_CIRC  = 2 * Math.PI * 152;  // 955.04
+
+    // ── Services catalog (for aura dots) ───────────────────────
+    const SERVICES = [
+      { id: 'heady-manager',    label: 'Manager',        status: 'healthy'  },
+      { id: 'hc-pipeline',      label: 'Pipeline',       status: 'healthy'  },
+      { id: 'hc-supervisor',    label: 'Supervisor',     status: 'healthy'  },
+      { id: 'hc-brain',         label: 'Brain',          status: 'healthy'  },
+      { id: 'hc-checkpoint',    label: 'Checkpoint',     status: 'healthy'  },
+      { id: 'hc-readiness',     label: 'Readiness',      status: 'healthy'  },
+      { id: 'hc-health',        label: 'Health',         status: 'healthy'  },
+      { id: 'networking',       label: 'Networking',     status: 'healthy'  },
+      { id: 'claude-agent',     label: 'Claude Agent',   status: 'degraded' },
+      { id: 'builder-agent',    label: 'Builder',        status: 'healthy'  },
+      { id: 'researcher-agent', label: 'Researcher',     status: 'healthy'  },
+      { id: 'deployer-agent',   label: 'Deployer',       status: 'healthy'  },
+    ];
+
+    // ── State ───────────────────────────────────────────────────
+    const state = {
+      mood:       'healthy',  // healthy | warning | critical | dreaming
+      ors:        88,
+      uptime:     99.94,
+      agents:     7,
+      agentsMax:  12,
+      throughput: 142,
+      memory:     61,
+      services:   SERVICES.map(s => ({ ...s })),
+      connMode:   'connecting',  // sse | polling | error | connecting
+    };
+
+    // ── Mood palette ────────────────────────────────────────────
+    const MOODS = {
+      healthy:  { color: '#00D9FF', glow: 'rgba(0,217,255,0.5)',   glow2: 'rgba(0,217,255,0.15)',  dur: '4.236s', label: 'HEALTHY',  orb1: 'rgba(0,217,255,0.18)',   orb2: 'rgba(155,89,255,0.12)',  orb3: 'rgba(212,175,55,0.10)'  },
+      warning:  { color: '#D4AF37', glow: 'rgba(212,175,55,0.5)',  glow2: 'rgba(212,175,55,0.15)', dur: '2.618s', label: 'WARNING',  orb1: 'rgba(212,175,55,0.18)',  orb2: 'rgba(0,217,255,0.10)',   orb3: 'rgba(255,0,160,0.08)'   },
+      critical: { color: '#FF00A0', glow: 'rgba(255,0,160,0.5)',   glow2: 'rgba(255,0,160,0.15)',  dur: '1.618s', label: 'CRITICAL', orb1: 'rgba(255,0,160,0.20)',   orb2: 'rgba(212,175,55,0.10)',  orb3: 'rgba(255,0,160,0.08)'   },
+      dreaming: { color: '#9B59FF', glow: 'rgba(155,89,255,0.5)',  glow2: 'rgba(155,89,255,0.15)', dur: '4.236s', label: 'DREAMING', orb1: 'rgba(155,89,255,0.20)',  orb2: 'rgba(0,217,255,0.12)',   orb3: 'rgba(212,175,55,0.08)'  },
+    };
+
+    // ── Apply mood to CSS vars ──────────────────────────────────
+    function applyMood(moodKey) {
+      const m = MOODS[moodKey] || MOODS.healthy;
+      const r = document.documentElement;
+      r.style.setProperty('--mood-color',  m.color);
+      r.style.setProperty('--mood-glow',   m.glow);
+      r.style.setProperty('--mood-glow-2', m.glow2);
+      r.style.setProperty('--mood-dur',    m.dur);
+      r.style.setProperty('--orb1-color',  m.orb1);
+      r.style.setProperty('--orb2-color',  m.orb2);
+      r.style.setProperty('--orb3-color',  m.orb3);
+
+      document.getElementById('moodText').textContent  = m.label;
+      document.getElementById('orsNumber').style.color = m.color;
+
+      // Dreaming class for special spin animation
+      const stage = document.getElementById('orbStage');
+      stage.className = 'orb-stage' + (moodKey === 'dreaming' ? ' mood-dreaming' : '');
+
+      // Update ORS ring stroke color
+      const fill = document.getElementById('orsRingFill');
+      fill.style.stroke = m.color;
+    }
+
+    // ── ORS ring update ─────────────────────────────────────────
+    function updateORS(score) {
+      const clamped = Math.max(0, Math.min(100, score));
+      const offset  = ORS_CIRC * (1 - clamped / 100);
+      document.getElementById('orsRingFill').style.strokeDashoffset = offset;
+
+      // Animate counter
+      animateCounter('orsNumber', parseInt(document.getElementById('orsNumber').textContent) || 0, clamped, 1618, '%');
+    }
+
+    // ── Animated counter ────────────────────────────────────────
+    function animateCounter(elId, from, to, duration, suffix) {
+      const el    = document.getElementById(elId);
+      const start = performance.now();
+      const diff  = to - from;
+
+      function step(now) {
+        const elapsed  = now - start;
+        const progress = Math.min(elapsed / duration, 1);
+        // Phi easing approximation: ease-in-out via smoothstep^phi
+        const t     = progress < 0.5
+          ? 2 * progress * progress
+          : 1 - Math.pow(-2 * progress + 2, 2) / 2;
+        const value = Math.round(from + diff * t);
+        el.textContent = value + (suffix || '');
+        if (progress < 1) requestAnimationFrame(step);
+      }
+      requestAnimationFrame(step);
+    }
+
+    // ── Stats update ────────────────────────────────────────────
+    function updateStats(data) {
+      // Uptime
+      const uptime = (data.uptime ?? state.uptime).toFixed(2);
+      document.getElementById('statUptime').textContent = uptime + '%';
+      document.getElementById('statUptimeFill').style.width = uptime + '%';
+
+      // Agents
+      const agents    = data.agents    ?? state.agents;
+      const agentsMax = data.agentsMax ?? state.agentsMax;
+      document.getElementById('statAgents').textContent = agents + ' / ' + agentsMax;
+      document.getElementById('statAgentsFill').style.width = (agents / agentsMax * 100) + '%';
+
+      // Throughput
+      const tput = data.throughput ?? state.throughput;
+      document.getElementById('statThroughput').textContent = tput + '/s';
+      document.getElementById('statThroughputFill').style.width = Math.min(tput / 300 * 100, 100) + '%';
+
+      // Memory
+      const mem = data.memory ?? state.memory;
+      document.getElementById('statMemory').textContent = mem + '%';
+      document.getElementById('statMemoryFill').style.width = mem + '%';
+    }
+
+    // ── Derive mood from ORS score ──────────────────────────────
+    function moodFromORS(score) {
+      if (score > 85) return 'healthy';
+      if (score > 70) return 'warning';
+      if (score > 50) return 'dreaming';
+      return 'critical';
+    }
+
+    // ── Ingest live data ────────────────────────────────────────
+    function ingestData(data) {
+      if (!data) return;
+
+      // ORS
+      const ors  = typeof data.ors === 'number' ? data.ors : state.ors;
+      state.ors  = ors;
+      updateORS(ors);
+
+      // Mood — explicit or derived
+      const mood   = data.mood ?? moodFromORS(ors);
+      state.mood   = mood;
+      applyMood(mood);
+
+      // Stats
+      Object.assign(state, {
+        uptime:     data.uptime     ?? state.uptime,
+        agents:     data.agents     ?? state.agents,
+        agentsMax:  data.agentsMax  ?? state.agentsMax,
+        throughput: data.throughput ?? state.throughput,
+        memory:     data.memory     ?? state.memory,
+      });
+      updateStats(state);
+
+      // Service aura dots
+      if (Array.isArray(data.services)) {
+        data.services.forEach(svc => {
+          const s = state.services.find(x => x.id === svc.id);
+          if (s) s.status = svc.status;
+        });
+        renderAuraDots();
+      }
+    }
+
+    // ── Connection status pill ──────────────────────────────────
+    function setConn(mode, text) {
+      const pill = document.getElementById('connPill');
+      pill.className = 'conn-pill ' + mode;
+      document.getElementById('connText').textContent = text;
+    }
+
+    // ── SSE connection ──────────────────────────────────────────
+    let sseSource  = null;
+    let pollTimer  = null;
+    let sseActive  = false;
+
+    function startSSE() {
+      try {
+        sseSource = new EventSource(SSE_URL);
+
+        sseSource.addEventListener('pulse', e => {
+          try {
+            ingestData(JSON.parse(e.data));
+          } catch (_) {}
+        });
+
+        sseSource.onopen = () => {
+          sseActive = true;
+          if (pollTimer) { clearInterval(pollTimer); pollTimer = null; }
+          setConn('sse', 'Live Stream');
+        };
+
+        sseSource.onerror = () => {
+          sseSource.close();
+          sseSource  = null;
+          sseActive  = false;
+          setConn('polling', 'Polling');
+          startPolling();
+        };
+      } catch (_) {
+        setConn('polling', 'Polling');
+        startPolling();
+      }
+    }
+
+    function startPolling() {
+      if (pollTimer) return;
+      const doFetch = () => {
+        fetch(POLL_URL)
+          .then(r => r.ok ? r.json() : null)
+          .then(data => {
+            if (data) {
+              ingestData(data);
+              setConn('polling', 'Polling');
+            }
+          })
+          .catch(() => {
+            // Server not available — run in demo mode silently
+          });
+      };
+      doFetch();
+      pollTimer = setInterval(doFetch, POLL_MS);
+    }
+
+    // ── Demo mode ticker (keeps dashboard alive without a server) ─
+    let demoTick = 0;
+    function runDemoTick() {
+      demoTick++;
+      // Gentle sine oscillation of ORS
+      const baseORS  = 88;
+      const ors      = Math.round(baseORS + Math.sin(demoTick * 0.12) * 8);
+      const tput     = Math.round(142 + Math.sin(demoTick * 0.08 + 1) * 22);
+      const mem      = Math.round(61  + Math.sin(demoTick * 0.06 + 2) * 9);
+      const agents   = 6 + (demoTick % 7 === 0 ? 1 : 0);
+
+      // Occasionally change a service status
+      if (demoTick % 11 === 0) {
+        const pick = state.services[Math.floor(Math.random() * state.services.length)];
+        const pool = ['healthy','healthy','healthy','degraded'];
+        pick.status = pool[Math.floor(Math.random() * pool.length)];
+      }
+      if (demoTick % 37 === 0) {
+        const pick = state.services[Math.floor(Math.random() * state.services.length)];
+        pick.status = 'healthy';
+      }
+
+      ingestData({ ors, throughput: tput, memory: mem, agents, agentsMax: 12,
+                   uptime: 99.94 + (Math.random() * 0.05 - 0.025) });
+      renderAuraDots();
+    }
+
+    // ── Golden-spiral placement for aura dots ──────────────────
+    function goldenSpiralPos(index, total, ringR) {
+      // Distribute points on a ring with golden-angle angular spacing
+      const goldenAngle = Math.PI * 2 / (PHI * PHI);  // ~137.5°
+      const angle       = index * goldenAngle;
+      // Vary radius slightly per index for depth
+      const r = ringR + Math.sin(index * PHI) * 14;
+      return {
+        x: Math.cos(angle) * r,
+        y: Math.sin(angle) * r,
+      };
+    }
+
+    function renderAuraDots() {
+      const orbit  = document.getElementById('auraOrbit');
+      const total  = state.services.length;
+      const stageW = 320;  // orb-stage size
+      const cx     = stageW / 2;
+      const cy     = stageW / 2;
+      const ringR  = 134;  // radius between orb edge (100px) and ORS ring (152px)
+
+      // Remove old dots
+      orbit.innerHTML = '';
+
+      state.services.forEach((svc, i) => {
+        const pos = goldenSpiralPos(i, total, ringR);
+        const dot = document.createElement('div');
+        dot.className = 'aura-dot ' + svc.status;
+        dot.style.cssText = [
+          'left:' + (cx + pos.x - 5) + 'px',
+          'top:'  + (cy + pos.y - 5) + 'px',
+          'animation-delay:' + (i * 0.382) + 's',
+        ].join(';');
+
+        // Tooltip
+        dot.addEventListener('mouseenter', e => showTooltip(e, svc));
+        dot.addEventListener('mouseleave',      hideTooltip);
+        dot.addEventListener('mousemove',  e => moveTooltip(e));
+
+        orbit.appendChild(dot);
+      });
+    }
+
+    // ── Tooltip ─────────────────────────────────────────────────
+    const tooltip = document.getElementById('dotTooltip');
+
+    const STATUS_COLORS = { healthy: '#00D9FF', degraded: '#D4AF37', down: '#FF00A0' };
+
+    function showTooltip(e, svc) {
+      const col = STATUS_COLORS[svc.status] || '#FAFAFA';
+      tooltip.innerHTML =
+        '<span class="dot-tooltip-status" style="background:' + col + ';box-shadow:0 0 6px ' + col + '"></span>' +
+        svc.label +
+        ' <span style="color:' + col + ';margin-left:6px;font-size:11px;font-weight:600">' +
+        svc.status.toUpperCase() + '</span>';
+      tooltip.classList.add('visible');
+      moveTooltip(e);
+    }
+
+    function moveTooltip(e) {
+      tooltip.style.left = (e.clientX + 14) + 'px';
+      tooltip.style.top  = (e.clientY - 10) + 'px';
+    }
+
+    function hideTooltip() {
+      tooltip.classList.remove('visible');
+    }
+
+    // ── Web Audio — 432Hz ambient tone ─────────────────────────
+    let audioCtx   = null;
+    let gainNode   = null;
+    let oscNode    = null;
+    let lfoNode    = null;
+    let lfoGain    = null;
+    let soundOn    = false;
+
+    function buildAudio() {
+      if (audioCtx) return;
+      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+      // Main 432Hz sine
+      oscNode            = audioCtx.createOscillator();
+      oscNode.type       = 'sine';
+      oscNode.frequency.value = 432;
+
+      // LFO for slow volume oscillation (0.1Hz)
+      lfoNode            = audioCtx.createOscillator();
+      lfoNode.type       = 'sine';
+      lfoNode.frequency.value = 0.1;
+
+      lfoGain            = audioCtx.createGain();
+      lfoGain.gain.value = 0.018;  // oscillation depth — very subtle
+
+      gainNode           = audioCtx.createGain();
+      gainNode.gain.value = 0;     // start silent, fade in
+
+      lfoNode.connect(lfoGain);
+      lfoGain.connect(gainNode.gain);
+      oscNode.connect(gainNode);
+      gainNode.connect(audioCtx.destination);
+
+      oscNode.start();
+      lfoNode.start();
+    }
+
+    function toggleSound() {
+      const btn = document.getElementById('soundToggle');
+      const lbl = document.getElementById('soundLabel');
+
+      if (!soundOn) {
+        buildAudio();
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+        gainNode.gain.cancelScheduledValues(audioCtx.currentTime);
+        gainNode.gain.setValueAtTime(gainNode.gain.value, audioCtx.currentTime);
+        gainNode.gain.linearRampToValueAtTime(0.028, audioCtx.currentTime + 2.618);
+        soundOn = true;
+        btn.classList.add('active');
+        lbl.textContent = 'On';
+      } else {
+        gainNode.gain.cancelScheduledValues(audioCtx.currentTime);
+        gainNode.gain.setValueAtTime(gainNode.gain.value, audioCtx.currentTime);
+        gainNode.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 1.618);
+        soundOn = false;
+        btn.classList.remove('active');
+        lbl.textContent = 'Sound';
+      }
+    }
+
+    // ── Bootstrap ───────────────────────────────────────────────
+    function init() {
+      // Render initial aura dots
+      renderAuraDots();
+
+      // Set initial mood & ORS ring
+      applyMood(state.mood);
+      updateORS(state.ors);
+      updateStats(state);
+
+      // Try live connection first; demo ticker runs regardless to keep UI alive
+      setConn('connecting', 'Connecting...');
+      startSSE();
+
+      // Demo ticker — phi-interval, runs even when live data is available
+      // to keep the UI alive during server gaps
+      let demoInterval = null;
+      let liveReceived = false;
+
+      // After 2.618s without live data, start demo mode
+      setTimeout(() => {
+        if (!liveReceived) {
+          setConn('polling', 'Demo Mode');
+          demoInterval = setInterval(runDemoTick, POLL_MS);
+        }
+      }, 2618);
+
+      // If we ever get real data, cancel demo mode
+      const origIngest = ingestData;
+      window._ingestData = data => {
+        if (!liveReceived) {
+          liveReceived = true;
+          if (demoInterval) { clearInterval(demoInterval); demoInterval = null; }
+        }
+        origIngest(data);
+      };
+    }
+
+    document.addEventListener('DOMContentLoaded', init);
+  </script>
+</body>
+</html>

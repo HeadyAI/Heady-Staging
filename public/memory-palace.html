@@ -1,0 +1,1022 @@
+<!-- HEADY_BRAND:BEGIN
+     HEADY SYSTEMS | memory-palace.html | Sacred Geometry v5.0
+     Spatial Knowledge Navigation — walk through your data
+     (c) 2026 HeadySystems Inc. - Eric Haywood, Founder
+HEADY_BRAND:END -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Memory Palace — Heady Spatial Knowledge Navigation</title>
+  <meta name="description" content="Heady Memory Palace — Navigate your data as rooms in a sacred geometry palace. Spatial knowledge navigation with CSS 3D transforms.">
+  <meta name="theme-color" content="#050510">
+  <link rel="stylesheet" href="/sacred-geometry.css">
+  <style>
+    /* ── Reset & Base ─────────────────────────────────────────────────── */
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --gold:    #D4AF37;
+      --cyan:    #00D9FF;
+      --magenta: #FF00A0;
+      --white:   #FAFAFA;
+      --bg0:     #050510;
+      --bg1:     #0A0A1A;
+      --bg2:     #1A1A3E;
+      --glass:   rgba(26,26,62,0.6);
+      --phi:     cubic-bezier(0.618,0,0.382,1);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: var(--bg0);
+      color: var(--white);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── Ambient Background ──────────────────────────────────────────── */
+    .bg-orbs {
+      position: fixed; inset: 0;
+      pointer-events: none; z-index: 0;
+      overflow: hidden;
+    }
+    .bg-orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(100px);
+      opacity: 0.12;
+      animation: orb-drift 28s ease-in-out infinite alternate;
+    }
+    .bg-orb:nth-child(1) { width: 600px; height: 600px; background: var(--cyan);    top: -150px; left: -100px; animation-duration: 28s; }
+    .bg-orb:nth-child(2) { width: 500px; height: 500px; background: var(--magenta); bottom: -100px; right: -80px; animation-duration: 34s; animation-direction: alternate-reverse; }
+    .bg-orb:nth-child(3) { width: 400px; height: 400px; background: var(--gold);    top: 50%; left: 50%; transform: translate(-50%,-50%); animation-duration: 22s; }
+
+    @keyframes orb-drift {
+      from { transform: translate(0,0) scale(1); }
+      to   { transform: translate(30px,20px) scale(1.08); }
+    }
+
+    /* ── Sticky Nav ──────────────────────────────────────────────────── */
+    .mp-nav {
+      position: sticky; top: 55px; z-index: 200;
+      background: rgba(5,5,16,0.85);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(212,175,55,0.2);
+      padding: 0 24px;
+    }
+    .mp-nav-inner {
+      max-width: 1400px; margin: 0 auto;
+      display: flex; align-items: center; justify-content: space-between;
+      height: 52px; gap: 16px;
+    }
+    .mp-nav-brand {
+      display: flex; align-items: center; gap: 10px;
+      font-size: 15px; font-weight: 700; color: var(--gold);
+      text-decoration: none; white-space: nowrap;
+    }
+    .mp-nav-brand-icon {
+      width: 30px; height: 30px;
+      background: conic-gradient(from 0deg, var(--gold), var(--cyan), var(--magenta), var(--gold));
+      clip-path: polygon(50% 0%,93.3% 25%,93.3% 75%,50% 100%,6.7% 75%,6.7% 25%);
+      animation: spin-slow 20s linear infinite;
+    }
+    @keyframes spin-slow { to { transform: rotate(360deg); } }
+
+    .mp-breadcrumb {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 13px; color: rgba(250,250,250,0.5);
+      flex: 1; overflow: hidden;
+    }
+    .mp-breadcrumb span { white-space: nowrap; }
+    .mp-breadcrumb .sep { color: rgba(212,175,55,0.4); }
+    .mp-breadcrumb .crumb-active { color: var(--gold); font-weight: 600; }
+
+    .mp-nav-actions { display: flex; align-items: center; gap: 8px; }
+    .btn-ghost {
+      background: none; border: 1px solid rgba(212,175,55,0.3);
+      color: var(--gold); font-size: 12px; padding: 6px 14px;
+      border-radius: 20px; cursor: pointer; font-family: inherit;
+      transition: all 0.2s var(--phi);
+    }
+    .btn-ghost:hover { background: rgba(212,175,55,0.12); border-color: var(--gold); }
+
+    /* ── Main Layout ─────────────────────────────────────────────────── */
+    .mp-layout {
+      position: relative; z-index: 1;
+      max-width: 1400px; margin: 0 auto;
+      padding: 32px 24px 80px;
+      display: grid;
+      grid-template-columns: 340px 1fr;
+      grid-template-rows: auto 1fr;
+      gap: 24px;
+      min-height: calc(100vh - 107px);
+    }
+
+    /* ── Palace Overview Map (left panel) ───────────────────────────── */
+    .palace-map {
+      grid-column: 1; grid-row: 1 / 3;
+      background: var(--glass);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(212,175,55,0.15);
+      border-radius: 20px;
+      padding: 24px;
+      display: flex; flex-direction: column; gap: 20px;
+      height: fit-content;
+      position: sticky; top: 115px;
+    }
+    .map-title {
+      font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
+      color: rgba(212,175,55,0.6); font-weight: 600;
+    }
+
+    /* Hex map SVG container */
+    .hex-map-wrap {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 1;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .hex-map-svg {
+      width: 290px; height: 290px;
+      overflow: visible;
+    }
+
+    /* Room legend */
+    .room-legend {
+      display: flex; flex-direction: column; gap: 6px;
+    }
+    .legend-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 8px 12px; border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.2s var(--phi);
+      border: 1px solid transparent;
+    }
+    .legend-item:hover { background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.08); }
+    .legend-item.active {
+      background: rgba(212,175,55,0.08);
+      border-color: rgba(212,175,55,0.3);
+    }
+    .legend-dot {
+      width: 10px; height: 10px; border-radius: 50%;
+      flex-shrink: 0;
+      box-shadow: 0 0 6px currentColor;
+    }
+    .legend-name { font-size: 12px; color: rgba(250,250,250,0.8); flex: 1; }
+    .legend-count {
+      font-size: 10px; color: rgba(250,250,250,0.35);
+      background: rgba(255,255,255,0.06);
+      padding: 2px 7px; border-radius: 8px;
+    }
+
+    /* ── Room View (right panel) ─────────────────────────────────────── */
+    .room-view {
+      grid-column: 2; grid-row: 1;
+      perspective: 1200px;
+    }
+
+    .room-scene {
+      position: relative;
+      transform-style: preserve-3d;
+      min-height: 380px;
+    }
+
+    .room-card {
+      background: var(--glass);
+      backdrop-filter: blur(20px);
+      border-radius: 24px;
+      padding: 32px;
+      border: 1px solid rgba(255,255,255,0.06);
+      position: relative;
+      overflow: hidden;
+      animation: room-enter 0.5s var(--phi) both;
+    }
+    @keyframes room-enter {
+      from { opacity: 0; transform: rotateY(-12deg) translateX(-30px); }
+      to   { opacity: 1; transform: rotateY(0deg) translateX(0); }
+    }
+    .room-card.room-exit {
+      animation: room-exit 0.4s var(--phi) both;
+    }
+    @keyframes room-exit {
+      from { opacity: 1; transform: rotateY(0deg) translateX(0); }
+      to   { opacity: 0; transform: rotateY(12deg) translateX(30px); }
+    }
+
+    /* Room glow overlay */
+    .room-glow {
+      position: absolute; inset: 0; pointer-events: none; border-radius: 24px;
+      opacity: 0.06;
+    }
+
+    /* Room header */
+    .room-header {
+      display: flex; align-items: flex-start; gap: 20px;
+      margin-bottom: 28px;
+    }
+    .room-shape-icon {
+      width: 72px; height: 72px; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      position: relative;
+    }
+    .room-shape-svg { width: 72px; height: 72px; }
+
+    .room-meta { flex: 1; }
+    .room-label {
+      font-size: 10px; letter-spacing: 2px; text-transform: uppercase;
+      color: rgba(250,250,250,0.4); margin-bottom: 4px;
+    }
+    .room-name {
+      font-size: 26px; font-weight: 700; line-height: 1.2;
+      margin-bottom: 8px;
+    }
+    .room-desc { font-size: 14px; color: rgba(250,250,250,0.55); line-height: 1.5; }
+
+    /* Door portals */
+    .room-doors {
+      display: flex; gap: 10px; margin-bottom: 24px; flex-wrap: wrap;
+    }
+    .door-portal {
+      display: flex; align-items: center; gap: 8px;
+      padding: 8px 14px;
+      border-radius: 20px;
+      border: 1px solid rgba(255,255,255,0.1);
+      background: rgba(255,255,255,0.03);
+      cursor: pointer; font-size: 12px; color: rgba(250,250,250,0.65);
+      font-family: inherit;
+      transition: all 0.25s var(--phi);
+      position: relative; overflow: hidden;
+    }
+    .door-portal::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse at center, currentColor, transparent 70%);
+      opacity: 0; transition: opacity 0.25s;
+    }
+    .door-portal:hover::before { opacity: 0.08; }
+    .door-portal:hover { border-color: rgba(255,255,255,0.25); transform: translateY(-1px); }
+    .door-arc { font-size: 16px; }
+
+    /* Room items grid */
+    .room-items-title {
+      font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase;
+      color: rgba(250,250,250,0.35); margin-bottom: 14px; font-weight: 600;
+    }
+    .room-items {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 12px;
+    }
+
+    .room-item {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 14px;
+      padding: 14px;
+      cursor: pointer;
+      animation: phi-float 4s ease-in-out infinite;
+      transition: all 0.25s var(--phi);
+      position: relative;
+    }
+    .room-item:nth-child(2n)  { animation-delay: -1.4s; }
+    .room-item:nth-child(3n)  { animation-delay: -2.8s; }
+    .room-item:nth-child(4n)  { animation-delay: -0.7s; }
+    @keyframes phi-float {
+      0%,100% { transform: translateY(0px); }
+      50%      { transform: translateY(-4px); }
+    }
+    .room-item:hover {
+      background: rgba(255,255,255,0.08);
+      border-color: rgba(255,255,255,0.15);
+      transform: translateY(-2px) scale(1.01);
+      animation: none;
+    }
+    .room-item-icon { font-size: 22px; margin-bottom: 8px; }
+    .room-item-name { font-size: 12px; font-weight: 600; color: var(--white); margin-bottom: 4px; }
+    .room-item-sub  { font-size: 11px; color: rgba(250,250,250,0.4); line-height: 1.4; }
+    .room-item-tag  {
+      display: inline-block; margin-top: 8px;
+      font-size: 9px; letter-spacing: 1px; text-transform: uppercase;
+      padding: 2px 8px; border-radius: 8px;
+      background: rgba(255,255,255,0.07);
+      color: rgba(250,250,250,0.45);
+    }
+
+    /* ── Item Detail Modal ───────────────────────────────────────────── */
+    .item-modal-backdrop {
+      position: fixed; inset: 0; z-index: 500;
+      background: rgba(5,5,16,0.8);
+      backdrop-filter: blur(8px);
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.3s var(--phi);
+    }
+    .item-modal-backdrop.open { opacity: 1; pointer-events: all; }
+    .item-modal {
+      background: var(--bg2);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 20px;
+      padding: 32px;
+      max-width: 480px; width: 90%;
+      transform: scale(0.9) translateY(20px);
+      transition: transform 0.3s var(--phi);
+    }
+    .item-modal-backdrop.open .item-modal { transform: scale(1) translateY(0); }
+    .modal-header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 16px;
+    }
+    .modal-title { font-size: 18px; font-weight: 700; }
+    .modal-close {
+      background: none; border: none; color: rgba(250,250,250,0.5);
+      font-size: 22px; cursor: pointer; line-height: 1;
+      transition: color 0.2s;
+    }
+    .modal-close:hover { color: var(--white); }
+    .modal-icon { font-size: 42px; margin-bottom: 12px; text-align: center; }
+    .modal-body { font-size: 14px; color: rgba(250,250,250,0.6); line-height: 1.6; }
+    .modal-meta {
+      margin-top: 16px; padding-top: 16px;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
+    }
+    .modal-meta-item label { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: rgba(250,250,250,0.35); display: block; margin-bottom: 3px; }
+    .modal-meta-item span  { font-size: 13px; color: var(--white); }
+
+    /* ── Add Item Panel ──────────────────────────────────────────────── */
+    .add-panel-backdrop {
+      position: fixed; inset: 0; z-index: 500;
+      background: rgba(5,5,16,0.8);
+      backdrop-filter: blur(8px);
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.3s var(--phi);
+    }
+    .add-panel-backdrop.open { opacity: 1; pointer-events: all; }
+    .add-panel {
+      background: var(--bg2);
+      border: 1px solid rgba(212,175,55,0.2);
+      border-radius: 20px;
+      padding: 32px;
+      max-width: 460px; width: 90%;
+      transform: scale(0.9) translateY(20px);
+      transition: transform 0.3s var(--phi);
+    }
+    .add-panel-backdrop.open .add-panel { transform: scale(1) translateY(0); }
+    .add-panel h3 { font-size: 18px; font-weight: 700; color: var(--gold); margin-bottom: 4px; }
+    .add-panel .sub { font-size: 12px; color: rgba(250,250,250,0.4); margin-bottom: 20px; }
+    .form-group { margin-bottom: 14px; }
+    .form-group label { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: rgba(250,250,250,0.5); display: block; margin-bottom: 6px; }
+    .form-group input, .form-group textarea, .form-group select {
+      width: 100%; background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 10px; padding: 10px 14px;
+      color: var(--white); font-family: inherit; font-size: 13px;
+      outline: none; resize: vertical;
+      transition: border-color 0.2s;
+    }
+    .form-group input:focus, .form-group textarea:focus, .form-group select:focus {
+      border-color: rgba(212,175,55,0.5);
+    }
+    .form-group select option { background: var(--bg2); }
+    .form-actions { display: flex; gap: 10px; margin-top: 20px; justify-content: flex-end; }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--gold), #B8940F);
+      color: #050510; border: none; border-radius: 20px;
+      padding: 10px 22px; font-size: 13px; font-weight: 700;
+      cursor: pointer; font-family: inherit;
+      transition: all 0.2s var(--phi);
+    }
+    .btn-primary:hover { box-shadow: 0 0 20px rgba(212,175,55,0.4); transform: scale(1.03); }
+    .btn-cancel {
+      background: none; border: 1px solid rgba(255,255,255,0.12);
+      color: rgba(250,250,250,0.6); border-radius: 20px;
+      padding: 10px 22px; font-size: 13px; cursor: pointer; font-family: inherit;
+      transition: all 0.2s;
+    }
+    .btn-cancel:hover { border-color: rgba(255,255,255,0.25); color: var(--white); }
+
+    /* ── FAB ─────────────────────────────────────────────────────────── */
+    .fab {
+      position: fixed; bottom: 36px; right: 36px; z-index: 300;
+      width: 56px; height: 56px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--gold), #B8940F);
+      border: none; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 26px; color: #050510;
+      box-shadow: 0 4px 24px rgba(212,175,55,0.45);
+      transition: all 0.25s var(--phi);
+    }
+    .fab:hover { transform: scale(1.1) rotate(45deg); box-shadow: 0 6px 32px rgba(212,175,55,0.6); }
+
+    /* ── Items panel (right panel bottom) ───────────────────────────── */
+    .room-items-panel {
+      grid-column: 2; grid-row: 2;
+    }
+
+    /* ── Keyboard hint ───────────────────────────────────────────────── */
+    .key-hint {
+      display: flex; gap: 8px; align-items: center;
+      font-size: 11px; color: rgba(250,250,250,0.3);
+      flex-wrap: wrap;
+    }
+    .key-badge {
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 5px; padding: 2px 7px;
+      font-size: 10px; color: rgba(250,250,250,0.5);
+    }
+
+    /* ── API Status Bar ──────────────────────────────────────────────── */
+    .api-bar {
+      grid-column: 1 / 3;
+      background: rgba(0,217,255,0.04);
+      border: 1px solid rgba(0,217,255,0.1);
+      border-radius: 12px;
+      padding: 10px 18px;
+      display: flex; align-items: center; gap: 16px;
+      font-size: 11px; color: rgba(250,250,250,0.4);
+      flex-wrap: wrap;
+    }
+    .api-bar .dot { width: 7px; height: 7px; border-radius: 50%; background: #00ff88; box-shadow: 0 0 8px #00ff88; flex-shrink: 0; }
+    .api-bar code { font-family: 'Courier New', monospace; color: var(--cyan); font-size: 11px; }
+
+    /* ── Responsive ──────────────────────────────────────────────────── */
+    @media (max-width: 900px) {
+      .mp-layout {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto auto auto;
+      }
+      .palace-map { grid-column: 1; grid-row: 1; position: static; }
+      .room-view  { grid-column: 1; grid-row: 2; }
+      .room-items-panel { grid-column: 1; grid-row: 3; }
+      .api-bar { grid-column: 1; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Ambient background -->
+  <div class="bg-orbs" aria-hidden="true">
+    <div class="bg-orb"></div>
+    <div class="bg-orb"></div>
+    <div class="bg-orb"></div>
+  </div>
+
+  <!-- Sticky nav -->
+  <nav class="mp-nav" role="navigation" aria-label="Memory Palace Navigation">
+    <div class="mp-nav-inner">
+      <a href="/" class="mp-nav-brand">
+        <div class="mp-nav-brand-icon"></div>
+        Memory Palace
+      </a>
+      <div class="mp-breadcrumb" id="breadcrumb" aria-label="Room path">
+        <span>Palace</span>
+      </div>
+      <div class="mp-nav-actions">
+        <div class="key-hint" aria-label="Keyboard shortcuts">
+          <span class="key-badge">&#8592;</span>
+          <span class="key-badge">&#8594;</span>
+          <span style="opacity:.5">navigate</span>
+        </div>
+        <button class="btn-ghost" onclick="showAddPanel()" aria-label="Add item to current room">+ Add Item</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main layout -->
+  <main class="mp-layout" role="main">
+
+    <!-- API status bar -->
+    <div class="api-bar" aria-live="polite">
+      <div class="dot"></div>
+      <span>Memory Palace API</span>
+      <code>GET /api/features/memory-palace</code>
+      <code>GET /api/features/memory-palace/room/:id</code>
+      <span id="api-status">Ready</span>
+    </div>
+
+    <!-- Left: Palace map -->
+    <aside class="palace-map" aria-label="Palace overview map">
+      <div class="map-title">Palace Overview</div>
+      <div class="hex-map-wrap">
+        <svg class="hex-map-svg" id="hexMap" viewBox="0 0 290 290" role="img" aria-label="Hexagonal room map">
+          <!-- Rooms rendered by JS -->
+        </svg>
+      </div>
+      <div class="room-legend" id="roomLegend" role="list" aria-label="Room list"></div>
+    </aside>
+
+    <!-- Right-top: Room view -->
+    <section class="room-view" aria-label="Current room" aria-live="polite">
+      <div class="room-scene">
+        <div class="room-card" id="roomCard"></div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Item detail modal -->
+  <div class="item-modal-backdrop" id="itemModal" role="dialog" aria-modal="true" aria-label="Item details">
+    <div class="item-modal">
+      <div class="modal-header">
+        <span class="modal-title" id="modalTitle"></span>
+        <button class="modal-close" onclick="closeModal()" aria-label="Close">&times;</button>
+      </div>
+      <div class="modal-icon" id="modalIcon"></div>
+      <div class="modal-body" id="modalBody"></div>
+      <div class="modal-meta" id="modalMeta"></div>
+    </div>
+  </div>
+
+  <!-- Add item panel -->
+  <div class="add-panel-backdrop" id="addPanel" role="dialog" aria-modal="true" aria-label="Add item">
+    <div class="add-panel">
+      <h3>Add Item</h3>
+      <div class="sub" id="addPanelSub">to Grand Atrium</div>
+      <div class="form-group">
+        <label for="itemIcon">Icon (emoji)</label>
+        <input type="text" id="itemIcon" value="✦" maxlength="2">
+      </div>
+      <div class="form-group">
+        <label for="itemName">Name</label>
+        <input type="text" id="itemName" placeholder="Item name">
+      </div>
+      <div class="form-group">
+        <label for="itemDesc">Description</label>
+        <textarea id="itemDesc" rows="3" placeholder="What is this item?"></textarea>
+      </div>
+      <div class="form-group">
+        <label for="itemTag">Tag</label>
+        <input type="text" id="itemTag" placeholder="e.g. artifact, config, doc">
+      </div>
+      <div class="form-actions">
+        <button class="btn-cancel" onclick="closeAddPanel()">Cancel</button>
+        <button class="btn-primary" onclick="submitAddItem()">Add to Palace</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Floating action button -->
+  <button class="fab" onclick="showAddPanel()" aria-label="Add item to current room" title="Add item">+</button>
+
+  <!-- Global nav -->
+  <script src="/nav-global.js"></script>
+
+  <script>
+    // ── Data ──────────────────────────────────────────────────────────────
+    const ROOMS = [
+      {
+        id: 'atrium',
+        name: 'Grand Atrium',
+        label: 'Entrance',
+        color: '#D4AF37',
+        shape: 'hexagon',
+        desc: 'The central hub of the palace. All paths begin and end here. Navigate to any chamber from this golden atrium.',
+        icon: '⬡',
+        doors: ['code-sanctum','service-temple','knowledge-library'],
+        items: [
+          { icon: '◈', name: 'Palace Map',      sub: 'Top-down navigation overlay',        tag: 'navigation' },
+          { icon: '∞', name: 'System Overview', sub: 'Full HCFullPipeline status board',    tag: 'dashboard' },
+          { icon: '⟐', name: 'Pipeline State',  sub: 'Live stage execution tracker',        tag: 'live' },
+          { icon: '⌂', name: 'Home Portal',     sub: 'Return to HeadyOS root',              tag: 'link' },
+        ]
+      },
+      {
+        id: 'code-sanctum',
+        name: 'Code Sanctum',
+        label: 'Artifacts',
+        color: '#00D9FF',
+        shape: 'octagon',
+        desc: 'Sacred chamber where all code artifacts reside. Source files, modules, and packages pulse with living energy.',
+        icon: '⬡',
+        doors: ['atrium','agent-chambers','config-vault'],
+        items: [
+          { icon: '🗂', name: 'heady-manager.js',    sub: 'MCP server & API gateway',           tag: 'core' },
+          { icon: '⚙', name: 'hc_pipeline.js',       sub: 'HCFullPipeline runtime engine',       tag: 'engine' },
+          { icon: '📦', name: 'packages/',            sub: '8 workspace packages',                tag: 'modules' },
+          { icon: '🤖', name: 'src/agents/',          sub: 'Builder, researcher, deployer agents', tag: 'agents' },
+          { icon: '🔬', name: 'src/heady_project/',   sub: 'Python conductor worker',             tag: 'python' },
+          { icon: '🌐', name: 'public/',              sub: 'Sacred Geometry React UI files',      tag: 'frontend' },
+        ]
+      },
+      {
+        id: 'service-temple',
+        name: 'Service Temple',
+        label: 'Connections',
+        color: '#FF00A0',
+        shape: 'hexagon',
+        desc: 'Where all services connect and commune. APIs, integrations, and external nodes form living constellations here.',
+        icon: '⬡',
+        doors: ['atrium','data-reservoir','agent-chambers'],
+        items: [
+          { icon: '⚡', name: 'REST API',         sub: '/api/* — 24 registered endpoints',    tag: 'api' },
+          { icon: '⬡',  name: 'MCP Protocol',     sub: 'Model Context Protocol gateway',       tag: 'protocol' },
+          { icon: '🔗', name: 'Render.com',        sub: 'Cloud deployment target',              tag: 'cloud' },
+          { icon: '🧠', name: 'Claude API',        sub: 'Anthropic claude-sonnet-4-6',          tag: 'ai' },
+          { icon: '🤗', name: 'HuggingFace',       sub: 'Model registry & inference',           tag: 'ai' },
+          { icon: '🐳', name: 'Docker Nodes',      sub: 'Containerized orchestration',          tag: 'infra' },
+        ]
+      },
+      {
+        id: 'config-vault',
+        name: 'Config Vault',
+        label: 'Configuration',
+        color: '#D4AF37',
+        shape: 'pentagon',
+        desc: 'The armored vault holding all configuration scrolls. YAML policies, pipeline definitions, and governance rules.',
+        icon: '⬠',
+        doors: ['code-sanctum','knowledge-library'],
+        items: [
+          { icon: '📜', name: 'hcfullpipeline.yaml',    sub: 'Master pipeline definition',         tag: 'pipeline' },
+          { icon: '🔒', name: 'governance-policies.yaml', sub: 'Access, security, cost controls',  tag: 'security' },
+          { icon: '📊', name: 'resource-policies.yaml',  sub: 'Concurrency & rate limits',          tag: 'resources' },
+          { icon: '🗺', name: 'service-catalog.yaml',    sub: 'All services, agents, SLOs',         tag: 'catalog' },
+          { icon: '🏗', name: 'render.yaml',             sub: 'Infrastructure as Code blueprint',   tag: 'infra' },
+          { icon: '🔖', name: 'heady-registry.json',     sub: 'Central component registry',         tag: 'registry' },
+        ]
+      },
+      {
+        id: 'knowledge-library',
+        name: 'Knowledge Library',
+        label: 'Documentation',
+        color: '#00D9FF',
+        shape: 'hexagon',
+        desc: 'An infinite library of scrolls and notebooks. Every documented pattern, protocol, and concept is catalogued here.',
+        icon: '⬡',
+        doors: ['atrium','config-vault','agent-chambers'],
+        items: [
+          { icon: '📖', name: 'CHECKPOINT_PROTOCOL.md', sub: 'Master sync & checkpoint protocol',  tag: 'protocol' },
+          { icon: '📋', name: 'heady-services-manual.md', sub: 'Comprehensive services manual',    tag: 'manual' },
+          { icon: '☁',  name: 'Colab Notebooks',         sub: 'Quick-start & tutorial notebooks',  tag: 'notebooks' },
+          { icon: '🔬', name: 'concepts-index.yaml',      sub: 'Pattern & concept tracking',        tag: 'patterns' },
+          { icon: '👁', name: 'DOC_OWNERS.yaml',          sub: 'Doc ownership & freshness',          tag: 'governance' },
+          { icon: '🌍', name: 'public-domain-patterns.md', sub: 'Public domain pattern registry',   tag: 'patterns' },
+        ]
+      },
+      {
+        id: 'agent-chambers',
+        name: 'Agent Chambers',
+        label: 'Agents',
+        color: '#FF00A0',
+        shape: 'octagon',
+        desc: 'Private chambers for each autonomous agent. Builder, Researcher, Deployer, and Claude Code each hold court here.',
+        icon: '⬡',
+        doors: ['code-sanctum','service-temple','knowledge-library'],
+        items: [
+          { icon: '🔨', name: 'BuilderAgent',     sub: 'Code generation & build tasks',       tag: 'agent' },
+          { icon: '🔭', name: 'ResearcherAgent',  sub: 'Knowledge retrieval & analysis',      tag: 'agent' },
+          { icon: '🚀', name: 'DeployerAgent',    sub: 'Artifact prep & deploy validation',   tag: 'agent' },
+          { icon: '✦',  name: 'ClaudeCode Agent', sub: 'claude-sonnet-4-6 code agent',        tag: 'ai-agent' },
+          { icon: '🐝', name: 'HeadyBee Swarm',   sub: 'Parallel fan-out supervisor',         tag: 'supervisor' },
+          { icon: '🧠', name: 'System Brain',     sub: 'Meta-controller & auto-tuner',        tag: 'controller' },
+        ]
+      },
+      {
+        id: 'data-reservoir',
+        name: 'Data Reservoir',
+        label: 'Data Stores',
+        color: '#D4AF37',
+        shape: 'hexagon',
+        desc: 'Deep cisterns of structured data. Postgres schemas, checkpoints, vector stores, and pipeline run histories.',
+        icon: '⬡',
+        doors: ['service-temple','config-vault'],
+        items: [
+          { icon: '🗄', name: 'PostgreSQL',       sub: 'Primary relational store (Render)',    tag: 'database' },
+          { icon: '⏱', name: 'Checkpoints',       sub: 'Snapshot & run-state records',        tag: 'state' },
+          { icon: '📈', name: 'Pipeline History',  sub: 'Run logs & execution traces',         tag: 'logs' },
+          { icon: '🔮', name: 'Vector Store',      sub: 'Latent space embeddings index',       tag: 'ai' },
+          { icon: '💾', name: 'Ephemeral Cache',   sub: 'In-memory task & routing cache',      tag: 'cache' },
+        ]
+      }
+    ];
+
+    // Hexagonal grid centers (flat-top, center 145,145)
+    const HEX_LAYOUT = [
+      { id: 'atrium',           cx: 145, cy: 145 }, // center
+      { id: 'code-sanctum',     cx: 145, cy:  68 }, // top
+      { id: 'service-temple',   cx: 212, cy: 107 }, // top-right
+      { id: 'config-vault',     cx: 212, cy: 183 }, // bottom-right
+      { id: 'knowledge-library',cx: 145, cy: 222 }, // bottom
+      { id: 'agent-chambers',   cx:  78, cy: 183 }, // bottom-left
+      { id: 'data-reservoir',   cx:  78, cy: 107 }, // top-left
+    ];
+
+    // ── State ─────────────────────────────────────────────────────────────
+    let currentRoomId = 'atrium';
+    let navHistory    = ['atrium'];
+    let userItems     = {};  // roomId -> [{icon,name,sub,tag}]
+    ROOMS.forEach(r => { userItems[r.id] = []; });
+
+    // ── Hex path helper ───────────────────────────────────────────────────
+    function hexPath(cx, cy, r) {
+      const pts = [];
+      for (let i = 0; i < 6; i++) {
+        const a = Math.PI / 180 * (60 * i - 30);
+        pts.push([cx + r * Math.cos(a), cy + r * Math.sin(a)]);
+      }
+      return pts.map((p,i) => (i===0?'M':'L') + p[0].toFixed(1)+','+p[1].toFixed(1)).join(' ') + ' Z';
+    }
+
+    function octPath(cx, cy, r) {
+      const pts = [];
+      for (let i = 0; i < 8; i++) {
+        const a = Math.PI / 180 * (45 * i - 22.5);
+        pts.push([cx + r * Math.cos(a), cy + r * Math.sin(a)]);
+      }
+      return pts.map((p,i) => (i===0?'M':'L') + p[0].toFixed(1)+','+p[1].toFixed(1)).join(' ') + ' Z';
+    }
+
+    function pentPath(cx, cy, r) {
+      const pts = [];
+      for (let i = 0; i < 5; i++) {
+        const a = Math.PI / 180 * (72 * i - 90);
+        pts.push([cx + r * Math.cos(a), cy + r * Math.sin(a)]);
+      }
+      return pts.map((p,i) => (i===0?'M':'L') + p[0].toFixed(1)+','+p[1].toFixed(1)).join(' ') + ' Z';
+    }
+
+    function shapeClipPath(shape) {
+      if (shape === 'octagon') return 'polygon(30% 0%,70% 0%,100% 30%,100% 70%,70% 100%,30% 100%,0% 70%,0% 30%)';
+      if (shape === 'pentagon') return 'polygon(50% 0%,100% 38%,82% 100%,18% 100%,0% 38%)';
+      return 'polygon(50% 0%,93.3% 25%,93.3% 75%,50% 100%,6.7% 75%,6.7% 25%)';
+    }
+
+    // ── Render hex map ────────────────────────────────────────────────────
+    function renderHexMap() {
+      const svg = document.getElementById('hexMap');
+      const roomById = {};
+      ROOMS.forEach(r => { roomById[r.id] = r; });
+
+      let html = '';
+
+      // Connection lines first
+      const drawn = new Set();
+      HEX_LAYOUT.forEach(h => {
+        const room = roomById[h.id];
+        if (!room) return;
+        room.doors.forEach(did => {
+          const key = [h.id, did].sort().join('|');
+          if (drawn.has(key)) return;
+          drawn.add(key);
+          const target = HEX_LAYOUT.find(x => x.id === did);
+          if (!target) return;
+          html += `<line x1="${h.cx}" y1="${h.cy}" x2="${target.cx}" y2="${target.cy}"
+            stroke="rgba(212,175,55,0.15)" stroke-width="1.5" stroke-dasharray="4 3"/>`;
+        });
+      });
+
+      // Room hexagons
+      HEX_LAYOUT.forEach(h => {
+        const room = roomById[h.id];
+        if (!room) return;
+        const isActive = h.id === currentRoomId;
+        const r = h.id === 'atrium' ? 38 : 28;
+        const path = hexPath(h.cx, h.cy, r);
+        const glow = isActive ? `filter:drop-shadow(0 0 10px ${room.color})` : '';
+        html += `<g class="hex-room" data-id="${h.id}" style="cursor:pointer" onclick="navigateTo('${h.id}')">
+          <path d="${path}"
+            fill="${isActive ? room.color+'22' : 'rgba(26,26,62,0.5)'}"
+            stroke="${isActive ? room.color : room.color+'55'}"
+            stroke-width="${isActive ? 2 : 1}"
+            style="${glow}"/>
+          <text x="${h.cx}" y="${h.cy + 1}" text-anchor="middle" dominant-baseline="middle"
+            font-size="${h.id==='atrium'?11:9}" fill="${isActive ? room.color : 'rgba(250,250,250,0.5)'}"
+            font-family="Inter,system-ui,sans-serif" font-weight="${isActive?'700':'400'}">
+            ${room.name.split(' ')[0]}
+          </text>
+          ${isActive ? `<circle cx="${h.cx}" cy="${h.cy-r-8}" r="4" fill="${room.color}" opacity="0.9"/>` : ''}
+        </g>`;
+      });
+
+      svg.innerHTML = html;
+    }
+
+    // ── Render legend ─────────────────────────────────────────────────────
+    function renderLegend() {
+      const el = document.getElementById('roomLegend');
+      el.innerHTML = ROOMS.map(r => `
+        <div class="legend-item ${r.id===currentRoomId?'active':''}" role="listitem"
+          onclick="navigateTo('${r.id}')" tabindex="0"
+          onkeydown="if(event.key==='Enter')navigateTo('${r.id}')">
+          <div class="legend-dot" style="background:${r.color};color:${r.color}"></div>
+          <span class="legend-name">${r.name}</span>
+          <span class="legend-count">${r.items.length + userItems[r.id].length}</span>
+        </div>
+      `).join('');
+    }
+
+    // ── Render breadcrumb ─────────────────────────────────────────────────
+    function renderBreadcrumb() {
+      const el = document.getElementById('breadcrumb');
+      const crumbs = navHistory.slice(0, 4);
+      const roomById = {};
+      ROOMS.forEach(r => { roomById[r.id] = r; });
+      el.innerHTML = crumbs.map((id, i) => {
+        const r = roomById[id];
+        const isLast = i === crumbs.length - 1;
+        return `<span class="${isLast?'crumb-active':''}" style="color:${isLast?r.color:''}">${r.name}</span>${isLast?'':'<span class="sep">›</span>'}`;
+      }).join('');
+    }
+
+    // ── Shape SVG for room card ───────────────────────────────────────────
+    function roomShapeSVG(shape, color) {
+      const cx = 36, cy = 36, r = 30;
+      let pathD;
+      if (shape === 'octagon') pathD = octPath(cx,cy,r);
+      else if (shape === 'pentagon') pathD = pentPath(cx,cy,r);
+      else pathD = hexPath(cx,cy,r);
+      return `<svg class="room-shape-svg" viewBox="0 0 72 72" aria-hidden="true">
+        <defs>
+          <filter id="shapeGlow">
+            <feGaussianBlur stdDeviation="3" result="blur"/>
+            <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+        </defs>
+        <path d="${pathD}" fill="${color}18" stroke="${color}" stroke-width="1.5" filter="url(#shapeGlow)"/>
+      </svg>`;
+    }
+
+    // ── Render room card ──────────────────────────────────────────────────
+    function renderRoom(room) {
+      const card = document.getElementById('roomCard');
+      const allItems = [...room.items, ...userItems[room.id]];
+      const roomById = {};
+      ROOMS.forEach(r => { roomById[r.id] = r; });
+
+      const doorsHtml = room.doors.map(did => {
+        const dr = roomById[did];
+        if (!dr) return '';
+        return `<button class="door-portal" onclick="navigateTo('${did}')"
+          style="color:${dr.color};border-color:${dr.color}33"
+          aria-label="Go to ${dr.name}">
+          <span class="door-arc">⟡</span> ${dr.name}
+        </button>`;
+      }).join('');
+
+      const itemsHtml = allItems.map((item, idx) => `
+        <div class="room-item" onclick="openItemModal(${JSON.stringify(room.id)},${idx})"
+          role="button" tabindex="0" aria-label="${item.name}"
+          style="border-color:${room.color}18"
+          onkeydown="if(event.key==='Enter')openItemModal('${room.id}',${idx})">
+          <div class="room-item-icon">${item.icon}</div>
+          <div class="room-item-name">${item.name}</div>
+          <div class="room-item-sub">${item.sub}</div>
+          <span class="room-item-tag" style="background:${room.color}18;color:${room.color}">${item.tag}</span>
+        </div>
+      `).join('');
+
+      card.innerHTML = `
+        <div class="room-glow" style="background:radial-gradient(circle at 30% 30%, ${room.color}, transparent 60%)"></div>
+        <div class="room-header">
+          <div class="room-shape-icon">${roomShapeSVG(room.shape, room.color)}</div>
+          <div class="room-meta">
+            <div class="room-label">${room.label}</div>
+            <div class="room-name" style="color:${room.color};text-shadow:0 0 30px ${room.color}55">${room.name}</div>
+            <div class="room-desc">${room.desc}</div>
+          </div>
+        </div>
+        <div class="room-doors" role="group" aria-label="Connected rooms">${doorsHtml}</div>
+        <div class="room-items-title">Artifacts &amp; Items (${allItems.length})</div>
+        <div class="room-items" role="list">${itemsHtml}</div>
+      `;
+
+      // Animate in
+      card.classList.remove('room-exit');
+      void card.offsetWidth; // reflow
+      card.style.borderColor = room.color + '22';
+    }
+
+    // ── Navigation ────────────────────────────────────────────────────────
+    function navigateTo(roomId, addToHistory = true) {
+      if (roomId === currentRoomId) return;
+      const card = document.getElementById('roomCard');
+      card.classList.add('room-exit');
+
+      setTimeout(() => {
+        currentRoomId = roomId;
+        if (addToHistory) {
+          navHistory.push(roomId);
+          if (navHistory.length > 6) navHistory.shift();
+        }
+        const room = ROOMS.find(r => r.id === roomId);
+        renderRoom(room);
+        renderHexMap();
+        renderLegend();
+        renderBreadcrumb();
+        updateAPIStatus(roomId);
+      }, 380);
+    }
+
+    // ── Item modal ────────────────────────────────────────────────────────
+    function openItemModal(roomId, idx) {
+      const room = ROOMS.find(r => r.id === roomId);
+      const allItems = [...room.items, ...userItems[roomId]];
+      const item = allItems[idx];
+      if (!item) return;
+
+      document.getElementById('modalTitle').textContent = item.name;
+      document.getElementById('modalIcon').textContent  = item.icon;
+      document.getElementById('modalBody').textContent  = item.sub;
+      document.getElementById('modalMeta').innerHTML = `
+        <div class="modal-meta-item"><label>Room</label><span style="color:${room.color}">${room.name}</span></div>
+        <div class="modal-meta-item"><label>Tag</label><span>${item.tag}</span></div>
+        <div class="modal-meta-item"><label>Shape</label><span>${room.shape}</span></div>
+        <div class="modal-meta-item"><label>Index</label><span>#${idx + 1}</span></div>
+      `;
+      document.getElementById('itemModal').classList.add('open');
+    }
+
+    function closeModal() {
+      document.getElementById('itemModal').classList.remove('open');
+    }
+
+    // ── Add item panel ────────────────────────────────────────────────────
+    function showAddPanel() {
+      const room = ROOMS.find(r => r.id === currentRoomId);
+      document.getElementById('addPanelSub').textContent = 'to ' + room.name;
+      document.getElementById('addPanel').classList.add('open');
+    }
+
+    function closeAddPanel() {
+      document.getElementById('addPanel').classList.remove('open');
+    }
+
+    function submitAddItem() {
+      const icon = document.getElementById('itemIcon').value.trim() || '✦';
+      const name = document.getElementById('itemName').value.trim();
+      const sub  = document.getElementById('itemDesc').value.trim();
+      const tag  = document.getElementById('itemTag').value.trim() || 'custom';
+      if (!name) { document.getElementById('itemName').focus(); return; }
+
+      userItems[currentRoomId].push({ icon, name, sub, tag });
+      closeAddPanel();
+
+      // Clear form
+      document.getElementById('itemName').value = '';
+      document.getElementById('itemDesc').value = '';
+      document.getElementById('itemTag').value  = '';
+      document.getElementById('itemIcon').value = '✦';
+
+      // Re-render
+      const room = ROOMS.find(r => r.id === currentRoomId);
+      renderRoom(room);
+      renderLegend();
+    }
+
+    // ── API status update ─────────────────────────────────────────────────
+    function updateAPIStatus(roomId) {
+      const el = document.getElementById('api-status');
+      el.textContent = 'Fetched room: ' + roomId;
+      // Simulate API call
+      setTimeout(() => { el.textContent = 'Ready'; }, 1800);
+    }
+
+    // ── Keyboard navigation ───────────────────────────────────────────────
+    document.addEventListener('keydown', (e) => {
+      const modal = document.getElementById('itemModal');
+      const addP  = document.getElementById('addPanel');
+      if (modal.classList.contains('open')) { if (e.key === 'Escape') closeModal(); return; }
+      if (addP.classList.contains('open'))  { if (e.key === 'Escape') closeAddPanel(); return; }
+
+      const room = ROOMS.find(r => r.id === currentRoomId);
+      if (!room) return;
+      if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+        e.preventDefault();
+        navigateTo(room.doors[0]);
+      } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+        e.preventDefault();
+        if (navHistory.length > 1) {
+          const prev = navHistory[navHistory.length - 2];
+          navHistory.pop();
+          navigateTo(prev, false);
+        } else {
+          navigateTo(room.doors[room.doors.length - 1]);
+        }
+      } else if (e.key === 'Escape') {
+        navigateTo('atrium');
+      }
+    });
+
+    // Click backdrop to close modals
+    document.getElementById('itemModal').addEventListener('click', function(e) {
+      if (e.target === this) closeModal();
+    });
+    document.getElementById('addPanel').addEventListener('click', function(e) {
+      if (e.target === this) closeAddPanel();
+    });
+
+    // ── Init ──────────────────────────────────────────────────────────────
+    (function init() {
+      const room = ROOMS.find(r => r.id === currentRoomId);
+      renderRoom(room);
+      renderHexMap();
+      renderLegend();
+      renderBreadcrumb();
+    })();
+  </script>
+</body>
+</html>

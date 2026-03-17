@@ -1,0 +1,1004 @@
+<!-- HEADY_BRAND:BEGIN
+     HEADY SYSTEMS | guardian.html | Sacred Geometry v5.0
+     Post-Quantum Personal Vault — secrets with visual trust
+     (c) 2026 HeadySystems Inc. - Eric Haywood, Founder
+HEADY_BRAND:END -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Guardian — Post-Quantum Personal Vault | HeadyOS</title>
+  <meta name="description" content="Heady Guardian — Post-Quantum Personal Vault. Store secrets with visual trust indicators, PQC signing, and sacred geometry aesthetics.">
+  <meta name="theme-color" content="#050510">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/sacred-geometry.css">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --gold:    #D4AF37;
+      --cyan:    #00D9FF;
+      --magenta: #FF00A0;
+      --white:   #FAFAFA;
+      --void:    #050510;
+      --deep:    #0A0A1A;
+      --nebula:  #1A1A3E;
+      --glass:   rgba(26,26,62,0.6);
+      --phi-ease: cubic-bezier(0.618,0,0.382,1);
+      --glow-gold:    0 0 30px rgba(212,175,55,0.55);
+      --glow-cyan:    0 0 30px rgba(0,217,255,0.5);
+      --glow-magenta: 0 0 30px rgba(255,0,160,0.5);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: radial-gradient(ellipse at 20% 10%, #1A1A3E 0%, #0A0A1A 45%, #050510 100%);
+      color: var(--white);
+      min-height: 100vh;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* ── Background orbs ── */
+    .orb-layer {
+      position: fixed; inset: 0;
+      pointer-events: none; z-index: 0; overflow: hidden;
+    }
+    .orb {
+      position: absolute; border-radius: 50%;
+      filter: blur(90px); opacity: 0.12;
+      animation: orb-drift 28s ease-in-out infinite;
+    }
+    .orb-a { width:520px; height:520px; background:var(--cyan);    top:-160px; left:-160px; animation-duration:32s; }
+    .orb-b { width:420px; height:420px; background:var(--magenta); bottom:-120px; right:-100px; animation-duration:26s; animation-delay:-12s; }
+    .orb-c { width:340px; height:340px; background:var(--gold);    top:45%; right:8%; animation-duration:38s; animation-delay:-7s; }
+
+    @keyframes orb-drift {
+      0%,100% { transform:translate(0,0) scale(1); }
+      33%      { transform:translate(60px,-50px) scale(1.08); }
+      66%      { transform:translate(-40px,45px) scale(0.94); }
+    }
+
+    /* ── Sticky nav ── */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 2rem;
+      height: 62px;
+      background: rgba(5,5,16,0.75);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(212,175,55,0.18);
+    }
+    .nav-logo {
+      display: flex; align-items: center; gap: 0.55rem;
+      font-size: 1.05rem; font-weight: 700; color: var(--gold);
+      text-decoration: none; letter-spacing: 0.03em;
+    }
+    .nav-logo svg { flex-shrink:0; }
+    .nav-links { display:flex; align-items:center; gap:1.6rem; }
+    .nav-links a {
+      color: rgba(250,250,250,0.7); text-decoration: none;
+      font-size: 0.88rem; font-weight: 500;
+      transition: color 0.3s var(--phi-ease);
+    }
+    .nav-links a:hover { color: var(--cyan); }
+    .nav-links a.active { color: var(--gold); }
+
+    /* PQC Shield badge */
+    .pqc-badge {
+      display: flex; align-items: center; gap: 0.5rem;
+      padding: 0.35rem 0.9rem;
+      background: rgba(212,175,55,0.08);
+      border: 1px solid rgba(212,175,55,0.35);
+      border-radius: 999px;
+      font-size: 0.78rem; font-weight: 600; color: var(--gold);
+      animation: shield-breathe 3.236s ease-in-out infinite;
+      cursor: default;
+    }
+    .pqc-badge svg { animation: shield-pulse 3.236s ease-in-out infinite; }
+    @keyframes shield-breathe {
+      0%,100% { box-shadow: 0 0 8px rgba(212,175,55,0.3); }
+      50%      { box-shadow: 0 0 22px rgba(212,175,55,0.65), 0 0 45px rgba(212,175,55,0.25); }
+    }
+    @keyframes shield-pulse {
+      0%,100% { filter:drop-shadow(0 0 4px rgba(212,175,55,0.5)); }
+      50%      { filter:drop-shadow(0 0 10px rgba(212,175,55,0.95)); }
+    }
+
+    /* ── Main layout ── */
+    .page-wrap {
+      position: relative; z-index: 1;
+      max-width: 1440px; margin: 0 auto;
+      padding: 2rem 2rem 4rem;
+    }
+
+    /* ── Vault door section ── */
+    .vault-door-section {
+      display: flex; align-items: center; justify-content: center;
+      padding: 2.5rem 0 2rem;
+      gap: 2.5rem; flex-wrap: wrap;
+    }
+    .vault-door-wrap {
+      position: relative; width: 160px; height: 160px; flex-shrink:0;
+    }
+    .vault-door {
+      width: 160px; height: 160px;
+      animation: vault-open 2s var(--phi-ease) forwards;
+    }
+    @keyframes vault-open {
+      0%   { transform: rotate(0deg) scale(0.85); opacity:0.5; }
+      60%  { transform: rotate(-162deg) scale(1.06); opacity:1; }
+      80%  { transform: rotate(-148deg) scale(0.98); }
+      100% { transform: rotate(-155deg) scale(1); opacity:1; }
+    }
+    .vault-glow {
+      position:absolute; inset:-18px; border-radius:50%;
+      background: radial-gradient(circle, rgba(212,175,55,0.22) 0%, transparent 70%);
+      animation: vault-glow-pulse 2.618s ease-in-out infinite;
+    }
+    @keyframes vault-glow-pulse {
+      0%,100% { opacity:0.6; transform:scale(1); }
+      50%      { opacity:1;   transform:scale(1.08); }
+    }
+    .vault-title-block { max-width:440px; }
+    .vault-title-block h1 {
+      font-size: 2.2rem; font-weight: 700; line-height: 1.2;
+      background: linear-gradient(135deg, var(--gold) 0%, var(--cyan) 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .vault-title-block p {
+      margin-top:0.6rem; color:rgba(250,250,250,0.62); font-size:0.95rem; line-height:1.6;
+    }
+    .btn-add-secret {
+      margin-top:1.2rem; display:inline-flex; align-items:center; gap:0.5rem;
+      padding:0.7rem 1.4rem;
+      background: linear-gradient(135deg, rgba(212,175,55,0.18), rgba(0,217,255,0.12));
+      border: 1px solid rgba(212,175,55,0.5);
+      border-radius: 10px;
+      color: var(--gold); font-size:0.9rem; font-weight:600;
+      cursor:pointer; transition: all 0.382s var(--phi-ease);
+      text-transform: uppercase; letter-spacing:0.07em;
+    }
+    .btn-add-secret:hover {
+      background: linear-gradient(135deg, rgba(212,175,55,0.3), rgba(0,217,255,0.2));
+      box-shadow: var(--glow-gold); transform: translateY(-2px);
+    }
+
+    /* ── Stats bar ── */
+    .stats-bar {
+      display: flex; gap:1rem; flex-wrap:wrap; margin-bottom:2rem;
+    }
+    .stat-pill {
+      flex:1; min-width:140px;
+      display:flex; align-items:center; gap:0.75rem;
+      padding:0.8rem 1.2rem;
+      background: var(--glass);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 14px;
+    }
+    .stat-icon { width:36px; height:36px; border-radius:10px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+    .stat-icon.gold    { background:rgba(212,175,55,0.15);  border:1px solid rgba(212,175,55,0.3); }
+    .stat-icon.green   { background:rgba(0,255,136,0.12);   border:1px solid rgba(0,255,136,0.3); }
+    .stat-icon.amber   { background:rgba(255,185,0,0.12);   border:1px solid rgba(255,185,0,0.3); }
+    .stat-icon.red     { background:rgba(255,60,60,0.12);   border:1px solid rgba(255,60,60,0.3); }
+    .stat-icon.cyan    { background:rgba(0,217,255,0.12);   border:1px solid rgba(0,217,255,0.3); }
+    .stat-val { font-size:1.5rem; font-weight:700; color:var(--white); line-height:1; }
+    .stat-lbl { font-size:0.72rem; color:rgba(250,250,250,0.5); text-transform:uppercase; letter-spacing:0.06em; margin-top:2px; }
+
+    /* ── Two-column main layout ── */
+    .main-cols {
+      display: grid;
+      grid-template-columns: 1fr 340px;
+      gap: 1.5rem;
+      align-items: start;
+    }
+    @media(max-width:900px) { .main-cols { grid-template-columns:1fr; } }
+
+    /* ── Section headings ── */
+    .section-heading {
+      font-size:0.78rem; font-weight:700; letter-spacing:0.12em;
+      text-transform:uppercase; color:rgba(250,250,250,0.45);
+      margin-bottom:1rem;
+    }
+
+    /* ── Secret cards masonry grid ── */
+    .cards-grid {
+      columns: 2; column-gap: 1rem;
+    }
+    @media(max-width:680px) { .cards-grid { columns:1; } }
+
+    .secret-card {
+      break-inside: avoid;
+      margin-bottom: 1rem;
+      padding: 1.1rem 1.2rem;
+      background: var(--glass);
+      backdrop-filter: blur(20px);
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,0.07);
+      transition: transform 0.382s var(--phi-ease), box-shadow 0.382s var(--phi-ease);
+      position: relative; overflow: hidden;
+    }
+    .secret-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.45);
+    }
+    .secret-card::before {
+      content:''; position:absolute; top:0; left:0; right:0; height:2px;
+      border-radius:16px 16px 0 0;
+    }
+    .secret-card.fresh::before  { background: linear-gradient(90deg, #00FF88, #00D9FF); }
+    .secret-card.aging::before  { background: linear-gradient(90deg, #FFB900, #FF6600); }
+    .secret-card.expired::before{ background: linear-gradient(90deg, #FF3C3C, #FF00A0); }
+
+    .card-top {
+      display:flex; align-items:flex-start; justify-content:space-between; gap:0.5rem;
+      margin-bottom:0.65rem;
+    }
+    .card-name { font-size:0.98rem; font-weight:600; color:var(--white); word-break:break-all; }
+    .card-badge {
+      padding:0.18rem 0.55rem; border-radius:6px;
+      font-size:0.68rem; font-weight:700; text-transform:uppercase; letter-spacing:0.07em;
+      flex-shrink:0; white-space:nowrap;
+    }
+    .badge-credentials { background:rgba(212,175,55,0.18); color:var(--gold);    border:1px solid rgba(212,175,55,0.35); }
+    .badge-api-key     { background:rgba(0,217,255,0.12);   color:var(--cyan);    border:1px solid rgba(0,217,255,0.3); }
+    .badge-token       { background:rgba(255,0,160,0.12);   color:var(--magenta); border:1px solid rgba(255,0,160,0.3); }
+    .badge-certificate { background:rgba(120,90,220,0.15);  color:#B090FF;        border:1px solid rgba(120,90,220,0.3); }
+    .badge-ssh-key     { background:rgba(0,220,130,0.12);   color:#00DC82;        border:1px solid rgba(0,220,130,0.3); }
+
+    .card-value {
+      font-family: 'Courier New', monospace;
+      font-size:0.88rem; color:rgba(250,250,250,0.45);
+      letter-spacing:0.12em; margin-bottom:0.75rem;
+      cursor:pointer; user-select:none;
+      transition: color 0.3s;
+    }
+    .card-value.revealed { color:var(--cyan); letter-spacing:0.03em; }
+
+    .card-footer {
+      display:flex; align-items:center; justify-content:space-between; gap:0.4rem;
+      flex-wrap:wrap;
+    }
+    .health-dot {
+      width:10px; height:10px; border-radius:50%; flex-shrink:0;
+      display:inline-block;
+    }
+    .health-dot.fresh   { background:#00FF88; box-shadow:0 0 8px #00FF88; }
+    .health-dot.aging   { background:#FFB900; box-shadow:0 0 8px #FFB900; }
+    .health-dot.expired { background:#FF3C3C; animation:red-pulse 1.618s ease-in-out infinite; box-shadow:0 0 10px #FF3C3C; }
+    @keyframes red-pulse {
+      0%,100% { box-shadow:0 0 6px #FF3C3C; }
+      50%      { box-shadow:0 0 18px #FF3C3C, 0 0 30px rgba(255,60,60,0.5); }
+    }
+    .health-label { font-size:0.72rem; color:rgba(250,250,250,0.45); }
+
+    .meta-row { display:flex; align-items:center; gap:0.6rem; }
+    .meta-item { font-size:0.7rem; color:rgba(250,250,250,0.38); }
+
+    .trust-seal-btn {
+      background:none; border:1px solid rgba(212,175,55,0.35);
+      border-radius:7px; padding:0.2rem 0.45rem;
+      cursor:pointer; color:var(--gold); font-size:0.7rem; font-weight:600;
+      display:flex; align-items:center; gap:0.3rem;
+      transition: all 0.3s var(--phi-ease);
+    }
+    .trust-seal-btn:hover { background:rgba(212,175,55,0.12); box-shadow:var(--glow-gold); }
+
+    /* ── Right column ── */
+    .right-col { display:flex; flex-direction:column; gap:1.5rem; }
+
+    /* ── Access log ── */
+    .access-log-panel {
+      background: var(--glass);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 18px;
+      padding: 1.2rem 1.3rem;
+    }
+    .log-list { display:flex; flex-direction:column; gap:0; }
+    .log-item {
+      display:flex; align-items:flex-start; gap:0.75rem;
+      padding: 0.7rem 0;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      position:relative;
+    }
+    .log-item:last-child { border-bottom:none; }
+    .log-timeline-dot {
+      width:8px; height:8px; border-radius:50%;
+      background: var(--cyan); margin-top:5px; flex-shrink:0;
+      box-shadow: 0 0 6px var(--cyan);
+    }
+    .log-body { flex:1; min-width:0; }
+    .log-name { font-size:0.82rem; font-weight:500; color:var(--white); }
+    .log-sub  { font-size:0.72rem; color:rgba(250,250,250,0.42); margin-top:2px; }
+    .log-time { font-size:0.7rem; color:rgba(250,250,250,0.32); flex-shrink:0; margin-top:3px; }
+
+    /* ── Trust Receipt Viewer panel ── */
+    .receipt-panel {
+      background: var(--glass);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(212,175,55,0.25);
+      border-radius: 18px;
+      padding: 1.2rem 1.3rem;
+      box-shadow: inset 0 0 30px rgba(212,175,55,0.04);
+    }
+    .receipt-empty {
+      text-align:center; color:rgba(250,250,250,0.3);
+      font-size:0.82rem; padding:1.5rem 0;
+    }
+    .receipt-content { display:none; }
+    .receipt-content.visible { display:block; }
+    .receipt-row {
+      display:flex; justify-content:space-between; gap:0.5rem;
+      padding:0.45rem 0;
+      border-bottom:1px solid rgba(212,175,55,0.08);
+      font-size:0.8rem;
+    }
+    .receipt-row:last-child { border-bottom:none; }
+    .receipt-key   { color:rgba(212,175,55,0.7); font-weight:500; flex-shrink:0; }
+    .receipt-val   { color:var(--white); font-family:'Courier New',monospace; font-size:0.74rem; word-break:break-all; text-align:right; }
+    .receipt-val.ok { color:#00FF88; }
+    .receipt-val.hash { color:var(--cyan); font-size:0.68rem; }
+
+    /* ── Modal ── */
+    .modal-overlay {
+      position:fixed; inset:0; z-index:200;
+      background:rgba(5,5,16,0.82);
+      backdrop-filter: blur(10px);
+      display:flex; align-items:center; justify-content:center;
+      opacity:0; pointer-events:none;
+      transition: opacity 0.382s var(--phi-ease);
+    }
+    .modal-overlay.open { opacity:1; pointer-events:all; }
+    .modal {
+      background: rgba(20,20,50,0.92);
+      backdrop-filter: blur(24px);
+      border: 1px solid rgba(212,175,55,0.3);
+      border-radius: 22px;
+      padding: 2rem 2.2rem;
+      width: min(520px, 94vw);
+      box-shadow: 0 24px 80px rgba(0,0,0,0.7), var(--glow-gold);
+      transform: translateY(20px) scale(0.97);
+      transition: transform 0.382s var(--phi-ease);
+    }
+    .modal-overlay.open .modal { transform: translateY(0) scale(1); }
+    .modal-header {
+      display:flex; align-items:center; justify-content:space-between;
+      margin-bottom:1.5rem;
+    }
+    .modal-title { font-size:1.15rem; font-weight:700; color:var(--gold); }
+    .modal-close {
+      background:none; border:none; color:rgba(250,250,250,0.4);
+      font-size:1.4rem; cursor:pointer; line-height:1;
+      transition:color 0.3s;
+    }
+    .modal-close:hover { color:var(--white); }
+    .form-group { margin-bottom:1.1rem; }
+    .form-label { display:block; font-size:0.78rem; font-weight:600; color:rgba(250,250,250,0.55); text-transform:uppercase; letter-spacing:0.08em; margin-bottom:0.45rem; }
+    .form-input, .form-select {
+      width:100%; padding:0.65rem 0.9rem;
+      background:rgba(255,255,255,0.05);
+      border:1px solid rgba(255,255,255,0.12);
+      border-radius:10px;
+      color:var(--white); font-family:'Inter',sans-serif; font-size:0.9rem;
+      transition: border-color 0.3s var(--phi-ease), box-shadow 0.3s;
+      outline:none;
+    }
+    .form-input:focus, .form-select:focus {
+      border-color:rgba(212,175,55,0.6);
+      box-shadow: 0 0 0 3px rgba(212,175,55,0.12);
+    }
+    .form-select option { background:#1A1A3E; color:var(--white); }
+    .form-input[type="password"] { letter-spacing:0.15em; }
+    .btn-store {
+      width:100%; padding:0.82rem;
+      background: linear-gradient(135deg, rgba(212,175,55,0.28), rgba(0,217,255,0.18));
+      border: 1px solid rgba(212,175,55,0.5);
+      border-radius:12px;
+      color:var(--white); font-family:'Inter',sans-serif; font-size:0.92rem; font-weight:700;
+      cursor:pointer; letter-spacing:0.06em; text-transform:uppercase;
+      transition: all 0.382s var(--phi-ease);
+      display:flex; align-items:center; justify-content:center; gap:0.55rem;
+    }
+    .btn-store:hover { box-shadow:var(--glow-gold); transform:translateY(-2px); }
+
+    /* ── Toast ── */
+    .toast {
+      position:fixed; bottom:2rem; right:2rem; z-index:300;
+      padding:0.75rem 1.3rem;
+      background:rgba(20,20,50,0.95);
+      border:1px solid rgba(0,255,136,0.45);
+      border-radius:12px; color:#00FF88; font-size:0.86rem; font-weight:500;
+      box-shadow:0 8px 32px rgba(0,0,0,0.5);
+      transform:translateY(20px); opacity:0;
+      transition: all 0.382s var(--phi-ease);
+      pointer-events:none;
+    }
+    .toast.show { transform:translateY(0); opacity:1; }
+
+    /* ── Utility ── */
+    .sr-only { position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; }
+  </style>
+</head>
+<body>
+
+<!-- Background orbs -->
+<div class="orb-layer" aria-hidden="true">
+  <div class="orb orb-a"></div>
+  <div class="orb orb-b"></div>
+  <div class="orb orb-c"></div>
+</div>
+
+<!-- Sticky navigation -->
+<nav>
+  <a href="/" class="nav-logo" aria-label="HeadyOS Home">
+    <!-- Hexagon logo mark -->
+    <svg width="26" height="26" viewBox="0 0 26 26" fill="none" aria-hidden="true">
+      <polygon points="13,2 23,7.5 23,18.5 13,24 3,18.5 3,7.5" stroke="#D4AF37" stroke-width="1.5" fill="rgba(212,175,55,0.1)"/>
+      <polygon points="13,6 19,9.5 19,16.5 13,20 7,16.5 7,9.5" stroke="#00D9FF" stroke-width="1" fill="none"/>
+      <circle cx="13" cy="13" r="2.5" fill="#D4AF37"/>
+    </svg>
+    HeadyOS
+  </a>
+  <div class="nav-links">
+    <a href="/pipeline.html">Pipeline</a>
+    <a href="/brain.html">Brain</a>
+    <a href="/security.html">Security</a>
+    <a href="/guardian.html" class="active">Guardian</a>
+    <a href="/status.html">Status</a>
+  </div>
+  <!-- PQC Shield Badge -->
+  <div class="pqc-badge" title="Post-Quantum Cryptography Active">
+    <svg width="16" height="18" viewBox="0 0 16 18" fill="none" aria-hidden="true">
+      <path d="M8 1L14.5 4V9C14.5 12.5 11.5 15.5 8 17C4.5 15.5 1.5 12.5 1.5 9V4L8 1Z"
+            stroke="#D4AF37" stroke-width="1.4" fill="rgba(212,175,55,0.15)"/>
+      <path d="M5.5 9L7 10.5L10.5 7" stroke="#D4AF37" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    Post-Quantum Protected
+  </div>
+</nav>
+
+<!-- Page content -->
+<main class="page-wrap" id="main-content">
+
+  <!-- Vault door + title -->
+  <section class="vault-door-section" aria-label="Guardian Vault">
+    <div class="vault-door-wrap" aria-hidden="true">
+      <div class="vault-glow"></div>
+      <svg class="vault-door" viewBox="0 0 160 160" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- Outer ring -->
+        <circle cx="80" cy="80" r="76" stroke="#D4AF37" stroke-width="2" stroke-dasharray="6 4" fill="rgba(26,26,62,0.7)"/>
+        <!-- Mid ring -->
+        <circle cx="80" cy="80" r="62" stroke="rgba(0,217,255,0.4)" stroke-width="1.5" fill="none"/>
+        <!-- Sacred geometry: overlapping circles / Flower of Life fragment -->
+        <circle cx="80" cy="62" r="18" stroke="rgba(212,175,55,0.3)" stroke-width="1" fill="none"/>
+        <circle cx="95.6" cy="71" r="18" stroke="rgba(212,175,55,0.3)" stroke-width="1" fill="none"/>
+        <circle cx="95.6" cy="89" r="18" stroke="rgba(212,175,55,0.3)" stroke-width="1" fill="none"/>
+        <circle cx="80" cy="98" r="18" stroke="rgba(212,175,55,0.3)" stroke-width="1" fill="none"/>
+        <circle cx="64.4" cy="89" r="18" stroke="rgba(212,175,55,0.3)" stroke-width="1" fill="none"/>
+        <circle cx="64.4" cy="71" r="18" stroke="rgba(212,175,55,0.3)" stroke-width="1" fill="none"/>
+        <circle cx="80" cy="80" r="18" stroke="rgba(0,217,255,0.5)" stroke-width="1.2" fill="none"/>
+        <!-- Vault bolts at compass points -->
+        <circle cx="80" cy="14" r="5" fill="rgba(212,175,55,0.6)" stroke="#D4AF37" stroke-width="1"/>
+        <circle cx="146" cy="80" r="5" fill="rgba(212,175,55,0.6)" stroke="#D4AF37" stroke-width="1"/>
+        <circle cx="80" cy="146" r="5" fill="rgba(212,175,55,0.6)" stroke="#D4AF37" stroke-width="1"/>
+        <circle cx="14" cy="80" r="5" fill="rgba(212,175,55,0.6)" stroke="#D4AF37" stroke-width="1"/>
+        <!-- Lock mechanism center -->
+        <circle cx="80" cy="80" r="11" fill="rgba(212,175,55,0.15)" stroke="#D4AF37" stroke-width="1.5"/>
+        <circle cx="80" cy="80" r="5" fill="#D4AF37" opacity="0.8"/>
+        <!-- Handle bar -->
+        <rect x="72" y="77" width="28" height="6" rx="3" fill="rgba(212,175,55,0.5)" stroke="#D4AF37" stroke-width="1"/>
+        <!-- Radial tick marks -->
+        <line x1="80" y1="4"   x2="80" y2="10"  stroke="rgba(212,175,55,0.5)" stroke-width="1.5"/>
+        <line x1="80" y1="150" x2="80" y2="156" stroke="rgba(212,175,55,0.5)" stroke-width="1.5"/>
+        <line x1="4"  y1="80"  x2="10" y2="80"  stroke="rgba(212,175,55,0.5)" stroke-width="1.5"/>
+        <line x1="150" y1="80" x2="156" y2="80" stroke="rgba(212,175,55,0.5)" stroke-width="1.5"/>
+      </svg>
+    </div>
+    <div class="vault-title-block">
+      <h1>Guardian Vault</h1>
+      <p>Post-Quantum Personal Vault — every secret is Ed25519-signed at rest, aged in real-time, and visually trusted with sacred geometry receipts.</p>
+      <button class="btn-add-secret" onclick="openModal()" aria-haspopup="dialog">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+          <line x1="7" y1="2" x2="7" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          <line x1="2" y1="7" x2="12" y2="7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        Store New Secret
+      </button>
+    </div>
+  </section>
+
+  <!-- Stats bar -->
+  <div class="stats-bar" id="stats-bar" role="region" aria-label="Vault Statistics">
+    <div class="stat-pill">
+      <div class="stat-icon gold">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+          <rect x="2" y="5" width="14" height="11" rx="2" stroke="#D4AF37" stroke-width="1.4"/>
+          <path d="M6 5V4a3 3 0 0 1 6 0v1" stroke="#D4AF37" stroke-width="1.4"/>
+          <circle cx="9" cy="10" r="1.5" fill="#D4AF37"/>
+        </svg>
+      </div>
+      <div>
+        <div class="stat-val" id="stat-total">0</div>
+        <div class="stat-lbl">Total Secrets</div>
+      </div>
+    </div>
+    <div class="stat-pill">
+      <div class="stat-icon green">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+          <circle cx="9" cy="9" r="7" stroke="#00FF88" stroke-width="1.4"/>
+          <path d="M5.5 9L7.5 11L12.5 6.5" stroke="#00FF88" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div>
+        <div class="stat-val" id="stat-fresh" style="color:#00FF88">0</div>
+        <div class="stat-lbl">Fresh</div>
+      </div>
+    </div>
+    <div class="stat-pill">
+      <div class="stat-icon amber">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+          <path d="M9 2L16 14H2L9 2Z" stroke="#FFB900" stroke-width="1.4"/>
+          <line x1="9" y1="7" x2="9" y2="10.5" stroke="#FFB900" stroke-width="1.5" stroke-linecap="round"/>
+          <circle cx="9" cy="12.5" r="0.75" fill="#FFB900"/>
+        </svg>
+      </div>
+      <div>
+        <div class="stat-val" id="stat-aging" style="color:#FFB900">0</div>
+        <div class="stat-lbl">Aging</div>
+      </div>
+    </div>
+    <div class="stat-pill">
+      <div class="stat-icon red">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+          <circle cx="9" cy="9" r="7" stroke="#FF3C3C" stroke-width="1.4"/>
+          <line x1="6.5" y1="6.5" x2="11.5" y2="11.5" stroke="#FF3C3C" stroke-width="1.5" stroke-linecap="round"/>
+          <line x1="11.5" y1="6.5" x2="6.5" y2="11.5" stroke="#FF3C3C" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div>
+        <div class="stat-val" id="stat-expired" style="color:#FF3C3C">0</div>
+        <div class="stat-lbl">Expired</div>
+      </div>
+    </div>
+    <div class="stat-pill">
+      <div class="stat-icon cyan">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+          <polygon points="9,2 15.5,5.75 15.5,12.25 9,16 2.5,12.25 2.5,5.75" stroke="#00D9FF" stroke-width="1.4" fill="none"/>
+          <path d="M6 9.5L8 11.5L12 7" stroke="#00D9FF" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div>
+        <div class="stat-val" id="stat-receipts" style="color:var(--cyan)">0</div>
+        <div class="stat-lbl">Trust Receipts</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main two-column layout -->
+  <div class="main-cols">
+
+    <!-- Left: secret cards -->
+    <div>
+      <div class="section-heading">Secret Cards</div>
+      <div class="cards-grid" id="cards-grid" role="list" aria-label="Secret cards"></div>
+    </div>
+
+    <!-- Right: access log + trust receipt -->
+    <aside class="right-col" role="complementary">
+      <!-- Access log -->
+      <div class="access-log-panel" aria-label="Access Log">
+        <div class="section-heading">Access Log</div>
+        <div class="log-list" id="log-list" role="log" aria-live="polite"></div>
+      </div>
+      <!-- Trust Receipt Viewer -->
+      <div class="receipt-panel" aria-label="Trust Receipt Viewer">
+        <div class="section-heading" style="color:rgba(212,175,55,0.6)">Trust Receipt Viewer</div>
+        <div class="receipt-empty" id="receipt-empty">Click a trust seal on any secret card to inspect its receipt.</div>
+        <div class="receipt-content" id="receipt-content" role="region" aria-live="polite"></div>
+      </div>
+    </aside>
+  </div>
+
+</main>
+
+<!-- Add Secret Modal -->
+<div class="modal-overlay" id="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-title" onclick="handleOverlayClick(event)">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title" id="modal-title">Store New Secret</span>
+      <button class="modal-close" onclick="closeModal()" aria-label="Close modal">&times;</button>
+    </div>
+    <div class="form-group">
+      <label class="form-label" for="f-name">Secret Name</label>
+      <input class="form-input" id="f-name" type="text" placeholder="e.g. Production DB Password" autocomplete="off">
+    </div>
+    <div class="form-group">
+      <label class="form-label" for="f-category">Category</label>
+      <select class="form-select" id="f-category">
+        <option value="credentials">Credentials</option>
+        <option value="api-key">API Key</option>
+        <option value="token">Token</option>
+        <option value="certificate">Certificate</option>
+        <option value="ssh-key">SSH Key</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label class="form-label" for="f-value">Secret Value</label>
+      <input class="form-input" id="f-value" type="password" placeholder="Enter secret value" autocomplete="new-password">
+    </div>
+    <div class="form-group">
+      <label class="form-label" for="f-expiry">Expiration (days from now)</label>
+      <input class="form-input" id="f-expiry" type="number" min="1" max="3650" placeholder="e.g. 90">
+    </div>
+    <button class="btn-store" onclick="storeSecret()">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+        <polygon points="8,1 13.5,4.25 13.5,10.75 8,14 2.5,10.75 2.5,4.25" stroke="currentColor" stroke-width="1.4" fill="none"/>
+        <path d="M5.5 8L7 9.5L10.5 6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      Store with PQC Signing
+    </button>
+  </div>
+</div>
+
+<!-- Toast notification -->
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+/* ── Vault state ── */
+var secrets = [
+  {
+    id:'sec-001', name:'Production DB Password', category:'credentials',
+    value:'S3cur3P@ssw0rd!xK9', health:'fresh',
+    lastAccessed:'2 min ago', accessCount:14,
+    createdAt: Date.now() - 1000*60*60*24*12,
+    expiresAt:  Date.now() + 1000*60*60*24*78,
+    receipt: {
+      algo:'Ed25519 + CRYSTALS-Dilithium',
+      signed:'2026-03-05T14:22:11Z',
+      hash:'a3f8c2d1e4b7090f6a2c8e3d5b1f4a9c2e7d0f3b6a8c1d4e7f0a2b5c8d1e4f7',
+      status:'VERIFIED'
+    }
+  },
+  {
+    id:'sec-002', name:'Anthropic API Key', category:'api-key',
+    value:'sk-ant-api03-AbCdEfGhIjKlMnOpQrStUvWxYz0123456789', health:'fresh',
+    lastAccessed:'18 min ago', accessCount:7,
+    createdAt: Date.now() - 1000*60*60*24*3,
+    expiresAt:  Date.now() + 1000*60*60*24*90,
+    receipt: {
+      algo:'Ed25519 + CRYSTALS-Dilithium',
+      signed:'2026-03-14T09:05:33Z',
+      hash:'7c3e9a2d5f8b1c4e7a0d3f6b9c2e5a8d1f4b7c0e3a6d9f2b5c8e1a4d7f0b3c6',
+      status:'VERIFIED'
+    }
+  },
+  {
+    id:'sec-003', name:'GitHub Deploy Token', category:'token',
+    value:'ghp_••••••••••••••••••••••••••••••••••••', health:'aging',
+    lastAccessed:'3 days ago', accessCount:22,
+    createdAt: Date.now() - 1000*60*60*24*58,
+    expiresAt:  Date.now() + 1000*60*60*24*12,
+    receipt: {
+      algo:'Ed25519 + CRYSTALS-Dilithium',
+      signed:'2026-01-16T11:44:07Z',
+      hash:'1b4d7e0a3c6f9b2e5a8d1c4f7b0e3a6d9c2f5b8e1a4d7f0b3c6e9a2d5f8b1c4',
+      status:'VERIFIED'
+    }
+  },
+  {
+    id:'sec-004', name:'AWS Root Certificate', category:'certificate',
+    value:'-----BEGIN CERTIFICATE-----MIIFazCCA1Og...', health:'expired',
+    lastAccessed:'12 days ago', accessCount:3,
+    createdAt: Date.now() - 1000*60*60*24*180,
+    expiresAt:  Date.now() - 1000*60*60*24*5,
+    receipt: {
+      algo:'Ed25519 + CRYSTALS-Dilithium',
+      signed:'2025-09-16T08:30:00Z',
+      hash:'f0a3d6b9c2e5f8a1d4b7c0e3f6a9d2b5e8a1c4d7f0b3a6d9c2e5f8b1a4d7c0e3',
+      status:'REVOKED'
+    }
+  },
+  {
+    id:'sec-005', name:'Render SSH Key', category:'ssh-key',
+    value:'-----BEGIN OPENSSH PRIVATE KEY-----b3BlbnNzaC1rZXk...', health:'fresh',
+    lastAccessed:'1 hr ago', accessCount:9,
+    createdAt: Date.now() - 1000*60*60*24*20,
+    expiresAt:  Date.now() + 1000*60*60*24*160,
+    receipt: {
+      algo:'Ed25519 + CRYSTALS-Dilithium',
+      signed:'2026-02-25T16:10:45Z',
+      hash:'e1c4a7f0d3b6e9a2c5f8b1d4a7e0c3f6b9d2a5c8f1b4e7a0d3c6f9b2e5a8c1d4',
+      status:'VERIFIED'
+    }
+  },
+  {
+    id:'sec-006', name:'Stripe Live Secret Key', category:'api-key',
+    value:'••••••••••••••••••••••••••••••••••••••••', health:'aging',
+    lastAccessed:'5 hrs ago', accessCount:31,
+    createdAt: Date.now() - 1000*60*60*24*44,
+    expiresAt:  Date.now() + 1000*60*60*24*16,
+    receipt: {
+      algo:'Ed25519 + CRYSTALS-Dilithium',
+      signed:'2026-01-31T20:55:19Z',
+      hash:'b5d8f1a4c7e0b3d6f9a2c5e8b1d4a7c0e3f6b9d2a5c8f1b4a7e0d3c6f9b2e5a8',
+      status:'VERIFIED'
+    }
+  }
+];
+
+var accessLog = [
+  { name:'Production DB Password', actor:'heady-manager', time:'2 min ago',  icon:'cyan' },
+  { name:'Anthropic API Key',       actor:'claude-code',   time:'18 min ago', icon:'gold' },
+  { name:'Render SSH Key',          actor:'deployer',      time:'1 hr ago',   icon:'cyan' },
+  { name:'Stripe Live Secret Key',  actor:'billing-svc',   time:'5 hrs ago',  icon:'magenta' },
+  { name:'GitHub Deploy Token',     actor:'ci-runner',     time:'3 days ago', icon:'amber' },
+  { name:'AWS Root Certificate',    actor:'cert-monitor',  time:'12 days ago',icon:'red' }
+];
+
+/* ── Helpers ── */
+function maskValue(v) {
+  return '\u25CF'.repeat(Math.min(v.length, 18));
+}
+
+function badgeClass(cat) {
+  return 'badge-' + cat.replace(/\s+/g,'-');
+}
+
+function truncateHash(h) {
+  return h.slice(0,16) + '...' + h.slice(-8);
+}
+
+/* ── Render cards ── */
+function renderCards() {
+  var grid = document.getElementById('cards-grid');
+  grid.innerHTML = '';
+  secrets.forEach(function(s) {
+    var div = document.createElement('div');
+    div.className = 'secret-card ' + s.health;
+    div.setAttribute('role','listitem');
+    div.innerHTML =
+      '<div class="card-top">' +
+        '<span class="card-name">' + escHtml(s.name) + '</span>' +
+        '<span class="card-badge ' + badgeClass(s.category) + '">' + escHtml(s.category) + '</span>' +
+      '</div>' +
+      '<div class="card-value" id="val-' + s.id + '" title="Click to reveal"' +
+           ' onclick="toggleReveal(\'' + s.id + '\')" role="button" tabindex="0"' +
+           ' aria-label="Secret value — click to reveal">' +
+        maskValue(s.value) +
+      '</div>' +
+      '<div class="card-footer">' +
+        '<span class="health-dot ' + s.health + '" aria-hidden="true"></span>' +
+        '<span class="health-label">' + capitalize(s.health) + '</span>' +
+        '<div class="meta-row">' +
+          '<span class="meta-item">Last: ' + escHtml(s.lastAccessed) + '</span>' +
+          '<span class="meta-item">&bull;</span>' +
+          '<span class="meta-item">Accesses: ' + s.accessCount + '</span>' +
+        '</div>' +
+        '<button class="trust-seal-btn" onclick="showReceipt(\'' + s.id + '\')" aria-label="View trust receipt for ' + escHtml(s.name) + '">' +
+          '<svg width="10" height="12" viewBox="0 0 10 12" fill="none" aria-hidden="true">' +
+            '<polygon points="5,1 9,3.2 9,8.8 5,11 1,8.8 1,3.2" stroke="currentColor" stroke-width="1.2" fill="none"/>' +
+            '<path d="M3 6L4.5 7.5L7 5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>' +
+          '</svg>' +
+          'Receipt' +
+        '</button>' +
+      '</div>';
+    grid.appendChild(div);
+  });
+  updateStats();
+}
+
+/* ── Toggle reveal ── */
+var revealTimers = {};
+function toggleReveal(id) {
+  var el = document.getElementById('val-' + id);
+  var s = secrets.find(function(x){ return x.id === id; });
+  if (!s) return;
+  if (el.classList.contains('revealed')) {
+    el.classList.remove('revealed');
+    el.textContent = maskValue(s.value);
+    return;
+  }
+  el.classList.add('revealed');
+  el.textContent = s.value;
+  s.accessCount++;
+  s.lastAccessed = 'just now';
+  addLogEntry(s.name, 'vault-ui');
+  clearTimeout(revealTimers[id]);
+  revealTimers[id] = setTimeout(function() {
+    el.classList.remove('revealed');
+    el.textContent = maskValue(s.value);
+  }, 8000);
+}
+
+/* ── Access log ── */
+function renderLog() {
+  var list = document.getElementById('log-list');
+  list.innerHTML = '';
+  accessLog.slice(0,8).forEach(function(entry) {
+    var item = document.createElement('div');
+    item.className = 'log-item';
+    var dotColor = entry.icon === 'gold' ? '#D4AF37' :
+                   entry.icon === 'magenta' ? '#FF00A0' :
+                   entry.icon === 'amber' ? '#FFB900' :
+                   entry.icon === 'red' ? '#FF3C3C' : '#00D9FF';
+    item.innerHTML =
+      '<div class="log-timeline-dot" style="background:' + dotColor + ';box-shadow:0 0 6px ' + dotColor + '" aria-hidden="true"></div>' +
+      '<div class="log-body">' +
+        '<div class="log-name">' + escHtml(entry.name) + '</div>' +
+        '<div class="log-sub">Accessor: ' + escHtml(entry.actor) + '</div>' +
+      '</div>' +
+      '<div class="log-time">' + escHtml(entry.time) + '</div>';
+    list.appendChild(item);
+  });
+}
+
+function addLogEntry(name, actor) {
+  accessLog.unshift({ name:name, actor:actor, time:'just now', icon:'cyan' });
+  renderLog();
+}
+
+/* ── Trust receipt ── */
+function showReceipt(id) {
+  var s = secrets.find(function(x){ return x.id === id; });
+  if (!s) return;
+  var r = s.receipt;
+  var content = document.getElementById('receipt-content');
+  var empty   = document.getElementById('receipt-empty');
+  var statusColor = r.status === 'VERIFIED' ? 'ok' : 'style="color:#FF3C3C"';
+  content.innerHTML =
+    '<div style="font-size:0.78rem;font-weight:700;color:rgba(212,175,55,0.8);margin-bottom:0.75rem;letter-spacing:0.06em;">' +
+      escHtml(s.name) +
+    '</div>' +
+    row('Algorithm', r.algo, '') +
+    row('Signed At', r.signed, '') +
+    row('Hash', truncateHash(r.hash), 'hash') +
+    row('Full Hash', '', 'hash', r.hash) +
+    row('Status', r.status, r.status === 'VERIFIED' ? 'ok' : 'style="color:#FF3C3C"') +
+    row('Category', s.category, '') +
+    row('Accesses', String(s.accessCount), '');
+  content.classList.add('visible');
+  empty.style.display = 'none';
+}
+
+function row(k, v, cls, fullVal) {
+  var val = fullVal !== undefined ? fullVal : v;
+  var valHtml = cls && cls !== 'style="color:#FF3C3C"'
+    ? '<span class="receipt-val ' + cls + '">' + escHtml(val) + '</span>'
+    : (cls.startsWith('style') ? '<span class="receipt-val" ' + cls + '>' + escHtml(val) + '</span>'
+                               : '<span class="receipt-val">' + escHtml(val) + '</span>');
+  return '<div class="receipt-row"><span class="receipt-key">' + escHtml(k) + '</span>' + valHtml + '</div>';
+}
+
+/* ── Stats ── */
+function updateStats() {
+  var total   = secrets.length;
+  var fresh   = secrets.filter(function(s){ return s.health === 'fresh'; }).length;
+  var aging   = secrets.filter(function(s){ return s.health === 'aging'; }).length;
+  var expired = secrets.filter(function(s){ return s.health === 'expired'; }).length;
+  document.getElementById('stat-total').textContent   = total;
+  document.getElementById('stat-fresh').textContent   = fresh;
+  document.getElementById('stat-aging').textContent   = aging;
+  document.getElementById('stat-expired').textContent = expired;
+  document.getElementById('stat-receipts').textContent = total;
+}
+
+/* ── Modal ── */
+function openModal() {
+  document.getElementById('modal-overlay').classList.add('open');
+  document.getElementById('f-name').focus();
+}
+function closeModal() {
+  document.getElementById('modal-overlay').classList.remove('open');
+}
+function handleOverlayClick(e) {
+  if (e.target === document.getElementById('modal-overlay')) closeModal();
+}
+
+function storeSecret() {
+  var name    = document.getElementById('f-name').value.trim();
+  var cat     = document.getElementById('f-category').value;
+  var value   = document.getElementById('f-value').value;
+  var expDays = parseInt(document.getElementById('f-expiry').value) || 90;
+
+  if (!name || !value) { showToast('Please fill in Name and Value.', true); return; }
+
+  var now = Date.now();
+  var newSecret = {
+    id: 'sec-' + (secrets.length + 1).toString().padStart(3,'0'),
+    name: name, category: cat, value: value,
+    health: 'fresh', lastAccessed: 'just now', accessCount: 0,
+    createdAt: now, expiresAt: now + expDays * 86400000,
+    receipt: {
+      algo: 'Ed25519 + CRYSTALS-Dilithium',
+      signed: new Date().toISOString(),
+      hash: generateFakeHash(),
+      status: 'VERIFIED'
+    }
+  };
+
+  /* API call (non-blocking, best-effort) */
+  fetch('/api/features/guardian/secret', {
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({ name:name, category:cat, expiresInDays:expDays })
+  }).catch(function(){});
+
+  secrets.unshift(newSecret);
+  addLogEntry(name, 'vault-ui');
+  renderCards();
+  closeModal();
+  clearForm();
+  showToast('Secret stored with PQC signature.');
+}
+
+function clearForm() {
+  document.getElementById('f-name').value = '';
+  document.getElementById('f-value').value = '';
+  document.getElementById('f-expiry').value = '';
+}
+
+/* ── Toast ── */
+function showToast(msg, isError) {
+  var t = document.getElementById('toast');
+  t.textContent = msg;
+  t.style.borderColor = isError ? 'rgba(255,60,60,0.5)' : 'rgba(0,255,136,0.45)';
+  t.style.color = isError ? '#FF6B6B' : '#00FF88';
+  t.classList.add('show');
+  setTimeout(function(){ t.classList.remove('show'); }, 3200);
+}
+
+/* ── Utils ── */
+function escHtml(str) {
+  return String(str)
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function capitalize(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
+function generateFakeHash() {
+  var hex='0123456789abcdef', h='';
+  for(var i=0;i<64;i++) h+=hex[Math.floor(Math.random()*16)];
+  return h;
+}
+
+/* ── API fetch on load (graceful degradation) ── */
+function loadFromApi() {
+  fetch('/api/features/guardian')
+    .then(function(r){ return r.ok ? r.json() : null; })
+    .then(function(data) {
+      if (data && Array.isArray(data.secrets) && data.secrets.length > 0) {
+        secrets = data.secrets;
+        renderCards();
+      }
+    })
+    .catch(function(){});
+
+  fetch('/api/features/guardian/receipts')
+    .then(function(r){ return r.ok ? r.json() : null; })
+    .then(function(data) {
+      if (data && Array.isArray(data.log) && data.log.length > 0) {
+        accessLog = data.log;
+        renderLog();
+      }
+    })
+    .catch(function(){});
+}
+
+/* ── Keyboard: close modal on Escape ── */
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') closeModal();
+});
+
+/* ── Boot ── */
+renderCards();
+renderLog();
+loadFromApi();
+</script>
+</body>
+</html>

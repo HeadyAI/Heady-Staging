@@ -1,0 +1,1185 @@
+<!-- HEADY_BRAND:BEGIN
+     HEADY SYSTEMS | constellation.html | Sacred Geometry v5.0
+     Personal Knowledge Graph — sacred geometry node visualization
+     (c) 2026 HeadySystems Inc. - Eric Haywood, Founder
+HEADY_BRAND:END -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Constellation — Heady Knowledge Graph</title>
+    <meta name="description" content="Heady Constellation — Interactive personal knowledge graph with sacred geometry node visualization.">
+    <meta name="theme-color" content="#050510">
+    <link rel="stylesheet" href="/sacred-geometry.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background: #050510;
+            color: #FAFAFA;
+            overflow: hidden;
+            height: 100vh;
+            width: 100vw;
+        }
+
+        /* ── Full-screen canvas ── */
+        #constellationCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            display: block;
+            cursor: crosshair;
+        }
+
+        /* ── Sticky nav overlay ── */
+        #heady-nav-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 200;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 32px;
+            height: 56px;
+            background: rgba(5, 5, 16, 0.72);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .nav-logo {
+            font-size: 18px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #D4AF37, #00D9FF, #FF00A0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: 0.5px;
+            text-decoration: none;
+            flex-shrink: 0;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            overflow-x: auto;
+            scrollbar-width: none;
+            padding: 0 16px;
+        }
+
+        .nav-links::-webkit-scrollbar { display: none; }
+
+        .nav-link {
+            color: rgba(250, 250, 250, 0.65);
+            text-decoration: none;
+            font-size: 13px;
+            padding: 5px 10px;
+            border-radius: 6px;
+            white-space: nowrap;
+            transition: color 0.236s cubic-bezier(0.618,0,0.382,1),
+                        background 0.236s cubic-bezier(0.618,0,0.382,1);
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            color: #00D9FF;
+            background: rgba(0, 217, 255, 0.1);
+        }
+
+        .nav-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #D4AF37;
+            flex-shrink: 0;
+            letter-spacing: 0.3px;
+        }
+
+        /* ── Cluster toggle bar ── */
+        #cluster-bar {
+            position: fixed;
+            top: 72px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 150;
+            display: flex;
+            gap: 8px;
+            background: rgba(26, 26, 62, 0.6);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 40px;
+            padding: 6px 14px;
+        }
+
+        .cluster-btn {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 0.4px;
+            padding: 5px 14px;
+            border-radius: 20px;
+            border: 1px solid transparent;
+            cursor: pointer;
+            background: transparent;
+            color: rgba(250, 250, 250, 0.5);
+            transition: all 0.236s cubic-bezier(0.618,0,0.382,1);
+        }
+
+        .cluster-btn:hover {
+            color: #FAFAFA;
+        }
+
+        .cluster-btn.active-core {
+            background: rgba(0, 217, 255, 0.15);
+            border-color: rgba(0, 217, 255, 0.5);
+            color: #00D9FF;
+        }
+
+        .cluster-btn.active-agents {
+            background: rgba(212, 175, 55, 0.15);
+            border-color: rgba(212, 175, 55, 0.5);
+            color: #D4AF37;
+        }
+
+        .cluster-btn.active-services {
+            background: rgba(255, 0, 160, 0.15);
+            border-color: rgba(255, 0, 160, 0.5);
+            color: #FF00A0;
+        }
+
+        /* ── Detail panel ── */
+        #detail-panel {
+            position: fixed;
+            top: 80px;
+            right: 24px;
+            width: 280px;
+            background: rgba(26, 26, 62, 0.6);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 24px;
+            z-index: 150;
+            opacity: 0;
+            transform: translateX(20px);
+            transition: opacity 0.382s cubic-bezier(0.618,0,0.382,1),
+                        transform 0.382s cubic-bezier(0.618,0,0.382,1);
+            pointer-events: none;
+        }
+
+        #detail-panel.visible {
+            opacity: 1;
+            transform: translateX(0);
+            pointer-events: all;
+        }
+
+        .detail-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .detail-dot {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            flex-shrink: 0;
+            box-shadow: 0 0 10px currentColor;
+        }
+
+        .detail-name {
+            font-size: 16px;
+            font-weight: 700;
+            color: #FAFAFA;
+        }
+
+        .detail-close {
+            margin-left: auto;
+            background: none;
+            border: none;
+            color: rgba(250,250,250,0.4);
+            cursor: pointer;
+            font-size: 18px;
+            line-height: 1;
+            padding: 2px 4px;
+            transition: color 0.236s;
+        }
+
+        .detail-close:hover { color: #FAFAFA; }
+
+        .detail-badge {
+            display: inline-block;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.6px;
+            text-transform: uppercase;
+            padding: 3px 8px;
+            border-radius: 10px;
+            margin-bottom: 14px;
+        }
+
+        .badge-core    { background: rgba(0,217,255,0.15); color: #00D9FF; border: 1px solid rgba(0,217,255,0.3); }
+        .badge-agent   { background: rgba(212,175,55,0.15); color: #D4AF37; border: 1px solid rgba(212,175,55,0.3); }
+        .badge-service { background: rgba(255,0,160,0.15); color: #FF00A0; border: 1px solid rgba(255,0,160,0.3); }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+            font-size: 13px;
+        }
+
+        .detail-row:last-child { border-bottom: none; }
+
+        .detail-label { color: rgba(250,250,250,0.45); }
+
+        .detail-value { color: #FAFAFA; font-weight: 500; }
+
+        .status-dot {
+            display: inline-block;
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            margin-right: 5px;
+        }
+
+        .status-online  { background: #00FF88; box-shadow: 0 0 6px #00FF88; }
+        .status-busy    { background: #D4AF37; box-shadow: 0 0 6px #D4AF37; }
+        .status-offline { background: #FF4444; box-shadow: 0 0 6px #FF4444; }
+
+        /* ── Tooltip ── */
+        #tooltip {
+            position: fixed;
+            z-index: 300;
+            background: rgba(26, 26, 62, 0.9);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 8px;
+            padding: 8px 12px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #FAFAFA;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.118s;
+            white-space: nowrap;
+        }
+
+        #tooltip.show { opacity: 1; }
+
+        /* ── HUD counters ── */
+        #hud {
+            position: fixed;
+            bottom: 24px;
+            left: 24px;
+            z-index: 150;
+            display: flex;
+            gap: 12px;
+        }
+
+        .hud-chip {
+            background: rgba(26,26,62,0.6);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 8px;
+            padding: 6px 12px;
+            font-size: 11px;
+            color: rgba(250,250,250,0.55);
+        }
+
+        .hud-chip span {
+            font-weight: 700;
+            color: #00D9FF;
+        }
+
+        /* ── Hint bar ── */
+        #hint-bar {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            z-index: 150;
+            font-size: 11px;
+            color: rgba(250,250,250,0.3);
+            text-align: right;
+            line-height: 1.8;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Full-screen canvas -->
+    <canvas id="constellationCanvas"></canvas>
+
+    <!-- Nav bar -->
+    <nav id="heady-nav-bar">
+        <a class="nav-logo" href="/">HEADY</a>
+        <div class="nav-links">
+            <a class="nav-link" href="/index.html">Home</a>
+            <a class="nav-link" href="/pipeline.html">Pipeline</a>
+            <a class="nav-link" href="/brain.html">Brain</a>
+            <a class="nav-link" href="/swarm.html">Swarm</a>
+            <a class="nav-link active" href="/constellation.html">Constellation</a>
+            <a class="nav-link" href="/latent-space.html">Latent Space</a>
+            <a class="nav-link" href="/mcp-dashboard.html">MCP</a>
+            <a class="nav-link" href="/documentation.html">Docs</a>
+            <a class="nav-link" href="/api-docs.html">API</a>
+            <a class="nav-link" href="/status.html">Status</a>
+        </div>
+        <div class="nav-title">Constellation</div>
+    </nav>
+
+    <!-- Cluster toggle bar -->
+    <div id="cluster-bar">
+        <button class="cluster-btn" id="btn-all"      onclick="setCluster('all')">All</button>
+        <button class="cluster-btn" id="btn-core"     onclick="setCluster('core')">Core</button>
+        <button class="cluster-btn" id="btn-agents"   onclick="setCluster('agents')">Agents</button>
+        <button class="cluster-btn" id="btn-services" onclick="setCluster('services')">Services</button>
+    </div>
+
+    <!-- Detail panel -->
+    <div id="detail-panel">
+        <div class="detail-header">
+            <div class="detail-dot" id="detail-dot"></div>
+            <div class="detail-name" id="detail-name">—</div>
+            <button class="detail-close" onclick="closeDetail()">×</button>
+        </div>
+        <div id="detail-badge-wrap"></div>
+        <div class="detail-row">
+            <span class="detail-label">Type</span>
+            <span class="detail-value" id="detail-type">—</span>
+        </div>
+        <div class="detail-row">
+            <span class="detail-label">Status</span>
+            <span class="detail-value" id="detail-status">—</span>
+        </div>
+        <div class="detail-row">
+            <span class="detail-label">Connections</span>
+            <span class="detail-value" id="detail-connections">—</span>
+        </div>
+        <div class="detail-row">
+            <span class="detail-label">Layer</span>
+            <span class="detail-value" id="detail-layer">—</span>
+        </div>
+        <div class="detail-row">
+            <span class="detail-label">Endpoint</span>
+            <span class="detail-value" id="detail-endpoint" style="font-size:11px;color:rgba(0,217,255,0.8)">—</span>
+        </div>
+    </div>
+
+    <!-- Tooltip -->
+    <div id="tooltip"></div>
+
+    <!-- HUD -->
+    <div id="hud">
+        <div class="hud-chip">Nodes: <span id="hud-nodes">0</span></div>
+        <div class="hud-chip">Edges: <span id="hud-edges">0</span></div>
+        <div class="hud-chip">Zoom: <span id="hud-zoom">100</span>%</div>
+    </div>
+
+    <!-- Hints -->
+    <div id="hint-bar">
+        Drag to move nodes &nbsp;·&nbsp; Scroll to zoom &nbsp;·&nbsp; Click to inspect &nbsp;·&nbsp; Double-click void to reset
+    </div>
+
+    <script>
+    // ═══════════════════════════════════════════════════════════
+    //  HEADY CONSTELLATION — Knowledge Graph Engine
+    //  Sacred Geometry v5.0 · φ = 1.618033988749895
+    // ═══════════════════════════════════════════════════════════
+
+    const PHI   = 1.618033988749895;
+    const PHI_I = 0.618033988749895;
+
+    // ── Node catalogue ──────────────────────────────────────────
+    const NODE_DEFS = [
+        // Core (ring 0 — center)
+        { id: 'heady-manager',  label: 'Heady Manager',  cluster: 'core',     type: 'MCP Server',      color: '#00D9FF', status: 'online',  layer: 'Orchestration', endpoint: ':3300/api' },
+        { id: 'hc-brain',       label: 'System Brain',   cluster: 'core',     type: 'Meta-Controller', color: '#D4AF37', status: 'online',  layer: 'Intelligence',  endpoint: ':3300/api/brain' },
+        { id: 'hc-supervisor',  label: 'Supervisor',     cluster: 'core',     type: 'Parallelizer',    color: '#FF00A0', status: 'online',  layer: 'Orchestration', endpoint: ':3300/api/supervisor' },
+        { id: 'hc-conductor',   label: 'Conductor',      cluster: 'core',     type: 'Python Worker',   color: '#00D9FF', status: 'online',  layer: 'Execution',     endpoint: 'conductor.worker' },
+
+        // Agents (ring 1)
+        { id: 'builder-agent',  label: 'Builder Agent',  cluster: 'agents',   type: 'Code Agent',      color: '#D4AF37', status: 'online',  layer: 'Agents',        endpoint: ':3300/api/agents/builder' },
+        { id: 'researcher',     label: 'Researcher',     cluster: 'agents',   type: 'Research Agent',  color: '#D4AF37', status: 'online',  layer: 'Agents',        endpoint: ':3300/api/agents/researcher' },
+        { id: 'deployer',       label: 'Deployer',       cluster: 'agents',   type: 'Deploy Agent',    color: '#D4AF37', status: 'busy',    layer: 'Agents',        endpoint: ':3300/api/agents/deployer' },
+        { id: 'claude-code',    label: 'Claude Code',    cluster: 'agents',   type: 'AI Agent',        color: '#FF00A0', status: 'online',  layer: 'Agents',        endpoint: ':3300/api/pipeline/claude' },
+
+        // Services (ring 2)
+        { id: 'hc-pipeline',    label: 'HC Pipeline',    cluster: 'services', type: 'Pipeline Engine', color: '#FF00A0', status: 'online',  layer: 'Services',      endpoint: ':3300/api/pipeline' },
+        { id: 'hc-checkpoint',  label: 'Checkpoint',     cluster: 'services', type: 'Checkpoint Svc',  color: '#00D9FF', status: 'online',  layer: 'Services',      endpoint: ':3300/api/checkpoint' },
+        { id: 'hc-readiness',   label: 'Readiness',      cluster: 'services', type: 'ORS Evaluator',   color: '#D4AF37', status: 'online',  layer: 'Services',      endpoint: ':3300/api/readiness' },
+        { id: 'hc-health',      label: 'Health Checks',  cluster: 'services', type: 'Health Monitor',  color: '#00D9FF', status: 'online',  layer: 'Services',      endpoint: ':3300/api/health-checks' },
+        { id: 'networking',     label: 'Networking',     cluster: 'services', type: 'HTTP Client',     color: '#FF00A0', status: 'online',  layer: 'Services',      endpoint: 'internal/direct' },
+        { id: 'latent-space',   label: 'Latent Space',   cluster: 'services', type: 'Vector Memory',   color: '#D4AF37', status: 'online',  layer: 'Services',      endpoint: ':3300/api/latent' },
+        { id: 'registry',       label: 'Registry',       cluster: 'services', type: 'Component Reg.',  color: '#00D9FF', status: 'online',  layer: 'Services',      endpoint: ':3300/api/registry' },
+        { id: 'mcp-server',     label: 'MCP Server',     cluster: 'services', type: 'MCP Protocol',    color: '#FF00A0', status: 'online',  layer: 'Services',      endpoint: ':3300/mcp' },
+    ];
+
+    // ── Edge definitions (source → target, weight 1–3) ──────────
+    const EDGE_DEFS = [
+        { a: 'heady-manager', b: 'hc-brain',      w: 3 },
+        { a: 'heady-manager', b: 'hc-supervisor', w: 3 },
+        { a: 'heady-manager', b: 'hc-pipeline',   w: 3 },
+        { a: 'heady-manager', b: 'registry',       w: 2 },
+        { a: 'heady-manager', b: 'mcp-server',     w: 2 },
+        { a: 'hc-brain',      b: 'hc-supervisor', w: 3 },
+        { a: 'hc-brain',      b: 'hc-readiness',  w: 2 },
+        { a: 'hc-brain',      b: 'hc-health',     w: 2 },
+        { a: 'hc-supervisor', b: 'builder-agent', w: 2 },
+        { a: 'hc-supervisor', b: 'researcher',    w: 2 },
+        { a: 'hc-supervisor', b: 'deployer',      w: 2 },
+        { a: 'hc-supervisor', b: 'claude-code',   w: 3 },
+        { a: 'hc-supervisor', b: 'hc-conductor',  w: 2 },
+        { a: 'hc-pipeline',   b: 'hc-checkpoint', w: 2 },
+        { a: 'hc-pipeline',   b: 'hc-conductor',  w: 2 },
+        { a: 'hc-pipeline',   b: 'networking',    w: 1 },
+        { a: 'builder-agent', b: 'hc-pipeline',   w: 1 },
+        { a: 'deployer',      b: 'hc-pipeline',   w: 1 },
+        { a: 'claude-code',   b: 'latent-space',  w: 2 },
+        { a: 'hc-checkpoint', b: 'registry',      w: 1 },
+        { a: 'hc-readiness',  b: 'hc-health',     w: 1 },
+        { a: 'latent-space',  b: 'registry',      w: 1 },
+        { a: 'networking',    b: 'mcp-server',    w: 1 },
+    ];
+
+    // ── State ────────────────────────────────────────────────────
+    const canvas  = document.getElementById('constellationCanvas');
+    const ctx     = canvas.getContext('2d');
+
+    let nodes     = [];
+    let particles = [];
+    let activeCluster = 'all';
+    let selectedNode  = null;
+    let hoveredNode   = null;
+    let dragNode      = null;
+    let dragOffX      = 0;
+    let dragOffY      = 0;
+    let viewX         = 0;
+    let viewY         = 0;
+    let viewScale     = 1;
+    let animFrame     = 0;
+    let lastTime      = 0;
+
+    // ── Resize handler ──────────────────────────────────────────
+    function resize() {
+        canvas.width  = window.innerWidth;
+        canvas.height = window.innerHeight;
+    }
+
+    window.addEventListener('resize', () => { resize(); layoutNodes(); });
+    resize();
+
+    // ── Golden spiral layout ────────────────────────────────────
+    function layoutNodes() {
+        const cx = canvas.width  / 2;
+        const cy = canvas.height / 2;
+
+        const coreNodes    = nodes.filter(n => n.cluster === 'core');
+        const agentNodes   = nodes.filter(n => n.cluster === 'agents');
+        const serviceNodes = nodes.filter(n => n.cluster === 'services');
+
+        // Core ring — tightly around center
+        const coreR = Math.min(canvas.width, canvas.height) * 0.11;
+        coreNodes.forEach((n, i) => {
+            const angle = (i / coreNodes.length) * Math.PI * 2 - Math.PI / 2;
+            n.tx = cx + Math.cos(angle) * coreR;
+            n.ty = cy + Math.sin(angle) * coreR;
+        });
+
+        // Agent ring — φ × core radius
+        const agentR = coreR * PHI * 1.4;
+        agentNodes.forEach((n, i) => {
+            const angle = (i / agentNodes.length) * Math.PI * 2 - Math.PI / 4;
+            n.tx = cx + Math.cos(angle) * agentR;
+            n.ty = cy + Math.sin(angle) * agentR;
+        });
+
+        // Service ring — φ² × core radius, golden spiral placement
+        const svcBaseR = coreR * PHI * PHI * 1.5;
+        serviceNodes.forEach((n, i) => {
+            // Sunflower / golden angle placement
+            const goldenAngle = i * (Math.PI * 2) * PHI_I;
+            const r = svcBaseR * Math.sqrt((i + 1) / serviceNodes.length);
+            n.tx = cx + Math.cos(goldenAngle) * r;
+            n.ty = cy + Math.sin(goldenAngle) * r;
+        });
+
+        // If no current position set yet, snap to target
+        nodes.forEach(n => {
+            if (n.x === undefined) { n.x = n.tx; n.y = n.ty; }
+        });
+    }
+
+    // ── Build node objects ──────────────────────────────────────
+    function buildNodes() {
+        nodes = NODE_DEFS.map(def => {
+            const isCore    = def.cluster === 'core';
+            const isAgent   = def.cluster === 'agents';
+            const baseR     = isCore ? 20 : isAgent ? 14 : 10;
+            return {
+                ...def,
+                r:       baseR,
+                baseR:   baseR,
+                x:       undefined,
+                y:       undefined,
+                tx:      0,
+                ty:      0,
+                vx:      (Math.random() - 0.5) * 0.3,
+                vy:      (Math.random() - 0.5) * 0.3,
+                phase:   Math.random() * Math.PI * 2,
+                ringRot: Math.random() * Math.PI * 2,
+                dim:     false,
+            };
+        });
+    }
+
+    // ── Particle pool ───────────────────────────────────────────
+    function spawnParticles() {
+        EDGE_DEFS.forEach(e => {
+            const na = nodes.find(n => n.id === e.a);
+            const nb = nodes.find(n => n.id === e.b);
+            if (!na || !nb) return;
+            // Each edge gets a few traveling particles
+            for (let i = 0; i < 2; i++) {
+                particles.push({
+                    edgeA: e.a,
+                    edgeB: e.b,
+                    t:     Math.random(),          // 0–1 along edge
+                    speed: 0.0012 + Math.random() * 0.0008,
+                    color: na.color,
+                    size:  1.5 + Math.random(),
+                    dir:   Math.random() > 0.5 ? 1 : -1,
+                });
+            }
+        });
+    }
+
+    // ── API fetch ────────────────────────────────────────────────
+    async function fetchConstellation() {
+        try {
+            const res = await fetch('/api/features/constellation', { signal: AbortSignal.timeout(4000) });
+            if (!res.ok) throw new Error('unavailable');
+            const data = await res.json();
+            // Merge live status into nodes if API responds
+            if (data && data.nodes) {
+                data.nodes.forEach(apiNode => {
+                    const local = nodes.find(n => n.id === apiNode.id);
+                    if (local && apiNode.status) local.status = apiNode.status;
+                });
+            }
+        } catch (_) {
+            // Fall through — use static demo data
+        }
+    }
+
+    // ── World → screen transform ────────────────────────────────
+    function worldToScreen(wx, wy) {
+        return {
+            x: wx * viewScale + viewX,
+            y: wy * viewScale + viewY,
+        };
+    }
+
+    function screenToWorld(sx, sy) {
+        return {
+            x: (sx - viewX) / viewScale,
+            y: (sy - viewY) / viewScale,
+        };
+    }
+
+    // ── Hit test ─────────────────────────────────────────────────
+    function hitNode(sx, sy) {
+        const w = screenToWorld(sx, sy);
+        for (let i = nodes.length - 1; i >= 0; i--) {
+            const n = nodes[i];
+            const dx = w.x - n.x;
+            const dy = w.y - n.y;
+            const hitR = (n.r + 6) / viewScale;
+            if (dx * dx + dy * dy < hitR * hitR) return n;
+        }
+        return null;
+    }
+
+    // ── Diamond SVG background pattern ──────────────────────────
+    let bgPattern = null;
+
+    function buildBgPattern() {
+        const patCanvas = document.createElement('canvas');
+        patCanvas.width  = 40;
+        patCanvas.height = 40;
+        const pc = patCanvas.getContext('2d');
+        pc.strokeStyle = 'rgba(255,255,255,0.025)';
+        pc.lineWidth   = 0.8;
+        // Diamond shape
+        pc.beginPath();
+        pc.moveTo(20, 2);
+        pc.lineTo(38, 20);
+        pc.lineTo(20, 38);
+        pc.lineTo(2, 20);
+        pc.closePath();
+        pc.stroke();
+        bgPattern = ctx.createPattern(patCanvas, 'repeat');
+    }
+
+    // ── Draw background ──────────────────────────────────────────
+    function drawBackground() {
+        // Void gradient
+        const grad = ctx.createRadialGradient(
+            canvas.width / 2, canvas.height / 2, 0,
+            canvas.width / 2, canvas.height / 2, Math.max(canvas.width, canvas.height) * 0.7
+        );
+        grad.addColorStop(0,   '#0A0A1A');
+        grad.addColorStop(0.5, '#07071A');
+        grad.addColorStop(1,   '#050510');
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        // Diamond pattern
+        if (bgPattern) {
+            ctx.save();
+            ctx.globalAlpha = 1;
+            ctx.fillStyle = bgPattern;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.restore();
+        }
+    }
+
+    // ── Draw a golden spiral guide (decorative) ─────────────────
+    function drawSpiralGuide(cx, cy, t) {
+        ctx.save();
+        ctx.translate(cx * viewScale + viewX, cy * viewScale + viewY);
+        ctx.globalAlpha = 0.04;
+        ctx.strokeStyle = '#D4AF37';
+        ctx.lineWidth   = 1;
+
+        // Archimedean approximation of golden spiral
+        const turns   = 3;
+        const maxR    = Math.min(canvas.width, canvas.height) * 0.42;
+        const steps   = 300;
+        ctx.beginPath();
+        for (let i = 0; i <= steps; i++) {
+            const theta = (i / steps) * turns * Math.PI * 2 + t * 0.05;
+            const r     = (i / steps) * maxR;
+            const px    = Math.cos(theta) * r * viewScale;
+            const py    = Math.sin(theta) * r * viewScale;
+            if (i === 0) ctx.moveTo(px, py);
+            else         ctx.lineTo(px, py);
+        }
+        ctx.stroke();
+        ctx.restore();
+    }
+
+    // ── Draw edges ───────────────────────────────────────────────
+    function drawEdges(t) {
+        EDGE_DEFS.forEach(e => {
+            const na = nodes.find(n => n.id === e.a);
+            const nb = nodes.find(n => n.id === e.b);
+            if (!na || !nb) return;
+
+            const dimA = na.dim;
+            const dimB = nb.dim;
+            if (dimA && dimB) return;
+
+            const sa = worldToScreen(na.x, na.y);
+            const sb = worldToScreen(nb.x, nb.y);
+
+            // Control point — perpendicular offset for curve
+            const mx  = (sa.x + sb.x) / 2;
+            const my  = (sa.y + sb.y) / 2;
+            const dx  = sb.x - sa.x;
+            const dy  = sb.y - sa.y;
+            const len = Math.sqrt(dx * dx + dy * dy);
+            const curvature = Math.min(len * 0.18, 40);
+            const cpx = mx + (-dy / len) * curvature;
+            const cpy = my + ( dx / len) * curvature;
+
+            const alpha = (dimA || dimB) ? 0.06 : 0.22 + e.w * 0.06;
+            const lw    = (e.w * 0.6) * viewScale;
+
+            // Gold gradient edge
+            const grad = ctx.createLinearGradient(sa.x, sa.y, sb.x, sb.y);
+            grad.addColorStop(0, na.color);
+            grad.addColorStop(1, nb.color);
+
+            ctx.save();
+            ctx.globalAlpha = alpha;
+            ctx.strokeStyle = grad;
+            ctx.lineWidth   = Math.max(0.5, lw);
+            ctx.beginPath();
+            ctx.moveTo(sa.x, sa.y);
+            ctx.quadraticCurveTo(cpx, cpy, sb.x, sb.y);
+            ctx.stroke();
+            ctx.restore();
+        });
+    }
+
+    // ── Draw particles along edges ────────────────────────────────
+    function drawParticles(dt) {
+        particles.forEach(p => {
+            // Advance
+            p.t += p.speed * p.dir * (dt / 16);
+            if (p.t > 1) { p.t = 0; }
+            if (p.t < 0) { p.t = 1; }
+
+            const na = nodes.find(n => n.id === p.edgeA);
+            const nb = nodes.find(n => n.id === p.edgeB);
+            if (!na || !nb || na.dim || nb.dim) return;
+
+            const sa = worldToScreen(na.x, na.y);
+            const sb = worldToScreen(nb.x, nb.y);
+
+            // Same quadratic curve interpolation
+            const mx  = (sa.x + sb.x) / 2;
+            const my  = (sa.y + sb.y) / 2;
+            const dx  = sb.x - sa.x;
+            const dy  = sb.y - sa.y;
+            const len = Math.sqrt(dx * dx + dy * dy);
+            if (len < 1) return;
+            const curvature = Math.min(len * 0.18, 40);
+            const cpx = mx + (-dy / len) * curvature;
+            const cpy = my + ( dx / len) * curvature;
+
+            const qt  = p.t;
+            const qx  = (1 - qt) * (1 - qt) * sa.x + 2 * (1 - qt) * qt * cpx + qt * qt * sb.x;
+            const qy  = (1 - qt) * (1 - qt) * sa.y + 2 * (1 - qt) * qt * cpy + qt * qt * sb.y;
+
+            ctx.save();
+            ctx.globalAlpha = 0.85;
+            ctx.fillStyle   = p.color;
+            ctx.shadowColor = p.color;
+            ctx.shadowBlur  = 6;
+            ctx.beginPath();
+            ctx.arc(qx, qy, p.size * Math.min(viewScale, 1.5), 0, Math.PI * 2);
+            ctx.fill();
+            ctx.restore();
+        });
+    }
+
+    // ── Draw a single node ───────────────────────────────────────
+    function drawNode(n, t) {
+        const s    = worldToScreen(n.x, n.y);
+        const r    = n.r * viewScale;
+        const pulse = 1 + Math.sin(t * 0.001 * PHI + n.phase) * 0.08;
+        const rp   = r * pulse;
+
+        ctx.save();
+
+        // Dim overlay
+        if (n.dim) ctx.globalAlpha = 0.12;
+
+        // Outer glow
+        const glowR = rp * (n.cluster === 'core' ? 3.5 : 2.8);
+        const glow  = ctx.createRadialGradient(s.x, s.y, rp * 0.5, s.x, s.y, glowR);
+        glow.addColorStop(0,   hexAlpha(n.color, 0.35));
+        glow.addColorStop(0.4, hexAlpha(n.color, 0.12));
+        glow.addColorStop(1,   'rgba(0,0,0,0)');
+        ctx.fillStyle = glow;
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, glowR, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Agent rotating ring
+        if (n.cluster === 'agents') {
+            n.ringRot += 0.008 * PHI_I;
+            ctx.save();
+            ctx.globalAlpha = n.dim ? 0.05 : 0.4;
+            ctx.strokeStyle = n.color;
+            ctx.lineWidth   = 1;
+            ctx.setLineDash([4, 6]);
+            ctx.lineDashOffset = -n.ringRot * 20;
+            ctx.beginPath();
+            ctx.arc(s.x, s.y, rp * 1.9, 0, Math.PI * 2);
+            ctx.stroke();
+            ctx.setLineDash([]);
+            ctx.restore();
+        }
+
+        // Core ring decoration
+        if (n.cluster === 'core') {
+            ctx.save();
+            ctx.globalAlpha = n.dim ? 0.04 : 0.18;
+            ctx.strokeStyle = n.color;
+            ctx.lineWidth   = 1.5;
+            ctx.beginPath();
+            ctx.arc(s.x, s.y, rp * 2.2, 0, Math.PI * 2);
+            ctx.stroke();
+            ctx.restore();
+        }
+
+        // Main orb fill
+        const orbGrad = ctx.createRadialGradient(
+            s.x - rp * 0.3, s.y - rp * 0.3, rp * 0.1,
+            s.x, s.y, rp
+        );
+        orbGrad.addColorStop(0, lighten(n.color, 60));
+        orbGrad.addColorStop(0.5, n.color);
+        orbGrad.addColorStop(1,   darken(n.color, 40));
+
+        ctx.fillStyle = orbGrad;
+        ctx.shadowColor = n.color;
+        ctx.shadowBlur  = (n === hoveredNode || n === selectedNode) ? 30 : 14;
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, rp, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Hover / selected ring
+        if (n === selectedNode) {
+            ctx.strokeStyle = '#FAFAFA';
+            ctx.lineWidth   = 2;
+            ctx.globalAlpha = 0.9;
+            ctx.beginPath();
+            ctx.arc(s.x, s.y, rp + 4, 0, Math.PI * 2);
+            ctx.stroke();
+        } else if (n === hoveredNode) {
+            ctx.strokeStyle = n.color;
+            ctx.lineWidth   = 1.5;
+            ctx.globalAlpha = 0.7;
+            ctx.beginPath();
+            ctx.arc(s.x, s.y, rp + 3, 0, Math.PI * 2);
+            ctx.stroke();
+        }
+
+        ctx.restore();
+
+        // Label (only when not too zoomed out)
+        if (viewScale > 0.55 && !n.dim) {
+            ctx.save();
+            ctx.globalAlpha = n === hoveredNode || n === selectedNode ? 1 : 0.72;
+            ctx.font        = `${Math.round(10 * Math.min(viewScale, 1.4))}px 'Inter', system-ui, sans-serif`;
+            ctx.fillStyle   = '#FAFAFA';
+            ctx.textAlign   = 'center';
+            ctx.textBaseline = 'top';
+            ctx.shadowColor  = '#000';
+            ctx.shadowBlur   = 4;
+            ctx.fillText(n.label, s.x, s.y + rp + 5 * viewScale);
+            ctx.restore();
+        }
+    }
+
+    // ── Main animation loop ──────────────────────────────────────
+    function loop(timestamp) {
+        const dt = timestamp - lastTime;
+        lastTime = timestamp;
+        animFrame = timestamp;
+
+        drawBackground();
+        drawSpiralGuide(canvas.width / (2 * viewScale) - viewX / viewScale,
+                        canvas.height / (2 * viewScale) - viewY / viewScale,
+                        timestamp);
+
+        // Soft-body float — nodes drift gently toward target
+        nodes.forEach(n => {
+            const floatX = Math.sin(timestamp * 0.0003 * PHI_I + n.phase) * 3;
+            const floatY = Math.cos(timestamp * 0.0004 * PHI   + n.phase) * 3;
+            const fx = (n.tx + floatX - n.x) * 0.025;
+            const fy = (n.ty + floatY - n.y) * 0.025;
+            n.x += fx;
+            n.y += fy;
+        });
+
+        drawEdges(timestamp);
+        drawParticles(dt);
+        nodes.forEach(n => drawNode(n, timestamp));
+
+        // Update HUD
+        document.getElementById('hud-zoom').textContent = Math.round(viewScale * 100);
+
+        requestAnimationFrame(loop);
+    }
+
+    // ── Color helpers ────────────────────────────────────────────
+    function hexAlpha(hex, alpha) {
+        const r = parseInt(hex.slice(1, 3), 16);
+        const g = parseInt(hex.slice(3, 5), 16);
+        const b = parseInt(hex.slice(5, 7), 16);
+        return `rgba(${r},${g},${b},${alpha})`;
+    }
+
+    function lighten(hex, amount) {
+        const r = Math.min(255, parseInt(hex.slice(1, 3), 16) + amount);
+        const g = Math.min(255, parseInt(hex.slice(3, 5), 16) + amount);
+        const b = Math.min(255, parseInt(hex.slice(5, 7), 16) + amount);
+        return `rgb(${r},${g},${b})`;
+    }
+
+    function darken(hex, amount) {
+        const r = Math.max(0, parseInt(hex.slice(1, 3), 16) - amount);
+        const g = Math.max(0, parseInt(hex.slice(3, 5), 16) - amount);
+        const b = Math.max(0, parseInt(hex.slice(5, 7), 16) - amount);
+        return `rgb(${r},${g},${b})`;
+    }
+
+    // ── Cluster filter ───────────────────────────────────────────
+    function setCluster(which) {
+        activeCluster = which;
+
+        // Update button states
+        document.querySelectorAll('.cluster-btn').forEach(b => {
+            b.className = 'cluster-btn';
+        });
+        const btn = document.getElementById('btn-' + which);
+        if (btn) {
+            if (which === 'core')     btn.className = 'cluster-btn active-core';
+            else if (which === 'agents')   btn.className = 'cluster-btn active-agents';
+            else if (which === 'services') btn.className = 'cluster-btn active-services';
+        }
+
+        nodes.forEach(n => {
+            n.dim = which !== 'all' && n.cluster !== which;
+        });
+    }
+
+    // ── Detail panel ─────────────────────────────────────────────
+    function showDetail(n) {
+        selectedNode = n;
+
+        document.getElementById('detail-name').textContent = n.label;
+
+        const dot = document.getElementById('detail-dot');
+        dot.style.background  = n.color;
+        dot.style.boxShadow   = `0 0 8px ${n.color}`;
+        dot.style.color       = n.color;
+
+        const badgeWrap = document.getElementById('detail-badge-wrap');
+        const cls = n.cluster === 'core' ? 'badge-core' : n.cluster === 'agents' ? 'badge-agent' : 'badge-service';
+        badgeWrap.innerHTML = `<span class="detail-badge ${cls}">${n.cluster}</span>`;
+
+        document.getElementById('detail-type').textContent   = n.type;
+        document.getElementById('detail-layer').textContent  = n.layer;
+        document.getElementById('detail-endpoint').textContent = n.endpoint;
+
+        const connCount = EDGE_DEFS.filter(e => e.a === n.id || e.b === n.id).length;
+        document.getElementById('detail-connections').textContent = connCount;
+
+        const statusEl = document.getElementById('detail-status');
+        const dotClass = n.status === 'online' ? 'status-online' : n.status === 'busy' ? 'status-busy' : 'status-offline';
+        statusEl.innerHTML = `<span class="status-dot ${dotClass}"></span>${n.status}`;
+
+        document.getElementById('detail-panel').classList.add('visible');
+    }
+
+    function closeDetail() {
+        selectedNode = null;
+        document.getElementById('detail-panel').classList.remove('visible');
+    }
+
+    // ── Tooltip ──────────────────────────────────────────────────
+    const tooltip = document.getElementById('tooltip');
+
+    function showTooltip(n, sx, sy) {
+        tooltip.textContent = `${n.label} · ${n.type}`;
+        tooltip.style.left  = (sx + 14) + 'px';
+        tooltip.style.top   = (sy - 10) + 'px';
+        tooltip.classList.add('show');
+    }
+
+    function hideTooltip() {
+        tooltip.classList.remove('show');
+    }
+
+    // ── Pointer events ───────────────────────────────────────────
+    let pointerDown   = false;
+    let pointerStart  = { x: 0, y: 0 };
+    let viewStart     = { x: 0, y: 0 };
+    let movedSinceDown = false;
+
+    canvas.addEventListener('mousedown', e => {
+        pointerDown    = true;
+        movedSinceDown = false;
+        pointerStart   = { x: e.clientX, y: e.clientY };
+        viewStart      = { x: viewX, y: viewY };
+
+        const hit = hitNode(e.clientX, e.clientY);
+        if (hit) {
+            dragNode  = hit;
+            const sw  = screenToWorld(e.clientX, e.clientY);
+            dragOffX  = sw.x - hit.x;
+            dragOffY  = sw.y - hit.y;
+            canvas.style.cursor = 'grabbing';
+        }
+    });
+
+    canvas.addEventListener('mousemove', e => {
+        const dx = e.clientX - pointerStart.x;
+        const dy = e.clientY - pointerStart.y;
+        if (dx * dx + dy * dy > 4) movedSinceDown = true;
+
+        if (pointerDown && !dragNode) {
+            // Pan
+            viewX = viewStart.x + dx;
+            viewY = viewStart.y + dy;
+            canvas.style.cursor = 'grabbing';
+        } else if (pointerDown && dragNode) {
+            // Drag node
+            const w   = screenToWorld(e.clientX, e.clientY);
+            dragNode.x  = w.x - dragOffX;
+            dragNode.y  = w.y - dragOffY;
+            dragNode.tx = dragNode.x;
+            dragNode.ty = dragNode.y;
+        } else {
+            // Hover detection
+            const hit = hitNode(e.clientX, e.clientY);
+            if (hit !== hoveredNode) {
+                hoveredNode = hit;
+                if (hit) {
+                    showTooltip(hit, e.clientX, e.clientY);
+                    canvas.style.cursor = 'pointer';
+                } else {
+                    hideTooltip();
+                    canvas.style.cursor = 'crosshair';
+                }
+            } else if (hit) {
+                showTooltip(hit, e.clientX, e.clientY);
+            }
+        }
+    });
+
+    canvas.addEventListener('mouseup', e => {
+        if (!movedSinceDown) {
+            const hit = hitNode(e.clientX, e.clientY);
+            if (hit) {
+                showDetail(hit);
+            } else {
+                // click on empty — do nothing; dblclick resets
+            }
+        }
+        pointerDown = false;
+        dragNode    = null;
+        canvas.style.cursor = hoveredNode ? 'pointer' : 'crosshair';
+    });
+
+    canvas.addEventListener('dblclick', e => {
+        const hit = hitNode(e.clientX, e.clientY);
+        if (!hit) {
+            // Reset view
+            viewX     = 0;
+            viewY     = 0;
+            viewScale = 1;
+            layoutNodes();
+        }
+    });
+
+    canvas.addEventListener('mouseleave', () => {
+        hoveredNode = null;
+        hideTooltip();
+        pointerDown = false;
+        dragNode    = null;
+    });
+
+    // Scroll zoom — centered on pointer
+    canvas.addEventListener('wheel', e => {
+        e.preventDefault();
+        const factor = e.deltaY < 0 ? 1.08 : 0.93;
+        const wx     = (e.clientX - viewX) / viewScale;
+        const wy     = (e.clientY - viewY) / viewScale;
+        viewScale    = Math.min(4, Math.max(0.25, viewScale * factor));
+        viewX        = e.clientX - wx * viewScale;
+        viewY        = e.clientY - wy * viewScale;
+    }, { passive: false });
+
+    // Touch support
+    let lastTouchDist = 0;
+
+    canvas.addEventListener('touchstart', e => {
+        if (e.touches.length === 1) {
+            const t = e.touches[0];
+            pointerDown    = true;
+            movedSinceDown = false;
+            pointerStart   = { x: t.clientX, y: t.clientY };
+            viewStart      = { x: viewX, y: viewY };
+            const hit = hitNode(t.clientX, t.clientY);
+            if (hit) {
+                dragNode = hit;
+                const w  = screenToWorld(t.clientX, t.clientY);
+                dragOffX = w.x - hit.x;
+                dragOffY = w.y - hit.y;
+            }
+        } else if (e.touches.length === 2) {
+            dragNode = null;
+            const dx = e.touches[0].clientX - e.touches[1].clientX;
+            const dy = e.touches[0].clientY - e.touches[1].clientY;
+            lastTouchDist = Math.sqrt(dx * dx + dy * dy);
+        }
+    }, { passive: true });
+
+    canvas.addEventListener('touchmove', e => {
+        e.preventDefault();
+        if (e.touches.length === 1) {
+            const t  = e.touches[0];
+            const dx = t.clientX - pointerStart.x;
+            const dy = t.clientY - pointerStart.y;
+            if (dx * dx + dy * dy > 4) movedSinceDown = true;
+
+            if (dragNode) {
+                const w = screenToWorld(t.clientX, t.clientY);
+                dragNode.x  = w.x - dragOffX;
+                dragNode.y  = w.y - dragOffY;
+                dragNode.tx = dragNode.x;
+                dragNode.ty = dragNode.y;
+            } else {
+                viewX = viewStart.x + dx;
+                viewY = viewStart.y + dy;
+            }
+        } else if (e.touches.length === 2) {
+            const dx   = e.touches[0].clientX - e.touches[1].clientX;
+            const dy   = e.touches[0].clientY - e.touches[1].clientY;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            const cx   = (e.touches[0].clientX + e.touches[1].clientX) / 2;
+            const cy   = (e.touches[0].clientY + e.touches[1].clientY) / 2;
+            if (lastTouchDist > 0) {
+                const factor = dist / lastTouchDist;
+                const wx     = (cx - viewX) / viewScale;
+                const wy     = (cy - viewY) / viewScale;
+                viewScale    = Math.min(4, Math.max(0.25, viewScale * factor));
+                viewX        = cx - wx * viewScale;
+                viewY        = cy - wy * viewScale;
+            }
+            lastTouchDist = dist;
+        }
+    }, { passive: false });
+
+    canvas.addEventListener('touchend', e => {
+        if (!movedSinceDown && e.changedTouches.length === 1) {
+            const t   = e.changedTouches[0];
+            const hit = hitNode(t.clientX, t.clientY);
+            if (hit) showDetail(hit);
+        }
+        if (e.touches.length === 0) {
+            pointerDown = false;
+            dragNode    = null;
+        }
+    }, { passive: true });
+
+    // ── Bootstrap ────────────────────────────────────────────────
+    buildNodes();
+    layoutNodes();
+    spawnParticles();
+
+    document.getElementById('hud-nodes').textContent = nodes.length;
+    document.getElementById('hud-edges').textContent = EDGE_DEFS.length;
+
+    buildBgPattern();
+    fetchConstellation();
+
+    // Center view
+    viewX = 0;
+    viewY = 0;
+
+    requestAnimationFrame(ts => { lastTime = ts; requestAnimationFrame(loop); });
+
+    </script>
+
+    <script src="/nav-global.js"></script>
+</body>
+</html>

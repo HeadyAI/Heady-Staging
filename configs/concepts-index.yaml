@@ -1,10 +1,398 @@
-version: 1
-concepts:
-  liquid_gateway: workers/liquid-gateway-worker/src/index.ts
-  mcp_gateway: workers/heady-mcp-worker/src/index.ts
-  vector_memory: services/heady-memory/src/index.ts
-  auto_success: services/auto-success-engine/src/index.ts
-  pipeline: services/hcfullpipeline-executor/src/index.ts
-  governance: services/heady-governance/src/index.ts
-  observability: services/observability-kernel/src/index.ts
-  domain_routing: services/domain-router/src/index.ts
+# HEADY_BRAND:BEGIN
+# ╔══════════════════════════════════════════════════════════════════╗
+# ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
+# ║  ██║  ██║██╔════╝██╔══██╗██╔══██╗╚██╗ ██╔╝                     ║
+# ║  ███████║█████╗  ███████║██║  ██║ ╚████╔╝                      ║
+# ║  ██╔══██║██╔══╝  ██╔══██║██║  ██║  ╚██╔╝                       ║
+# ║  ██║  ██║███████╗██║  ██║██████╔╝   ██║                        ║
+# ║  ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝    ╚═╝                        ║
+# ║                                                                  ║
+# ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
+# ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
+# ║  FILE: configs/concepts-index.yaml                                                    ║
+# ║  LAYER: config                                                  ║
+# ╚══════════════════════════════════════════════════════════════════╝
+# HEADY_BRAND:END
+
+#
+# Concept Index - Tracks implemented, planned, and public-domain patterns.
+# Consulted at every checkpoint for alignment and upgrade decisions.
+
+version: "2.0.0"
+
+# ─── IMPLEMENTED CONCEPTS ─────────────────────────────────────────────────
+implementedConcepts:
+  - id: orchestrator-conductor
+    name: Orchestrator-Conductor Pattern
+    description: Central orchestrator with fine control over multi-agent coordination
+    location: heady-manager.js, src/hc_autobuild.js
+    status: active
+
+  - id: sacred-geometry-ui
+    name: Sacred Geometry Aesthetics
+    description: Rounded, organic, breathing UI patterns
+    location: public/, frontend/
+    status: active
+
+  - id: mcp-protocol
+    name: Model Context Protocol
+    description: MCP server for Copilot/AI integration
+    location: heady-manager.js
+    status: active
+
+  - id: deterministic-builds
+    name: Deterministic Build System
+    description: Same inputs produce same outputs across worktrees
+    location: hcautobuild.ps1, commit_and_build.ps1
+    status: active
+
+  - id: checkpoint-recovery
+    name: Checkpoint-Based Recovery
+    description: Pipeline state checkpoints with rollback capability
+    location: scripts/auto-checkpoint.ps1
+    status: active
+
+  - id: rate-limiting
+    name: Rate Limiting & Throttling
+    description: Sliding window rate limits on API endpoints
+    location: heady-manager.js
+    status: active
+
+  - id: multi-worktree
+    name: Multi-Worktree Architecture
+    description: Isolated development environments per system aspect
+    location: scripts/heady-layer.ps1
+    status: active
+
+  - id: direct-api-routing
+    name: Direct API Calls (No-Proxy)
+    description: Bypass proxies for Heady internal service calls
+    location: packages/networking/
+    status: active
+
+  - id: supervisor-pattern
+    name: Supervisor Multi-Agent Pattern
+    description: Direct routing to agents with parallel fan-out and aggregation
+    location: packages/hc-supervisor/
+    status: active
+
+  - id: system-brain
+    name: System Brain Meta-Controller
+    description: Central meta-controller owning catalogs, health, policies, concepts
+    location: packages/hc-brain/
+    status: active
+
+  - id: operational-readiness
+    name: Operational Readiness Evaluator
+    description: Scored readiness assessment at each checkpoint
+    location: packages/hc-readiness/
+    status: active
+
+  - id: claude-code-agent
+    name: Claude Code AI Agent
+    description: Claude Code CLI integrated as pipeline agent for code analysis, security audit, documentation, concept alignment, and task planning
+    location: src/hc_claude_agent.js
+    status: active
+
+  - id: hcfullpipeline-runtime
+    name: HCFullPipeline Runtime Engine
+    description: YAML-driven pipeline executor with topological stage ordering, checkpoints, stop rules, circuit breakers, and pluggable task handlers
+    location: src/hc_pipeline.js
+    status: active
+
+  - id: swarm-intelligence
+    name: Swarm Intelligence
+    description: "17-swarm matrix with CSL geometric gates"
+    status: implemented
+
+  - id: monte-carlo-scheduler
+    name: Monte Carlo Scheduler
+    description: "1K+ scenario simulation for pipeline decisions"
+    status: implemented
+
+  - id: knowledge-distillation
+    name: Knowledge Distillation
+    description: "HeadyDistiller Tier 1/2/3 recipe system"
+    status: implemented
+
+  - id: trust-receipt
+    name: Trust Receipt
+    description: "Ed25519-signed trust receipts per pipeline completion"
+    status: implemented
+
+  - id: vector-routing
+    name: Vector Routing
+    description: "CSL-based semantic vector routing"
+    status: implemented
+
+  - id: sacred-geometry-motion
+    name: Sacred Geometry Motion System
+    description: "Phi-derived timing for all animations — durations at φⁿ intervals (0.382s, 0.618s, 1.618s, 2.618s, 4.236s), golden ratio easing curves, Fibonacci stagger delays"
+    location: public/sacred-geometry.css
+    status: active
+
+  - id: heady-pulse
+    name: Heady Pulse Ambient Dashboard
+    description: "Living dashboard that breathes with system health — mood orb, ORS ring, service aura dots, phi-timed ambient intelligence"
+    location: public/pulse.html, src/routes/features-routes.js
+    status: active
+
+  - id: heady-constellation
+    name: Heady Constellation Knowledge Graph
+    description: "Interactive canvas-based knowledge graph showing services as stars connected by golden ratio spirals"
+    location: public/constellation.html, src/routes/features-routes.js
+    status: active
+
+  - id: heady-arena
+    name: Heady Arena Solution Battles
+    description: "Live multi-agent competition — agents propose solutions, get scored, winner selected in real-time arena"
+    location: public/arena.html, src/routes/features-routes.js
+    status: active
+
+  - id: heady-voice
+    name: Heady Voice Command Interface
+    description: "Natural language command routing — voice/text input classified by intent, routed to agents via pipeline stages"
+    location: public/voice.html, src/routes/features-routes.js
+    status: active
+
+  - id: heady-memory-palace
+    name: Heady Memory Palace
+    description: "Spatial knowledge navigation — data organized as rooms in sacred geometry palace with CSS 3D transforms"
+    location: public/memory-palace.html, src/routes/features-routes.js
+    status: active
+
+  - id: heady-guardian
+    name: Heady Guardian PQC Vault
+    description: "Post-quantum personal vault with visual trust indicators — Ed25519 trust receipts, health-colored secret cards"
+    location: public/guardian.html, src/routes/features-routes.js
+    status: active
+
+  - id: heady-timeline
+    name: Heady Timeline
+    description: "Golden spiral event timeline — horizontal scrolling history with color-coded event nodes and zoom controls"
+    location: public/timeline.html, src/routes/features-routes.js
+    status: active
+
+  - id: heady-dreams
+    name: Heady Dreams Optimization Engine
+    description: "Background optimization using learning pipeline variant — self-awareness through distillation, presented as dream journal"
+    location: public/dreams.html, src/routes/features-routes.js
+    status: active
+
+  - id: heady-forge
+    name: Heady Forge Component Builder
+    description: "Visual drag-and-drop builder — compose pipeline configs from sacred geometry shapes, compile to YAML"
+    location: public/forge.html, src/routes/features-routes.js
+    status: active
+
+  - id: heady-identity-layer
+    name: Heady Identity Graph
+    description: "Unified identity graph — human auth + delegated agent tokens + ZK-proof data consent, anchored to username@headyme.com"
+    location: public/identity.html, src/routes/features-routes.js
+    status: active
+
+  - id: personal-data-vault
+    name: Heady Vault Sovereign Data Store
+    description: "Personal sovereign data store with MCP-exposed selective disclosure and ZK-proof consent gates"
+    location: public/vault.html, src/routes/features-routes.js
+    status: active
+
+  - id: agent-marketplace
+    name: Heady Marketplace
+    description: "Skill-subscription model for 17 swarms — install/uninstall agent capabilities like an app store"
+    location: public/marketplace.html, src/routes/features-routes.js
+    status: active
+
+  - id: personal-briefing-layer
+    name: Heady Briefing
+    description: "Daily narrative synthesis from swarm outputs — morning intelligence digest covering agents, services, security, insights"
+    location: public/briefing.html, src/routes/features-routes.js
+    status: active
+
+  - id: personal-mcp-gateway
+    name: Heady Gateway
+    description: "Personal MCP server dashboard — manage exposed endpoints, rate limits, API clients, and budget controls"
+    location: public/gateway.html, src/routes/features-routes.js
+    status: active
+
+  - id: heady-swarm-mode
+    name: Heady Swarm Mode
+    description: "Visual swarm orchestration — watch particles diverge, explore, and converge into solutions with golden angle spiral"
+    location: public/swarm-mode.html, src/routes/features-routes.js
+    status: active
+
+# ─── PLANNED CONCEPTS ─────────────────────────────────────────────────────
+plannedConcepts:
+  - id: saga-compensation
+    name: Saga / Workflow Compensation
+    description: Multi-step workflow undo/correct on partial failure
+    targetLocation: packages/hc-supervisor/src/saga.js
+    priority: high
+
+  - id: auto-tuning-loop
+    name: Auto-Tuning Loop
+    description: Periodic analysis of concurrency, batch sizes, cost to self-optimize
+    targetLocation: packages/hc-brain/src/autotuner.js
+    priority: medium
+
+  - id: hot-cold-path
+    name: Hot Path / Cold Path Separation
+    description: Separate queues and resource pools for latency-sensitive vs async work
+    targetLocation: packages/hc-supervisor/src/scheduler.js
+    priority: medium
+
+  - id: skill-based-routing
+    name: Skill-Based Agent Routing
+    description: Match tasks to agents by skill tags and health, not hard-coded names
+    targetLocation: packages/hc-supervisor/src/router.js
+    priority: high
+
+  - id: canary-deployment
+    name: Canary Deployment
+    description: "φ-stepped canary rollout (5→25→50→100%)"
+    status: planned
+
+  - id: pqc-cert-rotation
+    name: PQC Certificate Rotation
+    description: "Post-quantum certificate rotation"
+    status: planned
+
+  - id: multi-tier-memory
+    name: Multi-Tier Memory
+    description: "T0/T1/T2 memory architecture with phi-scaled TTLs"
+    status: planned
+
+  - id: llm-as-judge
+    name: LLM-as-Judge
+    description: "Automated quality gate with composite scoring"
+    status: planned
+
+# ─── PUBLIC DOMAIN PATTERNS (available for integration) ───────────────────
+publicDomainPatterns:
+  - id: circuit-breaker
+    name: Circuit Breaker
+    description: Stop calling failing external services after threshold; periodically test
+    sources:
+      - "Martin Fowler: Circuit Breaker (martinfowler.com)"
+      - "Netflix Hystrix (github.com/Netflix/Hystrix)"
+    status: planned
+    applicability: External API calls, LLM providers
+
+  - id: retry-backoff-jitter
+    name: Retry with Exponential Backoff + Jitter
+    description: Avoid thundering herd; respect rate limits
+    sources:
+      - "AWS Architecture Blog: Exponential Backoff and Jitter"
+    status: implemented
+    applicability: All external HTTP calls
+
+  - id: bulkhead-isolation
+    name: Bulkhead / Isolation
+    description: Separate critical from noisy workloads to prevent starvation
+    sources:
+      - "Microsoft Azure Architecture: Bulkhead Pattern"
+    status: planned
+    applicability: Hot vs cold path separation
+
+  - id: idempotent-tasks
+    name: Idempotent Task Design
+    description: Safe retries without side effects on duplicate execution
+    sources:
+      - "Designing Data-Intensive Applications (Kleppmann)"
+    status: implemented
+    applicability: All pipeline tasks
+
+  - id: multi-agent-supervisor
+    name: Multi-Agent Supervisor
+    description: Central coordinator with agents-as-tools, parallel calls, centralized aggregation
+    sources:
+      - "LangGraph Supervisor Agent pattern"
+      - "AWS Bedrock Multi-Agent Orchestration"
+    status: implemented
+    applicability: HCFullPipeline execute stage
+
+  - id: event-sourcing
+    name: Event Sourcing
+    description: Store all state changes as immutable events for replay and audit
+    sources:
+      - "Martin Fowler: Event Sourcing"
+      - "Greg Young: CQRS and Event Sourcing"
+    status: planned
+    applicability: Audit logs, pipeline run history
+
+  - id: cqrs
+    name: Command Query Responsibility Segregation
+    description: Separate read and write models for optimal query performance
+    sources:
+      - "Microsoft CQRS Pattern Documentation"
+    status: planned
+    applicability: Dashboard reads vs pipeline writes
+
+  - id: observability-three-pillars
+    name: Logs + Metrics + Traces
+    description: Complete observability via structured logs, time-series metrics, distributed traces
+    sources:
+      - "OpenTelemetry (opentelemetry.io)"
+    status: planned
+    applicability: All services and agents
+
+# ─── SWARM REGISTRY ───────────────────────────────────────────────────────
+swarmRegistry:
+  - id: OVERMIND
+    description: Top-level meta-swarm coordinator
+  - id: GOVERNANCE
+    description: Policy enforcement and compliance swarm
+  - id: FORGE
+    description: Build and code generation swarm
+  - id: EMISSARY
+    description: External integrations and API gateway swarm
+  - id: FOUNDRY
+    description: Infrastructure provisioning swarm
+  - id: STUDIO
+    description: Creative and content generation swarm
+  - id: ARBITER
+    description: Conflict resolution and decision arbitration swarm
+  - id: DIPLOMAT
+    description: Cross-system negotiation and protocol swarm
+  - id: ORACLE
+    description: Prediction and forecasting swarm
+  - id: QUANT
+    description: Quantitative analysis and financial swarm
+  - id: FABRICATOR
+    description: Data fabrication and synthetic generation swarm
+  - id: PERSONA
+    description: Identity and personalization swarm
+  - id: SENTINEL
+    description: Security monitoring and threat response swarm
+  - id: NEXUS
+    description: Inter-swarm routing and message bus swarm
+  - id: DREAMER
+    description: Long-horizon planning and ideation swarm
+  - id: TENSOR
+    description: ML inference and tensor computation swarm
+  - id: TOPOLOGY
+    description: Network topology and spatial reasoning swarm
+
+# ─── CSL GATES ────────────────────────────────────────────────────────────
+cslGates:
+  AND: "cos(a, b)"
+  OR: "normalize(a + b)"
+  NOT: "a - proj_b(a)"
+  GATE: "σ((cos - τ) / T)"
+  IMPLY: "proj_b(a)"
+  CONSENSUS: "normalize(Σwᵢaᵢ)"
+  XOR: "Exclusive difference"
+  ANALOGY: "normalize(b - a + c)"
+scoringTiers:
+  CORE:
+    threshold: 0.718
+    action: "Auto-inject into active context"
+  INCLUDE:
+    threshold: 0.618
+    action: "Add to response context"
+  RECALL:
+    threshold: 0.382
+    action: "Available via search"
+  VOID:
+    threshold: 0.0
+    action: "Filtered out (below 0.382)"

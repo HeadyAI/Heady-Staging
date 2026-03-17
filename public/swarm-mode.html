@@ -1,0 +1,1141 @@
+<!-- HEADY_BRAND:BEGIN
+     HEADY SYSTEMS | swarm-mode.html | Sacred Geometry v5.0
+     Visual Swarm Orchestration — watch agents converge
+     (c) 2026 HeadySystems Inc. - Eric Haywood, Founder
+HEADY_BRAND:END -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Swarm Mode — Heady Visual Orchestration</title>
+  <meta name="description" content="Heady Swarm Mode — Watch agents diverge, explore, and converge on a solution in real-time visual orchestration.">
+  <meta name="theme-color" content="#050510">
+  <link rel="stylesheet" href="/sacred-geometry.css">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: #050510;
+      color: #FAFAFA;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── Background atmosphere ── */
+    .bg-orbs {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      overflow: hidden;
+    }
+    .orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(90px);
+      opacity: 0.12;
+      animation: orb-drift 28s infinite ease-in-out;
+    }
+    .orb-cyan  { width: 480px; height: 480px; background: #00D9FF; top: -120px; left: -80px; animation-duration: 26s; }
+    .orb-mag   { width: 380px; height: 380px; background: #FF00A0; bottom: -60px; right: -40px; animation-duration: 32s; animation-delay: -12s; }
+    .orb-gold  { width: 320px; height: 320px; background: #D4AF37; top: 45%; right: 8%; animation-duration: 38s; animation-delay: -18s; }
+    @keyframes orb-drift {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      33%       { transform: translate(40px, -60px) scale(1.08); }
+      66%       { transform: translate(-30px, 40px) scale(0.94); }
+    }
+
+    /* ── Sticky nav ── */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(5, 5, 16, 0.82);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(212, 175, 55, 0.18);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 34px;
+      height: 58px;
+    }
+    .nav-brand {
+      font-weight: 700;
+      font-size: 1.05rem;
+      background: linear-gradient(90deg, #D4AF37, #00D9FF);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      letter-spacing: 0.04em;
+      text-decoration: none;
+    }
+    .nav-links { display: flex; gap: 28px; align-items: center; }
+    .nav-links a {
+      color: rgba(250, 250, 250, 0.65);
+      text-decoration: none;
+      font-size: 0.88rem;
+      transition: color 0.3s;
+    }
+    .nav-links a:hover { color: #00D9FF; }
+    .nav-links a.active { color: #D4AF37; font-weight: 600; }
+    .nav-badge {
+      background: rgba(212, 175, 55, 0.15);
+      border: 1px solid rgba(212, 175, 55, 0.4);
+      color: #D4AF37;
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 20px;
+      letter-spacing: 0.08em;
+    }
+
+    /* ── Page wrapper ── */
+    .page {
+      position: relative;
+      z-index: 1;
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 48px 32px 80px;
+    }
+
+    /* ── Page header ── */
+    .page-header {
+      text-align: center;
+      margin-bottom: 48px;
+    }
+    .page-header h1 {
+      font-size: clamp(2rem, 4vw, 3.4rem);
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      background: linear-gradient(135deg, #00D9FF 0%, #FF00A0 50%, #D4AF37 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      line-height: 1.15;
+      margin-bottom: 14px;
+    }
+    .page-header p {
+      color: rgba(250, 250, 250, 0.6);
+      font-size: 1.05rem;
+      max-width: 600px;
+      margin: 0 auto;
+      line-height: 1.65;
+    }
+
+    /* ── Glass card ── */
+    .glass {
+      background: rgba(26, 26, 62, 0.6);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 18px;
+    }
+    .glass-gold  { border-color: rgba(212, 175, 55, 0.28); }
+    .glass-cyan  { border-color: rgba(0, 217, 255, 0.22); }
+    .glass-mag   { border-color: rgba(255, 0, 160, 0.22); }
+
+    /* ── Problem input section ── */
+    .input-section {
+      padding: 32px 36px;
+      margin-bottom: 32px;
+    }
+    .input-section h2 {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #D4AF37;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-bottom: 18px;
+    }
+    .input-row { display: flex; gap: 18px; align-items: flex-end; }
+    .input-group { flex: 1; }
+    .input-group label {
+      display: block;
+      font-size: 0.8rem;
+      color: rgba(250,250,250,0.5);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    textarea {
+      width: 100%;
+      background: rgba(5, 5, 16, 0.7);
+      border: 1px solid rgba(0, 217, 255, 0.2);
+      border-radius: 12px;
+      color: #FAFAFA;
+      font-family: 'Inter', system-ui, sans-serif;
+      font-size: 0.95rem;
+      padding: 14px 16px;
+      resize: vertical;
+      min-height: 80px;
+      outline: none;
+      transition: border-color 0.3s;
+      line-height: 1.5;
+    }
+    textarea:focus { border-color: #00D9FF; box-shadow: 0 0 0 3px rgba(0,217,255,0.1); }
+    textarea::placeholder { color: rgba(250,250,250,0.25); }
+    .slider-group { min-width: 200px; }
+    .slider-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+    .slider-val {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: #D4AF37;
+      font-variant-numeric: tabular-nums;
+    }
+    input[type=range] {
+      -webkit-appearance: none;
+      width: 100%;
+      height: 4px;
+      border-radius: 2px;
+      background: rgba(255,255,255,0.12);
+      outline: none;
+    }
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 18px; height: 18px;
+      border-radius: 50%;
+      background: #D4AF37;
+      cursor: pointer;
+      box-shadow: 0 0 10px rgba(212,175,55,0.6);
+    }
+    .btn-activate {
+      background: linear-gradient(135deg, #D4AF37, #B8860B);
+      color: #050510;
+      border: none;
+      border-radius: 12px;
+      padding: 14px 32px;
+      font-family: 'Inter', system-ui, sans-serif;
+      font-size: 0.95rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.382s cubic-bezier(0.618,0,0.382,1);
+      box-shadow: 0 0 20px rgba(212,175,55,0.3);
+    }
+    .btn-activate:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 40px rgba(212,175,55,0.55);
+    }
+    .btn-activate:active { transform: translateY(0); }
+    .btn-activate:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    /* ── Main layout ── */
+    .main-grid {
+      display: grid;
+      grid-template-columns: 1fr 280px;
+      gap: 24px;
+      margin-bottom: 28px;
+    }
+    @media (max-width: 900px) {
+      .main-grid { grid-template-columns: 1fr; }
+      .input-row { flex-direction: column; }
+    }
+
+    /* ── Canvas section ── */
+    .canvas-section { padding: 24px; }
+    .canvas-wrap {
+      position: relative;
+      width: 100%;
+      border-radius: 12px;
+      overflow: hidden;
+      background: #020208;
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+    canvas {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+    .canvas-idle-msg {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      pointer-events: none;
+      transition: opacity 0.618s;
+    }
+    .canvas-idle-msg.hidden { opacity: 0; }
+    .idle-orb {
+      width: 56px; height: 56px;
+      border-radius: 50%;
+      border: 2px solid rgba(212,175,55,0.4);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.4rem;
+      animation: pulse-idle 2.618s infinite cubic-bezier(0.618,0,0.382,1);
+    }
+    @keyframes pulse-idle {
+      0%, 100% { box-shadow: 0 0 10px rgba(212,175,55,0.2); }
+      50%       { box-shadow: 0 0 30px rgba(212,175,55,0.5); }
+    }
+    .idle-text { color: rgba(250,250,250,0.35); font-size: 0.88rem; }
+
+    /* ── Phase strip ── */
+    .phase-strip {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0;
+      padding: 18px 24px;
+      margin-top: 16px;
+      border-radius: 12px;
+      background: rgba(5,5,16,0.5);
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+    .phase-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      padding: 10px 20px;
+      border-radius: 10px;
+      transition: all 0.618s cubic-bezier(0.618,0,0.382,1);
+      cursor: default;
+      min-width: 100px;
+    }
+    .phase-item .phase-icon { font-size: 1.3rem; opacity: 0.4; transition: opacity 0.618s; }
+    .phase-item .phase-label {
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: rgba(250,250,250,0.3);
+      transition: color 0.618s;
+    }
+    .phase-item.active .phase-icon { opacity: 1; }
+    .phase-item.active .phase-label { color: #D4AF37; }
+    .phase-item.active {
+      background: rgba(212,175,55,0.1);
+      box-shadow: 0 0 20px rgba(212,175,55,0.2);
+    }
+    .phase-item.done .phase-label { color: rgba(0,217,255,0.6); }
+    .phase-item.done .phase-icon { opacity: 0.6; }
+    .phase-connector {
+      width: 40px; height: 2px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 1px;
+      position: relative;
+      overflow: hidden;
+    }
+    .phase-connector::after {
+      content: '';
+      position: absolute;
+      top: 0; left: -100%;
+      width: 100%; height: 100%;
+      background: linear-gradient(90deg, transparent, #D4AF37, transparent);
+      animation: connector-flow 2s linear infinite;
+      opacity: 0;
+    }
+    .phase-connector.active::after { opacity: 1; }
+    @keyframes connector-flow {
+      0%   { left: -100%; }
+      100% { left: 100%; }
+    }
+
+    /* ── Sidebar ── */
+    .sidebar { display: flex; flex-direction: column; gap: 16px; }
+    .sidebar-card { padding: 20px; }
+    .sidebar-title {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #00D9FF;
+      margin-bottom: 16px;
+    }
+    .particle-list { display: flex; flex-direction: column; gap: 8px; max-height: 380px; overflow-y: auto; }
+    .particle-list::-webkit-scrollbar { width: 4px; }
+    .particle-list::-webkit-scrollbar-track { background: transparent; }
+    .particle-list::-webkit-scrollbar-thumb { background: rgba(0,217,255,0.3); border-radius: 2px; }
+    .particle-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: 8px;
+      background: rgba(5,5,16,0.5);
+      border: 1px solid rgba(255,255,255,0.05);
+      transition: border-color 0.382s;
+    }
+    .particle-item.active { border-color: rgba(0,217,255,0.3); }
+    .particle-dot {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      margin-top: 3px;
+      box-shadow: 0 0 6px currentColor;
+    }
+    .particle-info { flex: 1; min-width: 0; }
+    .particle-name { font-size: 0.8rem; font-weight: 600; color: #FAFAFA; margin-bottom: 2px; }
+    .particle-status {
+      font-size: 0.72rem;
+      color: rgba(250,250,250,0.4);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .particle-finding {
+      font-size: 0.7rem;
+      color: #D4AF37;
+      margin-top: 4px;
+      line-height: 1.4;
+    }
+
+    /* ── Stats ── */
+    .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .stat-box {
+      background: rgba(5,5,16,0.5);
+      border-radius: 8px;
+      padding: 10px 12px;
+      text-align: center;
+    }
+    .stat-val { font-size: 1.3rem; font-weight: 700; color: #D4AF37; font-variant-numeric: tabular-nums; }
+    .stat-lbl { font-size: 0.68rem; color: rgba(250,250,250,0.4); letter-spacing: 0.05em; text-transform: uppercase; margin-top: 2px; }
+
+    /* ── Solution card ── */
+    .solution-card {
+      padding: 36px 40px;
+      margin-bottom: 28px;
+      border-color: rgba(212,175,55,0.5);
+      display: none;
+      animation: solution-appear 0.618s cubic-bezier(0.618,0,0.382,1) both;
+    }
+    .solution-card.visible { display: block; }
+    @keyframes solution-appear {
+      from { opacity: 0; transform: translateY(20px) scale(0.98); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    .solution-header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .solution-orb {
+      width: 48px; height: 48px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 35%, #F4D03F, #D4AF37, #B8860B);
+      box-shadow: 0 0 30px rgba(212,175,55,0.6), 0 0 60px rgba(212,175,55,0.25);
+      flex-shrink: 0;
+      animation: solution-orb-pulse 2.618s infinite cubic-bezier(0.618,0,0.382,1);
+    }
+    @keyframes solution-orb-pulse {
+      0%, 100% { box-shadow: 0 0 30px rgba(212,175,55,0.6), 0 0 60px rgba(212,175,55,0.25); }
+      50%       { box-shadow: 0 0 50px rgba(212,175,55,0.9), 0 0 100px rgba(212,175,55,0.4); }
+    }
+    .solution-meta h3 {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #D4AF37;
+      margin-bottom: 4px;
+    }
+    .solution-meta span { font-size: 0.8rem; color: rgba(250,250,250,0.45); }
+    .solution-body {
+      font-size: 0.97rem;
+      color: rgba(250,250,250,0.85);
+      line-height: 1.75;
+      border-top: 1px solid rgba(212,175,55,0.2);
+      padding-top: 20px;
+    }
+    .solution-contributions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 20px;
+    }
+    .contrib-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      border: 1px solid;
+    }
+    .contrib-dot { width: 7px; height: 7px; border-radius: 50%; }
+
+    /* ── History ── */
+    .history-section { }
+    .history-section h2 {
+      font-size: 0.88rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: rgba(250,250,250,0.4);
+      margin-bottom: 16px;
+    }
+    .history-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px; }
+    .history-card {
+      padding: 16px 20px;
+      cursor: pointer;
+      transition: all 0.382s cubic-bezier(0.618,0,0.382,1);
+    }
+    .history-card:hover {
+      border-color: rgba(212,175,55,0.4);
+      transform: translateY(-2px);
+    }
+    .history-problem {
+      font-size: 0.82rem;
+      color: rgba(250,250,250,0.7);
+      margin-bottom: 8px;
+      overflow: hidden;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+    }
+    .history-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.72rem;
+      color: rgba(250,250,250,0.35);
+    }
+    .history-agents {
+      display: flex;
+      gap: 4px;
+    }
+    .history-dot { width: 8px; height: 8px; border-radius: 50%; }
+    .history-empty {
+      grid-column: 1/-1;
+      text-align: center;
+      padding: 40px;
+      color: rgba(250,250,250,0.2);
+      font-size: 0.88rem;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Background atmosphere -->
+<div class="bg-orbs" aria-hidden="true">
+  <div class="orb orb-cyan"></div>
+  <div class="orb orb-mag"></div>
+  <div class="orb orb-gold"></div>
+</div>
+
+<!-- Sticky nav -->
+<nav>
+  <a class="nav-brand" href="/">HEADY SYSTEMS</a>
+  <div class="nav-links">
+    <a href="/pipeline.html">Pipeline</a>
+    <a href="/brain.html">Brain</a>
+    <a href="/swarm.html">Swarm</a>
+    <a href="/swarm-mode.html" class="active">Swarm Mode</a>
+    <a href="/mcp-dashboard.html">MCP</a>
+    <a href="/status.html">Status</a>
+    <span class="nav-badge">LIVE</span>
+  </div>
+</nav>
+
+<!-- Page content -->
+<main class="page">
+
+  <!-- Page header -->
+  <div class="page-header">
+    <h1>Swarm Mode</h1>
+    <p>Deploy a swarm of specialized agents that diverge to explore, then converge on a unified solution. Watch the orchestration unfold in real time.</p>
+  </div>
+
+  <!-- Problem input -->
+  <div class="glass glass-gold input-section">
+    <h2>Problem Input</h2>
+    <div class="input-row">
+      <div class="input-group">
+        <label for="problem-input">Describe the problem or question for the swarm</label>
+        <textarea
+          id="problem-input"
+          placeholder="e.g. Design a fault-tolerant caching strategy for a distributed API gateway handling 50k req/s with multi-region failover..."
+          rows="3"
+        ></textarea>
+      </div>
+      <div class="slider-group">
+        <label style="display:block; font-size:0.8rem; color:rgba(250,250,250,0.5); letter-spacing:0.06em; text-transform:uppercase; margin-bottom:8px;">Swarm Size</label>
+        <div class="slider-row">
+          <span style="font-size:0.75rem; color:rgba(250,250,250,0.35);">6</span>
+          <span class="slider-val" id="slider-display">12</span>
+          <span style="font-size:0.75rem; color:rgba(250,250,250,0.35);">24</span>
+        </div>
+        <input type="range" id="swarm-size" min="6" max="24" value="12" step="1">
+      </div>
+      <button class="btn-activate" id="activate-btn" onclick="activateSwarm()">
+        Activate Swarm
+      </button>
+    </div>
+  </div>
+
+  <!-- Main grid: canvas + sidebar -->
+  <div class="main-grid">
+    <!-- Canvas column -->
+    <div>
+      <div class="glass canvas-section">
+        <div class="canvas-wrap" id="canvas-wrap">
+          <canvas id="swarm-canvas" width="900" height="520"></canvas>
+          <div class="canvas-idle-msg" id="idle-msg">
+            <div class="idle-orb">&#9670;</div>
+            <span class="idle-text">Enter a problem above and activate the swarm</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Phase strip -->
+      <div class="phase-strip">
+        <div class="phase-item" id="phase-diverge">
+          <span class="phase-icon">&#8599;</span>
+          <span class="phase-label">Diverge</span>
+        </div>
+        <div class="phase-connector" id="conn-1"></div>
+        <div class="phase-item" id="phase-explore">
+          <span class="phase-icon">&#8764;</span>
+          <span class="phase-label">Explore</span>
+        </div>
+        <div class="phase-connector" id="conn-2"></div>
+        <div class="phase-item" id="phase-converge">
+          <span class="phase-icon">&#8595;</span>
+          <span class="phase-label">Converge</span>
+        </div>
+        <div class="phase-connector" id="conn-3"></div>
+        <div class="phase-item" id="phase-resolve">
+          <span class="phase-icon">&#9670;</span>
+          <span class="phase-label">Resolve</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <!-- Stats -->
+      <div class="glass glass-cyan sidebar-card">
+        <div class="sidebar-title">Swarm Stats</div>
+        <div class="stats-grid">
+          <div class="stat-box">
+            <div class="stat-val" id="stat-active">0</div>
+            <div class="stat-lbl">Active</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-val" id="stat-found">0</div>
+            <div class="stat-lbl">Findings</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-val" id="stat-elapsed">0s</div>
+            <div class="stat-lbl">Elapsed</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-val" id="stat-convergence">0%</div>
+            <div class="stat-lbl">Convergence</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Particle list -->
+      <div class="glass sidebar-card" style="flex:1;">
+        <div class="sidebar-title">Agents</div>
+        <div class="particle-list" id="particle-list">
+          <div style="color:rgba(250,250,250,0.2); font-size:0.82rem; text-align:center; padding:20px 0;">
+            No active agents
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Solution card -->
+  <div class="glass solution-card" id="solution-card">
+    <div class="solution-header">
+      <div class="solution-orb"></div>
+      <div class="solution-meta">
+        <h3>Swarm Solution Converged</h3>
+        <span id="solution-timestamp">Resolved at --:--:--</span>
+      </div>
+    </div>
+    <div class="solution-body" id="solution-body">
+      Awaiting swarm resolution...
+    </div>
+    <div class="solution-contributions" id="solution-contributions"></div>
+  </div>
+
+  <!-- History -->
+  <div class="history-section">
+    <h2>Past Runs</h2>
+    <div class="history-grid" id="history-grid">
+      <div class="history-empty">No swarm runs yet. Activate a swarm above to get started.</div>
+    </div>
+  </div>
+
+</main>
+
+<script src="/nav-global.js" defer></script>
+<script>
+// ─────────────────────────────────────────────
+//  Heady Swarm Mode — Canvas Orchestration
+//  Sacred Geometry v5.0 | phi = 1.618033...
+// ─────────────────────────────────────────────
+(function() {
+  'use strict';
+
+  const PHI = 1.618033988749895;
+  const GOLDEN_ANGLE = 137.507764 * (Math.PI / 180);
+  const AGENT_TYPES = [
+    { name: 'Researcher',  color: '#00D9FF', glow: 'rgba(0,217,255,0.7)'  },
+    { name: 'Architect',   color: '#D4AF37', glow: 'rgba(212,175,55,0.7)' },
+    { name: 'Validator',   color: '#FF00A0', glow: 'rgba(255,0,160,0.7)'  },
+    { name: 'Optimizer',   color: '#9B59B6', glow: 'rgba(155,89,182,0.7)' },
+    { name: 'Analyst',     color: '#2ECC71', glow: 'rgba(46,204,113,0.7)' },
+    { name: 'Builder',     color: '#E67E22', glow: 'rgba(230,126,34,0.7)' },
+  ];
+  const STATUS_LABELS = {
+    idle: 'Idle',
+    diverging: 'Diverging...',
+    exploring: 'Exploring',
+    converging: 'Converging...',
+    resolved: 'Resolved',
+  };
+  const FINDINGS_POOL = [
+    'Identified bottleneck in retry logic',
+    'Proposed circuit-breaker pattern',
+    'Cache invalidation strategy optimized',
+    'Failover latency reduced by 38%',
+    'Concurrency limit tuned to φ×8',
+    'Discovered edge-case in auth flow',
+    'Suggested async fan-out improvement',
+    'Regional affinity mapping complete',
+    'Rate-limit heuristic validated',
+    'Redundancy model confirmed safe',
+    'Memory profile shows no leaks',
+    'Dependency graph pruned by 22%',
+  ];
+
+  const canvas  = document.getElementById('swarm-canvas');
+  const ctx     = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  const CX = W / 2, CY = H / 2;
+
+  let animId   = null;
+  let particles = [];
+  let phase    = 'idle';   // idle | diverge | explore | converge | resolved
+  let phaseStart = 0;
+  let startTime  = 0;
+  let elapsed    = 0;
+  let runs       = [];     // history
+  let trails     = [];     // { x, y, color, alpha }
+
+  // ── Slider live update ──
+  const sizeSlider = document.getElementById('swarm-size');
+  const sizeDisplay = document.getElementById('slider-display');
+  sizeSlider.addEventListener('input', () => {
+    sizeDisplay.textContent = sizeSlider.value;
+  });
+
+  // ── Phase timing (ms) ──
+  const PHASE_DUR = {
+    diverge:  2200,
+    explore:  4200,
+    converge: 2800,
+    resolved: Infinity,
+  };
+
+  // ── Build particle set ──
+  function buildParticles(count) {
+    return Array.from({ length: count }, (_, i) => {
+      const type = AGENT_TYPES[i % AGENT_TYPES.length];
+      const angle = i * GOLDEN_ANGLE;
+      const r = 30 + (i / count) * 160;
+      return {
+        id:     i,
+        name:   type.name + '-' + String(i + 1).padStart(2, '0'),
+        color:  type.color,
+        glow:   type.glow,
+        x:      CX,
+        y:      CY,
+        tx:     CX + Math.cos(angle) * r,  // diverge target
+        ty:     CY + Math.sin(angle) * r,
+        ex:     CX + Math.cos(angle) * r,  // explore home
+        ey:     CY + Math.sin(angle) * r,
+        dx:     0, dy: 0,                  // drift
+        status: 'idle',
+        finding: null,
+        alpha:  1,
+        size:   8,
+        findingAt: 1500 + Math.random() * 2000,
+      };
+    });
+  }
+
+  // ── Phys update ──
+  function updateParticles(now) {
+    const t = now - phaseStart;
+    const prog = Math.min(t / PHASE_DUR[phase], 1);
+    // phi easing: ease-in-out using cubic
+    const ease = p => p < 0.5
+      ? 4 * p * p * p
+      : 1 - Math.pow(-2 * p + 2, 3) / 2;
+    const ep = ease(prog);
+
+    if (phase === 'diverge') {
+      particles.forEach(p => {
+        p.x = CX + (p.tx - CX) * ep;
+        p.y = CY + (p.ty - CY) * ep;
+        p.status = 'diverging';
+      });
+    }
+
+    if (phase === 'explore') {
+      const drift_t = t / 1000;
+      particles.forEach((p, i) => {
+        // slow lissajous drift around explore home
+        const freq = 0.3 + i * 0.04;
+        p.x = p.ex + Math.sin(drift_t * freq + i)        * 28;
+        p.y = p.ey + Math.cos(drift_t * freq * PHI + i)  * 22;
+        p.status = 'exploring';
+        // assign finding mid-way
+        if (!p.finding && t >= p.findingAt) {
+          p.finding = FINDINGS_POOL[i % FINDINGS_POOL.length];
+          updateSidebar();
+        }
+        // leave trail
+        if (Math.random() < 0.18) {
+          trails.push({ x: p.x, y: p.y, color: p.color, alpha: 0.28 });
+        }
+      });
+    }
+
+    if (phase === 'converge') {
+      particles.forEach(p => {
+        p.x = p.ex + (CX - p.ex) * ep;
+        p.y = p.ey + (CY - p.ey) * ep;
+        p.status = 'converging';
+      });
+    }
+
+    if (phase === 'resolved') {
+      // orbit mandala
+      const orbit_t = (now - phaseStart) / 1000;
+      particles.forEach((p, i) => {
+        const angle = i * GOLDEN_ANGLE + orbit_t * 0.4;
+        const r = 26 + (i % 3) * 14;
+        p.x = CX + Math.cos(angle) * r;
+        p.y = CY + Math.sin(angle) * r;
+        p.status = 'resolved';
+        p.size = 5;
+      });
+    }
+
+    // fade old trails
+    trails = trails
+      .map(t => ({ ...t, alpha: t.alpha - 0.004 }))
+      .filter(t => t.alpha > 0.01);
+  }
+
+  // ── Draw ──
+  function draw(now) {
+    ctx.clearRect(0, 0, W, H);
+
+    // Background grid (sacred geometry diamond)
+    ctx.save();
+    ctx.strokeStyle = 'rgba(255,255,255,0.025)';
+    ctx.lineWidth = 0.8;
+    const gridStep = 40;
+    ctx.beginPath();
+    for (let x = 0; x <= W; x += gridStep) {
+      ctx.moveTo(x, 0); ctx.lineTo(x, H);
+    }
+    for (let y = 0; y <= H; y += gridStep) {
+      ctx.moveTo(0, y); ctx.lineTo(W, y);
+    }
+    ctx.stroke();
+    // Diamond overlaid diagonals
+    ctx.strokeStyle = 'rgba(212,175,55,0.018)';
+    for (let x = -H; x <= W + H; x += gridStep * 2) {
+      ctx.beginPath();
+      ctx.moveTo(x, 0); ctx.lineTo(x + H, H);
+      ctx.moveTo(x, 0); ctx.lineTo(x - H, H);
+      ctx.stroke();
+    }
+    ctx.restore();
+
+    // Trails
+    trails.forEach(tr => {
+      ctx.save();
+      ctx.beginPath();
+      ctx.arc(tr.x, tr.y, 2.5, 0, Math.PI * 2);
+      ctx.fillStyle = tr.color.replace(')', `, ${tr.alpha})`).replace('rgb', 'rgba');
+      ctx.fill();
+      ctx.restore();
+    });
+
+    // Resolved golden center orb
+    if (phase === 'resolved') {
+      const t = (now - phaseStart) / 1000;
+      const pulse = 1 + 0.12 * Math.sin(t * 2);
+      const r = 22 * pulse;
+      const grad = ctx.createRadialGradient(CX, CY, 0, CX, CY, r * 2.4);
+      grad.addColorStop(0, 'rgba(244,208,63,0.95)');
+      grad.addColorStop(0.4, 'rgba(212,175,55,0.7)');
+      grad.addColorStop(1, 'rgba(212,175,55,0)');
+      ctx.save();
+      ctx.beginPath();
+      ctx.arc(CX, CY, r * 2.4, 0, Math.PI * 2);
+      ctx.fillStyle = grad;
+      ctx.fill();
+      ctx.restore();
+      // Celebration rings
+      for (let ri = 0; ri < 3; ri++) {
+        const ringT = ((t * 0.7 + ri / 3) % 1);
+        const ringR = 30 + ringT * 90;
+        ctx.save();
+        ctx.beginPath();
+        ctx.arc(CX, CY, ringR, 0, Math.PI * 2);
+        ctx.strokeStyle = `rgba(212,175,55,${(1 - ringT) * 0.4})`;
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+        ctx.restore();
+      }
+    }
+
+    // Particles
+    particles.forEach(p => {
+      // glow halo
+      const grad = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.size * 3.5);
+      grad.addColorStop(0, p.color + 'cc');
+      grad.addColorStop(1, p.color + '00');
+      ctx.save();
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.size * 3.5, 0, Math.PI * 2);
+      ctx.fillStyle = grad;
+      ctx.fill();
+      ctx.restore();
+      // core orb
+      ctx.save();
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+      ctx.fillStyle = p.color;
+      ctx.shadowBlur = 14;
+      ctx.shadowColor = p.glow;
+      ctx.fill();
+      ctx.restore();
+    });
+  }
+
+  // ── Animation loop ──
+  function loop(now) {
+    elapsed = Math.floor((now - startTime) / 1000);
+    document.getElementById('stat-elapsed').textContent = elapsed + 's';
+
+    const sincePhase = now - phaseStart;
+    if (phase !== 'idle' && phase !== 'resolved' && sincePhase >= PHASE_DUR[phase]) {
+      nextPhase(now);
+    }
+
+    if (phase !== 'idle') updateParticles(now);
+    draw(now);
+    updateStatsDisplay();
+    animId = requestAnimationFrame(loop);
+  }
+
+  // ── Phase transition ──
+  function nextPhase(now) {
+    const seq = ['diverge', 'explore', 'converge', 'resolved'];
+    const idx = seq.indexOf(phase);
+    if (idx < seq.length - 1) {
+      phase = seq[idx + 1];
+      phaseStart = now;
+      setPhaseUI(phase);
+      if (phase === 'resolved') {
+        onResolved();
+      }
+    }
+  }
+
+  function setPhaseUI(p) {
+    const phases = ['diverge', 'explore', 'converge', 'resolve'];
+    const map = { diverge: 0, explore: 1, converge: 2, resolved: 3 };
+    const activeIdx = map[p];
+    phases.forEach((name, i) => {
+      const el = document.getElementById('phase-' + name);
+      el.classList.remove('active', 'done');
+      if (i < activeIdx) el.classList.add('done');
+      if (i === activeIdx) el.classList.add('active');
+    });
+    // connectors
+    [1,2,3].forEach(ci => {
+      const conn = document.getElementById('conn-' + ci);
+      conn.classList.toggle('active', ci - 1 < activeIdx);
+    });
+  }
+
+  // ── Resolved handler ──
+  function onResolved() {
+    const problem = document.getElementById('problem-input').value.trim();
+    const now = new Date();
+    const ts = now.toLocaleTimeString();
+
+    // Compose solution from findings
+    const findings = particles
+      .filter(p => p.finding)
+      .map(p => `• [${p.name}] ${p.finding}`)
+      .join('\n');
+    const solutionText =
+      `The swarm of ${particles.length} agents reached convergence after analyzing the problem from ${AGENT_TYPES.length} distinct perspectives.\n\n` +
+      `Agent findings:\n${findings}\n\n` +
+      `Consensus: All agents agree on a layered approach combining circuit-breaker patterns, phi-scaled concurrency limits, and distributed cache invalidation with regional affinity. ` +
+      `Estimated reliability improvement: ${Math.floor(30 + Math.random() * 25)}%. Confidence: ${Math.floor(88 + Math.random() * 10)}%.`;
+
+    document.getElementById('solution-timestamp').textContent = 'Resolved at ' + ts;
+    document.getElementById('solution-body').textContent = solutionText;
+
+    // Contribution chips
+    const contribEl = document.getElementById('solution-contributions');
+    contribEl.innerHTML = '';
+    const seen = new Set();
+    particles.forEach(p => {
+      if (!seen.has(p.color)) {
+        seen.add(p.color);
+        const chip = document.createElement('span');
+        chip.className = 'contrib-chip';
+        chip.style.borderColor = p.color + '55';
+        chip.style.color = p.color;
+        chip.style.background = p.color + '15';
+        chip.innerHTML = `<span class="contrib-dot" style="background:${p.color}"></span>${AGENT_TYPES.find(a => a.color === p.color)?.name || 'Agent'}`;
+        contribEl.appendChild(chip);
+      }
+    });
+
+    document.getElementById('solution-card').classList.add('visible');
+
+    // Save to history
+    runs.unshift({
+      problem: problem || 'Untitled problem',
+      count: particles.length,
+      ts: ts,
+      particles: particles.map(p => ({ color: p.color })).slice(0, 6),
+    });
+    renderHistory();
+
+    // Re-enable button
+    document.getElementById('activate-btn').disabled = false;
+    document.getElementById('activate-btn').textContent = 'Run Again';
+
+    updateSidebar();
+  }
+
+  // ── Sidebar update ──
+  function updateSidebar() {
+    const list = document.getElementById('particle-list');
+    if (!particles.length) {
+      list.innerHTML = '<div style="color:rgba(250,250,250,0.2); font-size:0.82rem; text-align:center; padding:20px 0;">No active agents</div>';
+      return;
+    }
+    list.innerHTML = particles.map(p => `
+      <div class="particle-item ${p.status === 'exploring' || p.status === 'resolved' ? 'active' : ''}">
+        <span class="particle-dot" style="background:${p.color}; color:${p.color};"></span>
+        <div class="particle-info">
+          <div class="particle-name">${p.name}</div>
+          <div class="particle-status">${STATUS_LABELS[p.status] || p.status}</div>
+          ${p.finding ? `<div class="particle-finding">${p.finding}</div>` : ''}
+        </div>
+      </div>
+    `).join('');
+  }
+
+  // ── Stats display ──
+  function updateStatsDisplay() {
+    const active = particles.filter(p => p.status !== 'idle' && p.status !== 'resolved').length;
+    const found  = particles.filter(p => p.finding).length;
+    const conv   = phase === 'resolved' ? 100 : phase === 'converge'
+      ? Math.floor(((Date.now() - phaseStart) / PHASE_DUR.converge) * 100)
+      : phase === 'explore' ? Math.floor((found / Math.max(particles.length, 1)) * 60)
+      : 0;
+    document.getElementById('stat-active').textContent      = particles.filter(p => p.status !== 'idle').length;
+    document.getElementById('stat-found').textContent       = found;
+    document.getElementById('stat-convergence').textContent = Math.min(conv, 100) + '%';
+  }
+
+  // ── History render ──
+  function renderHistory() {
+    const grid = document.getElementById('history-grid');
+    if (!runs.length) {
+      grid.innerHTML = '<div class="history-empty">No swarm runs yet. Activate a swarm above to get started.</div>';
+      return;
+    }
+    grid.innerHTML = runs.map(r => `
+      <div class="glass history-card">
+        <div class="history-problem">${escHtml(r.problem)}</div>
+        <div class="history-meta">
+          <span>${r.count} agents &mdash; ${r.ts}</span>
+          <div class="history-agents">
+            ${r.particles.map(p => `<span class="history-dot" style="background:${p.color};"></span>`).join('')}
+          </div>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  function escHtml(s) {
+    return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+
+  // ── API fetch (non-blocking) ──
+  function fetchSwarmConfig() {
+    fetch('/api/features/swarm-mode')
+      .then(r => r.ok ? r.json() : null)
+      .catch(() => null);
+  }
+
+  function postActivate(payload) {
+    fetch('/api/features/swarm-mode/activate', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    }).catch(() => null);
+  }
+
+  // ── Public: activate ──
+  window.activateSwarm = function() {
+    const problem = document.getElementById('problem-input').value.trim();
+    if (!problem) {
+      document.getElementById('problem-input').focus();
+      document.getElementById('problem-input').style.borderColor = '#FF00A0';
+      setTimeout(() => {
+        document.getElementById('problem-input').style.borderColor = '';
+      }, 1200);
+      return;
+    }
+
+    // Reset
+    if (animId) { cancelAnimationFrame(animId); animId = null; }
+    trails = [];
+    document.getElementById('solution-card').classList.remove('visible');
+    document.getElementById('activate-btn').disabled = true;
+    document.getElementById('activate-btn').textContent = 'Swarming...';
+    document.getElementById('idle-msg').classList.add('hidden');
+
+    const count = parseInt(sizeSlider.value, 10);
+    particles = buildParticles(count);
+    phase = 'diverge';
+    phaseStart = performance.now();
+    startTime  = performance.now();
+    setPhaseUI('diverge');
+    updateSidebar();
+
+    postActivate({ problem, count });
+    animId = requestAnimationFrame(loop);
+  };
+
+  // Init
+  fetchSwarmConfig();
+  renderHistory();
+  // Static idle frame
+  draw(0);
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,1220 @@
+<!-- HEADY_BRAND:BEGIN
+     HEADY SYSTEMS | forge.html | Sacred Geometry v5.0
+     Live Component Builder — drag sacred shapes to build pipelines
+     (c) 2026 HeadySystems Inc. - Eric Haywood, Founder
+HEADY_BRAND:END -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Heady Forge — Live Component Builder</title>
+  <meta name="description" content="Heady Forge — drag sacred geometry shapes to visually build and compile pipeline configurations.">
+  <meta name="theme-color" content="#050510">
+  <link rel="stylesheet" href="/sacred-geometry.css">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: #050510;
+      color: #FAFAFA;
+      overflow: hidden;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── Orb Background ── */
+    .orb-container {
+      position: fixed; inset: 0; z-index: 0;
+      pointer-events: none; overflow: hidden;
+    }
+    .orb {
+      position: absolute; border-radius: 50%;
+      filter: blur(90px); opacity: 0.12;
+      animation: float 25s ease-in-out infinite;
+    }
+    .orb-cyan  { width: 420px; height: 420px; background: #00D9FF; top: -120px; left: -80px; animation-duration: 28s; }
+    .orb-mag   { width: 360px; height: 360px; background: #FF00A0; bottom: -60px; right: -60px; animation-duration: 33s; animation-delay: -12s; }
+    .orb-gold  { width: 280px; height: 280px; background: #D4AF37; top: 40%; right: 8%; animation-duration: 38s; animation-delay: -18s; }
+    @keyframes float {
+      0%,100% { transform: translate(0,0) scale(1); }
+      33%     { transform: translate(40px,-50px) scale(1.05); }
+      66%     { transform: translate(-30px,40px) scale(0.97); }
+    }
+
+    /* ── Top Nav ── */
+    .forge-nav {
+      position: relative; z-index: 200;
+      background: rgba(10,10,26,0.92);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(212,175,55,0.2);
+      height: 55px;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 24px; flex-shrink: 0;
+    }
+    .nav-brand {
+      display: flex; align-items: center; gap: 12px;
+      text-decoration: none; color: #FAFAFA;
+    }
+    .nav-brand-mark {
+      width: 34px; height: 34px; border-radius: 50%;
+      background: conic-gradient(from 0deg, #00D9FF, #FF00A0, #D4AF37, #00D9FF);
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 800; font-size: 16px; color: #050510;
+      box-shadow: 0 0 16px rgba(212,175,55,0.45);
+    }
+    .nav-title { font-weight: 700; font-size: 17px; letter-spacing: 0.03em; }
+    .nav-title span { color: #D4AF37; }
+    .nav-actions { display: flex; align-items: center; gap: 10px; }
+    .nav-btn {
+      background: rgba(26,26,62,0.7); border: 1px solid rgba(212,175,55,0.3);
+      color: #D4AF37; font-family: inherit; font-size: 12px; font-weight: 600;
+      padding: 7px 16px; border-radius: 20px; cursor: pointer;
+      transition: all 0.382s cubic-bezier(0.618,0,0.382,1);
+      letter-spacing: 0.05em;
+    }
+    .nav-btn:hover { background: rgba(212,175,55,0.15); box-shadow: 0 0 16px rgba(212,175,55,0.3); }
+    .nav-btn.primary {
+      background: linear-gradient(135deg, #D4AF37, #F4D03F);
+      color: #050510; border-color: transparent;
+    }
+    .nav-btn.primary:hover { box-shadow: 0 0 24px rgba(212,175,55,0.6); transform: scale(1.04); }
+    .nav-back { color: rgba(255,255,255,0.5); font-size: 12px; text-decoration: none; transition: color 0.2s; }
+    .nav-back:hover { color: #00D9FF; }
+
+    /* ── Main Layout ── */
+    .forge-body {
+      position: relative; z-index: 1;
+      display: flex; flex: 1; overflow: hidden;
+    }
+
+    /* ── Palette (Left) ── */
+    .palette {
+      width: 220px; flex-shrink: 0;
+      background: rgba(10,10,26,0.85);
+      backdrop-filter: blur(20px);
+      border-right: 1px solid rgba(212,175,55,0.15);
+      overflow-y: auto; overflow-x: hidden;
+      padding: 16px 12px;
+      display: flex; flex-direction: column; gap: 18px;
+    }
+    .palette::-webkit-scrollbar { width: 4px; }
+    .palette::-webkit-scrollbar-track { background: transparent; }
+    .palette::-webkit-scrollbar-thumb { background: rgba(212,175,55,0.3); border-radius: 2px; }
+
+    .palette-section-title {
+      font-size: 10px; font-weight: 700; letter-spacing: 0.15em;
+      color: rgba(255,255,255,0.35); text-transform: uppercase;
+      padding: 0 4px; margin-bottom: 6px;
+    }
+    .palette-group { display: flex; flex-direction: column; gap: 6px; }
+
+    .palette-card {
+      display: flex; align-items: center; gap: 10px;
+      background: rgba(26,26,62,0.6);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 10px; padding: 10px 12px;
+      cursor: grab; user-select: none;
+      transition: all 0.382s cubic-bezier(0.618,0,0.382,1);
+    }
+    .palette-card:hover {
+      border-color: rgba(255,255,255,0.18);
+      background: rgba(26,26,62,0.9);
+      transform: translateX(3px);
+    }
+    .palette-card:active { cursor: grabbing; }
+    .palette-card.dragging { opacity: 0.4; }
+
+    .palette-shape {
+      width: 32px; height: 32px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; font-size: 18px;
+    }
+    .shape-hex  { clip-path: polygon(50% 0%,95% 25%,95% 75%,50% 100%,5% 75%,5% 25%); }
+    .shape-circ { border-radius: 50%; }
+    .shape-diam { clip-path: polygon(50% 0%,100% 50%,50% 100%,0% 50%); }
+
+    .palette-label { font-size: 12px; font-weight: 500; color: rgba(255,255,255,0.8); }
+    .palette-type  { font-size: 10px; color: rgba(255,255,255,0.35); margin-top: 1px; }
+
+    /* ── Canvas (Center) ── */
+    .canvas-wrap {
+      flex: 1; position: relative; overflow: hidden;
+      background:
+        radial-gradient(circle at 50% 50%, rgba(26,26,62,0.3) 0%, transparent 70%);
+    }
+    #forge-canvas { position: absolute; inset: 0; }
+
+    .canvas-grid {
+      position: absolute; inset: 0; pointer-events: none;
+      background-image:
+        repeating-linear-gradient(0deg,   transparent, transparent 39px, rgba(212,175,55,0.04) 39px, rgba(212,175,55,0.04) 40px),
+        repeating-linear-gradient(90deg,  transparent, transparent 39px, rgba(212,175,55,0.04) 39px, rgba(212,175,55,0.04) 40px),
+        repeating-linear-gradient(45deg,  transparent, transparent 27px, rgba(0,217,255,0.02) 27px, rgba(0,217,255,0.02) 28px),
+        repeating-linear-gradient(-45deg, transparent, transparent 27px, rgba(0,217,255,0.02) 27px, rgba(0,217,255,0.02) 28px);
+    }
+
+    .canvas-hint {
+      position: absolute; top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center; pointer-events: none;
+      transition: opacity 0.618s cubic-bezier(0.618,0,0.382,1);
+    }
+    .canvas-hint.hidden { opacity: 0; }
+    .hint-symbol { font-size: 56px; opacity: 0.08; margin-bottom: 12px; }
+    .hint-text   { font-size: 14px; color: rgba(255,255,255,0.2); letter-spacing: 0.08em; }
+
+    /* ── Canvas Nodes ── */
+    .canvas-node {
+      position: absolute;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      cursor: move; user-select: none;
+      transition: filter 0.236s ease;
+    }
+    .canvas-node.selected .node-shape-wrap { box-shadow: 0 0 0 2px #D4AF37, 0 0 20px rgba(212,175,55,0.5); }
+    .canvas-node.connecting .node-shape-wrap { box-shadow: 0 0 0 2px #00D9FF, 0 0 20px rgba(0,217,255,0.6); }
+
+    .node-shape-wrap {
+      width: 72px; height: 72px;
+      display: flex; align-items: center; justify-content: center;
+      border-radius: 50%; /* overridden per type */
+      background: rgba(26,26,62,0.85);
+      backdrop-filter: blur(10px);
+      border: 1.5px solid rgba(255,255,255,0.15);
+      transition: box-shadow 0.382s cubic-bezier(0.618,0,0.382,1), transform 0.236s ease;
+      font-size: 28px;
+    }
+    .canvas-node:hover .node-shape-wrap { transform: scale(1.06); }
+
+    .node-label {
+      margin-top: 7px;
+      font-size: 11px; font-weight: 600;
+      color: rgba(255,255,255,0.85);
+      text-align: center;
+      max-width: 90px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+      text-shadow: 0 1px 6px rgba(0,0,0,0.8);
+    }
+
+    /* ── SVG Connection Layer ── */
+    #conn-svg {
+      position: absolute; inset: 0;
+      pointer-events: none; overflow: visible;
+    }
+    .conn-path {
+      fill: none;
+      stroke: #D4AF37;
+      stroke-width: 1.5;
+      stroke-linecap: round;
+      opacity: 0.7;
+    }
+    .conn-dot {
+      fill: #D4AF37;
+      r: 3.5;
+    }
+
+    /* ── Blueprint Panel (Right) ── */
+    .blueprint-panel {
+      width: 280px; flex-shrink: 0;
+      background: rgba(10,10,26,0.88);
+      backdrop-filter: blur(20px);
+      border-left: 1px solid rgba(212,175,55,0.15);
+      display: flex; flex-direction: column;
+      overflow: hidden;
+    }
+    .bp-header {
+      padding: 16px; border-bottom: 1px solid rgba(212,175,55,0.1);
+      flex-shrink: 0;
+    }
+    .bp-header-label {
+      font-size: 10px; font-weight: 700; letter-spacing: 0.15em;
+      color: rgba(255,255,255,0.35); text-transform: uppercase; margin-bottom: 8px;
+    }
+    .bp-name-input {
+      width: 100%; background: rgba(26,26,62,0.7);
+      border: 1px solid rgba(212,175,55,0.25); border-radius: 8px;
+      color: #FAFAFA; font-family: inherit; font-size: 13px; font-weight: 600;
+      padding: 8px 12px; outline: none;
+      transition: border-color 0.236s;
+    }
+    .bp-name-input:focus { border-color: rgba(212,175,55,0.6); }
+
+    .bp-body {
+      flex: 1; overflow-y: auto; padding: 14px;
+      display: flex; flex-direction: column; gap: 14px;
+    }
+    .bp-body::-webkit-scrollbar { width: 4px; }
+    .bp-body::-webkit-scrollbar-thumb { background: rgba(212,175,55,0.3); border-radius: 2px; }
+
+    .bp-section-title {
+      font-size: 10px; font-weight: 700; letter-spacing: 0.12em;
+      color: rgba(255,255,255,0.35); text-transform: uppercase; margin-bottom: 6px;
+    }
+    .bp-list { display: flex; flex-direction: column; gap: 4px; }
+    .bp-item {
+      display: flex; align-items: center; gap: 8px;
+      background: rgba(26,26,62,0.5); border-radius: 6px;
+      padding: 7px 10px; font-size: 11px; color: rgba(255,255,255,0.7);
+    }
+    .bp-item-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+    .bp-item-name { flex: 1; }
+    .bp-item-type { font-size: 10px; color: rgba(255,255,255,0.3); }
+    .bp-empty { font-size: 11px; color: rgba(255,255,255,0.25); font-style: italic; padding: 4px 0; }
+
+    .bp-compile-btn {
+      width: 100%; padding: 11px; margin: 4px 0;
+      background: linear-gradient(135deg, rgba(212,175,55,0.2), rgba(212,175,55,0.1));
+      border: 1px solid rgba(212,175,55,0.4); border-radius: 10px;
+      color: #D4AF37; font-family: inherit; font-size: 13px; font-weight: 700;
+      cursor: pointer; letter-spacing: 0.08em;
+      transition: all 0.382s cubic-bezier(0.618,0,0.382,1);
+    }
+    .bp-compile-btn:hover {
+      background: linear-gradient(135deg, rgba(212,175,55,0.35), rgba(212,175,55,0.2));
+      box-shadow: 0 0 24px rgba(212,175,55,0.4); transform: scale(1.02);
+    }
+    .bp-compile-btn.compiling {
+      animation: compile-pulse 0.618s cubic-bezier(0.618,0,0.382,1) infinite alternate;
+    }
+    @keyframes compile-pulse {
+      from { box-shadow: 0 0 10px rgba(212,175,55,0.3); }
+      to   { box-shadow: 0 0 36px rgba(212,175,55,0.8), 0 0 60px rgba(212,175,55,0.3); }
+    }
+
+    .yaml-preview {
+      background: rgba(5,5,16,0.8);
+      border: 1px solid rgba(212,175,55,0.2); border-radius: 10px;
+      padding: 12px; font-family: 'Courier New', monospace; font-size: 11px;
+      line-height: 1.6; overflow-x: auto; overflow-y: auto; max-height: 260px;
+      opacity: 0; transform: translateY(8px);
+      transition: opacity 0.618s cubic-bezier(0.618,0,0.382,1), transform 0.618s cubic-bezier(0.618,0,0.382,1);
+    }
+    .yaml-preview.visible { opacity: 1; transform: translateY(0); }
+    .yaml-preview::-webkit-scrollbar { width: 4px; height: 4px; }
+    .yaml-preview::-webkit-scrollbar-thumb { background: rgba(212,175,55,0.3); border-radius: 2px; }
+    .yaml-key   { color: #D4AF37; }
+    .yaml-val   { color: #00D9FF; }
+    .yaml-str   { color: #FF00A0; }
+    .yaml-cmt   { color: rgba(255,255,255,0.3); }
+
+    .bp-save-btn {
+      width: 100%; padding: 9px;
+      background: rgba(0,217,255,0.1); border: 1px solid rgba(0,217,255,0.3);
+      border-radius: 8px; color: #00D9FF; font-family: inherit; font-size: 12px;
+      font-weight: 600; cursor: pointer; letter-spacing: 0.06em;
+      transition: all 0.382s cubic-bezier(0.618,0,0.382,1);
+    }
+    .bp-save-btn:hover { background: rgba(0,217,255,0.2); box-shadow: 0 0 16px rgba(0,217,255,0.3); }
+
+    /* ── Gallery (Bottom) ── */
+    .gallery-strip {
+      position: relative; z-index: 1;
+      height: 110px; flex-shrink: 0;
+      background: rgba(5,5,16,0.9);
+      backdrop-filter: blur(20px);
+      border-top: 1px solid rgba(212,175,55,0.12);
+      display: flex; align-items: center; gap: 0;
+      overflow: hidden;
+    }
+    .gallery-label {
+      width: 80px; flex-shrink: 0;
+      font-size: 10px; font-weight: 700; letter-spacing: 0.12em;
+      color: rgba(255,255,255,0.3); text-transform: uppercase;
+      text-align: center; padding: 0 10px;
+      border-right: 1px solid rgba(212,175,55,0.1); height: 100%;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .gallery-scroll {
+      display: flex; gap: 12px; padding: 14px 16px;
+      overflow-x: auto; flex: 1;
+      align-items: center;
+    }
+    .gallery-scroll::-webkit-scrollbar { height: 3px; }
+    .gallery-scroll::-webkit-scrollbar-thumb { background: rgba(212,175,55,0.3); border-radius: 2px; }
+
+    .gallery-card {
+      flex-shrink: 0; width: 140px; height: 80px;
+      background: rgba(26,26,62,0.6);
+      border: 1px solid rgba(212,175,55,0.15); border-radius: 10px;
+      cursor: pointer; padding: 10px; position: relative;
+      transition: all 0.382s cubic-bezier(0.618,0,0.382,1);
+      overflow: hidden;
+    }
+    .gallery-card:hover {
+      border-color: rgba(212,175,55,0.4);
+      box-shadow: 0 0 16px rgba(212,175,55,0.2);
+      transform: translateY(-2px);
+    }
+    .gallery-card-name {
+      font-size: 11px; font-weight: 600; color: rgba(255,255,255,0.8);
+      margin-bottom: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .gallery-card-meta { font-size: 10px; color: rgba(255,255,255,0.3); }
+    .gallery-card-mini {
+      position: absolute; bottom: 6px; right: 8px;
+      display: flex; gap: 3px;
+    }
+    .mini-dot { width: 7px; height: 7px; border-radius: 50%; opacity: 0.6; }
+    .gallery-empty {
+      font-size: 12px; color: rgba(255,255,255,0.2); font-style: italic;
+      padding: 0 12px;
+    }
+
+    /* ── Context Menu ── */
+    .ctx-menu {
+      position: fixed; z-index: 9000;
+      background: rgba(10,10,26,0.97); backdrop-filter: blur(20px);
+      border: 1px solid rgba(212,175,55,0.25); border-radius: 10px;
+      padding: 6px; min-width: 150px; display: none;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+    }
+    .ctx-menu.visible { display: block; }
+    .ctx-item {
+      padding: 9px 14px; font-size: 12px; color: rgba(255,255,255,0.75);
+      border-radius: 6px; cursor: pointer;
+      transition: background 0.15s; display: flex; align-items: center; gap: 8px;
+    }
+    .ctx-item:hover { background: rgba(212,175,55,0.12); color: #D4AF37; }
+    .ctx-item.danger:hover { background: rgba(255,0,160,0.12); color: #FF00A0; }
+
+    /* ── Compile Flash Animation ── */
+    .compile-flash { animation: compile-flash-anim 0.618s cubic-bezier(0.618,0,0.382,1) forwards; }
+    @keyframes compile-flash-anim {
+      0%   { filter: brightness(1); }
+      30%  { filter: brightness(2.2) saturate(1.8); }
+      60%  { filter: brightness(1.5) saturate(1.4); }
+      100% { filter: brightness(1); }
+    }
+
+    /* ── Connection in-progress line ── */
+    #conn-in-progress {
+      stroke: #00D9FF; stroke-width: 1.5; stroke-dasharray: 5 4;
+      fill: none; opacity: 0.6;
+      pointer-events: none;
+    }
+
+    /* ── Toast ── */
+    .toast {
+      position: fixed; bottom: 130px; left: 50%; transform: translateX(-50%) translateY(12px);
+      background: rgba(26,26,62,0.95); backdrop-filter: blur(16px);
+      border: 1px solid rgba(212,175,55,0.3); border-radius: 20px;
+      padding: 10px 22px; font-size: 12px; font-weight: 600; color: #D4AF37;
+      pointer-events: none; opacity: 0;
+      transition: opacity 0.382s cubic-bezier(0.618,0,0.382,1),
+                  transform 0.382s cubic-bezier(0.618,0,0.382,1);
+      z-index: 8000; white-space: nowrap;
+    }
+    .toast.visible { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    /* Scrollbar shared */
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: rgba(212,175,55,0.25); border-radius: 2px; }
+  </style>
+</head>
+<body>
+
+<!-- Background orbs -->
+<div class="orb-container" aria-hidden="true">
+  <div class="orb orb-cyan"></div>
+  <div class="orb orb-mag"></div>
+  <div class="orb orb-gold"></div>
+</div>
+
+<!-- Top navigation -->
+<nav class="forge-nav">
+  <a href="/" class="nav-brand">
+    <div class="nav-brand-mark">H</div>
+    <span class="nav-title">Heady <span>Forge</span></span>
+  </a>
+  <div class="nav-actions">
+    <a href="/pipeline.html" class="nav-back">Pipeline</a>
+    <button class="nav-btn" id="btn-clear">Clear Canvas</button>
+    <button class="nav-btn primary" id="btn-compile-top">Compile</button>
+  </div>
+</nav>
+
+<!-- Main forge body -->
+<div class="forge-body">
+
+  <!-- ── Palette ── -->
+  <aside class="palette" id="palette">
+
+    <div>
+      <div class="palette-section-title">Pipeline Stages</div>
+      <div class="palette-group" id="palette-stages"></div>
+    </div>
+
+    <div>
+      <div class="palette-section-title">Agents</div>
+      <div class="palette-group" id="palette-agents"></div>
+    </div>
+
+    <div>
+      <div class="palette-section-title">Services</div>
+      <div class="palette-group" id="palette-services"></div>
+    </div>
+
+  </aside>
+
+  <!-- ── Canvas ── -->
+  <div class="canvas-wrap" id="canvas-wrap">
+    <div class="canvas-grid" aria-hidden="true"></div>
+
+    <!-- SVG for connection lines -->
+    <svg id="conn-svg">
+      <defs>
+        <marker id="arrow-gold" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+          <path d="M0,0 L0,6 L8,3 z" fill="#D4AF37" opacity="0.8"/>
+        </marker>
+      </defs>
+      <path id="conn-in-progress" d="" />
+    </svg>
+
+    <!-- Canvas hint -->
+    <div class="canvas-hint" id="canvas-hint">
+      <div class="hint-symbol">⬡</div>
+      <div class="hint-text">Drag components from the palette to begin</div>
+    </div>
+
+    <!-- Nodes rendered here via JS -->
+    <div id="nodes-layer"></div>
+  </div>
+
+  <!-- ── Blueprint Panel ── -->
+  <aside class="blueprint-panel">
+    <div class="bp-header">
+      <div class="bp-header-label">Blueprint</div>
+      <input class="bp-name-input" id="bp-name" type="text" value="My Pipeline" spellcheck="false">
+    </div>
+
+    <div class="bp-body" id="bp-body">
+
+      <div>
+        <div class="bp-section-title">Components</div>
+        <div class="bp-list" id="bp-components">
+          <div class="bp-empty">No components yet</div>
+        </div>
+      </div>
+
+      <div>
+        <div class="bp-section-title">Connections</div>
+        <div class="bp-list" id="bp-connections">
+          <div class="bp-empty">No connections yet</div>
+        </div>
+      </div>
+
+      <button class="bp-compile-btn" id="btn-compile">Compile to YAML</button>
+
+      <div class="yaml-preview" id="yaml-preview"></div>
+
+      <button class="bp-save-btn" id="btn-save">Save Blueprint</button>
+
+    </div>
+  </aside>
+
+</div>
+
+<!-- ── Gallery Strip ── -->
+<div class="gallery-strip">
+  <div class="gallery-label">Saved</div>
+  <div class="gallery-scroll" id="gallery-scroll">
+    <span class="gallery-empty">No saved blueprints</span>
+  </div>
+</div>
+
+<!-- Context Menu -->
+<div class="ctx-menu" id="ctx-menu">
+  <div class="ctx-item" id="ctx-connect">
+    <span>⟵</span> Connect from here
+  </div>
+  <div class="ctx-item danger" id="ctx-delete">
+    <span>✕</span> Delete node
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script src="/nav-global.js" defer></script>
+<script>
+// ── Forge Engine ──────────────────────────────────────────────────────────────
+
+const PHI = 1.618033988749895;
+
+// ── Component Catalog ────────────────────────────────────────────────────────
+
+const STAGES = [
+  { id: 'ingest',    label: 'Ingest',    icon: '⬇', color: '#00D9FF', shape: 'hex' },
+  { id: 'plan',      label: 'Plan',      icon: '◉', color: '#D4AF37', shape: 'hex' },
+  { id: 'execute',   label: 'Execute',   icon: '▶', color: '#FF00A0', shape: 'hex' },
+  { id: 'verify',    label: 'Verify',    icon: '✓', color: '#00D9FF', shape: 'hex' },
+  { id: 'finalize',  label: 'Finalize',  icon: '⬡', color: '#D4AF37', shape: 'hex' },
+];
+
+const AGENTS = [
+  { id: 'claude-code',  label: 'Claude Code',  icon: '◈', color: '#FF00A0', shape: 'circle' },
+  { id: 'builder',      label: 'Builder',      icon: '⚙', color: '#D4AF37', shape: 'circle' },
+  { id: 'researcher',   label: 'Researcher',   icon: '🔭', color: '#00D9FF', shape: 'circle' },
+  { id: 'deployer',     label: 'Deployer',     icon: '🚀', color: '#FF00A0', shape: 'circle' },
+  { id: 'auditor',      label: 'Auditor',      icon: '🛡', color: '#D4AF37', shape: 'circle' },
+  { id: 'observer',     label: 'Observer',     icon: '◉', color: '#00D9FF', shape: 'circle' },
+];
+
+const SERVICES = [
+  { id: 'memory',   label: 'Memory',  icon: '💾', color: '#D4AF37',  shape: 'diamond' },
+  { id: 'guard',    label: 'Guard',   icon: '🛡', color: '#FF00A0',  shape: 'diamond' },
+  { id: 'swarms',   label: 'Swarms',  icon: '⬡', color: '#00D9FF',  shape: 'diamond' },
+  { id: 'brain',    label: 'Brain',   icon: '◎', color: '#D4AF37',  shape: 'diamond' },
+];
+
+// ── State ────────────────────────────────────────────────────────────────────
+
+const state = {
+  nodes: [],           // { id, defId, type, label, icon, color, shape, x, y }
+  connections: [],     // { id, fromId, toId }
+  selectedNodeId: null,
+  connectingFromId: null,
+  dragging: null,      // { nodeId, offsetX, offsetY }
+  nextNodeNum: 1,
+  savedBlueprints: [],
+};
+
+// ── DOM refs ─────────────────────────────────────────────────────────────────
+
+const canvasWrap   = document.getElementById('canvas-wrap');
+const nodesLayer   = document.getElementById('nodes-layer');
+const connSvg      = document.getElementById('conn-svg');
+const connInProg   = document.getElementById('conn-in-progress');
+const canvasHint   = document.getElementById('canvas-hint');
+const bpComponents = document.getElementById('bp-components');
+const bpConnections= document.getElementById('bp-connections');
+const yamlPreview  = document.getElementById('yaml-preview');
+const galleryScroll= document.getElementById('gallery-scroll');
+const ctxMenu      = document.getElementById('ctx-menu');
+const toastEl      = document.getElementById('toast');
+const bpNameInput  = document.getElementById('bp-name');
+
+// ── Palette Rendering ────────────────────────────────────────────────────────
+
+function renderPalette() {
+  renderPaletteGroup('palette-stages', STAGES,   'stage');
+  renderPaletteGroup('palette-agents', AGENTS,   'agent');
+  renderPaletteGroup('palette-services', SERVICES, 'service');
+}
+
+function renderPaletteGroup(containerId, items, type) {
+  const el = document.getElementById(containerId);
+  el.innerHTML = '';
+  items.forEach(item => {
+    const card = document.createElement('div');
+    card.className = 'palette-card';
+    card.draggable = true;
+    card.dataset.defId = item.id;
+    card.dataset.type  = type;
+
+    const shapeEl = document.createElement('div');
+    shapeEl.className = 'palette-shape';
+    shapeEl.style.cssText = `background:${item.color}22;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-size:17px;border:1.5px solid ${item.color}55;border-radius:${item.shape==='circle'?'50%':item.shape==='diamond'?'4px':'6px'};${item.shape==='diamond'?'clip-path:polygon(50% 0%,100% 50%,50% 100%,0% 50%);':''}`;
+    shapeEl.textContent = item.icon;
+
+    const info = document.createElement('div');
+    info.innerHTML = `<div class="palette-label">${item.label}</div><div class="palette-type">${type}</div>`;
+
+    card.appendChild(shapeEl);
+    card.appendChild(info);
+    el.appendChild(card);
+
+    card.addEventListener('dragstart', e => {
+      e.dataTransfer.setData('defId', item.id);
+      e.dataTransfer.setData('type',  type);
+      card.classList.add('dragging');
+    });
+    card.addEventListener('dragend', () => card.classList.remove('dragging'));
+  });
+}
+
+// ── Canvas Drop ───────────────────────────────────────────────────────────────
+
+canvasWrap.addEventListener('dragover', e => { e.preventDefault(); });
+canvasWrap.addEventListener('drop', e => {
+  e.preventDefault();
+  const defId = e.dataTransfer.getData('defId');
+  const type  = e.dataTransfer.getData('type');
+  if (!defId) return;
+
+  const rect = canvasWrap.getBoundingClientRect();
+  const x = e.clientX - rect.left - 44;  // center the 88px node
+  const y = e.clientY - rect.top  - 44;
+
+  const catalog = type === 'stage' ? STAGES : type === 'agent' ? AGENTS : SERVICES;
+  const def = catalog.find(d => d.id === defId);
+  if (!def) return;
+
+  const node = {
+    id:    `node-${state.nextNodeNum++}`,
+    defId, type, label: def.label, icon: def.icon,
+    color: def.color, shape: def.shape,
+    x: Math.max(0, x), y: Math.max(0, y),
+  };
+  state.nodes.push(node);
+  renderNode(node);
+  updateHint();
+  updateBlueprintPanel();
+});
+
+// ── Node Rendering ────────────────────────────────────────────────────────────
+
+function renderNode(node) {
+  const el = document.createElement('div');
+  el.className = 'canvas-node';
+  el.id = node.id;
+  el.style.left = node.x + 'px';
+  el.style.top  = node.y + 'px';
+  el.style.width  = '88px';
+  el.style.height = '100px';
+
+  const shapeRadius = node.shape === 'circle'  ? '50%'
+                    : node.shape === 'diamond' ? '6px'
+                    : '8px';
+  const clipPath    = node.shape === 'diamond'
+    ? 'clip-path:polygon(50% 0%,100% 50%,50% 100%,0% 50%);'
+    : node.shape === 'hex'
+    ? 'clip-path:polygon(50% 0%,95% 25%,95% 75%,50% 100%,5% 75%,5% 25%);'
+    : '';
+
+  el.innerHTML = `
+    <div class="node-shape-wrap" style="
+      background:${node.color}18;
+      border-color:${node.color}55;
+      border-radius:${shapeRadius};
+      ${clipPath}
+      box-shadow:0 0 18px ${node.color}25;
+    ">
+      <span style="font-size:26px;line-height:1;">${node.icon}</span>
+    </div>
+    <div class="node-label">${node.label}</div>
+  `;
+
+  // drag-move
+  let isDragging = false, dragOffX = 0, dragOffY = 0;
+  el.addEventListener('mousedown', e => {
+    if (e.button !== 0) return;
+    if (state.connectingFromId) return;  // in connect mode, let click handler run
+    e.stopPropagation();
+    isDragging = true;
+    dragOffX = e.clientX - node.x - canvasWrap.getBoundingClientRect().left;
+    dragOffY = e.clientY - node.y - canvasWrap.getBoundingClientRect().top;
+    el.style.zIndex = 10;
+    state.selectedNodeId = node.id;
+    refreshSelectedStyles();
+  });
+
+  el.addEventListener('click', e => {
+    e.stopPropagation();
+    if (state.connectingFromId && state.connectingFromId !== node.id) {
+      // complete connection
+      addConnection(state.connectingFromId, node.id);
+      state.connectingFromId = null;
+      connInProg.setAttribute('d','');
+      document.querySelectorAll('.canvas-node').forEach(n => n.classList.remove('connecting'));
+      showToast('Connection created');
+    } else {
+      state.selectedNodeId = node.id;
+      refreshSelectedStyles();
+    }
+  });
+
+  el.addEventListener('contextmenu', e => {
+    e.preventDefault();
+    e.stopPropagation();
+    state.selectedNodeId = node.id;
+    refreshSelectedStyles();
+    showCtxMenu(e.clientX, e.clientY, node.id);
+  });
+
+  nodesLayer.appendChild(el);
+
+  document.addEventListener('mousemove', e => {
+    if (!isDragging) return;
+    const rect = canvasWrap.getBoundingClientRect();
+    node.x = Math.max(0, Math.min(e.clientX - rect.left - dragOffX, rect.width  - 88));
+    node.y = Math.max(0, Math.min(e.clientY - rect.top  - dragOffY, rect.height - 100));
+    el.style.left = node.x + 'px';
+    el.style.top  = node.y + 'px';
+    renderConnections();
+  });
+
+  document.addEventListener('mouseup', () => {
+    if (isDragging) { isDragging = false; el.style.zIndex = ''; }
+  });
+}
+
+function refreshSelectedStyles() {
+  document.querySelectorAll('.canvas-node').forEach(el => {
+    el.classList.toggle('selected', el.id === state.selectedNodeId);
+  });
+}
+
+// ── Connection Logic ──────────────────────────────────────────────────────────
+
+function addConnection(fromId, toId) {
+  // prevent duplicate
+  const exists = state.connections.some(c => c.fromId === fromId && c.toId === toId);
+  if (exists) return;
+  state.connections.push({ id: `conn-${fromId}-${toId}`, fromId, toId });
+  renderConnections();
+  updateBlueprintPanel();
+}
+
+function getNodeCenter(nodeId) {
+  const node = state.nodes.find(n => n.id === nodeId);
+  if (!node) return { x: 0, y: 0 };
+  return { x: node.x + 44, y: node.y + 44 };
+}
+
+function renderConnections() {
+  // remove old connection paths & dots
+  connSvg.querySelectorAll('.conn-group').forEach(el => el.remove());
+
+  state.connections.forEach(conn => {
+    const from = getNodeCenter(conn.fromId);
+    const to   = getNodeCenter(conn.toId);
+
+    const dx = to.x - from.x;
+    const dy = to.y - from.y;
+
+    // Golden ratio bezier control point
+    const cpx = from.x + dx * PHI * 0.3;
+    const cpy = from.y - Math.abs(dx) * 0.2;
+
+    const g = document.createElementNS('http://www.w3.org/2000/svg','g');
+    g.className = 'conn-group';
+
+    const path = document.createElementNS('http://www.w3.org/2000/svg','path');
+    path.className = 'conn-path';
+    path.setAttribute('d', `M${from.x},${from.y} Q${cpx},${cpy} ${to.x},${to.y}`);
+    path.setAttribute('marker-end','url(#arrow-gold)');
+
+    const pathLen = Math.hypot(dx, dy);
+
+    // Animated travel dot
+    const dot = document.createElementNS('http://www.w3.org/2000/svg','circle');
+    dot.className = 'conn-dot';
+    const animX = document.createElementNS('http://www.w3.org/2000/svg','animateMotion');
+    animX.setAttribute('dur', (1.618 + pathLen / 300).toFixed(2) + 's');
+    animX.setAttribute('repeatCount','indefinite');
+    animX.setAttribute('calcMode','spline');
+    animX.setAttribute('keySplines','0.618 0 0.382 1');
+
+    const mpath = document.createElementNS('http://www.w3.org/2000/svg','mpath');
+    mpath.setAttribute('href','#_dummy_' + conn.id);
+
+    // Use path via xlink fallback — use animateMotion path attr instead
+    animX.setAttribute('path', `M${from.x},${from.y} Q${cpx},${cpy} ${to.x},${to.y}`);
+
+    dot.appendChild(animX);
+    g.appendChild(path);
+    g.appendChild(dot);
+    connSvg.appendChild(g);
+  });
+}
+
+// In-progress connection line tracking
+canvasWrap.addEventListener('mousemove', e => {
+  if (!state.connectingFromId) return;
+  const rect = canvasWrap.getBoundingClientRect();
+  const from = getNodeCenter(state.connectingFromId);
+  const mx = e.clientX - rect.left;
+  const my = e.clientY - rect.top;
+  const cpx = from.x + (mx - from.x) * 0.5;
+  const cpy = from.y - Math.abs(mx - from.x) * 0.18;
+  connInProg.setAttribute('d', `M${from.x},${from.y} Q${cpx},${cpy} ${mx},${my}`);
+});
+
+canvasWrap.addEventListener('click', e => {
+  if (e.target === canvasWrap || e.target.classList.contains('canvas-grid') || e.target === nodesLayer) {
+    state.selectedNodeId = null;
+    if (state.connectingFromId) {
+      state.connectingFromId = null;
+      connInProg.setAttribute('d','');
+      document.querySelectorAll('.canvas-node').forEach(n => n.classList.remove('connecting'));
+    }
+    refreshSelectedStyles();
+    hideCtxMenu();
+  }
+});
+
+// ── Blueprint Panel ───────────────────────────────────────────────────────────
+
+function updateBlueprintPanel() {
+  // Components
+  if (state.nodes.length === 0) {
+    bpComponents.innerHTML = '<div class="bp-empty">No components yet</div>';
+  } else {
+    bpComponents.innerHTML = state.nodes.map(n => `
+      <div class="bp-item">
+        <div class="bp-item-dot" style="background:${n.color};box-shadow:0 0 6px ${n.color}55;"></div>
+        <div class="bp-item-name">${n.label}</div>
+        <div class="bp-item-type">${n.type}</div>
+      </div>
+    `).join('');
+  }
+
+  // Connections
+  if (state.connections.length === 0) {
+    bpConnections.innerHTML = '<div class="bp-empty">No connections yet</div>';
+  } else {
+    bpConnections.innerHTML = state.connections.map(c => {
+      const from = state.nodes.find(n => n.id === c.fromId);
+      const to   = state.nodes.find(n => n.id === c.toId);
+      if (!from || !to) return '';
+      return `
+        <div class="bp-item">
+          <div class="bp-item-dot" style="background:#D4AF37;"></div>
+          <div class="bp-item-name">${from.label} → ${to.label}</div>
+        </div>
+      `;
+    }).join('');
+  }
+}
+
+// ── YAML Compilation ──────────────────────────────────────────────────────────
+
+function compileYAML() {
+  const name = bpNameInput.value.trim() || 'My Pipeline';
+  const lines = [];
+
+  lines.push(`<span class="yaml-cmt"># Heady Forge Blueprint — compiled ${new Date().toISOString().slice(0,19)}Z</span>`);
+  lines.push(`<span class="yaml-key">blueprint</span>:`);
+  lines.push(`  <span class="yaml-key">name</span>: <span class="yaml-str">"${name}"</span>`);
+  lines.push(`  <span class="yaml-key">version</span>: <span class="yaml-val">1.0.0</span>`);
+  lines.push(`  <span class="yaml-key">engine</span>: <span class="yaml-str">hcfullpipeline</span>`);
+  lines.push(``);
+
+  if (state.nodes.length > 0) {
+    lines.push(`<span class="yaml-key">components</span>:`);
+    state.nodes.forEach(n => {
+      lines.push(`  - <span class="yaml-key">id</span>: <span class="yaml-str">${n.defId}</span>`);
+      lines.push(`    <span class="yaml-key">label</span>: <span class="yaml-str">"${n.label}"</span>`);
+      lines.push(`    <span class="yaml-key">type</span>: <span class="yaml-val">${n.type}</span>`);
+      lines.push(`    <span class="yaml-key">position</span>: <span class="yaml-val">{x: ${Math.round(n.x)}, y: ${Math.round(n.y)}}</span>`);
+    });
+    lines.push(``);
+  }
+
+  if (state.connections.length > 0) {
+    lines.push(`<span class="yaml-key">connections</span>:`);
+    state.connections.forEach(c => {
+      const from = state.nodes.find(n => n.id === c.fromId);
+      const to   = state.nodes.find(n => n.id === c.toId);
+      if (!from || !to) return;
+      lines.push(`  - <span class="yaml-key">from</span>: <span class="yaml-str">${from.defId}</span>`);
+      lines.push(`    <span class="yaml-key">to</span>: <span class="yaml-str">${to.defId}</span>`);
+      lines.push(`    <span class="yaml-key">type</span>: <span class="yaml-val">data-flow</span>`);
+    });
+    lines.push(``);
+  }
+
+  // Infer stages from pipeline stage nodes
+  const stageNodes = state.nodes.filter(n => n.type === 'stage');
+  if (stageNodes.length > 0) {
+    lines.push(`<span class="yaml-key">stages</span>:`);
+    stageNodes.forEach(n => {
+      lines.push(`  - <span class="yaml-key">id</span>: <span class="yaml-str">${n.defId}</span>`);
+      lines.push(`    <span class="yaml-key">name</span>: <span class="yaml-str">"${n.label}"</span>`);
+      // deps: nodes that connect into this node
+      const deps = state.connections
+        .filter(c => c.toId === n.id)
+        .map(c => { const f = state.nodes.find(x => x.id === c.fromId); return f ? f.defId : null; })
+        .filter(Boolean);
+      if (deps.length > 0) {
+        lines.push(`    <span class="yaml-key">depends_on</span>: <span class="yaml-val">[${deps.join(', ')}]</span>`);
+      }
+    });
+    lines.push(``);
+  }
+
+  // Agents
+  const agentNodes = state.nodes.filter(n => n.type === 'agent');
+  if (agentNodes.length > 0) {
+    lines.push(`<span class="yaml-key">agents</span>:`);
+    agentNodes.forEach(n => {
+      lines.push(`  - <span class="yaml-key">id</span>: <span class="yaml-str">${n.defId}</span>`);
+      lines.push(`    <span class="yaml-key">role</span>: <span class="yaml-str">${n.defId}</span>`);
+    });
+    lines.push(``);
+  }
+
+  // Services
+  const svcNodes = state.nodes.filter(n => n.type === 'service');
+  if (svcNodes.length > 0) {
+    lines.push(`<span class="yaml-key">services</span>:`);
+    svcNodes.forEach(n => {
+      lines.push(`  - <span class="yaml-key">id</span>: <span class="yaml-str">${n.defId}</span>`);
+      lines.push(`    <span class="yaml-key">enabled</span>: <span class="yaml-val">true</span>`);
+    });
+  }
+
+  return lines.join('\n');
+}
+
+function triggerCompile() {
+  if (state.nodes.length === 0) {
+    showToast('Add components to the canvas first');
+    return;
+  }
+
+  const btn = document.getElementById('btn-compile');
+  btn.classList.add('compiling');
+  btn.textContent = 'Compiling…';
+
+  // Flash all nodes
+  document.querySelectorAll('.canvas-node').forEach(el => {
+    el.classList.add('compile-flash');
+    setTimeout(() => el.classList.remove('compile-flash'), 800);
+  });
+
+  // Flash connections
+  connSvg.querySelectorAll('.conn-path').forEach(p => {
+    p.style.stroke = '#F4D03F';
+    p.style.strokeWidth = '3';
+    p.style.opacity = '1';
+    setTimeout(() => {
+      p.style.stroke = '#D4AF37';
+      p.style.strokeWidth = '1.5';
+      p.style.opacity = '0.7';
+    }, 700);
+  });
+
+  setTimeout(() => {
+    btn.classList.remove('compiling');
+    btn.textContent = 'Compile to YAML';
+
+    const yaml = compileYAML();
+    yamlPreview.innerHTML = yaml;
+    yamlPreview.classList.add('visible');
+
+    // POST to API (non-blocking)
+    const payload = {
+      name: bpNameInput.value.trim() || 'My Pipeline',
+      components: state.nodes.map(n => ({ id: n.defId, type: n.type, label: n.label, x: n.x, y: n.y })),
+      connections: state.connections.map(c => ({ from: c.fromId, to: c.toId })),
+    };
+    fetch('/api/features/forge/blueprint', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    }).catch(() => {});
+
+    showToast('Blueprint compiled');
+  }, 900);
+}
+
+document.getElementById('btn-compile').addEventListener('click', triggerCompile);
+document.getElementById('btn-compile-top').addEventListener('click', triggerCompile);
+
+// ── Save Blueprint ────────────────────────────────────────────────────────────
+
+document.getElementById('btn-save').addEventListener('click', () => {
+  if (state.nodes.length === 0) { showToast('Nothing to save'); return; }
+
+  const name = bpNameInput.value.trim() || 'My Pipeline';
+  const bp = {
+    id: Date.now(),
+    name,
+    nodes: JSON.parse(JSON.stringify(state.nodes)),
+    connections: JSON.parse(JSON.stringify(state.connections)),
+    savedAt: new Date().toISOString(),
+    nodeCount: state.nodes.length,
+    connCount: state.connections.length,
+  };
+
+  state.savedBlueprints.push(bp);
+  renderGallery();
+  showToast('Blueprint saved');
+
+  // POST compile
+  fetch(`/api/features/forge/blueprint/${bp.id}/compile`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(bp),
+  }).catch(() => {});
+});
+
+// ── Clear Canvas ──────────────────────────────────────────────────────────────
+
+document.getElementById('btn-clear').addEventListener('click', () => {
+  state.nodes = [];
+  state.connections = [];
+  state.selectedNodeId = null;
+  state.connectingFromId = null;
+  connInProg.setAttribute('d','');
+  nodesLayer.innerHTML = '';
+  connSvg.querySelectorAll('.conn-group').forEach(el => el.remove());
+  yamlPreview.classList.remove('visible');
+  updateBlueprintPanel();
+  updateHint();
+  showToast('Canvas cleared');
+});
+
+// ── Gallery ───────────────────────────────────────────────────────────────────
+
+function renderGallery() {
+  if (state.savedBlueprints.length === 0) {
+    galleryScroll.innerHTML = '<span class="gallery-empty">No saved blueprints</span>';
+    return;
+  }
+
+  galleryScroll.innerHTML = '';
+  state.savedBlueprints.forEach(bp => {
+    const card = document.createElement('div');
+    card.className = 'gallery-card';
+
+    // collect colors for mini dots
+    const colors = [...new Set(bp.nodes.map(n => n.color))].slice(0, 4);
+
+    card.innerHTML = `
+      <div class="gallery-card-name">${bp.name}</div>
+      <div class="gallery-card-meta">${bp.nodeCount} nodes · ${bp.connCount} links</div>
+      <div class="gallery-card-mini">
+        ${colors.map(c => `<div class="mini-dot" style="background:${c};"></div>`).join('')}
+      </div>
+    `;
+
+    card.addEventListener('click', () => loadBlueprint(bp));
+    galleryScroll.appendChild(card);
+  });
+}
+
+function loadBlueprint(bp) {
+  // clear current
+  state.nodes = [];
+  state.connections = [];
+  nodesLayer.innerHTML = '';
+  connSvg.querySelectorAll('.conn-group').forEach(el => el.remove());
+  yamlPreview.classList.remove('visible');
+
+  // restore
+  bpNameInput.value = bp.name;
+  state.nodes = JSON.parse(JSON.stringify(bp.nodes));
+  state.connections = JSON.parse(JSON.stringify(bp.connections));
+  state.nodes.forEach(n => renderNode(n));
+  renderConnections();
+  updateBlueprintPanel();
+  updateHint();
+  showToast(`Loaded: ${bp.name}`);
+}
+
+// ── Context Menu ──────────────────────────────────────────────────────────────
+
+function showCtxMenu(x, y, nodeId) {
+  ctxMenu.style.left = x + 'px';
+  ctxMenu.style.top  = y + 'px';
+  ctxMenu.dataset.nodeId = nodeId;
+  ctxMenu.classList.add('visible');
+}
+
+function hideCtxMenu() {
+  ctxMenu.classList.remove('visible');
+  ctxMenu.dataset.nodeId = '';
+}
+
+document.getElementById('ctx-connect').addEventListener('click', () => {
+  const nodeId = ctxMenu.dataset.nodeId;
+  hideCtxMenu();
+  if (!nodeId) return;
+  state.connectingFromId = nodeId;
+  document.querySelectorAll('.canvas-node').forEach(el => {
+    el.classList.toggle('connecting', el.id === nodeId);
+  });
+  showToast('Click another node to connect');
+});
+
+document.getElementById('ctx-delete').addEventListener('click', () => {
+  const nodeId = ctxMenu.dataset.nodeId;
+  hideCtxMenu();
+  if (!nodeId) return;
+  deleteNode(nodeId);
+});
+
+document.addEventListener('click', e => {
+  if (!ctxMenu.contains(e.target)) hideCtxMenu();
+});
+
+function deleteNode(nodeId) {
+  state.nodes = state.nodes.filter(n => n.id !== nodeId);
+  state.connections = state.connections.filter(c => c.fromId !== nodeId && c.toId !== nodeId);
+  const el = document.getElementById(nodeId);
+  if (el) el.remove();
+  if (state.selectedNodeId === nodeId) state.selectedNodeId = null;
+  if (state.connectingFromId === nodeId) {
+    state.connectingFromId = null;
+    connInProg.setAttribute('d','');
+  }
+  renderConnections();
+  updateBlueprintPanel();
+  updateHint();
+}
+
+document.addEventListener('keydown', e => {
+  if ((e.key === 'Delete' || e.key === 'Backspace') && state.selectedNodeId) {
+    const tag = document.activeElement.tagName.toLowerCase();
+    if (tag === 'input' || tag === 'textarea') return;
+    deleteNode(state.selectedNodeId);
+    showToast('Node deleted');
+  }
+  if (e.key === 'Escape') {
+    state.connectingFromId = null;
+    connInProg.setAttribute('d','');
+    document.querySelectorAll('.canvas-node').forEach(n => n.classList.remove('connecting'));
+    hideCtxMenu();
+  }
+});
+
+// ── Canvas Hint ───────────────────────────────────────────────────────────────
+
+function updateHint() {
+  canvasHint.classList.toggle('hidden', state.nodes.length > 0);
+}
+
+// ── Toast ─────────────────────────────────────────────────────────────────────
+
+let toastTimer = null;
+function showToast(msg) {
+  toastEl.textContent = msg;
+  toastEl.classList.add('visible');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => toastEl.classList.remove('visible'), 2200);
+}
+
+// ── Boot ──────────────────────────────────────────────────────────────────────
+
+renderPalette();
+updateHint();
+updateBlueprintPanel();
+
+// Seed one starter blueprint in gallery
+(function seedGallery() {
+  const starter = {
+    id: 'starter-001',
+    name: 'Starter Pipeline',
+    nodeCount: 3, connCount: 2,
+    nodes: [
+      { id: 'node-s1', defId: 'ingest', type: 'stage', label: 'Ingest', icon: '⬇', color: '#00D9FF', shape: 'hex', x: 120, y: 180 },
+      { id: 'node-s2', defId: 'plan',   type: 'stage', label: 'Plan',   icon: '◉', color: '#D4AF37', shape: 'hex', x: 340, y: 180 },
+      { id: 'node-s3', defId: 'claude-code', type: 'agent', label: 'Claude Code', icon: '◈', color: '#FF00A0', shape: 'circle', x: 230, y: 340 },
+    ],
+    connections: [
+      { id: 'c1', fromId: 'node-s1', toId: 'node-s2' },
+      { id: 'c2', fromId: 'node-s2', toId: 'node-s3' },
+    ],
+    savedAt: new Date().toISOString(),
+  };
+  state.savedBlueprints.push(starter);
+  renderGallery();
+})();
+</script>
+</body>
+</html>

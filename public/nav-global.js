@@ -31,14 +31,26 @@
     { href: '/headyos-mobile.html', label: 'Mobile', icon: '📱', group: 'products' },
     { href: '/headybuddy-integrated.html', label: 'HeadyBuddy', icon: '🤖', group: 'products' },
     { href: '/pipeline.html', label: 'Pipeline', icon: '⟐', group: 'system' },
+    { href: '/forge.html', label: 'Forge', icon: '⬡', group: 'system' },
     { href: '/brain.html', label: 'Brain', icon: '🧠', group: 'system' },
+    { href: '/briefing.html', label: 'Briefing', icon: '☀', group: 'system' },
     { href: '/swarm.html', label: 'Swarm', icon: '🐝', group: 'system' },
+    { href: '/arena.html', label: 'Arena', icon: '⚔', group: 'system' },
     { href: '/liquid-nodes.html', label: 'Liquid Nodes', icon: '💧', group: 'system' },
     { href: '/translator.html', label: 'Translator', icon: '🌐', group: 'system' },
     { href: '/latent-space.html', label: 'Latent Space', icon: '◉', group: 'system' },
+    { href: '/dreams.html', label: 'Dreams', icon: '💜', group: 'system' },
+    { href: '/memory-palace.html', label: 'Memory Palace', icon: '⬡', group: 'system' },
     { href: '/colab.html', label: 'Colab Ops', icon: '☁', group: 'system' },
     { href: '/mcp-dashboard.html', label: 'MCP', icon: '⬡', group: 'system' },
+    { href: '/gateway.html', label: 'Gateway', icon: '⛩', group: 'system' },
+    { href: '/timeline.html', label: 'Timeline', icon: '⟳', group: 'system' },
     { href: '/docker-orchestrator.html', label: 'Docker', icon: '🐳', group: 'system' },
+    { href: '/identity.html', label: 'Identity', icon: '◎', group: 'system' },
+    { href: '/ecosystem.html', label: 'Ecosystem', icon: '∞', group: 'core' },
+    { href: '/huggingface.html', label: 'HuggingFace', icon: '🤗', group: 'products' },
+    { href: '/discord.html', label: 'Discord', icon: '🎮', group: 'products' },
+    { href: '/vault.html', label: 'Vault', icon: '🔐', group: 'products' },
     { href: '/sacred-geometry.html', label: 'Design System', icon: 'φ', group: 'resources' },
     { href: '/security.html', label: 'Security', icon: '🛡', group: 'resources' },
     { href: '/patents.html', label: 'Patents', icon: '📜', group: 'resources' },
@@ -237,6 +249,7 @@
       <div class="footer-col"><h4>Platform</h4>
         <a href="/headyos-desktop.html">HeadyOS Desktop</a><a href="/headyos-mobile.html">HeadyOS Mobile</a>
         <a href="/headybuddy-integrated.html">HeadyBuddy AI</a><a href="/pricing.html">Pricing</a>
+        <a href="/ecosystem.html">Ecosystem</a>
       </div>
       <div class="footer-col"><h4>System</h4>
         <a href="/pipeline.html">HCFullPipeline</a><a href="/brain.html">System Brain</a>
@@ -248,7 +261,8 @@
         <a href="/developer-guide.html">Developer Guide</a><a href="/integrations.html">Integrations</a>
         <a href="/mcp-dashboard.html">MCP Dashboard</a><a href="/sacred-geometry.html">Design System</a>
       </div>
-      <div class="footer-col"><h4>Company</h4>
+      <div class="footer-col"><h4>Community</h4>
+        <a href="/huggingface.html">HuggingFace</a><a href="/discord.html">Discord</a>
         <a href="/about.html">About</a><a href="/team.html">Team</a>
         <a href="/blog.html">Blog</a><a href="/patents.html">Patents (51)</a>
         <a href="/security.html">Security</a><a href="/contact.html">Contact</a>

@@ -1,0 +1,1341 @@
+<!-- HEADY_BRAND:BEGIN
+     HEADY SYSTEMS | arena.html | Sacred Geometry v5.0
+     Live Solution Battles — multi-agent competition arena
+     (c) 2026 HeadySystems Inc. - Eric Haywood, Founder
+HEADY_BRAND:END -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Heady Arena — Live Solution Battles</title>
+  <meta name="description" content="Heady Arena — Watch AI agents compete in real-time to solve your problems. Multi-agent live battle system.">
+  <meta name="theme-color" content="#050510">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/sacred-geometry.css">
+  <style>
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --gold: #D4AF37;
+      --gold-light: #F4D03F;
+      --gold-dark: #B8860B;
+      --cyan: #00D9FF;
+      --magenta: #FF00A0;
+      --void: #050510;
+      --deep: #0A0A1A;
+      --nebula: #1A1A3E;
+      --white: #FAFAFA;
+      --glass-bg: rgba(26, 26, 62, 0.6);
+      --glass-border: rgba(0, 217, 255, 0.15);
+      --ease-phi: cubic-bezier(0.618, 0, 0.382, 1);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: var(--void);
+      color: var(--white);
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
+
+    /* ── Background orbs ── */
+    .orb-container {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      overflow: hidden;
+    }
+    .orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(90px);
+      opacity: 0.13;
+      animation: orb-drift 28s infinite ease-in-out;
+    }
+    .orb-cyan  { width: 480px; height: 480px; background: var(--cyan);    top: -120px; left: -120px; animation-duration: 26s; }
+    .orb-magenta { width: 380px; height: 380px; background: var(--magenta); bottom: -80px; right: -60px; animation-duration: 33s; animation-delay: -11s; }
+    .orb-gold  { width: 320px; height: 320px; background: var(--gold);    top: 40%; right: 8%; animation-duration: 38s; animation-delay: -18s; }
+
+    @keyframes orb-drift {
+      0%, 100% { transform: translate(0, 0) rotate(0deg); }
+      25%  { transform: translate(55px, -55px) rotate(90deg); }
+      50%  { transform: translate(-35px, 35px) rotate(180deg); }
+      75%  { transform: translate(35px, 55px) rotate(270deg); }
+    }
+
+    /* ── Sticky Nav ── */
+    .nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(5, 5, 16, 0.85);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--glass-border);
+      padding: 0 32px;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+    }
+    .nav-brand-icon {
+      width: 36px;
+      height: 36px;
+      background: linear-gradient(135deg, var(--cyan), var(--magenta));
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      font-weight: 900;
+      color: var(--void);
+    }
+    .nav-brand-name {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--white);
+      letter-spacing: 0.5px;
+    }
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      list-style: none;
+    }
+    .nav-links a {
+      color: rgba(250, 250, 250, 0.65);
+      text-decoration: none;
+      font-size: 0.875rem;
+      font-weight: 500;
+      padding: 6px 14px;
+      border-radius: 8px;
+      transition: color 0.3s var(--ease-phi), background 0.3s var(--ease-phi);
+    }
+    .nav-links a:hover, .nav-links a.active {
+      color: var(--cyan);
+      background: rgba(0, 217, 255, 0.08);
+    }
+    .nav-cta {
+      background: linear-gradient(135deg, var(--gold-dark), var(--gold)) !important;
+      color: var(--void) !important;
+      font-weight: 700 !important;
+      padding: 8px 18px !important;
+    }
+    .nav-cta:hover { opacity: 0.88; }
+
+    /* ── Page layout ── */
+    .page {
+      position: relative;
+      z-index: 1;
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 48px 28px 80px;
+    }
+
+    /* ── Page header ── */
+    .page-header {
+      text-align: center;
+      margin-bottom: 48px;
+    }
+    .page-header .tag {
+      display: inline-block;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--magenta);
+      background: rgba(255, 0, 160, 0.12);
+      border: 1px solid rgba(255, 0, 160, 0.3);
+      border-radius: 100px;
+      padding: 4px 16px;
+      margin-bottom: 20px;
+    }
+    .page-header h1 {
+      font-size: clamp(2.4rem, 5vw, 4rem);
+      font-weight: 900;
+      letter-spacing: -1px;
+      line-height: 1.1;
+      background: linear-gradient(135deg, var(--cyan) 0%, var(--magenta) 50%, var(--gold) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 16px;
+    }
+    .page-header p {
+      font-size: 1.1rem;
+      color: rgba(250, 250, 250, 0.6);
+      max-width: 560px;
+      margin: 0 auto;
+      line-height: 1.7;
+    }
+
+    /* ── Glass card utility ── */
+    .glass {
+      background: var(--glass-bg);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--glass-border);
+      border-radius: 20px;
+    }
+
+    /* ── Problem input card ── */
+    .problem-card {
+      padding: 36px 40px;
+      margin-bottom: 40px;
+    }
+    .problem-card label {
+      display: block;
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--cyan);
+      margin-bottom: 14px;
+    }
+    .problem-textarea {
+      width: 100%;
+      min-height: 120px;
+      background: rgba(10, 10, 26, 0.7);
+      border: 1px solid rgba(0, 217, 255, 0.2);
+      border-radius: 14px;
+      color: var(--white);
+      font-family: 'Inter', system-ui, sans-serif;
+      font-size: 1rem;
+      line-height: 1.7;
+      padding: 18px 20px;
+      resize: vertical;
+      outline: none;
+      transition: border-color 0.3s var(--ease-phi), box-shadow 0.3s var(--ease-phi);
+    }
+    .problem-textarea::placeholder { color: rgba(250, 250, 250, 0.3); }
+    .problem-textarea:focus {
+      border-color: var(--cyan);
+      box-shadow: 0 0 0 3px rgba(0, 217, 255, 0.1), 0 0 30px rgba(0, 217, 255, 0.15);
+    }
+    .problem-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 20px;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    .problem-meta {
+      font-size: 0.85rem;
+      color: rgba(250, 250, 250, 0.4);
+    }
+    .btn-launch {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: linear-gradient(135deg, var(--gold-dark) 0%, var(--gold) 50%, var(--gold-light) 100%);
+      color: #0A0A1A;
+      font-family: 'Inter', system-ui, sans-serif;
+      font-size: 1rem;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      border: none;
+      border-radius: 14px;
+      padding: 14px 36px;
+      cursor: pointer;
+      transition: transform 0.382s var(--ease-phi), box-shadow 0.382s var(--ease-phi), opacity 0.382s var(--ease-phi);
+      box-shadow: 0 4px 24px rgba(212, 175, 55, 0.35);
+    }
+    .btn-launch:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 40px rgba(212, 175, 55, 0.55);
+    }
+    .btn-launch:active:not(:disabled) { transform: translateY(0); }
+    .btn-launch:disabled { opacity: 0.5; cursor: not-allowed; }
+    .btn-launch .launch-icon { font-size: 1.1rem; }
+
+    /* ── Main arena grid ── */
+    .arena-grid {
+      display: grid;
+      grid-template-columns: 280px 1fr 280px;
+      grid-template-rows: auto;
+      gap: 24px;
+      margin-bottom: 40px;
+    }
+    @media (max-width: 1100px) {
+      .arena-grid { grid-template-columns: 1fr 1fr; }
+      .arena-stage { grid-column: 1 / -1; }
+    }
+    @media (max-width: 700px) {
+      .arena-grid { grid-template-columns: 1fr; }
+    }
+
+    /* ── Live feed (left panel) ── */
+    .panel-label {
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 1.8px;
+      text-transform: uppercase;
+      color: rgba(250, 250, 250, 0.45);
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .panel-label .dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--magenta);
+      animation: pulse-dot 1.618s infinite var(--ease-phi);
+    }
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.7); }
+    }
+
+    .live-feed-panel {
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+    }
+    .feed-scroll {
+      flex: 1;
+      overflow-y: auto;
+      max-height: 480px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      padding-right: 4px;
+    }
+    .feed-scroll::-webkit-scrollbar { width: 4px; }
+    .feed-scroll::-webkit-scrollbar-track { background: transparent; }
+    .feed-scroll::-webkit-scrollbar-thumb { background: rgba(0, 217, 255, 0.25); border-radius: 4px; }
+
+    .feed-item {
+      background: rgba(10, 10, 26, 0.5);
+      border: 1px solid rgba(0, 217, 255, 0.1);
+      border-radius: 10px;
+      padding: 10px 14px;
+      font-size: 0.82rem;
+      line-height: 1.55;
+      opacity: 0;
+      transform: translateX(-14px);
+      animation: feed-reveal 0.618s var(--ease-phi) forwards;
+    }
+    @keyframes feed-reveal {
+      to { opacity: 1; transform: translateX(0); }
+    }
+    .feed-item .feed-time {
+      font-size: 0.7rem;
+      color: rgba(250, 250, 250, 0.3);
+      margin-bottom: 4px;
+    }
+    .feed-item .feed-agent {
+      font-weight: 700;
+      font-size: 0.78rem;
+      margin-bottom: 2px;
+    }
+    .feed-item.agent-claude  .feed-agent { color: var(--cyan); }
+    .feed-item.agent-builder .feed-agent { color: var(--gold); }
+    .feed-item.agent-researcher .feed-agent { color: var(--magenta); }
+    .feed-item.agent-deployer .feed-agent { color: #9B59B6; }
+    .feed-item .feed-text { color: rgba(250, 250, 250, 0.75); }
+
+    /* ── Arena stage (center) ── */
+    .arena-stage {
+      padding: 32px 28px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .arena-stage .panel-label { align-self: flex-start; }
+
+    .arena-floor-wrap {
+      position: relative;
+      width: 100%;
+      max-width: 540px;
+      aspect-ratio: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 8px auto 20px;
+    }
+
+    /* Hexagonal arena floor via clip-path + perspective */
+    .arena-floor {
+      position: absolute;
+      inset: 0;
+      transform: perspective(700px) rotateX(18deg);
+    }
+    .hex-ring {
+      position: absolute;
+      inset: 0;
+      clip-path: polygon(50% 0%, 93.3% 25%, 93.3% 75%, 50% 100%, 6.7% 75%, 6.7% 25%);
+    }
+    .hex-ring-outer {
+      background: rgba(0, 217, 255, 0.04);
+      border: none;
+      box-shadow: inset 0 0 60px rgba(0, 217, 255, 0.06);
+    }
+    .hex-ring-outline {
+      position: absolute;
+      inset: 0;
+      clip-path: polygon(50% 0%, 93.3% 25%, 93.3% 75%, 50% 100%, 6.7% 75%, 6.7% 25%);
+      background: transparent;
+      outline: 2px solid rgba(0, 217, 255, 0.25);
+    }
+    /* SVG hex lines drawn inline */
+    .arena-svg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    /* Agent avatars positioned in arena corners */
+    .arena-agents {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+    }
+    .agent-avatar {
+      position: absolute;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      pointer-events: auto;
+    }
+    /* Positioning: top-left, top-right, bottom-left, bottom-right */
+    .agent-avatar:nth-child(1) { top: 8%;  left: 8%; }
+    .agent-avatar:nth-child(2) { top: 8%;  right: 8%; }
+    .agent-avatar:nth-child(3) { bottom: 8%; left: 8%; }
+    .agent-avatar:nth-child(4) { bottom: 8%; right: 8%; }
+
+    .avatar-orb {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.6rem;
+      position: relative;
+      transition: transform 0.618s var(--ease-phi), box-shadow 0.618s var(--ease-phi);
+    }
+    .avatar-orb::before {
+      content: '';
+      position: absolute;
+      inset: -3px;
+      border-radius: 50%;
+      border: 2px solid transparent;
+      animation: spin-ring 3.236s linear infinite;
+    }
+    @keyframes spin-ring {
+      to { transform: rotate(360deg); }
+    }
+    .avatar-orb.claude    { background: radial-gradient(135deg, rgba(0,217,255,0.3), rgba(0,217,255,0.08)); border: 2px solid var(--cyan); box-shadow: 0 0 24px rgba(0,217,255,0.4); }
+    .avatar-orb.claude::before { border-color: var(--cyan) transparent transparent transparent; }
+    .avatar-orb.builder   { background: radial-gradient(135deg, rgba(212,175,55,0.3), rgba(212,175,55,0.08)); border: 2px solid var(--gold); box-shadow: 0 0 24px rgba(212,175,55,0.35); }
+    .avatar-orb.builder::before { border-color: var(--gold) transparent transparent transparent; }
+    .avatar-orb.researcher{ background: radial-gradient(135deg, rgba(255,0,160,0.3), rgba(255,0,160,0.08)); border: 2px solid var(--magenta); box-shadow: 0 0 24px rgba(255,0,160,0.35); }
+    .avatar-orb.researcher::before { border-color: var(--magenta) transparent transparent transparent; }
+    .avatar-orb.deployer  { background: radial-gradient(135deg, rgba(155,89,182,0.3), rgba(155,89,182,0.08)); border: 2px solid #9B59B6; box-shadow: 0 0 24px rgba(155,89,182,0.35); }
+    .avatar-orb.deployer::before  { border-color: #9B59B6 transparent transparent transparent; }
+
+    .avatar-orb.active { animation: avatar-pulse 1.618s infinite var(--ease-phi); }
+    @keyframes avatar-pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.08); }
+    }
+    .avatar-orb.winner {
+      animation: winner-glow 1.0s infinite var(--ease-phi) !important;
+      box-shadow: 0 0 0 4px var(--gold), 0 0 50px rgba(212,175,55,0.7) !important;
+    }
+    @keyframes winner-glow {
+      0%, 100% { box-shadow: 0 0 0 4px var(--gold), 0 0 40px rgba(212,175,55,0.6); }
+      50%       { box-shadow: 0 0 0 6px var(--gold-light), 0 0 70px rgba(244,208,63,0.9); }
+    }
+
+    .avatar-name {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      color: rgba(250,250,250,0.8);
+      text-align: center;
+    }
+    .avatar-status {
+      font-size: 0.65rem;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 100px;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+    }
+    .status-idle     { background: rgba(250,250,250,0.1); color: rgba(250,250,250,0.45); }
+    .status-active   { background: rgba(0,217,255,0.15); color: var(--cyan); }
+    .status-thinking { background: rgba(212,175,55,0.15); color: var(--gold); }
+    .status-done     { background: rgba(0,200,100,0.15); color: #00C864; }
+    .status-winner   { background: rgba(212,175,55,0.3); color: var(--gold); }
+
+    /* Connecting lines SVG (animated dashes) */
+    .arena-lines {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+    .battle-line {
+      stroke-dasharray: 8 6;
+      animation: dash-flow 2s linear infinite;
+    }
+    .battle-line.competing { stroke: rgba(255,0,160,0.45); }
+    .battle-line.cooperating { stroke: rgba(0,217,255,0.35); }
+    @keyframes dash-flow {
+      to { stroke-dashoffset: -56; }
+    }
+
+    /* Arena idle / active state label */
+    .arena-status-label {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: rgba(250,250,250,0.4);
+      text-align: center;
+      padding: 10px 24px;
+      border-radius: 100px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      margin-top: 4px;
+    }
+    .arena-status-label.running { color: var(--cyan); border-color: rgba(0,217,255,0.25); background: rgba(0,217,255,0.06); }
+    .arena-status-label.done    { color: var(--gold); border-color: rgba(212,175,55,0.3); background: rgba(212,175,55,0.08); }
+
+    /* ── Score board (right panel) ── */
+    .score-panel {
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+    }
+    .score-list {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      margin-top: 4px;
+    }
+    .score-item {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .score-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .score-agent-name {
+      font-size: 0.88rem;
+      font-weight: 700;
+    }
+    .score-agent-name.claude     { color: var(--cyan); }
+    .score-agent-name.builder    { color: var(--gold); }
+    .score-agent-name.researcher { color: var(--magenta); }
+    .score-agent-name.deployer   { color: #9B59B6; }
+    .score-value {
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: var(--white);
+    }
+    .score-bar-track {
+      height: 8px;
+      background: rgba(255,255,255,0.07);
+      border-radius: 100px;
+      overflow: hidden;
+    }
+    .score-bar-fill {
+      height: 100%;
+      border-radius: 100px;
+      width: 0%;
+      transition: width 1.618s var(--ease-phi);
+    }
+    .score-bar-fill.claude     { background: linear-gradient(90deg, rgba(0,217,255,0.6), var(--cyan)); }
+    .score-bar-fill.builder    { background: linear-gradient(90deg, rgba(212,175,55,0.6), var(--gold)); }
+    .score-bar-fill.researcher { background: linear-gradient(90deg, rgba(255,0,160,0.6), var(--magenta)); }
+    .score-bar-fill.deployer   { background: linear-gradient(90deg, rgba(155,89,182,0.6), #9B59B6); }
+
+    /* Crown for winner */
+    .crown-badge {
+      display: none;
+      font-size: 1rem;
+      margin-left: 6px;
+      animation: crown-bounce 1.0s infinite var(--ease-phi);
+    }
+    .crown-badge.visible { display: inline; }
+    @keyframes crown-bounce {
+      0%, 100% { transform: translateY(0) rotate(-8deg); }
+      50% { transform: translateY(-4px) rotate(8deg); }
+    }
+
+    /* ── Winner announcement ── */
+    .winner-announcement {
+      display: none;
+      text-align: center;
+      padding: 40px 32px;
+      margin-bottom: 40px;
+      position: relative;
+      overflow: hidden;
+      animation: winner-expand 0.618s var(--ease-phi) both;
+    }
+    .winner-announcement.visible { display: block; }
+    @keyframes winner-expand {
+      from { opacity: 0; transform: scaleY(0.8); }
+      to   { opacity: 1; transform: scaleY(1); }
+    }
+    .winner-announcement h2 {
+      font-size: 2.4rem;
+      font-weight: 900;
+      background: linear-gradient(135deg, var(--gold-dark), var(--gold-light));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 8px;
+    }
+    .winner-announcement .winner-sub {
+      font-size: 1.1rem;
+      color: rgba(250,250,250,0.6);
+      margin-bottom: 20px;
+    }
+    .winner-score-big {
+      display: inline-block;
+      font-size: 4rem;
+      font-weight: 900;
+      color: var(--gold);
+      text-shadow: 0 0 40px rgba(212,175,55,0.6);
+    }
+    /* Particle burst (CSS only) */
+    .particles {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+    }
+    .particle {
+      position: absolute;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      opacity: 0;
+      animation: particle-burst 1.618s var(--ease-phi) forwards;
+    }
+    @keyframes particle-burst {
+      0%   { opacity: 1; transform: translate(0, 0) scale(1); }
+      100% { opacity: 0; transform: var(--tx, translate(80px, -120px)) scale(0.2); }
+    }
+
+    /* ── Battle history timeline ── */
+    .history-section { margin-top: 8px; }
+    .section-title {
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: var(--white);
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .section-title::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, rgba(0,217,255,0.3), transparent);
+    }
+
+    .timeline {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      position: relative;
+    }
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 22px;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: linear-gradient(180deg, var(--cyan), var(--magenta), transparent);
+      opacity: 0.25;
+    }
+    .timeline-item {
+      display: flex;
+      gap: 20px;
+      align-items: flex-start;
+      padding: 0 0 28px 0;
+      position: relative;
+    }
+    .timeline-dot {
+      width: 46px;
+      height: 46px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      position: relative;
+      z-index: 1;
+    }
+    .timeline-dot.gold    { background: rgba(212,175,55,0.15); border: 2px solid var(--gold);    box-shadow: 0 0 16px rgba(212,175,55,0.25); }
+    .timeline-dot.cyan    { background: rgba(0,217,255,0.1);   border: 2px solid var(--cyan);    box-shadow: 0 0 16px rgba(0,217,255,0.2); }
+    .timeline-dot.magenta { background: rgba(255,0,160,0.1);   border: 2px solid var(--magenta); box-shadow: 0 0 16px rgba(255,0,160,0.2); }
+    .timeline-dot.purple  { background: rgba(155,89,182,0.1);  border: 2px solid #9B59B6;        box-shadow: 0 0 16px rgba(155,89,182,0.2); }
+
+    .timeline-content {
+      background: var(--glass-bg);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--glass-border);
+      border-radius: 14px;
+      padding: 18px 22px;
+      flex: 1;
+    }
+    .timeline-content .battle-name {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--white);
+      margin-bottom: 4px;
+    }
+    .timeline-content .battle-winner {
+      font-size: 0.82rem;
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+    .timeline-content .battle-scores {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .mini-score {
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 3px 10px;
+      border-radius: 100px;
+      background: rgba(255,255,255,0.06);
+      color: rgba(250,250,250,0.6);
+    }
+    .mini-score.top { background: rgba(212,175,55,0.15); color: var(--gold); }
+    .battle-date {
+      font-size: 0.72rem;
+      color: rgba(250,250,250,0.3);
+      margin-top: 8px;
+    }
+
+    /* ── Utility ── */
+    .visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0,0,0,0); }
+    .mt-8  { margin-top: 8px; }
+    .mt-16 { margin-top: 16px; }
+  </style>
+</head>
+<body>
+
+<!-- Background orbs -->
+<div class="orb-container" aria-hidden="true">
+  <div class="orb orb-cyan"></div>
+  <div class="orb orb-magenta"></div>
+  <div class="orb orb-gold"></div>
+</div>
+
+<!-- ── Navigation ── -->
+<nav class="nav" role="navigation" aria-label="Main navigation">
+  <a href="/" class="nav-brand">
+    <div class="nav-brand-icon">H</div>
+    <span class="nav-brand-name">HeadyOS</span>
+  </a>
+  <ul class="nav-links" role="list">
+    <li><a href="/pipeline.html">Pipeline</a></li>
+    <li><a href="/brain.html">Brain</a></li>
+    <li><a href="/swarm.html">Swarm</a></li>
+    <li><a href="/arena.html" class="active">Arena</a></li>
+    <li><a href="/mcp-dashboard.html">MCP</a></li>
+    <li><a href="/api-docs.html">API</a></li>
+    <li><a href="/auth.html" class="nav-cta">Sign In</a></li>
+  </ul>
+</nav>
+
+<!-- ── Page content ── -->
+<main class="page" id="main-content">
+
+  <!-- Page header -->
+  <header class="page-header">
+    <div class="tag">Live Battle System</div>
+    <h1>Heady Arena</h1>
+    <p>Watch AI agents compete in real-time to solve your problem. The best solution wins the crown.</p>
+  </header>
+
+  <!-- Problem input -->
+  <section class="glass problem-card" aria-labelledby="problem-heading">
+    <label id="problem-heading" for="problem-input">Describe your problem</label>
+    <textarea
+      id="problem-input"
+      class="problem-textarea"
+      placeholder="e.g. Design a rate-limiting strategy for a public API that handles 50k RPS with per-user quotas and graceful degradation..."
+      rows="4"
+      aria-describedby="problem-hint"
+    ></textarea>
+    <div class="problem-footer">
+      <span id="problem-hint" class="problem-meta">4 agents will compete — Claude Code, Builder, Researcher, Deployer</span>
+      <button class="btn-launch" id="launch-btn" type="button" aria-label="Launch battle">
+        <span class="launch-icon" aria-hidden="true">&#9876;</span>
+        Launch Battle
+      </button>
+    </div>
+  </section>
+
+  <!-- Winner announcement (hidden until battle ends) -->
+  <section class="glass winner-announcement" id="winner-announcement" aria-live="assertive" aria-atomic="true">
+    <div class="particles" id="particles" aria-hidden="true"></div>
+    <div style="font-size:2.5rem; margin-bottom:8px;" aria-hidden="true">&#9812;</div>
+    <h2 id="winner-name">Winner: Claude Code</h2>
+    <p class="winner-sub" id="winner-sub">Solved in 12.4 seconds with highest confidence score</p>
+    <div class="winner-score-big" id="winner-score-big">94</div>
+  </section>
+
+  <!-- Arena grid -->
+  <section class="arena-grid" aria-label="Battle arena">
+
+    <!-- Left: Live feed -->
+    <div class="glass live-feed-panel" aria-labelledby="feed-heading">
+      <div class="panel-label">
+        <span class="dot" aria-hidden="true"></span>
+        <span id="feed-heading">Live Feed</span>
+      </div>
+      <div class="feed-scroll" id="feed-scroll" role="log" aria-live="polite" aria-label="Live agent activity feed"></div>
+    </div>
+
+    <!-- Center: Arena stage -->
+    <div class="glass arena-stage" aria-label="Arena stage">
+      <div class="panel-label" aria-hidden="true">
+        <span>Arena Floor</span>
+      </div>
+
+      <div class="arena-floor-wrap" role="img" aria-label="Hexagonal arena with competing agents">
+        <!-- Hex floor -->
+        <div class="arena-floor" aria-hidden="true">
+          <div class="hex-ring hex-ring-outer"></div>
+        </div>
+
+        <!-- SVG hex outline + inner grid lines -->
+        <svg class="arena-svg" viewBox="0 0 540 540" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <!-- Outer hexagon -->
+          <polygon points="270,18 503,148.5 503,391.5 270,522 37,391.5 37,148.5"
+            fill="none" stroke="rgba(0,217,255,0.22)" stroke-width="1.5"/>
+          <!-- Inner hexagon -->
+          <polygon points="270,90 450,195 450,345 270,450 90,345 90,195"
+            fill="none" stroke="rgba(0,217,255,0.1)" stroke-width="1"/>
+          <!-- Centre cross -->
+          <line x1="270" y1="90"  x2="270" y2="450" stroke="rgba(0,217,255,0.07)" stroke-width="1"/>
+          <line x1="90"  y1="195" x2="450" y2="345" stroke="rgba(0,217,255,0.07)" stroke-width="1"/>
+          <line x1="450" y1="195" x2="90"  y2="345" stroke="rgba(0,217,255,0.07)" stroke-width="1"/>
+          <!-- Centre dot -->
+          <circle cx="270" cy="270" r="5" fill="rgba(0,217,255,0.3)"/>
+          <circle cx="270" cy="270" r="14" fill="none" stroke="rgba(0,217,255,0.15)" stroke-width="1"/>
+
+          <!-- Animated connecting lines (competing) -->
+          <line class="battle-line competing" id="line-12" x1="120" y1="130" x2="420" y2="130" stroke-width="1.5"/>
+          <line class="battle-line competing" id="line-34" x1="120" y1="410" x2="420" y2="410" stroke-width="1.5"/>
+          <!-- Animated connecting lines (cooperating) -->
+          <line class="battle-line cooperating" id="line-13" x1="120" y1="130" x2="120" y2="410" stroke-width="1.5"/>
+          <line class="battle-line cooperating" id="line-24" x1="420" y1="130" x2="420" y2="410" stroke-width="1.5"/>
+          <!-- Cross lines -->
+          <line class="battle-line cooperating" id="line-14" x1="120" y1="130" x2="420" y2="410" stroke-width="1" opacity="0.5"/>
+          <line class="battle-line cooperating" id="line-23" x1="420" y1="130" x2="120" y2="410" stroke-width="1" opacity="0.5"/>
+        </svg>
+
+        <!-- Agent avatars -->
+        <div class="arena-agents" aria-hidden="true">
+          <div class="agent-avatar" id="avatar-claude">
+            <div class="avatar-orb claude" id="orb-claude">&#9670;</div>
+            <div class="avatar-name">Claude Code</div>
+            <div class="avatar-status status-idle" id="status-claude">Idle</div>
+          </div>
+          <div class="agent-avatar" id="avatar-builder">
+            <div class="avatar-orb builder" id="orb-builder">&#9650;</div>
+            <div class="avatar-name">Builder</div>
+            <div class="avatar-status status-idle" id="status-builder">Idle</div>
+          </div>
+          <div class="agent-avatar" id="avatar-researcher">
+            <div class="avatar-orb researcher" id="orb-researcher">&#9679;</div>
+            <div class="avatar-name">Researcher</div>
+            <div class="avatar-status status-idle" id="status-researcher">Idle</div>
+          </div>
+          <div class="agent-avatar" id="avatar-deployer">
+            <div class="avatar-orb deployer" id="orb-deployer">&#9632;</div>
+            <div class="avatar-name">Deployer</div>
+            <div class="avatar-status status-idle" id="status-deployer">Idle</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="arena-status-label" id="arena-status-label">Awaiting battle launch</div>
+    </div>
+
+    <!-- Right: Score board -->
+    <div class="glass score-panel" aria-labelledby="score-heading">
+      <div class="panel-label">
+        <span id="score-heading">Score Board</span>
+      </div>
+      <div class="score-list" role="list" aria-label="Agent scores">
+
+        <div class="score-item" role="listitem">
+          <div class="score-header">
+            <span class="score-agent-name claude">Claude Code <span class="crown-badge" id="crown-claude" aria-label="Winner">&#9812;</span></span>
+            <span class="score-value" id="score-val-claude">0</span>
+          </div>
+          <div class="score-bar-track" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" aria-label="Claude Code score" id="bar-track-claude">
+            <div class="score-bar-fill claude" id="bar-claude"></div>
+          </div>
+        </div>
+
+        <div class="score-item" role="listitem">
+          <div class="score-header">
+            <span class="score-agent-name builder">Builder Agent <span class="crown-badge" id="crown-builder" aria-label="Winner">&#9812;</span></span>
+            <span class="score-value" id="score-val-builder">0</span>
+          </div>
+          <div class="score-bar-track" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" aria-label="Builder Agent score" id="bar-track-builder">
+            <div class="score-bar-fill builder" id="bar-builder"></div>
+          </div>
+        </div>
+
+        <div class="score-item" role="listitem">
+          <div class="score-header">
+            <span class="score-agent-name researcher">Researcher <span class="crown-badge" id="crown-researcher" aria-label="Winner">&#9812;</span></span>
+            <span class="score-value" id="score-val-researcher">0</span>
+          </div>
+          <div class="score-bar-track" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" aria-label="Researcher score" id="bar-track-researcher">
+            <div class="score-bar-fill researcher" id="bar-researcher"></div>
+          </div>
+        </div>
+
+        <div class="score-item" role="listitem">
+          <div class="score-header">
+            <span class="score-agent-name deployer">Deployer <span class="crown-badge" id="crown-deployer" aria-label="Winner">&#9812;</span></span>
+            <span class="score-value" id="score-val-deployer">0</span>
+          </div>
+          <div class="score-bar-track" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" aria-label="Deployer score" id="bar-track-deployer">
+            <div class="score-bar-fill deployer" id="bar-deployer"></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Battle history -->
+  <section class="history-section" aria-labelledby="history-heading">
+    <h2 class="section-title" id="history-heading">Battle History</h2>
+    <div class="timeline" id="history-timeline" role="list" aria-label="Past battles">
+
+      <div class="timeline-item" role="listitem">
+        <div class="timeline-dot gold" aria-hidden="true">&#9812;</div>
+        <div class="timeline-content">
+          <div class="battle-name">Design a distributed caching layer for microservices</div>
+          <div class="battle-winner" style="color:var(--gold)">Winner: Claude Code</div>
+          <div class="battle-scores">
+            <span class="mini-score top">Claude Code — 91</span>
+            <span class="mini-score">Builder — 78</span>
+            <span class="mini-score">Researcher — 83</span>
+            <span class="mini-score">Deployer — 65</span>
+          </div>
+          <div class="battle-date">2026-03-17 &bull; 18.2 s</div>
+        </div>
+      </div>
+
+      <div class="timeline-item" role="listitem">
+        <div class="timeline-dot magenta" aria-hidden="true">&#9679;</div>
+        <div class="timeline-content">
+          <div class="battle-name">Write a real-time anomaly detection algorithm for log streams</div>
+          <div class="battle-winner" style="color:var(--magenta)">Winner: Researcher</div>
+          <div class="battle-scores">
+            <span class="mini-score">Claude Code — 80</span>
+            <span class="mini-score">Builder — 74</span>
+            <span class="mini-score top">Researcher — 89</span>
+            <span class="mini-score">Deployer — 61</span>
+          </div>
+          <div class="battle-date">2026-03-16 &bull; 22.7 s</div>
+        </div>
+      </div>
+
+      <div class="timeline-item" role="listitem">
+        <div class="timeline-dot cyan" aria-hidden="true">&#9670;</div>
+        <div class="timeline-content">
+          <div class="battle-name">Optimise cold-start latency for a serverless Postgres connection pool</div>
+          <div class="battle-winner" style="color:var(--cyan)">Winner: Builder Agent</div>
+          <div class="battle-scores">
+            <span class="mini-score">Claude Code — 76</span>
+            <span class="mini-score top">Builder — 88</span>
+            <span class="mini-score">Researcher — 70</span>
+            <span class="mini-score">Deployer — 77</span>
+          </div>
+          <div class="battle-date">2026-03-15 &bull; 15.9 s</div>
+        </div>
+      </div>
+
+      <div class="timeline-item" role="listitem">
+        <div class="timeline-dot purple" aria-hidden="true">&#9632;</div>
+        <div class="timeline-content">
+          <div class="battle-name">Build a zero-downtime Kubernetes rolling deployment strategy</div>
+          <div class="battle-winner" style="color:#9B59B6">Winner: Deployer</div>
+          <div class="battle-scores">
+            <span class="mini-score">Claude Code — 72</span>
+            <span class="mini-score">Builder — 69</span>
+            <span class="mini-score">Researcher — 75</span>
+            <span class="mini-score top">Deployer — 93</span>
+          </div>
+          <div class="battle-date">2026-03-14 &bull; 19.1 s</div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+</main>
+
+<!-- ── Global nav injection ── -->
+<script src="/nav-global.js"></script>
+
+<script>
+(function () {
+  'use strict';
+
+  // ── Config ──────────────────────────────────────────────────────────────
+  const POLL_INTERVAL_MS = 1618; // phi * 1000
+
+  const AGENTS = [
+    { key: 'claude',     label: 'Claude Code',   orbClass: 'claude',     feedClass: 'agent-claude' },
+    { key: 'builder',    label: 'Builder Agent', orbClass: 'builder',    feedClass: 'agent-builder' },
+    { key: 'researcher', label: 'Researcher',    orbClass: 'researcher', feedClass: 'agent-researcher' },
+    { key: 'deployer',   label: 'Deployer',      orbClass: 'deployer',   feedClass: 'agent-deployer' },
+  ];
+
+  // Scripted demo timeline for when real API is unavailable
+  const DEMO_SCRIPT = [
+    { delay: 400,   agent: 'claude',     status: 'active',   text: 'Analyzing problem structure and constraints...' },
+    { delay: 900,   agent: 'builder',    status: 'active',   text: 'Proposing solution architecture A...' },
+    { delay: 1400,  agent: 'researcher', status: 'thinking', text: 'Scanning pattern library for relevant approaches...' },
+    { delay: 2000,  agent: 'claude',     status: 'thinking', text: 'Drafting implementation plan with edge-case analysis...' },
+    { delay: 2500,  agent: 'deployer',   status: 'active',   text: 'Evaluating deployment feasibility of each proposal...' },
+    { delay: 3200,  agent: 'researcher', status: 'active',   text: 'Found 3 relevant public-domain patterns — applying...' },
+    { delay: 4000,  agent: 'builder',    status: 'thinking', text: 'Iterating on solution A with circuit-breaker integration...' },
+    { delay: 4800,  agent: 'claude',     status: 'active',   text: 'Confidence score rising — 71, 78, 84...' },
+    { delay: 5600,  agent: 'researcher', status: 'thinking', text: 'Cross-referencing system-components.yaml for conflicts...' },
+    { delay: 6400,  agent: 'deployer',   status: 'thinking', text: 'Validating render.yaml compatibility...' },
+    { delay: 7200,  agent: 'builder',    status: 'active',   text: 'Solution B proposed — optimised for low-latency path...' },
+    { delay: 8100,  agent: 'claude',     status: 'thinking', text: 'Comparing solution A vs B on 6 quality dimensions...' },
+    { delay: 9000,  agent: 'researcher', status: 'done',     text: 'Research complete. Handoff to finalization.' },
+    { delay: 10000, agent: 'builder',    status: 'done',     text: 'Solution B finalised and committed to scratch space.' },
+    { delay: 11000, agent: 'deployer',   status: 'done',     text: 'Deployment manifest validated — ready.' },
+    { delay: 12000, agent: 'claude',     status: 'done',     text: 'Final solution compiled. Submitting for scoring...' },
+    // Score increments
+    { delay: 12500, scores: { claude: 94, builder: 81, researcher: 77, deployer: 68 } },
+    { delay: 13500, winner: 'claude' },
+  ];
+
+  // ── State ────────────────────────────────────────────────────────────────
+  let battleId    = null;
+  let pollTimer   = null;
+  let demoTimers  = [];
+  let isRunning   = false;
+
+  // ── DOM refs ─────────────────────────────────────────────────────────────
+  const launchBtn       = document.getElementById('launch-btn');
+  const problemInput    = document.getElementById('problem-input');
+  const feedScroll      = document.getElementById('feed-scroll');
+  const arenaStatusLbl  = document.getElementById('arena-status-label');
+  const winnerSection   = document.getElementById('winner-announcement');
+  const winnerName      = document.getElementById('winner-name');
+  const winnerSub       = document.getElementById('winner-sub');
+  const winnerScoreBig  = document.getElementById('winner-score-big');
+  const particlesEl     = document.getElementById('particles');
+  const historyTimeline = document.getElementById('history-timeline');
+
+  // ── Helpers ──────────────────────────────────────────────────────────────
+  function now() {
+    const d = new Date();
+    return d.toTimeString().slice(0, 8);
+  }
+
+  function addFeedItem(agent, text) {
+    const item = document.createElement('div');
+    item.className = 'feed-item ' + (agent ? agent.feedClass : '');
+    item.innerHTML =
+      '<div class="feed-time">' + now() + '</div>' +
+      (agent ? '<div class="feed-agent">' + agent.label + '</div>' : '') +
+      '<div class="feed-text">' + escHtml(text) + '</div>';
+    feedScroll.appendChild(item);
+    feedScroll.scrollTop = feedScroll.scrollHeight;
+  }
+
+  function escHtml(s) {
+    return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+
+  function setAgentStatus(key, statusKey, label) {
+    const el = document.getElementById('status-' + key);
+    if (!el) return;
+    el.className = 'avatar-status status-' + statusKey;
+    el.textContent = label || statusKey.charAt(0).toUpperCase() + statusKey.slice(1);
+  }
+
+  function setAgentOrb(key, active) {
+    const el = document.getElementById('orb-' + key);
+    if (!el) return;
+    if (active) el.classList.add('active');
+    else el.classList.remove('active');
+  }
+
+  function setScore(key, value) {
+    const bar   = document.getElementById('bar-' + key);
+    const val   = document.getElementById('score-val-' + key);
+    const track = document.getElementById('bar-track-' + key);
+    if (!bar || !val) return;
+    bar.style.width = value + '%';
+    val.textContent = value;
+    if (track) track.setAttribute('aria-valuenow', value);
+  }
+
+  function setWinner(key) {
+    const agent = AGENTS.find(a => a.key === key);
+    if (!agent) return;
+
+    // Crown on score board
+    const crown = document.getElementById('crown-' + key);
+    if (crown) crown.classList.add('visible');
+
+    // Orb winner glow
+    const orb = document.getElementById('orb-' + key);
+    if (orb) { orb.classList.remove('active'); orb.classList.add('winner'); }
+
+    // Status badge
+    setAgentStatus(key, 'winner', 'Winner');
+
+    // Score
+    const scoreVal = parseInt(document.getElementById('score-val-' + key).textContent, 10);
+
+    // Winner announcement
+    winnerName.textContent = 'Winner: ' + agent.label;
+    winnerSub.textContent  = 'Achieved highest score in this battle';
+    winnerScoreBig.textContent = scoreVal;
+    winnerSection.classList.add('visible');
+    winnerSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+    // Particle burst
+    burstParticles();
+
+    // Arena status
+    arenaStatusLbl.textContent = agent.label + ' wins the battle';
+    arenaStatusLbl.className   = 'arena-status-label done';
+
+    // Prepend to history
+    addHistoryEntry(problemInput.value || 'Unnamed battle', agent, scoreVal);
+  }
+
+  function burstParticles() {
+    particlesEl.innerHTML = '';
+    const colors = ['#D4AF37','#F4D03F','#00D9FF','#FF00A0','#FAFAFA'];
+    for (let i = 0; i < 28; i++) {
+      const p = document.createElement('div');
+      p.className = 'particle';
+      const angle = (i / 28) * 360;
+      const dist  = 60 + Math.random() * 120;
+      const tx    = Math.cos(angle * Math.PI / 180) * dist + 'px, ' + Math.sin(angle * Math.PI / 180) * dist + 'px';
+      p.style.cssText =
+        'left: calc(50% - 3px);' +
+        'top: calc(50% - 3px);' +
+        'background:' + colors[i % colors.length] + ';' +
+        '--tx: translate(' + tx + ');' +
+        'animation-delay:' + (i * 0.04) + 's;';
+      particlesEl.appendChild(p);
+    }
+  }
+
+  function addHistoryEntry(problem, agent, score) {
+    const colorMap = { claude: 'var(--cyan)', builder: 'var(--gold)', researcher: 'var(--magenta)', deployer: '#9B59B6' };
+    const dotMap   = { claude: 'cyan', builder: 'gold', researcher: 'magenta', deployer: 'purple' };
+    const iconMap  = { claude: '&#9670;', builder: '&#9650;', researcher: '&#9679;', deployer: '&#9632;' };
+    const agentColor = colorMap[agent.key] || 'var(--cyan)';
+    const dotCls     = dotMap[agent.key]   || 'cyan';
+    const icon       = iconMap[agent.key]  || '&#9670;';
+
+    const allScores = AGENTS.map(a => {
+      const v = parseInt(document.getElementById('score-val-' + a.key).textContent, 10);
+      return '<span class="mini-score' + (a.key === agent.key ? ' top' : '') + '">' + a.label + ' \u2014 ' + v + '</span>';
+    }).join('');
+
+    const item = document.createElement('div');
+    item.className = 'timeline-item';
+    item.setAttribute('role', 'listitem');
+    const dateStr = new Date().toISOString().slice(0, 10);
+    item.innerHTML =
+      '<div class="timeline-dot ' + dotCls + '" aria-hidden="true">' + icon + '</div>' +
+      '<div class="timeline-content">' +
+        '<div class="battle-name">' + escHtml(problem.slice(0, 80)) + (problem.length > 80 ? '...' : '') + '</div>' +
+        '<div class="battle-winner" style="color:' + agentColor + '">Winner: ' + agent.label + '</div>' +
+        '<div class="battle-scores">' + allScores + '</div>' +
+        '<div class="battle-date">' + dateStr + ' &bull; just now</div>' +
+      '</div>';
+
+    historyTimeline.insertBefore(item, historyTimeline.firstChild);
+  }
+
+  function resetArena() {
+    AGENTS.forEach(a => {
+      setAgentStatus(a.key, 'idle', 'Idle');
+      setAgentOrb(a.key, false);
+      const orb = document.getElementById('orb-' + a.key);
+      if (orb) orb.classList.remove('winner');
+      const crown = document.getElementById('crown-' + a.key);
+      if (crown) crown.classList.remove('visible');
+      setScore(a.key, 0);
+    });
+    feedScroll.innerHTML = '';
+    winnerSection.classList.remove('visible');
+    particlesEl.innerHTML = '';
+    arenaStatusLbl.textContent = 'Awaiting battle launch';
+    arenaStatusLbl.className   = 'arena-status-label';
+  }
+
+  // ── Demo mode (no live API) ───────────────────────────────────────────────
+  function runDemo(problem) {
+    demoTimers.forEach(clearTimeout);
+    demoTimers = [];
+
+    addFeedItem(null, 'Battle started: "' + problem.slice(0, 60) + (problem.length > 60 ? '...' : '') + '"');
+
+    DEMO_SCRIPT.forEach(step => {
+      const t = setTimeout(() => {
+        if (step.scores) {
+          Object.entries(step.scores).forEach(([k, v]) => setScore(k, v));
+        } else if (step.winner) {
+          setWinner(step.winner);
+          isRunning = false;
+          launchBtn.disabled = false;
+          launchBtn.textContent = 'Launch Battle';
+        } else {
+          const agent = AGENTS.find(a => a.key === step.agent);
+          if (agent) {
+            addFeedItem(agent, step.text);
+            setAgentStatus(step.agent, step.status, step.status.charAt(0).toUpperCase() + step.status.slice(1));
+            setAgentOrb(step.agent, step.status === 'active' || step.status === 'thinking');
+          }
+        }
+      }, step.delay);
+      demoTimers.push(t);
+    });
+  }
+
+  // ── API mode ─────────────────────────────────────────────────────────────
+  async function startBattle(problem) {
+    try {
+      const res = await fetch('/api/features/arena/battle', {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify({ problem }),
+      });
+      if (!res.ok) throw new Error('API ' + res.status);
+      const data = await res.json();
+      battleId = data.id || data.battleId || null;
+      addFeedItem(null, 'Battle created — ID: ' + battleId);
+      schedulePoll();
+    } catch {
+      // Fall back to demo mode
+      addFeedItem(null, 'Live API unavailable — running demo simulation...');
+      runDemo(problem);
+    }
+  }
+
+  function schedulePoll() {
+    if (!battleId) return;
+    pollTimer = setTimeout(pollBattle, POLL_INTERVAL_MS);
+  }
+
+  async function pollBattle() {
+    if (!battleId || !isRunning) return;
+    try {
+      const res = await fetch('/api/features/arena/battle/' + encodeURIComponent(battleId));
+      if (!res.ok) throw new Error('Poll ' + res.status);
+      const data = await res.json();
+      applyUpdate(data);
+      if (data.status !== 'complete' && data.status !== 'error') schedulePoll();
+    } catch {
+      schedulePoll(); // retry on transient errors
+    }
+  }
+
+  function applyUpdate(data) {
+    // Scores
+    if (data.scores) {
+      Object.entries(data.scores).forEach(([k, v]) => setScore(k, v));
+    }
+    // Feed events
+    if (Array.isArray(data.events)) {
+      data.events.forEach(ev => {
+        const agent = AGENTS.find(a => a.key === ev.agent);
+        if (ev.text) addFeedItem(agent || null, ev.text);
+        if (ev.status && ev.agent) {
+          setAgentStatus(ev.agent, ev.status);
+          setAgentOrb(ev.agent, ev.status === 'active' || ev.status === 'thinking');
+        }
+      });
+    }
+    // Arena status
+    if (data.statusLabel) {
+      arenaStatusLbl.textContent = data.statusLabel;
+      arenaStatusLbl.className   = 'arena-status-label running';
+    }
+    // Winner
+    if (data.status === 'complete' && data.winner) {
+      setWinner(data.winner);
+      isRunning  = false;
+      battleId   = null;
+      launchBtn.disabled   = false;
+      launchBtn.textContent = 'Launch Battle';
+    }
+  }
+
+  // ── Launch handler ────────────────────────────────────────────────────────
+  launchBtn.addEventListener('click', function () {
+    const problem = problemInput.value.trim();
+    if (!problem) {
+      problemInput.focus();
+      problemInput.style.borderColor = 'var(--magenta)';
+      setTimeout(() => { problemInput.style.borderColor = ''; }, 2000);
+      return;
+    }
+    if (isRunning) return;
+
+    resetArena();
+    isRunning = true;
+    launchBtn.disabled    = true;
+    launchBtn.textContent = 'Battle in progress...';
+    arenaStatusLbl.textContent = 'Battle running...';
+    arenaStatusLbl.className   = 'arena-status-label running';
+
+    startBattle(problem);
+  });
+
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,991 @@
+<!-- HEADY_BRAND:BEGIN
+     HEADY SYSTEMS | timeline.html | Sacred Geometry v5.0
+     Personal System History — golden spiral event timeline
+     (c) 2026 HeadySystems Inc. - Eric Haywood, Founder
+HEADY_BRAND:END -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Heady Timeline — Personal System History</title>
+  <meta name="description" content="Heady Systems personal history — golden spiral event timeline with live updates, clustering, and phi-reveal animations.">
+  <meta name="theme-color" content="#050510">
+  <link rel="stylesheet" href="/sacred-geometry.css">
+  <style>
+    /* ── Reset & Tokens ─────────────────────────────────────────── */
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg-deep:    #050510;
+      --bg-base:    #0A0A1A;
+      --bg-mid:     #1A1A3E;
+      --gold:       #D4AF37;
+      --cyan:       #00D9FF;
+      --magenta:    #FF00A0;
+      --purple:     #9B59B6;
+      --white:      #FAFAFA;
+      --glass:      rgba(26,26,62,0.6);
+      --phi:        cubic-bezier(0.618, 0, 0.382, 1);
+      --nav-h:      55px;
+    }
+
+    html, body {
+      width: 100%; min-height: 100vh;
+      background: var(--bg-deep);
+      color: var(--white);
+      font-family: 'Inter', system-ui, sans-serif;
+      overflow-x: hidden;
+    }
+
+    /* ── Ambient Orbs ───────────────────────────────────────────── */
+    .orb-layer {
+      position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden;
+    }
+    .orb {
+      position: absolute; border-radius: 50%;
+      filter: blur(90px); opacity: 0.12;
+      animation: orb-drift 28s ease-in-out infinite alternate;
+    }
+    .orb-a { width: 500px; height: 500px; background: var(--cyan);    top: -120px; left: -120px; animation-duration: 26s; }
+    .orb-b { width: 380px; height: 380px; background: var(--magenta); bottom: -80px; right: -80px; animation-duration: 32s; animation-delay: -8s; }
+    .orb-c { width: 300px; height: 300px; background: var(--gold);    top: 40%;  right: 12%;  animation-duration: 22s; animation-delay: -14s; }
+
+    @keyframes orb-drift {
+      0%   { transform: translate(0, 0) scale(1); }
+      50%  { transform: translate(40px, -40px) scale(1.08); }
+      100% { transform: translate(-20px, 30px) scale(0.95); }
+    }
+
+    /* ── Page Wrapper ───────────────────────────────────────────── */
+    .page-wrapper {
+      position: relative; z-index: 1;
+      padding-top: calc(var(--nav-h) + 32px);
+      padding-bottom: 80px;
+      min-height: 100vh;
+    }
+
+    /* ── Hero ───────────────────────────────────────────────────── */
+    .hero {
+      text-align: center;
+      padding: 48px 20px 36px;
+      max-width: 760px;
+      margin: 0 auto;
+    }
+    .hero-tag {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(212,175,55,0.12); border: 1px solid rgba(212,175,55,0.3);
+      color: var(--gold); border-radius: 20px; padding: 5px 16px;
+      font-size: 11px; letter-spacing: 1.4px; text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+    .hero h1 {
+      font-size: clamp(28px, 5vw, 52px); font-weight: 800;
+      line-height: 1.1; margin-bottom: 14px;
+      background: linear-gradient(135deg, var(--white) 0%, var(--cyan) 50%, var(--gold) 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .hero p {
+      color: rgba(250,250,250,0.6); font-size: 15px; line-height: 1.7;
+    }
+
+    /* ── Controls Bar ───────────────────────────────────────────── */
+    .controls-bar {
+      max-width: 1300px; margin: 0 auto 28px;
+      padding: 0 24px;
+      display: flex; flex-wrap: wrap; align-items: center; gap: 18px;
+    }
+
+    /* Filter pills */
+    .filter-group {
+      display: flex; flex-wrap: wrap; gap: 8px; flex: 1;
+    }
+    .filter-pill {
+      padding: 7px 16px; border-radius: 20px; font-size: 12px;
+      font-weight: 600; letter-spacing: 0.5px; cursor: pointer;
+      border: 1px solid rgba(255,255,255,0.15);
+      background: rgba(26,26,62,0.5); color: rgba(250,250,250,0.6);
+      transition: all 0.25s var(--phi);
+      user-select: none;
+    }
+    .filter-pill:hover { border-color: rgba(255,255,255,0.35); color: var(--white); }
+    .filter-pill.active {
+      color: var(--bg-deep); font-weight: 700;
+      box-shadow: 0 0 14px currentColor;
+    }
+    .filter-pill[data-type="all"].active    { background: var(--white);   border-color: var(--white); }
+    .filter-pill[data-type="system"].active  { background: var(--cyan);    border-color: var(--cyan); }
+    .filter-pill[data-type="pipeline"].active{ background: var(--gold);    border-color: var(--gold); }
+    .filter-pill[data-type="agent"].active   { background: var(--magenta); border-color: var(--magenta); }
+    .filter-pill[data-type="dream"].active   { background: var(--purple);  border-color: var(--purple); }
+    .filter-pill[data-type="swarm"].active   { background: #00FF88;        border-color: #00FF88; }
+    .filter-pill[data-type="forge"].active   { background: #FF6B35;        border-color: #FF6B35; }
+    .filter-pill[data-type="custom"].active  { background: var(--white);   border-color: var(--white); }
+
+    /* Zoom slider */
+    .zoom-group {
+      display: flex; align-items: center; gap: 12px;
+      background: var(--glass); backdrop-filter: blur(20px);
+      border: 1px solid rgba(255,255,255,0.1); border-radius: 12px;
+      padding: 8px 16px;
+    }
+    .zoom-group label {
+      font-size: 11px; color: rgba(250,250,250,0.5);
+      letter-spacing: 0.8px; text-transform: uppercase; white-space: nowrap;
+    }
+    .zoom-slider {
+      -webkit-appearance: none; appearance: none;
+      width: 140px; height: 4px;
+      background: linear-gradient(90deg, var(--gold), var(--cyan));
+      border-radius: 2px; outline: none; cursor: pointer;
+    }
+    .zoom-slider::-webkit-slider-thumb {
+      -webkit-appearance: none; width: 16px; height: 16px; border-radius: 50%;
+      background: var(--gold); border: 2px solid var(--bg-deep);
+      box-shadow: 0 0 8px var(--gold); cursor: pointer;
+    }
+    .zoom-label {
+      font-size: 11px; color: var(--gold); min-width: 72px; text-align: right;
+      font-weight: 600;
+    }
+
+    /* Add event button */
+    .add-btn {
+      padding: 9px 20px; border-radius: 20px; font-size: 12px; font-weight: 700;
+      background: linear-gradient(135deg, var(--gold), #B8952A);
+      color: var(--bg-deep); border: none; cursor: pointer;
+      transition: all 0.25s var(--phi); white-space: nowrap;
+      letter-spacing: 0.5px;
+    }
+    .add-btn:hover { box-shadow: 0 0 18px rgba(212,175,55,0.5); transform: scale(1.04); }
+
+    /* ── Timeline Container ──────────────────────────────────────── */
+    .timeline-viewport {
+      max-width: 1300px; margin: 0 auto;
+      padding: 0 24px;
+      position: relative;
+    }
+
+    .timeline-scroll {
+      overflow-x: auto; overflow-y: visible;
+      padding: 80px 0 100px;
+      cursor: grab;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(212,175,55,0.3) transparent;
+    }
+    .timeline-scroll:active { cursor: grabbing; }
+    .timeline-scroll::-webkit-scrollbar { height: 4px; }
+    .timeline-scroll::-webkit-scrollbar-track { background: transparent; }
+    .timeline-scroll::-webkit-scrollbar-thumb {
+      background: rgba(212,175,55,0.3); border-radius: 2px;
+    }
+
+    .timeline-track {
+      position: relative;
+      min-width: 2400px;
+      height: 260px;
+      transition: min-width 0.6s var(--phi);
+    }
+
+    /* Central golden line */
+    .timeline-line {
+      position: absolute;
+      top: 50%; left: 0; right: 0;
+      height: 3px;
+      transform: translateY(-50%);
+      background: linear-gradient(90deg,
+        transparent 0%,
+        rgba(212,175,55,0.2) 5%,
+        var(--gold) 20%,
+        var(--cyan) 50%,
+        var(--gold) 80%,
+        rgba(212,175,55,0.2) 95%,
+        transparent 100%);
+      border-radius: 2px;
+    }
+    .timeline-line::after {
+      content: '';
+      position: absolute; inset: -2px;
+      background: inherit;
+      filter: blur(6px); opacity: 0.4;
+      border-radius: 4px;
+    }
+
+    /* Now indicator */
+    .now-indicator {
+      position: absolute; top: 0; bottom: 0;
+      width: 2px;
+      background: var(--cyan);
+      box-shadow: 0 0 12px var(--cyan), 0 0 24px rgba(0,217,255,0.4);
+      z-index: 5; pointer-events: none;
+      transition: left 0.6s var(--phi);
+    }
+    .now-indicator::before {
+      content: 'NOW';
+      position: absolute; top: 6px; left: 50%; transform: translateX(-50%);
+      font-size: 9px; font-weight: 700; letter-spacing: 1.2px;
+      color: var(--cyan); white-space: nowrap;
+    }
+
+    /* ── Event Nodes ─────────────────────────────────────────────── */
+    .event-node {
+      position: absolute;
+      top: 50%; transform: translate(-50%, -50%);
+      border-radius: 50%; cursor: pointer;
+      transition: transform 0.35s var(--phi), box-shadow 0.35s var(--phi), opacity 0.4s var(--phi);
+      z-index: 10;
+    }
+    .event-node::after {
+      content: ''; position: absolute; inset: -4px; border-radius: 50%;
+      opacity: 0; transition: opacity 0.35s var(--phi);
+      background: radial-gradient(circle, currentColor 0%, transparent 70%);
+    }
+    .event-node:hover::after, .event-node.pinned::after { opacity: 0.3; }
+    .event-node:hover { transform: translate(-50%, -50%) scale(1.35); }
+    .event-node.pinned { transform: translate(-50%, -50%) scale(1.4); }
+
+    .event-node.type-system  { background: var(--cyan);    box-shadow: 0 0 10px rgba(0,217,255,0.6); }
+    .event-node.type-pipeline { background: var(--gold);    box-shadow: 0 0 10px rgba(212,175,55,0.6); }
+    .event-node.type-agent   { background: var(--magenta); box-shadow: 0 0 10px rgba(255,0,160,0.6); }
+    .event-node.type-dream   { background: var(--purple);  box-shadow: 0 0 10px rgba(155,89,182,0.6); }
+    .event-node.type-swarm   { background: #00FF88;        box-shadow: 0 0 10px rgba(0,255,136,0.6); }
+    .event-node.type-forge   { background: #FF6B35;        box-shadow: 0 0 10px rgba(255,107,53,0.6); }
+    .event-node.type-custom  { background: var(--white);   box-shadow: 0 0 10px rgba(250,250,250,0.4); }
+
+    .event-node.hidden { opacity: 0; pointer-events: none; }
+
+    /* Pulse ring on nodes */
+    .event-node.pulse::before {
+      content: '';
+      position: absolute; inset: -6px; border-radius: 50%;
+      border: 2px solid currentColor;
+      animation: pulse-ring 2s var(--phi) infinite;
+    }
+    @keyframes pulse-ring {
+      0%   { transform: scale(1);   opacity: 0.8; }
+      100% { transform: scale(2);   opacity: 0; }
+    }
+
+    /* ── Stem connecting node to card ───────────────────────────── */
+    .event-stem {
+      position: absolute; left: 50%; width: 2px;
+      transform: translateX(-50%);
+      background: linear-gradient(to bottom, currentColor, transparent);
+      pointer-events: none;
+      opacity: 0.4;
+    }
+
+    /* ── Detail Cards ────────────────────────────────────────────── */
+    .event-card {
+      position: absolute;
+      width: 220px;
+      background: var(--glass);
+      backdrop-filter: blur(20px);
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,0.1);
+      padding: 14px 16px;
+      pointer-events: none;
+      opacity: 0; transform: scale(0.85) translateY(8px);
+      transition: opacity 0.35s var(--phi), transform 0.35s var(--phi);
+      z-index: 20;
+    }
+    .event-card.visible {
+      opacity: 1; transform: scale(1) translateY(0);
+      pointer-events: auto;
+    }
+    .event-card.above { bottom: calc(50% + 22px); }
+    .event-card.below { top:    calc(50% + 22px); }
+
+    .card-title {
+      font-size: 13px; font-weight: 700; color: var(--white);
+      margin-bottom: 6px; line-height: 1.3;
+    }
+    .card-badge {
+      display: inline-block; padding: 2px 10px; border-radius: 10px;
+      font-size: 10px; font-weight: 700; letter-spacing: 0.6px;
+      text-transform: uppercase; margin-bottom: 7px;
+    }
+    .badge-system   { background: rgba(0,217,255,0.15);   color: var(--cyan); }
+    .badge-pipeline { background: rgba(212,175,55,0.15);  color: var(--gold); }
+    .badge-agent    { background: rgba(255,0,160,0.15);   color: var(--magenta); }
+    .badge-dream    { background: rgba(155,89,182,0.15);  color: var(--purple); }
+    .badge-swarm    { background: rgba(0,255,136,0.15);   color: #00FF88; }
+    .badge-forge    { background: rgba(255,107,53,0.15);  color: #FF6B35; }
+    .badge-custom   { background: rgba(250,250,250,0.1);  color: var(--white); }
+
+    .card-time {
+      font-size: 10px; color: rgba(250,250,250,0.45);
+      margin-bottom: 8px; font-family: 'Courier New', monospace;
+    }
+    .card-desc {
+      font-size: 12px; color: rgba(250,250,250,0.7);
+      line-height: 1.55;
+    }
+    .card-close {
+      position: absolute; top: 8px; right: 10px;
+      font-size: 14px; cursor: pointer; color: rgba(255,255,255,0.4);
+      transition: color 0.2s; background: none; border: none;
+    }
+    .card-close:hover { color: var(--white); }
+
+    /* ── Cluster Node ────────────────────────────────────────────── */
+    .cluster-node {
+      position: absolute; top: 50%; transform: translate(-50%, -50%);
+      cursor: pointer; z-index: 15;
+      animation: spiral-in 0.5s var(--phi) both;
+    }
+    .cluster-ring {
+      width: 48px; height: 48px; border-radius: 50%;
+      background: conic-gradient(from 0deg, var(--gold), var(--cyan), var(--magenta), var(--gold));
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 0 16px rgba(212,175,55,0.5);
+      animation: cluster-spin 8s linear infinite;
+    }
+    @keyframes cluster-spin {
+      from { filter: hue-rotate(0deg); }
+      to   { filter: hue-rotate(360deg); }
+    }
+    .cluster-inner {
+      width: 38px; height: 38px; border-radius: 50%;
+      background: var(--bg-mid);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 12px; font-weight: 800; color: var(--gold);
+    }
+    .cluster-node:hover .cluster-ring {
+      box-shadow: 0 0 28px rgba(212,175,55,0.8);
+    }
+
+    /* ── Animations ─────────────────────────────────────────────── */
+    @keyframes spiral-in {
+      0%   { transform: translate(-50%, -50%) scale(0) rotate(-180deg); opacity: 0; }
+      100% { transform: translate(-50%, -50%) scale(1) rotate(0deg);    opacity: 1; }
+    }
+
+    .event-node.enter {
+      animation: spiral-in 0.55s var(--phi) both;
+    }
+
+    /* ── Year/Date Labels on timeline ───────────────────────────── */
+    .time-label {
+      position: absolute; top: calc(50% + 20px);
+      transform: translateX(-50%);
+      font-size: 10px; color: rgba(250,250,250,0.3);
+      letter-spacing: 0.8px; white-space: nowrap;
+      pointer-events: none;
+    }
+
+    /* ── Live Badge ──────────────────────────────────────────────── */
+    .live-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: rgba(0,217,255,0.08); border: 1px solid rgba(0,217,255,0.25);
+      border-radius: 20px; padding: 5px 14px;
+      font-size: 11px; color: var(--cyan); margin-left: auto;
+    }
+    .live-dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--cyan); animation: live-blink 1.4s ease-in-out infinite;
+    }
+    @keyframes live-blink { 0%,100%{opacity:1} 50%{opacity:0.2} }
+
+    /* ── Stats Bar ───────────────────────────────────────────────── */
+    .stats-bar {
+      max-width: 1300px; margin: 32px auto 0;
+      padding: 0 24px;
+      display: flex; flex-wrap: wrap; gap: 12px;
+    }
+    .stat-card {
+      flex: 1; min-width: 120px;
+      background: var(--glass); backdrop-filter: blur(20px);
+      border: 1px solid rgba(255,255,255,0.08); border-radius: 12px;
+      padding: 16px 20px;
+      text-align: center;
+    }
+    .stat-val {
+      font-size: 28px; font-weight: 800;
+      background: linear-gradient(135deg, var(--gold), var(--cyan));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text; display: block;
+    }
+    .stat-lbl { font-size: 11px; color: rgba(250,250,250,0.45); letter-spacing: 0.8px; text-transform: uppercase; }
+
+    /* ── Add Event Modal ─────────────────────────────────────────── */
+    .modal-overlay {
+      position: fixed; inset: 0; z-index: 200;
+      background: rgba(5,5,16,0.75); backdrop-filter: blur(8px);
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.3s var(--phi);
+    }
+    .modal-overlay.open { opacity: 1; pointer-events: auto; }
+    .modal-box {
+      background: var(--bg-mid); border: 1px solid rgba(212,175,55,0.2);
+      border-radius: 18px; padding: 32px; width: 100%; max-width: 440px;
+      transform: scale(0.9); transition: transform 0.3s var(--phi);
+    }
+    .modal-overlay.open .modal-box { transform: scale(1); }
+    .modal-box h3 { font-size: 18px; font-weight: 700; color: var(--gold); margin-bottom: 20px; }
+    .modal-field { margin-bottom: 14px; }
+    .modal-field label { display: block; font-size: 12px; color: rgba(250,250,250,0.5); margin-bottom: 6px; letter-spacing: 0.6px; }
+    .modal-field input, .modal-field select, .modal-field textarea {
+      width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 8px; padding: 10px 12px; color: var(--white); font-size: 13px;
+      font-family: inherit; outline: none; transition: border-color 0.2s;
+      resize: vertical;
+    }
+    .modal-field input:focus, .modal-field select:focus, .modal-field textarea:focus {
+      border-color: var(--gold);
+    }
+    .modal-field select option { background: var(--bg-mid); }
+    .modal-actions { display: flex; gap: 10px; margin-top: 20px; justify-content: flex-end; }
+    .btn-cancel {
+      padding: 9px 20px; border-radius: 10px; font-size: 13px;
+      background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12);
+      color: var(--white); cursor: pointer; transition: background 0.2s;
+    }
+    .btn-cancel:hover { background: rgba(255,255,255,0.1); }
+    .btn-submit {
+      padding: 9px 24px; border-radius: 10px; font-size: 13px; font-weight: 700;
+      background: linear-gradient(135deg, var(--gold), #B8952A);
+      color: var(--bg-deep); border: none; cursor: pointer;
+      transition: box-shadow 0.2s;
+    }
+    .btn-submit:hover { box-shadow: 0 0 16px rgba(212,175,55,0.5); }
+
+    /* ── Responsive ─────────────────────────────────────────────── */
+    @media (max-width: 700px) {
+      .controls-bar { flex-direction: column; align-items: stretch; }
+      .zoom-group { justify-content: space-between; }
+      .zoom-slider { width: 100px; }
+      .timeline-track { height: 220px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Ambient background -->
+<div class="orb-layer">
+  <div class="orb orb-a"></div>
+  <div class="orb orb-b"></div>
+  <div class="orb orb-c"></div>
+</div>
+
+<div class="page-wrapper">
+
+  <!-- Hero -->
+  <div class="hero">
+    <div class="hero-tag">&#x03C6; Sacred Geometry v5.0 &mdash; Personal History</div>
+    <h1>Heady Timeline</h1>
+    <p>Golden spiral event history &mdash; every system milestone, pipeline run, agent birth, and dream woven into a single living record.</p>
+  </div>
+
+  <!-- Controls -->
+  <div class="controls-bar">
+    <div class="filter-group" id="filterGroup">
+      <button class="filter-pill active" data-type="all">All</button>
+      <button class="filter-pill" data-type="system">System</button>
+      <button class="filter-pill" data-type="pipeline">Pipeline</button>
+      <button class="filter-pill" data-type="agent">Agent</button>
+      <button class="filter-pill" data-type="dream">Dream</button>
+      <button class="filter-pill" data-type="swarm">Swarm</button>
+      <button class="filter-pill" data-type="forge">Forge</button>
+      <button class="filter-pill" data-type="custom">Custom</button>
+    </div>
+
+    <div class="zoom-group">
+      <label>Zoom</label>
+      <input type="range" class="zoom-slider" id="zoomSlider" min="1" max="10" value="5">
+      <span class="zoom-label" id="zoomLabel">6 Months</span>
+    </div>
+
+    <div class="live-badge"><span class="live-dot"></span> Live</div>
+
+    <button class="add-btn" id="addEventBtn">+ Add Event</button>
+  </div>
+
+  <!-- Timeline -->
+  <div class="timeline-viewport">
+    <div class="timeline-scroll" id="timelineScroll">
+      <div class="timeline-track" id="timelineTrack">
+        <div class="timeline-line"></div>
+        <div class="now-indicator" id="nowIndicator"></div>
+        <!-- nodes rendered by JS -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats-bar" id="statsBar">
+    <div class="stat-card"><span class="stat-val" id="statTotal">0</span><span class="stat-lbl">Total Events</span></div>
+    <div class="stat-card"><span class="stat-val" id="statToday">0</span><span class="stat-lbl">Today</span></div>
+    <div class="stat-card"><span class="stat-val" id="statPipeline">0</span><span class="stat-lbl">Pipeline Runs</span></div>
+    <div class="stat-card"><span class="stat-val" id="statAgents">0</span><span class="stat-lbl">Agent Events</span></div>
+    <div class="stat-card"><span class="stat-val" id="statDreams">0</span><span class="stat-lbl">Dreams</span></div>
+  </div>
+
+</div><!-- /page-wrapper -->
+
+<!-- Add Event Modal -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal-box">
+    <h3>Add Timeline Event</h3>
+    <div class="modal-field">
+      <label>Title</label>
+      <input type="text" id="newTitle" placeholder="Event title...">
+    </div>
+    <div class="modal-field">
+      <label>Type</label>
+      <select id="newType">
+        <option value="custom">Custom</option>
+        <option value="system">System</option>
+        <option value="pipeline">Pipeline</option>
+        <option value="agent">Agent</option>
+        <option value="dream">Dream</option>
+        <option value="swarm">Swarm</option>
+        <option value="forge">Forge</option>
+      </select>
+    </div>
+    <div class="modal-field">
+      <label>Description</label>
+      <textarea id="newDesc" rows="3" placeholder="Describe this moment..."></textarea>
+    </div>
+    <div class="modal-field">
+      <label>Importance (1&ndash;5)</label>
+      <input type="range" id="newImportance" min="1" max="5" value="3">
+    </div>
+    <div class="modal-actions">
+      <button class="btn-cancel" id="modalCancel">Cancel</button>
+      <button class="btn-submit" id="modalSubmit">Add Event</button>
+    </div>
+  </div>
+</div>
+
+<script src="/nav-global.js"></script>
+<script>
+/* ── Timeline Engine ─────────────────────────────────────────────── */
+(function() {
+  'use strict';
+
+  /* ── Constants ──────────────────────────────────────────────────── */
+  const PHI = 1.618033988749895;
+  const TYPE_COLORS = {
+    system:   '#00D9FF',
+    pipeline: '#D4AF37',
+    agent:    '#FF00A0',
+    dream:    '#9B59B6',
+    swarm:    '#00FF88',
+    forge:    '#FF6B35',
+    custom:   '#FAFAFA',
+  };
+
+  /* zoom level → window in hours */
+  const ZOOM_WINDOWS = [1, 3, 6, 12, 24, 24*7, 24*30, 24*90, 24*180, 24*365];
+  const ZOOM_LABELS  = ['Last Hour','3 Hours','6 Hours','12 Hours','24 Hours',
+                        'Last Week','Last Month','Last 3 Months','6 Months','All Time'];
+
+  const CLUSTER_THRESHOLD_PX = 40; /* collapse nodes closer than this */
+
+  /* ── Seed Data ──────────────────────────────────────────────────── */
+  const now = Date.now();
+  const h   = 3600000;
+  const d   = 86400000;
+
+  let events = [
+    { id:'e1',  title:'HeadyOS Genesis',            type:'system',   ts: now - 365*d,   importance:5, desc:'The first commit. Sacred Geometry v1.0 scaffolded. The monorepo awakens.' },
+    { id:'e2',  title:'HCFullPipeline v1.0',         type:'pipeline', ts: now - 340*d,   importance:5, desc:'22-stage intelligent pipeline goes live. Ingest through finalize.' },
+    { id:'e3',  title:'BuilderAgent Deployed',       type:'agent',    ts: now - 310*d,   importance:4, desc:'First autonomous build-and-deploy cycle without human intervention.' },
+    { id:'e4',  title:'Dream: Liquid Nodes',         type:'dream',    ts: now - 290*d,   importance:3, desc:'Prototype for fluid topology where nodes morph under load.' },
+    { id:'e5',  title:'HeadyBee Swarm Alpha',        type:'swarm',    ts: now - 260*d,   importance:4, desc:'Parallel fan-out across 16 worker bees. First colony established.' },
+    { id:'e6',  title:'Sacred Geometry v2.0',        type:'system',   ts: now - 240*d,   importance:3, desc:'Phi-scaled spacing system, glass morphism, and breathing animations.' },
+    { id:'e7',  title:'Pipeline Run #100',           type:'pipeline', ts: now - 210*d,   importance:3, desc:'Milestone: 100th successful end-to-end pipeline execution logged.' },
+    { id:'e8',  title:'ResearcherAgent Born',        type:'agent',    ts: now - 195*d,   importance:4, desc:'Autonomous knowledge retrieval and synthesis agent goes online.' },
+    { id:'e9',  title:'HeadyForge v1.0',             type:'forge',    ts: now - 175*d,   importance:4, desc:'Code forge with multi-model consensus and deterministic output seeding.' },
+    { id:'e10', title:'Dream: Latent Space UI',      type:'dream',    ts: now - 160*d,   importance:3, desc:'Visualizing embedding clusters in 3D with sacred geometry scaffolding.' },
+    { id:'e11', title:'System Brain Online',         type:'system',   ts: now - 140*d,   importance:5, desc:'Meta-controller connects all subsystems. ORS scoring activated.' },
+    { id:'e12', title:'Pipeline Run #500',           type:'pipeline', ts: now - 120*d,   importance:3, desc:'500 runs. P95 latency 1.2s. Zero critical failures this sprint.' },
+    { id:'e13', title:'Swarm Scale: 64 Bees',        type:'swarm',    ts: now - 100*d,   importance:4, desc:'Colony scaled from 16 to 64 parallel workers. Throughput 4x.' },
+    { id:'e14', title:'Sacred Geometry v3.0',        type:'system',   ts: now -  85*d,   importance:3, desc:'Organic rounded forms, fibonacci grids, and golden ratio breakpoints.' },
+    { id:'e15', title:'ClaudeCode Agent Integrated', type:'agent',    ts: now -  70*d,   importance:5, desc:'Claude Code joins as primary code-generation and analysis agent.' },
+    { id:'e16', title:'HeadyForge v2.0',             type:'forge',    ts: now -  55*d,   importance:4, desc:'Multi-repo forge with checkpoint sync and doc-freshness enforcement.' },
+    { id:'e17', title:'Dream: Timeline View',        type:'dream',    ts: now -  40*d,   importance:3, desc:'Golden spiral event history — this very page — conceived during ideation sprint.' },
+    { id:'e18', title:'Pipeline Run #1000',          type:'pipeline', ts: now -  28*d,   importance:5, desc:'Four-figure milestone. Mean time to recovery: 8s. ORS: 94.' },
+    { id:'e19', title:'Sacred Geometry v4.0',        type:'system',   ts: now -  18*d,   importance:3, desc:'Breathing animations, conic gradients, post-quantum security badge added.' },
+    { id:'e20', title:'Swarm Mission Complete',      type:'swarm',    ts: now -  10*d,   importance:4, desc:'First fully autonomous multi-day swarm mission finished with 0 human touches.' },
+    { id:'e21', title:'Checkpoint Protocol v3',      type:'system',   ts: now -   5*d,   importance:4, desc:'Full sync across docs, notebooks, registry, and configs at every stage.' },
+    { id:'e22', title:'Timeline Page Live',          type:'system',   ts: now -      h,  importance:5, desc:'Sacred Geometry v5.0. This golden spiral timeline is now operational.', pulse: true },
+  ];
+
+  /* ── State ──────────────────────────────────────────────────────── */
+  let activeFilter = 'all';
+  let zoomLevel    = 5; /* index into ZOOM_WINDOWS */
+  let pinnedId     = null;
+  let hoveredId    = null;
+  let isDragging   = false;
+  let dragStartX   = 0;
+  let dragScrollX  = 0;
+
+  /* ── DOM refs ───────────────────────────────────────────────────── */
+  const track         = document.getElementById('timelineTrack');
+  const scroll        = document.getElementById('timelineScroll');
+  const nowIndicator  = document.getElementById('nowIndicator');
+  const zoomSlider    = document.getElementById('zoomSlider');
+  const zoomLabelEl   = document.getElementById('zoomLabel');
+  const filterGroup   = document.getElementById('filterGroup');
+
+  /* ── Helpers ────────────────────────────────────────────────────── */
+  function fmtTime(ts) {
+    const dt = new Date(ts);
+    const pad = n => String(n).padStart(2,'0');
+    const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    return `${months[dt.getMonth()]} ${dt.getDate()}, ${dt.getFullYear()} ${pad(dt.getHours())}:${pad(dt.getMinutes())}`;
+  }
+
+  function nodeSize(importance) {
+    return 10 + importance * 4; /* 14px – 30px */
+  }
+
+  /* ── Render ─────────────────────────────────────────────────────── */
+  function getVisibleRange() {
+    const windowMs = ZOOM_WINDOWS[zoomLevel] * h;
+    const end   = now;
+    const start = now - windowMs;
+    return { start, end, windowMs };
+  }
+
+  function tsToX(ts, start, windowMs, trackWidth) {
+    return ((ts - start) / windowMs) * trackWidth;
+  }
+
+  function buildClusters(visibleEvents, start, windowMs, trackWidth) {
+    /* Sort by timestamp */
+    const sorted = [...visibleEvents].sort((a, b) => a.ts - b.ts);
+    const placed  = [];
+    const clusters = [];
+
+    for (const ev of sorted) {
+      const x = tsToX(ev.ts, start, windowMs, trackWidth);
+      /* Check collision with last placed */
+      const last = placed[placed.length - 1];
+      if (last && Math.abs(x - last.x) < CLUSTER_THRESHOLD_PX) {
+        /* Merge into existing cluster or create new one */
+        const existing = clusters.find(c => c.ids.includes(last.id));
+        if (existing) {
+          existing.ids.push(ev.id);
+          existing.x = (existing.x + x) / 2;
+        } else {
+          clusters.push({ ids: [last.id, ev.id], x: (last.x + x) / 2 });
+          placed.splice(placed.indexOf(last), 1);
+        }
+      } else {
+        placed.push({ id: ev.id, x });
+      }
+    }
+    return { placed, clusters };
+  }
+
+  function renderTimeline() {
+    /* Remove all dynamic children except the line and now-indicator */
+    Array.from(track.children).forEach(el => {
+      if (!el.classList.contains('timeline-line') && !el.classList.contains('now-indicator')) {
+        el.remove();
+      }
+    });
+
+    const { start, end, windowMs } = getVisibleRange();
+    const trackWidth = Math.max(track.offsetWidth || 2400, 2400);
+
+    /* Position now indicator */
+    const nowX = tsToX(now, start, windowMs, trackWidth);
+    nowIndicator.style.left = nowX + 'px';
+
+    /* Date labels every ~15% of track width */
+    const labelCount = 7;
+    for (let i = 0; i <= labelCount; i++) {
+      const frac = i / labelCount;
+      const ts   = start + frac * windowMs;
+      const lbl  = document.createElement('div');
+      lbl.className = 'time-label';
+      lbl.style.left = (frac * trackWidth) + 'px';
+      lbl.textContent = fmtTime(ts);
+      track.appendChild(lbl);
+    }
+
+    /* Filter events */
+    const visible = events.filter(ev => {
+      if (ev.ts < start || ev.ts > end) return false;
+      if (activeFilter !== 'all' && ev.type !== activeFilter) return false;
+      return true;
+    });
+
+    /* Cluster analysis */
+    const { placed, clusters } = buildClusters(visible, start, windowMs, trackWidth);
+
+    /* Collect ids that are in clusters */
+    const clusteredIds = new Set(clusters.flatMap(c => c.ids));
+
+    /* Render individual nodes */
+    let cardAbove = true; /* alternate above/below */
+    placed.forEach((p, idx) => {
+      const ev = events.find(e => e.id === p.id);
+      if (!ev) return;
+      const size = nodeSize(ev.importance);
+      const isAbove = idx % 2 === 0;
+      renderEventNode(ev, p.x, size, isAbove);
+      cardAbove = !cardAbove;
+    });
+
+    /* Render clusters */
+    clusters.forEach(cl => {
+      renderCluster(cl, start, windowMs, trackWidth);
+    });
+
+    updateStats();
+  }
+
+  function renderEventNode(ev, x, size, isAbove) {
+    /* Node orb */
+    const node = document.createElement('div');
+    node.className  = `event-node type-${ev.type}${ev.pulse ? ' pulse' : ''}`;
+    node.dataset.id = ev.id;
+    node.style.cssText = `left:${x}px; width:${size}px; height:${size}px;`;
+
+    /* Stem */
+    const stemLen = 38;
+    const stem = document.createElement('div');
+    stem.className = 'event-stem';
+    stem.style.cssText = isAbove
+      ? `bottom:${size/2}px; height:${stemLen}px; color:${TYPE_COLORS[ev.type]};`
+      : `top:${size/2}px;    height:${stemLen}px; color:${TYPE_COLORS[ev.type]};`;
+    node.appendChild(stem);
+
+    /* Card */
+    const card = document.createElement('div');
+    card.className = `event-card ${isAbove ? 'above' : 'below'}`;
+    card.innerHTML = `
+      <button class="card-close" data-id="${ev.id}" title="Close">&#x2715;</button>
+      <div class="card-title">${ev.title}</div>
+      <span class="card-badge badge-${ev.type}">${ev.type}</span>
+      <div class="card-time">${fmtTime(ev.ts)}</div>
+      <div class="card-desc">${ev.desc}</div>
+    `;
+    node.appendChild(card);
+
+    /* Show/hide logic */
+    if (pinnedId === ev.id) {
+      card.classList.add('visible');
+      node.classList.add('pinned');
+    }
+
+    node.addEventListener('mouseenter', () => {
+      if (pinnedId !== ev.id) card.classList.add('visible');
+    });
+    node.addEventListener('mouseleave', () => {
+      if (pinnedId !== ev.id) card.classList.remove('visible');
+    });
+    node.addEventListener('click', (e) => {
+      if (e.target.closest('.card-close')) return;
+      if (pinnedId === ev.id) {
+        pinnedId = null;
+        node.classList.remove('pinned');
+        card.classList.remove('visible');
+      } else {
+        pinnedId = ev.id;
+        node.classList.add('pinned');
+        card.classList.add('visible');
+      }
+    });
+
+    /* Close button */
+    card.querySelector('.card-close').addEventListener('click', () => {
+      pinnedId = null;
+      node.classList.remove('pinned');
+      card.classList.remove('visible');
+    });
+
+    track.appendChild(node);
+  }
+
+  function renderCluster(cl, start, windowMs, trackWidth) {
+    const wrapper = document.createElement('div');
+    wrapper.className = 'cluster-node';
+    wrapper.style.left = cl.x + 'px';
+    wrapper.innerHTML = `
+      <div class="cluster-ring">
+        <div class="cluster-inner">${cl.ids.length}</div>
+      </div>
+    `;
+    wrapper.title = `${cl.ids.length} events — click to expand`;
+
+    wrapper.addEventListener('click', () => {
+      /* Expand: zoom in one step so events separate */
+      if (zoomLevel > 0) {
+        zoomLevel--;
+        zoomSlider.value = zoomLevel + 1;
+        zoomLabelEl.textContent = ZOOM_LABELS[zoomLevel];
+        renderTimeline();
+        /* Scroll to cluster center */
+        scroll.scrollTo({ left: cl.x - scroll.offsetWidth / 2, behavior: 'smooth' });
+      }
+    });
+
+    track.appendChild(wrapper);
+  }
+
+  /* ── Stats ──────────────────────────────────────────────────────── */
+  function updateStats() {
+    const todayStart = new Date(); todayStart.setHours(0,0,0,0);
+    document.getElementById('statTotal').textContent    = events.length;
+    document.getElementById('statToday').textContent    = events.filter(e => e.ts >= todayStart.getTime()).length;
+    document.getElementById('statPipeline').textContent = events.filter(e => e.type === 'pipeline').length;
+    document.getElementById('statAgents').textContent   = events.filter(e => e.type === 'agent').length;
+    document.getElementById('statDreams').textContent   = events.filter(e => e.type === 'dream').length;
+  }
+
+  /* ── Filter Pills ───────────────────────────────────────────────── */
+  filterGroup.addEventListener('click', e => {
+    const pill = e.target.closest('.filter-pill');
+    if (!pill) return;
+    filterGroup.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
+    pill.classList.add('active');
+    activeFilter = pill.dataset.type;
+    pinnedId = null;
+    renderTimeline();
+  });
+
+  /* ── Zoom Slider ────────────────────────────────────────────────── */
+  zoomSlider.addEventListener('input', () => {
+    zoomLevel = parseInt(zoomSlider.value) - 1;
+    zoomLabelEl.textContent = ZOOM_LABELS[zoomLevel];
+    renderTimeline();
+  });
+
+  /* ── Drag-scroll ────────────────────────────────────────────────── */
+  scroll.addEventListener('mousedown', e => {
+    if (e.target.closest('.event-node') || e.target.closest('.cluster-node')) return;
+    isDragging  = true;
+    dragStartX  = e.pageX;
+    dragScrollX = scroll.scrollLeft;
+  });
+  window.addEventListener('mousemove', e => {
+    if (!isDragging) return;
+    scroll.scrollLeft = dragScrollX - (e.pageX - dragStartX);
+  });
+  window.addEventListener('mouseup', () => { isDragging = false; });
+
+  /* ── API fetch (with fallback to seed data) ─────────────────────── */
+  function fetchEvents() {
+    const type  = activeFilter === 'all' ? '' : activeFilter;
+    const url   = `/api/features/timeline?limit=50${type ? '&type=' + type : ''}`;
+    fetch(url)
+      .then(r => { if (!r.ok) throw new Error('no api'); return r.json(); })
+      .then(data => {
+        if (Array.isArray(data) && data.length) {
+          /* Merge server events (avoid duplicates by id) */
+          const existingIds = new Set(events.map(e => e.id));
+          data.forEach(ev => {
+            if (!existingIds.has(ev.id)) {
+              ev.enter = true;
+              events.push(ev);
+            }
+          });
+          renderTimeline();
+        }
+      })
+      .catch(() => { /* silently use seed data */ });
+  }
+
+  /* ── Live Update ────────────────────────────────────────────────── */
+  let liveInterval = null;
+  function startLiveUpdates() {
+    liveInterval = setInterval(() => {
+      fetch('/api/features/timeline?limit=5&since=' + (now - 60000))
+        .then(r => r.ok ? r.json() : [])
+        .then(data => {
+          if (!Array.isArray(data) || !data.length) return;
+          const existingIds = new Set(events.map(e => e.id));
+          let added = false;
+          data.forEach(ev => {
+            if (!existingIds.has(ev.id)) {
+              ev.pulse = true;
+              events.push(ev);
+              added = true;
+            }
+          });
+          if (added) renderTimeline();
+        })
+        .catch(() => {});
+    }, 15000);
+  }
+
+  /* ── Add Event Modal ────────────────────────────────────────────── */
+  const modalOverlay = document.getElementById('modalOverlay');
+  const addBtn       = document.getElementById('addEventBtn');
+  const cancelBtn    = document.getElementById('modalCancel');
+  const submitBtn    = document.getElementById('modalSubmit');
+
+  addBtn.addEventListener('click', () => modalOverlay.classList.add('open'));
+  cancelBtn.addEventListener('click', () => modalOverlay.classList.remove('open'));
+  modalOverlay.addEventListener('click', e => {
+    if (e.target === modalOverlay) modalOverlay.classList.remove('open');
+  });
+
+  submitBtn.addEventListener('click', () => {
+    const title = document.getElementById('newTitle').value.trim();
+    const type  = document.getElementById('newType').value;
+    const desc  = document.getElementById('newDesc').value.trim();
+    const imp   = parseInt(document.getElementById('newImportance').value);
+    if (!title) { document.getElementById('newTitle').focus(); return; }
+
+    const newEv = {
+      id:         'custom_' + Date.now(),
+      title, type, desc,
+      importance: imp,
+      ts:         Date.now(),
+      pulse:      true,
+    };
+
+    /* POST to API (best-effort) */
+    fetch('/api/features/timeline/event', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(newEv),
+    }).catch(() => {});
+
+    events.push(newEv);
+    renderTimeline();
+
+    /* Reset & close */
+    document.getElementById('newTitle').value      = '';
+    document.getElementById('newDesc').value       = '';
+    document.getElementById('newImportance').value = '3';
+    modalOverlay.classList.remove('open');
+
+    /* Snap to now */
+    scroll.scrollTo({ left: scroll.scrollWidth, behavior: 'smooth' });
+  });
+
+  /* ── Keyboard ───────────────────────────────────────────────────── */
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') {
+      modalOverlay.classList.remove('open');
+      pinnedId = null;
+      renderTimeline();
+    }
+  });
+
+  /* ── Init ───────────────────────────────────────────────────────── */
+  renderTimeline();
+  /* Scroll to show recent events (rightmost portion) */
+  requestAnimationFrame(() => {
+    scroll.scrollTo({ left: scroll.scrollWidth * 0.7, behavior: 'instant' });
+  });
+  fetchEvents();
+  startLiveUpdates();
+
+  /* Re-render on resize */
+  window.addEventListener('resize', () => renderTimeline());
+
+})();
+</script>
+</body>
+</html>

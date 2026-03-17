@@ -1,0 +1,1134 @@
+<!-- HEADY_BRAND:BEGIN
+     HEADY SYSTEMS | identity.html | Sacred Geometry v5.0
+     Unified Identity Graph — human + agent + data identity
+     (c) 2026 HeadySystems Inc. - Eric Haywood, Founder
+HEADY_BRAND:END -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HeadyMe — Unified Identity Graph</title>
+  <meta name="description" content="HeadyMe — Manage your unified human, agent, and data consent identity across the Heady platform.">
+  <meta name="theme-color" content="#050510">
+  <link rel="stylesheet" href="/sacred-geometry.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --gold:    #D4AF37;
+      --gold-s:  rgba(212,175,55,0.18);
+      --gold-g:  rgba(212,175,55,0.6);
+      --cyan:    #00D9FF;
+      --cyan-s:  rgba(0,217,255,0.18);
+      --cyan-g:  rgba(0,217,255,0.5);
+      --magenta: #FF00A0;
+      --mag-s:   rgba(255,0,160,0.18);
+      --mag-g:   rgba(255,0,160,0.5);
+      --void:    #050510;
+      --deep:    #0A0A1A;
+      --nebula:  #1A1A3E;
+      --white:   #FAFAFA;
+      --muted:   rgba(250,250,250,0.55);
+      --glass:   rgba(26,26,62,0.6);
+      --phi:     cubic-bezier(0.618,0,0.382,1);
+      --card-r:  20px;
+    }
+
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: var(--void);
+      color: var(--white);
+      min-height: 100vh;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* ── Ambient background orbs ── */
+    .bg-orbs {
+      position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden;
+    }
+    .bg-orb {
+      position: absolute; border-radius: 50%; filter: blur(90px); opacity: 0.12;
+      animation: bg-float 28s infinite ease-in-out;
+    }
+    .bg-orb-a { width: 500px; height: 500px; background: var(--cyan);    top: -120px; left: -120px; animation-duration: 26s; }
+    .bg-orb-b { width: 400px; height: 400px; background: var(--magenta); bottom: -80px; right: -80px; animation-duration: 32s; animation-delay: -12s; }
+    .bg-orb-c { width: 320px; height: 320px; background: var(--gold);    top: 40%; left: 55%; animation-duration: 38s; animation-delay: -20s; }
+    @keyframes bg-float {
+      0%,100% { transform: translate(0,0) scale(1); }
+      33%      { transform: translate(40px,-60px) scale(1.08); }
+      66%      { transform: translate(-30px,40px) scale(0.94); }
+    }
+
+    /* ── Layout wrapper ── */
+    .page-wrap {
+      position: relative; z-index: 1;
+      max-width: 1280px; margin: 0 auto;
+      padding: 72px 24px 80px;
+    }
+
+    /* ── Section title ── */
+    .section-label {
+      font-size: 11px; font-weight: 600; letter-spacing: 2.5px; text-transform: uppercase;
+      color: var(--cyan); margin-bottom: 10px;
+    }
+    .section-title {
+      font-size: clamp(2rem, 4vw, 3.2rem); font-weight: 800; line-height: 1.15;
+      background: linear-gradient(135deg, var(--cyan) 0%, var(--magenta) 50%, var(--gold) 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    .section-sub {
+      color: var(--muted); font-size: 1.05rem; margin-top: 10px; max-width: 560px; line-height: 1.6;
+    }
+
+    /* ── Glass card ── */
+    .glass-card {
+      background: var(--glass);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: var(--card-r);
+      padding: 28px;
+      transition: border-color 0.35s var(--phi), box-shadow 0.35s var(--phi);
+    }
+    .glass-card:hover {
+      border-color: rgba(0,217,255,0.25);
+      box-shadow: 0 0 40px rgba(0,217,255,0.08);
+    }
+
+    /* ═══════════════════════════════════════
+       IDENTITY HERO — Orb + Handle
+    ═══════════════════════════════════════ */
+    .identity-hero {
+      display: flex; flex-direction: column; align-items: center;
+      margin-bottom: 52px; padding-top: 8px; text-align: center;
+    }
+
+    /* Central orb */
+    .id-orb-wrap {
+      position: relative; width: 280px; height: 280px;
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 28px;
+    }
+
+    /* Outer ring — magenta: Data Consent */
+    .ring-outer {
+      position: absolute; inset: 0; border-radius: 50%;
+      border: 2px solid var(--magenta);
+      box-shadow: 0 0 18px var(--mag-g), inset 0 0 18px rgba(255,0,160,0.04);
+      animation: ring-spin 18s linear infinite;
+    }
+    /* ring accent dots */
+    .ring-outer::before {
+      content: '';
+      position: absolute; top: -5px; left: 50%; transform: translateX(-50%);
+      width: 10px; height: 10px; border-radius: 50%; background: var(--magenta);
+      box-shadow: 0 0 12px var(--mag-g);
+    }
+
+    /* Middle ring — gold: Agent Identity */
+    .ring-mid {
+      position: absolute;
+      inset: 26px; border-radius: 50%;
+      border: 2px solid var(--gold);
+      box-shadow: 0 0 14px var(--gold-g), inset 0 0 14px rgba(212,175,55,0.04);
+      animation: ring-spin 12s linear infinite reverse;
+    }
+    .ring-mid::before {
+      content: '';
+      position: absolute; top: -5px; left: 50%; transform: translateX(-50%);
+      width: 8px; height: 8px; border-radius: 50%; background: var(--gold);
+      box-shadow: 0 0 10px var(--gold-g);
+    }
+
+    /* Inner ring — cyan: Human Identity */
+    .ring-inner {
+      position: absolute;
+      inset: 52px; border-radius: 50%;
+      border: 2px solid var(--cyan);
+      box-shadow: 0 0 12px var(--cyan-g), inset 0 0 12px rgba(0,217,255,0.06);
+      animation: ring-spin 8s linear infinite;
+    }
+    .ring-inner::before {
+      content: '';
+      position: absolute; top: -5px; left: 50%; transform: translateX(-50%);
+      width: 6px; height: 6px; border-radius: 50%; background: var(--cyan);
+      box-shadow: 0 0 8px var(--cyan-g);
+    }
+
+    @keyframes ring-spin {
+      from { transform: rotate(0deg); }
+      to   { transform: rotate(360deg); }
+    }
+
+    /* Core orb */
+    .id-orb-core {
+      position: relative; z-index: 2;
+      width: 118px; height: 118px; border-radius: 50%;
+      background: conic-gradient(from 0deg, var(--cyan), var(--magenta), var(--gold), var(--cyan));
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 0 50px rgba(0,217,255,0.35), 0 0 90px rgba(255,0,160,0.15);
+      animation: orb-breathe 4s ease-in-out infinite;
+    }
+    .id-orb-core-inner {
+      width: 96px; height: 96px; border-radius: 50%;
+      background: var(--deep);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 2.2rem; font-weight: 800; color: var(--white);
+      letter-spacing: -1px;
+    }
+    @keyframes orb-breathe {
+      0%,100% { transform: scale(1);    box-shadow: 0 0 50px rgba(0,217,255,0.35), 0 0 90px rgba(255,0,160,0.15); }
+      50%      { transform: scale(1.04); box-shadow: 0 0 70px rgba(0,217,255,0.5),  0 0 120px rgba(255,0,160,0.25); }
+    }
+
+    /* Ring legend */
+    .ring-legend {
+      display: flex; gap: 20px; flex-wrap: wrap; justify-content: center; margin-top: 12px; margin-bottom: 20px;
+    }
+    .ring-legend-item {
+      display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--muted);
+    }
+    .ring-legend-dot {
+      width: 10px; height: 10px; border-radius: 50%;
+    }
+
+    /* Handle display */
+    .id-handle {
+      font-size: clamp(1.3rem, 3vw, 2rem); font-weight: 700;
+      background: linear-gradient(90deg, var(--cyan), var(--gold));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+      letter-spacing: -0.5px;
+    }
+    .id-status-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      margin-top: 8px; padding: 5px 14px; border-radius: 999px;
+      background: rgba(0,217,255,0.1); border: 1px solid rgba(0,217,255,0.25);
+      font-size: 12px; color: var(--cyan);
+    }
+    .id-status-dot {
+      width: 7px; height: 7px; border-radius: 50%; background: var(--cyan);
+      animation: pulse-dot 2s ease-in-out infinite;
+    }
+    @keyframes pulse-dot {
+      0%,100% { opacity: 1; transform: scale(1); }
+      50%      { opacity: 0.5; transform: scale(0.75); }
+    }
+
+    /* ═══════════════════════════════════════
+       THREE IDENTITY CARDS
+    ═══════════════════════════════════════ */
+    .id-cards-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      margin-bottom: 44px;
+    }
+    @media (max-width: 900px) {
+      .id-cards-grid { grid-template-columns: 1fr; }
+    }
+
+    .id-card-header {
+      display: flex; align-items: center; gap: 10px; margin-bottom: 18px;
+    }
+    .id-card-icon {
+      width: 38px; height: 38px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 17px; flex-shrink: 0;
+    }
+    .icon-cyan    { background: var(--cyan-s);  border: 1px solid rgba(0,217,255,0.3); }
+    .icon-gold    { background: var(--gold-s);  border: 1px solid rgba(212,175,55,0.3); }
+    .icon-magenta { background: var(--mag-s);   border: 1px solid rgba(255,0,160,0.3); }
+
+    .id-card-title { font-size: 15px; font-weight: 600; }
+    .id-card-sub   { font-size: 11px; color: var(--muted); margin-top: 1px; }
+
+    /* Human card rows */
+    .info-row {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 9px 0; border-bottom: 1px solid rgba(255,255,255,0.05);
+      font-size: 13px;
+    }
+    .info-row:last-child { border-bottom: none; }
+    .info-label { color: var(--muted); }
+    .info-val   { font-weight: 500; }
+    .verified-badge {
+      display: inline-flex; align-items: center; gap: 4px;
+      background: rgba(0,255,120,0.12); border: 1px solid rgba(0,255,120,0.3);
+      color: #00ff78; font-size: 11px; padding: 2px 8px; border-radius: 999px;
+    }
+    .login-list { margin-top: 6px; }
+    .login-item {
+      font-size: 12px; color: var(--muted); padding: 5px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+      display: flex; justify-content: space-between;
+    }
+    .login-item:last-child { border-bottom: none; }
+
+    /* Agent delegations */
+    .agent-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+    .agent-item:last-of-type { border-bottom: none; }
+    .agent-orb {
+      width: 32px; height: 32px; border-radius: 50%; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center; font-size: 13px;
+      background: conic-gradient(from 0deg, var(--gold), var(--magenta), var(--gold));
+      box-shadow: 0 0 10px var(--gold-g);
+    }
+    .agent-info { flex: 1; min-width: 0; }
+    .agent-name { font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .agent-scope { font-size: 11px; color: var(--muted); }
+    .agent-status-dot {
+      width: 8px; height: 8px; border-radius: 50%; background: var(--gold);
+      box-shadow: 0 0 6px var(--gold-g); flex-shrink: 0;
+    }
+    .agent-expiry { font-size: 11px; color: var(--gold); flex-shrink: 0; }
+
+    /* Consent gates */
+    .consent-item {
+      background: rgba(255,0,160,0.05); border: 1px solid rgba(255,0,160,0.12);
+      border-radius: 12px; padding: 12px; margin-bottom: 10px;
+    }
+    .consent-item:last-of-type { margin-bottom: 0; }
+    .consent-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px; }
+    .consent-requestor { font-size: 13px; font-weight: 600; }
+    .consent-proof {
+      font-size: 10px; padding: 2px 7px; border-radius: 999px;
+      background: rgba(255,0,160,0.15); border: 1px solid rgba(255,0,160,0.3); color: var(--magenta);
+    }
+    .consent-scope { font-size: 12px; color: var(--muted); margin-bottom: 10px; }
+    .consent-actions { display: flex; gap: 8px; }
+    .btn-approve, .btn-deny {
+      flex: 1; padding: 7px 0; border-radius: 10px; font-size: 12px;
+      font-weight: 600; cursor: pointer; border: none; transition: all 0.25s var(--phi);
+    }
+    .btn-approve {
+      background: rgba(0,255,120,0.15); border: 1px solid rgba(0,255,120,0.35); color: #00ff78;
+    }
+    .btn-approve:hover {
+      background: rgba(0,255,120,0.28); box-shadow: 0 0 16px rgba(0,255,120,0.3);
+    }
+    .btn-deny {
+      background: rgba(255,0,60,0.12); border: 1px solid rgba(255,0,60,0.3); color: #ff3c5a;
+    }
+    .btn-deny:hover {
+      background: rgba(255,0,60,0.25); box-shadow: 0 0 16px rgba(255,0,60,0.25);
+    }
+
+    /* Action buttons */
+    .btn-primary {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 10px 18px; border-radius: 12px; font-size: 13px; font-weight: 600;
+      cursor: pointer; border: none; transition: all 0.28s var(--phi);
+      font-family: 'Inter', system-ui, sans-serif;
+    }
+    .btn-gold {
+      background: linear-gradient(135deg, var(--gold), #f0c840);
+      color: var(--deep); box-shadow: 0 4px 20px var(--gold-g);
+    }
+    .btn-gold:hover { transform: translateY(-2px); box-shadow: 0 8px 32px var(--gold-g); }
+    .btn-magenta {
+      background: linear-gradient(135deg, var(--magenta), #cc0080);
+      color: var(--white); box-shadow: 0 4px 20px var(--mag-g);
+    }
+    .btn-magenta:hover { transform: translateY(-2px); box-shadow: 0 8px 32px var(--mag-g); }
+
+    .card-footer { margin-top: 16px; display: flex; justify-content: flex-end; }
+
+    /* ═══════════════════════════════════════
+       IDENTITY GRAPH VISUALIZATION
+    ═══════════════════════════════════════ */
+    .graph-section { margin-bottom: 44px; }
+    .graph-title {
+      font-size: 13px; font-weight: 600; color: var(--muted);
+      letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 16px;
+    }
+    .graph-canvas-wrap {
+      background: var(--glass); backdrop-filter: blur(20px);
+      border: 1px solid rgba(255,255,255,0.07); border-radius: var(--card-r);
+      overflow: hidden;
+    }
+    #identityGraph { display: block; width: 100%; height: 340px; cursor: grab; }
+    #identityGraph:active { cursor: grabbing; }
+
+    /* ═══════════════════════════════════════
+       REGISTRATION FORM (shown when no identity)
+    ═══════════════════════════════════════ */
+    .reg-section {
+      display: none; /* toggled via JS */
+      max-width: 500px; margin: 0 auto 52px;
+    }
+    .reg-section.visible { display: block; }
+    .reg-card { background: var(--glass); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.08); border-radius: var(--card-r); padding: 36px; }
+    .reg-title { font-size: 1.5rem; font-weight: 700; margin-bottom: 6px; }
+    .reg-sub { color: var(--muted); font-size: 13px; margin-bottom: 28px; }
+
+    .form-group { margin-bottom: 18px; }
+    .form-label { font-size: 12px; font-weight: 600; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 7px; display: block; }
+    .form-input {
+      width: 100%; padding: 12px 16px; background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.12); border-radius: 12px;
+      color: var(--white); font-size: 14px; font-family: 'Inter', system-ui, sans-serif;
+      transition: border-color 0.25s var(--phi), box-shadow 0.25s var(--phi);
+      outline: none;
+    }
+    .form-input:focus {
+      border-color: var(--cyan); box-shadow: 0 0 0 3px rgba(0,217,255,0.12);
+    }
+    .form-input::placeholder { color: rgba(250,250,250,0.3); }
+
+    .auth-method-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; }
+    .auth-method-btn {
+      padding: 12px 8px; border-radius: 12px; background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.1); cursor: pointer; text-align: center;
+      transition: all 0.25s var(--phi); color: var(--white); font-size: 12px; font-weight: 500;
+      font-family: 'Inter', system-ui, sans-serif;
+    }
+    .auth-method-btn .auth-icon { font-size: 20px; display: block; margin-bottom: 5px; }
+    .auth-method-btn.selected {
+      border-color: var(--cyan); background: rgba(0,217,255,0.1);
+      box-shadow: 0 0 16px rgba(0,217,255,0.2);
+    }
+    .auth-method-btn:hover { border-color: rgba(0,217,255,0.4); }
+
+    .btn-reg-submit {
+      width: 100%; padding: 14px; border-radius: 14px; font-size: 15px; font-weight: 700;
+      cursor: pointer; border: none; margin-top: 8px;
+      background: linear-gradient(135deg, var(--cyan), var(--magenta));
+      color: var(--white); font-family: 'Inter', system-ui, sans-serif;
+      box-shadow: 0 6px 28px rgba(0,217,255,0.3);
+      transition: all 0.3s var(--phi);
+    }
+    .btn-reg-submit:hover { transform: translateY(-2px); box-shadow: 0 10px 40px rgba(0,217,255,0.4); }
+
+    /* ═══════════════════════════════════════
+       MODAL — Delegate Agent / Consent Gate
+    ═══════════════════════════════════════ */
+    .modal-overlay {
+      position: fixed; inset: 0; z-index: 9000;
+      background: rgba(5,5,16,0.82); backdrop-filter: blur(6px);
+      display: none; align-items: center; justify-content: center; padding: 24px;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal-box {
+      background: #0f0f2a; border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 20px; padding: 32px; width: 100%; max-width: 440px;
+      animation: modal-in 0.3s var(--phi);
+    }
+    @keyframes modal-in {
+      from { opacity: 0; transform: scale(0.93) translateY(20px); }
+      to   { opacity: 1; transform: scale(1)    translateY(0); }
+    }
+    .modal-title { font-size: 1.1rem; font-weight: 700; margin-bottom: 18px; }
+    .modal-close {
+      position: absolute; top: 14px; right: 16px;
+      background: none; border: none; color: var(--muted); font-size: 20px;
+      cursor: pointer; line-height: 1;
+    }
+    .modal-box { position: relative; }
+
+    /* ── Loading state ── */
+    .loading-bar {
+      height: 2px; border-radius: 1px; overflow: hidden;
+      background: rgba(255,255,255,0.06); margin-bottom: 24px;
+    }
+    .loading-bar-fill {
+      height: 100%; width: 40%;
+      background: linear-gradient(90deg, var(--cyan), var(--magenta));
+      animation: loading-slide 1.4s ease-in-out infinite;
+    }
+    @keyframes loading-slide {
+      0%   { transform: translateX(-100%); }
+      100% { transform: translateX(350%); }
+    }
+
+    /* ── Toast ── */
+    #toast {
+      position: fixed; bottom: 28px; right: 28px; z-index: 9999;
+      background: rgba(26,26,62,0.95); border: 1px solid rgba(0,217,255,0.3);
+      border-radius: 12px; padding: 12px 20px; font-size: 13px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.4); pointer-events: none;
+      opacity: 0; transform: translateY(16px);
+      transition: all 0.3s var(--phi);
+    }
+    #toast.show { opacity: 1; transform: translateY(0); }
+
+    /* ── Utility ── */
+    .mt-8  { margin-top: 8px; }
+    .mt-14 { margin-top: 14px; }
+    .text-muted { color: var(--muted); }
+    .text-cyan    { color: var(--cyan); }
+    .text-gold    { color: var(--gold); }
+    .text-magenta { color: var(--magenta); }
+    .divider { border: none; border-top: 1px solid rgba(255,255,255,0.07); margin: 16px 0; }
+    .flex-between { display: flex; justify-content: space-between; align-items: center; }
+  </style>
+</head>
+<body>
+
+<div class="bg-orbs">
+  <div class="bg-orb bg-orb-a"></div>
+  <div class="bg-orb bg-orb-b"></div>
+  <div class="bg-orb bg-orb-c"></div>
+</div>
+
+<script src="/nav-global.js"></script>
+
+<div class="page-wrap">
+
+  <!-- Page header -->
+  <div style="text-align:center; margin-bottom: 48px;">
+    <div class="section-label">HeadyMe — Identity System</div>
+    <h1 class="section-title">Unified Identity Graph</h1>
+    <p class="section-sub" style="margin: 12px auto 0;">Three-layer identity: your human presence, your delegated agents, and your data consent gates — all in one graph.</p>
+  </div>
+
+  <!-- Loading bar (shown while fetching) -->
+  <div class="loading-bar" id="loadingBar">
+    <div class="loading-bar-fill"></div>
+  </div>
+
+  <!-- IDENTITY HERO (shown when identity exists) -->
+  <div id="identitySection">
+
+    <div class="identity-hero">
+      <div class="id-orb-wrap">
+        <div class="ring-outer"></div>
+        <div class="ring-mid"></div>
+        <div class="ring-inner"></div>
+        <div class="id-orb-core">
+          <div class="id-orb-core-inner" id="orbInitials">EH</div>
+        </div>
+      </div>
+
+      <div class="ring-legend">
+        <div class="ring-legend-item">
+          <div class="ring-legend-dot" style="background:var(--cyan); box-shadow:0 0 6px var(--cyan-g);"></div>
+          Human Identity
+        </div>
+        <div class="ring-legend-item">
+          <div class="ring-legend-dot" style="background:var(--gold); box-shadow:0 0 6px var(--gold-g);"></div>
+          Agent Delegations
+        </div>
+        <div class="ring-legend-item">
+          <div class="ring-legend-dot" style="background:var(--magenta); box-shadow:0 0 6px var(--mag-g);"></div>
+          Data Consent
+        </div>
+      </div>
+
+      <div class="id-handle" id="userHandle">eric@headyme.com</div>
+      <div class="id-status-badge">
+        <div class="id-status-dot"></div>
+        Identity Active &nbsp;·&nbsp; ORS 94
+      </div>
+    </div>
+
+    <!-- Three identity cards -->
+    <div class="id-cards-grid">
+
+      <!-- Card 1: Human Identity -->
+      <div class="glass-card" style="border-color: rgba(0,217,255,0.15);">
+        <div class="id-card-header">
+          <div class="id-card-icon icon-cyan">&#128100;</div>
+          <div>
+            <div class="id-card-title text-cyan">Human Identity</div>
+            <div class="id-card-sub">SSO, passkeys &amp; OAuth</div>
+          </div>
+        </div>
+
+        <div class="info-row">
+          <span class="info-label">Auth Method</span>
+          <span class="info-val" id="authMethod">Passkey (WebAuthn)</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Verification</span>
+          <span class="verified-badge">&#10003; Verified</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Handle</span>
+          <span class="info-val text-cyan" id="humanHandle">eric@headyme.com</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Identity ID</span>
+          <span class="info-val" style="font-size:11px; font-family:monospace;" id="identityId">hid_9fA2…c1d3</span>
+        </div>
+
+        <hr class="divider">
+        <div class="section-label" style="font-size:10px; margin-bottom:6px;">Login History</div>
+        <div class="login-list" id="loginHistory">
+          <div class="login-item"><span>Chrome / macOS</span><span>just now</span></div>
+          <div class="login-item"><span>Safari / iPhone</span><span>2h ago</span></div>
+          <div class="login-item"><span>Chrome / macOS</span><span>Yesterday</span></div>
+          <div class="login-item"><span>HeadyOS Desktop</span><span>Mar 15</span></div>
+          <div class="login-item"><span>API Key Auth</span><span>Mar 14</span></div>
+        </div>
+      </div>
+
+      <!-- Card 2: Agent Delegations -->
+      <div class="glass-card" style="border-color: rgba(212,175,55,0.15);">
+        <div class="id-card-header">
+          <div class="id-card-icon icon-gold">&#129302;</div>
+          <div>
+            <div class="id-card-title text-gold">Agent Delegations</div>
+            <div class="id-card-sub">Delegated agent tokens</div>
+          </div>
+        </div>
+
+        <div id="agentList">
+          <div class="agent-item">
+            <div class="agent-orb">&#9881;</div>
+            <div class="agent-info">
+              <div class="agent-name">HeadyBuilder</div>
+              <div class="agent-scope">build, deploy, lint</div>
+            </div>
+            <span class="agent-expiry">7d</span>
+            <div class="agent-status-dot"></div>
+          </div>
+          <div class="agent-item">
+            <div class="agent-orb">&#128269;</div>
+            <div class="agent-info">
+              <div class="agent-name">HeadyResearcher</div>
+              <div class="agent-scope">read, search, analyze</div>
+            </div>
+            <span class="agent-expiry">3d</span>
+            <div class="agent-status-dot"></div>
+          </div>
+          <div class="agent-item">
+            <div class="agent-orb">&#128200;</div>
+            <div class="agent-info">
+              <div class="agent-name">HeadyDeployer</div>
+              <div class="agent-scope">deploy, rollback</div>
+            </div>
+            <span class="agent-expiry">14d</span>
+            <div class="agent-status-dot"></div>
+          </div>
+          <div class="agent-item">
+            <div class="agent-orb">&#128196;</div>
+            <div class="agent-info">
+              <div class="agent-name">ClaudeCode</div>
+              <div class="agent-scope">code-gen, refactor</div>
+            </div>
+            <span class="agent-expiry">30d</span>
+            <div class="agent-status-dot"></div>
+          </div>
+        </div>
+
+        <div class="card-footer">
+          <button class="btn-primary btn-gold" onclick="openDelegateModal()">
+            + Delegate New Agent
+          </button>
+        </div>
+      </div>
+
+      <!-- Card 3: Data Consent Gates -->
+      <div class="glass-card" style="border-color: rgba(255,0,160,0.15);">
+        <div class="id-card-header">
+          <div class="id-card-icon icon-magenta">&#128274;</div>
+          <div>
+            <div class="id-card-title text-magenta">Data Consent Gates</div>
+            <div class="id-card-sub">ZK-proof selective disclosure</div>
+          </div>
+        </div>
+
+        <div id="consentList">
+          <div class="consent-item">
+            <div class="consent-top">
+              <span class="consent-requestor">Stripe Billing</span>
+              <span class="consent-proof">ZK-selective</span>
+            </div>
+            <div class="consent-scope">Email, plan tier — no payment data</div>
+            <div class="consent-actions">
+              <button class="btn-approve" onclick="handleConsent(this,'approve')">Approve</button>
+              <button class="btn-deny"    onclick="handleConsent(this,'deny')">Deny</button>
+            </div>
+          </div>
+          <div class="consent-item">
+            <div class="consent-top">
+              <span class="consent-requestor">HuggingFace Hub</span>
+              <span class="consent-proof">ZK-selective</span>
+            </div>
+            <div class="consent-scope">Username, public models only</div>
+            <div class="consent-actions">
+              <button class="btn-approve" onclick="handleConsent(this,'approve')">Approve</button>
+              <button class="btn-deny"    onclick="handleConsent(this,'deny')">Deny</button>
+            </div>
+          </div>
+          <div class="consent-item">
+            <div class="consent-top">
+              <span class="consent-requestor">Discord Integration</span>
+              <span class="consent-proof">ZK-selective</span>
+            </div>
+            <div class="consent-scope">Display name, guild memberships</div>
+            <div class="consent-actions">
+              <button class="btn-approve" onclick="handleConsent(this,'approve')">Approve</button>
+              <button class="btn-deny"    onclick="handleConsent(this,'deny')">Deny</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="card-footer">
+          <button class="btn-primary btn-magenta" onclick="openConsentModal()">
+            + Create Consent Gate
+          </button>
+        </div>
+      </div>
+
+    </div><!-- /.id-cards-grid -->
+
+    <!-- Identity Graph Visualization -->
+    <div class="graph-section">
+      <div class="graph-title">Identity Graph — You &rarr; Agents &rarr; Services</div>
+      <div class="graph-canvas-wrap">
+        <canvas id="identityGraph"></canvas>
+      </div>
+    </div>
+
+  </div><!-- /#identitySection -->
+
+  <!-- REGISTRATION FORM (shown when no identity) -->
+  <div class="reg-section" id="regSection">
+    <div class="reg-card">
+      <div class="reg-title">Create Your HeadyMe Identity</div>
+      <div class="reg-sub">Choose your handle and preferred authentication method to begin.</div>
+
+      <div class="form-group">
+        <label class="form-label" for="regHandle">Your Handle</label>
+        <input class="form-input" id="regHandle" type="text" placeholder="yourname@headyme.com" autocomplete="username">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Authentication Method</label>
+        <div class="auth-method-grid">
+          <button class="auth-method-btn selected" data-method="passkey" onclick="selectAuthMethod(this)">
+            <span class="auth-icon">&#128273;</span>Passkey
+          </button>
+          <button class="auth-method-btn" data-method="sso" onclick="selectAuthMethod(this)">
+            <span class="auth-icon">&#127760;</span>SSO
+          </button>
+          <button class="auth-method-btn" data-method="oauth" onclick="selectAuthMethod(this)">
+            <span class="auth-icon">&#128279;</span>OAuth
+          </button>
+        </div>
+      </div>
+
+      <button class="btn-reg-submit" onclick="submitRegistration()">Create Identity</button>
+    </div>
+  </div>
+
+</div><!-- /.page-wrap -->
+
+<!-- Delegate Agent Modal -->
+<div class="modal-overlay" id="delegateModal">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal('delegateModal')">&times;</button>
+    <div class="modal-title text-gold">Delegate New Agent</div>
+
+    <div class="form-group">
+      <label class="form-label" for="agentName">Agent Name</label>
+      <input class="form-input" id="agentName" type="text" placeholder="e.g. HeadyResearcher">
+    </div>
+    <div class="form-group">
+      <label class="form-label" for="agentScopes">Scopes (comma-separated)</label>
+      <input class="form-input" id="agentScopes" type="text" placeholder="read, search, analyze">
+    </div>
+    <div class="form-group">
+      <label class="form-label" for="agentExpiry">Token Expiry (days)</label>
+      <input class="form-input" id="agentExpiry" type="number" placeholder="7" min="1" max="90">
+    </div>
+    <button class="btn-primary btn-gold" style="width:100%; justify-content:center; padding:12px;" onclick="submitDelegation()">
+      Generate Delegation Token
+    </button>
+  </div>
+</div>
+
+<!-- Consent Gate Modal -->
+<div class="modal-overlay" id="consentModal">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal('consentModal')">&times;</button>
+    <div class="modal-title text-magenta">Create Consent Gate</div>
+
+    <div class="form-group">
+      <label class="form-label" for="consentRequestor">Requestor / Service</label>
+      <input class="form-input" id="consentRequestor" type="text" placeholder="e.g. Stripe Billing">
+    </div>
+    <div class="form-group">
+      <label class="form-label" for="consentScope">Data Scope</label>
+      <input class="form-input" id="consentScope" type="text" placeholder="e.g. Email, plan tier — no payment data">
+    </div>
+    <div class="form-group">
+      <label class="form-label" for="consentProof">Proof Type</label>
+      <select class="form-input" id="consentProof">
+        <option value="zk-selective">ZK-selective</option>
+        <option value="zk-full">ZK-full</option>
+        <option value="direct">Direct (no ZK)</option>
+      </select>
+    </div>
+    <button class="btn-primary btn-magenta" style="width:100%; justify-content:center; padding:12px;" onclick="submitConsentGate()">
+      Create Gate
+    </button>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+(function () {
+  'use strict';
+
+  /* ── Toast helper ── */
+  function toast(msg, dur) {
+    const el = document.getElementById('toast');
+    el.textContent = msg;
+    el.classList.add('show');
+    setTimeout(() => el.classList.remove('show'), dur || 3000);
+  }
+
+  /* ── Modal helpers ── */
+  window.openDelegateModal = function () {
+    document.getElementById('delegateModal').classList.add('open');
+  };
+  window.openConsentModal = function () {
+    document.getElementById('consentModal').classList.add('open');
+  };
+  window.closeModal = function (id) {
+    document.getElementById(id).classList.remove('open');
+  };
+  // Close on overlay click
+  document.querySelectorAll('.modal-overlay').forEach(el => {
+    el.addEventListener('click', function (e) {
+      if (e.target === this) this.classList.remove('open');
+    });
+  });
+
+  /* ── Auth method selector ── */
+  window.selectAuthMethod = function (btn) {
+    document.querySelectorAll('.auth-method-btn').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+  };
+
+  /* ── Consent action ── */
+  window.handleConsent = function (btn, action) {
+    const item = btn.closest('.consent-item');
+    const name = item.querySelector('.consent-requestor').textContent;
+    const endpoint = '/api/features/identity/consent-gate';
+    fetch(endpoint, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ requestor: name, action: action })
+    }).catch(() => {});
+    item.style.transition = 'opacity 0.4s, transform 0.4s';
+    item.style.opacity = '0';
+    item.style.transform = 'translateX(30px)';
+    setTimeout(() => item.remove(), 420);
+    toast(action === 'approve' ? 'Consent approved for ' + name : 'Consent denied for ' + name);
+  };
+
+  /* ── Delegation submit ── */
+  window.submitDelegation = function () {
+    const name   = document.getElementById('agentName').value.trim();
+    const scopes = document.getElementById('agentScopes').value.trim();
+    const expiry = document.getElementById('agentExpiry').value.trim() || '7';
+    if (!name) { toast('Agent name is required.'); return; }
+    fetch('/api/features/identity/delegate-agent', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, scopes, expiry: parseInt(expiry) })
+    }).catch(() => {});
+    const list = document.getElementById('agentList');
+    const item = document.createElement('div');
+    item.className = 'agent-item';
+    item.innerHTML = `
+      <div class="agent-orb">&#9733;</div>
+      <div class="agent-info">
+        <div class="agent-name">${name}</div>
+        <div class="agent-scope">${scopes || 'no scopes'}</div>
+      </div>
+      <span class="agent-expiry">${expiry}d</span>
+      <div class="agent-status-dot" style="background:var(--gold);box-shadow:0 0 6px var(--gold-g);"></div>`;
+    list.appendChild(item);
+    closeModal('delegateModal');
+    toast('Agent "' + name + '" delegated — token valid for ' + expiry + 'd.');
+    document.getElementById('agentName').value = '';
+    document.getElementById('agentScopes').value = '';
+    document.getElementById('agentExpiry').value = '';
+  };
+
+  /* ── Consent gate submit ── */
+  window.submitConsentGate = function () {
+    const requestor = document.getElementById('consentRequestor').value.trim();
+    const scope     = document.getElementById('consentScope').value.trim();
+    const proof     = document.getElementById('consentProof').value;
+    if (!requestor) { toast('Requestor name is required.'); return; }
+    fetch('/api/features/identity/consent-gate', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ requestor, scope, proof, action: 'create' })
+    }).catch(() => {});
+    const list = document.getElementById('consentList');
+    const item = document.createElement('div');
+    item.className = 'consent-item';
+    item.innerHTML = `
+      <div class="consent-top">
+        <span class="consent-requestor">${requestor}</span>
+        <span class="consent-proof">${proof}</span>
+      </div>
+      <div class="consent-scope">${scope || 'No scope defined'}</div>
+      <div class="consent-actions">
+        <button class="btn-approve" onclick="handleConsent(this,'approve')">Approve</button>
+        <button class="btn-deny"    onclick="handleConsent(this,'deny')">Deny</button>
+      </div>`;
+    list.prepend(item);
+    closeModal('consentModal');
+    toast('Consent gate created for ' + requestor + '.');
+    document.getElementById('consentRequestor').value = '';
+    document.getElementById('consentScope').value = '';
+  };
+
+  /* ── Registration submit ── */
+  window.submitRegistration = function () {
+    const handle = document.getElementById('regHandle').value.trim();
+    const method = document.querySelector('.auth-method-btn.selected')?.dataset.method || 'passkey';
+    if (!handle) { toast('Handle is required.'); return; }
+    fetch('/api/features/identity/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ handle, authMethod: method })
+    }).then(r => r.ok ? r.json() : null).then(data => {
+      const h = data?.handle || handle;
+      document.getElementById('userHandle').textContent = h;
+      document.getElementById('humanHandle').textContent = h;
+      document.getElementById('orbInitials').textContent = h.split('@')[0].substring(0, 2).toUpperCase();
+      document.getElementById('regSection').classList.remove('visible');
+      document.getElementById('identitySection').style.display = '';
+      toast('Identity created — welcome, ' + h + '!', 4000);
+    }).catch(() => {
+      toast('Registration saved locally — server unavailable.');
+      document.getElementById('regSection').classList.remove('visible');
+      document.getElementById('identitySection').style.display = '';
+    });
+  };
+
+  /* ════════════════════════════════════════
+     IDENTITY GRAPH CANVAS
+  ════════════════════════════════════════ */
+  function initGraph() {
+    const canvas = document.getElementById('identityGraph');
+    if (!canvas) return;
+    const dpr = window.devicePixelRatio || 1;
+    function resize() {
+      const rect = canvas.parentElement.getBoundingClientRect();
+      canvas.width  = rect.width  * dpr;
+      canvas.height = 340 * dpr;
+      canvas.style.width  = rect.width + 'px';
+      canvas.style.height = '340px';
+    }
+    resize();
+    window.addEventListener('resize', () => { resize(); draw(); });
+
+    const ctx = canvas.getContext('2d');
+    let t = 0;
+
+    const YOU = { label: 'You', color: '#00D9FF', r: 26 };
+
+    const AGENTS = [
+      { label: 'Builder',    color: '#D4AF37', angle: 0    },
+      { label: 'Researcher', color: '#D4AF37', angle: 72   },
+      { label: 'Deployer',   color: '#D4AF37', angle: 144  },
+      { label: 'ClaudeCode', color: '#D4AF37', angle: 216  },
+      { label: 'Conductor',  color: '#D4AF37', angle: 288  },
+    ];
+
+    const SERVICES = [
+      { label: 'Stripe',       color: '#FF00A0', angle: 0   },
+      { label: 'HuggingFace',  color: '#FF00A0', angle: 45  },
+      { label: 'Discord',      color: '#FF00A0', angle: 90  },
+      { label: 'GitHub',       color: '#FF00A0', angle: 135 },
+      { label: 'Render',       color: '#FF00A0', angle: 180 },
+      { label: 'OpenAI',       color: '#FF00A0', angle: 225 },
+      { label: 'Anthropic',    color: '#FF00A0', angle: 270 },
+      { label: 'Postgres',     color: '#FF00A0', angle: 315 },
+    ];
+
+    function polarToXY(cx, cy, radius, angleDeg) {
+      const a = (angleDeg - 90) * Math.PI / 180;
+      return { x: cx + radius * Math.cos(a), y: cy + radius * Math.sin(a) };
+    }
+
+    function drawGlowCircle(cx, cy, r, color, alpha) {
+      ctx.save();
+      ctx.globalAlpha = alpha;
+      const g = ctx.createRadialGradient(cx, cy, 0, cx, cy, r * 2);
+      g.addColorStop(0, color);
+      g.addColorStop(1, 'transparent');
+      ctx.fillStyle = g;
+      ctx.beginPath(); ctx.arc(cx, cy, r * 2, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+
+      ctx.save();
+      ctx.globalAlpha = 1;
+      ctx.strokeStyle = color;
+      ctx.lineWidth = 1.5 * dpr;
+      ctx.shadowColor = color;
+      ctx.shadowBlur = 8 * dpr;
+      ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.restore();
+    }
+
+    function drawLabel(x, y, text, color) {
+      ctx.save();
+      ctx.font = `${Math.round(10 * dpr)}px Inter, sans-serif`;
+      ctx.fillStyle = color;
+      ctx.globalAlpha = 0.85;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(text, x, y);
+      ctx.restore();
+    }
+
+    function drawDashedLine(x1, y1, x2, y2, color, alpha) {
+      ctx.save();
+      ctx.globalAlpha = alpha;
+      ctx.strokeStyle = color;
+      ctx.lineWidth = 1 * dpr;
+      ctx.setLineDash([4 * dpr, 6 * dpr]);
+      ctx.shadowColor = color;
+      ctx.shadowBlur = 4 * dpr;
+      ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2);
+      ctx.stroke();
+      ctx.restore();
+    }
+
+    function draw() {
+      const W = canvas.width;
+      const H = canvas.height;
+      ctx.clearRect(0, 0, W, H);
+
+      const cx = W / 2;
+      const cy = H / 2;
+      const r1 = Math.min(W, H) * 0.18;  // agent orbit
+      const r2 = Math.min(W, H) * 0.38;  // service orbit
+
+      // Subtle orbit rings
+      ctx.save();
+      ctx.strokeStyle = 'rgba(212,175,55,0.1)';
+      ctx.lineWidth = 1 * dpr;
+      ctx.setLineDash([2 * dpr, 6 * dpr]);
+      ctx.beginPath(); ctx.arc(cx, cy, r1, 0, Math.PI * 2); ctx.stroke();
+      ctx.strokeStyle = 'rgba(255,0,160,0.1)';
+      ctx.beginPath(); ctx.arc(cx, cy, r2, 0, Math.PI * 2); ctx.stroke();
+      ctx.restore();
+
+      // Agent nodes + lines to center
+      AGENTS.forEach(ag => {
+        const offset = t * (ag.angle % 2 === 0 ? 0.4 : -0.3);
+        const pos = polarToXY(cx, cy, r1, ag.angle + offset);
+        drawDashedLine(cx, cy, pos.x, pos.y, ag.color, 0.25);
+        drawGlowCircle(pos.x, pos.y, 10 * dpr, ag.color, 0.15);
+        drawLabel(pos.x, pos.y + 18 * dpr, ag.label, ag.color);
+      });
+
+      // Service nodes + lines to agents (simplified: line from center)
+      SERVICES.forEach(sv => {
+        const offset = t * (sv.angle % 3 === 0 ? 0.2 : -0.15);
+        const pos = polarToXY(cx, cy, r2, sv.angle + offset);
+        // Closest agent
+        const closest = AGENTS.reduce((best, ag) => {
+          const ap = polarToXY(cx, cy, r1, ag.angle);
+          const dx = ap.x - pos.x, dy = ap.y - pos.y;
+          const d = Math.sqrt(dx*dx+dy*dy);
+          return (!best || d < best.d) ? { ...ag, d, ax: ap.x, ay: ap.y } : best;
+        }, null);
+        if (closest) drawDashedLine(closest.ax, closest.ay, pos.x, pos.y, '#D4AF37', 0.14);
+        drawDashedLine(cx, cy, pos.x, pos.y, sv.color, 0.1);
+        drawGlowCircle(pos.x, pos.y, 7 * dpr, sv.color, 0.12);
+        drawLabel(pos.x, pos.y + 14 * dpr, sv.label, sv.color);
+      });
+
+      // Center YOU node
+      drawGlowCircle(cx, cy, 18 * dpr, YOU.color, 0.2);
+      ctx.save();
+      ctx.font = `bold ${Math.round(11 * dpr)}px Inter, sans-serif`;
+      ctx.fillStyle = YOU.color;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.shadowColor = YOU.color;
+      ctx.shadowBlur = 10;
+      ctx.fillText('You', cx, cy);
+      ctx.restore();
+
+      t += 0.18;
+      requestAnimationFrame(draw);
+    }
+
+    draw();
+  }
+
+  /* ════════════════════════════════════════
+     BOOTSTRAP — fetch identity from API
+  ════════════════════════════════════════ */
+  function boot() {
+    const loading = document.getElementById('loadingBar');
+    const identSec = document.getElementById('identitySection');
+    const regSec   = document.getElementById('regSection');
+
+    fetch('/api/features/identity')
+      .then(r => r.ok ? r.json() : null)
+      .then(data => {
+        loading.style.display = 'none';
+        if (data && data.handle) {
+          // Populate identity data
+          document.getElementById('userHandle').textContent   = data.handle;
+          document.getElementById('humanHandle').textContent  = data.handle;
+          document.getElementById('identityId').textContent   = data.id ? ('hid_' + data.id.substring(0, 4) + '...' + data.id.slice(-4)) : 'hid_9fA2…c1d3';
+          document.getElementById('authMethod').textContent   = data.authMethod || 'Passkey (WebAuthn)';
+          document.getElementById('orbInitials').textContent  = data.handle.split('@')[0].substring(0, 2).toUpperCase();
+          if (data.agents && data.agents.length) {
+            const list = document.getElementById('agentList');
+            list.innerHTML = '';
+            data.agents.forEach(ag => {
+              const item = document.createElement('div');
+              item.className = 'agent-item';
+              item.innerHTML = `
+                <div class="agent-orb">&#9881;</div>
+                <div class="agent-info">
+                  <div class="agent-name">${ag.name}</div>
+                  <div class="agent-scope">${ag.scopes || ''}</div>
+                </div>
+                <span class="agent-expiry">${ag.expiry || '—'}</span>
+                <div class="agent-status-dot"></div>`;
+              list.appendChild(item);
+            });
+          }
+          identSec.style.display = '';
+          initGraph();
+        } else {
+          // No identity found — show registration
+          identSec.style.display = 'none';
+          regSec.classList.add('visible');
+        }
+      })
+      .catch(() => {
+        loading.style.display = 'none';
+        // Fallback: show demo identity with static data
+        identSec.style.display = '';
+        initGraph();
+      });
+  }
+
+  // Start
+  boot();
+})();
+</script>
+
+</body>
+</html>

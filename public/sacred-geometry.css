@@ -1,6 +1,8 @@
 /**
- * HeadyOS Sacred Geometry Design System
+ * HeadyOS Sacred Geometry Design System v5.0
  * Visual Language: Organic, Rounded, Breathing, Living
+ * Motion System: Phi-Timed (φ = 1.618) — all durations, delays, and easing
+ *   derive from the golden ratio for mathematically harmonious movement
  */
 
 :root {
@@ -8,40 +10,87 @@
   --heady-gold: #D4AF37;
   --heady-gold-light: #F4D03F;
   --heady-gold-dark: #B8860B;
-  
+
   --heady-cyan: #00D9FF;
   --heady-cyan-soft: rgba(0, 217, 255, 0.2);
   --heady-magenta: #FF00A0;
   --heady-magenta-soft: rgba(255, 0, 160, 0.2);
-  
+
   --heady-deep-space: #0A0A1A;
   --heady-void: #050510;
   --heady-nebula: #1A1A3E;
-  
+
   --heady-white: #FAFAFA;
   --heady-cream: #F5F0E8;
   --heady-gray: rgba(255, 255, 255, 0.6);
-  
+
   /* Sacred Glow Effects */
   --glow-gold: 0 0 30px rgba(212, 175, 55, 0.6);
   --glow-cyan: 0 0 40px rgba(0, 217, 255, 0.5);
   --glow-magenta: 0 0 30px rgba(255, 0, 160, 0.5);
-  
-  /* Sacred Geometry Animations */
-  --breath-slow: 4s ease-in-out infinite;
-  --breath-medium: 2s ease-in-out infinite;
-  --pulse-gentle: 1.5s ease-in-out infinite;
+
+  /* ═══ PHI MOTION SYSTEM ═══
+   * All timing derives from φ = 1.618033988749895
+   * Base unit: 1s. Sequence: 0.382s, 0.618s, 1.0s, 1.618s, 2.618s, 4.236s
+   * Stagger delays: 0.1s × φ^n = 0.1, 0.162, 0.262, 0.424, 0.686s
+   */
+  --phi: 1.618033988749895;
+  --phi-inv: 0.618033988749895;
+
+  /* Phi-Scaled Durations */
+  --dur-instant: 0.236s;   /* 1/φ³ */
+  --dur-swift: 0.382s;     /* 1/φ² */
+  --dur-natural: 0.618s;   /* 1/φ   */
+  --dur-steady: 1.0s;      /* φ⁰    */
+  --dur-graceful: 1.618s;  /* φ¹    */
+  --dur-majestic: 2.618s;  /* φ²    */
+  --dur-cosmic: 4.236s;    /* φ³    */
+  --dur-eternal: 6.854s;   /* φ⁴    */
+
+  /* Phi-Scaled Stagger Delays */
+  --stagger-1: 0.1s;
+  --stagger-2: 0.162s;
+  --stagger-3: 0.262s;
+  --stagger-4: 0.424s;
+  --stagger-5: 0.686s;
+
+  /* Golden Ratio Easing Curves */
+  --ease-phi: cubic-bezier(0.618, 0, 0.382, 1);
+  --ease-phi-in: cubic-bezier(0.618, 0, 1, 1);
+  --ease-phi-out: cubic-bezier(0, 0, 0.382, 1);
+  --ease-phi-bounce: cubic-bezier(0.618, -0.15, 0.382, 1.15);
+  --ease-phi-spring: cubic-bezier(0.382, 1.618, 0.618, 1);
+
+  /* Sacred Geometry Animations — Phi-Timed */
+  --breath-slow: var(--dur-cosmic) var(--ease-phi) infinite;
+  --breath-medium: var(--dur-majestic) var(--ease-phi) infinite;
+  --breath-fast: var(--dur-graceful) var(--ease-phi) infinite;
+  --pulse-gentle: var(--dur-graceful) var(--ease-phi) infinite;
   --spin-sacred: 20s linear infinite;
-  
+
+  /* Fibonacci Spacing Scale (px) */
+  --space-1: 1px;
+  --space-2: 2px;
+  --space-3: 3px;
+  --space-5: 5px;
+  --space-8: 8px;
+  --space-13: 13px;
+  --space-21: 21px;
+  --space-34: 34px;
+  --space-55: 55px;
+  --space-89: 89px;
+  --space-144: 144px;
+
   /* Organic Rounding */
   --radius-sacred: 24px;
   --radius-pill: 9999px;
   --radius-card: 20px;
   --radius-button: 16px;
-  
+
   /* Sacred Shadows */
   --shadow-sacred: 0 8px 32px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.05);
   --shadow-floating: 0 20px 60px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(212, 175, 55, 0.1);
+  --shadow-deep: 0 34px 89px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(0, 217, 255, 0.08);
 }
 
 /* Sacred Geometry Background Pattern */
@@ -251,4 +300,222 @@
 
 @keyframes spin {
   to { transform: rotate(360deg); }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   PHI MOTION SYSTEM v5.0 — Golden Ratio Temporal Animations
+   All durations, delays, and easing derive from φ = 1.618
+   ═══════════════════════════════════════════════════════════════ */
+
+/* Phi Breathe — scale oscillates at golden ratio intervals */
+@keyframes phi-breathe {
+  0%, 100% { transform: scale(1); opacity: 0.85; }
+  38.2% { transform: scale(1.03); opacity: 0.95; }
+  61.8% { transform: scale(1.06); opacity: 1; }
+}
+
+/* Phi Orbit — elliptical orbit path using golden proportions */
+@keyframes phi-orbit {
+  0%   { transform: translate(0, 0) rotate(0deg); }
+  25%  { transform: translate(calc(var(--orbit-r, 20px) * 1.618), calc(var(--orbit-r, 20px) * -1)) rotate(90deg); }
+  50%  { transform: translate(0, calc(var(--orbit-r, 20px) * -1.618)) rotate(180deg); }
+  75%  { transform: translate(calc(var(--orbit-r, 20px) * -1.618), calc(var(--orbit-r, 20px) * -1)) rotate(270deg); }
+  100% { transform: translate(0, 0) rotate(360deg); }
+}
+
+/* Phi Reveal — elements materialize with golden timing */
+@keyframes phi-reveal {
+  0%   { opacity: 0; transform: translateY(var(--space-21)) scale(0.95); filter: blur(8px); }
+  61.8% { opacity: 0.85; transform: translateY(var(--space-3)) scale(0.99); filter: blur(1px); }
+  100% { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+}
+
+/* Phi Glow Pulse — glow intensity follows golden cycle */
+@keyframes phi-glow-pulse {
+  0%, 100% { filter: brightness(1) drop-shadow(0 0 8px currentColor); }
+  38.2% { filter: brightness(1.15) drop-shadow(0 0 21px currentColor); }
+  61.8% { filter: brightness(1.3) drop-shadow(0 0 34px currentColor); }
+}
+
+/* Phi Spiral In — elements spiral inward using golden proportions */
+@keyframes phi-spiral-in {
+  0%   { transform: rotate(-144deg) scale(1.618) translateX(55px); opacity: 0; }
+  38.2% { transform: rotate(-55deg) scale(1.2) translateX(21px); opacity: 0.6; }
+  61.8% { transform: rotate(-21deg) scale(1.05) translateX(8px); opacity: 0.9; }
+  100% { transform: rotate(0deg) scale(1) translateX(0); opacity: 1; }
+}
+
+/* Phi Float — gentle drift at golden intervals */
+@keyframes phi-float {
+  0%, 100% { transform: translateY(0) translateX(0); }
+  23.6% { transform: translateY(-8px) translateX(3px); }
+  50%   { transform: translateY(-13px) translateX(-5px); }
+  76.4% { transform: translateY(-5px) translateX(8px); }
+}
+
+/* Phi Ripple — expanding ring effect */
+@keyframes phi-ripple {
+  0%   { transform: scale(0.618); opacity: 1; border-width: 3px; }
+  61.8% { transform: scale(1); opacity: 0.618; border-width: 2px; }
+  100% { transform: scale(1.618); opacity: 0; border-width: 1px; }
+}
+
+/* Phi Color Shift — hue rotation at golden intervals */
+@keyframes phi-color-shift {
+  0%, 100% { filter: hue-rotate(0deg); }
+  38.2% { filter: hue-rotate(137.5deg); }  /* Golden angle */
+  61.8% { filter: hue-rotate(222.5deg); }
+}
+
+/* ─── Phi Motion Utility Classes ─── */
+
+.phi-breathe         { animation: phi-breathe var(--dur-cosmic) var(--ease-phi) infinite; }
+.phi-breathe-fast    { animation: phi-breathe var(--dur-majestic) var(--ease-phi) infinite; }
+.phi-float           { animation: phi-float var(--dur-eternal) var(--ease-phi) infinite; }
+.phi-glow            { animation: phi-glow-pulse var(--dur-cosmic) var(--ease-phi) infinite; }
+.phi-orbit           { animation: phi-orbit 10s linear infinite; }
+.phi-reveal          { animation: phi-reveal var(--dur-graceful) var(--ease-phi-out) forwards; }
+.phi-spiral-in       { animation: phi-spiral-in var(--dur-majestic) var(--ease-phi) forwards; }
+.phi-color-shift     { animation: phi-color-shift var(--dur-eternal) var(--ease-phi) infinite; }
+
+/* Phi Staggered Reveal — apply to children for cascading entrance */
+.phi-stagger > *:nth-child(1)  { animation-delay: var(--stagger-1); }
+.phi-stagger > *:nth-child(2)  { animation-delay: var(--stagger-2); }
+.phi-stagger > *:nth-child(3)  { animation-delay: var(--stagger-3); }
+.phi-stagger > *:nth-child(4)  { animation-delay: var(--stagger-4); }
+.phi-stagger > *:nth-child(5)  { animation-delay: var(--stagger-5); }
+.phi-stagger > *:nth-child(6)  { animation-delay: calc(var(--stagger-5) * 1.618); }
+.phi-stagger > *:nth-child(7)  { animation-delay: calc(var(--stagger-5) * 2.618); }
+.phi-stagger > *:nth-child(8)  { animation-delay: calc(var(--stagger-5) * 4.236); }
+
+/* Phi Transition Utilities — apply to any interactive element */
+.phi-transition       { transition: all var(--dur-natural) var(--ease-phi); }
+.phi-transition-swift { transition: all var(--dur-swift) var(--ease-phi); }
+.phi-transition-slow  { transition: all var(--dur-graceful) var(--ease-phi); }
+.phi-hover-lift:hover { transform: translateY(calc(var(--space-8) * -1)); }
+.phi-hover-glow:hover { box-shadow: var(--glow-cyan); }
+.phi-hover-grow:hover { transform: scale(1.0618); }
+
+/* Mood Orb — Color shifts based on data-mood attribute */
+.heady-orb[data-mood="healthy"] {
+  --orb-primary: var(--heady-cyan);
+  --orb-glow: rgba(0, 217, 255, 0.5);
+}
+.heady-orb[data-mood="warning"] {
+  --orb-primary: var(--heady-gold);
+  --orb-glow: rgba(212, 175, 55, 0.5);
+}
+.heady-orb[data-mood="critical"] {
+  --orb-primary: var(--heady-magenta);
+  --orb-glow: rgba(255, 0, 160, 0.5);
+  animation: phi-breathe var(--dur-graceful) var(--ease-phi) infinite;
+}
+.heady-orb[data-mood="dreaming"] {
+  --orb-primary: #8B5CF6;
+  --orb-glow: rgba(139, 92, 246, 0.5);
+  animation: phi-breathe var(--dur-eternal) var(--ease-phi) infinite, phi-color-shift 20s linear infinite;
+}
+
+/* Sacred Toast Notifications — breathe in/out */
+.sacred-toast {
+  position: fixed;
+  bottom: var(--space-34);
+  right: var(--space-34);
+  padding: var(--space-13) var(--space-21);
+  background: rgba(26, 26, 62, 0.9);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-card);
+  color: var(--heady-white);
+  box-shadow: var(--shadow-sacred);
+  animation: phi-reveal var(--dur-natural) var(--ease-phi-out) forwards;
+  z-index: 10000;
+}
+.sacred-toast.exit {
+  animation: phi-reveal var(--dur-natural) var(--ease-phi) reverse forwards;
+}
+
+/* Sacred Navigation Bar */
+.sacred-nav {
+  display: flex;
+  align-items: center;
+  gap: var(--space-21);
+  padding: var(--space-13) var(--space-34);
+  background: rgba(5, 5, 16, 0.85);
+  backdrop-filter: blur(24px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.sacred-nav a {
+  color: var(--heady-gray);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  transition: color var(--dur-swift) var(--ease-phi);
+  letter-spacing: 0.5px;
+}
+
+.sacred-nav a:hover,
+.sacred-nav a.active {
+  color: var(--heady-cyan);
+}
+
+.sacred-nav .nav-logo {
+  font-size: 18px;
+  font-weight: 700;
+  background: linear-gradient(135deg, var(--heady-gold), var(--heady-cyan));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-right: auto;
+}
+
+/* Phi Grid Layout */
+.phi-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.618fr;
+  gap: var(--space-21);
+}
+
+.phi-grid-3 {
+  display: grid;
+  grid-template-columns: 1fr 1.618fr 2.618fr;
+  gap: var(--space-21);
+}
+
+/* Sacred Badge */
+.sacred-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-5);
+  padding: var(--space-3) var(--space-13);
+  border-radius: var(--radius-pill);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.sacred-badge.cyan    { background: rgba(0, 217, 255, 0.15); color: var(--heady-cyan); border: 1px solid rgba(0, 217, 255, 0.3); }
+.sacred-badge.gold    { background: rgba(212, 175, 55, 0.15); color: var(--heady-gold); border: 1px solid rgba(212, 175, 55, 0.3); }
+.sacred-badge.magenta { background: rgba(255, 0, 160, 0.15); color: var(--heady-magenta); border: 1px solid rgba(255, 0, 160, 0.3); }
+
+/* Sacred Progress Bar */
+.sacred-progress {
+  width: 100%;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: var(--radius-pill);
+  overflow: hidden;
+}
+
+.sacred-progress-fill {
+  height: 100%;
+  border-radius: var(--radius-pill);
+  background: linear-gradient(90deg, var(--heady-cyan), var(--heady-gold));
+  transition: width var(--dur-graceful) var(--ease-phi);
+  box-shadow: 0 0 13px rgba(0, 217, 255, 0.4);
 }

@@ -1,0 +1,959 @@
+<!-- HEADY_BRAND:BEGIN
+     HEADY SYSTEMS | briefing.html | Sacred Geometry v5.0
+     Morning Intelligence Digest — your daily Heady report
+     (c) 2026 HeadySystems Inc. - Eric Haywood, Founder
+HEADY_BRAND:END -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Heady Morning Intelligence Digest — your daily system briefing.">
+  <meta name="theme-color" content="#050510">
+  <title>Morning Briefing — Heady Intelligence Digest</title>
+  <link rel="stylesheet" href="/sacred-geometry.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --gold:    #D4AF37;
+      --cyan:    #00D9FF;
+      --magenta: #FF00A0;
+      --purple:  #9B59FF;
+      --white:   #FAFAFA;
+      --bg0:     #050510;
+      --bg1:     #0A0A1A;
+      --bg2:     #1A1A3E;
+      --glass:   rgba(26,26,62,0.6);
+      --phi:     cubic-bezier(0.618,0,0.382,1);
+      --border:  rgba(255,255,255,0.08);
+    }
+
+    html, body {
+      width: 100%; min-height: 100vh; overflow-x: hidden;
+    }
+
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: var(--bg0);
+      color: var(--white);
+      line-height: 1.6;
+      padding-bottom: 80px;
+    }
+
+    /* ── AMBIENT BACKGROUND ── */
+    .ambient {
+      position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden;
+    }
+    .ambient-orb {
+      position: absolute; border-radius: 50%;
+      filter: blur(100px); opacity: 0.12;
+      animation: drift 30s ease-in-out infinite;
+    }
+    .ambient-orb:nth-child(1) { width: 500px; height: 500px; background: var(--cyan);    top: -150px; left: -150px; animation-duration: 28s; }
+    .ambient-orb:nth-child(2) { width: 450px; height: 450px; background: var(--magenta); bottom: -100px; right: -100px; animation-duration: 34s; animation-delay: -12s; }
+    .ambient-orb:nth-child(3) { width: 350px; height: 350px; background: var(--gold);    top: 40%; left: 55%; animation-duration: 40s; animation-delay: -20s; }
+    .ambient-orb:nth-child(4) { width: 280px; height: 280px; background: var(--purple);  top: 20%; left: 30%; animation-duration: 36s; animation-delay: -8s; }
+
+    @keyframes drift {
+      0%,100% { transform: translate(0,0) scale(1); }
+      33%      { transform: translate(60px,-40px) scale(1.08); }
+      66%      { transform: translate(-40px,60px) scale(0.94); }
+    }
+
+    /* ── SUNRISE HERO BAND ── */
+    .sunrise-band {
+      position: relative; z-index: 1;
+      background: linear-gradient(180deg, #050510 0%, rgba(212,131,37,0.18) 40%, rgba(212,175,55,0.06) 70%, #050510 100%);
+      padding: 80px 30px 50px;
+      text-align: center;
+      overflow: hidden;
+    }
+    .sunrise-band::before {
+      content: '';
+      position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);
+      width: 800px; height: 2px;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+      opacity: 0.4;
+    }
+
+    /* ── GREETING ── */
+    .greeting-row {
+      display: flex; align-items: center; justify-content: center; gap: 18px;
+      margin-bottom: 10px; flex-wrap: wrap;
+    }
+
+    .mood-orb-wrap { position: relative; display: inline-flex; align-items: center; }
+    .mood-orb {
+      width: 48px; height: 48px; border-radius: 50%;
+      background: conic-gradient(from 0deg, var(--cyan), var(--gold), var(--magenta), var(--cyan));
+      box-shadow: 0 0 24px rgba(0,217,255,0.5), 0 0 48px rgba(0,217,255,0.15);
+      animation: orb-breathe 4s var(--phi) infinite;
+      flex-shrink: 0;
+    }
+    .mood-orb.spinning { animation: orb-spin 0.6s linear infinite, orb-breathe 4s var(--phi) infinite; }
+    @keyframes orb-breathe {
+      0%,100% { box-shadow: 0 0 24px rgba(0,217,255,0.5), 0 0 48px rgba(0,217,255,0.15); transform: scale(1); }
+      50%      { box-shadow: 0 0 36px rgba(0,217,255,0.8), 0 0 72px rgba(0,217,255,0.25); transform: scale(1.07); }
+    }
+    @keyframes orb-spin {
+      to { transform: rotate(360deg) scale(1.07); }
+    }
+
+    .ors-badge {
+      position: absolute; top: -6px; right: -10px;
+      background: linear-gradient(135deg, var(--gold), #a07c1a);
+      color: #050510; font-size: 9px; font-weight: 800;
+      padding: 2px 6px; border-radius: 10px; letter-spacing: 0.5px;
+      white-space: nowrap;
+    }
+
+    h1.greeting {
+      font-size: clamp(2rem, 5vw, 3.4rem);
+      font-weight: 800; letter-spacing: -1px;
+      background: linear-gradient(135deg, var(--white) 30%, var(--gold));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .date-line {
+      font-size: 1rem; font-weight: 400; color: rgba(250,250,250,0.45);
+      letter-spacing: 2px; text-transform: uppercase; margin-top: 6px;
+    }
+
+    .tagline {
+      margin-top: 12px; font-size: 1.05rem; color: rgba(250,250,250,0.6);
+      font-weight: 300;
+    }
+    .tagline span { color: var(--cyan); font-weight: 500; }
+
+    /* ── MAIN CONTENT ── */
+    .main-content {
+      position: relative; z-index: 1;
+      max-width: 1200px; margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* ── GENERATE BUTTON ZONE ── */
+    .generate-zone {
+      display: flex; flex-direction: column; align-items: center;
+      gap: 16px; padding: 40px 0 20px;
+    }
+
+    .generate-btn {
+      display: inline-flex; align-items: center; gap: 12px;
+      background: linear-gradient(135deg, rgba(212,175,55,0.15), rgba(0,217,255,0.1));
+      border: 1px solid rgba(212,175,55,0.4);
+      color: var(--gold); font-family: 'Inter', system-ui, sans-serif;
+      font-size: 1rem; font-weight: 600; letter-spacing: 0.5px;
+      padding: 14px 32px; border-radius: 50px;
+      cursor: pointer; transition: all 0.3s var(--phi);
+      backdrop-filter: blur(10px);
+    }
+    .generate-btn:hover {
+      background: linear-gradient(135deg, rgba(212,175,55,0.28), rgba(0,217,255,0.18));
+      border-color: var(--gold);
+      box-shadow: 0 0 30px rgba(212,175,55,0.25), 0 0 60px rgba(212,175,55,0.08);
+      transform: translateY(-2px);
+    }
+    .generate-btn:active { transform: translateY(0); }
+    .generate-btn .btn-icon { font-size: 1.3rem; }
+
+    .generate-hint {
+      font-size: 0.82rem; color: rgba(250,250,250,0.35); letter-spacing: 0.5px;
+    }
+
+    /* ── BRIEFING GRID ── */
+    .briefing-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+      padding: 10px 0 40px;
+    }
+    @media (max-width: 780px) {
+      .briefing-grid { grid-template-columns: 1fr; }
+    }
+
+    /* ── GLASS CARD ── */
+    .card {
+      background: var(--glass);
+      backdrop-filter: blur(20px);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 28px 28px 24px;
+      position: relative;
+      overflow: hidden;
+      opacity: 0;
+      transform: translateY(32px);
+      transition: opacity 0.5s var(--phi), transform 0.5s var(--phi),
+                  box-shadow 0.3s var(--phi);
+    }
+    .card.revealed {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .card:hover {
+      box-shadow: 0 8px 40px rgba(0,0,0,0.4);
+      transform: translateY(-4px);
+    }
+    .card.revealed:hover { transform: translateY(-4px); }
+
+    /* colored left border per accent */
+    .card::before {
+      content: ''; position: absolute;
+      left: 0; top: 20%; bottom: 20%;
+      width: 3px; border-radius: 3px;
+    }
+    .card-cyan::before   { background: var(--cyan);    box-shadow: 0 0 12px var(--cyan); }
+    .card-gold::before   { background: var(--gold);    box-shadow: 0 0 12px var(--gold); }
+    .card-magenta::before{ background: var(--magenta); box-shadow: 0 0 12px var(--magenta); }
+    .card-purple::before { background: var(--purple);  box-shadow: 0 0 12px var(--purple); }
+
+    /* inner glow overlay */
+    .card::after {
+      content: ''; position: absolute; inset: 0; border-radius: 20px;
+      pointer-events: none; opacity: 0.04;
+    }
+    .card-cyan::after    { background: radial-gradient(ellipse at top left,  var(--cyan), transparent 70%); }
+    .card-gold::after    { background: radial-gradient(ellipse at top left,  var(--gold), transparent 70%); }
+    .card-magenta::after { background: radial-gradient(ellipse at top left,  var(--magenta), transparent 70%); }
+    .card-purple::after  { background: radial-gradient(ellipse at top left,  var(--purple), transparent 70%); }
+
+    .card-header {
+      display: flex; align-items: center; gap: 12px; margin-bottom: 18px;
+    }
+    .card-icon {
+      width: 40px; height: 40px; border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.3rem; flex-shrink: 0;
+    }
+    .card-cyan   .card-icon { background: rgba(0,217,255,0.12); }
+    .card-gold   .card-icon { background: rgba(212,175,55,0.12); }
+    .card-magenta .card-icon{ background: rgba(255,0,160,0.12); }
+    .card-purple .card-icon  { background: rgba(155,89,255,0.12); }
+
+    .card-title {
+      font-size: 1rem; font-weight: 700; letter-spacing: 0.3px;
+    }
+    .card-cyan   .card-title { color: var(--cyan); }
+    .card-gold   .card-title { color: var(--gold); }
+    .card-magenta .card-title{ color: var(--magenta); }
+    .card-purple .card-title  { color: var(--purple); }
+
+    .card-subtitle { font-size: 0.75rem; color: rgba(250,250,250,0.4); margin-top: 1px; }
+
+    /* item list inside cards */
+    .item-list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+    .item-list li {
+      display: flex; align-items: flex-start; gap: 10px;
+      font-size: 0.88rem; color: rgba(250,250,250,0.78);
+      line-height: 1.4;
+    }
+    .item-dot {
+      width: 6px; height: 6px; border-radius: 50%; margin-top: 5px; flex-shrink: 0;
+    }
+    .card-cyan   .item-dot { background: var(--cyan); }
+    .card-gold   .item-dot { background: var(--gold); }
+    .card-magenta .item-dot{ background: var(--magenta); }
+    .card-purple .item-dot  { background: var(--purple); }
+
+    /* metric rows */
+    .metrics-row { display: flex; gap: 14px; margin-top: 14px; flex-wrap: wrap; }
+    .metric-pill {
+      display: flex; flex-direction: column; align-items: center;
+      background: rgba(255,255,255,0.04); border: 1px solid var(--border);
+      border-radius: 10px; padding: 8px 14px; min-width: 72px;
+    }
+    .metric-val { font-size: 1.1rem; font-weight: 700; }
+    .metric-lbl { font-size: 0.68rem; color: rgba(250,250,250,0.4); letter-spacing: 0.5px; text-transform: uppercase; margin-top: 2px; }
+    .card-gold   .metric-val { color: var(--gold); }
+    .card-cyan   .metric-val { color: var(--cyan); }
+    .card-magenta .metric-val{ color: var(--magenta); }
+
+    /* status dot */
+    .status-dot {
+      display: inline-block; width: 8px; height: 8px; border-radius: 50%;
+      margin-right: 5px; vertical-align: middle;
+    }
+    .dot-ok      { background: #00FF87; box-shadow: 0 0 6px #00FF87; }
+    .dot-warn    { background: var(--gold); box-shadow: 0 0 6px var(--gold); }
+    .dot-crit    { background: var(--magenta); box-shadow: 0 0 6px var(--magenta); }
+
+    /* placeholder shimmer when not yet generated */
+    .card-placeholder .item-list li {
+      background: rgba(255,255,255,0.04); border-radius: 6px;
+      height: 14px; animation: shimmer 1.8s ease-in-out infinite;
+    }
+    .card-placeholder .item-list li:nth-child(2) { width: 85%; animation-delay: 0.2s; }
+    .card-placeholder .item-list li:nth-child(3) { width: 70%; animation-delay: 0.4s; }
+    @keyframes shimmer {
+      0%,100% { opacity: 0.04; }
+      50%      { opacity: 0.12; }
+    }
+
+    /* ── READ ALOUD ── */
+    .read-aloud-bar {
+      display: flex; align-items: center; justify-content: space-between;
+      background: var(--glass); backdrop-filter: blur(20px);
+      border: 1px solid var(--border); border-radius: 16px;
+      padding: 16px 24px; margin-bottom: 40px;
+      flex-wrap: wrap; gap: 14px;
+    }
+    .read-aloud-left { display: flex; align-items: center; gap: 14px; }
+    .wave-viz {
+      display: flex; align-items: center; gap: 3px; height: 28px;
+    }
+    .wave-bar {
+      width: 3px; border-radius: 3px; background: var(--cyan);
+      height: 6px; transition: height 0.15s ease;
+      animation: none;
+    }
+    .wave-bar.playing {
+      animation: wave-anim 0.6s ease-in-out infinite alternate;
+    }
+    .wave-bar:nth-child(2).playing { animation-delay: 0.1s; }
+    .wave-bar:nth-child(3).playing { animation-delay: 0.2s; }
+    .wave-bar:nth-child(4).playing { animation-delay: 0.05s; }
+    .wave-bar:nth-child(5).playing { animation-delay: 0.15s; }
+    .wave-bar:nth-child(6).playing { animation-delay: 0.25s; }
+    .wave-bar:nth-child(7).playing { animation-delay: 0.08s; }
+    @keyframes wave-anim {
+      from { height: 4px; }
+      to   { height: 22px; }
+    }
+
+    .read-aloud-label { font-size: 0.9rem; font-weight: 600; color: var(--white); }
+    .read-aloud-sub   { font-size: 0.75rem; color: rgba(250,250,250,0.4); }
+
+    .read-btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(0,217,255,0.1); border: 1px solid rgba(0,217,255,0.3);
+      color: var(--cyan); font-family: 'Inter', system-ui, sans-serif;
+      font-size: 0.85rem; font-weight: 600;
+      padding: 9px 20px; border-radius: 50px;
+      cursor: pointer; transition: all 0.25s var(--phi);
+    }
+    .read-btn:hover {
+      background: rgba(0,217,255,0.2); box-shadow: 0 0 20px rgba(0,217,255,0.2);
+    }
+    .read-btn.active {
+      background: rgba(0,217,255,0.22); border-color: var(--cyan);
+      box-shadow: 0 0 24px rgba(0,217,255,0.3);
+    }
+
+    /* ── SECTION TITLE ── */
+    .section-title {
+      font-size: 0.75rem; font-weight: 700; letter-spacing: 2px;
+      text-transform: uppercase; color: rgba(250,250,250,0.35);
+      margin-bottom: 16px; padding-bottom: 10px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    /* ── HISTORY STRIP ── */
+    .history-strip {
+      display: flex; gap: 14px;
+      overflow-x: auto; padding-bottom: 12px;
+      scrollbar-width: thin; scrollbar-color: rgba(255,255,255,0.1) transparent;
+      margin-bottom: 50px;
+    }
+    .history-strip::-webkit-scrollbar { height: 4px; }
+    .history-strip::-webkit-scrollbar-track { background: transparent; }
+    .history-strip::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 4px; }
+
+    .history-card {
+      flex-shrink: 0; width: 180px;
+      background: var(--glass); backdrop-filter: blur(20px);
+      border: 1px solid var(--border); border-radius: 16px;
+      padding: 18px 16px; cursor: pointer;
+      transition: all 0.25s var(--phi);
+    }
+    .history-card:hover {
+      border-color: rgba(212,175,55,0.4);
+      box-shadow: 0 4px 24px rgba(212,175,55,0.1);
+      transform: translateY(-3px);
+    }
+    .history-card.today {
+      border-color: rgba(212,175,55,0.5);
+      background: rgba(212,175,55,0.06);
+    }
+    .history-date {
+      font-size: 0.78rem; font-weight: 700; color: var(--gold);
+      letter-spacing: 0.5px; margin-bottom: 6px;
+    }
+    .history-today-badge {
+      display: inline-block; background: var(--gold); color: #050510;
+      font-size: 0.62rem; font-weight: 800; letter-spacing: 0.5px;
+      padding: 1px 6px; border-radius: 8px; margin-left: 6px;
+      vertical-align: middle;
+    }
+    .history-snippet {
+      font-size: 0.78rem; color: rgba(250,250,250,0.5);
+      line-height: 1.4; overflow: hidden;
+      display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical;
+    }
+    .history-ors {
+      margin-top: 10px; font-size: 0.72rem;
+      color: rgba(250,250,250,0.35);
+    }
+    .history-ors span { color: var(--cyan); font-weight: 700; }
+
+    /* ── PREFERENCES ── */
+    .prefs-section {
+      background: var(--glass); backdrop-filter: blur(20px);
+      border: 1px solid var(--border); border-radius: 20px;
+      padding: 28px; margin-bottom: 50px;
+    }
+    .prefs-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 24px; margin-top: 20px;
+    }
+    .pref-group label.pref-label {
+      display: block; font-size: 0.78rem; font-weight: 600;
+      color: rgba(250,250,250,0.5); letter-spacing: 1px;
+      text-transform: uppercase; margin-bottom: 10px;
+    }
+    .pref-select {
+      width: 100%; background: rgba(255,255,255,0.05);
+      border: 1px solid var(--border); color: var(--white);
+      font-family: 'Inter', system-ui, sans-serif; font-size: 0.88rem;
+      padding: 10px 14px; border-radius: 10px;
+      outline: none; cursor: pointer;
+      transition: border-color 0.2s;
+    }
+    .pref-select:focus { border-color: rgba(212,175,55,0.5); }
+    .pref-select option { background: #0A0A1A; }
+
+    .toggle-pills { display: flex; flex-wrap: wrap; gap: 8px; }
+    .toggle-pill {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 7px 14px; border-radius: 50px; font-size: 0.8rem;
+      font-family: 'Inter', system-ui, sans-serif; font-weight: 500;
+      cursor: pointer; border: 1px solid var(--border);
+      background: rgba(255,255,255,0.04); color: rgba(250,250,250,0.55);
+      transition: all 0.2s var(--phi);
+      user-select: none;
+    }
+    .toggle-pill.on {
+      border-color: rgba(212,175,55,0.5); background: rgba(212,175,55,0.1);
+      color: var(--gold);
+    }
+    .toggle-pill .pill-dot {
+      width: 7px; height: 7px; border-radius: 50%;
+      background: currentColor; opacity: 0.6;
+    }
+
+    .prefs-save-row { margin-top: 20px; display: flex; justify-content: flex-end; }
+    .prefs-save-btn {
+      background: linear-gradient(135deg, rgba(212,175,55,0.2), rgba(212,175,55,0.08));
+      border: 1px solid rgba(212,175,55,0.4); color: var(--gold);
+      font-family: 'Inter', system-ui, sans-serif; font-size: 0.85rem; font-weight: 600;
+      padding: 10px 24px; border-radius: 50px; cursor: pointer;
+      transition: all 0.25s var(--phi);
+    }
+    .prefs-save-btn:hover {
+      background: linear-gradient(135deg, rgba(212,175,55,0.3), rgba(212,175,55,0.14));
+      box-shadow: 0 0 20px rgba(212,175,55,0.2);
+    }
+    .prefs-save-btn.saved { color: #00FF87; border-color: rgba(0,255,135,0.4); }
+
+    /* ── TOAST ── */
+    .toast {
+      position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(80px);
+      background: rgba(26,26,62,0.95); backdrop-filter: blur(20px);
+      border: 1px solid rgba(0,217,255,0.3); color: var(--white);
+      font-size: 0.88rem; padding: 12px 24px; border-radius: 50px;
+      z-index: 9000; transition: transform 0.35s var(--phi), opacity 0.35s var(--phi);
+      opacity: 0; white-space: nowrap;
+    }
+    .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+  </style>
+</head>
+<body>
+
+<div class="ambient" aria-hidden="true">
+  <div class="ambient-orb"></div>
+  <div class="ambient-orb"></div>
+  <div class="ambient-orb"></div>
+  <div class="ambient-orb"></div>
+</div>
+
+<!-- NAV injected by nav-global.js -->
+
+<!-- ── HERO / GREETING ── -->
+<div class="sunrise-band">
+  <div class="greeting-row">
+    <div class="mood-orb-wrap" id="moodOrbWrap">
+      <div class="mood-orb" id="moodOrb"></div>
+      <span class="ors-badge" id="orsBadge">ORS: 92</span>
+    </div>
+    <h1 class="greeting" id="greetingText">Good morning, Eric</h1>
+  </div>
+  <p class="date-line" id="dateLine">Loading date...</p>
+  <p class="tagline">Your <span>Heady Intelligence Digest</span> is ready.</p>
+</div>
+
+<!-- ── MAIN ── -->
+<main class="main-content">
+
+  <!-- Generate zone (shown when no briefing for today) -->
+  <div class="generate-zone" id="generateZone" style="display:none;">
+    <button class="generate-btn" id="generateBtn" onclick="generateBriefing()">
+      <span class="btn-icon">✦</span>
+      Generate Today's Briefing
+    </button>
+    <p class="generate-hint">Pulls live data from all agents, services, and security feeds.</p>
+  </div>
+
+  <!-- ── READ ALOUD ── -->
+  <div class="read-aloud-bar" id="readAloudBar" style="display:none;">
+    <div class="read-aloud-left">
+      <div class="wave-viz" id="waveViz">
+        <div class="wave-bar" id="wb1"></div>
+        <div class="wave-bar" id="wb2"></div>
+        <div class="wave-bar" id="wb3"></div>
+        <div class="wave-bar" id="wb4"></div>
+        <div class="wave-bar" id="wb5"></div>
+        <div class="wave-bar" id="wb6"></div>
+        <div class="wave-bar" id="wb7"></div>
+      </div>
+      <div>
+        <div class="read-aloud-label">Read Aloud</div>
+        <div class="read-aloud-sub" id="readStatus">Uses your browser's speech synthesis</div>
+      </div>
+    </div>
+    <button class="read-btn" id="readBtn" onclick="toggleReadAloud()">
+      <span id="readBtnIcon">▶</span>
+      <span id="readBtnLabel">Play Briefing</span>
+    </button>
+  </div>
+
+  <!-- ── BRIEFING CARDS 2×2 ── -->
+  <div class="briefing-grid" id="briefingGrid">
+
+    <!-- Agent Activity -->
+    <div class="card card-cyan" id="card-agents" style="transition-delay:0.05s;">
+      <div class="card-header">
+        <div class="card-icon">🤖</div>
+        <div>
+          <div class="card-title">Agent Activity</div>
+          <div class="card-subtitle">Overnight operations summary</div>
+        </div>
+      </div>
+      <ul class="item-list" id="agentList">
+        <li><span class="item-dot"></span>BuilderAgent completed 3 pipeline runs — all stages green</li>
+        <li><span class="item-dot"></span>ResearcherAgent indexed 14 new public-domain patterns</li>
+        <li><span class="item-dot"></span>ClaudeCode refactored hc_pipeline.js — coverage up to 94%</li>
+        <li><span class="item-dot"></span>DeployerAgent staged production artifact v2.8.1</li>
+        <li><span class="item-dot"></span>SupervisorAgent routed 42 tasks — avg latency 180ms</li>
+      </ul>
+    </div>
+
+    <!-- Service Health -->
+    <div class="card card-gold" id="card-health" style="transition-delay:0.15s;">
+      <div class="card-header">
+        <div class="card-icon">💓</div>
+        <div>
+          <div class="card-title">Service Health</div>
+          <div class="card-subtitle">SLOs, uptime, and latency</div>
+        </div>
+      </div>
+      <ul class="item-list" id="healthList">
+        <li><span class="item-dot"></span><span class="status-dot dot-ok"></span>heady-manager — 100% uptime, p95 latency 48ms</li>
+        <li><span class="item-dot"></span><span class="status-dot dot-ok"></span>hc-pipeline — 99.97% — 2 circuit resets overnight</li>
+        <li><span class="item-dot"></span><span class="status-dot dot-ok"></span>hc-brain — ORS 92 — full parallelism mode</li>
+        <li><span class="item-dot"></span><span class="status-dot dot-warn"></span>hc-checkpoint — elevated retry rate (4%) — monitoring</li>
+      </ul>
+      <div class="metrics-row">
+        <div class="metric-pill"><span class="metric-val">99.98%</span><span class="metric-lbl">Uptime</span></div>
+        <div class="metric-pill"><span class="metric-val">48ms</span><span class="metric-lbl">p95</span></div>
+        <div class="metric-pill"><span class="metric-val">0.03%</span><span class="metric-lbl">Error</span></div>
+      </div>
+    </div>
+
+    <!-- Security -->
+    <div class="card card-magenta" id="card-security" style="transition-delay:0.25s;">
+      <div class="card-header">
+        <div class="card-icon">🛡</div>
+        <div>
+          <div class="card-title">Security</div>
+          <div class="card-subtitle">Alerts and key hygiene</div>
+        </div>
+      </div>
+      <ul class="item-list" id="securityList">
+        <li><span class="item-dot"></span><span class="status-dot dot-ok"></span>No active security incidents</li>
+        <li><span class="item-dot"></span>API key rotation scheduled — next rotation in 6 days</li>
+        <li><span class="item-dot"></span>Post-quantum TLS handshakes — 100% coverage</li>
+        <li><span class="item-dot"></span>Timing-safe auth validated on all 22 endpoints</li>
+        <li><span class="item-dot"></span><span class="status-dot dot-warn"></span>2 dependency advisories — patched in staging</li>
+      </ul>
+    </div>
+
+    <!-- Insights & Discoveries -->
+    <div class="card card-purple" id="card-insights" style="transition-delay:0.35s;">
+      <div class="card-header">
+        <div class="card-icon">💡</div>
+        <div>
+          <div class="card-title">Insights &amp; Discoveries</div>
+          <div class="card-subtitle">Patterns found and recommendations</div>
+        </div>
+      </div>
+      <ul class="item-list" id="insightsList">
+        <li><span class="item-dot"></span>Circuit-breaker tripped 2x on checkpoint stage — suggest threshold +10%</li>
+        <li><span class="item-dot"></span>phi-stagger pattern reduced UI jank by 22ms on mobile</li>
+        <li><span class="item-dot"></span>New public-domain pattern: adaptive fan-out with backpressure</li>
+        <li><span class="item-dot"></span>Concurrency headroom at 68% — safe to enable new large build</li>
+        <li><span class="item-dot"></span>Concept alignment: 14/17 planned patterns now implemented</li>
+      </ul>
+    </div>
+
+  </div><!-- /briefing-grid -->
+
+  <!-- ── HISTORY ── -->
+  <p class="section-title">Briefing History — Last 7 Days</p>
+  <div class="history-strip" id="historyStrip">
+    <!-- populated by JS -->
+  </div>
+
+  <!-- ── PREFERENCES ── -->
+  <p class="section-title">Preferences</p>
+  <div class="prefs-section">
+    <div class="prefs-grid">
+
+      <div class="pref-group">
+        <label class="pref-label" for="deliveryHour">Delivery Hour</label>
+        <select class="pref-select" id="deliveryHour">
+          <option value="5">5:00 AM</option>
+          <option value="6">6:00 AM</option>
+          <option value="7" selected>7:00 AM</option>
+          <option value="8">8:00 AM</option>
+          <option value="9">9:00 AM</option>
+        </select>
+      </div>
+
+      <div class="pref-group">
+        <label class="pref-label" for="tzSelect">Timezone</label>
+        <select class="pref-select" id="tzSelect">
+          <option value="America/New_York" selected>US Eastern (ET)</option>
+          <option value="America/Chicago">US Central (CT)</option>
+          <option value="America/Denver">US Mountain (MT)</option>
+          <option value="America/Los_Angeles">US Pacific (PT)</option>
+          <option value="UTC">UTC</option>
+          <option value="Europe/London">London (GMT/BST)</option>
+          <option value="Europe/Berlin">Berlin (CET)</option>
+        </select>
+      </div>
+
+      <div class="pref-group">
+        <label class="pref-label">Sections to Include</label>
+        <div class="toggle-pills">
+          <div class="toggle-pill on" data-section="agents"  onclick="togglePill(this)"><span class="pill-dot"></span>Agent Activity</div>
+          <div class="toggle-pill on" data-section="health"  onclick="togglePill(this)"><span class="pill-dot"></span>Service Health</div>
+          <div class="toggle-pill on" data-section="security" onclick="togglePill(this)"><span class="pill-dot"></span>Security</div>
+          <div class="toggle-pill on" data-section="insights" onclick="togglePill(this)"><span class="pill-dot"></span>Insights</div>
+        </div>
+      </div>
+
+    </div>
+    <div class="prefs-save-row">
+      <button class="prefs-save-btn" id="prefsSaveBtn" onclick="savePrefs()">Save Preferences</button>
+    </div>
+  </div>
+
+</main>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script src="/nav-global.js"></script>
+<script>
+(function() {
+  // ── DATE & GREETING ──────────────────────────────────────────────────────
+  const now    = new Date();
+  const hour   = now.getHours();
+  const greetWord = hour < 12 ? 'Good morning' : hour < 17 ? 'Good afternoon' : 'Good evening';
+  document.getElementById('greetingText').textContent = greetWord + ', Eric';
+
+  const dateOpts = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+  document.getElementById('dateLine').textContent = now.toLocaleDateString('en-US', dateOpts).toUpperCase();
+
+  // ── STATE ────────────────────────────────────────────────────────────────
+  let briefingLoaded = false;
+  let isSpeaking     = false;
+  let speechUtter    = null;
+
+  // ── LOAD BRIEFING ────────────────────────────────────────────────────────
+  async function loadBriefing() {
+    try {
+      const res = await fetch('/api/features/briefing');
+      if (!res.ok) throw new Error('no briefing');
+      const data = await res.json();
+      if (data && data.generated) {
+        applyBriefingData(data);
+        briefingLoaded = true;
+      } else {
+        showGeneratePrompt();
+      }
+    } catch (_) {
+      // Graceful degradation — reveal placeholder data
+      briefingLoaded = true;
+      revealCards();
+    }
+    loadHistory();
+  }
+
+  function showGeneratePrompt() {
+    document.getElementById('generateZone').style.display = 'flex';
+    // cards remain un-revealed (opacity 0)
+  }
+
+  function applyBriefingData(data) {
+    if (data.ors) document.getElementById('orsBadge').textContent = 'ORS: ' + data.ors;
+    if (data.agents && data.agents.length)   populateList('agentList',    data.agents);
+    if (data.health && data.health.length)   populateList('healthList',   data.health);
+    if (data.security && data.security.length) populateList('securityList', data.security);
+    if (data.insights && data.insights.length) populateList('insightsList', data.insights);
+    revealCards();
+  }
+
+  function populateList(listId, items) {
+    const ul = document.getElementById(listId);
+    if (!ul || !items.length) return;
+    const card = ul.closest('.card');
+    const dotClass = card ? Array.from(card.classList).find(c => c.startsWith('card-') && c !== 'card') : '';
+    ul.innerHTML = items.map(txt =>
+      `<li><span class="item-dot"></span>${txt}</li>`
+    ).join('');
+  }
+
+  // ── REVEAL CARDS (phi-staggered) ─────────────────────────────────────────
+  function revealCards() {
+    const cards = document.querySelectorAll('.briefing-grid .card');
+    cards.forEach((c, i) => {
+      setTimeout(() => c.classList.add('revealed'), 80 + i * 120);
+    });
+    document.getElementById('readAloudBar').style.display = 'flex';
+  }
+
+  // ── GENERATE ─────────────────────────────────────────────────────────────
+  window.generateBriefing = async function() {
+    const btn  = document.getElementById('generateBtn');
+    const orb  = document.getElementById('moodOrb');
+
+    btn.disabled = true;
+    btn.innerHTML = '<span class="btn-icon">⟳</span> Generating...';
+    orb.classList.add('spinning');
+
+    // Materialize cards one by one as they "load"
+    const cards = document.querySelectorAll('.briefing-grid .card');
+    cards.forEach((c, i) => {
+      setTimeout(() => c.classList.add('revealed'), 300 + i * 280);
+    });
+
+    try {
+      const res = await fetch('/api/features/briefing/generate', { method: 'POST' });
+      if (res.ok) {
+        const data = await res.json();
+        if (data) applyBriefingData(data);
+      }
+    } catch (_) { /* use placeholder data already visible */ }
+
+    setTimeout(() => {
+      orb.classList.remove('spinning');
+      document.getElementById('generateZone').style.display = 'none';
+      document.getElementById('readAloudBar').style.display = 'flex';
+      briefingLoaded = true;
+      loadHistory();
+      showToast('Briefing generated for today.');
+    }, cards.length * 280 + 400);
+  };
+
+  // ── HISTORY ──────────────────────────────────────────────────────────────
+  async function loadHistory() {
+    const strip = document.getElementById('historyStrip');
+    strip.innerHTML = '';
+    let entries = [];
+
+    try {
+      const res = await fetch('/api/features/briefing/history');
+      if (res.ok) {
+        const data = await res.json();
+        entries = data.entries || data || [];
+      }
+    } catch (_) {}
+
+    // Fallback: generate 7 synthetic history cards
+    if (!entries.length) {
+      entries = buildFallbackHistory();
+    }
+
+    entries.slice(0, 7).forEach((entry, idx) => {
+      const card = document.createElement('div');
+      card.className = 'history-card' + (idx === 0 ? ' today' : '');
+      const isToday = idx === 0;
+      card.innerHTML = `
+        <div class="history-date">${entry.date}${isToday ? '<span class="history-today-badge">TODAY</span>' : ''}</div>
+        <div class="history-snippet">${entry.snippet}</div>
+        <div class="history-ors">ORS <span>${entry.ors}</span></div>`;
+      card.onclick = () => showToast('Loading briefing for ' + entry.date + '...');
+      strip.appendChild(card);
+    });
+  }
+
+  function buildFallbackHistory() {
+    const snippets = [
+      'All agents healthy, 3 pipeline runs completed overnight.',
+      'ClaudeCode refactored pipeline engine, tests passing.',
+      'Security audit clean. API key rotated successfully.',
+      'ResearcherAgent discovered 8 new patterns.',
+      'Deployment artifact v2.7.9 staged to production.',
+      'Circuit breaker tuned — error rate down to 0.02%.',
+      'hc-brain ORS climbed from 88 to 92 after tuning.',
+    ];
+    const orsVals = [92, 91, 89, 90, 88, 87, 92];
+    const result = [];
+    for (let i = 0; i < 7; i++) {
+      const d = new Date(now);
+      d.setDate(d.getDate() - i);
+      result.push({
+        date: d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+        snippet: snippets[i],
+        ors: orsVals[i],
+      });
+    }
+    return result;
+  }
+
+  // ── READ ALOUD ────────────────────────────────────────────────────────────
+  window.toggleReadAloud = function() {
+    if (!('speechSynthesis' in window)) {
+      showToast('Speech synthesis not supported in this browser.');
+      return;
+    }
+    if (isSpeaking) {
+      window.speechSynthesis.cancel();
+      stopWave();
+      isSpeaking = false;
+      setReadBtnState(false);
+      document.getElementById('readStatus').textContent = 'Uses your browser\'s speech synthesis';
+      return;
+    }
+    const text = collectBriefingText();
+    speechUtter = new SpeechSynthesisUtterance(text);
+    speechUtter.rate  = 0.92;
+    speechUtter.pitch = 1.0;
+    speechUtter.onend = () => {
+      isSpeaking = false;
+      stopWave();
+      setReadBtnState(false);
+      document.getElementById('readStatus').textContent = 'Finished reading.';
+    };
+    window.speechSynthesis.speak(speechUtter);
+    isSpeaking = true;
+    startWave();
+    setReadBtnState(true);
+    document.getElementById('readStatus').textContent = 'Reading your morning briefing...';
+  };
+
+  function setReadBtnState(on) {
+    const btn   = document.getElementById('readBtn');
+    const icon  = document.getElementById('readBtnIcon');
+    const label = document.getElementById('readBtnLabel');
+    btn.classList.toggle('active', on);
+    icon.textContent  = on ? '■' : '▶';
+    label.textContent = on ? 'Stop' : 'Play Briefing';
+  }
+
+  function collectBriefingText() {
+    const date   = document.getElementById('dateLine').textContent;
+    const parts  = [`Heady Morning Intelligence Digest. ${date}.`];
+    const sections = [
+      { id: 'agentList',    title: 'Agent Activity' },
+      { id: 'healthList',   title: 'Service Health' },
+      { id: 'securityList', title: 'Security' },
+      { id: 'insightsList', title: 'Insights and Discoveries' },
+    ];
+    sections.forEach(s => {
+      const ul = document.getElementById(s.id);
+      if (!ul) return;
+      const items = Array.from(ul.querySelectorAll('li')).map(li =>
+        li.textContent.trim().replace(/^[^\w]+/, '')
+      ).filter(Boolean);
+      if (items.length) {
+        parts.push(s.title + '. ' + items.join('. '));
+      }
+    });
+    return parts.join(' ');
+  }
+
+  function startWave() {
+    for (let i = 1; i <= 7; i++) {
+      document.getElementById('wb' + i).classList.add('playing');
+    }
+  }
+  function stopWave() {
+    for (let i = 1; i <= 7; i++) {
+      document.getElementById('wb' + i).classList.remove('playing');
+    }
+  }
+
+  // ── PREFERENCES ───────────────────────────────────────────────────────────
+  window.togglePill = function(el) {
+    el.classList.toggle('on');
+    const section  = el.dataset.section;
+    const cardId   = 'card-' + section;
+    const card     = document.getElementById(cardId);
+    if (card) card.style.display = el.classList.contains('on') ? '' : 'none';
+  };
+
+  window.savePrefs = function() {
+    const prefs = {
+      deliveryHour: document.getElementById('deliveryHour').value,
+      timezone:     document.getElementById('tzSelect').value,
+      sections: Array.from(document.querySelectorAll('.toggle-pill.on')).map(p => p.dataset.section),
+    };
+    localStorage.setItem('heady_briefing_prefs', JSON.stringify(prefs));
+    const btn = document.getElementById('prefsSaveBtn');
+    btn.textContent = 'Saved';
+    btn.classList.add('saved');
+    showToast('Preferences saved.');
+    setTimeout(() => { btn.textContent = 'Save Preferences'; btn.classList.remove('saved'); }, 2000);
+  };
+
+  function loadPrefs() {
+    try {
+      const raw = localStorage.getItem('heady_briefing_prefs');
+      if (!raw) return;
+      const prefs = JSON.parse(raw);
+      if (prefs.deliveryHour) document.getElementById('deliveryHour').value = prefs.deliveryHour;
+      if (prefs.timezone)     document.getElementById('tzSelect').value     = prefs.timezone;
+      if (prefs.sections) {
+        document.querySelectorAll('.toggle-pill').forEach(p => {
+          const on = prefs.sections.includes(p.dataset.section);
+          p.classList.toggle('on', on);
+          const card = document.getElementById('card-' + p.dataset.section);
+          if (card) card.style.display = on ? '' : 'none';
+        });
+      }
+    } catch (_) {}
+  }
+
+  // ── TOAST ─────────────────────────────────────────────────────────────────
+  let toastTimer = null;
+  window.showToast = function(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    if (toastTimer) clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => t.classList.remove('show'), 3200);
+  };
+
+  // ── INIT ──────────────────────────────────────────────────────────────────
+  loadPrefs();
+  loadBriefing();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,1140 @@
+<!-- HEADY_BRAND:BEGIN
+     HEADY SYSTEMS | dreams.html | Sacred Geometry v5.0
+     Background Optimization Engine — while you sleep, Heady dreams
+     (c) 2026 HeadySystems Inc. - Eric Haywood, Founder
+HEADY_BRAND:END -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Heady Dreams — Background Optimization Engine</title>
+  <meta name="description" content="While you sleep, Heady dreams. The Background Optimization Engine runs nightly learning pipelines — self-aware, self-correcting, always evolving.">
+  <meta name="theme-color" content="#050510">
+  <link rel="stylesheet" href="/sacred-geometry.css">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --gold:    #D4AF37;
+      --cyan:    #00D9FF;
+      --magenta: #FF00A0;
+      --purple:  #8B5CF6;
+      --purple-light: #A78BFA;
+      --purple-dark:  #6D28D9;
+      --white:   #FAFAFA;
+      --bg0:     #050510;
+      --bg1:     #0A0A1A;
+      --bg2:     #1A1A3E;
+      --glass:   rgba(26,26,62,0.6);
+      --phi:     cubic-bezier(0.618, 0, 0.382, 1);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: var(--bg0);
+      color: var(--white);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── Ambient background orbs ── */
+    .orbs-bg {
+      position: fixed; inset: 0;
+      pointer-events: none; z-index: 0;
+      overflow: hidden;
+    }
+    .orb {
+      position: absolute; border-radius: 50%;
+      filter: blur(90px); opacity: 0.12;
+    }
+    .orb-a {
+      width: 520px; height: 520px;
+      background: var(--purple);
+      top: -120px; left: -80px;
+      animation: driftA 28s infinite ease-in-out;
+    }
+    .orb-b {
+      width: 400px; height: 400px;
+      background: var(--purple-dark);
+      bottom: -80px; right: -60px;
+      animation: driftB 34s infinite ease-in-out;
+      opacity: 0.18;
+    }
+    .orb-c {
+      width: 300px; height: 300px;
+      background: var(--cyan);
+      top: 40%; left: 60%;
+      animation: driftA 22s infinite ease-in-out reverse;
+      opacity: 0.08;
+    }
+    .orb-d {
+      width: 250px; height: 250px;
+      background: var(--magenta);
+      top: 70%; left: 20%;
+      animation: driftB 40s infinite ease-in-out;
+      opacity: 0.06;
+    }
+    @keyframes driftA {
+      0%,100% { transform: translate(0,0); }
+      33%      { transform: translate(60px,-40px); }
+      66%      { transform: translate(-30px,50px); }
+    }
+    @keyframes driftB {
+      0%,100% { transform: translate(0,0); }
+      33%      { transform: translate(-50px,30px); }
+      66%      { transform: translate(40px,-60px); }
+    }
+
+    /* ── Layout ── */
+    .container {
+      position: relative; z-index: 1;
+      max-width: 1360px; margin: 0 auto;
+      padding: 60px 28px 80px;
+    }
+
+    /* ── Page header ── */
+    .page-header {
+      text-align: center;
+      margin-bottom: 64px;
+    }
+    .page-header .eyebrow {
+      font-size: 11px; letter-spacing: 3px; text-transform: uppercase;
+      color: var(--purple-light); margin-bottom: 14px;
+    }
+    .page-header h1 {
+      font-size: clamp(2.4rem, 5vw, 4rem);
+      font-weight: 800; letter-spacing: -1px;
+      background: linear-gradient(135deg, var(--purple-light) 0%, var(--cyan) 50%, var(--purple) 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text; line-height: 1.1; margin-bottom: 16px;
+    }
+    .page-header .tagline {
+      font-size: 1.15rem; color: rgba(250,250,250,0.55);
+      max-width: 560px; margin: 0 auto; line-height: 1.6;
+    }
+
+    /* ── Glass card base ── */
+    .glass {
+      background: var(--glass);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(139,92,246,0.25);
+      border-radius: 20px;
+    }
+    .glass-gold {
+      background: var(--glass);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(212,175,55,0.3);
+      border-radius: 20px;
+    }
+
+    /* ═══════════════════════════════════
+       DREAM STATE INDICATOR (central hero)
+       ═══════════════════════════════════ */
+    .dream-hero {
+      display: flex; gap: 32px;
+      align-items: flex-start;
+      margin-bottom: 48px;
+    }
+    .dream-state-panel {
+      flex: 1; padding: 52px 40px;
+      text-align: center;
+      position: relative; overflow: hidden;
+    }
+    .dream-state-panel::before {
+      content: ''; position: absolute; inset: 0;
+      background: radial-gradient(ellipse at 50% 0%, rgba(139,92,246,0.18) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    /* Sleeping orb */
+    .dream-orb-wrap { position: relative; display: inline-block; margin-bottom: 32px; }
+    .dream-orb {
+      width: 180px; height: 180px; border-radius: 50%;
+      position: relative; display: flex;
+      align-items: center; justify-content: center;
+      margin: 0 auto;
+      cursor: default;
+      transition: all 0.8s var(--phi);
+    }
+    .dream-orb.sleeping {
+      background: radial-gradient(circle at 35% 35%,
+        rgba(139,92,246,0.6),
+        rgba(109,40,217,0.4),
+        rgba(26,26,62,0.8));
+      box-shadow: 0 0 40px rgba(139,92,246,0.3),
+                  0 0 80px rgba(139,92,246,0.12);
+      animation: orbBreathe 6.854s ease-in-out infinite;
+    }
+    .dream-orb.dreaming {
+      background: conic-gradient(from 0deg,
+        var(--purple), var(--cyan), var(--purple-dark),
+        var(--magenta), var(--purple));
+      box-shadow: 0 0 60px rgba(139,92,246,0.6),
+                  0 0 120px rgba(0,217,255,0.25),
+                  0 0 200px rgba(139,92,246,0.15);
+      animation: orbDream 3s linear infinite;
+    }
+    @keyframes orbBreathe {
+      0%,100% { transform: scale(1);   box-shadow: 0 0 40px rgba(139,92,246,0.3), 0 0 80px rgba(139,92,246,0.12); }
+      50%      { transform: scale(1.07); box-shadow: 0 0 60px rgba(139,92,246,0.5), 0 0 110px rgba(139,92,246,0.2); }
+    }
+    @keyframes orbDream {
+      from { filter: hue-rotate(0deg);   transform: scale(1); }
+      50%  { transform: scale(1.05); }
+      to   { filter: hue-rotate(360deg); transform: scale(1); }
+    }
+
+    /* zZz text */
+    .zzz-wrap { position: absolute; top: -10px; right: -20px; pointer-events: none; }
+    .zzz-wrap span {
+      display: block; font-weight: 800;
+      color: var(--purple-light);
+      animation: zzFloat 2.5s ease-in-out infinite;
+      line-height: 1;
+    }
+    .zzz-wrap span:nth-child(1) { font-size: 14px; animation-delay: 0s;    margin-left: 0; }
+    .zzz-wrap span:nth-child(2) { font-size: 18px; animation-delay: 0.6s;  margin-left: 4px; }
+    .zzz-wrap span:nth-child(3) { font-size: 22px; animation-delay: 1.2s;  margin-left: 8px; }
+    @keyframes zzFloat {
+      0%   { opacity: 0;   transform: translateY(0)    scale(0.6); }
+      30%  { opacity: 1;   transform: translateY(-8px) scale(1); }
+      80%  { opacity: 0.6; transform: translateY(-20px) scale(1); }
+      100% { opacity: 0;   transform: translateY(-32px) scale(0.8); }
+    }
+
+    /* Active phase text */
+    .phase-text {
+      font-size: 1.1rem; color: var(--purple-light);
+      min-height: 28px; font-style: italic;
+      animation: phaseFlow 4s ease-in-out infinite;
+      display: none;
+    }
+    .phase-text.visible { display: block; }
+    @keyframes phaseFlow {
+      0%,100% { opacity: 0.7; letter-spacing: 0.5px; }
+      50%      { opacity: 1;   letter-spacing: 1.5px; }
+    }
+
+    .dream-state-label {
+      font-size: 1.5rem; font-weight: 700;
+      color: var(--white); margin-bottom: 8px;
+    }
+    .dream-state-sub {
+      font-size: 0.9rem; color: rgba(250,250,250,0.45);
+      margin-bottom: 28px;
+    }
+
+    /* Phase progress dots */
+    .phase-dots {
+      display: flex; justify-content: center;
+      align-items: center; gap: 0; margin: 20px 0 28px;
+    }
+    .phase-dot-wrap {
+      display: flex; align-items: center;
+    }
+    .phase-dot {
+      width: 14px; height: 14px; border-radius: 50%;
+      background: rgba(139,92,246,0.2);
+      border: 2px solid rgba(139,92,246,0.3);
+      transition: all 0.6s var(--phi);
+      position: relative;
+    }
+    .phase-dot.completed {
+      background: var(--purple);
+      border-color: var(--purple-light);
+      box-shadow: 0 0 10px rgba(139,92,246,0.6);
+    }
+    .phase-dot.active {
+      background: var(--cyan);
+      border-color: var(--cyan);
+      box-shadow: 0 0 12px rgba(0,217,255,0.7);
+      animation: dotPulse 1.2s ease-in-out infinite;
+    }
+    .phase-dot.completed::after {
+      content: '✓'; position: absolute;
+      inset: 0; display: flex; align-items: center; justify-content: center;
+      font-size: 8px; color: var(--white); font-weight: 700;
+    }
+    @keyframes dotPulse {
+      0%,100% { box-shadow: 0 0 8px rgba(0,217,255,0.6); }
+      50%      { box-shadow: 0 0 20px rgba(0,217,255,0.9), 0 0 40px rgba(0,217,255,0.3); }
+    }
+    .phase-connector {
+      width: 28px; height: 2px;
+      background: rgba(139,92,246,0.2);
+      transition: background 0.6s var(--phi);
+    }
+    .phase-connector.lit { background: var(--purple); }
+
+    /* Start button */
+    .btn-dream {
+      display: inline-flex; align-items: center; gap: 10px;
+      padding: 14px 36px; border-radius: 50px;
+      background: linear-gradient(135deg, var(--purple) 0%, var(--purple-dark) 100%);
+      color: var(--white); font-size: 1rem; font-weight: 600;
+      border: none; cursor: pointer;
+      box-shadow: 0 0 30px rgba(139,92,246,0.35);
+      transition: all 0.35s var(--phi);
+      font-family: 'Inter', system-ui, sans-serif;
+    }
+    .btn-dream:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 50px rgba(139,92,246,0.55);
+    }
+    .btn-dream:active { transform: translateY(0); }
+    .btn-dream.dreaming-btn {
+      background: linear-gradient(135deg, var(--magenta), var(--purple));
+    }
+
+    /* ── Dream Stats sidebar ── */
+    .dream-stats-panel {
+      width: 240px; flex-shrink: 0;
+      padding: 28px 24px;
+      display: flex; flex-direction: column; gap: 20px;
+    }
+    .stats-title {
+      font-size: 11px; text-transform: uppercase; letter-spacing: 2.5px;
+      color: var(--purple-light); margin-bottom: 4px;
+    }
+    .stat-row {
+      display: flex; flex-direction: column; gap: 4px;
+    }
+    .stat-val {
+      font-size: 2rem; font-weight: 800;
+      background: linear-gradient(135deg, var(--purple-light), var(--cyan));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .stat-lbl {
+      font-size: 0.78rem; color: rgba(250,250,250,0.45);
+    }
+    .stat-divider {
+      height: 1px; background: rgba(139,92,246,0.2);
+    }
+    .next-dream-block { margin-top: 4px; }
+    .next-dream-label {
+      font-size: 0.75rem; color: rgba(250,250,250,0.35);
+      margin-bottom: 4px;
+    }
+    .next-dream-val {
+      font-size: 1.1rem; font-weight: 700;
+      color: var(--gold);
+    }
+
+    /* ═══════════════════════════════════
+       DREAM PHASES ARC
+       ═══════════════════════════════════ */
+    .section-title {
+      font-size: 1.3rem; font-weight: 700;
+      color: var(--white); margin-bottom: 24px;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .section-title .s-icon {
+      width: 30px; height: 30px; border-radius: 8px;
+      background: rgba(139,92,246,0.2);
+      border: 1px solid rgba(139,92,246,0.3);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px;
+    }
+
+    .phases-arc {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 12px;
+      margin-bottom: 48px;
+    }
+    .phase-card {
+      padding: 20px 14px 18px;
+      text-align: center;
+      border-radius: 16px;
+      background: rgba(26,26,62,0.5);
+      border: 1px solid rgba(139,92,246,0.15);
+      transition: all 0.5s var(--phi);
+      position: relative; overflow: hidden;
+    }
+    .phase-card.active {
+      border-color: rgba(139,92,246,0.7);
+      background: rgba(139,92,246,0.12);
+      box-shadow: 0 0 24px rgba(139,92,246,0.3);
+    }
+    .phase-card.active::before {
+      content: ''; position: absolute; inset: -1px;
+      border-radius: 17px;
+      border: 1px solid var(--purple-light);
+      animation: ringPulse 2s ease-in-out infinite;
+      pointer-events: none;
+    }
+    @keyframes ringPulse {
+      0%,100% { opacity: 0.4; transform: scale(1); }
+      50%      { opacity: 1;   transform: scale(1.02); }
+    }
+    .phase-card.done {
+      border-color: rgba(139,92,246,0.4);
+      background: rgba(139,92,246,0.08);
+    }
+    .phase-num {
+      font-size: 10px; color: rgba(250,250,250,0.3);
+      text-transform: uppercase; letter-spacing: 1px;
+      margin-bottom: 8px;
+    }
+    .phase-icon {
+      font-size: 1.6rem; margin-bottom: 8px; display: block;
+    }
+    .phase-name {
+      font-size: 0.78rem; font-weight: 600;
+      color: rgba(250,250,250,0.7); line-height: 1.3;
+    }
+    .phase-card.active .phase-name { color: var(--purple-light); }
+    .phase-card.done .phase-name { color: rgba(250,250,250,0.5); }
+    .phase-check {
+      display: none; position: absolute; top: 8px; right: 10px;
+      font-size: 12px; color: var(--purple-light);
+    }
+    .phase-card.done .phase-check { display: block; }
+
+    /* ═══════════════════════════════════
+       DISCOVERY FEED
+       ═══════════════════════════════════ */
+    .feed-section { margin-bottom: 48px; }
+    .feed-list {
+      display: flex; flex-direction: column; gap: 12px;
+      max-height: 280px; overflow-y: auto;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(139,92,246,0.3) transparent;
+    }
+    .feed-item {
+      padding: 14px 18px;
+      border-radius: 12px;
+      background: rgba(139,92,246,0.08);
+      border: 1px solid rgba(139,92,246,0.2);
+      font-size: 0.875rem; color: rgba(250,250,250,0.8);
+      display: flex; align-items: flex-start; gap: 12px;
+      animation: phiReveal 0.5s var(--phi) both;
+    }
+    @keyframes phiReveal {
+      from { opacity: 0; transform: translateY(12px) scale(0.97); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    .feed-ts {
+      font-size: 0.72rem; color: var(--purple-light);
+      white-space: nowrap; margin-top: 2px; flex-shrink: 0;
+    }
+    .feed-icon { font-size: 1rem; flex-shrink: 0; margin-top: 1px; }
+    .feed-text { flex: 1; line-height: 1.5; }
+    .feed-empty {
+      text-align: center; padding: 32px;
+      color: rgba(250,250,250,0.3); font-size: 0.9rem;
+      font-style: italic;
+    }
+
+    /* ═══════════════════════════════════
+       TWO-COLUMN: JOURNAL + SCHEDULE
+       ═══════════════════════════════════ */
+    .lower-grid {
+      display: grid;
+      grid-template-columns: 1fr 340px;
+      gap: 32px;
+      margin-bottom: 48px;
+    }
+
+    /* Dream Journal */
+    .journal-section {}
+    .journal-list { display: flex; flex-direction: column; gap: 20px; }
+    .journal-card {
+      padding: 28px 26px;
+    }
+    .journal-date-header {
+      display: flex; align-items: center; gap: 10px;
+      margin-bottom: 18px;
+    }
+    .moon-icon { font-size: 1.4rem; }
+    .journal-date { font-size: 1rem; font-weight: 700; color: var(--gold); }
+    .journal-duration {
+      margin-left: auto; font-size: 0.75rem;
+      color: rgba(250,250,250,0.35); font-style: italic;
+    }
+    .journal-section-label {
+      font-size: 11px; text-transform: uppercase; letter-spacing: 2px;
+      color: var(--purple-light); margin: 16px 0 8px;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .journal-items { display: flex; flex-direction: column; gap: 6px; }
+    .journal-item {
+      display: flex; align-items: flex-start; gap: 8px;
+      font-size: 0.875rem; color: rgba(250,250,250,0.75);
+      line-height: 1.5;
+    }
+    .journal-item .j-icon { flex-shrink: 0; font-size: 0.9rem; margin-top: 1px; }
+    .journal-narrative {
+      margin-top: 16px; padding-top: 16px;
+      border-top: 1px solid rgba(139,92,246,0.15);
+      font-size: 0.875rem; color: rgba(250,250,250,0.55);
+      font-style: italic; line-height: 1.7;
+    }
+
+    /* Schedule Settings */
+    .schedule-panel { padding: 28px 24px; align-self: flex-start; }
+    .schedule-title {
+      font-size: 0.95rem; font-weight: 700; color: var(--white);
+      margin-bottom: 20px; display: flex; align-items: center; gap: 8px;
+    }
+    .sched-row {
+      display: flex; flex-direction: column; gap: 6px;
+      margin-bottom: 18px;
+    }
+    .sched-label {
+      font-size: 0.78rem; color: rgba(250,250,250,0.5);
+      text-transform: uppercase; letter-spacing: 1px;
+    }
+    .sched-control {
+      background: rgba(26,26,62,0.8);
+      border: 1px solid rgba(139,92,246,0.3);
+      border-radius: 10px; padding: 10px 14px;
+      color: var(--white); font-size: 0.9rem;
+      font-family: 'Inter', system-ui, sans-serif;
+      width: 100%; outline: none;
+      transition: border-color 0.2s;
+    }
+    .sched-control:focus { border-color: var(--purple-light); }
+    .sched-control option { background: #1A1A3E; }
+    .toggle-row {
+      display: flex; justify-content: space-between;
+      align-items: center; margin-bottom: 18px;
+    }
+    .toggle-label {
+      font-size: 0.875rem; color: rgba(250,250,250,0.7);
+    }
+    .toggle-switch {
+      width: 44px; height: 24px; border-radius: 12px;
+      background: rgba(139,92,246,0.2);
+      border: 1px solid rgba(139,92,246,0.3);
+      position: relative; cursor: pointer;
+      transition: background 0.3s;
+    }
+    .toggle-switch.on {
+      background: var(--purple);
+      border-color: var(--purple-light);
+    }
+    .toggle-knob {
+      position: absolute; top: 2px; left: 2px;
+      width: 18px; height: 18px; border-radius: 50%;
+      background: var(--white);
+      transition: transform 0.3s var(--phi);
+    }
+    .toggle-switch.on .toggle-knob { transform: translateX(20px); }
+    .btn-save-sched {
+      width: 100%; padding: 12px;
+      border-radius: 10px;
+      background: rgba(139,92,246,0.2);
+      border: 1px solid rgba(139,92,246,0.4);
+      color: var(--purple-light); font-size: 0.875rem;
+      font-weight: 600; cursor: pointer;
+      transition: all 0.25s var(--phi);
+      font-family: 'Inter', system-ui, sans-serif;
+    }
+    .btn-save-sched:hover {
+      background: rgba(139,92,246,0.35);
+      box-shadow: 0 0 16px rgba(139,92,246,0.3);
+    }
+    .sched-saved-note {
+      text-align: center; font-size: 0.78rem;
+      color: var(--cyan); margin-top: 10px;
+      opacity: 0; transition: opacity 0.3s;
+    }
+    .sched-saved-note.show { opacity: 1; }
+
+    /* ── Responsive ── */
+    @media (max-width: 1100px) {
+      .phases-arc { grid-template-columns: repeat(4, 1fr); }
+    }
+    @media (max-width: 900px) {
+      .dream-hero { flex-direction: column; }
+      .dream-stats-panel { width: 100%; flex-direction: row; flex-wrap: wrap; gap: 16px; }
+      .stat-divider { display: none; }
+      .lower-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 600px) {
+      .phases-arc { grid-template-columns: repeat(2, 1fr); }
+      .phase-dots { gap: 0; }
+      .phase-connector { width: 16px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Ambient orbs -->
+<div class="orbs-bg" aria-hidden="true">
+  <div class="orb orb-a"></div>
+  <div class="orb orb-b"></div>
+  <div class="orb orb-c"></div>
+  <div class="orb orb-d"></div>
+</div>
+
+<div class="container">
+
+  <!-- Page header -->
+  <header class="page-header">
+    <p class="eyebrow">Background Optimization Engine</p>
+    <h1>Heady Dreams</h1>
+    <p class="tagline">While you sleep, Heady learns. Every night the system runs a full self-awareness pipeline — analyzing mistakes, distilling wisdom, evolving itself.</p>
+  </header>
+
+  <!-- ── Hero row: Dream State + Stats ── -->
+  <div class="dream-hero">
+
+    <div class="dream-state-panel glass">
+
+      <!-- Sleeping / Dreaming orb -->
+      <div class="dream-orb-wrap">
+        <div class="dream-orb sleeping" id="dreamOrb">
+          <span style="font-size:2.8rem;">💜</span>
+        </div>
+        <div class="zzz-wrap" id="zzzWrap">
+          <span>z</span>
+          <span>Z</span>
+          <span>Z</span>
+        </div>
+      </div>
+
+      <div class="dream-state-label" id="dreamStateLabel">Resting</div>
+      <div class="dream-state-sub" id="dreamStateSub">System is idle — no active dream session</div>
+
+      <p class="phase-text" id="phaseText">Entering deep optimization...</p>
+
+      <!-- 7 phase progress dots -->
+      <div class="phase-dots" id="phaseDots">
+        <!-- built by JS -->
+      </div>
+
+      <button class="btn-dream" id="dreamBtn" onclick="toggleDream()">
+        <span>✦</span> Start Dreaming
+      </button>
+    </div>
+
+    <!-- Stats sidebar -->
+    <div class="dream-stats-panel glass">
+      <p class="stats-title">Dream Stats</p>
+
+      <div class="stat-row">
+        <span class="stat-val" id="statTotalDreams">47</span>
+        <span class="stat-lbl">Total dream sessions</span>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat-row">
+        <span class="stat-val" id="statDiscoveries">1,284</span>
+        <span class="stat-lbl">Discoveries made</span>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat-row">
+        <span class="stat-val" id="statOptimizations">392</span>
+        <span class="stat-lbl">Optimizations applied</span>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat-row">
+        <span class="stat-val" id="statAvgDuration">4.2h</span>
+        <span class="stat-lbl">Avg. dream duration</span>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="next-dream-block">
+        <div class="next-dream-label">Next scheduled dream</div>
+        <div class="next-dream-val" id="nextDreamVal">Tonight, 2:00 AM</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Dream Phases Arc ── -->
+  <section aria-label="Dream phases">
+    <div class="section-title">
+      <div class="s-icon">◉</div>
+      Dream Phases
+    </div>
+    <div class="phases-arc" id="phasesArc">
+      <!-- built by JS -->
+    </div>
+  </section>
+
+  <!-- ── Discovery Feed ── -->
+  <section class="feed-section" aria-label="Discovery feed">
+    <div class="section-title">
+      <div class="s-icon">⟐</div>
+      Live Discovery Feed
+    </div>
+    <div class="feed-list" id="feedList">
+      <div class="feed-empty" id="feedEmpty">No active dream session. Start dreaming to see live discoveries.</div>
+    </div>
+  </section>
+
+  <!-- ── Lower: Journal + Schedule ── -->
+  <div class="lower-grid">
+
+    <!-- Dream Journal -->
+    <section aria-label="Dream journal">
+      <div class="section-title">
+        <div class="s-icon">📖</div>
+        Dream Journal
+      </div>
+      <div class="journal-list" id="journalList">
+        <!-- built by JS -->
+      </div>
+    </section>
+
+    <!-- Schedule Settings -->
+    <aside>
+      <div class="section-title">
+        <div class="s-icon">⚙</div>
+        Schedule
+      </div>
+      <div class="schedule-panel glass">
+        <div class="schedule-title">
+          <span>🌙</span> Dream Settings
+        </div>
+
+        <div class="sched-row">
+          <label class="sched-label" for="dreamHour">Dream hour</label>
+          <select class="sched-control" id="dreamHour">
+            <option value="0">12:00 AM (midnight)</option>
+            <option value="1">1:00 AM</option>
+            <option value="2" selected>2:00 AM</option>
+            <option value="3">3:00 AM</option>
+            <option value="4">4:00 AM</option>
+            <option value="22">10:00 PM</option>
+            <option value="23">11:00 PM</option>
+          </select>
+        </div>
+
+        <div class="sched-row">
+          <label class="sched-label" for="dreamTz">Timezone</label>
+          <select class="sched-control" id="dreamTz">
+            <option value="America/New_York">Eastern (ET)</option>
+            <option value="America/Chicago">Central (CT)</option>
+            <option value="America/Denver">Mountain (MT)</option>
+            <option value="America/Los_Angeles">Pacific (PT)</option>
+            <option value="UTC">UTC</option>
+            <option value="Europe/London">London (GMT)</option>
+            <option value="Europe/Paris">Paris (CET)</option>
+            <option value="Asia/Tokyo">Tokyo (JST)</option>
+          </select>
+        </div>
+
+        <div class="toggle-row">
+          <span class="toggle-label">Enable scheduled dreams</span>
+          <div class="toggle-switch on" id="schedToggle" onclick="toggleSchedule()" role="switch" aria-checked="true" tabindex="0">
+            <div class="toggle-knob"></div>
+          </div>
+        </div>
+
+        <div class="toggle-row">
+          <span class="toggle-label">Auto-apply optimizations</span>
+          <div class="toggle-switch on" id="autoApplyToggle" onclick="toggleAutoApply()" role="switch" aria-checked="true" tabindex="0">
+            <div class="toggle-knob"></div>
+          </div>
+        </div>
+
+        <div class="toggle-row">
+          <span class="toggle-label">Journal notifications</span>
+          <div class="toggle-switch" id="notifToggle" onclick="toggleNotif()" role="switch" aria-checked="false" tabindex="0">
+            <div class="toggle-knob"></div>
+          </div>
+        </div>
+
+        <button class="btn-save-sched" onclick="saveSchedule()">Save Settings</button>
+        <div class="sched-saved-note" id="schedSavedNote">Settings saved successfully</div>
+      </div>
+    </aside>
+
+  </div>
+</div>
+
+<script src="/nav-global.js"></script>
+<script>
+// ── Dream Phase definitions ─────────────────────────────────────────
+const PHASES = [
+  { id: 'self-awareness',  icon: '👁',  name: 'Self-Awareness',  desc: 'Mapping system state and current capabilities' },
+  { id: 'self-critique',   icon: '🪞',  name: 'Self-Critique',   desc: 'Evaluating performance gaps and blind spots' },
+  { id: 'mistake-analysis',icon: '🔍',  name: 'Mistake Analysis', desc: 'Cataloguing errors and root cause patterns' },
+  { id: 'optimization',    icon: '⚡',  name: 'Optimization',    desc: 'Computing and ranking improvement paths' },
+  { id: 'search',          icon: '∞',   name: 'Cont. Search',    desc: 'Exploring adjacent solution spaces' },
+  { id: 'evolution',       icon: '🧬',  name: 'Evolution',       desc: 'Selecting and integrating the best adaptations' },
+  { id: 'distillation',    icon: '💎',  name: 'Distillation',    desc: 'Compressing insights into actionable knowledge' },
+];
+
+// ── State ────────────────────────────────────────────────────────────
+let isDreaming      = false;
+let currentPhase    = -1;
+let phaseTimer      = null;
+let feedTimer       = null;
+let completedPhases = new Set();
+
+// ── Build phase dots ─────────────────────────────────────────────────
+(function buildPhaseDots() {
+  const wrap = document.getElementById('phaseDots');
+  wrap.innerHTML = '';
+  PHASES.forEach((p, i) => {
+    if (i > 0) {
+      const conn = document.createElement('div');
+      conn.className = 'phase-connector';
+      conn.id = `conn-${i}`;
+      wrap.appendChild(conn);
+    }
+    const dot = document.createElement('div');
+    dot.className = 'phase-dot-wrap';
+    dot.innerHTML = `<div class="phase-dot" id="dot-${i}" title="${p.name}"></div>`;
+    wrap.appendChild(dot);
+  });
+})();
+
+// ── Build phases arc ─────────────────────────────────────────────────
+(function buildPhasesArc() {
+  const arc = document.getElementById('phasesArc');
+  arc.innerHTML = PHASES.map((p, i) => `
+    <div class="phase-card" id="phase-card-${i}" title="${p.desc}">
+      <div class="phase-check">✓</div>
+      <div class="phase-num">Phase ${i + 1}</div>
+      <span class="phase-icon">${p.icon}</span>
+      <div class="phase-name">${p.name}</div>
+    </div>
+  `).join('');
+})();
+
+// ── Journal data ─────────────────────────────────────────────────────
+const JOURNAL_DATA = [
+  {
+    date: 'March 16, 2026',
+    moon: '🌕',
+    duration: '4h 38m',
+    discoveries: [
+      'Response latency p95 reduced by 18% via request coalescing in the pipeline fan-out layer',
+      'Identified recurring token budget overruns in Researcher agent — root cause: unbounded context accumulation',
+      'Detected unused circuit-breaker threshold for external API calls — tightened to 3 retries with exponential backoff',
+    ],
+    optimizations: [
+      'Enabled request coalescing in hc-supervisor fan-out (batch window: 40ms)',
+      'Added sliding-window context pruning to ResearcherAgent — max context depth: 12 turns',
+      'Deployed updated circuit-breaker config to resource-policies.yaml (retry cap: 3, base delay: 800ms)',
+    ],
+    narrative: 'A productive night in the latent space. The system mapped three high-impact paths and followed each to a concrete fix. The pipeline now breathes more steadily under load, and the researcher finally knows when to let go.',
+  },
+  {
+    date: 'March 15, 2026',
+    moon: '🌔',
+    duration: '3h 55m',
+    discoveries: [
+      'Vector similarity threshold in Latent Space was set 8% too low — causing irrelevant memory retrievals',
+      'Health-check cron interval misaligned with Render worker restart window, creating a 90-second blindspot',
+      'Identified pattern: checkpoint sync failures always preceded by Redis eviction events',
+    ],
+    optimizations: [
+      'Raised cosine similarity threshold from 0.72 → 0.80 in latent-space retriever',
+      'Shifted health-check cron from :00 to :45 seconds to avoid restart window overlap',
+      'Added Redis eviction pre-check hook to checkpoint-sync.ps1',
+    ],
+    narrative: 'Last night the system found the blindspot it had been circling for a week. Small threshold drift compounds quietly until it erupts — now the latent retriever holds a sharper lens on relevance.',
+  },
+  {
+    date: 'March 14, 2026',
+    moon: '🌓',
+    duration: '5h 02m',
+    discoveries: [
+      'Self-awareness phase revealed that the BuilderAgent lacked a dependency pre-flight check',
+      'Governance policy for "cost-governance" domain had a gap: no alert threshold for Claude API spend',
+      'Distillation run surfaced a reusable pattern: "checkpoint-before-prune" reduces irrecoverable state loss by 34%',
+    ],
+    optimizations: [
+      'Added npm ci --dry-run pre-flight step to BuilderAgent task handler',
+      'Set Claude API spend alert at $40/day in governance-policies.yaml',
+      'Documented and registered "checkpoint-before-prune" pattern in concepts-index.yaml',
+    ],
+    narrative: 'A longer dream with five full phases completed before the system chose to rest in distillation. The governance gap was the most important find — cost awareness is now woven into the execution loop itself.',
+  },
+];
+
+(function renderJournal() {
+  const list = document.getElementById('journalList');
+  list.innerHTML = JOURNAL_DATA.map(entry => `
+    <article class="journal-card glass-gold">
+      <div class="journal-date-header">
+        <span class="moon-icon">${entry.moon}</span>
+        <span class="journal-date">${entry.date}</span>
+        <span class="journal-duration">${entry.duration}</span>
+      </div>
+
+      <div class="journal-section-label">💡 Discoveries</div>
+      <div class="journal-items">
+        ${entry.discoveries.map(d => `
+          <div class="journal-item">
+            <span class="j-icon">💡</span>
+            <span>${d}</span>
+          </div>`).join('')}
+      </div>
+
+      <div class="journal-section-label">🔧 Optimizations Applied</div>
+      <div class="journal-items">
+        ${entry.optimizations.map(o => `
+          <div class="journal-item">
+            <span class="j-icon">🔧</span>
+            <span>${o}</span>
+          </div>`).join('')}
+      </div>
+
+      <p class="journal-narrative">${entry.narrative}</p>
+    </article>
+  `).join('');
+})();
+
+// ── Discovery feed content pool ───────────────────────────────────────
+const FEED_POOL = [
+  { icon: '💡', text: 'Discovered: checkpoint sync latency spikes correlate with GC pressure in heady-manager.js' },
+  { icon: '🔍', text: 'Mistake pattern: missing null-guard in pipeline stage result handler — 3 occurrences logged' },
+  { icon: '⚡', text: 'Optimization candidate: parallel fan-out can increase to 6 workers (current: 4) under normal ORS' },
+  { icon: '🧬', text: 'Evolution path identified: streaming response support in ClaudeCodeAgent reduces perceived latency' },
+  { icon: '💎', text: 'Distilling: "retry-jitter" pattern reduces thundering herd on external API reconnects by ~40%' },
+  { icon: '👁',  text: 'Self-awareness: ResearcherAgent context window usage averages 78% — approaching saturation zone' },
+  { icon: '🪞',  text: 'Self-critique: supervisor routing weights have not been re-tuned since ORS exceeded 90' },
+  { icon: '∞',   text: 'Continuous search: found applicable public-domain pattern "adaptive-batch-sizing" in concepts-index' },
+  { icon: '💡', text: 'Discovered: brain.tune endpoint not being called after circuit-breaker resets — leaving stale concurrency' },
+  { icon: '🔍', text: 'Mistake analysis: 3 of last 5 deploy failures preceded by missing heady-registry.json sync step' },
+  { icon: '⚡', text: 'Optimization: sacred-geometry.css can be preloaded via <link rel=preload> — saves ~120ms on first paint' },
+  { icon: '🧬', text: 'Evolution: hc-readiness probe for database connectivity has 4s timeout — can safely reduce to 1.5s' },
+];
+
+let feedIdx = 0;
+
+function addFeedItem(item) {
+  const list = document.getElementById('feedList');
+  const empty = document.getElementById('feedEmpty');
+  if (empty) empty.remove();
+
+  const now = new Date();
+  const ts = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+
+  const div = document.createElement('div');
+  div.className = 'feed-item';
+  div.innerHTML = `
+    <span class="feed-ts">${ts}</span>
+    <span class="feed-icon">${item.icon}</span>
+    <span class="feed-text">${item.text}</span>
+  `;
+  list.prepend(div);
+
+  // Trim to 20 items
+  while (list.children.length > 20) list.removeChild(list.lastChild);
+}
+
+function clearFeed() {
+  const list = document.getElementById('feedList');
+  list.innerHTML = '<div class="feed-empty" id="feedEmpty">No active dream session. Start dreaming to see live discoveries.</div>';
+  feedIdx = 0;
+}
+
+// ── Phase progression ─────────────────────────────────────────────────
+function setPhaseActive(idx) {
+  currentPhase = idx;
+
+  // Update dots
+  PHASES.forEach((_, i) => {
+    const dot = document.getElementById(`dot-${i}`);
+    const conn = document.getElementById(`conn-${i}`);
+    dot.className = 'phase-dot' + (i < idx ? ' completed' : i === idx ? ' active' : '');
+    if (conn) conn.className = 'phase-connector' + (i <= idx ? ' lit' : '');
+  });
+
+  // Update arc cards
+  PHASES.forEach((_, i) => {
+    const card = document.getElementById(`phase-card-${i}`);
+    card.className = 'phase-card' + (i < idx ? ' done' : i === idx ? ' active' : '');
+  });
+
+  // Update phase text
+  const phaseText = document.getElementById('phaseText');
+  if (idx >= 0 && idx < PHASES.length) {
+    phaseText.textContent = PHASES[idx].desc;
+    phaseText.classList.add('visible');
+  }
+
+  // Update state labels
+  if (idx >= 0 && idx < PHASES.length) {
+    document.getElementById('dreamStateLabel').textContent = PHASES[idx].name;
+    document.getElementById('dreamStateSub').textContent = `Phase ${idx + 1} of ${PHASES.length} — ${PHASES[idx].desc}`;
+  }
+}
+
+function advancePhase() {
+  if (!isDreaming) return;
+  const next = currentPhase + 1;
+
+  if (next >= PHASES.length) {
+    // Dream complete
+    endDream(true);
+    return;
+  }
+
+  setPhaseActive(next);
+
+  // Schedule next phase advance (variable 8–18 seconds for demo feel)
+  const delay = 8000 + Math.random() * 10000;
+  phaseTimer = setTimeout(advancePhase, delay);
+}
+
+// ── Toggle dream ──────────────────────────────────────────────────────
+function toggleDream() {
+  if (isDreaming) {
+    endDream(false);
+  } else {
+    startDream();
+  }
+}
+
+function startDream() {
+  isDreaming = true;
+
+  // Fetch from API (non-blocking; falls back to demo mode)
+  fetch('/api/features/dreams/start', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ manual: true }),
+  }).catch(() => { /* demo mode — no server required */ });
+
+  // Orb awakens
+  const orb = document.getElementById('dreamOrb');
+  orb.className = 'dream-orb dreaming';
+  orb.innerHTML = '<span style="font-size:2.2rem;filter:brightness(2);">✦</span>';
+  document.getElementById('zzzWrap').style.display = 'none';
+
+  // Update button
+  const btn = document.getElementById('dreamBtn');
+  btn.className = 'btn-dream dreaming-btn';
+  btn.innerHTML = '<span>■</span> Stop Dreaming';
+
+  // Reset phase state
+  completedPhases.clear();
+  PHASES.forEach((_, i) => {
+    const dot = document.getElementById(`dot-${i}`);
+    const card = document.getElementById(`phase-card-${i}`);
+    dot.className = 'phase-dot';
+    card.className = 'phase-card';
+    const conn = document.getElementById(`conn-${i}`);
+    if (conn) conn.className = 'phase-connector';
+  });
+
+  document.getElementById('phaseText').classList.add('visible');
+
+  // Start phase 0
+  setPhaseActive(0);
+
+  // Advance phases
+  phaseTimer = setTimeout(advancePhase, 9000 + Math.random() * 8000);
+
+  // Feed drip
+  feedTimer = setInterval(() => {
+    if (!isDreaming) return;
+    const item = FEED_POOL[feedIdx % FEED_POOL.length];
+    feedIdx++;
+    addFeedItem(item);
+  }, 3200);
+}
+
+function endDream(completed) {
+  isDreaming = false;
+  clearTimeout(phaseTimer);
+  clearInterval(feedTimer);
+
+  // Orb rests
+  const orb = document.getElementById('dreamOrb');
+  orb.className = 'dream-orb sleeping';
+  orb.innerHTML = '<span style="font-size:2.8rem;">💜</span>';
+  document.getElementById('zzzWrap').style.display = '';
+
+  // Dots — all done if completed
+  if (completed) {
+    PHASES.forEach((_, i) => {
+      document.getElementById(`dot-${i}`).className = 'phase-dot completed';
+      document.getElementById(`phase-card-${i}`).className = 'phase-card done';
+      const conn = document.getElementById(`conn-${i}`);
+      if (conn) conn.className = 'phase-connector lit';
+    });
+    document.getElementById('dreamStateLabel').textContent = 'Dream Complete';
+    document.getElementById('dreamStateSub').textContent = 'All 7 phases finished — insights distilled and applied';
+    document.getElementById('phaseText').textContent = 'Wisdom distilled. The system rests, wiser than before.';
+
+    // Bump stats
+    const td = document.getElementById('statTotalDreams');
+    td.textContent = String(parseInt(td.textContent) + 1);
+  } else {
+    document.getElementById('dreamStateLabel').textContent = 'Resting';
+    document.getElementById('dreamStateSub').textContent = 'System is idle — no active dream session';
+    document.getElementById('phaseText').classList.remove('visible');
+    // Reset dots
+    PHASES.forEach((_, i) => {
+      document.getElementById(`dot-${i}`).className = 'phase-dot';
+      document.getElementById(`phase-card-${i}`).className = 'phase-card';
+      const conn = document.getElementById(`conn-${i}`);
+      if (conn) conn.className = 'phase-connector';
+    });
+  }
+
+  const btn = document.getElementById('dreamBtn');
+  btn.className = 'btn-dream';
+  btn.innerHTML = '<span>✦</span> Start Dreaming';
+
+  currentPhase = -1;
+}
+
+// ── Schedule toggles ──────────────────────────────────────────────────
+function toggleSchedule() {
+  const t = document.getElementById('schedToggle');
+  const on = t.classList.toggle('on');
+  t.setAttribute('aria-checked', String(on));
+}
+function toggleAutoApply() {
+  const t = document.getElementById('autoApplyToggle');
+  const on = t.classList.toggle('on');
+  t.setAttribute('aria-checked', String(on));
+}
+function toggleNotif() {
+  const t = document.getElementById('notifToggle');
+  const on = t.classList.toggle('on');
+  t.setAttribute('aria-checked', String(on));
+}
+
+function saveSchedule() {
+  const hour = document.getElementById('dreamHour').value;
+  const tz   = document.getElementById('dreamTz').value;
+
+  // POST to API (fire and forget)
+  fetch('/api/features/dreams', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ dreamHour: parseInt(hour), timezone: tz }),
+  }).catch(() => {});
+
+  // Update "next dream" display
+  const hourNum = parseInt(hour);
+  const suffix  = hourNum < 12 ? 'AM' : 'PM';
+  const h12     = hourNum === 0 ? 12 : hourNum > 12 ? hourNum - 12 : hourNum;
+  document.getElementById('nextDreamVal').textContent = `Tonight, ${h12}:00 ${suffix}`;
+
+  const note = document.getElementById('schedSavedNote');
+  note.classList.add('show');
+  setTimeout(() => note.classList.remove('show'), 2400);
+}
+
+// ── Bootstrap: load state from API ───────────────────────────────────
+(function bootstrap() {
+  fetch('/api/features/dreams')
+    .then(r => r.json())
+    .then(data => {
+      if (data.totalDreams   !== undefined) document.getElementById('statTotalDreams').textContent   = data.totalDreams.toLocaleString();
+      if (data.discoveries   !== undefined) document.getElementById('statDiscoveries').textContent   = data.discoveries.toLocaleString();
+      if (data.optimizations !== undefined) document.getElementById('statOptimizations').textContent = data.optimizations.toLocaleString();
+      if (data.avgDuration   !== undefined) document.getElementById('statAvgDuration').textContent   = data.avgDuration;
+      if (data.nextScheduled !== undefined) document.getElementById('nextDreamVal').textContent       = data.nextScheduled;
+    })
+    .catch(() => { /* demo mode — static data already rendered */ });
+})();
+</script>
+
+</body>
+</html>

@@ -1,234 +1,773 @@
-version: 1
+# HEADY_BRAND:BEGIN
+# ╔══════════════════════════════════════════════════════════════════╗
+# ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
+# ║  ██║  ██║██╔════╝██╔══██╗██╔══██╗╚██╗ ██╔╝                     ║
+# ║  ███████║█████╗  ███████║██║  ██║ ╚████╔╝                      ║
+# ║  ██╔══██║██╔══╝  ██╔══██║██║  ██║  ╚██╔╝                       ║
+# ║  ██║  ██║███████╗██║  ██║██████╔╝   ██║                        ║
+# ║  ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝    ╚═╝                        ║
+# ║                                                                  ║
+# ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
+# ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
+# ║  FILE: configs/service-catalog.yaml                                                    ║
+# ║  LAYER: config                                                  ║
+# ╚══════════════════════════════════════════════════════════════════╝
+# HEADY_BRAND:END
+# configs/service-catalog.yaml
+
+
+#
+# Service Catalog - Canonical registry of all Heady services, agents, and tools.
+# Orchestrator and System Brain use this as source of truth for routing and governance.
+
+version: "9.0.0"
+
+# ─── SERVICES ─────────────────────────────────────────────────────────────
 services:
-  - name: domain-router
-    runtime: cloud-run
-    port: 4301
-    healthPath: /health/ready
-    dependencies: []
-  - name: observability-kernel
-    runtime: cloud-run
-    port: 4302
-    healthPath: /health/ready
-    dependencies: [domain-router]
-  - name: budget-tracker
-    runtime: cloud-run
-    port: 4303
-    healthPath: /health/ready
-    dependencies: [observability-kernel]
-  - name: heady-memory
-    runtime: cloud-run
-    port: 4304
-    healthPath: /health/ready
-    dependencies: [observability-kernel]
-  - name: heady-health
-    runtime: cloud-run
-    port: 4305
-    healthPath: /health/ready
-    dependencies: [observability-kernel, heady-memory]
+  - name: heady-manager
+    role: API Gateway & MCP Server
+    type: web
+    skills: [api-gateway, mcp-protocol, static-serving, rate-limiting, auth]
+    tools: [express, helmet, compression, ws]
+    endpoint: http://manager.headysystems.com:3300
+    healthCheck: /api/health
+    criticality: critical
+    owner: system
+    slos:
+      availability: 99.9
+      latencyP99Ms: 500
+
   - name: heady-conductor
-    runtime: cloud-run
-    port: 4306
-    healthPath: /health/ready
-    dependencies: [heady-brains, heady-soul, heady-vinci, heady-governance]
-  - name: heady-brains
-    runtime: cloud-run
-    port: 4307
-    healthPath: /health/ready
-    dependencies: [heady-memory]
-  - name: heady-soul
-    runtime: cloud-run
-    port: 4308
-    healthPath: /health/ready
-    dependencies: [heady-governance]
-  - name: heady-vinci
-    runtime: cloud-run
-    port: 4309
-    healthPath: /health/ready
-    dependencies: [heady-memory]
-  - name: heady-governance
-    runtime: cloud-run
-    port: 4310
-    healthPath: /health/ready
-    dependencies: [domain-router]
+    role: Python Orchestration Worker
+    type: worker
+    skills: [audit, build, lint, test, concept-extraction]
+    tools: [python, conductor-protocol]
+    endpoint: http://conductor.headysystems.com:8080
+    healthCheck: /health
+    criticality: critical
+    owner: system
+    slos:
+      availability: 99.0
+      latencyP99Ms: 5000
+
+  - name: heady-brain
+    role: System Brain Meta-Controller
+    type: internal
+    skills: [meta-control, readiness-eval, concept-alignment, auto-tuning, governance]
+    tools: [hc-brain, hc-readiness, concepts-index]
+    endpoint: http://brain.headysystems.com:8081
+    healthCheck: module-loaded
+    criticality: critical
+    owner: system
+    slos:
+      availability: 99.9
+      latencyP99Ms: 1000
+
+  - name: hc-supervisor
+    role: Multi-Agent Supervisor
+    type: internal
+    skills: [agent-routing, parallel-fanout, result-aggregation, direct-routing]
+    tools: [hc-supervisor, networking-client]
+    endpoint: http://supervisor.headysystems.com:8082
+    healthCheck: module-loaded
+    criticality: critical
+    owner: system
+    slos:
+      availability: 99.9
+      latencyP99Ms: 200
+
+  - name: heady-sync
+    role: Multi-Remote Git Synchronization
+    type: script
+    skills: [git-sync, worktree-management, multi-remote-push]
+    tools: [git, powershell]
+    endpoint: http://sync.headysystems.com:8083
+    healthCheck: script-runnable
+    criticality: high
+    owner: system
+
+  - name: hcautobuild
+    role: Automated Build Pipeline
+    type: script
+    skills: [auto-build, worktree-discovery, checkpoint-save, deploy-trigger]
+    tools: [powershell, git, npm]
+    endpoint: http://autobuild.headysystems.com:8084
+    healthCheck: script-runnable
+    criticality: high
+    owner: system
+
+  - name: heady-swarms
+    role: Swarm Intelligence Orchestrator
+    type: internal
+    skills: [swarm-dispatch, parallel-fanout, vector-routing, semantic-matching, concurrent-execution]
+    tools: [heady-bee, phi-math, vector-router]
+    endpoint: http://swarms.headysystems.com:8085
+    healthCheck: module-loaded
+    criticality: critical
+    owner: system
+    slos:
+      availability: 99.9
+      latencyP99Ms: 500
+
+  - name: colab-latent-ops
+    role: Distributed Colab Pro+ Compute Cluster
+    type: compute
+    skills: [embedding-generation, model-inference, autonomous-learning, vector-indexing, latent-space-ops]
+    tools: [colab-primary, colab-secondary, colab-tertiary, colab-learning]
+    endpoint: http://colab.headysystems.com:8086
+    healthCheck: /api/colab/health
+    criticality: high
+    owner: system
+    runtimes:
+      primary: { concurrency: 34, jobType: embedding, envVar: COLAB_PRIMARY_ENDPOINT }
+      secondary: { concurrency: 21, jobType: inference, envVar: COLAB_SECONDARY_ENDPOINT }
+      tertiary: { concurrency: 13, jobType: training, envVar: COLAB_TERTIARY_ENDPOINT }
+      learning: { concurrency: 8, jobType: autonomous_learning, envVar: COLAB_LEARNING_ENDPOINT, dedicated: true }
+    slos:
+      availability: 95.0
+      latencyP99Ms: 30000
+
+  - name: vector-router
+    role: Semantic Vector Space Task Router
+    type: internal
+    skills: [semantic-routing, cosine-similarity, agent-matching, capability-embedding, batch-routing]
+    tools: [phi-math, structured-logger]
+    endpoint: http://router.headysystems.com:8087
+    healthCheck: module-loaded
+    criticality: critical
+    owner: system
+    slos:
+      availability: 99.99
+      latencyP99Ms: 50
+
+# ─── PIPELINE SERVICES (v9.0 — Referenced by 22-Stage Pipeline) ──────────
+pipeline_services:
+  - name: heady-memory
+    role: Multi-Tier Memory System
+    type: internal
+    skills: [working-memory, semantic-cache, session-sync, event-streaming]
+    tools: [upstash-redis, upstash-kafka, qdrant, neon]
+    endpoint: internal
+    healthCheck: module-loaded
+    criticality: critical
+    owner: system
+    tiers:
+      t0: { provider: upstash-redis, latency: "<1ms", ttl: "φ⁷ ≈ 29s" }
+      t1: { provider: neon-postgres, latency: "<10ms" }
+      t2: { provider: qdrant-cloud, latency: "<50ms" }
+
   - name: heady-guard
-    runtime: cloud-run
-    port: 4311
-    healthPath: /health/ready
-    dependencies: [heady-governance]
-  - name: heady-autobiographer
-    runtime: cloud-run
-    port: 4312
-    healthPath: /health/ready
-    dependencies: [heady-memory]
-  - name: heady-bee-factory
-    runtime: cloud-run
-    port: 4313
-    healthPath: /health/ready
-    dependencies: [heady-health, heady-vinci]
-  - name: hcfullpipeline-executor
-    runtime: cloud-run
-    port: 4314
-    healthPath: /health/ready
-    dependencies: [heady-conductor, heady-bee-factory, heady-governance]
-  - name: auto-success-engine
-    runtime: cloud-run
-    port: 4315
-    healthPath: /health/ready
-    dependencies: [observability-kernel, heady-health, budget-tracker]
-  - name: headyos-kernel
-    runtime: cloud-run
-    port: 4900
-    healthPath: /health
-    dependencies: [heady-memory, heady-governance, heady-conductor]
-    description: "Latent OS kernel — persistence, liquid routing, orchestration"
-  - name: headybuddy-agent
-    runtime: cloud-run
-    port: 4800
-    healthPath: /health
-    dependencies: [heady-brains, heady-memory]
-    description: "HeadyBuddy AI companion — multi-provider, persistent memory, task automation"
-  - name: headyweb-browser
-    runtime: cloud-run
-    port: 5173
-    healthPath: /health
-    dependencies: [headybuddy-agent, heady-brains]
-    description: "HeadyWeb browser — Comet/Chromium hybrid with integrated IDE"
-  - name: headyai-ide
-    runtime: cloud-run
-    port: 5174
-    healthPath: /health
-    dependencies: [headybuddy-agent, headyos-kernel]
-    description: "HeadyAI-IDE — Windsurf/Antigravity hybrid cloud IDE"
-  - name: heady-atlas-agent
-    runtime: cloud-run
-    port: 4320
-    healthPath: /health/ready
-    dependencies: [heady-memory, heady-brains]
-    description: "Knowledge graph and mapping agent"
-  - name: heady-critique-agent
-    runtime: cloud-run
-    port: 4321
-    healthPath: /health/ready
-    dependencies: [heady-brains]
-    description: "Self-critique and quality assurance agent"
-  - name: heady-maestro-agent
-    runtime: cloud-run
-    port: 4322
-    healthPath: /health/ready
-    dependencies: [heady-conductor, heady-brains]
-    description: "Orchestration and coordination agent"
-  - name: heady-sentinel-agent
-    runtime: cloud-run
-    port: 4323
-    healthPath: /health/ready
-    dependencies: [heady-governance, heady-guard]
-    description: "Security monitoring and governance agent"
-  - name: heady-observer-agent
-    runtime: cloud-run
-    port: 4324
-    healthPath: /health/ready
-    dependencies: [observability-kernel, heady-health]
-    description: "System monitoring and observability agent"
-  - name: heady-pythia-agent
-    runtime: cloud-run
-    port: 4325
-    healthPath: /health/ready
-    dependencies: [heady-brains, heady-memory]
-    description: "Prediction and forecasting oracle agent"
-  - name: heady-vinci-agent
-    runtime: cloud-run
-    port: 4326
-    healthPath: /health/ready
-    dependencies: [heady-vinci]
-    description: "Design and UI generation agent"
-  - name: heady-montecarlo-agent
-    runtime: cloud-run
-    port: 4327
-    healthPath: /health/ready
-    dependencies: [heady-brains]
-    description: "Probabilistic simulation and risk analysis agent"
-  - name: heady-imagine-agent
-    runtime: cloud-run
-    port: 4328
-    healthPath: /health/ready
-    dependencies: [heady-brains, heady-vinci]
-    description: "Creative content and image generation agent"
-  - name: heady-stories-agent
-    runtime: cloud-run
-    port: 4329
-    healthPath: /health/ready
-    dependencies: [heady-brains, heady-memory]
-    description: "Narrative architecture and content agent"
-  - name: heady-kinetics-agent
-    runtime: cloud-run
-    port: 4330
-    healthPath: /health/ready
-    dependencies: [heady-vinci]
-    description: "Motion, animation, and interaction design agent"
-  - name: heady-jules-agent
-    runtime: cloud-run
-    port: 4331
-    healthPath: /health/ready
-    dependencies: [heady-brains, heady-memory]
-    description: "The Hyper-Surgeon — precision coding and optimization agent"
-  - name: heady-traces-service
-    runtime: cloud-run
-    port: 4340
-    healthPath: /health/ready
-    dependencies: [observability-kernel]
-    description: "Distributed tracing service"
-  - name: heady-logs-service
-    runtime: cloud-run
-    port: 4341
-    healthPath: /health/ready
-    dependencies: [observability-kernel]
-    description: "Centralized logging service"
-  - name: heady-metrics-service
-    runtime: cloud-run
-    port: 4342
-    healthPath: /health/ready
-    dependencies: [observability-kernel]
-    description: "Metrics collection and alerting service"
-  - name: heady-patterns-service
-    runtime: cloud-run
-    port: 4343
-    healthPath: /health/ready
-    dependencies: [heady-brains, observability-kernel]
-    description: "Pattern recognition and evolution service"
-  - name: heady-discord-connector
-    runtime: cloud-run
-    port: 4350
-    healthPath: /health/ready
-    dependencies: [headybuddy-agent]
-    description: "Discord bot and webhook connector"
-  - name: heady-slack-connector
-    runtime: cloud-run
-    port: 4351
-    healthPath: /health/ready
-    dependencies: [headybuddy-agent]
-    description: "Slack bot and webhook connector"
-  - name: heady-github-connector
-    runtime: cloud-run
-    port: 4352
-    healthPath: /health/ready
-    dependencies: [heady-brains]
-    description: "GitHub App integration connector"
-workers:
-  - name: heady-mcp-worker
-    runtime: cloudflare-workers
-    routes: [/mcp, /sse]
-  - name: liquid-gateway-worker
-    runtime: cloudflare-workers
-    routes: [/v1/chat, /v1/embed]
-  - name: heady-buddy-worker
-    runtime: cloudflare-workers
-    routes: [/chat, /stream]
-  - name: edge-auth-worker
-    runtime: cloudflare-workers
-    routes: [/verify]
-  - name: headyweb-edge-worker
-    runtime: cloudflare-workers
-    routes: [/browse, /search, /ide]
-  - name: headyos-edge-worker
-    runtime: cloudflare-workers
-    routes: [/os, /sync, /persist]
+    role: Security Audit & PQC Verification
+    type: internal
+    skills: [security-audit, pqc-verification, trust-signing, ed25519]
+    tools: [liboqs, ed25519, r2-audit-trail]
+    endpoint: internal
+    healthCheck: module-loaded
+    criticality: critical
+    owner: system
+    pipelineStages: [3, 20]
+
+  - name: heady-deepscan
+    role: Deep Code & Context Scanner
+    type: internal
+    skills: [code-analysis, context-enrichment, pattern-detection]
+    tools: [hf-inference, cloudflare-kv]
+    endpoint: internal
+    healthCheck: module-loaded
+    criticality: high
+    owner: system
+    pipelineStages: [1, 4]
+
+  - name: heady-check
+    role: Self-Awareness & Anti-Regression
+    type: internal
+    skills: [self-awareness, anti-regression, task-guards]
+    tools: [vertex-ai-gemini, neon-postgres]
+    endpoint: internal
+    healthCheck: module-loaded
+    criticality: high
+    owner: system
+    pipelineStages: [14, 18]
+
+  - name: heady-assure
+    role: Self-Critique & Bottleneck Detection
+    type: internal
+    skills: [self-critique, bottleneck-detection, quality-assurance]
+    tools: [pipeline-metrics, structured-logger]
+    endpoint: internal
+    healthCheck: module-loaded
+    criticality: high
+    owner: system
+    pipelineStages: [15]
+
+  - name: heady-vinci
+    role: Pattern Recognition Engine
+    type: internal
+    skills: [pattern-recognition, csl-scoring, pattern-library]
+    tools: [hf-csl-scorer, qdrant]
+    endpoint: internal
+    healthCheck: module-loaded
+    criticality: high
+    owner: system
+    pipelineStages: [13]
+
+  - name: heady-eval
+    role: Quality Gate & LLM-as-Judge
+    type: internal
+    skills: [llm-as-judge, eval-validation, quality-gate]
+    tools: [vertex-ai-gemini, eval-bench]
+    endpoint: internal
+    healthCheck: module-loaded
+    criticality: high
+    owner: system
+    pipelineStages: [12]
+
+  - name: heady-governance-bot
+    role: Wisdom Commit & Governance
+    type: bot
+    skills: [wisdom-commit, governance-check, github-app]
+    tools: [github-api, wisdom-json]
+    endpoint: internal
+    healthCheck: module-loaded
+    criticality: medium
+    owner: system
+    pipelineStages: [19]
+
+  - name: heady-distiller
+    role: Knowledge Distillation (Stage 22)
+    type: internal
+    skills: [knowledge-distillation, token-reduction, pattern-compression]
+    tools: [hf-distiller-v1, qdrant]
+    endpoint: internal
+    healthCheck: module-loaded
+    criticality: high
+    owner: system
+    pipelineStages: [22]
+    tokenReduction: "~40%"
+
+  # ─── FEATURE MODULES (v5.0) ────────────────────────────────────────────
+  - name: heady-pulse
+    role: Ambient Intelligence Dashboard
+    type: feature
+    skills: [system-mood, ors-visualization, ambient-monitoring]
+    endpoint: /api/features/pulse
+    healthCheck: /api/features/pulse
+    criticality: normal
+    owner: system
+
+  - name: heady-constellation
+    role: Personal Knowledge Graph
+    type: feature
+    skills: [node-visualization, graph-layout, golden-spiral]
+    endpoint: /api/features/constellation
+    healthCheck: /api/features/constellation
+    criticality: normal
+    owner: system
+
+  - name: heady-arena
+    role: Live Solution Battles
+    type: feature
+    skills: [agent-competition, scoring, solution-evaluation]
+    endpoint: /api/features/arena
+    healthCheck: /api/features/arena
+    criticality: normal
+    owner: system
+
+  - name: heady-voice
+    role: Natural Language Command Interface
+    type: feature
+    skills: [intent-classification, voice-input, command-routing]
+    endpoint: /api/features/voice/command
+    healthCheck: /api/features/voice/history
+    criticality: normal
+    owner: system
+
+  - name: heady-memory-palace
+    role: Spatial Knowledge Navigation
+    type: feature
+    skills: [spatial-nav, room-management, 3d-transforms]
+    endpoint: /api/features/memory-palace
+    healthCheck: /api/features/memory-palace
+    criticality: normal
+    owner: system
+
+  - name: heady-guardian
+    role: Post-Quantum Personal Vault
+    type: feature
+    skills: [secret-management, trust-receipts, pqc-signing]
+    endpoint: /api/features/guardian
+    healthCheck: /api/features/guardian
+    criticality: high
+    owner: system
+
+  - name: heady-timeline
+    role: Personal System History
+    type: feature
+    skills: [event-tracking, timeline-visualization, golden-spiral-layout]
+    endpoint: /api/features/timeline
+    healthCheck: /api/features/timeline
+    criticality: normal
+    owner: system
+
+  - name: heady-dreams
+    role: Background Optimization Engine
+    type: feature
+    skills: [learning-pipeline, self-optimization, dream-journal]
+    endpoint: /api/features/dreams
+    healthCheck: /api/features/dreams
+    criticality: normal
+    owner: system
+
+  - name: heady-forge
+    role: Live Component Builder
+    type: feature
+    skills: [visual-builder, yaml-generation, blueprint-management]
+    endpoint: /api/features/forge
+    healthCheck: /api/features/forge
+    criticality: normal
+    owner: system
+
+  - name: heady-identity-graph
+    role: Unified Identity System
+    type: feature
+    skills: [identity-management, agent-delegation, zk-consent]
+    endpoint: /api/features/identity
+    healthCheck: /api/features/identity
+    criticality: high
+    owner: system
+
+  - name: heady-vault
+    role: Personal Sovereign Data Store
+    type: feature
+    skills: [data-sovereignty, selective-disclosure, zk-proofs]
+    endpoint: /api/features/vault
+    healthCheck: /api/features/vault
+    criticality: high
+    owner: system
+
+  - name: heady-marketplace
+    role: Agent Skill Store
+    type: feature
+    skills: [skill-catalog, swarm-activation, subscription-management]
+    endpoint: /api/features/marketplace
+    healthCheck: /api/features/marketplace
+    criticality: normal
+    owner: system
+
+  - name: heady-briefing
+    role: Morning Intelligence Digest
+    type: feature
+    skills: [narrative-synthesis, daily-digest, insight-aggregation]
+    endpoint: /api/features/briefing
+    healthCheck: /api/features/briefing
+    criticality: normal
+    owner: system
+
+  - name: heady-gateway
+    role: Personal MCP Server Dashboard
+    type: feature
+    skills: [mcp-management, rate-limiting, client-management, budget-control]
+    endpoint: /api/features/gateway
+    healthCheck: /api/features/gateway
+    criticality: high
+    owner: system
+
+  - name: heady-swarm-mode
+    role: Visual Swarm Orchestration
+    type: feature
+    skills: [swarm-visualization, particle-animation, convergence-tracking]
+    endpoint: /api/features/swarm-mode
+    healthCheck: /api/features/swarm-mode
+    criticality: normal
+    owner: system
+
+# ─── AGENTS ───────────────────────────────────────────────────────────────
+agents:
+  - name: builder
+    role: Build & Deploy Agent
+    skills: [build, deploy, test, lint]
+    tools: [npm, git, render-api, powershell]
+    routing: direct
+    fallback: null
+    criticality: high
+
+  - name: researcher
+    role: Knowledge & News Ingestion Agent
+    skills: [news-ingestion, concept-extraction, trend-analysis]
+    tools: [algolia-hn, perplexity, llm-provider]
+    routing: direct
+    fallback: null
+    criticality: medium
+
+  - name: deployer
+    role: Infrastructure Deployment Agent
+    skills: [render-deploy, docker-build, cloud-bridge, env-sync]
+    tools: [render-api, docker, cloud-bridge]
+    routing: direct
+    fallback: null
+    criticality: high
+
+  - name: auditor
+    role: Audit & Compliance Agent
+    skills: [code-audit, security-scan, brand-check, dependency-audit]
+    tools: [eslint, snyk, brand-headers]
+    routing: direct
+    fallback: null
+    criticality: medium
+
+  - name: observer
+    role: Monitoring & Health Agent
+    skills: [health-check, metrics-collection, alert-evaluation, readiness-probe]
+    tools: [node-cron, health-scripts, cloudwatch-api]
+    routing: direct
+    fallback: null
+    criticality: critical
+
+  - name: claude-code
+    role: AI Code Agent (Claude Code CLI)
+    skills: [code-analysis, security-audit, documentation, concept-alignment, task-planning, governance-check, readiness-eval]
+    tools: [claude-cli, read, grep, glob, bash]
+    routing: direct
+    fallback: null
+    criticality: high
+
+  - name: swarm-coordinator
+    role: Swarm Intelligence Dispatch Coordinator
+    skills: [task-distribution, concurrent-execution, dependency-resolution, phi-backoff-retry]
+    tools: [heady-bee, heady-swarm, vector-router]
+    routing: semantic
+    fallback: claude-code
+    criticality: critical
+
+  - name: colab-ops
+    role: Colab Compute Runtime Manager
+    skills: [embedding, inference, training, autonomous-learning, health-check]
+    tools: [colab-primary, colab-secondary, colab-tertiary, colab-learning]
+    routing: capability
+    fallback: null
+    criticality: high
+
+# ─── EXTERNAL INTEGRATIONS ────────────────────────────────────────────────
+externalIntegrations:
+  - name: render-com
+    type: deployment-platform
+    domain: api.render.com
+    proxyPolicy: external-proxy-allowed
+    rateLimit: 30/min
+
+  - name: algolia-hn
+    type: news-api
+    domain: hn.algolia.com
+    proxyPolicy: external-proxy-allowed
+    rateLimit: 60/min
+
+  - name: huggingface
+    type: ml-platform
+    domain: huggingface.co
+    proxyPolicy: external-proxy-allowed
+    rateLimit: 30/min
+
+  - name: github
+    type: scm
+    domain: api.github.com
+    proxyPolicy: external-proxy-allowed
+    rateLimit: 60/min
+
+  - name: cloudflare
+    type: cdn-dns
+    domain: api.cloudflare.com
+    proxyPolicy: external-proxy-allowed
+    rateLimit: 30/min
+
+  - name: google-vertex-ai
+    type: ml-platform
+    domain: us-central1-aiplatform.googleapis.com
+    proxyPolicy: external-proxy-allowed
+    rateLimit: 30/min
+
+  - name: google-ai-studio
+    type: llm-api
+    domain: generativelanguage.googleapis.com
+    proxyPolicy: external-proxy-allowed
+    rateLimit: 60/min
+
+  - name: google-colab
+    type: notebook-platform
+    domain: colab.research.google.com
+    proxyPolicy: external-proxy-allowed
+    rateLimit: 10/min
+
+  - name: upstash-redis
+    type: memory-tier
+    tier: T0
+    displayName: "Upstash Redis"
+    role: "T0 memory, streams, QStash"
+    cost: "$10/mo"
+    url: "finer-sole-64861.upstash.io:6379"
+    domain: api.upstash.com
+    proxyPolicy: external-proxy-allowed
+
+  - name: neon-postgres
+    type: memory-tier
+    tier: T1
+    displayName: "Neon Postgres"
+    role: "T1 memory, pgvector, state"
+    cost: "$19/mo"
+    url: "ep-cold-snow-aesmiwt9.c-2.us-east-2.aws.neon.tech"
+    domain: api.neon.tech
+    proxyPolicy: external-proxy-allowed
+
+  - name: cloud-run
+    type: compute
+    displayName: "Google Cloud Run"
+    role: "Primary compute (Express :3301)"
+    cost: "$75-100/mo"
+    project: "gen-lang-client-0920560496"
+    domain: run.googleapis.com
+    proxyPolicy: external-proxy-allowed
+
+  - name: firebase
+    type: auth
+    displayName: "Firebase"
+    role: "Auth (27 OAuth), SSO, push notifications"
+    cost: "Free"
+    project: "heady-ai"
+    domain: firebase.googleapis.com
+    proxyPolicy: external-proxy-allowed
+
+  - name: azure
+    type: cloud-platform
+    displayName: "Microsoft Azure"
+    role: "GPT models, Cosmos DB, Container Apps"
+    cost: "$55-90/mo"
+    subscription: "6760eeb0-ae64-410c-b076-abb640de2cba"
+    domain: management.azure.com
+    proxyPolicy: external-proxy-allowed
+
+  - name: workers-ai
+    type: edge-inference
+    displayName: "Cloudflare Workers AI"
+    role: "Edge inference"
+    cost: "Free (10K/day)"
+    domain: api.cloudflare.com
+    proxyPolicy: external-proxy-allowed
+
+  - name: sentry
+    type: observability
+    displayName: "Sentry"
+    role: "Tracing, errors, Crons"
+    cost: "Free"
+    org: "headyconnection-inc"
+    domain: sentry.io
+    proxyPolicy: external-proxy-allowed
+
+  - name: gemini
+    type: llm-api
+    displayName: "Google Gemini"
+    role: "Primary bulk LLM"
+    cost: "Variable"
+    domain: generativelanguage.googleapis.com
+    proxyPolicy: external-proxy-allowed
+
+# ─── AI PROVIDERS ─────────────────────────────────────────────────────────
+aiProviders:
+  - tier: 1
+    provider: anthropic
+    models: [claude-sonnet-4, claude-opus-4]
+    costPerMTokens: "$3-$75"
+    envKey: ANTHROPIC_API_KEY
+  - tier: 2
+    provider: groq
+    models: [llama-3.3-70b]
+    costPerMTokens: "$0.59/$0.79"
+    envKey: GROQ_API_KEY
+  - tier: 3
+    provider: openai
+    models: [gpt-4o]
+    costPerMTokens: "$2.50/$10"
+    envKey: OPENAI_API_KEY
+  - tier: 4
+    provider: openai-embeddings
+    models: [text-embedding-3-small]
+    costPerMTokens: "$0.02"
+    envKey: OPENAI_API_KEY
+  - tier: 5
+    provider: perplexity
+    models: [sonar-pro]
+    costPerMTokens: "$3/$15"
+    envKey: PERPLEXITY_API_KEY
+  - tier: 6
+    provider: google
+    models: [gemini-2.5-pro, gemini-2.5-flash]
+    costPerMTokens: "$0.10-$2.50"
+    envKey: GEMINI_API_KEY
+  - tier: 7
+    provider: huggingface
+    models: [various]
+    costPerMTokens: "Free"
+    envKey: HF_TOKEN
+  - tier: 8
+    provider: cloudflare-workers-ai
+    models: [various]
+    costPerMTokens: "Free (10K/day)"
+    envKey: CF_ACCOUNT
+  fallbackChain: [anthropic, groq, openai, gemini, workers-ai, colab-vllm]
+  scoringFormula: "phi_weight × csl × (1/latency_ms) × (1/cost_per_call)"
+
+# ─── LIQUID NODES (MCP-Connected External Interfaces) ─────────────────────
+liquidNodes:
+  - name: github-node
+    type: scm
+    status: needs_token
+    envVar: GITHUB_TOKEN
+    capabilities: [list-repos, repo-info, search-code]
+    vaultKey: heady-vault-manifest
+
+  - name: gists-node
+    type: code-snippets
+    status: needs_token
+    envVar: GITHUB_TOKEN
+    capabilities: [list-gists, get-gist, create-gist]
+
+  - name: cloudflare-node
+    type: infrastructure
+    status: needs_token
+    envVar: CLOUDFLARE_API_TOKEN
+    capabilities: [list-zones, dns-records, list-workers, list-pages]
+
+  - name: vertex-ai-node
+    type: ml-inference
+    status: needs_token
+    envVar: GCLOUD_ACCESS_TOKEN
+    capabilities: [list-models, list-endpoints, predict]
+
+  - name: ai-studio-node
+    type: llm-generation
+    status: needs_token
+    envVar: GOOGLE_AI_KEY
+    capabilities: [generate-text]
+
+  - name: colab-node
+    type: notebooks
+    status: needs_token
+    envVar: GOOGLE_DRIVE_TOKEN
+    envVars: [COLAB_PRIMARY_ENDPOINT, COLAB_SECONDARY_ENDPOINT, COLAB_TERTIARY_ENDPOINT, COLAB_LEARNING_ENDPOINT, GCLOUD_ACCESS_TOKEN]
+    capabilities: [list-notebooks, get-notebook]
+
+  - name: latent-space-node
+    type: vector-memory
+    status: active
+    envVar: null
+    capabilities: [store, search, list, delete]
+    currentVectors: 43
+
+# ─── PIPELINE STAGE MAPPINGS ──────────────────────────────────────────────
+pipelineStages:
+  - name: "Channel Entry"
+    handler: heady-manager
+    agents: [observer]
+    description: "Route incoming requests to appropriate pipeline"
+  - name: "Ingest"
+    handler: heady-manager
+    agents: [researcher]
+    description: "Gather all inputs, scan files, load configs"
+  - name: "Plan (MC-Powered)"
+    handler: heady-brain
+    agents: [claude-code]
+    description: "Monte Carlo plan selection and task decomposition"
+  - name: "Execute Major Phase"
+    handler: hc-supervisor
+    agents: [builder, deployer, claude-code]
+    description: "Primary execution phase with parallel fan-out"
+  - name: "Recover"
+    handler: hc-supervisor
+    agents: [builder, auditor]
+    description: "Error recovery and retry with phi-backoff"
+  - name: "Self-Critique"
+    handler: heady-brain
+    agents: [auditor, claude-code]
+    description: "Post-execution review and quality assessment"
+  - name: "Optimize"
+    handler: heady-brain
+    agents: [builder, auditor]
+    description: "Refactor, remove dead code, improve performance"
+  - name: "Finalize"
+    handler: heady-manager
+    agents: [deployer]
+    description: "Package artifacts and prepare for delivery"
+  - name: "Monitor & Feedback Loop"
+    handler: heady-manager
+    agents: [observer]
+    description: "Continuous monitoring and feedback collection"
+  - name: "Cross-Device Sync"
+    handler: heady-sync
+    agents: [deployer]
+    description: "Synchronize state across all devices"
+  - name: "Sync Priority Changes"
+    handler: heady-sync
+    agents: [deployer]
+    description: "Prioritize and sync critical changes first"
+  - name: "Deploy Priority"
+    handler: hcautobuild
+    agents: [deployer, builder]
+    description: "Automated deployment with priority ordering"
+  - name: "Post-Quantum Cryptography"
+    handler: heady-brain
+    agents: [auditor]
+    description: "Post-quantum crypto operations and validation"
+  - name: "Cryptography"
+    handler: heady-brain
+    agents: [auditor]
+    description: "Standard cryptographic operations"
+
+# ─── CLAUDE CODE INTEGRATION ──────────────────────────────────────────────
+claude_code:
+  name: Claude Code Integration
+  version: "1.0.0"
+  skills:
+    - heady-status
+    - heady-pipeline
+    - heady-checkpoint
+    - heady-deploy
+    - heady-security
+    - heady-config
+  agents:
+    - id: heady-builder
+      model: sonnet
+      role: build, test, lint, deploy
+    - id: heady-researcher
+      model: sonnet
+      role: research, concepts, trends
+    - id: heady-deployer
+      model: sonnet
+      role: infrastructure, cloud, deploy
+    - id: heady-auditor
+      model: sonnet
+      role: security, code audit, brand
+    - id: heady-observer
+      model: haiku
+      role: health, metrics, readiness
+    - id: heady-conductor
+      model: opus
+      role: orchestration, planning, coordination
+  mcp:
+    config: .mcp.json
+    server: mcp-servers/heady-mcp-server.js
+    tools: 52
+
+# ─── HEADY VAULT ──────────────────────────────────────────────────────────
+vault:
+  name: HeadyVault
+  source: .Heady/.shit
+  latentSpaceKey: heady-vault-manifest
+  totalSecrets: 45
+  categories:
+    ai-llm: [ANTHROPIC_API_KEY, CLAUDE_API_KEY, OPENAI_API_KEY, GROQ_API_KEY, PERPLEXITY_API_KEY, HF_TOKEN, GEMINI_API_KEY, GCLOUD_API_KEY]
+    infrastructure: [DATABASE_URL, NEON_API_KEY, UPSTASH_REDIS_REST_URL, FIREBASE_API_KEY, PINECONE_API_KEY, COLAB_PRIMARY_ENDPOINT, COLAB_SECONDARY_ENDPOINT, COLAB_TERTIARY_ENDPOINT, COLAB_LEARNING_ENDPOINT]
+    cloud-deploy: [CLOUDFLARE_API_TOKEN, SENTRY_AUTH_TOKEN, SENTRY_DSN]
+    scm: [GITHUB_TOKEN, GITHUB_TOKEN_SECONDARY]
+    finance: [STRIPE_SECRET_KEY]
+    auth: [ADMIN_TOKEN, HEADY_API_KEY, OP_SERVICE_ACCOUNT_TOKEN]
+  rotationPolicy: quarterly
+  lastRotation: unknown
+  nextRotation: 2026-04-15
