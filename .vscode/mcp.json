@@ -1,11 +1,20 @@
 {
-    "servers": {
-        "Heady": {
-            "type": "sse",
-            "url": "https://heady.headyme.com/sse",
-            "headers": {
-                "Authorization": "Bearer hdy_int_4d2d3fe4becc8ad3eea4c9c9b25ba68a83b28335143b89ab"
-            }
-        }
+  "servers": {
+    "heady-cloud": {
+      "type": "http",
+      "url": "https://headymcp.com/mcp",
+      "headers": {
+        "Authorization": "Bearer hdy_int_71589764cb98ea40bb384a4534999996ec5a06629bcbd346"
+      }
+    },
+    "heady-local": {
+      "type": "stdio",
+      "command": "node",
+      "args": ["/home/headyme/Heady/services/heady-mcp-server/src/index.js"],
+      "env": {
+        "HEADY_MCP_TRANSPORT": "stdio",
+        "NODE_ENV": "development"
+      }
     }
+  }
 }
