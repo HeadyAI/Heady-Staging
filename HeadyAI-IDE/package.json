@@ -16,7 +16,7 @@
   "dependencies": {
     "@monaco-editor/react": "^4.7.0",
     "@tailwindcss/postcss": "^4.1.18",
-    "electron": "^28.1.1",
+    "electron": "^35.7.5",
     "framer-motion": "^12.34.0",
     "lucide-react": "^0.564.0",
     "react": "^18.2.0",
@@ -29,10 +29,10 @@
   "devDependencies": {
     "@vitejs/plugin-react": "^4.2.1",
     "autoprefixer": "^10.4.24",
-    "electron-builder": "^24.13.3",
-    "postcss": "^8.5.6",
+    "electron-builder": "^26.8.1",
+    "postcss": "^8.5.8",
     "tailwindcss": "^4.1.18",
-    "vite": "^5.1.4"
+    "vite": "^8.0.0"
   },
   "build": {
     "appId": "com.headysystems.headyai-ide",
