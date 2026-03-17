@@ -21,11 +21,11 @@
   },
   "dependencies": {
     "@opentelemetry/api": "^1.9.0",
-    "@opentelemetry/sdk-node": "^0.54.0",
-    "@opentelemetry/exporter-trace-otlp-grpc": "^0.54.0",
-    "@opentelemetry/exporter-prometheus": "^0.54.0",
-    "@opentelemetry/instrumentation-http": "^0.54.0",
-    "@opentelemetry/instrumentation-express": "^0.43.0",
+    "@opentelemetry/sdk-node": "^0.213.0",
+    "@opentelemetry/exporter-trace-otlp-grpc": "^0.213.0",
+    "@opentelemetry/exporter-prometheus": "^0.213.0",
+    "@opentelemetry/instrumentation-http": "^0.213.0",
+    "@opentelemetry/instrumentation-express": "^0.61.0",
     "@opentelemetry/resources": "^1.27.0",
     "@opentelemetry/semantic-conventions": "^1.27.0",
     "pino": "^9.4.0",
@@ -34,7 +34,7 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
-    "typescript": "^5.6.3",
+    "typescript": "^5.9.3",
     "vitest": "^2.1.8"
   },
   "scripts": {
