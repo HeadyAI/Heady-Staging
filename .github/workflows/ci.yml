@@ -33,7 +33,7 @@ jobs:
     name: '§7 Systematic Scan'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: 'STEP 2 — Localhost contamination (ZERO TOLERANCE)'
         run: |
@@ -94,7 +94,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: [systematic-scan]
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - uses: pnpm/action-setup@v4
         with:
@@ -121,7 +121,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: [systematic-scan]
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - uses: pnpm/action-setup@v4
         with:
@@ -164,7 +164,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: [lint]
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - uses: pnpm/action-setup@v4
         with:
@@ -217,7 +217,7 @@ jobs:
           --health-timeout 5s
           --health-retries 5
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - uses: pnpm/action-setup@v4
         with:
@@ -254,7 +254,7 @@ jobs:
       contents: read
       id-token: write
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Authenticate to GCP
         uses: google-github-actions/auth@v2
