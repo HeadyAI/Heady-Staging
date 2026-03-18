@@ -1,0 +1,122 @@
+
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Discord Status Wall</title>
+<style>
+
+:root {
+  --bg:#070B14; --surface:#0F1627; --surface2:#121C31; --line:#22345A;
+  --text:#D7E7FF; --muted:#82A0C8; --teal:#36F3C8; --cyan:#49B8FF;
+  --violet:#8C6BFF; --magenta:#FF4FD8; --amber:#FFB24D;
+}
+* { box-sizing:border-box; }
+html,body { margin:0; min-height:100%; background:radial-gradient(circle at 20% 20%, #13213C 0%, var(--bg) 42%), linear-gradient(160deg, #050913 0%, #091121 100%); color:var(--text); font-family:Arial, Helvetica, sans-serif; }
+a { color:var(--cyan); }
+.page { min-height:100vh; overflow:hidden; position:relative; }
+.grid-bg::before { content:''; position:absolute; inset:0; background-image:linear-gradient(rgba(105,155,255,.08) 1px, transparent 1px), linear-gradient(90deg, rgba(105,155,255,.08) 1px, transparent 1px); background-size:34px 34px; mask-image:radial-gradient(circle at center, black 40%, transparent 88%); pointer-events:none; }
+.halo { position:absolute; border-radius:999px; filter:blur(50px); opacity:.35; animation:float 12s ease-in-out infinite; }
+.h1 { font-size:56px; line-height:1; margin:0 0 12px; letter-spacing:.5px; }
+.sub { color:var(--muted); font-size:20px; margin:0; }
+.card { background:linear-gradient(180deg, rgba(17,27,47,.92), rgba(11,18,33,.92)); border:1px solid rgba(111,157,255,.16); border-radius:26px; box-shadow:0 24px 80px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.04); backdrop-filter:blur(20px); }
+.kpi { padding:22px 24px; min-height:136px; position:relative; overflow:hidden; }
+.kpi::after { content:''; position:absolute; inset:auto -30px -36px auto; width:160px; height:160px; border-radius:999px; background:radial-gradient(circle, rgba(73,184,255,.36) 0%, rgba(255,79,216,0) 72%); }
+.label { color:var(--muted); font-size:14px; letter-spacing:1.4px; text-transform:uppercase; }
+.value { font-size:46px; font-weight:700; margin-top:12px; }
+.small { color:var(--muted); font-size:14px; }
+.glow-line { height:2px; background:linear-gradient(90deg, transparent, var(--teal), var(--magenta), transparent); filter:drop-shadow(0 0 10px rgba(73,184,255,.8)); }
+.pill { display:inline-flex; gap:10px; align-items:center; padding:10px 14px; border-radius:999px; background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.08); color:var(--text); font-size:14px; }
+.dot { width:10px; height:10px; border-radius:50%; background:var(--teal); box-shadow:0 0 14px var(--teal); }
+@keyframes hueFlow { 0%{ filter:hue-rotate(0deg); } 100%{ filter:hue-rotate(360deg); } }
+@keyframes float { 0%,100%{ transform:translateY(0px); } 50%{ transform:translateY(-24px); } }
+@keyframes pulse { 0%,100%{ transform:scale(1); opacity:.8; } 50%{ transform:scale(1.08); opacity:1; } }
+@keyframes dash { to { stroke-dashoffset:-120; } }
+@media (prefers-reduced-motion: reduce) { .animated, .halo, .orbits, .shift, .live-wave, .node, .scan { animation:none !important; transition:none !important; } }
+
+.shell { max-width:1440px; margin:0 auto; min-height:100vh; padding:22px; display:grid; grid-template-columns:92px 280px 1fr; gap:18px; }
+.side, .channels, .main { padding:18px; }
+.side { display:flex; flex-direction:column; gap:14px; align-items:center; }
+.server-dot { width:58px; height:58px; border-radius:22px; background:linear-gradient(135deg, rgba(54,243,200,.26), rgba(255,79,216,.26)); border:1px solid rgba(255,255,255,.1); box-shadow:0 0 24px rgba(73,184,255,.18); }
+.server-dot.active { border-radius:18px; outline:3px solid rgba(73,184,255,.6); }
+.channels .group { margin-top:16px; }
+.channels h3 { margin:0 0 10px; color:var(--muted); font-size:13px; text-transform:uppercase; letter-spacing:1.4px; }
+.chan { display:flex; justify-content:space-between; align-items:center; padding:10px 12px; border-radius:14px; color:var(--text); margin-bottom:8px; background:rgba(255,255,255,.03); }
+.chan.active { background:linear-gradient(90deg, rgba(73,184,255,.18), rgba(255,79,216,.08)); }
+.main-head { display:flex; justify-content:space-between; align-items:flex-start; gap:18px; }
+.big-panel { padding:20px; margin-top:16px; }
+.stream { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:16px; margin-top:16px; }
+.tile { padding:18px; min-height:190px; position:relative; overflow:hidden; }
+.tile::before { content:''; position:absolute; inset:auto -40px -40px auto; width:170px; height:170px; border-radius:50%; background:radial-gradient(circle, rgba(73,184,255,.26) 0%, rgba(73,184,255,0) 70%); }
+.spark { height:84px; margin-top:12px; }
+.log { display:grid; gap:10px; margin-top:16px; }
+.logline { padding:12px 14px; border-radius:14px; background:rgba(255,255,255,.035); color:var(--muted); }
+.tag { color:var(--text); }
+@media (max-width:1120px) { .shell { grid-template-columns:92px 1fr; } .main { grid-column:1/-1; } .stream { grid-template-columns:1fr; } }
+</style></head>
+<body>
+<div class="page grid-bg">
+  <div class="shell">
+    <div class="card side">
+      <div class="server-dot active"></div>
+      <div class="server-dot"></div>
+      <div class="server-dot"></div>
+      <div class="server-dot"></div>
+      <div class="server-dot"></div>
+    </div>
+    <div class="card channels">
+      <div class="pill"><span class="dot"></span> discord surface</div>
+      <div class="group">
+        <h3>System channels</h3>
+        <div class="chan active"><span># swarm-status</span><span class="small">42</span></div>
+        <div class="chan"><span># mcp-bridges</span><span class="small">16</span></div>
+        <div class="chan"><span># skill-forge</span><span class="small">11</span></div>
+        <div class="chan"><span># alerts</span><span class="small">7</span></div>
+      </div>
+      <div class="group">
+        <h3>Live rooms</h3>
+        <div class="chan"><span>Signal Ops</span><span class="small">9</span></div>
+        <div class="chan"><span>Builder Hive</span><span class="small">5</span></div>
+        <div class="chan"><span>Perplexity Lab</span><span class="small">3</span></div>
+      </div>
+    </div>
+    <div class="card main">
+      <div class="main-head">
+        <div>
+          <h1 class="h1" style="font-size:42px"># swarm-status</h1>
+          <p class="sub">A Discord-native status wall with animated data blocks and vivid role energy.</p>
+        </div>
+        <div class="pill"><span class="dot"></span> aura cycling every 28s</div>
+      </div>
+      <div class="card big-panel">
+        <div class="label">Announcement banner</div>
+        <div class="glow-line" style="margin:14px 0 18px"></div>
+        <div class="sub" style="font-size:24px;color:var(--text)">Heady systems are stable, MCP bridges are warm, and the bee factory is pushing a fresh skill wave into Discord.</div>
+      </div>
+      <div class="stream">
+        <div class="card tile">
+          <div class="label">Latency pulse</div>
+          <div class="value" style="font-size:40px">86ms</div>
+          <svg class="spark" viewBox="0 0 240 84" preserveAspectRatio="none"><path d="M0 56 C24 50 30 26 52 26 S90 60 116 42 S152 8 176 26 S216 40 240 18" fill="none" stroke="url(#g)" stroke-width="6" stroke-linecap="round"/></svg>
+        </div>
+        <div class="card tile">
+          <div class="label">Swarm jobs</div>
+          <div class="value" style="font-size:40px">55</div>
+          <div class="small">peak live agents</div>
+          <div style="margin-top:18px;display:flex;gap:8px;align-items:flex-end;height:74px"><span style="display:block;width:18px;border-radius:12px 12px 0 0;background:linear-gradient(180deg,#49B8FF,#FF4FD8);height:24px;box-shadow:0 0 16px rgba(73,184,255,.18)"></span><span style="display:block;width:18px;border-radius:12px 12px 0 0;background:linear-gradient(180deg,#49B8FF,#FF4FD8);height:34px;box-shadow:0 0 16px rgba(73,184,255,.18)"></span><span style="display:block;width:18px;border-radius:12px 12px 0 0;background:linear-gradient(180deg,#49B8FF,#FF4FD8);height:46px;box-shadow:0 0 16px rgba(73,184,255,.18)"></span><span style="display:block;width:18px;border-radius:12px 12px 0 0;background:linear-gradient(180deg,#49B8FF,#FF4FD8);height:58px;box-shadow:0 0 16px rgba(73,184,255,.18)"></span><span style="display:block;width:18px;border-radius:12px 12px 0 0;background:linear-gradient(180deg,#49B8FF,#FF4FD8);height:42px;box-shadow:0 0 16px rgba(73,184,255,.18)"></span><span style="display:block;width:18px;border-radius:12px 12px 0 0;background:linear-gradient(180deg,#49B8FF,#FF4FD8);height:68px;box-shadow:0 0 16px rgba(73,184,255,.18)"></span><span style="display:block;width:18px;border-radius:12px 12px 0 0;background:linear-gradient(180deg,#49B8FF,#FF4FD8);height:74px;box-shadow:0 0 16px rgba(73,184,255,.18)"></span></div>
+        </div>
+        <div class="card tile">
+          <div class="label">User-facing glow</div>
+          <div style="display:grid;place-items:center;height:118px">
+            <div style="width:96px;height:96px;border-radius:50%;background:radial-gradient(circle, rgba(255,255,255,.95) 0%, rgba(54,243,200,.42) 32%, rgba(255,79,216,0) 72%);animation:pulse 3.6s ease-in-out infinite"></div>
+          </div>
+          <div class="small">great for hero embeds and badges</div>
+        </div>
+      </div>
+      <div class="log">
+        <div class="logline"><span class="tag">signal-bee</span> pushed a color-shift update to the status banner.</div>
+        <div class="logline"><span class="tag">tool-bee</span> refreshed MCP bridge health from the dashboard layer.</div>
+        <div class="logline"><span class="tag">pattern-bee</span> published a fresh skill suggestion pack for operators.</div>
+      </div>
+    </div>
+  </div>
+  <svg width="0" height="0"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="{palette['teal']}"/><stop offset="100%" stop-color="{palette['magenta']}"/></linearGradient></defs></svg>
+</div>
+</body></html>

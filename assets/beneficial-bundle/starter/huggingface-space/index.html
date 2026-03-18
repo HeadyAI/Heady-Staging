@@ -1,0 +1,129 @@
+
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Telemetry Glass</title>
+<style>
+
+:root {
+  --bg:#070B14; --surface:#0F1627; --surface2:#121C31; --line:#22345A;
+  --text:#D7E7FF; --muted:#82A0C8; --teal:#36F3C8; --cyan:#49B8FF;
+  --violet:#8C6BFF; --magenta:#FF4FD8; --amber:#FFB24D;
+}
+* { box-sizing:border-box; }
+html,body { margin:0; min-height:100%; background:radial-gradient(circle at 20% 20%, #13213C 0%, var(--bg) 42%), linear-gradient(160deg, #050913 0%, #091121 100%); color:var(--text); font-family:Arial, Helvetica, sans-serif; }
+a { color:var(--cyan); }
+.page { min-height:100vh; overflow:hidden; position:relative; }
+.grid-bg::before { content:''; position:absolute; inset:0; background-image:linear-gradient(rgba(105,155,255,.08) 1px, transparent 1px), linear-gradient(90deg, rgba(105,155,255,.08) 1px, transparent 1px); background-size:34px 34px; mask-image:radial-gradient(circle at center, black 40%, transparent 88%); pointer-events:none; }
+.halo { position:absolute; border-radius:999px; filter:blur(50px); opacity:.35; animation:float 12s ease-in-out infinite; }
+.h1 { font-size:56px; line-height:1; margin:0 0 12px; letter-spacing:.5px; }
+.sub { color:var(--muted); font-size:20px; margin:0; }
+.card { background:linear-gradient(180deg, rgba(17,27,47,.92), rgba(11,18,33,.92)); border:1px solid rgba(111,157,255,.16); border-radius:26px; box-shadow:0 24px 80px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.04); backdrop-filter:blur(20px); }
+.kpi { padding:22px 24px; min-height:136px; position:relative; overflow:hidden; }
+.kpi::after { content:''; position:absolute; inset:auto -30px -36px auto; width:160px; height:160px; border-radius:999px; background:radial-gradient(circle, rgba(73,184,255,.36) 0%, rgba(255,79,216,0) 72%); }
+.label { color:var(--muted); font-size:14px; letter-spacing:1.4px; text-transform:uppercase; }
+.value { font-size:46px; font-weight:700; margin-top:12px; }
+.small { color:var(--muted); font-size:14px; }
+.glow-line { height:2px; background:linear-gradient(90deg, transparent, var(--teal), var(--magenta), transparent); filter:drop-shadow(0 0 10px rgba(73,184,255,.8)); }
+.pill { display:inline-flex; gap:10px; align-items:center; padding:10px 14px; border-radius:999px; background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.08); color:var(--text); font-size:14px; }
+.dot { width:10px; height:10px; border-radius:50%; background:var(--teal); box-shadow:0 0 14px var(--teal); }
+@keyframes hueFlow { 0%{ filter:hue-rotate(0deg); } 100%{ filter:hue-rotate(360deg); } }
+@keyframes float { 0%,100%{ transform:translateY(0px); } 50%{ transform:translateY(-24px); } }
+@keyframes pulse { 0%,100%{ transform:scale(1); opacity:.8; } 50%{ transform:scale(1.08); opacity:1; } }
+@keyframes dash { to { stroke-dashoffset:-120; } }
+@media (prefers-reduced-motion: reduce) { .animated, .halo, .orbits, .shift, .live-wave, .node, .scan { animation:none !important; transition:none !important; } }
+
+body { animation:hueFlow 28s linear infinite; }
+.layout { padding:34px; max-width:1440px; margin:0 auto; position:relative; }
+.hero { display:flex; justify-content:space-between; gap:18px; align-items:flex-end; padding-top:28px; }
+.hero-right { display:flex; gap:12px; flex-wrap:wrap; justify-content:flex-end; }
+.kpis { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:18px; margin-top:24px; }
+.main { display:grid; grid-template-columns:1.35fr .95fr; gap:18px; margin-top:18px; }
+.panel { padding:22px; }
+.chart-box { position:relative; height:340px; overflow:hidden; }
+svg { width:100%; height:100%; }
+.table { display:grid; gap:12px; margin-top:14px; }
+.row-item { display:grid; grid-template-columns:160px 1fr 54px; align-items:center; gap:12px; }
+.bar { height:10px; border-radius:999px; background:rgba(255,255,255,.06); overflow:hidden; }
+.bar > span { display:block; height:100%; border-radius:999px; background:linear-gradient(90deg, var(--teal), var(--cyan), var(--magenta)); box-shadow:0 0 18px rgba(73,184,255,.4); }
+.legend { display:flex; gap:12px; flex-wrap:wrap; margin-top:10px; }
+.live-wave path { stroke-dasharray:4 10; animation:dash 11s linear infinite; }
+@media (max-width:1100px) { .kpis,.main { grid-template-columns:1fr 1fr; } .hero { flex-direction:column; align-items:flex-start; } }
+@media (max-width:760px) { .kpis,.main { grid-template-columns:1fr; } }
+</style></head>
+<body>
+<div class="page grid-bg">
+  <div class="halo" style="width:340px;height:340px;left:3%;top:8%;background:#49B8FF;"></div>
+  <div class="halo" style="width:300px;height:300px;right:8%;top:18%;background:#FF4FD8;animation-delay:-3s"></div>
+  <div class="layout">
+    <div class="hero">
+      <div>
+        <div class="pill"><span class="dot"></span> live telemetry surface</div>
+        <h1 class="h1">Heady signals with color-shifted motion</h1>
+        <p class="sub">A neon glass dashboard for swarms, MCP links, and user-facing metrics.</p>
+      </div>
+      <div class="hero-right">
+        <div class="pill"><span class="dot"></span> services online</div>
+        <div class="pill"><span class="dot"></span> discord ready</div>
+        <div class="pill"><span class="dot"></span> animated svg html</div>
+      </div>
+    </div>
+    <div class="kpis">
+      <div class="card kpi"><div class="label">Services online</div><div class="value" id="svc">167</div><div class="small">out of 175 indexed nodes</div></div>
+      <div class="card kpi"><div class="label">Coherence</div><div class="value" id="coh">0.931</div><div class="small">stable swarm resonance</div></div>
+      <div class="card kpi"><div class="label">MCP latency</div><div class="value" id="lat">86ms</div><div class="small">cross-service median</div></div>
+      <div class="card kpi"><div class="label">Skill bursts</div><div class="value" id="skills">34</div><div class="small">active prompt surfaces</div></div>
+    </div>
+    <div class="main">
+      <div class="card panel">
+        <div class="label">Swarm throughput</div>
+        <div class="chart-box">
+          <svg viewBox="0 0 700 340" preserveAspectRatio="none">
+            <defs>
+              <linearGradient id="lineGrad" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%" stop-color="#36F3C8" />
+                <stop offset="50%" stop-color="#49B8FF" />
+                <stop offset="100%" stop-color="#FF4FD8" />
+              </linearGradient>
+              <linearGradient id="fillGrad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#4FD8FF44" />
+                <stop offset="100%" stop-color="#4FD8FF00" />
+              </linearGradient>
+            </defs>
+            <g opacity="0.18"><line x1="60" y1="30" x2="60" y2="320" stroke="white" stroke-width="1" /><line x1="140" y1="30" x2="140" y2="320" stroke="white" stroke-width="1" /><line x1="220" y1="30" x2="220" y2="320" stroke="white" stroke-width="1" /><line x1="300" y1="30" x2="300" y2="320" stroke="white" stroke-width="1" /><line x1="380" y1="30" x2="380" y2="320" stroke="white" stroke-width="1" /><line x1="460" y1="30" x2="460" y2="320" stroke="white" stroke-width="1" /><line x1="540" y1="30" x2="540" y2="320" stroke="white" stroke-width="1" /><line x1="620" y1="30" x2="620" y2="320" stroke="white" stroke-width="1" /><line x1="60" y1="70" x2="660" y2="70" stroke="white" stroke-width="1" /><line x1="60" y1="120" x2="660" y2="120" stroke="white" stroke-width="1" /><line x1="60" y1="170" x2="660" y2="170" stroke="white" stroke-width="1" /><line x1="60" y1="220" x2="660" y2="220" stroke="white" stroke-width="1" /><line x1="60" y1="270" x2="660" y2="270" stroke="white" stroke-width="1" /><line x1="60" y1="320" x2="660" y2="320" stroke="white" stroke-width="1" /></g>
+            <path d="M60 256 C120 226, 150 206, 140 196 S210 164,220 154 S290 100,300 92 S370 130,380 122 S450 72,460 60 S530 104,540 112 S610 26,620 38 L620 320 L60 320 Z" fill="url(#fillGrad)" />
+            <g class="live-wave">
+              <path d="M60 256 C120 226, 150 206, 140 196 S210 164,220 154 S290 100,300 92 S370 130,380 122 S450 72,460 60 S530 104,540 112 S610 26,620 38" fill="none" stroke="url(#lineGrad)" stroke-width="8" stroke-linecap="round" />
+            </g>
+            <circle cx="60" cy="256" r="8" fill="white" opacity="0.9"><animate attributeName="r" values="8;11;8" dur="3s" begin="0.0s" repeatCount="indefinite"/></circle><circle cx="140" cy="196" r="8" fill="white" opacity="0.9"><animate attributeName="r" values="8;11;8" dur="3s" begin="0.4s" repeatCount="indefinite"/></circle><circle cx="220" cy="154" r="8" fill="white" opacity="0.9"><animate attributeName="r" values="8;11;8" dur="3s" begin="0.8s" repeatCount="indefinite"/></circle><circle cx="300" cy="92" r="8" fill="white" opacity="0.9"><animate attributeName="r" values="8;11;8" dur="3s" begin="1.2000000000000002s" repeatCount="indefinite"/></circle><circle cx="380" cy="122" r="8" fill="white" opacity="0.9"><animate attributeName="r" values="8;11;8" dur="3s" begin="1.6s" repeatCount="indefinite"/></circle><circle cx="460" cy="60" r="8" fill="white" opacity="0.9"><animate attributeName="r" values="8;11;8" dur="3s" begin="2.0s" repeatCount="indefinite"/></circle><circle cx="540" cy="112" r="8" fill="white" opacity="0.9"><animate attributeName="r" values="8;11;8" dur="3s" begin="2.4000000000000004s" repeatCount="indefinite"/></circle><circle cx="620" cy="38" r="8" fill="white" opacity="0.9"><animate attributeName="r" values="8;11;8" dur="3s" begin="2.8000000000000003s" repeatCount="indefinite"/></circle>
+          </svg>
+        </div>
+        <div class="legend">
+          <div class="pill"><span class="dot"></span> queue velocity</div>
+          <div class="pill"><span class="dot"></span> agent completion flow</div>
+          <div class="pill"><span class="dot"></span> user-visible signal pulse</div>
+        </div>
+      </div>
+      <div class="card panel">
+        <div class="label">Top channels</div>
+        <div class="table" id="channels"></div>
+        <div style="height:16px"></div>
+        <div class="label">Status text</div>
+        <p class="sub" style="font-size:16px;max-width:460px">Designed for Discord embeds, dashboard hero cards, and animated data panels where state changes should feel alive without becoming noisy.</p>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+const data = {json.dumps(sample_data)};
+document.getElementById('svc').textContent = data.services_online;
+document.getElementById('coh').textContent = data.coherence.toFixed(3);
+document.getElementById('lat').textContent = data.mcp_latency_ms + 'ms';
+document.getElementById('skills').textContent = 34;
+const channels = document.getElementById('channels');
+data.channels.forEach(([name, pct]) => {{
+  const row = document.createElement('div');
+  row.className = 'row-item';
+  row.innerHTML = `<div class="small" style="color:var(--text)">${{name}}</div><div class="bar"><span style="width:${{pct}}%"></span></div><div class="small">${{pct}}%</div>`;
+  channels.appendChild(row);
+}});
+</script>
+</body></html>

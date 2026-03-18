@@ -1,0 +1,20 @@
+{
+  "service": "skill-graph",
+  "entities": [
+    "skill",
+    "trigger",
+    "bundle",
+    "gap"
+  ],
+  "key_tools": [
+    "search_skills",
+    "get_skill_neighbors",
+    "suggest_skill_bundle",
+    "find_skill_gaps"
+  ],
+  "ui_resources": [
+    "ui://skills/graph",
+    "ui://skills/card-grid",
+    "ui://skills/gap-report"
+  ]
+}

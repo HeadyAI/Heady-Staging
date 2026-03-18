@@ -1,0 +1,47 @@
+{
+  "name": "@headysystems/heady-components",
+  "version": "2.0.0",
+  "description": "Heady™ Latent-Space OS — New bees, services, middleware, and Perplexity skills",
+  "type": "module",
+  "main": "src/index.js",
+  "exports": {
+    "./bees/thinking-budget":   "./src/bees/thinking-budget-bee.js",
+    "./bees/knowledge-distiller": "./src/bees/knowledge-distiller-bee.js",
+    "./bees/semantic-cache":    "./src/bees/semantic-cache-bee.js",
+    "./bees/audit-trail":       "./src/bees/audit-trail-bee.js",
+    "./bees/context-compressor":"./src/bees/context-compressor-bee.js",
+    "./services/csl-router":    "./src/services/csl-router.js",
+    "./middleware/rate-limiter": "./src/middleware/rate-limiter.js",
+    "./skills/heady-context":   "./src/skills/perplexity/heady-context.js",
+    "./skills/phi-code-review": "./src/skills/perplexity/phi-code-review.js",
+    "./skills/grant-writer":    "./src/skills/perplexity/grant-writer.js",
+    "./skills/patent-strategy": "./src/skills/perplexity/patent-strategy.js",
+    "./skills/cost-optimizer":  "./src/skills/perplexity/cost-optimizer.js"
+  },
+  "scripts": {
+    "test":  "vitest run",
+    "lint":  "eslint src --ext .js",
+    "types": "tsc --noEmit"
+  },
+  "dependencies": {
+    "zod":    "^3.23.8",
+    "uuid":   "^10.0.0",
+    "pino":   "^9.5.0",
+    "hono":   "^4.6.0"
+  },
+  "devDependencies": {
+    "vitest":                    "^2.1.0",
+    "@types/node":               "^22.0.0",
+    "eslint":                    "^9.0.0",
+    "eslint-plugin-no-console":  "^3.1.0"
+  },
+  "engines": { "node": ">=22.0.0" },
+  "author":  "Eric Haywood <eric@headysystems.com>",
+  "license": "UNLICENSED",
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url":  "https://github.com/headysystems/heady-components"
+  },
+  "keywords": ["heady","csl","swarm","phi","fibonacci","ai-orchestration","latent-os"]
+}

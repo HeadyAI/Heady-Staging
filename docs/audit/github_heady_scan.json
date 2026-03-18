@@ -1,0 +1,375 @@
+{
+  "scan_metadata": {
+    "generated_at": "2026-03-17T20:51:00Z",
+    "scanner": "Perplexity Computer / GitHub public API + web",
+    "scope": ["HeadyMe", "HeadySystems"],
+    "registry_version": "4.1.0",
+    "notes": "HeadyMe private repos not accessible without authentication. All data from public endpoints."
+  },
+  "repositories": {
+    "HeadyMe": [
+      {
+        "name": "Heady-Main",
+        "description": "Heady™ Main — production-ready, fully validated (HeadyMe canonical)",
+        "url": "https://github.com/HeadyMe/Heady-Main",
+        "commits": "918+",
+        "last_updated": "2026-03-17",
+        "status": "active",
+        "primary_language": "Java",
+        "language_breakdown": {"Java": "72%", "JavaScript": "18%", "HTML": "3.8%", "C": "1.2%", "TypeScript": "1.1%", "Python": "~1%"},
+        "significance": "canonical_monorepo"
+      },
+      {
+        "name": "Heady-Main-1",
+        "description": "Heady™ Main — production-ready, fully validated (HeadySystems mirror)",
+        "url": "https://github.com/HeadyMe/Heady-Main-1",
+        "last_updated": "2026-03-17",
+        "status": "active",
+        "significance": "mirror"
+      },
+      {
+        "name": "Heady-Testing",
+        "description": "Heady Systems - Full Stack Testing Repository",
+        "url": "https://github.com/HeadyMe/Heady-Testing",
+        "commits": "983+",
+        "last_updated": "2026-03-17",
+        "status": "active",
+        "significance": "testing_monorepo"
+      },
+      {
+        "name": "headymcp-core",
+        "description": "Heady™ Master Control Program — 31 MCP tools, autonomous orchestration, zero-latency dispatch",
+        "url": "https://github.com/HeadyMe/headymcp-core",
+        "commits": 2,
+        "last_updated": "2026-03-07",
+        "status": "active",
+        "significance": "latent_os_projection_stub",
+        "tech": {"primary": "JavaScript", "secondary": "Dockerfile"},
+        "entrypoint": "index.js",
+        "features": ["31 MCP tools", "zero-latency dispatch", "LLM bridging (Claude/GPT/Gemini/Groq)"]
+      },
+      {
+        "name": "headymcp-production",
+        "description": "Live Projection: headymcp.com — Autonomous deployment target for HeadyMCP Dashboard UI",
+        "url": "https://github.com/HeadyMe/headymcp-production",
+        "commits": 1,
+        "last_updated": "2026-03-07",
+        "status": "active",
+        "significance": "production_deployment_target"
+      },
+      {
+        "name": "headyme-core",
+        "description": "Heady™ Personal Cloud Hub — your AI-powered command center",
+        "url": "https://github.com/HeadyMe/headyme-core",
+        "commits": 2,
+        "last_updated": "2026-03-07",
+        "status": "active",
+        "significance": "latent_os_projection_stub",
+        "pipeline": "pgvector (Brain) → Eradication Protocol → Domain Slicer → GitHub Push → headyme.com",
+        "features": ["Personal Dashboard", "AI Memory (3D vector/pgvector)", "Cloud Storage", "Cross-Vertical Sync"]
+      },
+      {
+        "name": "headyos-core",
+        "description": "Heady™ Operating System — the latent OS powering continuous AI reasoning",
+        "url": "https://github.com/HeadyMe/headyos-core",
+        "commits": 2,
+        "last_updated": "2026-03-07",
+        "significance": "latent_os_projection_stub",
+        "features": ["Latent Reasoning", "Persistent Memory (pgvector 3D knowledge graph)", "Self-Evolution (Synaptic Forge)", "PHI-timed orchestration"]
+      },
+      {
+        "name": "headyapi-core",
+        "description": "Heady™ API Gateway — unified API layer with rate limiting, auth, and intelligent routing",
+        "url": "https://github.com/HeadyMe/headyapi-core",
+        "commits": 2,
+        "last_updated": "2026-03-07",
+        "significance": "latent_os_projection_stub",
+        "features": ["Intelligent routing (9 domains)", "JWT + API key auth (tiered)", "Rate limiting", "Analytics dashboards"]
+      },
+      {
+        "name": "headysystems-core",
+        "description": "Heady™ AI Infrastructure Engine — self-healing infrastructure, Sacred Geometry orchestration",
+        "url": "https://github.com/HeadyMe/headysystems-core",
+        "commits": 2,
+        "last_updated": "2026-03-07",
+        "significance": "latent_os_projection_stub",
+        "features": ["Self-Healing (99.97% uptime SLA)", "20 AI nodes (Sacred Geometry)", "Live Telemetry (9 domains)", "Zero Trust Security"]
+      },
+      {
+        "name": "headybot-core",
+        "description": "Heady™ Bot Framework — autonomous bot orchestration with swarm intelligence",
+        "url": "https://github.com/HeadyMe/headybot-core",
+        "commits": 2,
+        "last_updated": "2026-03-07",
+        "significance": "latent_os_projection_stub",
+        "features": ["Multi-platform (Discord/Slack/Telegram)", "Swarm Intelligence", "Event-driven pub/sub"]
+      },
+      {
+        "name": "headybuddy-core",
+        "description": "Heady™ AI Companion — personal AI buddy with persistent memory, chat, and creative tools",
+        "url": "https://github.com/HeadyMe/headybuddy-core",
+        "commits": 2,
+        "last_updated": "2026-03-07",
+        "significance": "latent_os_projection_stub",
+        "features": ["Always-On Chat", "Creative Suite (image gen, music)", "Smart Notes", "Personality Engine"]
+      },
+      {
+        "name": "headyconnection-core",
+        "description": "Heady™ Community & Connection — collaborative AI workspace",
+        "url": "https://github.com/HeadyMe/headyconnection-core",
+        "commits": 2,
+        "last_updated": "2026-03-07",
+        "significance": "latent_os_projection_stub",
+        "features": ["Collaborative Workspaces", "Knowledge Sharing", "Community Hub", "Deep Integration with Heady services"]
+      },
+      {
+        "name": "headyio-core",
+        "description": "Heady™ Developer SDK & IO — official SDK for building on the Heady platform",
+        "url": "https://github.com/HeadyMe/headyio-core",
+        "commits": 2,
+        "last_updated": "2026-03-07",
+        "significance": "latent_os_projection_stub",
+        "sdks": ["Hive SDK", "Sacred Geometry SDK (PHI-based)", "MCP Client (IDE connectivity)"]
+      },
+      {
+        "name": "heady-docs",
+        "description": "Heady™ Documentation Hub — Single Source of Truth",
+        "url": "https://github.com/HeadyMe/heady-docs",
+        "commits": 2,
+        "last_updated": "2026-03-07",
+        "status": "active",
+        "significance": "documentation_hub",
+        "sections": ["api", "patents", "site", "sources", "strategic"],
+        "coverage": ["51+ patents", "30+ MCP tools across 7 domains", "6-layer architecture", "APEX trading architecture"]
+      },
+      {
+        "name": "headysystems-production",
+        "description": "Live Projection: headysystems.com — Autonomous deployment target",
+        "url": "https://github.com/HeadyMe/headysystems-production",
+        "commits": 3,
+        "last_updated": "2026-03-07",
+        "tech": "HTML (100%)",
+        "significance": "production_deployment_target"
+      },
+      {
+        "name": "headysystems",
+        "description": "Heady™ headysystems — Production Site",
+        "url": "https://github.com/HeadyMe/headysystems",
+        "commits": 3,
+        "last_updated": "2026-03-15",
+        "tech": {"primary": "JavaScript 93.7%", "secondary": "Dockerfile 6.3%"},
+        "significance": "production_site"
+      },
+      {
+        "name": "HeadyWeb",
+        "description": "Heady Systems — HeadyWeb",
+        "url": "https://github.com/HeadyMe/HeadyWeb",
+        "commits": 3,
+        "last_updated": "2026-03-15",
+        "tech": {"primary": "JavaScript 87.5%", "css": "9.2%", "html": "3.3%"},
+        "build_tools": ["Vite", "TailwindCSS", "PostCSS"],
+        "significance": "frontend_web_app"
+      }
+    ],
+    "HeadySystems": [
+      {
+        "name": "Heady-Main",
+        "description": "Heady™ Main — production-ready, fully validated (HeadySystems mirror)",
+        "url": "https://github.com/HeadySystems/Heady-Main",
+        "last_updated": "2026-03-17",
+        "status": "active",
+        "significance": "mirror_of_HeadyMe_Heady-Main"
+      },
+      {
+        "name": "Heady-Staging",
+        "description": "Heady™ Staging — pre-production validation (HeadySystems mirror)",
+        "url": "https://github.com/HeadySystems/Heady-Staging",
+        "size_kb": 833839,
+        "last_updated": "2026-03-17",
+        "status": "active",
+        "significance": "staging_environment"
+      },
+      {
+        "name": "Heady-Testing",
+        "description": "Heady™ Testing — HeadyValidator thorough testing (HeadySystems mirror)",
+        "url": "https://github.com/HeadySystems/Heady-Testing",
+        "last_updated": "2026-03-17",
+        "status": "active",
+        "significance": "testing_mirror"
+      },
+      {
+        "name": "Heady-pre-production",
+        "description": "Official HeadySystems Inc Repo — Sacred Geometry Architecture",
+        "url": "https://github.com/HeadySystems/Heady-pre-production",
+        "commits": 37,
+        "archived_date": "2026-03-04",
+        "status": "archived",
+        "significance": "legacy_v3_pre_production"
+      },
+      {
+        "name": "Heady",
+        "description": "Heady Systems - Sacred Geometry Architecture v3.0.0",
+        "url": "https://github.com/HeadySystems/Heady",
+        "commits": 120,
+        "archived_date": "2026-03-04",
+        "status": "archived",
+        "significance": "legacy_v3"
+      },
+      {
+        "name": "ai-workflow-engine",
+        "description": "AI workflow engine integrating Cloudflare Workers, Render, GitHub Gists, GitHub Actions",
+        "url": "https://github.com/HeadySystems/ai-workflow-engine",
+        "commits": 10,
+        "archived_date": "2026-03-04",
+        "status": "archived",
+        "tech": "TypeScript 100%"
+      }
+    ]
+  },
+  "architecture": {
+    "monorepo_root": "https://github.com/HeadyMe/Heady-Main",
+    "registry_version": "4.1.0",
+    "registry_url": "https://github.com/HeadyMe/Heady-Main/blob/main/heady-registry.json",
+    "pipeline": {
+      "name": "HCFullPipeline",
+      "stages": ["ingest", "plan", "execute", "recover", "finalize"],
+      "gating": "ORS (Operational Readiness Score)"
+    },
+    "layers": 6,
+    "swarms": 17,
+    "bee_types": 89,
+    "cognitive_archetypes": 7,
+    "ai_nodes": ["JULES (Hyper-Surgeon)", "OBSERVER (Natural Observer)", "BUILDER (Constructor)", "ATLAS (Auto-Archivist)", "PYTHIA (Oracle)"],
+    "live_services": [
+      {"name": "HeadyCloud API", "endpoint": "https://headysystems.com/api"},
+      {"name": "HeadyManager", "endpoint": "https://headysystems.com/manager", "port": 3300, "transport": "MCP/HTTP"},
+      {"name": "Registry", "endpoint": "https://headysystems.com/registry"},
+      {"name": "Brain Service", "endpoint": "https://brain.headysystems.com"},
+      {"name": "HeadyDistiller", "endpoint": "https://distiller.headysystems.com", "port": 3398, "transport": "streamable-HTTP"},
+      {"name": "HeadyMCP", "domain": "headymcp.com", "transport": "JSON-RPC + SSE"},
+      {"name": "HeadyAPI", "domain": "headyapi.com", "pattern": "races 4+ LLM providers, auto-failover"},
+      {"name": "headyme.com", "port": 3000},
+      {"name": "headyio.com", "role": "registry domain"}
+    ],
+    "key_packages": [
+      "phi-math", "phi-math-foundation", "csl-engine", "csl-gate", "csl-router",
+      "hc-brain", "hc-supervisor", "hc-checkpoint", "hc-health", "hc-readiness",
+      "heady-conductor", "heady-soul", "heady-memory", "vector-memory",
+      "heady-bee-factory", "heady-bee", "mcp-server", "liquid-architecture",
+      "liquid-deploy", "resonance-router", "socratic-loop", "spatial-orchestrator",
+      "observability-kernel", "observability-client", "structured-logger",
+      "heady-persistence"
+    ],
+    "tech_stack": {
+      "runtime": ["Node.js 22", "Python", "Java"],
+      "package_manager": "pnpm (Turborepo)",
+      "databases": ["PostgreSQL + pgvector (authoritative)", "Redis", "Cloudflare Vectorize (edge)"],
+      "frontend": ["React", "Vite", "TailwindCSS"],
+      "deployment": ["GCP Cloud Run (15 scaffolds)", "Cloudflare Workers (4 scaffolds)", "GitHub Actions CI/CD", "Docker"],
+      "ai_providers": ["Anthropic Claude (primary)", "GPT", "Gemini", "Groq", "HuggingFace"],
+      "security": ["JWT + API key (tiered)", "OAuth 2.1/OIDC", "HMAC webhooks"],
+      "monitoring": ["Sentry", "k6 load tests", "chaos engineering suite", "Kubernetes-style probes"],
+      "ide_integration": ["VS Code", "Cursor", "Windsurf", "MCP 30+ tools"]
+    }
+  },
+  "notable_issues": {
+    "HeadyMe/Heady-Main": [
+      {"number": 9, "state": "open", "title": "chore(deps): bump npm_and_yarn group across 9 dirs (16 updates)", "significance": "active_dependency_maintenance"},
+      {"number": 7, "state": "open", "title": "feat: Ecosystem Maintenance + Persistence System + Gateway + Service Wiring (v4.1.0)", "significance": "CRITICAL_new_persistence_layer_cross_domain_auth", "url": "https://github.com/HeadyMe/Heady-Main/issues/7"},
+      {"number": 6, "state": "open", "title": "chore(deps): bump rollup 4.57.1 → 4.59.0 in /HeadyAI-IDE", "significance": "bundler_security_fix"},
+      {"number": 4, "state": "open", "title": "feat(headyweb): Comet × Chromium hybrid browser build", "significance": "30_files_5579_insertions_full_AI_browser"},
+      {"number": 3, "state": "open", "title": "feat(buddy): HeadyBuddy cross-device AI companion", "significance": "38_files_12923_lines_CRDT_sync_6_components"},
+      {"number": 2, "state": "open", "title": "feat(heady-ai-ide): v2.0 — Windsurf-next + Antigravity hybrid IDE", "significance": "Monaco_phi_panels_FIB7_parallel_agents"},
+      {"number": 1, "state": "closed", "title": "CP-02: 100% orchestration test coverage + security/resilience modules", "significance": "263_tests_13_suites_100%_coverage_7_modules"}
+    ],
+    "HeadyMe/heady-docs": [
+      {"number": 1, "state": "open", "title": "Docs audit: fix broken links, remove key leaks, add missing sections", "significance": "SECURITY_key_leak_pplx_anthropic_github_PAT"},
+      {"number": 2, "state": "open", "title": "High-value documentation improvements", "significance": "quickstart_auth_docs_glossary"},
+      {"number": 3, "state": "open", "title": "docs: second-wave architecture deep-dives", "significance": "domain_registry_cross_site_auth_colab_control_plane"}
+    ],
+    "HeadySystems/Heady-pre-production": [
+      {"number": 12, "state": "closed", "title": "Add heady-server to MCP configuration", "significance": "npx_heady-mcp-server_with_HEADY_API_TOKEN"},
+      {"number": 9, "state": "open", "title": "[WIP] Fix errors in Jules admin IDE", "significance": "ORPHANED_open_issue_in_archived_repo"},
+      {"number": 7, "state": "closed", "title": "Implement Web-based Admin IDE with AI and MCP Support", "significance": "Monaco_HuggingFace_Cascade_AI_MCP_tool_execution"}
+    ]
+  },
+  "wiring_concerns": [
+    {
+      "id": "SEC-001",
+      "severity": "CRITICAL",
+      "title": "MCP Tool Execution Security Gap (30% coverage)",
+      "source": "https://github.com/HeadyMe/Heady-Main/blob/main/docs/SECURITY-GAP-ANALYSIS.md",
+      "detail": "MCP tool execution security at 30%, MCP Gateway Zero-Trust at 20%. Arbitrary tool calls can bypass auth."
+    },
+    {
+      "id": "SEC-002",
+      "severity": "CRITICAL",
+      "title": "API Key Leak in Public heady-docs Repo",
+      "source": "https://github.com/HeadyMe/heady-docs/issues/1",
+      "detail": "Leaked prefixes: pplx-FvR1..., sk-ant-api03-..., ghp_49EA... in api/api-keys-reference.md. Cleaned in issue #1 but git history retains. Rotate all three keys."
+    },
+    {
+      "id": "SEC-003",
+      "severity": "HIGH",
+      "title": "Hardcoded Neon DB Credentials in Colab Notebooks",
+      "source": "https://github.com/HeadyMe/Heady-Main/commit/706bc292",
+      "detail": "Plaintext DATABASE_URL in Jupyter notebooks committed to git. Stripped in commit 706bc292 (2026-03-16) but git history retains. Requires BFG/filter-repo to purge."
+    },
+    {
+      "id": "INT-001",
+      "severity": "HIGH",
+      "title": "Unresolved Merge Conflicts in README.md",
+      "source": "https://github.com/HeadyMe/Heady-Main/blob/main/README.md",
+      "detail": "<<<<<<< HEAD conflict markers present between HEAD and commit 233933e0. Indicates incomplete merge during active rearchitecture."
+    },
+    {
+      "id": "SEC-004",
+      "severity": "HIGH",
+      "title": "npx -y heady-mcp-server Supply Chain Risk",
+      "source": "https://github.com/HeadySystems/Heady-pre-production/issues/12",
+      "detail": "mcp_config.json uses npx -y to auto-install heady-mcp-server at runtime with HEADY_API_TOKEN injected. Malicious npm package compromise = RCE."
+    },
+    {
+      "id": "INT-002",
+      "severity": "HIGH",
+      "title": "Cross-Domain Auth Contract Incomplete",
+      "source": "https://github.com/HeadyMe/heady-docs/issues/3",
+      "detail": "SessionManager in @heady/persistence relays auth across 9 domains via httpOnly cookies. Cross-Site Auth Contract documented as incomplete — session hijacking risk."
+    },
+    {
+      "id": "INT-003",
+      "severity": "MEDIUM",
+      "title": "*-core Repos Are Stub Projections, Not Standalone Implementations",
+      "source": "https://github.com/HeadyMe/headymcp-core",
+      "detail": "All 10 *-core repos have 2 commits each and a single index.js entrypoint. Real implementations live in HeadyMe/Heady-Main/src/ and packages/. Downstream consumers will find shells."
+    },
+    {
+      "id": "INT-004",
+      "severity": "MEDIUM",
+      "title": "Registry Domain Mismatch (headyio.com vs headysystems.com)",
+      "source": "https://github.com/HeadyMe/Heady-Main/blob/main/heady-registry.json",
+      "detail": "heady-registry.json declares domain headyio.com and memory storage at headyio.com/api/memory, but live services are on headysystems.com. Potential routing/discovery failure."
+    },
+    {
+      "id": "INT-005",
+      "severity": "MEDIUM",
+      "title": "Node.js → Python Boundary Not Explicitly Documented",
+      "source": "https://github.com/HeadyMe/Heady-Main/blob/main/CLAUDE.md",
+      "detail": "heady-manager.js (port 3300) calls Python workers (heady_conductor.py, process_data.py). IPC mechanism (child_process vs HTTP) not documented; timeout mismatch and error propagation risks."
+    },
+    {
+      "id": "INT-006",
+      "severity": "LOW",
+      "title": "28K+ AndroidSDK Files in Git History",
+      "source": "https://github.com/HeadyMe/Heady-Main/issues/7",
+      "detail": ".gitignore gap admitted AndroidSDK/ into repo. Fixed in v4.1.0 but history bloat remains."
+    },
+    {
+      "id": "INT-007",
+      "severity": "LOW",
+      "title": "Open WIP Issue in Archived Repo (Will Never Close)",
+      "source": "https://github.com/HeadySystems/Heady-pre-production/issues/9",
+      "detail": "Jules admin IDE has incomplete tasks (final tests, code review) in an archived read-only repo. State is permanently unresolved."
+    }
+  ]
+}

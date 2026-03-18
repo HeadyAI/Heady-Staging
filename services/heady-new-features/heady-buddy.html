@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HeadyBuddy — AI Companion</title>
+<link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700&f[]=cabinet-grotesk@800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --phi: 1.618033988749895;
+  --bg: #0e0d0b;
+  --surface: #161512;
+  --surface2: #1d1c19;
+  --border: #2a2925;
+  --text: #e8e6e0;
+  --muted: #6b6a65;
+  --faint: #3a3935;
+  --accent: #4f98a3;
+  --accent-hover: #62b0bc;
+  --accent-dim: #1a3b3f;
+  --gold: #c9952a;
+  --success: #6daa45;
+  --error: #dd6974;
+  --r: 0.5rem;
+  --font-body: 'Satoshi', sans-serif;
+  --font-display: 'Cabinet Grotesk', sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{height:100%;-webkit-font-smoothing:antialiased}
+body{
+  min-height:100dvh;font-family:var(--font-body);font-size:15px;
+  background:var(--bg);color:var(--text);display:flex;flex-direction:column;
+}
+/* ── Layout ── */
+.app{display:grid;grid-template-columns:240px 1fr;grid-template-rows:100dvh;overflow:hidden}
+.sidebar{
+  background:var(--surface);border-right:1px solid var(--border);
+  display:flex;flex-direction:column;padding:1rem;gap:0.75rem;overflow-y:auto;
+}
+.main{display:flex;flex-direction:column;overflow:hidden}
+
+/* ── Logo ── */
+.logo{display:flex;align-items:center;gap:0.5rem;padding:0.25rem 0 0.75rem;border-bottom:1px solid var(--border)}
+.logo svg{flex-shrink:0}
+.logo-text{font-family:var(--font-display);font-size:1.3rem;font-weight:800;
+  background:linear-gradient(135deg,var(--accent),var(--gold));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent}
+
+/* ── Sidebar sections ── */
+.sidebar-label{font-size:0.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--muted);padding:0.5rem 0 0.25rem}
+.mode-btn{
+  display:flex;align-items:center;gap:0.6rem;padding:0.55rem 0.75rem;
+  border-radius:var(--r);border:none;background:transparent;color:var(--muted);
+  cursor:pointer;font-size:0.875rem;font-family:var(--font-body);text-align:left;
+  transition:all 180ms ease;width:100%;
+}
+.mode-btn:hover{background:var(--surface2);color:var(--text)}
+.mode-btn.active{background:var(--accent-dim);color:var(--accent)}
+.mode-icon{width:16px;text-align:center;font-size:0.85rem}
+
+/* ── Budget meter ── */
+.budget-block{background:var(--surface2);border:1px solid var(--border);
+  border-radius:var(--r);padding:0.75rem;margin-top:auto}
+.budget-row{display:flex;justify-content:space-between;font-size:0.75rem;margin-bottom:0.4rem}
+.budget-label{color:var(--muted)}
+.budget-val{color:var(--text);font-weight:600}
+.budget-bar{height:4px;background:var(--faint);border-radius:99px;overflow:hidden}
+.budget-fill{height:100%;border-radius:99px;transition:width 0.6s ease;
+  background:linear-gradient(90deg,var(--success),var(--gold))}
+
+/* ── Swarm toggles ── */
+.swarm-grid{display:grid;grid-template-columns:1fr 1fr;gap:0.4rem}
+.swarm-tag{
+  padding:0.3rem 0.5rem;border-radius:var(--r);font-size:0.7rem;font-weight:600;
+  background:var(--faint);color:var(--muted);cursor:pointer;text-align:center;
+  transition:all 180ms;border:1px solid transparent;user-select:none;
+}
+.swarm-tag.on{background:var(--accent-dim);color:var(--accent);border-color:var(--accent)}
+
+/* ── Header ── */
+.chat-header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0.875rem 1.25rem;border-bottom:1px solid var(--border);
+  background:var(--surface);flex-shrink:0;
+}
+.chat-header-left{display:flex;align-items:center;gap:0.75rem}
+.chat-title{font-family:var(--font-display);font-size:1.1rem;font-weight:800}
+.header-controls{display:flex;align-items:center;gap:0.5rem}
+
+/* Model + thinking selectors */
+.select-row{display:flex;gap:0.5rem}
+select{
+  background:var(--surface2);border:1px solid var(--border);color:var(--text);
+  padding:0.35rem 0.6rem;border-radius:var(--r);font-family:var(--font-body);
+  font-size:0.8rem;cursor:pointer;appearance:none;outline:none;
+}
+select:focus{border-color:var(--accent)}
+
+/* ── CSL Bar ── */
+.csl-bar-wrap{
+  padding:0.5rem 1.25rem;background:var(--surface);border-bottom:1px solid var(--border);
+  display:flex;align-items:center;gap:0.75rem;font-size:0.75rem;
+}
+.csl-label{color:var(--muted);white-space:nowrap;min-width:80px}
+.csl-track{flex:1;height:6px;background:var(--faint);border-radius:99px;overflow:hidden;position:relative}
+.csl-fill{height:100%;border-radius:99px;background:linear-gradient(90deg,#dd6974,#c9952a,#6daa45);
+  transition:width 0.5s cubic-bezier(0.16,1,0.3,1);width:0%}
+.csl-val{color:var(--text);font-weight:600;min-width:40px;text-align:right}
+.route-label{
+  padding:0.15rem 0.5rem;border-radius:99px;background:var(--accent-dim);
+  color:var(--accent);font-size:0.7rem;font-weight:700;
+}
+
+/* ── Messages ── */
+.messages{flex:1;overflow-y:auto;padding:1.25rem;display:flex;flex-direction:column;gap:1rem}
+.messages::-webkit-scrollbar{width:4px}
+.messages::-webkit-scrollbar-thumb{background:var(--border);border-radius:99px}
+
+.msg{display:flex;gap:0.75rem;max-width:800px}
+.msg.user{flex-direction:row-reverse;align-self:flex-end}
+.msg-avatar{
+  width:30px;height:30px;border-radius:50%;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;font-size:0.8rem;
+  font-weight:700;
+}
+.msg.assistant .msg-avatar{background:var(--accent-dim);color:var(--accent)}
+.msg.user .msg-avatar{background:var(--gold);color:#000}
+.msg-bubble{
+  padding:0.75rem 1rem;border-radius:0.75rem;line-height:1.6;font-size:0.9rem;max-width:640px;
+}
+.msg.assistant .msg-bubble{background:var(--surface2);border:1px solid var(--border)}
+.msg.user .msg-bubble{background:var(--accent-dim);border:1px solid var(--accent)}
+.msg-bubble pre{
+  background:var(--bg);border:1px solid var(--border);border-radius:0.4rem;
+  padding:0.75rem;margin:0.5rem 0;overflow-x:auto;font-size:0.8rem;
+}
+.msg-bubble code{font-family:monospace;font-size:0.82em;background:var(--faint);
+  padding:0.1em 0.3em;border-radius:3px}
+.msg-bubble pre code{background:none;padding:0}
+
+/* Thinking indicator */
+.thinking-dots{display:inline-flex;gap:4px;align-items:center}
+.thinking-dots span{
+  width:6px;height:6px;border-radius:50%;background:var(--accent);opacity:0.4;
+  animation:dot-pulse 1.4s infinite ease-in-out;
+}
+.thinking-dots span:nth-child(2){animation-delay:.2s}
+.thinking-dots span:nth-child(3){animation-delay:.4s}
+@keyframes dot-pulse{0%,80%,100%{opacity:.4;transform:scale(1)}40%{opacity:1;transform:scale(1.2)}}
+
+/* ── Quickstart chips ── */
+.quickstart{
+  padding:0 1.25rem 0.75rem;display:flex;gap:0.5rem;flex-wrap:wrap;
+}
+.chip{
+  padding:0.35rem 0.75rem;background:var(--surface2);border:1px solid var(--border);
+  border-radius:99px;font-size:0.78rem;color:var(--muted);cursor:pointer;
+  transition:all 180ms;white-space:nowrap;
+}
+.chip:hover{background:var(--accent-dim);color:var(--accent);border-color:var(--accent)}
+
+/* ── Input area ── */
+.input-wrap{
+  padding:0.875rem 1.25rem;border-top:1px solid var(--border);
+  background:var(--surface);flex-shrink:0;
+}
+.input-row{
+  display:flex;align-items:flex-end;gap:0.5rem;
+  background:var(--surface2);border:1px solid var(--border);
+  border-radius:0.75rem;padding:0.5rem;transition:border-color 180ms;
+}
+.input-row:focus-within{border-color:var(--accent)}
+textarea{
+  flex:1;background:transparent;border:none;outline:none;resize:none;
+  font-family:var(--font-body);font-size:0.9rem;color:var(--text);
+  line-height:1.5;max-height:200px;min-height:24px;padding:0.25rem 0.25rem;
+}
+textarea::placeholder{color:var(--muted)}
+.send-btn{
+  width:36px;height:36px;border-radius:0.5rem;background:var(--accent);
+  border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;transition:background 180ms;
+}
+.send-btn:hover{background:var(--accent-hover)}
+.send-btn:disabled{background:var(--faint);cursor:not-allowed}
+.input-meta{
+  display:flex;justify-content:space-between;align-items:center;
+  font-size:0.72rem;color:var(--muted);margin-top:0.4rem;padding:0 0.25rem;
+}
+
+/* ── Icon btn ── */
+.icon-btn{
+  background:transparent;border:none;cursor:pointer;color:var(--muted);
+  padding:0.35rem;border-radius:var(--r);transition:all 180ms;display:flex;
+}
+.icon-btn:hover{background:var(--surface2);color:var(--text)}
+
+/* ── Welcome ── */
+.welcome{
+  flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;padding:2rem;gap:1rem;
+}
+.welcome-icon{font-size:3rem}
+.welcome h2{font-family:var(--font-display);font-size:1.6rem;font-weight:800;
+  background:linear-gradient(135deg,var(--accent),var(--gold));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.welcome p{color:var(--muted);max-width:400px;line-height:1.6;font-size:0.9rem}
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- ── Sidebar ── -->
+<aside class="sidebar">
+  <div class="logo">
+    <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+      <polygon points="14,2 25,8 25,20 14,26 3,20 3,8" stroke="#4f98a3" stroke-width="1.5" fill="none"/>
+      <polygon points="14,7 20,10.5 20,17.5 14,21 8,17.5 8,10.5" fill="#4f98a3" opacity="0.4"/>
+      <circle cx="14" cy="14" r="2.5" fill="#c9952a"/>
+    </svg>
+    <span class="logo-text">HeadyBuddy</span>
+  </div>
+
+  <div class="sidebar-label">Mode</div>
+  <button class="mode-btn active" data-mode="heady" onclick="setMode(this)">
+    <span class="mode-icon">🧠</span> Heady Context
+  </button>
+  <button class="mode-btn" data-mode="code" onclick="setMode(this)">
+    <span class="mode-icon">💻</span> Code
+  </button>
+  <button class="mode-btn" data-mode="grant" onclick="setMode(this)">
+    <span class="mode-icon">📋</span> Grant Writer
+  </button>
+  <button class="mode-btn" data-mode="patent" onclick="setMode(this)">
+    <span class="mode-icon">🔒</span> Patent Strategy
+  </button>
+  <button class="mode-btn" data-mode="deep" onclick="setMode(this)">
+    <span class="mode-icon">⚡</span> Deep Think
+  </button>
+
+  <div class="sidebar-label" style="margin-top:0.5rem">Active Swarms</div>
+  <div class="swarm-grid" id="swarmGrid">
+    <div class="swarm-tag on" onclick="toggleSwarm(this)">Code</div>
+    <div class="swarm-tag on" onclick="toggleSwarm(this)">Research</div>
+    <div class="swarm-tag on" onclick="toggleSwarm(this)">Deploy</div>
+    <div class="swarm-tag" onclick="toggleSwarm(this)">Patent</div>
+    <div class="swarm-tag" onclick="toggleSwarm(this)">Grant</div>
+    <div class="swarm-tag" onclick="toggleSwarm(this)">Design</div>
+    <div class="swarm-tag on" onclick="toggleSwarm(this)">Auth</div>
+    <div class="swarm-tag on" onclick="toggleSwarm(this)">Vector</div>
+    <div class="swarm-tag" onclick="toggleSwarm(this)">Cost</div>
+    <div class="swarm-tag" onclick="toggleSwarm(this)">Audit</div>
+  </div>
+
+  <div class="budget-block">
+    <div class="budget-row">
+      <span class="budget-label">Monthly Budget</span>
+      <span class="budget-val" id="budgetVal">$347 / $700</span>
+    </div>
+    <div class="budget-bar"><div class="budget-fill" id="budgetFill" style="width:49.6%"></div></div>
+    <div style="display:flex;justify-content:space-between;margin-top:0.5rem;font-size:0.7rem;color:var(--muted)">
+      <span>🟢 On track</span>
+      <span id="budgetDays">14 days left</span>
+    </div>
+  </div>
+</aside>
+
+<!-- ── Main ── -->
+<main class="main">
+  <div class="chat-header">
+    <div class="chat-header-left">
+      <div class="chat-title" id="chatTitle">Heady Context</div>
+      <div class="route-label" id="routeLabel">coordinator-bee</div>
+    </div>
+    <div class="header-controls">
+      <div class="select-row">
+        <select id="modelSelect">
+          <option value="gemini-2.5-flash">Gemini 2.5 Flash ⚡</option>
+          <option value="gemini-2.5-pro">Gemini 2.5 Pro</option>
+          <option value="claude-sonnet-4-5">Claude Sonnet 4.5</option>
+          <option value="claude-opus-4-6">Claude Opus 4.6 🧠</option>
+          <option value="gpt-4o-mini">GPT-4o Mini</option>
+          <option value="llama-3.3-70b">Llama 3.3 70B</option>
+        </select>
+        <select id="thinkSelect">
+          <option value="0">Think: None</option>
+          <option value="618">Think: Fast (618)</option>
+          <option value="1618" selected>Think: Balanced (1618)</option>
+          <option value="4096">Think: Deep (4096)</option>
+          <option value="16180">Think: Ultra (16180)</option>
+          <option value="24576">Think: MAX</option>
+        </select>
+      </div>
+      <button class="icon-btn" title="Export conversation" onclick="exportConvo()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
+        </svg>
+      </button>
+      <button class="icon-btn" title="Clear conversation" onclick="clearConvo()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- CSL Routing Bar -->
+  <div class="csl-bar-wrap">
+    <span class="csl-label">CSL Similarity</span>
+    <div class="csl-track"><div class="csl-fill" id="cslFill"></div></div>
+    <span class="csl-val" id="cslVal">—</span>
+  </div>
+
+  <!-- Messages -->
+  <div class="messages" id="messages">
+    <div class="welcome" id="welcome">
+      <div class="welcome-icon">🐝</div>
+      <h2>HeadyBuddy Active</h2>
+      <p>Your φ-aligned AI companion. 17 swarms · 89 bees · CSL routing · Latent-Space OS.</p>
+      <p style="font-size:0.78rem;color:var(--faint);margin-top:0.5rem">
+        Set your API key: <code style="color:var(--accent)">window._headyApiKey = 'key'</code>
+      </p>
+    </div>
+  </div>
+
+  <!-- Quick start chips -->
+  <div class="quickstart" id="quickstart">
+    <div class="chip" onclick="sendChip(this)">Write an SBIR Phase I abstract</div>
+    <div class="chip" onclick="sendChip(this)">Generate pgvector HNSW migration SQL</div>
+    <div class="chip" onclick="sendChip(this)">Audit my monthly spend</div>
+    <div class="chip" onclick="sendChip(this)">Review code for φ-alignment</div>
+    <div class="chip" onclick="sendChip(this)">Draft CSL patent claims</div>
+    <div class="chip" onclick="sendChip(this)">Deploy Cloud Run with min-instances=1</div>
+  </div>
+
+  <!-- Input -->
+  <div class="input-wrap">
+    <div class="input-row">
+      <textarea id="msgInput" rows="1" placeholder="Ask HeadyBuddy anything about Heady™..."
+        onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
+      <button class="send-btn" id="sendBtn" onclick="sendMessage()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5">
+          <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
+        </svg>
+      </button>
+    </div>
+    <div class="input-meta">
+      <span id="tokenEstimate">~0 tokens</span>
+      <span id="modelLabel">gemini-2.5-flash · Balanced thinking</span>
+    </div>
+  </div>
+</main>
+</div>
+
+<script>
+const PHI = 1.618033988749895;
+let messages = [];
+let currentMode = 'heady';
+let isStreaming = false;
+
+const MODES = {
+  heady:  { title: 'Heady Context', bee: 'coordinator-bee',  system: buildHeadySystem() },
+  code:   { title: 'Code Mode',     bee: 'code-generator-bee', system: 'You are the Heady code-generator-bee. Write production Node.js ESM code. Always use Zod, pino, UUID, φ-constants. No console.log. httpOnly cookies only. Cloud-deployed patterns.' },
+  grant:  { title: 'Grant Writer',  bee: 'grant-writer-bee', system: 'You are the Heady grant-writer-bee. Company: HeadySystems Inc., EIN 41-3412204, Fort Collins CO. Product: Heady™ Latent-Space OS, CSL routing, 17 swarms, 89 bees, 60+ patents. Write SBIR/STTR/NSF proposals with technical depth and broader impact.' },
+  patent: { title: 'Patent Strategy', bee: 'patent-bee',     system: 'You are the Heady patent-bee. Advise on 60+ provisional patent portfolio. Tier 1: CSL routing, φ-Fibonacci architecture. Convert sequence: Q2 2026 utility, Q3 PCT. Draft claims using apparatus/method templates. Prior art searches first.' },
+  deep:   { title: 'Deep Think',    bee: 'architect-bee',    system: buildHeadySystem() + '\n\nYou are in DEEP THINK mode. Think step by step. Reason through architecture decisions. Consider φ-alignment, cost implications, patent defensibility, and social impact.' },
+};
+
+function buildHeadySystem() {
+  return `You are HeadyBuddy — the AI companion for HeadySystems Inc.
+Company: HeadySystems Inc. (EIN 41-3412204, Fort Collins CO). Founder: Eric Haywood.
+Product: Heady™ Latent-Space OS · 17 swarms · 89 bees · 22 pipeline stages
+Core: Continuous Semantic Logic (CSL) — cosine similarity replaces all if/else routing
+Math: φ = ${PHI} — ALL capacity constants use Fibonacci sequence
+Stack: Node.js ESM · Cloudflare Workers (Hono) · Cloud Run (Express) · Neon Postgres · Qdrant · Upstash Redis · Firebase Auth · Cloudflare Pages/R2/KV
+Models: gemini-2.5-flash (default) → claude-opus-4-6 (reasoning) → gpt-4o-mini (fallback)
+Budget: $600-750/month · Target: $360 post-optimization · EIN: 41-3412204
+60+ provisional patents · SBIR target: Q2 2026
+Rules: ESM only · Zod validation · pino logging · UUID PKs · httpOnly cookies · φ-constants
+Active swarms: Code, Research, Deploy, Auth, Vector`;
+}
+
+// ── Mode switching ──
+function setMode(btn) {
+  document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  currentMode = btn.dataset.mode;
+  const m = MODES[currentMode];
+  document.getElementById('chatTitle').textContent = m.title;
+  document.getElementById('routeLabel').textContent = m.bee;
+}
+
+// ── Swarm toggles ──
+function toggleSwarm(el) { el.classList.toggle('on'); }
+
+// ── CSL visualization ──
+function animateCSL(score, beeId) {
+  const pct = Math.min(100, score * 100);
+  const fill = document.getElementById('cslFill');
+  const val  = document.getElementById('cslVal');
+  const label = document.getElementById('routeLabel');
+  fill.style.width = pct + '%';
+  val.textContent = score.toFixed(3);
+  if (beeId) label.textContent = beeId;
+}
+
+// ── Message rendering ──
+function renderMsg(role, content, thinking = false) {
+  const welcome = document.getElementById('welcome');
+  if (welcome) welcome.remove();
+  const qs = document.getElementById('quickstart');
+  if (qs) qs.style.display = 'none';
+
+  const container = document.getElementById('messages');
+  const wrap = document.createElement('div');
+  wrap.className = `msg ${role}`;
+
+  const avatar = document.createElement('div');
+  avatar.className = 'msg-avatar';
+  avatar.textContent = role === 'user' ? 'E' : '🐝';
+
+  const bubble = document.createElement('div');
+  bubble.className = 'msg-bubble';
+
+  if (thinking) {
+    bubble.innerHTML = '<div class="thinking-dots"><span></span><span></span><span></span></div>';
+  } else {
+    bubble.innerHTML = formatContent(content);
+  }
+
+  wrap.appendChild(avatar);
+  wrap.appendChild(bubble);
+  container.appendChild(wrap);
+  container.scrollTop = container.scrollHeight;
+  return bubble;
+}
+
+function formatContent(text) {
+  // Code blocks
+  text = text.replace(/```(\w*)\n([\s\S]*?)```/g, (_, lang, code) =>
+    `<pre><code class="language-${lang}">${escHtml(code.trim())}</code></pre>`);
+  // Inline code
+  text = text.replace(/`([^`]+)`/g, '<code>$1</code>');
+  // Bold
+  text = text.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+  // Newlines
+  text = text.replace(/\n/g, '<br>');
+  return text;
+}
+
+function escHtml(t) {
+  return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+// ── Send message ──
+async function sendMessage() {
+  const input = document.getElementById('msgInput');
+  const text = input.value.trim();
+  if (!text || isStreaming) return;
+
+  input.value = '';
+  autoResize(input);
+  isStreaming = true;
+  document.getElementById('sendBtn').disabled = true;
+
+  renderMsg('user', text);
+  messages.push({ role: 'user', content: text });
+
+  // Simulate CSL routing
+  const simSimilarity = 0.618 + Math.random() * 0.38;
+  const bees = ['code-generator-bee','architect-bee','research-bee','coordinator-bee','grant-writer-bee'];
+  const routedBee = bees[Math.floor(Math.random() * bees.length)];
+  animateCSL(simSimilarity, routedBee);
+
+  const thinkBubble = renderMsg('assistant', '', true);
+
+  const apiKey = window._headyApiKey ?? '';
+  const model  = document.getElementById('modelSelect').value;
+  const tokens = parseInt(document.getElementById('thinkSelect').value) || 1618;
+
+  if (!apiKey && !window._headyDemo) {
+    thinkBubble.innerHTML = formatContent(
+      `**HeadyBuddy ready.** To enable live AI responses:\n\n\`\`\`js\nwindow._headyApiKey = 'YOUR_GEMINI_API_KEY';\n\`\`\`\n\nOr set \`window._headyDemo = true\` for demo mode responses.\n\n**Your message:** "${escHtml(text)}"\n\n**Mode:** ${MODES[currentMode].title} · **Model:** ${model} · **Thinking:** ${tokens} tokens · **CSL:** ${simSimilarity.toFixed(3)} → ${routedBee}`
+    );
+    isStreaming = false;
+    document.getElementById('sendBtn').disabled = false;
+    return;
+  }
+
+  if (window._headyDemo) {
+    await demoResponse(thinkBubble, text, model, tokens, routedBee);
+    isStreaming = false;
+    document.getElementById('sendBtn').disabled = false;
+    return;
+  }
+
+  // Live Gemini API call
+  try {
+    const sysPrompt = MODES[currentMode].system;
+    const body = {
+      contents: [
+        { role: 'user', parts: [{ text: sysPrompt + '\n\nUser: ' + text }] }
+      ],
+      generationConfig: {
+        thinkingConfig: { thinkingBudget: tokens },
+        maxOutputTokens: Math.min(8192, tokens * PHI | 0) || 4096,
+        temperature: tokens > 0 ? 0.3 : 0.7,
+      },
+    };
+
+    const resp = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`,
+      { method:'POST', headers:{'content-type':'application/json'}, body: JSON.stringify(body) }
+    );
+
+    const data = await resp.json();
+    const reply = data.candidates?.[0]?.content?.parts?.find(p => !p.thought)?.text
+      ?? data.error?.message ?? 'No response';
+
+    thinkBubble.innerHTML = formatContent(reply);
+    messages.push({ role: 'assistant', content: reply });
+
+    // Update budget estimate
+    const usedTokens = data.usageMetadata?.totalTokenCount ?? 1000;
+    updateBudget(usedTokens);
+  } catch(err) {
+    thinkBubble.innerHTML = `<span style="color:var(--error)">Error: ${escHtml(err.message)}</span>`;
+  }
+
+  isStreaming = false;
+  document.getElementById('sendBtn').disabled = false;
+}
+
+// ── Demo responses ──
+async function demoResponse(bubble, text, model, tokens, bee) {
+  await sleep(800);
+  const demos = [
+    `**CSL Route:** ${bee} (similarity: ${(0.7 + Math.random() * 0.28).toFixed(3)})\n\n**Thinking budget:** ${tokens} tokens (${tokens === 0 ? 'INSTANT' : tokens <= 618 ? 'FAST' : tokens <= 1618 ? 'BALANCED' : 'DEEP'} tier)\n\nHere's my analysis for your Heady™ system...\n\n\`\`\`js\nimport { z } from 'zod';\nimport { v4 as uuidv4 } from 'uuid';\nimport pino from 'pino';\n\nconst logger = pino({ name: '${bee}' });\nconst PHI = 1.618033988749895;\n\n// φ-aligned implementation\nexport default class ExampleBee {\n  async execute(input) {\n    const id = uuidv4();\n    logger.info({ beeId: id }, 'executing');\n    return { id, result: 'φ-aligned output', phi: PHI };\n  }\n}\n\`\`\`\n\n**Cost estimate:** ~$0.00012/call at Gemini Flash rates · Semantic cache saves 60%`,
+    `**φ-Alignment Score: 1.382 / 1.618** (Good — minor improvements needed)\n\n| Check | Score |\n|-------|-------|\n| ESM Syntax | 0.3/0.3 ✅ |\n| Security/Auth | 0.2/0.3 ⚠️ |\n| Validation | 0.2/0.2 ✅ |\n| Logging | 0.1/0.1 ✅ |\n| φ-Constants | 0.1/0.2 ⚠️ |\n\n**Issues:** Replace hardcoded 1000 with Fibonacci value (987 or 1597). Add httpOnly cookie check.\n\n**Fixed:** \`const RATE_LIMIT = 987; // Fibonacci, not arbitrary 1000\``,
+    `**SBIR Phase I Abstract Draft**\n\nHeadySystems Inc. proposes to develop Heady™, a novel Continuous Semantic Logic (CSL) AI orchestration platform that replaces traditional boolean routing logic with cosine similarity gates calibrated to the golden ratio φ = 1.618. The technical innovation — routing AI agents via vector similarity rather than if/else conditions — enables zero-configuration deployment of new autonomous agent types and graceful degradation under partial system failures. Phase I will validate CSL routing accuracy (target: >94% correct bee selection), demonstrate φ-Fibonacci swarm scaling from 1 to 89 agents, and establish the mathematical foundation for Phase II commercialization targeting federal defense and healthcare markets. Budget: $305,000.`,
+  ];
+  const reply = demos[Math.floor(Math.random() * demos.length)];
+  bubble.innerHTML = formatContent(reply);
+  messages.push({ role: 'assistant', content: reply });
+}
+
+// ── Utilities ──
+function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+function handleKey(e) {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+}
+
+function autoResize(el) {
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 200) + 'px';
+  const chars = el.value.length;
+  document.getElementById('tokenEstimate').textContent = `~${Math.ceil(chars/4)} tokens`;
+  const model = document.getElementById('modelSelect').value;
+  const think = document.getElementById('thinkSelect');
+  const tier = think.options[think.selectedIndex].text.split('(')[0].trim().replace('Think: ','');
+  document.getElementById('modelLabel').textContent = `${model} · ${tier} thinking`;
+}
+
+function sendChip(el) {
+  document.getElementById('msgInput').value = el.textContent;
+  autoResize(document.getElementById('msgInput'));
+  sendMessage();
+}
+
+function clearConvo() {
+  messages = [];
+  const c = document.getElementById('messages');
+  c.innerHTML = '';
+  const qs = document.getElementById('quickstart');
+  if (qs) qs.style.display = 'flex';
+  animateCSL(0, 'coordinator-bee');
+}
+
+function exportConvo() {
+  const lines = messages.map(m => `[${m.role.toUpperCase()}]\n${m.content}`).join('\n\n---\n\n');
+  const blob = new Blob([lines], { type: 'text/plain' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `heady-buddy-${new Date().toISOString().split('T')[0]}.txt`;
+  a.click();
+}
+
+function updateBudget(tokens) {
+  const costPerToken = 0.0000003; // gemini flash average
+  const spent = parseFloat(document.getElementById('budgetVal').textContent.split('$')[1]) || 347;
+  const newSpent = Math.min(700, spent + tokens * costPerToken).toFixed(0);
+  document.getElementById('budgetVal').textContent = `$${newSpent} / $700`;
+  document.getElementById('budgetFill').style.width = (newSpent / 700 * 100) + '%';
+}
+
+// Budget days left
+const day = new Date().getDate();
+const daysInMonth = new Date(new Date().getFullYear(), new Date().getMonth()+1, 0).getDate();
+document.getElementById('budgetDays').textContent = `${daysInMonth - day} days left`;
+</script>
+</body>
+</html>

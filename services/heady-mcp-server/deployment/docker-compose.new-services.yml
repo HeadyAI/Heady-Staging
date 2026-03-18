@@ -1,0 +1,196 @@
+# Heady New Services — Docker Compose
+# © 2026 HeadySystems Inc.
+# All services use phi-scaled resource limits
+
+version: '3.9'
+
+x-heady-defaults: &heady-defaults
+  restart: unless-stopped
+  networks:
+    - heady-mesh
+  environment:
+    NODE_ENV: production
+    PHI: "1.618033988749895"
+    PSI: "0.618033988749895"
+    VECTOR_DIM: "384"
+    CSL_THRESHOLD_MED: "0.809"
+    LOG_FORMAT: json
+  healthcheck:
+    interval: 34s      # FIB[8]
+    timeout: 8s         # FIB[5]
+    retries: 5          # FIB[4]
+    start_period: 21s   # FIB[7]
+  deploy:
+    resources:
+      limits:
+        memory: 512M
+        cpus: '0.618'   # PSI
+      reservations:
+        memory: 256M
+        cpus: '0.382'   # PSI^2
+
+services:
+  heady-cortex:
+    <<: *heady-defaults
+    build: ../new-services
+    command: node heady-cortex-service.js
+    ports: ["3401:3401"]
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3401/health"]
+
+  heady-chronicle:
+    <<: *heady-defaults
+    build: ../new-services
+    command: node heady-chronicle-service.js
+    ports: ["3402:3402"]
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3402/health"]
+
+  heady-nexus:
+    <<: *heady-defaults
+    build: ../new-services
+    command: node heady-nexus-service.js
+    ports: ["3403:3403"]
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3403/health"]
+
+  heady-oracle:
+    <<: *heady-defaults
+    build: ../new-services
+    command: node heady-oracle-service.js
+    ports: ["3404:3404"]
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3404/health"]
+
+  heady-genesis:
+    <<: *heady-defaults
+    build: ../new-services
+    command: node heady-genesis-service.js
+    ports: ["3405:3405"]
+
+  heady-prism:
+    <<: *heady-defaults
+    build: ../new-services
+    command: node heady-prism-service.js
+    ports: ["3406:3406"]
+
+  heady-beacon:
+    <<: *heady-defaults
+    build: ../new-services
+    command: node heady-beacon-service.js
+    ports: ["3407:3407"]
+
+  heady-forge:
+    <<: *heady-defaults
+    build: ../new-services
+    command: node heady-forge-service.js
+    ports: ["3408:3408"]
+
+  heady-spectrum:
+    <<: *heady-defaults
+    build: ../new-services
+    command: node heady-spectrum-service.js
+    ports: ["3409:3409"]
+
+  heady-atlas-mapping:
+    <<: *heady-defaults
+    build: ../new-services
+    command: node heady-atlas-mapping-service.js
+    ports: ["3410:3410"]
+
+  heady-flux:
+    <<: *heady-defaults
+    build: ../new-services
+    command: node heady-flux-service.js
+    ports: ["3411:3411"]
+
+  heady-vault:
+    <<: *heady-defaults
+    build: ../new-services
+    command: node heady-vault-service.js
+    ports: ["3412:3412"]
+
+  heady-echo:
+    <<: *heady-defaults
+    build: ../new-services
+    command: node heady-echo-service.js
+    ports: ["3413:3413"]
+
+  heady-harbor:
+    <<: *heady-defaults
+    build: ../new-services
+    command: node heady-harbor-service.js
+    ports: ["3414:3414"]
+
+  heady-compass:
+    <<: *heady-defaults
+    build: ../new-services
+    command: node heady-compass-service.js
+    ports: ["3415:3415"]
+
+  heady-catalyst:
+    <<: *heady-defaults
+    build: ../new-services
+    command: node heady-catalyst-service.js
+    ports: ["3416:3416"]
+
+  heady-guardian:
+    <<: *heady-defaults
+    build: ../new-services
+    command: node heady-guardian-service.js
+    ports: ["3417:3417"]
+
+  heady-resonance:
+    <<: *heady-defaults
+    build: ../new-services
+    command: node heady-resonance-service.js
+    ports: ["3418:3418"]
+
+  heady-weaver:
+    <<: *heady-defaults
+    build: ../new-services
+    command: node heady-weaver-service.js
+    ports: ["3419:3419"]
+
+  heady-phoenix:
+    <<: *heady-defaults
+    build: ../new-services
+    command: node heady-phoenix-service.js
+    ports: ["3420:3420"]
+
+  heady-synapse:
+    <<: *heady-defaults
+    build: ../new-services
+    command: node heady-synapse-service.js
+    ports: ["3421:3421"]
+
+  heady-mirror:
+    <<: *heady-defaults
+    build: ../new-services
+    command: node heady-mirror-service.js
+    ports: ["3422:3422"]
+
+  heady-aurora:
+    <<: *heady-defaults
+    build: ../new-services
+    command: node heady-aurora-service.js
+    ports: ["3423:3423"]
+
+  heady-genome:
+    <<: *heady-defaults
+    build: ../new-services
+    command: node heady-genome-service.js
+    ports: ["3424:3424"]
+
+  heady-meridian:
+    <<: *heady-defaults
+    build: ../new-services
+    command: node heady-meridian-service.js
+    ports: ["3425:3425"]
+
+networks:
+  heady-mesh:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.21.0.0/16  # FIB[7] = 21

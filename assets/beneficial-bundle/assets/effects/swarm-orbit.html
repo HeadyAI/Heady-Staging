@@ -1,0 +1,92 @@
+
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Swarm Orbit</title>
+<style>
+
+:root {
+  --bg:#070B14; --surface:#0F1627; --surface2:#121C31; --line:#22345A;
+  --text:#D7E7FF; --muted:#82A0C8; --teal:#36F3C8; --cyan:#49B8FF;
+  --violet:#8C6BFF; --magenta:#FF4FD8; --amber:#FFB24D;
+}
+* { box-sizing:border-box; }
+html,body { margin:0; min-height:100%; background:radial-gradient(circle at 20% 20%, #13213C 0%, var(--bg) 42%), linear-gradient(160deg, #050913 0%, #091121 100%); color:var(--text); font-family:Arial, Helvetica, sans-serif; }
+a { color:var(--cyan); }
+.page { min-height:100vh; overflow:hidden; position:relative; }
+.grid-bg::before { content:''; position:absolute; inset:0; background-image:linear-gradient(rgba(105,155,255,.08) 1px, transparent 1px), linear-gradient(90deg, rgba(105,155,255,.08) 1px, transparent 1px); background-size:34px 34px; mask-image:radial-gradient(circle at center, black 40%, transparent 88%); pointer-events:none; }
+.halo { position:absolute; border-radius:999px; filter:blur(50px); opacity:.35; animation:float 12s ease-in-out infinite; }
+.h1 { font-size:56px; line-height:1; margin:0 0 12px; letter-spacing:.5px; }
+.sub { color:var(--muted); font-size:20px; margin:0; }
+.card { background:linear-gradient(180deg, rgba(17,27,47,.92), rgba(11,18,33,.92)); border:1px solid rgba(111,157,255,.16); border-radius:26px; box-shadow:0 24px 80px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.04); backdrop-filter:blur(20px); }
+.kpi { padding:22px 24px; min-height:136px; position:relative; overflow:hidden; }
+.kpi::after { content:''; position:absolute; inset:auto -30px -36px auto; width:160px; height:160px; border-radius:999px; background:radial-gradient(circle, rgba(73,184,255,.36) 0%, rgba(255,79,216,0) 72%); }
+.label { color:var(--muted); font-size:14px; letter-spacing:1.4px; text-transform:uppercase; }
+.value { font-size:46px; font-weight:700; margin-top:12px; }
+.small { color:var(--muted); font-size:14px; }
+.glow-line { height:2px; background:linear-gradient(90deg, transparent, var(--teal), var(--magenta), transparent); filter:drop-shadow(0 0 10px rgba(73,184,255,.8)); }
+.pill { display:inline-flex; gap:10px; align-items:center; padding:10px 14px; border-radius:999px; background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.08); color:var(--text); font-size:14px; }
+.dot { width:10px; height:10px; border-radius:50%; background:var(--teal); box-shadow:0 0 14px var(--teal); }
+@keyframes hueFlow { 0%{ filter:hue-rotate(0deg); } 100%{ filter:hue-rotate(360deg); } }
+@keyframes float { 0%,100%{ transform:translateY(0px); } 50%{ transform:translateY(-24px); } }
+@keyframes pulse { 0%,100%{ transform:scale(1); opacity:.8; } 50%{ transform:scale(1.08); opacity:1; } }
+@keyframes dash { to { stroke-dashoffset:-120; } }
+@media (prefers-reduced-motion: reduce) { .animated, .halo, .orbits, .shift, .live-wave, .node, .scan { animation:none !important; transition:none !important; } }
+
+body { overflow:hidden; }
+.stage { display:grid; place-items:center; min-height:100vh; padding:24px; position:relative; }
+.core { position:relative; width:min(92vw,920px); aspect-ratio:1/1; }
+.ring { position:absolute; inset:50%; translate:-50% -50%; border-radius:50%; border:1px solid rgba(255,255,255,.12); }
+.r1 { width:28%; height:28%; } .r2 { width:48%; height:48%; } .r3 { width:70%; height:70%; } .r4 { width:88%; height:88%; }
+.center { position:absolute; inset:50%; translate:-50% -50%; width:180px; height:180px; border-radius:50%; display:grid; place-items:center; background:radial-gradient(circle at 40% 40%, rgba(255,255,255,.16), rgba(0,0,0,.06) 50%), linear-gradient(135deg, rgba(73,184,255,.24), rgba(255,79,216,.18)); border:1px solid rgba(255,255,255,.12); box-shadow:0 0 80px rgba(73,184,255,.25); }
+.center::before { content:''; width:118px; height:118px; border-radius:50%; background:radial-gradient(circle, rgba(255,255,255,.9) 0%, rgba(54,243,200,.34) 32%, rgba(54,243,200,0) 72%); animation:pulse 4s ease-in-out infinite; }
+.center-label { position:absolute; inset:auto 0 28px; text-align:center; font-weight:700; letter-spacing:1px; }
+.orbit { position:absolute; inset:50%; translate:-50% -50%; border-radius:50%; }
+.o1 { width:28%; height:28%; animation:spin 10s linear infinite; }
+.o2 { width:48%; height:48%; animation:spin 16s linear infinite reverse; }
+.o3 { width:70%; height:70%; animation:spin 22s linear infinite; }
+.o4 { width:88%; height:88%; animation:spin 29s linear infinite reverse; }
+.node { position:absolute; top:50%; left:100%; translate:-50% -50%; width:116px; height:116px; border-radius:28px; display:grid; place-items:center; text-align:center; padding:10px; background:linear-gradient(180deg, rgba(18,28,49,.92), rgba(8,13,22,.95)); border:1px solid rgba(255,255,255,.08); box-shadow:0 18px 40px rgba(0,0,0,.4); color:var(--text); font-size:14px; }
+.node strong { display:block; font-size:14px; margin-bottom:4px; }
+.node span { color:var(--muted); font-size:12px; }
+.trace { position:absolute; inset:50%; translate:-50% -50%; width:88%; height:88%; pointer-events:none; }
+.trace svg { width:100%; height:100%; }
+.headline { position:absolute; top:26px; left:26px; max-width:520px; }
+.panel { position:absolute; right:26px; bottom:26px; width:min(92vw,360px); padding:20px; }
+.list { display:grid; gap:10px; margin-top:14px; }
+.item { display:flex; justify-content:space-between; color:var(--muted); font-size:14px; }
+@keyframes spin { to { transform:translate(-50%, -50%) rotate(360deg); } }
+</style></head>
+<body>
+<div class="page grid-bg stage">
+  <div class="halo" style="width:380px;height:380px;left:12%;top:12%;background:#49B8FF;"></div>
+  <div class="halo" style="width:340px;height:340px;right:10%;bottom:10%;background:#FF4FD8;animation-delay:-2s"></div>
+  <div class="headline">
+    <div class="pill"><span class="dot"></span> swarm map</div>
+    <h1 class="h1">Orbiting bees around a live Heady core</h1>
+    <p class="sub">A lightweight visual for showing specialized agents, role balance, and live coordination energy.</p>
+  </div>
+  <div class="core">
+    <div class="ring r1"></div><div class="ring r2"></div><div class="ring r3"></div><div class="ring r4"></div>
+    <div class="center"><div class="center-label">HEADY CORE</div></div>
+    <div class="orbit o1"><div class="node"><div><strong>Signal Bee</strong><span>discord hooks</span></div></div></div>
+    <div class="orbit o2"><div class="node"><div><strong>Recall Bee</strong><span>memory threads</span></div></div></div>
+    <div class="orbit o2" style="transform:translate(-50%, -50%) rotate(180deg)"><div class="node"><div><strong>Tool Bee</strong><span>MCP routing</span></div></div></div>
+    <div class="orbit o3"><div class="node"><div><strong>Lens Bee</strong><span>ui surfaces</span></div></div></div>
+    <div class="orbit o3" style="transform:translate(-50%, -50%) rotate(120deg)"><div class="node"><div><strong>Guard Bee</strong><span>safe actions</span></div></div></div>
+    <div class="orbit o3" style="transform:translate(-50%, -50%) rotate(240deg)"><div class="node"><div><strong>Pattern Bee</strong><span>skill mining</span></div></div></div>
+    <div class="orbit o4"><div class="node"><div><strong>Scout Bee</strong><span>web inputs</span></div></div></div>
+    <div class="orbit o4" style="transform:translate(-50%, -50%) rotate(72deg)"><div class="node"><div><strong>Comms Bee</strong><span>discord pulse</span></div></div></div>
+    <div class="orbit o4" style="transform:translate(-50%, -50%) rotate(144deg)"><div class="node"><div><strong>Forge Bee</strong><span>asset builds</span></div></div></div>
+    <div class="orbit o4" style="transform:translate(-50%, -50%) rotate(216deg)"><div class="node"><div><strong>Judge Bee</strong><span>consensus pass</span></div></div></div>
+    <div class="orbit o4" style="transform:translate(-50%, -50%) rotate(288deg)"><div class="node"><div><strong>Echo Bee</strong><span>status narration</span></div></div></div>
+  </div>
+  <div class="card panel">
+    <div class="label">Suggested use</div>
+    <div class="list">
+      <div class="item"><span>Discord welcome panel</span><strong style="color:var(--text)">yes</strong></div>
+      <div class="item"><span>Animated docs hero</span><strong style="color:var(--text)">yes</strong></div>
+      <div class="item"><span>Ops status wall</span><strong style="color:var(--text)">yes</strong></div>
+      <div class="item"><span>Low-friction embed</span><strong style="color:var(--text)">svg/html</strong></div>
+    </div>
+  </div>
+</div>
+</body></html>

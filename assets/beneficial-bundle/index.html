@@ -1,0 +1,76 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Heady Visual Pack</title>
+<style>
+
+:root {
+  --bg:#070B14; --surface:#0F1627; --surface2:#121C31; --line:#22345A;
+  --text:#D7E7FF; --muted:#82A0C8; --teal:#36F3C8; --cyan:#49B8FF;
+  --violet:#8C6BFF; --magenta:#FF4FD8; --amber:#FFB24D;
+}
+* { box-sizing:border-box; }
+html,body { margin:0; min-height:100%; background:radial-gradient(circle at 20% 20%, #13213C 0%, var(--bg) 42%), linear-gradient(160deg, #050913 0%, #091121 100%); color:var(--text); font-family:Arial, Helvetica, sans-serif; }
+a { color:var(--cyan); }
+.page { min-height:100vh; overflow:hidden; position:relative; }
+.grid-bg::before { content:''; position:absolute; inset:0; background-image:linear-gradient(rgba(105,155,255,.08) 1px, transparent 1px), linear-gradient(90deg, rgba(105,155,255,.08) 1px, transparent 1px); background-size:34px 34px; mask-image:radial-gradient(circle at center, black 40%, transparent 88%); pointer-events:none; }
+.halo { position:absolute; border-radius:999px; filter:blur(50px); opacity:.35; animation:float 12s ease-in-out infinite; }
+.h1 { font-size:56px; line-height:1; margin:0 0 12px; letter-spacing:.5px; }
+.sub { color:var(--muted); font-size:20px; margin:0; }
+.card { background:linear-gradient(180deg, rgba(17,27,47,.92), rgba(11,18,33,.92)); border:1px solid rgba(111,157,255,.16); border-radius:26px; box-shadow:0 24px 80px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.04); backdrop-filter:blur(20px); }
+.kpi { padding:22px 24px; min-height:136px; position:relative; overflow:hidden; }
+.kpi::after { content:''; position:absolute; inset:auto -30px -36px auto; width:160px; height:160px; border-radius:999px; background:radial-gradient(circle, rgba(73,184,255,.36) 0%, rgba(255,79,216,0) 72%); }
+.label { color:var(--muted); font-size:14px; letter-spacing:1.4px; text-transform:uppercase; }
+.value { font-size:46px; font-weight:700; margin-top:12px; }
+.small { color:var(--muted); font-size:14px; }
+.glow-line { height:2px; background:linear-gradient(90deg, transparent, var(--teal), var(--magenta), transparent); filter:drop-shadow(0 0 10px rgba(73,184,255,.8)); }
+.pill { display:inline-flex; gap:10px; align-items:center; padding:10px 14px; border-radius:999px; background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.08); color:var(--text); font-size:14px; }
+.dot { width:10px; height:10px; border-radius:50%; background:var(--teal); box-shadow:0 0 14px var(--teal); }
+@keyframes hueFlow { 0%{ filter:hue-rotate(0deg); } 100%{ filter:hue-rotate(360deg); } }
+@keyframes float { 0%,100%{ transform:translateY(0px); } 50%{ transform:translateY(-24px); } }
+@keyframes pulse { 0%,100%{ transform:scale(1); opacity:.8; } 50%{ transform:scale(1.08); opacity:1; } }
+@keyframes dash { to { stroke-dashoffset:-120; } }
+@media (prefers-reduced-motion: reduce) { .animated, .halo, .orbits, .shift, .live-wave, .node, .scan { animation:none !important; transition:none !important; } }
+
+body { padding:32px; }
+.wrap { max-width:1380px; margin:0 auto; }
+.hero { padding:28px 0 24px; }
+.hero .sub { max-width:900px; }
+.row { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:18px; margin-top:22px; }
+.icon-card { padding:18px; }
+.icon-card img { width:100%; aspect-ratio:1/1; border-radius:22px; background:#08111E; border:1px solid rgba(255,255,255,.05); }
+.name { margin-top:12px; font-size:15px; color:var(--text); }
+.section-title { margin:34px 0 14px; font-size:28px; }
+.banner { width:100%; border-radius:28px; border:1px solid rgba(255,255,255,.08); }
+.links { display:flex; flex-wrap:wrap; gap:12px; margin-top:16px; }
+.link-card { padding:14px 16px; text-decoration:none; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="hero">
+    <div class="pill"><span class="dot"></span> heady visual + concept pack</div>
+    <h1 class="h1">Color-shifting UI energy for Heady, Discord, swarms, and skills</h1>
+    <p class="sub">Open the SVGs directly, use the effect demos as inspiration or drop-in surfaces, and mine the docs for new MCP services, HeadyBees, HeadySwarms, and Perplexity skills.</p>
+  </div>
+  <img class="banner" src="assets/discord/server-banner-heady.svg" alt="Heady server banner" />
+  <div class="section-title">Icons</div>
+  <div class="row">
+    <div class="card icon-card"><img src="assets/icons/heady-core-orb.svg" alt="heady-core-orb.svg" /><div class="name">heady-core-orb.svg</div></div><div class="card icon-card"><img src="assets/icons/swarm-hive.svg" alt="swarm-hive.svg" /><div class="name">swarm-hive.svg</div></div><div class="card icon-card"><img src="assets/icons/bee-scout.svg" alt="bee-scout.svg" /><div class="name">bee-scout.svg</div></div><div class="card icon-card"><img src="assets/icons/mcp-bridge.svg" alt="mcp-bridge.svg" /><div class="name">mcp-bridge.svg</div></div><div class="card icon-card"><img src="assets/icons/telemetry-eye.svg" alt="telemetry-eye.svg" /><div class="name">telemetry-eye.svg</div></div><div class="card icon-card"><img src="assets/icons/memory-lattice.svg" alt="memory-lattice.svg" /><div class="name">memory-lattice.svg</div></div><div class="card icon-card"><img src="assets/icons/signal-prism.svg" alt="signal-prism.svg" /><div class="name">signal-prism.svg</div></div><div class="card icon-card"><img src="assets/icons/governance-shield.svg" alt="governance-shield.svg" /><div class="name">governance-shield.svg</div></div><div class="card icon-card"><img src="assets/icons/skill-burst.svg" alt="skill-burst.svg" /><div class="name">skill-burst.svg</div></div>
+  </div>
+  <div class="section-title">Discord assets</div>
+  <div class="row">
+    <div class="card icon-card"><img src="assets/discord/server-icon-heady.svg" alt="server-icon-heady.svg" /><div class="name">server-icon-heady.svg</div></div><div class="card icon-card"><img src="assets/discord/profile-card-bot.svg" alt="profile-card-bot.svg" /><div class="name">profile-card-bot.svg</div></div><div class="card icon-card"><img src="assets/discord/role-architect.svg" alt="role-architect.svg" /><div class="name">role-architect.svg</div></div><div class="card icon-card"><img src="assets/discord/role-conductor.svg" alt="role-conductor.svg" /><div class="name">role-conductor.svg</div></div><div class="card icon-card"><img src="assets/discord/role-observer.svg" alt="role-observer.svg" /><div class="name">role-observer.svg</div></div><div class="card icon-card"><img src="assets/discord/role-builder.svg" alt="role-builder.svg" /><div class="name">role-builder.svg</div></div>
+  </div>
+  <div class="section-title">Live demos</div>
+  <div class="links">
+    <a class="card link-card" href="assets/effects/color-shift-telemetry.html">Telemetry glass dashboard</a>
+    <a class="card link-card" href="assets/effects/swarm-orbit.html">Swarm orbit graph</a>
+    <a class="card link-card" href="assets/effects/discord-status-wall.html">Discord status wall</a>
+  </div>
+</div>
+</body>
+</html>

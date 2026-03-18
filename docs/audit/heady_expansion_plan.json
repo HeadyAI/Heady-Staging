@@ -1,0 +1,489 @@
+{
+  "current_services": [
+    {
+      "name": "HeadyManager",
+      "status": "confirmed",
+      "source_urls": [
+        "https://github.com/HeadyMe/Heady-Main",
+        "https://github.com/HeadyMe/Heady-Main/blob/main/heady-registry.json"
+      ],
+      "notes": "MCP/API gateway on port 3300"
+    },
+    {
+      "name": "HeadyCloud API",
+      "status": "confirmed",
+      "source_urls": [
+        "https://github.com/HeadyMe/Heady-Main"
+      ],
+      "notes": "API surface at headysystems.com/api"
+    },
+    {
+      "name": "Registry",
+      "status": "confirmed",
+      "source_urls": [
+        "https://github.com/HeadyMe/Heady-Main/blob/main/heady-registry.json"
+      ],
+      "notes": "Public registry endpoint"
+    },
+    {
+      "name": "Brain Service",
+      "status": "confirmed",
+      "source_urls": [
+        "https://github.com/HeadyMe/Heady-Main"
+      ],
+      "notes": "brain.headysystems.com"
+    },
+    {
+      "name": "HeadyDistiller",
+      "status": "confirmed",
+      "source_urls": [
+        "https://github.com/HeadyMe/Heady-Main"
+      ],
+      "notes": "distiller.headysystems.com streamable HTTP"
+    },
+    {
+      "name": "HeadyMCP",
+      "status": "confirmed",
+      "source_urls": [
+        "https://github.com/HeadyMe/Heady-Main",
+        "https://github.com/HeadyMe/headymcp-core"
+      ],
+      "notes": "headymcp.com JSON-RPC + SSE"
+    },
+    {
+      "name": "HeadyAPI",
+      "status": "confirmed",
+      "source_urls": [
+        "https://github.com/HeadyMe/Heady-Main"
+      ],
+      "notes": "headyapi.com gateway"
+    },
+    {
+      "name": "headyme.com",
+      "status": "confirmed",
+      "source_urls": [
+        "https://github.com/HeadyMe/Heady-Main"
+      ],
+      "notes": "user-facing domain"
+    },
+    {
+      "name": "headyio.com",
+      "status": "confirmed",
+      "source_urls": [
+        "https://github.com/HeadyMe/Heady-Main/blob/main/heady-registry.json"
+      ],
+      "notes": "registry/developer domain"
+    },
+    {
+      "name": "@heady/persistence",
+      "status": "confirmed",
+      "source_urls": [
+        "https://github.com/HeadyMe/Heady-Main/issues/7"
+      ],
+      "notes": "PersistenceEngine, SessionManager, StateSyncEngine"
+    }
+  ],
+  "current_tools": [
+    {
+      "name": "heady_health",
+      "status": "confirmed",
+      "source_urls": [
+        "https://github.com/HeadyMe/Heady-Main"
+      ]
+    },
+    {
+      "name": "heady_pulse",
+      "status": "confirmed",
+      "source_urls": [
+        "https://github.com/HeadyMe/Heady-Main"
+      ]
+    },
+    {
+      "name": "heady_brain_query",
+      "status": "confirmed",
+      "source_urls": [
+        "https://github.com/HeadyMe/Heady-Main"
+      ]
+    },
+    {
+      "name": "heady_generate",
+      "status": "confirmed",
+      "source_urls": [
+        "https://github.com/HeadyMe/Heady-Main"
+      ]
+    },
+    {
+      "name": "heady_deploy",
+      "status": "confirmed",
+      "source_urls": [
+        "https://github.com/HeadyMe/Heady-Main"
+      ]
+    },
+    {
+      "name": "heady_battle",
+      "status": "confirmed",
+      "source_urls": [
+        "https://github.com/HeadyMe/Heady-Main"
+      ]
+    },
+    {
+      "name": "heady_creative",
+      "status": "confirmed",
+      "source_urls": [
+        "https://github.com/HeadyMe/Heady-Main"
+      ]
+    },
+    {
+      "name": "heady_distill",
+      "status": "confirmed",
+      "source_urls": [
+        "https://github.com/HeadyMe/Heady-Main"
+      ]
+    }
+  ],
+  "current_workflows": [
+    {
+      "name": "HCFullPipeline",
+      "status": "confirmed",
+      "source_urls": [
+        "https://github.com/HeadyMe/Heady-Main/blob/main/heady-registry.json",
+        "https://github.com/HeadyMe/Heady-Main"
+      ],
+      "notes": "represented as compact registry flow and richer orchestration flow"
+    },
+    {
+      "name": "Cross-device state sync",
+      "status": "confirmed",
+      "source_urls": [
+        "https://github.com/HeadyMe/Heady-Main/issues/7",
+        "https://github.com/HeadyMe/Heady-pre-production-9f2f0642/blob/main/src/runtime/cross-device-sync.js"
+      ]
+    },
+    {
+      "name": "IDE governed codeflow",
+      "status": "confirmed",
+      "source_urls": [
+        "https://github.com/HeadyMe/Heady-pre-production-9f2f0642/blob/main/src/services/ide-bridge.js"
+      ]
+    },
+    {
+      "name": "Auth provider federation and onboarding",
+      "status": "confirmed",
+      "source_urls": [
+        "https://github.com/HeadyMe/Heady-pre-production-9f2f0642/blob/main/src/auth/provider-registry.js",
+        "https://github.com/HeadyMe/Heady-pre-production-9f2f0642/blob/main/src/services/onboarding-orchestrator.js"
+      ]
+    },
+    {
+      "name": "Multi-model battle",
+      "status": "confirmed",
+      "source_urls": [
+        "https://github.com/HeadyMe/Heady-Main",
+        "https://huggingface.co/HeadySystems"
+      ]
+    },
+    {
+      "name": "Knowledge distillation",
+      "status": "confirmed",
+      "source_urls": [
+        "https://github.com/HeadyMe/Heady-Main"
+      ]
+    }
+  ],
+  "current_nodes": [
+    {
+      "name": "JULES",
+      "status": "confirmed",
+      "source_urls": [
+        "https://github.com/HeadyMe/Heady-Main"
+      ]
+    },
+    {
+      "name": "OBSERVER",
+      "status": "confirmed",
+      "source_urls": [
+        "https://github.com/HeadyMe/Heady-Main"
+      ]
+    },
+    {
+      "name": "BUILDER",
+      "status": "confirmed",
+      "source_urls": [
+        "https://github.com/HeadyMe/Heady-Main"
+      ]
+    },
+    {
+      "name": "ATLAS",
+      "status": "confirmed",
+      "source_urls": [
+        "https://github.com/HeadyMe/Heady-Main"
+      ]
+    },
+    {
+      "name": "PYTHIA",
+      "status": "confirmed",
+      "source_urls": [
+        "https://github.com/HeadyMe/Heady-Main",
+        "https://huggingface.co/HeadySystems"
+      ]
+    },
+    {
+      "name": "CONDUCTOR",
+      "status": "confirmed",
+      "source_urls": [
+        "https://github.com/HeadyMe/Heady-Main"
+      ]
+    },
+    {
+      "name": "SENTINEL",
+      "status": "confirmed",
+      "source_urls": [
+        "https://github.com/HeadyMe/Heady-Main"
+      ]
+    },
+    {
+      "name": "FORGE",
+      "status": "confirmed",
+      "source_urls": [
+        "https://github.com/HeadyMe/Heady-Main"
+      ]
+    },
+    {
+      "name": "EMISSARY",
+      "status": "confirmed",
+      "source_urls": [
+        "https://github.com/HeadyMe/Heady-Main"
+      ]
+    },
+    {
+      "name": "DREAMER",
+      "status": "confirmed",
+      "source_urls": [
+        "https://github.com/HeadyMe/Heady-Main"
+      ]
+    },
+    {
+      "name": "ARBITER",
+      "status": "confirmed",
+      "source_urls": [
+        "https://github.com/HeadyMe/Heady-Main"
+      ]
+    },
+    {
+      "name": "DIPLOMAT",
+      "status": "confirmed",
+      "source_urls": [
+        "https://github.com/HeadyMe/Heady-Main"
+      ]
+    },
+    {
+      "name": "ORACLE",
+      "status": "confirmed",
+      "source_urls": [
+        "https://github.com/HeadyMe/Heady-Main"
+      ]
+    },
+    {
+      "name": "QUANT",
+      "status": "confirmed",
+      "source_urls": [
+        "https://github.com/HeadyMe/Heady-Main"
+      ]
+    },
+    {
+      "name": "FABRICATOR",
+      "status": "confirmed",
+      "source_urls": [
+        "https://github.com/HeadyMe/Heady-Main"
+      ]
+    },
+    {
+      "name": "PERSONA",
+      "status": "confirmed",
+      "source_urls": [
+        "https://github.com/HeadyMe/Heady-Main"
+      ]
+    },
+    {
+      "name": "NEXUS",
+      "status": "confirmed",
+      "source_urls": [
+        "https://github.com/HeadyMe/Heady-Main"
+      ]
+    },
+    {
+      "name": "STUDIO",
+      "status": "confirmed",
+      "source_urls": [
+        "https://github.com/HeadyMe/Heady-Main"
+      ]
+    },
+    {
+      "name": "TENSOR",
+      "status": "confirmed",
+      "source_urls": [
+        "https://github.com/HeadyMe/Heady-Main"
+      ]
+    },
+    {
+      "name": "TOPOLOGY",
+      "status": "confirmed",
+      "source_urls": [
+        "https://github.com/HeadyMe/Heady-Main"
+      ]
+    }
+  ],
+  "gaps": [
+    {
+      "id": "SEC-001",
+      "title": "MCP tool execution security gap",
+      "severity": "critical",
+      "source_urls": [
+        "https://github.com/HeadyMe/Heady-Main/blob/main/docs/SECURITY-GAP-ANALYSIS.md"
+      ],
+      "notes": "30% coverage"
+    },
+    {
+      "id": "SEC-002",
+      "title": "MCP gateway zero-trust gap",
+      "severity": "critical",
+      "source_urls": [
+        "https://github.com/HeadyMe/Heady-Main/blob/main/docs/SECURITY-GAP-ANALYSIS.md"
+      ],
+      "notes": "20% coverage"
+    },
+    {
+      "id": "SEC-003",
+      "title": "Public key leak in docs repo",
+      "severity": "critical",
+      "source_urls": [
+        "https://github.com/HeadyMe/heady-docs/issues/1"
+      ]
+    },
+    {
+      "id": "SEC-004",
+      "title": "Notebook database credentials in git history",
+      "severity": "high",
+      "source_urls": [
+        "https://github.com/HeadyMe/Heady-Main/commit/706bc292"
+      ]
+    },
+    {
+      "id": "INT-001",
+      "title": "Incomplete cross-site auth contract",
+      "severity": "high",
+      "source_urls": [
+        "https://github.com/HeadyMe/heady-docs/issues/3",
+        "https://github.com/HeadyMe/Heady-Main/issues/7"
+      ]
+    },
+    {
+      "id": "INT-002",
+      "title": "npx runtime install supply-chain risk",
+      "severity": "high",
+      "source_urls": [
+        "https://github.com/HeadySystems/Heady-pre-production/issues/12"
+      ]
+    },
+    {
+      "id": "INT-003",
+      "title": "Projection repos are shells rather than clear deployable products",
+      "severity": "medium",
+      "source_urls": [
+        "https://github.com/HeadyMe/headymcp-core",
+        "https://github.com/HeadyMe/headyme-core",
+        "https://github.com/HeadyMe/headyos-core"
+      ]
+    },
+    {
+      "id": "INT-004",
+      "title": "Registry domain mismatch",
+      "severity": "medium",
+      "source_urls": [
+        "https://github.com/HeadyMe/Heady-Main/blob/main/heady-registry.json"
+      ]
+    },
+    {
+      "id": "INT-005",
+      "title": "Node to Python contract ambiguity",
+      "severity": "medium",
+      "source_urls": [
+        "https://github.com/HeadyMe/Heady-Main/blob/main/CLAUDE.md"
+      ]
+    },
+    {
+      "id": "INT-006",
+      "title": "README merge conflict markers",
+      "severity": "medium",
+      "source_urls": [
+        "https://github.com/HeadyMe/Heady-Main/blob/main/README.md"
+      ]
+    }
+  ],
+  "proposed_services": [
+    "Heady Identity Authority",
+    "Heady Policy Decision Point",
+    "Heady Tool Sandbox Gateway",
+    "Heady Canonical Registry",
+    "Heady Event Mesh",
+    "Heady Workflow Engine",
+    "Heady Secret Broker",
+    "Heady Packaging Publisher",
+    "Heady Contract Bridge",
+    "Heady Cost and Quota Controller"
+  ],
+  "proposed_tools": [
+    "heady_auth_introspect",
+    "heady_policy_simulate",
+    "heady_tool_exec",
+    "heady_registry_resolve",
+    "heady_workflow_run",
+    "heady_workflow_status",
+    "heady_event_publish",
+    "heady_secret_lease",
+    "heady_contract_validate",
+    "heady_release_promote",
+    "heady_cost_guard",
+    "heady_trace_replay"
+  ],
+  "proposed_workflows": [
+    "Identity bootstrap and device trust enrollment",
+    "Cross-domain login and session continuity",
+    "Tool execution approval and isolated run",
+    "Agent swarm decomposition and DAG execution",
+    "Multi-model battle with budget caps and promotion criteria",
+    "Cross-device handoff and state reconciliation",
+    "Canonical release projection to core repos, SDK, and site targets",
+    "Secret rotation and blast-radius verification",
+    "Incident response and security rollback",
+    "Contract migration for service, tool, and workflow schemas"
+  ],
+  "proposed_agents": [
+    "ContractBrokerAgent",
+    "PolicyEnforcerAgent",
+    "SecretCustodianAgent",
+    "ReleaseProjectionAgent",
+    "EventReliabilityAgent",
+    "IdentityContinuityAgent",
+    "CostGuardAgent",
+    "RuntimeForensicsAgent"
+  ],
+  "proposed_nodes": [
+    "STEWARD",
+    "CUSTODIAN",
+    "BROKER",
+    "JUDGE",
+    "COURIER",
+    "LEDGER"
+  ],
+  "wiring_recommendations": [
+    "Route every client through one API ingress fronting identity and registry lookup.",
+    "Require policy evaluation before any privileged tool, workflow, or deployment action.",
+    "Move long-running tasks to a durable workflow engine backed by an event mesh.",
+    "Register every service, workflow, tool, and node in a signed canonical registry.",
+    "Broker all secrets through short-lived leases rather than static environment injection.",
+    "Use a typed contract bridge for Node-to-Python boundaries with explicit timeout and retry semantics.",
+    "Generate public projection repos from canonical artifacts so they cannot drift into shells.",
+    "Treat Hugging Face Spaces as demo surfaces, not as sources of operational truth."
+  ]
+}
