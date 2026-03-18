@@ -16,6 +16,14 @@ const { DRUPAL_TOOLS } = require('./drupal-integration');
 const { AEGIS_TOOLS } = require('./aegis');
 const { MANDALA_TOOLS } = require('./mandala');
 const { MNEMOSYNE_TOOLS } = require('./mnemosyne');
+// ── 55 Novel MCP Tools (7 category modules) ──
+const { PHYSICAL_WORLD_TOOLS } = require('./physical-world');
+const { CREATIVE_MEDIA_TOOLS } = require('./creative-media');
+const { SCIENCE_RESEARCH_TOOLS } = require('./science-research');
+const { SOCIAL_LEGAL_HEALTH_TOOLS } = require('./social-legal-health');
+const { EDUCATION_KNOWLEDGE_TOOLS } = require('./education-knowledge');
+const { BUSINESS_DEVOPS_TOOLS } = require('./business-devops');
+const { WILD_IDEAS_TOOLS } = require('./wild-ideas');
 
 function createToolRegistry() {
   const tools = [];
@@ -782,6 +790,27 @@ function createToolRegistry() {
 
   for (const tool of MNEMOSYNE_TOOLS) {
     register(tool);
+  }
+
+  // ═══════════════════════════════════════════════════════════════════
+  // 55 NOVEL MCP TOOLS — Physical World, Creative, Science, Social,
+  //   Legal, Health, Education, Business, DevOps, Wild Ideas
+  // ═══════════════════════════════════════════════════════════════════
+
+  const NOVEL_TOOL_MODULES = [
+    PHYSICAL_WORLD_TOOLS,      // 7: Forge, Wing, Garage, Grid, PulseHealth, RoboHand, Sense
+    CREATIVE_MEDIA_TOOLS,      // 7: Cut, Cast, Level, Type, Motion, Chroma, Runway
+    SCIENCE_RESEARCH_TOOLS,    // 6: Molecule, Star, GenomeBio, Atmos, Matter, Physik
+    SOCIAL_LEGAL_HEALTH_TOOLS, // 12: Relate, Podium, Lingua, Signal, Lex, RegWatch, Patent, Nourish, Lift, Circadian, Zen, Symptom
+    EDUCATION_KNOWLEDGE_TOOLS, // 4: Socratic, SkillTree, Scholar, Flash
+    BUSINESS_DEVOPS_TOOLS,     // 7: Intel, TAM, Price, Chaos, FinOps, Drift, Postmortem
+    WILD_IDEAS_TOOLS,          // 12: Loom, Synapse, Orchid, Acoustica, Instrument, BioLight, TimeCapsule, Conlang, Escape, Brewmaster, DMX, Arborist
+  ];
+
+  for (const moduleTools of NOVEL_TOOL_MODULES) {
+    for (const tool of moduleTools) {
+      register(tool);
+    }
   }
 
   return { tools, handlers };

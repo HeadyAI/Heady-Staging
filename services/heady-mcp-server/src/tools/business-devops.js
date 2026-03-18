@@ -1,0 +1,30 @@
+/**
+ * Business Intelligence + DevOps Infrastructure — 7 tools
+ * @module tools/business-devops
+ */
+'use strict';
+const { PHI, PSI } = require('../config/phi-constants');
+const BUSINESS_DEVOPS_TOOLS = [
+  { name: 'heady_intel', description: 'Strategic Competitive Synthesis — synthesizes job postings, patents, SEC filings, GitHub activity, social sentiment, pricing into strategic narratives with confidence ratings.', category: 'business', phiTier: 0,
+    inputSchema: { type: 'object', properties: { action: { type: 'string', enum: ['synthesize', 'monitor', 'talent-signal', 'patent-signal', 'sentiment'] }, competitor: { type: 'string' }, industry: { type: 'string' } }, required: ['action'] },
+    handler: async (a) => ({ pipeline: 'HeadyIntel', action: a.action, signals: ['job-postings', 'patents', 'SEC', 'github', 'social-sentiment', 'pricing'], csl: 'Distinguishes observed fact vs. analytical hypothesis', status: 'ready' }) },
+  { name: 'heady_tam', description: 'Dynamic Market Sizing Engine — multi-methodology TAM: top-down, bottom-up, value-theory with alternative data (job postings, Google Trends, app downloads). Confidence-interval-bounded estimates, continuously updated.', category: 'business', phiTier: 1,
+    inputSchema: { type: 'object', properties: { action: { type: 'string', enum: ['estimate', 'validate', 'track', 'scenario-model'] }, market: { type: 'string' }, methodologies: { type: 'array', items: { type: 'string' }, default: ['top-down', 'bottom-up', 'value-theory'] } }, required: ['action'] },
+    handler: async (a) => ({ pipeline: 'HeadyTAM', action: a.action, market: a.market, phi_confidence: { optimistic: `+${PHI.toFixed(3)}σ`, primary: 'center', pessimistic: `-${PHI.toFixed(3)}σ` }, alt_data: ['job-volumes', 'google-trends', 'app-downloads', 'conference-attendance'], status: 'ready' }) },
+  { name: 'heady_price', description: 'Dynamic Pricing Laboratory — models elasticity, competitive positioning, willingness-to-pay, A/B simulation, cannibalization effects, discount optimization. CSL prevents antitrust violations.', category: 'business', phiTier: 1,
+    inputSchema: { type: 'object', properties: { action: { type: 'string', enum: ['model-elasticity', 'simulate-ab', 'optimize', 'cannibalization', 'segment'] }, product: { type: 'string' }, current_price: { type: 'number' } }, required: ['action'] },
+    handler: async (a) => ({ pipeline: 'HeadyPrice', action: a.action, product: a.product, bee_types: ['ElasticityBee', 'CompetitorBee', 'SegmentBee', 'WTPBee', 'ChurnRiskBee'], csl: 'Prevents antitrust / contractual violations', status: 'ready' }) },
+  { name: 'heady_chaos', description: 'Autonomous Resilience Engineer — discovers topology from K8s/Terraform, identifies failure modes, designs chaos experiments, executes with safety gates, generates fix PRs. φ-scaled intensity: 1.0× → φ× → φ²× latency injection.', category: 'devops', phiTier: 0,
+    inputSchema: { type: 'object', properties: { action: { type: 'string', enum: ['discover', 'design-experiment', 'execute', 'abort', 'generate-fix-pr'] }, target: { type: 'string' }, intensity: { type: 'string', enum: ['gentle', 'moderate', 'aggressive'], default: 'gentle' } }, required: ['action'] },
+    handler: async (a) => ({ pipeline: 'HeadyChaos', action: a.action, phi_intensity: { gentle: '1.0× baseline', moderate: `${PHI.toFixed(3)}× escalation`, aggressive: `${(PHI*PHI).toFixed(3)}× maximum` }, csl_safety: 'Auto-terminates if error rate approaches abort threshold', closed_loop: 'discover → experiment → diagnose → fix PR', status: 'ready' }) },
+  { name: 'heady_finops', description: 'AI Workload Cost Optimizer — predicts training costs before execution, optimizes GPU scheduling across clouds (AWS/GCP/Azure/Lambda/CoreWeave), spot vs reserved, diminishing-returns early-stop.', category: 'devops', phiTier: 1,
+    inputSchema: { type: 'object', properties: { action: { type: 'string', enum: ['predict-cost', 'optimize-schedule', 'spot-negotiate', 'early-stop-check', 'spend-report'] }, model_arch: { type: 'string' }, dataset_size: { type: 'string' }, providers: { type: 'array', items: { type: 'string' } } }, required: ['action'] },
+    handler: async (a) => ({ pipeline: 'HeadyFinOps', action: a.action, phi_tradeoff: 'Golden ratio point where cost and performance trade off optimally', providers: a.providers || ['AWS', 'GCP', 'Azure', 'Lambda', 'CoreWeave'], status: 'ready' }) },
+  { name: 'heady_drift', description: 'Infrastructure Conscience — compares actual state vs declared (Terraform/Pulumi/CFN), detects drift in real-time, diagnoses root causes, generates remediation. φ-urgency: cosmetic=1.0×, config=φ×, security=φ² emergency.', category: 'devops', phiTier: 1,
+    inputSchema: { type: 'object', properties: { action: { type: 'string', enum: ['scan', 'diagnose', 'remediate', 'track-patterns', 'alert-config'] }, iac_tool: { type: 'string', enum: ['terraform', 'pulumi', 'cloudformation', 'auto'] } }, required: ['action'] },
+    handler: async (a) => ({ pipeline: 'HeadyDrift', action: a.action, phi_urgency: { cosmetic: '1.0× priority', configuration: `${PHI.toFixed(3)}× priority`, security: `${(PHI*PHI).toFixed(3)}× emergency` }, csl: 'Maintains "infrastructure consciousness" of intended vs actual state', status: 'ready' }) },
+  { name: 'heady_postmortem', description: 'Incident Narrative Generator — correlates deploy logs, alerts, Slack, PagerDuty, code changes into coherent narrative. Fault trees, systemic factor identification, cross-incident pattern analysis.', category: 'devops', phiTier: 1,
+    inputSchema: { type: 'object', properties: { action: { type: 'string', enum: ['construct', 'analyze-patterns', 'action-items', 'fault-tree', 'systemic-themes'] }, incident_id: { type: 'string' }, timeframe: { type: 'string' } }, required: ['action'] },
+    handler: async (a) => ({ pipeline: 'HeadyPostmortem', action: a.action, sources: ['deploy-logs', 'alerts', 'slack', 'pagerduty', 'code-changes', 'monitoring'], swarms: ['timeline', 'root-cause', 'pattern-detection', 'action-gen', 'systemic-themes'], status: 'ready' }) },
+];
+module.exports = { BUSINESS_DEVOPS_TOOLS };
