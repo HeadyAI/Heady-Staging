@@ -1,0 +1,341 @@
+# =============================================================================
+# Heady Liquid Dynamic Parallel Async Distributed OS
+# Service Mesh Topology Configuration
+# =============================================================================
+# Sacred Geometry topology: concentric rings radiating from HeadySoul center.
+# All scaling constants derived from PHI (1.618033988749895).
+# =============================================================================
+
+phi: &PHI 1.618033988749895
+fibonacci: &FIB [1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89]
+
+# -----------------------------------------------------------------------------
+# Topology Layers
+# -----------------------------------------------------------------------------
+topology:
+  center:
+    service: HeadySoul
+    role: core-consciousness
+    description: Central identity and coherence anchor for the entire mesh.
+
+  inner_ring:
+    - service: Conductor
+      role: orchestration-lead
+      description: Directs task flow and delegates to downstream rings.
+    - service: Brains
+      role: reasoning-engine
+      description: Deep analytical reasoning and chain-of-thought.
+    - service: Vinci
+      role: creative-engine
+      description: Creative generation, design, and ideation.
+    - service: AutoSuccess
+      role: goal-tracker
+      description: Monitors goals, KPIs, and completion criteria.
+
+  middle_ring:
+    - service: JULES
+      role: code-generation
+    - service: BUILDER
+      role: project-assembly
+    - service: OBSERVER
+      role: runtime-monitoring
+    - service: MURPHY
+      role: failure-analysis
+    - service: ATLAS
+      role: knowledge-mapping
+    - service: PYTHIA
+      role: prediction-engine
+
+  outer_ring:
+    - service: BRIDGE
+      role: integration-gateway
+    - service: MUSE
+      role: inspiration-engine
+    - service: SENTINEL
+      role: security-enforcement
+    - service: NOVA
+      role: innovation-lab
+    - service: JANITOR
+      role: maintenance-cleanup
+    - service: SOPHIA
+      role: wisdom-synthesis
+    - service: CIPHER
+      role: encryption-privacy
+    - service: LENS
+      role: perception-analysis
+
+  governance_ring:
+    - service: Check
+      role: validation
+    - service: Assure
+      role: quality-assurance
+    - service: Aware
+      role: context-awareness
+    - service: Patterns
+      role: pattern-detection
+    - service: MC
+      role: master-of-ceremonies
+    - service: Risks
+      role: risk-assessment
+
+  advanced_mcp_ring:
+    tier_1_foundation:
+      - ContextWeaver
+      - MemoryForge
+      - SignalRouter
+      - StateKeeper
+      - EventNexus
+    tier_2_intelligence:
+      - ReasonGraph
+      - CausalNet
+      - InferencePool
+      - BeliefTracker
+      - HypothesisEngine
+    tier_3_creative:
+      - NarrativeArc
+      - DesignSynth
+      - ToneShaper
+      - MetaphorMill
+      - StyleFusion
+    tier_4_operational:
+      - DeployPilot
+      - ScaleSentry
+      - LoadBalancer
+      - CacheMaster
+      - QueueManager
+    tier_5_analytical:
+      - MetricsLoom
+      - AnomalyHawk
+      - TrendOracle
+      - CohortMapper
+      - FunnelTracer
+    tier_6_integration:
+      - APIBridge
+      - WebhookRelay
+      - StreamLinker
+      - ProtoAdapter
+      - SchemaSync
+    tier_7_governance:
+      - PolicyGuard
+      - AuditTrail
+      - ComplianceNet
+      - AccessMatrix
+      - RateLimiter
+    tier_8_evolution:
+      - SelfTuner
+      - FeedbackLoop
+      - AdaptiveRouter
+      - EvolveMutator
+      - PhiOptimizer
+
+# -----------------------------------------------------------------------------
+# Communication Patterns
+# -----------------------------------------------------------------------------
+communication:
+  defaults:
+    protocol: gRPC
+    csl_threshold: 0.7
+    timeout_base_ms: 1000
+    retry_base_ms: 100
+
+  connections:
+    # Center <-> Inner Ring: high-bandwidth, low-latency
+    HeadySoul_to_inner:
+      targets: [Conductor, Brains, Vinci, AutoSuccess]
+      protocol: gRPC
+      csl_threshold: 0.9
+      circuit_breaker:
+        failure_threshold: 5          # FIB[5]
+        reset_timeout_ms: 1618        # PHI * 1000
+        half_open_max: 3              # FIB[4]
+      retry:
+        max_attempts: 5               # FIB[5]
+        backoff: phi_exponential       # PHI^attempt * 100ms
+        max_delay_ms: 2618            # PHI^2 * 1000
+      timeout_ms: 1618                # PHI * 1000
+
+    # Inner Ring <-> Middle Ring
+    inner_to_middle:
+      targets: [JULES, BUILDER, OBSERVER, MURPHY, ATLAS, PYTHIA]
+      protocol: gRPC
+      csl_threshold: 0.75
+      circuit_breaker:
+        failure_threshold: 8          # FIB[6]
+        reset_timeout_ms: 2618        # PHI^2 * 1000
+        half_open_max: 5              # FIB[5]
+      retry:
+        max_attempts: 5
+        backoff: phi_exponential
+        max_delay_ms: 4236            # PHI^3 * 1000
+      timeout_ms: 2618
+
+    # Middle Ring <-> Outer Ring
+    middle_to_outer:
+      targets: [BRIDGE, MUSE, SENTINEL, NOVA, JANITOR, SOPHIA, CIPHER, LENS]
+      protocol: HTTP
+      csl_threshold: 0.6
+      circuit_breaker:
+        failure_threshold: 13         # FIB[7]
+        reset_timeout_ms: 4236        # PHI^3 * 1000
+        half_open_max: 8              # FIB[6]
+      retry:
+        max_attempts: 8
+        backoff: phi_exponential
+        max_delay_ms: 6854            # PHI^4 * 1000
+      timeout_ms: 4236
+
+    # Event bus: all rings publish/subscribe
+    event_bus:
+      targets: ["*"]
+      protocol: NATS
+      csl_threshold: 0.5
+      circuit_breaker:
+        failure_threshold: 21         # FIB[8]
+        reset_timeout_ms: 6854
+        half_open_max: 13
+      retry:
+        max_attempts: 13
+        backoff: phi_exponential
+        max_delay_ms: 11090           # PHI^5 * 1000
+      timeout_ms: 5000
+
+    # Real-time streaming: WebSocket for live updates
+    realtime_stream:
+      targets: [OBSERVER, Aware, LENS, MetricsLoom, AnomalyHawk]
+      protocol: WebSocket
+      csl_threshold: 0.8
+      heartbeat_interval_ms: 1618
+      reconnect_delay_ms: 618         # PHI * 382
+
+    # Cache and state: Redis pub/sub for ephemeral coordination
+    state_sync:
+      targets: [StateKeeper, CacheMaster, MemoryForge]
+      protocol: redis_pubsub
+      csl_threshold: 0.6
+      channel_prefix: "heady:state:"
+      ttl_base_ms: 1618
+
+# -----------------------------------------------------------------------------
+# Data Flow Paths
+# -----------------------------------------------------------------------------
+data_flows:
+  request_path:
+    description: Synchronous request lifecycle
+    stages:
+      - name: ingress
+        component: BRIDGE
+        protocol: HTTP
+      - name: gateway
+        component: APIBridge
+        protocol: gRPC
+      - name: routing
+        component: SignalRouter
+        action: csl_weighted_route
+      - name: orchestration
+        component: Conductor
+        action: assemble_pipeline
+      - name: execution
+        component: "{resolved_service}"
+        protocol: gRPC
+      - name: response
+        component: BRIDGE
+        action: serialize_and_return
+
+  event_path:
+    description: Asynchronous event propagation
+    stages:
+      - name: emit
+        component: "{source_service}"
+        protocol: NATS
+        subject: "heady.events.{domain}.{action}"
+      - name: bus
+        component: EventNexus
+        action: route_and_filter
+      - name: fanout
+        component: NATS_JetStream
+        action: durable_delivery
+      - name: consume
+        component: "{subscriber_services}"
+        ack: explicit
+        max_deliver: 8                # FIB[6]
+
+  memory_path:
+    description: Knowledge storage and retrieval
+    stages:
+      - name: capture
+        component: "{source_service}"
+        action: extract_embeddings
+      - name: embed
+        component: MemoryForge
+        model: text-embedding-3-large
+        dimensions: 1536
+      - name: store
+        component: pgvector
+        index: ivfflat
+        lists: 89                     # FIB[11]
+      - name: retrieve
+        component: MemoryForge
+        action: similarity_search
+        top_k: 13                     # FIB[7]
+
+  pipeline_path:
+    description: HCFP stage-by-stage pipeline
+    stages:
+      - name: intake
+        component: Conductor
+        action: parse_and_plan
+      - name: decompose
+        component: Brains
+        action: break_into_stages
+      - name: execute_stages
+        component: "{stage_services}"
+        mode: parallel_where_possible
+      - name: synthesize
+        component: Conductor
+        action: merge_results
+      - name: validate
+        component: Check
+        action: assert_quality_gates
+      - name: deliver
+        component: AutoSuccess
+        action: mark_complete
+
+# -----------------------------------------------------------------------------
+# Health Mesh
+# -----------------------------------------------------------------------------
+health:
+  check_interval_ms: 1618            # PHI * 1000
+  cascade_depth: 5                    # FIB[5] rings deep
+
+  probes:
+    liveness:
+      path: /healthz
+      interval_ms: 1618
+      timeout_ms: 618
+      failure_threshold: 3            # FIB[4]
+    readiness:
+      path: /readyz
+      interval_ms: 2618
+      timeout_ms: 1000
+      failure_threshold: 5            # FIB[5]
+    startup:
+      path: /startupz
+      initial_delay_ms: 2618
+      period_ms: 1618
+      failure_threshold: 8            # FIB[6]
+
+  dependency_propagation:
+    enabled: true
+    strategy: pessimistic_cascade
+    rules:
+      - if_dependency_unhealthy: degrade_gracefully
+      - if_critical_dependency_down: circuit_open
+      - propagation_delay_ms: 618     # allow transient recovery
+
+  circuit_breaker_sharing:
+    enabled: true
+    backend: redis
+    key_prefix: "heady:cb:"
+    sync_interval_ms: 1618
+    states: [CLOSED, HALF_OPEN, OPEN]
+    state_ttl_ms: 6854               # PHI^4 * 1000
