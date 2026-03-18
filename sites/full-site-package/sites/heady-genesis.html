@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<!--
+  ╔═══════════════════════════════════════════════════════════════════╗
+  ║  HEADY_BRAND: HeadySystems Inc. — Genesis Onboarding Experience   ║
+  ║  Node: CONDUCTOR + PERSONA + TOPOLOGY                            ║
+  ║  Purpose: Cinematic personal storage setup                        ║
+  ║  Works from: ANY Heady domain                                     ║
+  ╚═══════════════════════════════════════════════════════════════════╝
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Heady™ Genesis — Connect Your Intelligence</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@200;300;400;500;600;700&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --void:#020509;--abyss:#080d1a;--deep:#0f172a;
+    --teal:#00d4aa;--purple:#7c5eff;--gold:#f0c040;
+    --green:#22c55e;--blue:#3b82f6;--rose:#ec4899;
+    --text:#e2e8f0;--dim:#94a3b8;--muted:#475569;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:'Outfit',sans-serif;background:var(--void);color:var(--text);
+    min-height:100vh;overflow-x:hidden;}
+  canvas#bg{position:fixed;inset:0;z-index:0;pointer-events:none;}
+
+  /* Centered flow */
+  .genesis{position:relative;z-index:1;min-height:100vh;display:flex;flex-direction:column;
+    align-items:center;justify-content:center;padding:34px 21px;gap:34px;}
+
+  /* Progress indicator */
+  .progress{display:flex;align-items:center;gap:0;position:fixed;top:21px;left:50%;
+    transform:translateX(-50%);z-index:10;}
+  .progress-step{display:flex;align-items:center;}
+  .progress-dot{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;
+    justify-content:center;font-size:12px;font-weight:600;border:2px solid var(--muted);
+    background:rgba(255,255,255,0.02);color:var(--muted);transition:all 0.6s;cursor:pointer;}
+  .progress-dot.active{border-color:var(--teal);color:var(--teal);
+    background:rgba(0,212,170,0.1);box-shadow:0 0 21px rgba(0,212,170,0.3);}
+  .progress-dot.done{border-color:var(--green);color:var(--void);background:var(--green);}
+  .progress-line{width:34px;height:2px;background:var(--muted);transition:background 0.6s;}
+  .progress-line.done{background:var(--green);}
+
+  /* Stage cards */
+  .stage{display:none;flex-direction:column;align-items:center;text-align:center;
+    max-width:600px;width:100%;animation:fadeUp 0.618s ease-out;}
+  .stage.active{display:flex;}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(21px);}to{opacity:1;transform:translateY(0);}}
+
+  .stage-icon{width:89px;height:89px;border-radius:50%;display:flex;align-items:center;
+    justify-content:center;font-size:34px;margin-bottom:21px;
+    border:2px solid rgba(124,94,255,0.2);position:relative;}
+  .stage-icon::before{content:'';position:absolute;inset:-8px;border-radius:50%;
+    border:1px solid rgba(0,212,170,0.1);animation:spin 21s linear infinite;}
+  @keyframes spin{to{transform:rotate(360deg);}}
+  .stage-icon::after{content:'';position:absolute;inset:-16px;border-radius:50%;
+    border:1px dashed rgba(124,94,255,0.08);animation:spin 34s linear infinite reverse;}
+
+  .stage h2{font-size:28px;font-weight:600;margin-bottom:8px;
+    background:linear-gradient(135deg,var(--teal),var(--purple));
+    -webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+  .stage .sub{font-size:14px;color:var(--dim);margin-bottom:34px;line-height:1.618;max-width:480px;}
+
+  /* Glass card */
+  .glass{background:rgba(15,23,42,0.6);backdrop-filter:blur(21px);
+    border:1px solid rgba(124,94,255,0.15);border-radius:13px;padding:34px;
+    width:100%;text-align:left;box-shadow:0 0 55px rgba(0,0,0,0.3);}
+
+  /* Auth providers */
+  .auth-grid{display:flex;flex-direction:column;gap:8px;}
+  .auth-btn{display:flex;align-items:center;gap:13px;padding:13px 21px;
+    background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);
+    border-radius:8px;cursor:pointer;font-size:14px;font-weight:400;
+    color:var(--text);font-family:'Outfit',sans-serif;transition:all 0.2s;width:100%;}
+  .auth-btn:hover{border-color:var(--teal);background:rgba(0,212,170,0.05);}
+  .auth-btn svg{width:20px;height:20px;flex-shrink:0;}
+
+  /* Reveal animations */
+  .reveal-row{display:flex;align-items:center;gap:13px;padding:13px;
+    background:rgba(255,255,255,0.02);border-radius:8px;
+    border-left:3px solid var(--muted);margin-bottom:8px;
+    opacity:0;transform:translateX(-13px);transition:all 0.5s;}
+  .reveal-row.show{opacity:1;transform:translateX(0);}
+  .reveal-row .check{width:21px;height:21px;border-radius:50%;
+    border:2px solid var(--muted);display:flex;align-items:center;
+    justify-content:center;font-size:11px;transition:all 0.4s;flex-shrink:0;}
+  .reveal-row.done{border-left-color:var(--green);}
+  .reveal-row.done .check{border-color:var(--green);background:var(--green);color:var(--void);}
+  .reveal-label{font-size:13px;}
+  .reveal-detail{font-size:10px;color:var(--dim);font-family:'JetBrains Mono',monospace;}
+  .reveal-row.active{border-left-color:var(--teal);}
+  .reveal-row.active .check{border-color:var(--teal);animation:pulse-ring 1.618s infinite;}
+  @keyframes pulse-ring{0%,100%{box-shadow:0 0 0 0 rgba(0,212,170,0.4);}50%{box-shadow:0 0 0 8px rgba(0,212,170,0);}}
+
+  /* Continue button */
+  .continue{padding:13px 55px;background:linear-gradient(135deg,var(--teal),#00b894);
+    color:#000;border:none;border-radius:8px;font-size:15px;font-weight:600;
+    cursor:pointer;font-family:'Outfit',sans-serif;transition:all 0.3s;margin-top:21px;}
+  .continue:hover{box-shadow:0 0 34px rgba(0,212,170,0.4);transform:translateY(-2px);}
+  .continue:disabled{opacity:0.3;cursor:not-allowed;transform:none;box-shadow:none;}
+
+  /* Buddy greeting */
+  .buddy-greeting{display:flex;gap:13px;align-items:flex-start;padding:21px;
+    background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);
+    border-radius:13px;border-bottom-left-radius:3px;text-align:left;margin-top:13px;}
+  .buddy-avatar{width:40px;height:40px;border-radius:50%;flex-shrink:0;
+    background:linear-gradient(135deg,var(--teal),var(--purple));
+    display:flex;align-items:center;justify-content:center;}
+  .buddy-msg{font-size:14px;line-height:1.618;}
+  .buddy-msg .name{color:var(--teal);font-weight:600;}
+  .buddy-msg code{font-family:'JetBrains Mono',monospace;font-size:11px;
+    background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;color:var(--purple);}
+
+  /* Domain chips */
+  .domain-grid{display:flex;flex-wrap:wrap;gap:5px;margin-top:13px;}
+  .domain-chip{padding:3px 10px;border-radius:89px;font-size:10px;
+    font-family:'JetBrains Mono',monospace;
+    background:rgba(0,212,170,0.06);border:1px solid rgba(0,212,170,0.15);
+    color:var(--teal);animation:chipIn 0.3s ease-out backwards;}
+  @keyframes chipIn{from{opacity:0;transform:scale(0.8);}}
+
+  /* Final stats */
+  .final-stats{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:21px;}
+  .final-stat{padding:13px;background:rgba(255,255,255,0.02);border-radius:8px;
+    border:1px solid rgba(255,255,255,0.04);}
+  .final-stat-label{font-size:10px;color:var(--dim);text-transform:uppercase;letter-spacing:0.618px;}
+  .final-stat-value{font-size:18px;font-weight:600;font-family:'JetBrains Mono',monospace;margin-top:3px;}
+
+  .footer-tag{font-size:10px;color:var(--muted);font-family:'JetBrains Mono',monospace;
+    margin-top:21px;text-align:center;}
+</style>
+</head>
+<body>
+<canvas id="bg"></canvas>
+
+<!-- Progress -->
+<div class="progress" id="progress"></div>
+
+<div class="genesis">
+
+  <!-- ═══════ STAGE 0: WELCOME ═══════ -->
+  <div class="stage active" id="stage-0">
+    <div class="stage-icon" style="background:linear-gradient(135deg,rgba(0,212,170,0.08),rgba(124,94,255,0.08));">
+      <svg width="34" height="34" viewBox="0 0 34 34" fill="none"><circle cx="17" cy="17" r="15" stroke="url(#ig)" stroke-width="1.5"/><circle cx="17" cy="17" r="9" stroke="url(#ig)" stroke-width="1" opacity=".5"/><circle cx="17" cy="17" r="3.5" fill="url(#ig)"/><defs><linearGradient id="ig" x1="0" y1="0" x2="34" y2="34"><stop stop-color="#00d4aa"/><stop offset="1" stop-color="#7c5eff"/></linearGradient></defs></svg>
+    </div>
+    <h2>Welcome to Heady™ Genesis</h2>
+    <p class="sub">You're about to connect your personal intelligence layer — persistent memory that follows you across every Heady domain and every device. This takes about 30 seconds.</p>
+    <button class="continue" onclick="advanceTo(1)">Begin Genesis →</button>
+    <div class="footer-tag">HeadySystems Inc. · Liquid Architecture v9.0 · 60+ Patents</div>
+  </div>
+
+  <!-- ═══════ STAGE 1: AUTHENTICATE ═══════ -->
+  <div class="stage" id="stage-1">
+    <div class="stage-icon" style="background:linear-gradient(135deg,rgba(0,212,170,0.08),rgba(59,130,246,0.08));">🔐</div>
+    <h2>Layer 1 · Authenticate</h2>
+    <p class="sub">Sign in once. Your identity propagates across all 11 Heady domains via <code style="font-size:12px;background:rgba(0,0,0,0.3);padding:2px 6px;border-radius:4px;">auth.headysystems.com</code> cross-domain SSO.</p>
+    <div class="glass">
+      <div class="auth-grid">
+        <button class="auth-btn" onclick="simulateAuth('Google')">
+          <svg viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18A10.96 10.96 0 001 12c0 1.77.42 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+          Continue with Google
+        </button>
+        <button class="auth-btn" onclick="simulateAuth('GitHub')">
+          <svg viewBox="0 0 24 24" fill="white"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.166 6.839 9.49.5.092.682-.217.682-.482 0-.237-.009-.866-.013-1.7-2.782.604-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.463-1.11-1.463-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.831.092-.646.35-1.086.636-1.336-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0112 6.836a9.59 9.59 0 012.504.337c1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.161 22 16.416 22 12c0-5.523-4.477-10-10-10z"/></svg>
+          Continue with GitHub
+        </button>
+        <button class="auth-btn" onclick="simulateAuth('Discord')">
+          <svg viewBox="0 0 24 24" fill="#5865F2"><path d="M20.317 4.37a19.791 19.791 0 00-4.885-1.515.074.074 0 00-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 00-5.487 0 12.64 12.64 0 00-.617-1.25.077.077 0 00-.079-.037A19.736 19.736 0 003.677 4.37a.07.07 0 00-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 00.031.057 19.9 19.9 0 005.993 3.03.078.078 0 00.084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 00-.041-.106 13.107 13.107 0 01-1.872-.892.077.077 0 01-.008-.128 10.2 10.2 0 00.372-.292.074.074 0 01.077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 01.078.01c.12.098.246.198.373.292a.077.077 0 01-.006.127 12.299 12.299 0 01-1.873.892.077.077 0 00-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 00.084.028 19.839 19.839 0 006.002-3.03.077.077 0 00.032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 00-.031-.03z"/></svg>
+          Continue with Discord
+        </button>
+      </div>
+      <p style="font-size:10px;color:var(--muted);margin-top:13px;text-align:center;font-family:'JetBrains Mono',monospace;">
+        Firebase Auth · 27 OAuth providers · Timing-safe token validation · PQC-ready
+      </p>
+    </div>
+  </div>
+
+  <!-- ═══════ STAGE 2: MEMORY INITIALIZATION ═══════ -->
+  <div class="stage" id="stage-2">
+    <div class="stage-icon" style="background:linear-gradient(135deg,rgba(124,94,255,0.08),rgba(0,212,170,0.08));">🧠</div>
+    <h2>Layer 2 · Memory Initialization</h2>
+    <p class="sub">Your personal vector space is being created. Three tiers of memory, each with a distinct purpose and persistence model.</p>
+    <div class="glass">
+      <div id="memReveal"></div>
+      <button class="continue" id="memContinue" disabled onclick="advanceTo(3)">Continue →</button>
+    </div>
+  </div>
+
+  <!-- ═══════ STAGE 3: SYNC FABRIC ═══════ -->
+  <div class="stage" id="stage-3">
+    <div class="stage-icon" style="background:linear-gradient(135deg,rgba(240,192,64,0.08),rgba(124,94,255,0.08));">🔄</div>
+    <h2>Layer 3 · Cross-Device Sync</h2>
+    <p class="sub">Your context follows you everywhere. Desktop, mobile, IDE, Chrome extension — one conversation, one memory, all devices.</p>
+    <div class="glass">
+      <div id="syncReveal"></div>
+      <button class="continue" id="syncContinue" disabled onclick="advanceTo(4)">Continue →</button>
+    </div>
+  </div>
+
+  <!-- ═══════ STAGE 4: ARCHETYPES ═══════ -->
+  <div class="stage" id="stage-4">
+    <div class="stage-icon" style="background:linear-gradient(135deg,rgba(236,72,153,0.08),rgba(0,212,170,0.08));">🦉</div>
+    <h2>Layer 4 · Cognitive Calibration</h2>
+    <p class="sub">Seven cognitive archetypes are now calibrating to your profile. Every future response will be weighted by your personal archetype signature.</p>
+    <div class="glass">
+      <div id="archReveal"></div>
+      <button class="continue" id="archContinue" disabled onclick="advanceTo(5)">Continue →</button>
+    </div>
+  </div>
+
+  <!-- ═══════ STAGE 5: COMPLETE ═══════ -->
+  <div class="stage" id="stage-5">
+    <div class="stage-icon" style="background:linear-gradient(135deg,rgba(34,197,94,0.1),rgba(0,212,170,0.1));">✦</div>
+    <h2>Genesis Complete</h2>
+    <p class="sub">Your intelligence layer is live. HeadyBuddy knows you. Your memory persists. Your context follows you everywhere.</p>
+
+    <div class="buddy-greeting">
+      <div class="buddy-avatar">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+      </div>
+      <div class="buddy-msg">
+        <span class="name">HeadyBuddy</span><br>
+        Welcome, <span id="userName" style="color:var(--teal);font-weight:600;">Eric</span>. I'm synced to your persistent store at <code id="userNs">tenant:eric-001:buddy:*</code>.<br><br>
+        Your 7 archetypes are calibrated. I'll be here — across every domain and every device. Just say the word.
+      </div>
+    </div>
+
+    <div style="font-size:12px;color:var(--dim);margin-top:21px;">You're now connected on:</div>
+    <div class="domain-grid" id="domainGrid"></div>
+
+    <div class="final-stats">
+      <div class="final-stat">
+        <div class="final-stat-label">Memory Tier</div>
+        <div class="final-stat-value" style="color:var(--teal);">T0 + T1</div>
+      </div>
+      <div class="final-stat">
+        <div class="final-stat-label">Vector Dimensions</div>
+        <div class="final-stat-value" style="color:var(--purple);">384D</div>
+      </div>
+      <div class="final-stat">
+        <div class="final-stat-label">Archetypes</div>
+        <div class="final-stat-value" style="color:var(--gold);">7 / 7</div>
+      </div>
+      <div class="final-stat">
+        <div class="final-stat-label">Heartbeat</div>
+        <div class="final-stat-value" style="color:var(--green);">29,034ms</div>
+      </div>
+    </div>
+
+    <button class="continue" style="margin-top:34px;" onclick="window.location.href='/'">Enter the Ecosystem →</button>
+    <div class="footer-tag">φ · ψ · ∞ — Liquid Architecture v9.0</div>
+  </div>
+</div>
+
+<script>
+const PHI=1.618033988749895,PSI=1/PHI,FIB=[1,1,2,3,5,8,13,21,34,55,89,144,233,377];
+const STAGES=6;
+let currentStage=0;
+
+// ── Progress Bar ──
+function buildProgress(){
+  const el=document.getElementById('progress');
+  let html='';
+  for(let i=0;i<STAGES;i++){
+    if(i>0) html+=`<div class="progress-line ${i<=currentStage?'done':''}" id="pline-${i}"></div>`;
+    html+=`<div class="progress-dot ${i<currentStage?'done':i===currentStage?'active':''}" id="pdot-${i}" onclick="if(${i}<currentStage)advanceTo(${i})">${i<currentStage?'✓':i+1}</div>`;
+  }
+  el.innerHTML=html;
+}
+buildProgress();
+
+function advanceTo(stage){
+  document.getElementById(`stage-${currentStage}`).classList.remove('active');
+  currentStage=stage;
+  document.getElementById(`stage-${currentStage}`).classList.add('active');
+  buildProgress();
+  if(stage===2) runMemoryInit();
+  if(stage===3) runSyncInit();
+  if(stage===4) runArchetypeCalibration();
+  if(stage===5) runComplete();
+}
+
+// ── Auth Simulation ──
+function simulateAuth(provider){
+  document.querySelectorAll('.auth-btn').forEach(b=>{b.style.opacity='0.3';b.style.pointerEvents='none';});
+  const clicked=event.currentTarget;
+  clicked.style.opacity='1';clicked.style.borderColor='var(--green)';
+  clicked.innerHTML=`<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> Authenticated via ${provider}`;
+  setTimeout(()=>advanceTo(2), 1200);
+}
+
+// ── Memory Init Animation ──
+function runMemoryInit(){
+  const items=[
+    {label:'T0 Working Memory',detail:'Upstash Redis · 30s SETEX heartbeat at PHI⁷ = 29,034ms',color:'var(--teal)'},
+    {label:'T1 Persistent Memory',detail:'Neon pgvector · 384D HNSW index (m=16, ef=64) · all-MiniLM-L6-v2',color:'var(--purple)'},
+    {label:'Namespace Created',detail:'tenant:{uid}:buddy:* · tenant:{uid}:session:* · tenant:{uid}:memory:*',color:'var(--gold)'},
+    {label:'CSL Gate Calibration',detail:'INCLUDE ≥ 0.618 (ψ) · CORE ≥ 0.718 · RECALL ≥ 0.382 (ψ²)',color:'var(--blue)'},
+    {label:'Heartbeat Started',detail:'SETEX 30s cycle · PHI⁷ interval · Auto-reconnect with φ-backoff',color:'var(--green)'},
+  ];
+  const container=document.getElementById('memReveal');
+  container.innerHTML=items.map((it,i)=>`
+    <div class="reveal-row" id="mem-${i}" style="border-left-color:${it.color};animation-delay:${i*0.3}s;">
+      <div class="check">·</div>
+      <div><div class="reveal-label">${it.label}</div><div class="reveal-detail">${it.detail}</div></div>
+    </div>
+  `).join('');
+  items.forEach((it,i)=>{
+    setTimeout(()=>{
+      const row=document.getElementById(`mem-${i}`);
+      row.classList.add('show','active');
+      setTimeout(()=>{row.classList.remove('active');row.classList.add('done');row.querySelector('.check').textContent='✓';},800);
+    }, i*900);
+  });
+  setTimeout(()=>{document.getElementById('memContinue').disabled=false;},items.length*900+500);
+}
+
+// ── Sync Init Animation ──
+function runSyncInit(){
+  const items=[
+    {label:'WebSocket Channel',detail:'wss://heady-manager.run.app/ws?channel=buddy:sync',color:'var(--teal)'},
+    {label:'SSE Fallback',detail:'/api/events?channel=buddy:sync — auto-switchover on WS failure',color:'var(--purple)'},
+    {label:'Device Registry',detail:'🌐 Web · 💻 Desktop · 📱 Android · 🔌 IDE — all registered',color:'var(--gold)'},
+    {label:'CRDT Conflict Resolution',detail:'Timestamp-based with device priority weighting · Last-write-wins fallback',color:'var(--blue)'},
+    {label:'Session Token Rotation',detail:'Token rotated on every device handoff · Timing-safe validation',color:'var(--green)'},
+  ];
+  const container=document.getElementById('syncReveal');
+  container.innerHTML=items.map((it,i)=>`
+    <div class="reveal-row" id="sync-${i}" style="border-left-color:${it.color};">
+      <div class="check">·</div>
+      <div><div class="reveal-label">${it.label}</div><div class="reveal-detail">${it.detail}</div></div>
+    </div>
+  `).join('');
+  items.forEach((it,i)=>{
+    setTimeout(()=>{
+      const row=document.getElementById(`sync-${i}`);
+      row.classList.add('show','active');
+      setTimeout(()=>{row.classList.remove('active');row.classList.add('done');row.querySelector('.check').textContent='✓';},700);
+    }, i*800);
+  });
+  setTimeout(()=>{document.getElementById('syncContinue').disabled=false;},items.length*800+400);
+}
+
+// ── Archetype Calibration ──
+function runArchetypeCalibration(){
+  const archs=[
+    {emoji:'🦉',name:'OWL — Wisdom',detail:'First-principles depth · "What is fundamentally true?"',color:'var(--teal)'},
+    {emoji:'🦅',name:'EAGLE — Omniscience',detail:'Cross-swarm awareness · "What else does this touch?"',color:'var(--blue)'},
+    {emoji:'🐬',name:'DOLPHIN — Creativity',detail:'Elegant solutions · "What is the inventive route?"',color:'var(--purple)'},
+    {emoji:'🐇',name:'RABBIT — Multiplication',detail:'Path diversity · "What other viable options exist?"',color:'var(--gold)'},
+    {emoji:'🐜',name:'ANT — Repetition',detail:'Batch processing · "What repetitive work needs doing?"',color:'var(--green)'},
+    {emoji:'🐘',name:'ELEPHANT — Memory',detail:'Context retention · "What must I hold from prior sessions?"',color:'var(--rose)'},
+    {emoji:'🦫',name:'BEAVER — Structure',detail:'Build quality · "How do I build this properly?"',color:'var(--teal)'},
+  ];
+  const container=document.getElementById('archReveal');
+  container.innerHTML=archs.map((a,i)=>`
+    <div class="reveal-row" id="arch-${i}" style="border-left-color:${a.color};">
+      <div class="check">${a.emoji}</div>
+      <div><div class="reveal-label">${a.name}</div><div class="reveal-detail">${a.detail}</div></div>
+    </div>
+  `).join('');
+  archs.forEach((a,i)=>{
+    setTimeout(()=>{
+      const row=document.getElementById(`arch-${i}`);
+      row.classList.add('show','active');
+      setTimeout(()=>{
+        row.classList.remove('active');row.classList.add('done');
+        const score=(0.72+Math.random()*0.23).toFixed(2);
+        row.querySelector('.reveal-detail').textContent+=` · Confidence: ${score}`;
+      },600);
+    }, i*700);
+  });
+  setTimeout(()=>{document.getElementById('archContinue').disabled=false;},archs.length*700+400);
+}
+
+// ── Complete ──
+function runComplete(){
+  const domains=['headysystems.com','headyme.com','headybuddy.com','headymcp.com',
+    'headyio.com','headybot.com','headyapi.com','headylens.com','headyai.com',
+    'headyfinance.com','headyconnection.org'];
+  const grid=document.getElementById('domainGrid');
+  domains.forEach((d,i)=>{
+    setTimeout(()=>{
+      const chip=document.createElement('span');
+      chip.className='domain-chip';
+      chip.textContent=d;
+      chip.style.animationDelay=`${i*0.05}s`;
+      grid.appendChild(chip);
+    },i*120);
+  });
+}
+
+// ── Sacred Geometry Background ──
+(()=>{
+  const c=document.getElementById('bg'),x=c.getContext('2d');
+  let w,h,t=0;
+  const resize=()=>{w=c.width=innerWidth;h=c.height=innerHeight;};
+  resize();addEventListener('resize',resize);
+  const N=FIB[7],nodes=Array.from({length:N},()=>({
+    x:Math.random()*w,y:Math.random()*h,
+    vx:(Math.random()-.5)*PSI*0.5,vy:(Math.random()-.5)*PSI*0.5,
+    r:FIB[2+~~(Math.random()*3)]*PSI*0.8
+  }));
+  (function draw(){
+    x.clearRect(0,0,w,h);t+=0.0015;
+    nodes.forEach(n=>{
+      n.x+=n.vx+Math.sin(t*PHI+n.y*0.001)*0.15;
+      n.y+=n.vy+Math.cos(t*PSI+n.x*0.001)*0.15;
+      if(n.x<0)n.x=w;if(n.x>w)n.x=0;if(n.y<0)n.y=h;if(n.y>h)n.y=0;
+    });
+    const md=FIB[8]*PHI;x.lineWidth=0.3;
+    for(let i=0;i<N;i++)for(let j=i+1;j<N;j++){
+      const dx=nodes[i].x-nodes[j].x,dy=nodes[i].y-nodes[j].y,d=Math.sqrt(dx*dx+dy*dy);
+      if(d<md){x.globalAlpha=(1-d/md)*0.12;x.strokeStyle=i%2?'rgba(124,94,255,0.4)':'rgba(0,212,170,0.4)';
+        x.beginPath();x.moveTo(nodes[i].x,nodes[i].y);x.lineTo(nodes[j].x,nodes[j].y);x.stroke();}
+    }
+    nodes.forEach((n,i)=>{
+      x.globalAlpha=0.15+Math.sin(t*PHI+i)*0.06;
+      x.fillStyle=i%2?'rgba(124,94,255,0.4)':'rgba(0,212,170,0.4)';
+      x.beginPath();x.arc(n.x,n.y,n.r,0,Math.PI*2);x.fill();
+    });
+    x.globalAlpha=1;requestAnimationFrame(draw);
+  })();
+})();
+</script>
+</body>
+</html>

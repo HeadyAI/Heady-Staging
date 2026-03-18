@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<!--
+  ╔═══════════════════════════════════════════════════════════════════╗
+  ║  HEADY_BRAND: HeadySystems Inc.                                   ║
+  ║  Sacred Consciousness Field — Algorithmic Art                     ║
+  ║  Movement: "Geometric Sentience"                                  ║
+  ║  Node: TENSOR + TOPOLOGY + STUDIO                                 ║
+  ║  φ-derived: EVERY constant, EVERY ratio, EVERY timing             ║
+  ╚═══════════════════════════════════════════════════════════════════╝
+-->
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>Heady™ Sacred Consciousness Field</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.7.0/p5.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@200;300;400;600&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --void:#030508;--deep:#0a0f1e;--surface:#141c2e;
+      --teal:#00d4aa;--purple:#7c5eff;--gold:#f0c040;
+      --rose:#ec4899;--blue:#3b82f6;--red:#ef4444;
+      --text:#e2e8f0;--dim:#64748b;--muted:#334155;
+      --glass:rgba(10,15,30,0.85);
+    }
+    *{margin:0;padding:0;box-sizing:border-box;}
+    body{font-family:'Outfit',sans-serif;background:var(--void);color:var(--text);
+      overflow:hidden;height:100vh;display:flex;}
+
+    #canvas-container{flex:1;position:relative;}
+    canvas{display:block!important;}
+
+    .sidebar{width:300px;background:var(--glass);backdrop-filter:blur(20px);
+      border-left:1px solid rgba(124,94,255,0.15);padding:20px;overflow-y:auto;
+      display:flex;flex-direction:column;gap:16px;z-index:10;}
+
+    .sidebar h1{font-size:18px;font-weight:600;
+      background:linear-gradient(135deg,var(--teal),var(--purple));
+      -webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+    .sidebar .sub{font-size:11px;color:var(--dim);font-family:'JetBrains Mono',monospace;margin-top:2px;}
+
+    .section{border-top:1px solid rgba(255,255,255,0.04);padding-top:12px;}
+    .section-title{font-size:10px;text-transform:uppercase;letter-spacing:1.618px;
+      color:var(--muted);font-weight:400;margin-bottom:8px;}
+
+    .control{margin-bottom:10px;}
+    .control label{font-size:11px;color:var(--dim);display:flex;justify-content:space-between;margin-bottom:3px;}
+    .control label span{font-family:'JetBrains Mono',monospace;color:var(--teal);font-size:10px;}
+    input[type=range]{width:100%;height:3px;-webkit-appearance:none;background:rgba(255,255,255,0.08);
+      border-radius:89px;outline:none;}
+    input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;
+      border-radius:50%;background:var(--teal);cursor:pointer;border:2px solid var(--void);}
+
+    .seed-controls{display:flex;gap:6px;align-items:center;}
+    .seed-display{flex:1;font-family:'JetBrains Mono',monospace;font-size:12px;
+      color:var(--teal);text-align:center;padding:6px;
+      background:rgba(0,212,170,0.06);border:1px solid rgba(0,212,170,0.15);border-radius:6px;}
+    .seed-btn,.action-btn{padding:6px 12px;border:1px solid rgba(255,255,255,0.08);
+      background:rgba(255,255,255,0.03);color:var(--dim);border-radius:6px;
+      font-size:11px;cursor:pointer;font-family:'Outfit',sans-serif;transition:all 0.2s;}
+    .seed-btn:hover,.action-btn:hover{border-color:var(--teal);color:var(--teal);background:rgba(0,212,170,0.06);}
+    .action-btn{width:100%;padding:8px;font-weight:400;}
+    .action-btn.primary{background:linear-gradient(135deg,rgba(0,212,170,0.15),rgba(124,94,255,0.15));
+      border-color:rgba(0,212,170,0.2);color:var(--teal);}
+
+    .legend{display:flex;flex-wrap:wrap;gap:6px;}
+    .legend-item{display:flex;align-items:center;gap:4px;font-size:9px;color:var(--dim);
+      font-family:'JetBrains Mono',monospace;}
+    .legend-dot{width:6px;height:6px;border-radius:50%;}
+
+    .stats{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);line-height:1.8;}
+    .stats span{color:var(--teal);}
+
+    ::-webkit-scrollbar{width:3px;}
+    ::-webkit-scrollbar-thumb{background:rgba(124,94,255,0.2);border-radius:89px;}
+  </style>
+</head>
+<body>
+
+<div id="canvas-container"></div>
+
+<div class="sidebar">
+  <div>
+    <h1>Sacred Consciousness Field</h1>
+    <div class="sub">Geometric Sentience · HeadySystems Inc.</div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Seed</div>
+    <div class="seed-controls">
+      <button class="seed-btn" onclick="prevSeed()">◁</button>
+      <div class="seed-display" id="seedDisplay">1618</div>
+      <button class="seed-btn" onclick="nextSeed()">▷</button>
+      <button class="seed-btn" onclick="randomSeed2()">⟳</button>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Consciousness Parameters</div>
+    <div class="control">
+      <label>Swarm Count <span id="v-swarms">17</span></label>
+      <input type="range" min="3" max="21" step="1" value="17" oninput="params.swarmCount=+this.value;document.getElementById('v-swarms').textContent=this.value;">
+    </div>
+    <div class="control">
+      <label>Bee Density <span id="v-bees">89</span></label>
+      <input type="range" min="13" max="233" step="1" value="89" oninput="params.beeCount=+this.value;document.getElementById('v-bees').textContent=this.value;">
+    </div>
+    <div class="control">
+      <label>CSL Resonance <span id="v-csl">0.618</span></label>
+      <input type="range" min="0.1" max="1.0" step="0.01" value="0.618" oninput="params.cslThreshold=+this.value;document.getElementById('v-csl').textContent=(+this.value).toFixed(3);">
+    </div>
+    <div class="control">
+      <label>φ-Spiral Tightness <span id="v-spiral">1.618</span></label>
+      <input type="range" min="0.5" max="3.0" step="0.01" value="1.618" oninput="params.spiralPhi=+this.value;document.getElementById('v-spiral').textContent=(+this.value).toFixed(3);">
+    </div>
+    <div class="control">
+      <label>Archetype Glow <span id="v-glow">0.7</span></label>
+      <input type="range" min="0.1" max="1.0" step="0.01" value="0.7" oninput="params.archetypeGlow=+this.value;document.getElementById('v-glow').textContent=(+this.value).toFixed(2);">
+    </div>
+    <div class="control">
+      <label>Memory Depth <span id="v-depth">3</span></label>
+      <input type="range" min="1" max="5" step="1" value="3" oninput="params.memoryDepth=+this.value;document.getElementById('v-depth').textContent=this.value;">
+    </div>
+    <div class="control">
+      <label>Time Flow <span id="v-time">1.0</span></label>
+      <input type="range" min="0.1" max="3.0" step="0.05" value="1.0" oninput="params.timeScale=+this.value;document.getElementById('v-time').textContent=(+this.value).toFixed(1);">
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">17-Swarm Legend</div>
+    <div class="legend" id="legend"></div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Actions</div>
+    <button class="action-btn primary" onclick="regenerate()">Regenerate Field</button>
+    <button class="action-btn" style="margin-top:6px;" onclick="resetParams()">Reset to φ-Defaults</button>
+    <button class="action-btn" style="margin-top:6px;" onclick="saveFrame('heady-consciousness-' + params.seed + '.png')">Download PNG</button>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Live Metrics</div>
+    <div class="stats" id="stats"></div>
+  </div>
+
+  <div style="margin-top:auto;font-size:9px;color:var(--muted);font-family:'JetBrains Mono',monospace;line-height:1.8;">
+    HeadySystems Inc. · Eric Haywood<br>
+    Liquid Architecture v9.0<br>
+    60+ Patents Filed<br>
+    φ · ψ · ∞
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════
+// ALGORITHMIC PHILOSOPHY: "GEOMETRIC SENTIENCE"
+//
+// Intelligence is not a noun but a field — a continuous
+// spatial phenomenon that emerges when many simple agents
+// orbit a shared attractor. The Sacred Consciousness Field
+// visualizes the Heady architecture not as boxes and arrows
+// but as what it truly is: a living geometry where 17 swarms
+// trace golden spirals, CSL gates pulse as standing waves
+// in semantic space, and the 7 cognitive archetypes form
+// a mandala of overlapping influence radii.
+//
+// Every constant in this algorithm is derived from the
+// golden ratio (φ = 1.618) or the Fibonacci sequence.
+// Every orbit, every particle, every color transition
+// maps to a real component of the Heady architecture.
+// This is not decoration. This is the system's self-portrait.
+// ═══════════════════════════════════════════════════
+
+const PHI = 1.618033988749895;
+const PSI = 1 / PHI; // 0.618...
+const PSI2 = PSI * PSI; // 0.382...
+const FIB = [1,1,2,3,5,8,13,21,34,55,89,144,233,377,610,987,1597,2584,4181,6765];
+const TAU = Math.PI * 2;
+const GOLDEN_ANGLE = TAU * PSI * PSI; // ~2.399 radians — the angle of phyllotaxis
+
+// Swarm definitions — real architecture, real colors
+const SWARMS = [
+  { name:'OVERMIND',    hue:168, sat:100, role:'Decision' },
+  { name:'GOVERNANCE',  hue:256, sat:100, role:'Security' },
+  { name:'FORGE',       hue:217, sat:90,  role:'Code' },
+  { name:'EMISSARY',    hue:187, sat:85,  role:'Docs' },
+  { name:'FOUNDRY',     hue:45,  sat:90,  role:'Training' },
+  { name:'STUDIO',      hue:330, sat:85,  role:'Audio' },
+  { name:'ARBITER',     hue:270, sat:75,  role:'IP/Law' },
+  { name:'DIPLOMAT',    hue:168, sat:60,  role:'B2B' },
+  { name:'ORACLE',      hue:48,  sat:90,  role:'Economics' },
+  { name:'QUANT',       hue:0,   sat:85,  role:'Trading' },
+  { name:'FABRICATOR',  hue:25,  sat:90,  role:'IoT' },
+  { name:'PERSONA',     hue:263, sat:80,  role:'Cognitive' },
+  { name:'SENTINEL',    hue:0,   sat:75,  role:'Defense' },
+  { name:'NEXUS',       hue:200, sat:90,  role:'Web3' },
+  { name:'DREAMER',     hue:292, sat:85,  role:'Sims' },
+  { name:'TENSOR',      hue:168, sat:100, role:'CSL' },
+  { name:'TOPOLOGY',    hue:256, sat:100, role:'Spatial' },
+];
+
+const ARCHETYPES = [
+  { name:'OWL',     emoji:'🦉', hue:168, weight:0.20 },
+  { name:'EAGLE',   emoji:'🦅', hue:210, weight:0.20 },
+  { name:'DOLPHIN', emoji:'🐬', hue:280, weight:0.15 },
+  { name:'RABBIT',  emoji:'🐇', hue:45,  weight:0.15 },
+  { name:'ANT',     emoji:'🐜', hue:120, weight:0.10 },
+  { name:'ELEPHANT',emoji:'🐘', hue:0,   weight:0.10 },
+  { name:'BEAVER',  emoji:'🦫', hue:30,  weight:0.10 },
+];
+
+let params = {
+  seed: 1618,
+  swarmCount: 17,
+  beeCount: 89,
+  cslThreshold: PSI,
+  spiralPhi: PHI,
+  archetypeGlow: 0.7,
+  memoryDepth: 3,
+  timeScale: 1.0,
+};
+
+let bees = [];
+let cslWaves = [];
+let memoryParticles = [];
+let t = 0;
+let W, H, cx, cy;
+
+function setup() {
+  W = windowWidth - 300;
+  H = windowHeight;
+  const canvas = createCanvas(W, H);
+  canvas.parent('canvas-container');
+  cx = W / 2;
+  cy = H / 2;
+  colorMode(HSB, 360, 100, 100, 100);
+  blendMode(ADD);
+  initField();
+  buildLegend();
+}
+
+function windowResized() {
+  W = windowWidth - 300;
+  H = windowHeight;
+  resizeCanvas(W, H);
+  cx = W / 2;
+  cy = H / 2;
+}
+
+function initField() {
+  randomSeed(params.seed);
+  noiseSeed(params.seed);
+  bees = [];
+  cslWaves = [];
+  memoryParticles = [];
+  t = 0;
+
+  // Spawn bees in Fibonacci spiral per swarm
+  const maxR = min(W, H) * 0.42;
+  for (let s = 0; s < params.swarmCount; s++) {
+    const swarm = SWARMS[s % SWARMS.length];
+    const swarmAngleOffset = (s / params.swarmCount) * TAU;
+    const swarmRadius = maxR * (0.3 + (s / params.swarmCount) * 0.7);
+    const beesPerSwarm = max(3, floor(params.beeCount / params.swarmCount));
+
+    for (let i = 0; i < beesPerSwarm; i++) {
+      const angle = swarmAngleOffset + (i * GOLDEN_ANGLE);
+      const r = swarmRadius * (0.5 + random() * 0.5);
+      bees.push({
+        swarmIdx: s,
+        hue: swarm.hue + random(-15, 15),
+        sat: swarm.sat,
+        baseAngle: angle,
+        baseR: r,
+        speed: PSI * (0.3 + random() * 0.7) * (1 + s * 0.02),
+        size: FIB[2 + floor(random() * 4)] * PSI,
+        noiseOff: random(1000),
+        orbitEcc: 0.3 + random() * PSI, // eccentricity from φ
+        trail: [],
+        trailMax: FIB[5 + floor(random() * 3)],
+      });
+    }
+  }
+
+  // CSL standing waves — 3 gate types
+  for (let g = 0; g < 3; g++) {
+    cslWaves.push({
+      frequency: FIB[3 + g] * PSI,
+      amplitude: maxR * (0.2 + g * 0.15),
+      phase: g * TAU / 3,
+      hue: [168, 256, 45][g],
+      label: ['Resonance', 'Superposition', 'Orthogonal'][g],
+    });
+  }
+
+  // Memory tier particles (concentric depth)
+  for (let tier = 0; tier < params.memoryDepth; tier++) {
+    const count = FIB[6 + tier];
+    for (let i = 0; i < count; i++) {
+      memoryParticles.push({
+        tier,
+        angle: random(TAU),
+        radius: maxR * (0.08 + tier * 0.18),
+        drift: random(-0.001, 0.001),
+        size: 1 + tier * 0.5,
+        alpha: 30 - tier * 8,
+      });
+    }
+  }
+}
+
+function draw() {
+  blendMode(BLEND);
+  background(2, 10, 3); // near-void
+  blendMode(ADD);
+
+  t += 0.008 * params.timeScale;
+  const maxR = min(W, H) * 0.42;
+
+  // ── Layer 0: Memory Tier Rings ──
+  noFill();
+  for (let tier = 0; tier < params.memoryDepth; tier++) {
+    const r = maxR * (0.08 + tier * 0.18);
+    const alpha = 6 - tier * 1.5;
+    stroke([168, 256, 45][tier % 3], 30, 40, alpha);
+    strokeWeight(0.5);
+    ellipse(cx, cy, r * 2, r * 2);
+  }
+
+  // Memory particles drift
+  noStroke();
+  memoryParticles.forEach(mp => {
+    mp.angle += mp.drift + sin(t * PSI) * 0.001;
+    const x = cx + cos(mp.angle) * mp.radius;
+    const y = cy + sin(mp.angle) * mp.radius;
+    fill([168, 256, 45][mp.tier % 3], 40, 60, mp.alpha);
+    circle(x, y, mp.size);
+  });
+
+  // ── Layer 1: CSL Standing Waves ──
+  cslWaves.forEach(wave => {
+    noFill();
+    strokeWeight(0.8);
+    const pts = 360;
+    for (let seg = 0; seg < 3; seg++) {
+      beginShape();
+      for (let i = 0; i <= pts; i++) {
+        const a = (i / pts) * TAU;
+        const waveR = wave.amplitude + sin(a * wave.frequency + t * PHI + wave.phase + seg * TAU/3) * maxR * 0.08 * params.cslThreshold;
+        const x = cx + cos(a) * waveR;
+        const y = cy + sin(a) * waveR;
+        const alpha = 12 * params.cslThreshold * (0.5 + 0.5 * sin(a * 3 + t));
+        stroke(wave.hue, 60, 70, alpha);
+        vertex(x, y);
+      }
+      endShape();
+    }
+  });
+
+  // ── Layer 2: Archetype Mandala ──
+  ARCHETYPES.forEach((arch, i) => {
+    const angle = (i / 7) * TAU + t * PSI * 0.3;
+    const r = maxR * 0.55;
+    const ax = cx + cos(angle) * r;
+    const ay = cy + sin(angle) * r;
+
+    // Influence radius
+    const influenceR = maxR * 0.25 * params.archetypeGlow * arch.weight * 5;
+    const pulseR = influenceR * (1 + sin(t * PHI + i * PSI) * 0.15);
+
+    noStroke();
+    for (let ring = 5; ring >= 0; ring--) {
+      const rr = pulseR * (ring / 5);
+      fill(arch.hue, 50, 50, 3 * params.archetypeGlow * (1 - ring/5));
+      circle(ax, ay, rr * 2);
+    }
+
+    // Core point
+    fill(arch.hue, 80, 90, 40 * params.archetypeGlow);
+    circle(ax, ay, 4);
+
+    // Confidence score display
+    const conf = (0.7 + noise(t * 0.3 + i) * 0.25).toFixed(2);
+    fill(0, 0, 100, 25);
+    textFont('JetBrains Mono');
+    textSize(8);
+    textAlign(CENTER);
+    text(conf, ax, ay + 12);
+  });
+
+  // ── Layer 3: Bee Orbits ──
+  bees.forEach(bee => {
+    const swarm = SWARMS[bee.swarmIdx % SWARMS.length];
+    const angle = bee.baseAngle + t * bee.speed;
+    const nVal = noise(bee.noiseOff + t * 0.3);
+    const eccR = bee.baseR * (1 + sin(angle * bee.orbitEcc) * 0.2 * nVal);
+
+    const x = cx + cos(angle) * eccR;
+    const y = cy + sin(angle * PSI) * eccR * PSI; // elliptical with φ-ratio
+
+    // Trail
+    bee.trail.push({ x, y });
+    if (bee.trail.length > bee.trailMax) bee.trail.shift();
+
+    // Draw trail
+    noFill();
+    beginShape();
+    bee.trail.forEach((pt, idx) => {
+      const a = (idx / bee.trail.length) * 15;
+      stroke(bee.hue, bee.sat * 0.6, 70, a);
+      strokeWeight(bee.size * 0.3);
+      vertex(pt.x, pt.y);
+    });
+    endShape();
+
+    // Draw bee
+    noStroke();
+    const brightness = 60 + nVal * 30;
+    const alpha = 35 + nVal * 25;
+    fill(bee.hue, bee.sat * 0.7, brightness, alpha);
+    circle(x, y, bee.size * 2);
+
+    // Glow
+    fill(bee.hue, bee.sat * 0.3, brightness, alpha * 0.3);
+    circle(x, y, bee.size * 6);
+  });
+
+  // ── Layer 4: Central Consciousness Core ──
+  // Flower of Life pattern at center
+  const coreR = maxR * 0.06;
+  noFill();
+  strokeWeight(0.4);
+  for (let i = 0; i < 6; i++) {
+    const angle = (i / 6) * TAU + t * PSI * 0.5;
+    const px = cx + cos(angle) * coreR;
+    const py = cy + sin(angle) * coreR;
+    stroke(168 + i * 15, 50, 60, 15 + sin(t * PHI + i) * 8);
+    circle(px, py, coreR * 2);
+  }
+  // Central eye
+  stroke(168, 80, 90, 20 + sin(t * PHI) * 10);
+  circle(cx, cy, coreR * 2);
+  noStroke();
+  fill(168, 90, 95, 30 + sin(t * 2) * 10);
+  circle(cx, cy, 3);
+
+  // ── Layer 5: Pipeline Energy Arc ──
+  // 12 stages as energy flowing around the field
+  strokeWeight(1.5);
+  noFill();
+  const pipeR = maxR * 0.95;
+  for (let s = 0; s < 12; s++) {
+    const startA = (s / 12) * TAU - HALF_PI;
+    const endA = ((s + 0.8) / 12) * TAU - HALF_PI;
+    const active = s <= floor((t * 2) % 12);
+    const hue = active ? 168 : 256;
+    const alpha = active ? 12 + sin(t * 3 + s) * 5 : 3;
+    stroke(hue, 60, 70, alpha);
+    arc(cx, cy, pipeR * 2, pipeR * 2, startA, endA);
+  }
+
+  // ── Stats Update ──
+  if (frameCount % 30 === 0) updateStats();
+}
+
+function updateStats() {
+  const el = document.getElementById('stats');
+  const activeGates = (params.cslThreshold >= PSI2 ? 1 : 0) +
+                      (params.cslThreshold >= PSI ? 1 : 0) +
+                      (params.cslThreshold >= 0.718 ? 1 : 0);
+  el.innerHTML = `
+    Bees: <span>${bees.length}</span> / ${FIB[19]} max<br>
+    Swarms: <span>${params.swarmCount}</span> / 17<br>
+    CSL Gates: <span>${activeGates}/3</span> (ψ²=${PSI2.toFixed(3)})<br>
+    Archetypes: <span>7/7</span> active<br>
+    Memory: <span>T0→T${params.memoryDepth - 1}</span><br>
+    Pipeline: <span>${floor((t * 2) % 12) + 1}/12</span><br>
+    Frame: <span>${frameCount}</span> · ${nf(frameRate(), 1, 1)} fps<br>
+    φ = <span>${PHI}</span><br>
+    Seed: <span>${params.seed}</span>
+  `;
+}
+
+function buildLegend() {
+  const el = document.getElementById('legend');
+  el.innerHTML = SWARMS.slice(0, params.swarmCount).map(s =>
+    `<div class="legend-item"><div class="legend-dot" style="background:hsl(${s.hue},${s.sat}%,60%)"></div>${s.name}</div>`
+  ).join('');
+}
+
+// ── Seed Navigation ──
+function prevSeed() { params.seed--; regenerate(); }
+function nextSeed() { params.seed++; regenerate(); }
+function randomSeed2() { params.seed = floor(Math.random() * 10000); regenerate(); }
+function regenerate() {
+  document.getElementById('seedDisplay').textContent = params.seed;
+  initField();
+  buildLegend();
+}
+function resetParams() {
+  params = { seed: 1618, swarmCount: 17, beeCount: 89, cslThreshold: PSI,
+    spiralPhi: PHI, archetypeGlow: 0.7, memoryDepth: 3, timeScale: 1.0 };
+  document.querySelectorAll('input[type=range]').forEach(el => {
+    const key = el.oninput.toString().match(/params\.(\w+)/)?.[1];
+    if (key && params[key] !== undefined) el.value = params[key];
+  });
+  document.getElementById('v-swarms').textContent = '17';
+  document.getElementById('v-bees').textContent = '89';
+  document.getElementById('v-csl').textContent = '0.618';
+  document.getElementById('v-spiral').textContent = '1.618';
+  document.getElementById('v-glow').textContent = '0.70';
+  document.getElementById('v-depth').textContent = '3';
+  document.getElementById('v-time').textContent = '1.0';
+  regenerate();
+}
+</script>
+</body>
+</html>

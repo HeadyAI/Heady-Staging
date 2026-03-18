@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<!--
+  HEADY_BRAND: HeadySystems Inc.
+  Module: 5-Stage Pilot Onboarding Flow
+  Node: CONDUCTOR + PERSONA
+  Domain: Resolves from any Heady domain /onboard
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Heady™ — Connect Your Intelligence</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{--void:#040810;--deep:#0f172a;--surface:#1e293b;--teal:#00d4aa;--purple:#7c5eff;--gold:#f0c040;--green:#22c55e;--blue:#3b82f6;--text:#e2e8f0;--dim:#94a3b8;--muted:#475569;--glass:rgba(15,23,42,0.75);--glass-border:rgba(124,94,255,0.2);--font:'Outfit',sans-serif;--mono:'JetBrains Mono',monospace;}
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:var(--font);background:var(--void);color:var(--text);min-height:100vh;display:flex;align-items:center;justify-content:center;}
+  canvas#bg{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:0.12;}
+
+  .onboard{position:relative;z-index:1;width:90%;max-width:620px;padding:34px;}
+
+  /* Progress bar */
+  .progress{display:flex;align-items:center;gap:8px;margin-bottom:34px;}
+  .progress-step{display:flex;align-items:center;gap:8px;flex:1;}
+  .progress-dot{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;font-family:var(--mono);border:2px solid var(--muted);color:var(--muted);transition:all 0.5s;}
+  .progress-dot.active{border-color:var(--teal);color:var(--teal);box-shadow:0 0 21px rgba(0,212,170,0.3);}
+  .progress-dot.done{border-color:var(--green);color:var(--green);background:rgba(34,197,94,0.1);}
+  .progress-line{flex:1;height:2px;background:var(--surface);transition:background 0.5s;}
+  .progress-line.done{background:var(--green);}
+  .progress-label{font-size:9px;font-family:var(--mono);color:var(--muted);text-align:center;margin-top:5px;}
+  .progress-col{display:flex;flex-direction:column;align-items:center;}
+
+  /* Stage card */
+  .stage{display:none;background:var(--glass);backdrop-filter:blur(18px);border:1px solid var(--glass-border);border-radius:13px;padding:34px;box-shadow:0 0 55px rgba(124,94,255,0.08);animation:fadeUp 0.382s ease-out;}
+  .stage.active{display:block;}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(13px);}to{opacity:1;transform:translateY(0);}}
+
+  .stage-num{font-family:var(--mono);font-size:11px;color:var(--teal);margin-bottom:8px;}
+  .stage h2{font-size:22px;font-weight:700;margin-bottom:8px;}
+  .stage p{font-size:13px;color:var(--dim);line-height:1.618;margin-bottom:21px;}
+
+  /* Auth buttons */
+  .auth-grid{display:flex;flex-direction:column;gap:8px;}
+  .auth-btn{display:flex;align-items:center;gap:13px;padding:13px 21px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:8px;cursor:pointer;font-size:14px;font-weight:500;color:var(--text);font-family:var(--font);transition:all 0.2s;width:100%;}
+  .auth-btn:hover{border-color:var(--teal);background:rgba(0,212,170,0.05);}
+  .auth-btn svg{width:20px;height:20px;flex-shrink:0;}
+
+  /* Processing animation */
+  .processing{display:flex;flex-direction:column;align-items:center;gap:13px;padding:21px 0;}
+  .spinner{width:34px;height:34px;border:3px solid var(--surface);border-top-color:var(--teal);border-radius:50%;animation:spin 1.618s linear infinite;}
+  @keyframes spin{to{transform:rotate(360deg);}}
+  .processing-text{font-size:12px;color:var(--dim);font-family:var(--mono);text-align:center;}
+
+  /* Info rows */
+  .info-grid{display:flex;flex-direction:column;gap:5px;margin:13px 0;padding:13px;background:rgba(0,0,0,0.2);border-radius:8px;border:1px solid rgba(255,255,255,0.04);}
+  .info-row{display:flex;justify-content:space-between;font-size:12px;padding:3px 0;border-bottom:1px solid rgba(255,255,255,0.03);}
+  .info-row span:first-child{color:var(--dim);}
+  .info-row span:last-child{font-family:var(--mono);color:var(--text);}
+  .info-row code{font-size:11px;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-family:var(--mono);}
+
+  /* API key display */
+  .key-display{padding:13px;background:rgba(0,0,0,0.3);border:1px solid var(--teal);border-radius:8px;font-family:var(--mono);font-size:13px;color:var(--teal);word-break:break-all;margin:13px 0;position:relative;cursor:pointer;}
+  .key-display::after{content:'Click to copy';position:absolute;top:5px;right:8px;font-size:9px;color:var(--muted);}
+
+  /* Success state */
+  .success-check{width:55px;height:55px;border-radius:50%;background:linear-gradient(135deg,var(--teal),var(--green));display:flex;align-items:center;justify-content:center;margin:0 auto 21px;font-size:24px;}
+
+  /* Buttons */
+  .btn{padding:13px 34px;border:none;border-radius:8px;font-family:var(--font);font-size:14px;font-weight:600;cursor:pointer;transition:all 0.2s;display:inline-flex;align-items:center;gap:8px;}
+  .btn-primary{background:linear-gradient(135deg,var(--teal),#00b894);color:#000;}
+  .btn-primary:hover{box-shadow:0 0 21px rgba(0,212,170,0.4);}
+  .btn-secondary{background:rgba(255,255,255,0.05);color:var(--text);border:1px solid rgba(255,255,255,0.1);}
+
+  .footer-note{text-align:center;font-size:10px;color:var(--muted);font-family:var(--mono);margin-top:21px;line-height:1.618;}
+</style>
+</head>
+<body>
+<canvas id="bg"></canvas>
+
+<div class="onboard">
+  <!-- Progress -->
+  <div class="progress" id="progressBar"></div>
+
+  <!-- Stage 1: IDENTITY -->
+  <div class="stage active" id="stage-1" data-node="CONDUCTOR">
+    <div class="stage-num">Stage 1 of 5</div>
+    <h2>Identity</h2>
+    <p>Sign in to create your persistent profile across all 11 Heady domains. One account, every surface — desktop, mobile, IDE, browser extension.</p>
+    <div class="auth-grid">
+      <button class="auth-btn" onclick="completeStage(1,'google')">
+        <svg viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18A10.96 10.96 0 001 12c0 1.77.42 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+        Continue with Google
+      </button>
+      <button class="auth-btn" onclick="completeStage(1,'github')">
+        <svg viewBox="0 0 24 24" fill="white"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.166 6.839 9.49.5.092.682-.217.682-.482 0-.237-.009-.866-.013-1.7-2.782.604-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.463-1.11-1.463-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.831.092-.646.35-1.086.636-1.336-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0112 6.836a9.59 9.59 0 012.504.337c1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.161 22 16.416 22 12c0-5.523-4.477-10-10-10z"/></svg>
+        Continue with GitHub
+      </button>
+      <button class="auth-btn" onclick="completeStage(1,'discord')">
+        <svg viewBox="0 0 24 24" fill="#5865F2"><path d="M20.317 4.37a19.791 19.791 0 00-4.885-1.515.074.074 0 00-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 00-5.487 0 12.64 12.64 0 00-.617-1.25.077.077 0 00-.079-.037A19.736 19.736 0 003.677 4.37a.07.07 0 00-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 00.031.057 19.9 19.9 0 005.993 3.03.078.078 0 00.084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 00-.041-.106 13.107 13.107 0 01-1.872-.892.077.077 0 01-.008-.128 10.2 10.2 0 00.372-.292.074.074 0 01.077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 01.078.01c.12.098.246.198.373.292a.077.077 0 01-.006.127 12.299 12.299 0 01-1.873.892.077.077 0 00-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 00.084.028 19.839 19.839 0 006.002-3.03.077.077 0 00.032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 00-.031-.03z"/></svg>
+        Continue with Discord
+      </button>
+    </div>
+    <p style="font-size:10px;color:var(--muted);margin-top:13px;text-align:center;">Firebase Auth · 27 OAuth providers · Cross-domain SSO via auth.headysystems.com</p>
+  </div>
+
+  <!-- Stage 2: LOGIC -->
+  <div class="stage" id="stage-2" data-node="TENSOR">
+    <div class="stage-num">Stage 2 of 5</div>
+    <h2>Logic Calibration</h2>
+    <p>Configuring your CSL gate thresholds and cognitive archetype weights. This determines how HeadyBuddy processes your requests.</p>
+    <div class="processing" id="proc-2">
+      <div class="spinner"></div>
+      <div class="processing-text">Calibrating Continuous Semantic Logic gates…<br>Resonance · Superposition · Orthogonal</div>
+    </div>
+    <div class="info-grid" id="logic-results" style="display:none;">
+      <div class="info-row"><span>CSL Include Gate</span><span style="color:var(--teal);">0.618 (ψ)</span></div>
+      <div class="info-row"><span>CSL Core Gate</span><span style="color:var(--teal);">0.718 (ψ+0.1)</span></div>
+      <div class="info-row"><span>CSL Recall Gate</span><span style="color:var(--teal);">0.382 (ψ²)</span></div>
+      <div class="info-row"><span>🦉 OWL Weight</span><span>0.20</span></div>
+      <div class="info-row"><span>🦅 EAGLE Weight</span><span>0.20</span></div>
+      <div class="info-row"><span>🐬 DOLPHIN Weight</span><span>0.15</span></div>
+      <div class="info-row"><span>🐇 RABBIT Weight</span><span>0.15</span></div>
+      <div class="info-row"><span>🐜 ANT Weight</span><span>0.10</span></div>
+      <div class="info-row"><span>🐘 ELEPHANT Weight</span><span>0.10</span></div>
+      <div class="info-row"><span>🦫 BEAVER Weight</span><span>0.10</span></div>
+    </div>
+    <div id="logic-btn" style="display:none;text-align:center;margin-top:13px;">
+      <button class="btn btn-primary" onclick="completeStage(2)">Continue →</button>
+    </div>
+  </div>
+
+  <!-- Stage 3: DATA -->
+  <div class="stage" id="stage-3" data-node="TOPOLOGY">
+    <div class="stage-num">Stage 3 of 5</div>
+    <h2>Memory Initialization</h2>
+    <p>Creating your personal vector space in Neon pgvector. All your conversations, preferences, and knowledge will persist here.</p>
+    <div class="processing" id="proc-3">
+      <div class="spinner"></div>
+      <div class="processing-text">Initializing pgvector namespace…<br><code style="font-size:10px;">tenant:&lt;your-id&gt;:*</code></div>
+    </div>
+    <div class="info-grid" id="data-results" style="display:none;">
+      <div class="info-row"><span>T0 Memory</span><span>Upstash Redis · 30s SETEX</span></div>
+      <div class="info-row"><span>T1 Memory</span><span>Neon pgvector · 384D HNSW</span></div>
+      <div class="info-row"><span>Namespace</span><span><code>tenant:usr_xxx:*</code></span></div>
+      <div class="info-row"><span>Tables Created</span><span style="color:var(--green);">buddy_messages, buddy_memory</span></div>
+      <div class="info-row"><span>HNSW Index</span><span>m=16, ef_construction=64</span></div>
+      <div class="info-row"><span>Embedding Model</span><span>all-MiniLM-L6-v2 (384D)</span></div>
+      <div class="info-row"><span>HF Token Rotation</span><span style="color:var(--green);">3 tokens active</span></div>
+    </div>
+    <div id="data-btn" style="display:none;text-align:center;margin-top:13px;">
+      <button class="btn btn-primary" onclick="completeStage(3)">Continue →</button>
+    </div>
+  </div>
+
+  <!-- Stage 4: KEYS -->
+  <div class="stage" id="stage-4" data-node="DIPLOMAT">
+    <div class="stage-num">Stage 4 of 5</div>
+    <h2>API Key Provisioning</h2>
+    <p>Your personal API key grants access to 30+ MCP tools, the HeadyBuddy chat API, and all Heady services.</p>
+    <div class="processing" id="proc-4">
+      <div class="spinner"></div>
+      <div class="processing-text">Generating API key…</div>
+    </div>
+    <div id="key-results" style="display:none;">
+      <div class="key-display" id="apiKeyDisplay" onclick="navigator.clipboard.writeText(this.textContent.trim()).then(()=>this.setAttribute('data-after','Copied!'))"></div>
+      <div class="info-grid">
+        <div class="info-row"><span>Tier</span><span id="keyTier" style="color:var(--teal);">—</span></div>
+        <div class="info-row"><span>Rate Limit</span><span id="keyRate">—</span></div>
+        <div class="info-row"><span>Scope</span><span>buddy, memory, cms, pipeline</span></div>
+        <div class="info-row"><span>Expires</span><span>21 days (auto-refresh)</span></div>
+      </div>
+    </div>
+    <div id="key-btn" style="display:none;text-align:center;margin-top:13px;">
+      <button class="btn btn-primary" onclick="completeStage(4)">Continue →</button>
+    </div>
+  </div>
+
+  <!-- Stage 5: DEPLOY -->
+  <div class="stage" id="stage-5" data-node="PERSONA">
+    <div class="stage-num">Stage 5 of 5</div>
+    <h2>You're Connected</h2>
+    <div class="success-check">✓</div>
+    <p style="text-align:center;">HeadyBuddy is now synced across all 11 domains and all your devices. Your conversations, preferences, and knowledge persist forever.</p>
+    <div class="info-grid">
+      <div class="info-row"><span>SSO Active On</span><span style="color:var(--green);">12 domains</span></div>
+      <div class="info-row"><span>T0 Heartbeat</span><span style="color:var(--green);">29,034ms (PHI⁷)</span></div>
+      <div class="info-row"><span>T1 pgvector</span><span style="color:var(--green);">Initialized</span></div>
+      <div class="info-row"><span>WebSocket Sync</span><span style="color:var(--green);">Connected</span></div>
+      <div class="info-row"><span>Archetypes</span><span style="color:var(--green);">7/7 calibrated</span></div>
+      <div class="info-row"><span>Pipeline</span><span style="color:var(--green);">12 stages ready</span></div>
+    </div>
+    <div style="text-align:center;margin-top:21px;display:flex;gap:8px;justify-content:center;">
+      <a href="/" class="btn btn-primary" data-node="CONDUCTOR">Go to Dashboard →</a>
+      <button class="btn btn-secondary" onclick="window.HeadyBuddyEmbed&&window.HeadyBuddyEmbed.toggle()" data-node="PERSONA">Open HeadyBuddy 💬</button>
+    </div>
+  </div>
+
+  <div class="footer-note">
+    HeadySystems Inc. · Liquid Architecture v9.0 · 60+ Patents Filed<br>
+    <span style="color:var(--teal);">φ · ψ · ∞</span>
+  </div>
+</div>
+
+<script src="/shared/buddy-embed.js" data-theme="dark" data-position="bottom-right" data-features="chat" async></script>
+<script>
+const PHI=1.618033988749895,PSI=1/PHI,FIB=[1,1,2,3,5,8,13,21,34,55,89];
+const STAGES=['IDENTITY','LOGIC','DATA','KEYS','DEPLOY'];
+let currentStage=1;
+
+// Build progress bar
+const bar=document.getElementById('progressBar');
+STAGES.forEach((name,i)=>{
+  const col=document.createElement('div');col.className='progress-col';
+  const dot=document.createElement('div');dot.className=`progress-dot${i===0?' active':''}`;dot.id=`dot-${i+1}`;dot.textContent=i+1;
+  const label=document.createElement('div');label.className='progress-label';label.textContent=name;
+  col.appendChild(dot);col.appendChild(label);bar.appendChild(col);
+  if(i<STAGES.length-1){const line=document.createElement('div');line.className='progress-line';line.id=`line-${i+1}`;bar.appendChild(line);}
+});
+
+async function completeStage(stage, provider) {
+  if(stage===1){
+    // Simulate Firebase auth
+    document.querySelectorAll('.auth-btn').forEach(b=>b.disabled=true);
+  }
+
+  // Update progress
+  document.getElementById(`dot-${stage}`).className='progress-dot done';
+  if(document.getElementById(`line-${stage}`))document.getElementById(`line-${stage}`).className='progress-line done';
+  const next=stage+1;
+  if(next<=5){
+    document.getElementById(`dot-${next}`).className='progress-dot active';
+    document.getElementById(`stage-${stage}`).classList.remove('active');
+    document.getElementById(`stage-${next}`).classList.add('active');
+    currentStage=next;
+  }
+
+  // Auto-process stages 2-4
+  if(next===2){
+    setTimeout(()=>{
+      document.getElementById('proc-2').style.display='none';
+      document.getElementById('logic-results').style.display='flex';
+      document.getElementById('logic-btn').style.display='block';
+    },Math.round(PHI*1200));
+  }
+  if(next===3){
+    setTimeout(()=>{
+      document.getElementById('proc-3').style.display='none';
+      document.getElementById('data-results').style.display='flex';
+      document.getElementById('data-btn').style.display='block';
+    },Math.round(PHI*1500));
+  }
+  if(next===4){
+    setTimeout(()=>{
+      const key=`hdy_plt_${Date.now().toString(36)}_${Math.random().toString(36).slice(2,10)}`;
+      document.getElementById('proc-4').style.display='none';
+      document.getElementById('key-results').style.display='block';
+      document.getElementById('apiKeyDisplay').textContent=key;
+      document.getElementById('keyTier').textContent='Pilot Partner';
+      document.getElementById('keyRate').textContent='89 req/min (FIB[10])';
+      document.getElementById('key-btn').style.display='block';
+    },Math.round(PHI*1000));
+  }
+  if(next===5){
+    document.getElementById(`dot-${5}`).className='progress-dot done';
+  }
+}
+
+// Sacred geometry background (condensed)
+(()=>{const c=document.getElementById('bg'),x=c.getContext('2d');let w,h,t=0;
+const r=()=>{w=c.width=innerWidth;h=c.height=innerHeight;};r();addEventListener('resize',r);
+const N=21,ns=Array.from({length:N},()=>({x:Math.random()*w,y:Math.random()*h,vx:(Math.random()-.5)*PSI,vy:(Math.random()-.5)*PSI,r:FIB[2+~~(Math.random()*4)]*PSI}));
+function d(){x.clearRect(0,0,w,h);t+=0.002;ns.forEach(n=>{n.x+=n.vx+Math.sin(t*PHI+n.y*0.001)*0.2;n.y+=n.vy+Math.cos(t*PSI+n.x*0.001)*0.2;if(n.x<0)n.x=w;if(n.x>w)n.x=0;if(n.y<0)n.y=h;if(n.y>h)n.y=0;});
+const md=FIB[8]*PHI;x.lineWidth=0.4;for(let i=0;i<N;i++)for(let j=i+1;j<N;j++){const dx=ns[i].x-ns[j].x,dy=ns[i].y-ns[j].y,dist=Math.sqrt(dx*dx+dy*dy);if(dist<md){x.globalAlpha=(1-dist/md)*0.2;x.strokeStyle=i%2?'rgba(124,94,255,0.4)':'rgba(0,212,170,0.4)';x.beginPath();x.moveTo(ns[i].x,ns[i].y);x.lineTo(ns[j].x,ns[j].y);x.stroke();}}
+ns.forEach((n,i)=>{x.globalAlpha=0.2+Math.sin(t*PHI+i)*0.1;x.fillStyle=i%2?'rgba(124,94,255,0.5)':'rgba(0,212,170,0.5)';x.beginPath();x.arc(n.x,n.y,n.r,0,Math.PI*2);x.fill();});
+x.globalAlpha=1;requestAnimationFrame(d);}d();})();
+</script>
+</body>
+</html>

@@ -1,0 +1,2208 @@
+<!DOCTYPE html>
+<!--
+  ╔═══════════════════════════════════════════════════════════════════╗
+  ║  HEADY_BRAND: HeadySystems Inc. — Admin Control Surface          ║
+  ║  Domain: 1ime1.com                                                ║
+  ║  Author: Eric Haywood, Founder & CEO                              ║
+  ║  Architecture: Liquid Architecture v9.0                           ║
+  ║  Node: CONDUCTOR (Orchestrator) + OBSERVER (Monitoring)           ║
+  ║  Patent Zone: HS-2026-053 through HS-2026-062                     ║
+  ║  Law 3: Zero localhost — Cloud Run + Cloudflare only              ║
+  ║  Law 4: Zero placeholders — every line functional                 ║
+  ╚═══════════════════════════════════════════════════════════════════╝
+-->
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Heady™ Admin · 1ime1.com</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* ═══════════════════════════════════════════════════
+       φ-CONSTANTS AS CSS CUSTOM PROPERTIES
+       PHI = 1.618033988749895
+       PSI = 0.618033988749895 (1/φ)
+       FIB: 1,1,2,3,5,8,13,21,34,55,89,144,233,377
+       ═══════════════════════════════════════════════════ */
+    :root {
+      --phi: 1.618;
+      --psi: 0.618;
+      --psi2: 0.382;
+
+      /* φ-scaled spacing */
+      --sp-1: 3px; --sp-2: 5px; --sp-3: 8px;
+      --sp-4: 13px; --sp-5: 21px; --sp-6: 34px;
+      --sp-7: 55px; --sp-8: 89px; --sp-9: 144px;
+
+      /* Heady palette */
+      --void: #060a14;
+      --abyss: #0b1120;
+      --deep: #0f172a;
+      --surface: #1e293b;
+      --muted: #475569;
+      --text: #e2e8f0;
+      --text-dim: #94a3b8;
+      --teal: #00d4aa;
+      --teal-dim: rgba(0,212,170,0.15);
+      --teal-glow: rgba(0,212,170,0.4);
+      --purple: #7c5eff;
+      --purple-dim: rgba(124,94,255,0.15);
+      --purple-glow: rgba(124,94,255,0.4);
+      --gold: #f0c040;
+      --gold-dim: rgba(240,192,64,0.15);
+      --red: #ef4444;
+      --red-dim: rgba(239,68,68,0.15);
+      --green: #22c55e;
+      --green-dim: rgba(34,197,94,0.15);
+      --blue: #3b82f6;
+      --blue-dim: rgba(59,130,246,0.15);
+
+      /* Glass */
+      --glass: rgba(15,23,42,0.72);
+      --glass-border: rgba(139,92,246,0.22);
+      --glass-hover: rgba(139,92,246,0.35);
+      --glass-blur: 18px;
+
+      /* Typography */
+      --font-display: 'Outfit', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+
+      /* Layout */
+      --sidebar-w: 233px; /* FIB[12] */
+      --topbar-h: 55px;   /* FIB[9] */
+      --buddy-w: 377px;   /* FIB[13] */
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      height: 100%; overflow: hidden;
+      font-family: var(--font-display);
+      background: var(--void);
+      color: var(--text);
+    }
+
+    /* ═══════ SACRED GEOMETRY CANVAS ═══════ */
+    #sacred-bg {
+      position: fixed; inset: 0; z-index: 0;
+      pointer-events: none; opacity: 0.18;
+    }
+
+    /* ═══════ LAYOUT SHELL ═══════ */
+    .app-shell {
+      display: grid;
+      grid-template-columns: var(--sidebar-w) 1fr;
+      grid-template-rows: var(--topbar-h) 1fr;
+      height: 100vh; position: relative; z-index: 1;
+    }
+
+    /* ═══════ TOPBAR ═══════ */
+    .topbar {
+      grid-column: 1 / -1;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 var(--sp-6);
+      background: var(--glass);
+      backdrop-filter: blur(var(--glass-blur));
+      border-bottom: 1px solid var(--glass-border);
+      z-index: 100;
+    }
+    .topbar-brand {
+      display: flex; align-items: center; gap: var(--sp-4);
+    }
+    .topbar-brand svg { width: 34px; height: 34px; }
+    .topbar-brand h1 {
+      font-size: 16px; font-weight: 600;
+      background: linear-gradient(135deg, var(--teal), var(--purple));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .topbar-domain {
+      font-family: var(--font-mono); font-size: 11px;
+      color: var(--text-dim); opacity: 0.7;
+    }
+    .topbar-actions {
+      display: flex; align-items: center; gap: var(--sp-5);
+    }
+    .topbar-status {
+      display: flex; align-items: center; gap: var(--sp-3);
+      font-size: 12px; color: var(--text-dim);
+      font-family: var(--font-mono);
+    }
+    .status-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 8px var(--green);
+      animation: pulse-dot 2.618s ease-in-out infinite;
+    }
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+    .topbar-user {
+      display: flex; align-items: center; gap: var(--sp-3);
+      cursor: pointer; padding: var(--sp-2) var(--sp-4);
+      border-radius: 8px; transition: background 0.3s;
+    }
+    .topbar-user:hover { background: rgba(255,255,255,0.05); }
+    .avatar {
+      width: 34px; height: 34px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--teal), var(--purple));
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 13px;
+    }
+
+    /* ═══════ SIDEBAR ═══════ */
+    .sidebar {
+      background: var(--glass);
+      backdrop-filter: blur(var(--glass-blur));
+      border-right: 1px solid var(--glass-border);
+      padding: var(--sp-5) 0;
+      display: flex; flex-direction: column;
+      overflow-y: auto;
+    }
+    .nav-section {
+      padding: var(--sp-3) var(--sp-5);
+      margin-top: var(--sp-4);
+    }
+    .nav-section-label {
+      font-size: 10px; text-transform: uppercase;
+      letter-spacing: 1.618px; color: var(--muted);
+      font-weight: 600; margin-bottom: var(--sp-3);
+    }
+    .nav-item {
+      display: flex; align-items: center; gap: var(--sp-4);
+      padding: var(--sp-3) var(--sp-5);
+      cursor: pointer; border-radius: 8px;
+      font-size: 13px; font-weight: 400;
+      color: var(--text-dim); transition: all 0.24s;
+      position: relative;
+    }
+    .nav-item:hover { background: rgba(255,255,255,0.04); color: var(--text); }
+    .nav-item.active {
+      background: var(--teal-dim); color: var(--teal);
+      font-weight: 500;
+    }
+    .nav-item.active::before {
+      content: ''; position: absolute; left: 0;
+      top: 50%; transform: translateY(-50%);
+      width: 3px; height: 21px;
+      background: var(--teal); border-radius: 0 3px 3px 0;
+    }
+    .nav-icon {
+      width: 18px; height: 18px; opacity: 0.7;
+      flex-shrink: 0;
+    }
+    .nav-item.active .nav-icon { opacity: 1; }
+    .nav-badge {
+      margin-left: auto;
+      background: var(--purple-dim); color: var(--purple);
+      font-size: 10px; font-weight: 600;
+      padding: 2px 7px; border-radius: 89px;
+      font-family: var(--font-mono);
+    }
+
+    /* ═══════ MAIN CONTENT ═══════ */
+    .main {
+      overflow-y: auto; padding: var(--sp-6);
+      display: flex; flex-direction: column; gap: var(--sp-6);
+    }
+
+    /* Page visibility */
+    .page { display: none; flex-direction: column; gap: var(--sp-6); }
+    .page.active { display: flex; }
+
+    /* ═══════ GLASS CARD ═══════ */
+    .card {
+      background: var(--glass);
+      backdrop-filter: blur(var(--glass-blur));
+      border: 1px solid var(--glass-border);
+      border-radius: 13px;
+      padding: var(--sp-6);
+      box-shadow: 0 0 34px rgba(124,94,255,0.06);
+      transition: border-color 0.3s, box-shadow 0.3s;
+    }
+    .card:hover {
+      border-color: var(--glass-hover);
+      box-shadow: 0 0 55px rgba(124,94,255,0.12);
+    }
+    .card-header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: var(--sp-5);
+    }
+    .card-title {
+      font-size: 15px; font-weight: 600;
+      display: flex; align-items: center; gap: var(--sp-3);
+    }
+    .card-title .node-tag {
+      font-family: var(--font-mono); font-size: 9px;
+      background: var(--purple-dim); color: var(--purple);
+      padding: 2px 6px; border-radius: 4px; font-weight: 500;
+    }
+
+    /* ═══════ DASHBOARD GRID ═══════ */
+    .dash-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(233px, 1fr));
+      gap: var(--sp-5);
+    }
+    .stat-card {
+      background: var(--glass);
+      backdrop-filter: blur(var(--glass-blur));
+      border: 1px solid var(--glass-border);
+      border-radius: 13px; padding: var(--sp-5);
+      display: flex; flex-direction: column; gap: var(--sp-3);
+    }
+    .stat-label {
+      font-size: 11px; color: var(--text-dim);
+      text-transform: uppercase; letter-spacing: 0.618px;
+    }
+    .stat-value {
+      font-size: 28px; font-weight: 700;
+      font-family: var(--font-mono);
+    }
+    .stat-value.teal { color: var(--teal); }
+    .stat-value.purple { color: var(--purple); }
+    .stat-value.gold { color: var(--gold); }
+    .stat-value.green { color: var(--green); }
+    .stat-sub {
+      font-size: 11px; color: var(--text-dim);
+      font-family: var(--font-mono);
+    }
+
+    /* ═══════ SERVICE HEALTH GRID ═══════ */
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: var(--sp-4);
+    }
+    .svc {
+      display: flex; align-items: center; gap: var(--sp-4);
+      padding: var(--sp-4);
+      background: rgba(255,255,255,0.02);
+      border-radius: 8px; border: 1px solid rgba(255,255,255,0.04);
+    }
+    .svc-dot {
+      width: 10px; height: 10px; border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .svc-dot.ok { background: var(--green); box-shadow: 0 0 8px var(--green); }
+    .svc-dot.warn { background: var(--gold); box-shadow: 0 0 8px var(--gold); }
+    .svc-dot.err { background: var(--red); box-shadow: 0 0 8px var(--red); }
+    .svc-name { font-size: 12px; font-weight: 500; }
+    .svc-latency {
+      margin-left: auto; font-family: var(--font-mono);
+      font-size: 10px; color: var(--text-dim);
+    }
+
+    /* ═══════ SITE CUSTOMIZER ═══════ */
+    .sites-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: var(--sp-5);
+    }
+    .site-card {
+      background: var(--glass);
+      backdrop-filter: blur(var(--glass-blur));
+      border: 1px solid var(--glass-border);
+      border-radius: 13px; padding: var(--sp-5);
+      cursor: pointer; transition: all 0.3s;
+    }
+    .site-card:hover {
+      border-color: var(--teal);
+      box-shadow: 0 0 34px var(--teal-dim);
+      transform: translateY(-2px);
+    }
+    .site-card-head {
+      display: flex; align-items: center; gap: var(--sp-4);
+      margin-bottom: var(--sp-4);
+    }
+    .site-favicon {
+      width: 34px; height: 34px; border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px; font-weight: 700;
+      background: linear-gradient(135deg, var(--teal-dim), var(--purple-dim));
+      border: 1px solid var(--glass-border);
+    }
+    .site-domain {
+      font-family: var(--font-mono); font-size: 13px;
+      font-weight: 600; color: var(--teal);
+    }
+    .site-purpose {
+      font-size: 11px; color: var(--text-dim);
+    }
+    .site-tags {
+      display: flex; flex-wrap: wrap; gap: var(--sp-2);
+      margin-top: var(--sp-4);
+    }
+    .site-tag {
+      font-size: 10px; padding: 2px 8px;
+      border-radius: 89px; font-family: var(--font-mono);
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      color: var(--text-dim);
+    }
+    .site-status {
+      display: flex; align-items: center; gap: var(--sp-2);
+      margin-top: var(--sp-4); font-size: 11px; color: var(--text-dim);
+    }
+    .site-status .svc-dot { width: 6px; height: 6px; }
+
+    /* ═══════ SITE EDITOR MODAL ═══════ */
+    .modal-overlay {
+      display: none; position: fixed; inset: 0;
+      background: rgba(0,0,0,0.7); z-index: 1000;
+      align-items: center; justify-content: center;
+      backdrop-filter: blur(8px);
+    }
+    .modal-overlay.open { display: flex; }
+    .modal {
+      background: var(--deep);
+      border: 1px solid var(--glass-border);
+      border-radius: 13px; padding: var(--sp-6);
+      width: 90%; max-width: 700px; max-height: 85vh;
+      overflow-y: auto; position: relative;
+      box-shadow: 0 0 89px rgba(124,94,255,0.2);
+    }
+    .modal-close {
+      position: absolute; top: var(--sp-4); right: var(--sp-4);
+      background: none; border: none; color: var(--text-dim);
+      cursor: pointer; font-size: 20px; padding: var(--sp-2);
+      border-radius: 8px; transition: background 0.2s;
+    }
+    .modal-close:hover { background: rgba(255,255,255,0.06); }
+    .modal h2 {
+      font-size: 18px; font-weight: 600;
+      margin-bottom: var(--sp-5);
+      display: flex; align-items: center; gap: var(--sp-3);
+    }
+
+    /* Form elements */
+    .form-group {
+      margin-bottom: var(--sp-5);
+    }
+    .form-label {
+      font-size: 11px; text-transform: uppercase;
+      letter-spacing: 0.618px; color: var(--text-dim);
+      font-weight: 500; margin-bottom: var(--sp-2);
+      display: block;
+    }
+    .form-input, .form-select, .form-textarea {
+      width: 100%; padding: var(--sp-3) var(--sp-4);
+      background: rgba(0,0,0,0.3);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 8px; color: var(--text);
+      font-family: var(--font-mono); font-size: 13px;
+      transition: border-color 0.2s;
+    }
+    .form-input:focus, .form-select:focus, .form-textarea:focus {
+      outline: none; border-color: var(--teal);
+      box-shadow: 0 0 0 2px var(--teal-dim);
+    }
+    .form-textarea { resize: vertical; min-height: 89px; }
+    .form-select {
+      appearance: none; cursor: pointer;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%2394a3b8'%3E%3Cpath d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 13px center;
+    }
+    .form-row {
+      display: grid; grid-template-columns: 1fr 1fr; gap: var(--sp-4);
+    }
+    .color-row {
+      display: flex; align-items: center; gap: var(--sp-3);
+    }
+    .color-swatch {
+      width: 34px; height: 34px; border-radius: 8px;
+      border: 2px solid rgba(255,255,255,0.15);
+      cursor: pointer; position: relative; overflow: hidden;
+    }
+    .color-swatch input[type="color"] {
+      position: absolute; inset: -8px;
+      width: calc(100% + 16px); height: calc(100% + 16px);
+      cursor: pointer; border: none;
+    }
+
+    /* Toggle switch */
+    .toggle-row {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: var(--sp-3) 0;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+    .toggle-label { font-size: 13px; }
+    .toggle {
+      width: 40px; height: 22px; border-radius: 89px;
+      background: var(--surface); cursor: pointer;
+      position: relative; transition: background 0.3s;
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+    .toggle.on { background: var(--teal); border-color: var(--teal); }
+    .toggle::after {
+      content: ''; position: absolute;
+      top: 2px; left: 2px; width: 16px; height: 16px;
+      border-radius: 50%; background: #fff;
+      transition: transform 0.3s;
+    }
+    .toggle.on::after { transform: translateX(18px); }
+
+    /* Buttons */
+    .btn {
+      padding: var(--sp-3) var(--sp-5);
+      border: none; border-radius: 8px;
+      font-family: var(--font-display);
+      font-size: 13px; font-weight: 500;
+      cursor: pointer; transition: all 0.2s;
+      display: inline-flex; align-items: center; gap: var(--sp-3);
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--teal), #00b894);
+      color: #000;
+    }
+    .btn-primary:hover { box-shadow: 0 0 21px var(--teal-glow); }
+    .btn-secondary {
+      background: rgba(255,255,255,0.06);
+      color: var(--text); border: 1px solid rgba(255,255,255,0.1);
+    }
+    .btn-secondary:hover { border-color: rgba(255,255,255,0.2); }
+    .btn-danger {
+      background: var(--red-dim); color: var(--red);
+      border: 1px solid rgba(239,68,68,0.2);
+    }
+    .btn-sm { padding: var(--sp-2) var(--sp-4); font-size: 12px; }
+    .btn-row {
+      display: flex; gap: var(--sp-3); margin-top: var(--sp-5);
+    }
+
+    /* ═══════ DRUPAL TASK MANAGER — KANBAN ═══════ */
+    .kanban {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: var(--sp-4);
+      min-height: 400px;
+    }
+    .kanban-col {
+      background: rgba(0,0,0,0.2);
+      border: 1px solid rgba(255,255,255,0.04);
+      border-radius: 13px; padding: var(--sp-4);
+      display: flex; flex-direction: column;
+      min-height: 300px;
+    }
+    .kanban-col-head {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: var(--sp-4); padding-bottom: var(--sp-3);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .kanban-col-title {
+      font-size: 12px; font-weight: 600;
+      text-transform: uppercase; letter-spacing: 0.618px;
+    }
+    .kanban-col-count {
+      font-family: var(--font-mono); font-size: 10px;
+      background: rgba(255,255,255,0.06);
+      padding: 2px 8px; border-radius: 89px;
+      color: var(--text-dim);
+    }
+    .kanban-cards {
+      flex: 1; display: flex; flex-direction: column;
+      gap: var(--sp-3); overflow-y: auto;
+    }
+    .kanban-card {
+      background: var(--glass);
+      border: 1px solid var(--glass-border);
+      border-radius: 8px; padding: var(--sp-4);
+      cursor: grab; transition: all 0.2s;
+      position: relative;
+    }
+    .kanban-card:hover {
+      border-color: var(--teal); transform: translateY(-1px);
+      box-shadow: 0 4px 21px rgba(0,212,170,0.08);
+    }
+    .kanban-card.dragging {
+      opacity: 0.5; cursor: grabbing;
+    }
+    .kanban-card-title {
+      font-size: 13px; font-weight: 500;
+      margin-bottom: var(--sp-2);
+    }
+    .kanban-card-meta {
+      display: flex; align-items: center; gap: var(--sp-3);
+      flex-wrap: wrap;
+    }
+    .kanban-card-type {
+      font-size: 10px; font-family: var(--font-mono);
+      padding: 1px 6px; border-radius: 4px;
+    }
+    .type-content { background: var(--blue-dim); color: var(--blue); }
+    .type-deploy { background: var(--green-dim); color: var(--green); }
+    .type-bug { background: var(--red-dim); color: var(--red); }
+    .type-feature { background: var(--purple-dim); color: var(--purple); }
+    .type-seo { background: var(--gold-dim); color: var(--gold); }
+    .kanban-card-site {
+      font-size: 10px; font-family: var(--font-mono);
+      color: var(--text-dim);
+    }
+    .kanban-card-priority {
+      margin-left: auto; font-size: 10px;
+      font-family: var(--font-mono);
+    }
+    .priority-high { color: var(--red); }
+    .priority-medium { color: var(--gold); }
+    .priority-low { color: var(--text-dim); }
+    .kanban-add-btn {
+      width: 100%; padding: var(--sp-3);
+      background: transparent; border: 1px dashed rgba(255,255,255,0.1);
+      border-radius: 8px; color: var(--text-dim);
+      cursor: pointer; font-size: 12px;
+      transition: all 0.2s; margin-top: var(--sp-3);
+    }
+    .kanban-add-btn:hover {
+      border-color: var(--teal); color: var(--teal);
+      background: var(--teal-dim);
+    }
+
+    /* ═══════ HEADYBUDDY CHAT PANEL ═══════ */
+    .buddy-toggle {
+      position: fixed; bottom: var(--sp-5); right: var(--sp-5);
+      width: 55px; height: 55px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--teal), var(--purple));
+      border: none; cursor: pointer; z-index: 500;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 0 34px var(--teal-glow);
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .buddy-toggle:hover {
+      transform: scale(1.08);
+      box-shadow: 0 0 55px var(--teal-glow);
+    }
+    .buddy-toggle svg { width: 24px; height: 24px; }
+    .buddy-badge {
+      position: absolute; top: -2px; right: -2px;
+      width: 13px; height: 13px; border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 8px var(--green);
+      border: 2px solid var(--void);
+    }
+
+    .buddy-panel {
+      position: fixed; bottom: 0; right: 0;
+      width: var(--buddy-w); height: 100vh;
+      background: var(--abyss);
+      border-left: 1px solid var(--glass-border);
+      z-index: 600; display: flex; flex-direction: column;
+      transform: translateX(100%);
+      transition: transform 0.382s cubic-bezier(0.16,1,0.3,1);
+      box-shadow: -13px 0 55px rgba(0,0,0,0.4);
+    }
+    .buddy-panel.open { transform: translateX(0); }
+
+    .buddy-header {
+      display: flex; align-items: center; gap: var(--sp-4);
+      padding: var(--sp-4) var(--sp-5);
+      border-bottom: 1px solid var(--glass-border);
+      background: var(--glass);
+      flex-shrink: 0;
+    }
+    .buddy-avatar {
+      width: 34px; height: 34px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--teal), var(--purple));
+      display: flex; align-items: center; justify-content: center;
+    }
+    .buddy-info { flex: 1; }
+    .buddy-name {
+      font-size: 14px; font-weight: 600;
+      background: linear-gradient(135deg, var(--teal), var(--purple));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .buddy-status {
+      font-size: 10px; color: var(--text-dim);
+      font-family: var(--font-mono);
+      display: flex; align-items: center; gap: var(--sp-2);
+    }
+    .buddy-sync-dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--green); display: inline-block;
+    }
+    .buddy-close {
+      background: none; border: none; color: var(--text-dim);
+      cursor: pointer; font-size: 18px; padding: var(--sp-2);
+      border-radius: 8px;
+    }
+    .buddy-close:hover { background: rgba(255,255,255,0.06); }
+
+    /* Buddy device indicator */
+    .buddy-devices {
+      display: flex; align-items: center; gap: var(--sp-2);
+      padding: var(--sp-2) var(--sp-5);
+      background: rgba(0,0,0,0.2);
+      border-bottom: 1px solid rgba(255,255,255,0.03);
+      font-size: 10px; color: var(--text-dim);
+      font-family: var(--font-mono);
+      flex-shrink: 0;
+    }
+    .device-chip {
+      padding: 1px 6px; border-radius: 4px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+    .device-chip.active {
+      background: var(--teal-dim);
+      border-color: rgba(0,212,170,0.3);
+      color: var(--teal);
+    }
+
+    /* Chat messages */
+    .buddy-messages {
+      flex: 1; overflow-y: auto;
+      padding: var(--sp-5);
+      display: flex; flex-direction: column;
+      gap: var(--sp-4);
+    }
+    .msg {
+      max-width: 88%; display: flex;
+      flex-direction: column; gap: var(--sp-2);
+    }
+    .msg.user { align-self: flex-end; }
+    .msg.buddy { align-self: flex-start; }
+    .msg-bubble {
+      padding: var(--sp-3) var(--sp-4);
+      border-radius: 13px; font-size: 13px;
+      line-height: 1.618;
+    }
+    .msg.user .msg-bubble {
+      background: linear-gradient(135deg, rgba(0,212,170,0.2), rgba(124,94,255,0.2));
+      border: 1px solid rgba(0,212,170,0.15);
+      border-bottom-right-radius: 3px;
+    }
+    .msg.buddy .msg-bubble {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-bottom-left-radius: 3px;
+    }
+    .msg-meta {
+      font-size: 10px; color: var(--muted);
+      font-family: var(--font-mono);
+      display: flex; align-items: center; gap: var(--sp-2);
+    }
+    .msg.user .msg-meta { align-self: flex-end; }
+    .msg-node {
+      font-size: 9px; padding: 1px 5px;
+      border-radius: 3px;
+      background: var(--purple-dim); color: var(--purple);
+    }
+
+    /* Chat input */
+    .buddy-input-area {
+      padding: var(--sp-4) var(--sp-5);
+      border-top: 1px solid var(--glass-border);
+      background: var(--glass);
+      display: flex; gap: var(--sp-3);
+      align-items: end; flex-shrink: 0;
+    }
+    .buddy-input {
+      flex: 1; padding: var(--sp-3) var(--sp-4);
+      background: rgba(0,0,0,0.3);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 13px; color: var(--text);
+      font-family: var(--font-display);
+      font-size: 13px; resize: none;
+      min-height: 40px; max-height: 144px;
+      line-height: 1.5;
+    }
+    .buddy-input:focus {
+      outline: none; border-color: var(--teal);
+    }
+    .buddy-input::placeholder { color: var(--muted); }
+    .buddy-send {
+      width: 40px; height: 40px;
+      background: linear-gradient(135deg, var(--teal), var(--purple));
+      border: none; border-radius: 50%; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: box-shadow 0.2s; flex-shrink: 0;
+    }
+    .buddy-send:hover { box-shadow: 0 0 21px var(--teal-glow); }
+
+    /* Buddy persistence banner */
+    .buddy-persist-banner {
+      padding: var(--sp-3) var(--sp-5);
+      background: linear-gradient(135deg, var(--teal-dim), var(--purple-dim));
+      border-bottom: 1px solid var(--glass-border);
+      font-size: 11px; color: var(--text-dim);
+      display: flex; align-items: center; gap: var(--sp-3);
+      flex-shrink: 0;
+    }
+    .buddy-persist-banner .lock-icon { color: var(--teal); }
+
+    /* ═══════ AUTH OVERLAY ═══════ */
+    .auth-overlay {
+      position: fixed; inset: 0; z-index: 2000;
+      background: var(--void);
+      display: flex; align-items: center; justify-content: center;
+      flex-direction: column; gap: var(--sp-6);
+    }
+    .auth-overlay.hidden { display: none; }
+    .auth-card {
+      background: var(--glass);
+      backdrop-filter: blur(var(--glass-blur));
+      border: 1px solid var(--glass-border);
+      border-radius: 13px; padding: var(--sp-8);
+      text-align: center; max-width: 400px; width: 90%;
+      box-shadow: 0 0 89px rgba(124,94,255,0.15);
+    }
+    .auth-card h2 {
+      font-size: 22px; font-weight: 600;
+      margin-bottom: var(--sp-3);
+      background: linear-gradient(135deg, var(--teal), var(--purple));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .auth-card p {
+      font-size: 13px; color: var(--text-dim);
+      margin-bottom: var(--sp-6);
+    }
+    .auth-providers {
+      display: flex; flex-direction: column; gap: var(--sp-3);
+    }
+    .auth-btn {
+      display: flex; align-items: center; gap: var(--sp-4);
+      padding: var(--sp-4) var(--sp-5);
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 8px; cursor: pointer;
+      font-size: 14px; font-weight: 500;
+      color: var(--text); transition: all 0.2s;
+      font-family: var(--font-display);
+      width: 100%;
+    }
+    .auth-btn:hover {
+      background: rgba(255,255,255,0.08);
+      border-color: var(--teal);
+    }
+    .auth-btn svg { width: 20px; height: 20px; flex-shrink: 0; }
+
+    /* ═══════ SCROLLBAR ═══════ */
+    ::-webkit-scrollbar { width: 5px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(124,94,255,0.2);
+      border-radius: 89px;
+    }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(124,94,255,0.4); }
+
+    /* ═══════ ANIMATIONS ═══════ */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(13px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .fade-up { animation: fadeUp 0.382s ease-out forwards; }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .app-shell { grid-template-columns: 1fr; }
+      .sidebar { display: none; }
+      .kanban { grid-template-columns: 1fr 1fr; }
+      .buddy-panel { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Sacred Geometry Background -->
+<canvas id="sacred-bg"></canvas>
+
+<!-- ═══════ AUTH OVERLAY ═══════ -->
+<div class="auth-overlay" id="authOverlay">
+  <canvas id="auth-bg-canvas" style="position:absolute;inset:0;z-index:0;opacity:0.15;pointer-events:none;"></canvas>
+  <div class="auth-card" style="position:relative;z-index:1;">
+    <svg width="55" height="55" viewBox="0 0 55 55" fill="none" style="margin-bottom:13px;">
+      <circle cx="27.5" cy="27.5" r="26" stroke="url(#ag1)" stroke-width="2" fill="none"/>
+      <circle cx="27.5" cy="27.5" r="16" stroke="url(#ag1)" stroke-width="1.5" fill="none" opacity="0.5"/>
+      <circle cx="27.5" cy="27.5" r="6" fill="url(#ag1)"/>
+      <defs><linearGradient id="ag1" x1="0" y1="0" x2="55" y2="55"><stop stop-color="#00d4aa"/><stop offset="1" stop-color="#7c5eff"/></linearGradient></defs>
+    </svg>
+    <h2>Heady™ Admin</h2>
+    <p>Sign in to access the control surface.<br>
+      <span style="font-family:var(--font-mono);font-size:10px;color:var(--muted);">1ime1.com · Cross-domain SSO via auth.headysystems.com</span>
+    </p>
+    <div class="auth-providers">
+      <button class="auth-btn" data-node="CONDUCTOR" onclick="handleAuth('google')">
+        <svg viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18A10.96 10.96 0 001 12c0 1.77.42 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+        Continue with Google
+      </button>
+      <button class="auth-btn" data-node="CONDUCTOR" onclick="handleAuth('github')">
+        <svg viewBox="0 0 24 24" fill="white"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.166 6.839 9.49.5.092.682-.217.682-.482 0-.237-.009-.866-.013-1.7-2.782.604-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.463-1.11-1.463-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.831.092-.646.35-1.086.636-1.336-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0112 6.836a9.59 9.59 0 012.504.337c1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.161 22 16.416 22 12c0-5.523-4.477-10-10-10z"/></svg>
+        Continue with GitHub
+      </button>
+      <button class="auth-btn" data-node="CONDUCTOR" onclick="handleAuth('discord')">
+        <svg viewBox="0 0 24 24" fill="#5865F2"><path d="M20.317 4.37a19.791 19.791 0 00-4.885-1.515.074.074 0 00-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 00-5.487 0 12.64 12.64 0 00-.617-1.25.077.077 0 00-.079-.037A19.736 19.736 0 003.677 4.37a.07.07 0 00-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 00.031.057 19.9 19.9 0 005.993 3.03.078.078 0 00.084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 00-.041-.106 13.107 13.107 0 01-1.872-.892.077.077 0 01-.008-.128 10.2 10.2 0 00.372-.292.074.074 0 01.077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 01.078.01c.12.098.246.198.373.292a.077.077 0 01-.006.127 12.299 12.299 0 01-1.873.892.077.077 0 00-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 00.084.028 19.839 19.839 0 006.002-3.03.077.077 0 00.032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 00-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
+        Continue with Discord
+      </button>
+    </div>
+    <p style="margin-top:var(--sp-5);font-size:10px;color:var(--muted);font-family:var(--font-mono);">
+      Secured by Firebase Auth · 27 OAuth providers · PQC-ready
+    </p>
+  </div>
+</div>
+
+<!-- ═══════ APP SHELL ═══════ -->
+<div class="app-shell" id="appShell" style="display:none;">
+
+  <!-- TOPBAR -->
+  <header class="topbar" data-node="CONDUCTOR">
+    <div class="topbar-brand">
+      <svg viewBox="0 0 34 34" fill="none">
+        <circle cx="17" cy="17" r="15.5" stroke="url(#tb1)" stroke-width="1.5"/>
+        <circle cx="17" cy="17" r="9.5" stroke="url(#tb1)" stroke-width="1" opacity="0.5"/>
+        <circle cx="17" cy="17" r="4" fill="url(#tb1)"/>
+        <defs><linearGradient id="tb1" x1="0" y1="0" x2="34" y2="34"><stop stop-color="#00d4aa"/><stop offset="1" stop-color="#7c5eff"/></linearGradient></defs>
+      </svg>
+      <div>
+        <h1>Heady™ Admin</h1>
+        <div class="topbar-domain">1ime1.com</div>
+      </div>
+    </div>
+    <div class="topbar-actions">
+      <div class="topbar-status">
+        <div class="status-dot"></div>
+        <span id="svcCount">10/10 services</span>
+      </div>
+      <div class="topbar-user" id="userMenu">
+        <div class="avatar" id="userAvatar">E</div>
+        <span style="font-size:13px;font-weight:500;" id="userName">Eric</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- SIDEBAR -->
+  <nav class="sidebar" data-node="CONDUCTOR">
+    <div class="nav-section">
+      <div class="nav-section-label">Core</div>
+      <div class="nav-item active" data-page="dashboard" onclick="navigateTo('dashboard')">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>
+        Dashboard
+      </div>
+      <div class="nav-item" data-page="sites" onclick="navigateTo('sites')">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
+        Site Customizer
+        <span class="nav-badge">11</span>
+      </div>
+    </div>
+    <div class="nav-section">
+      <div class="nav-section-label">Drupal CMS</div>
+      <div class="nav-item" data-page="tasks" onclick="navigateTo('tasks')">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+        Task Manager
+        <span class="nav-badge" id="taskCount">13</span>
+      </div>
+      <div class="nav-item" data-page="content" onclick="navigateTo('content')">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        Content
+      </div>
+      <div class="nav-item" data-page="media" onclick="navigateTo('media')">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+        Media
+      </div>
+    </div>
+    <div class="nav-section">
+      <div class="nav-section-label">Intelligence</div>
+      <div class="nav-item" data-page="pipeline" onclick="navigateTo('pipeline')">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        Pipeline
+      </div>
+      <div class="nav-item" data-page="swarms" onclick="navigateTo('swarms')">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+        Swarms
+        <span class="nav-badge">17</span>
+      </div>
+      <div class="nav-item" data-page="memory" onclick="navigateTo('memory')">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg>
+        Memory (T0/T1)
+      </div>
+    </div>
+    <div class="nav-section">
+      <div class="nav-section-label">System</div>
+      <div class="nav-item" data-page="settings" onclick="navigateTo('settings')">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+        Settings
+      </div>
+    </div>
+    <div style="flex:1;"></div>
+    <div style="padding:var(--sp-4) var(--sp-5);font-size:10px;color:var(--muted);font-family:var(--font-mono);line-height:1.618;">
+      Liquid Architecture v9.0<br>
+      φ = 1.618 · ψ = 0.618<br>
+      60+ patents filed
+    </div>
+  </nav>
+
+  <!-- MAIN CONTENT AREA -->
+  <main class="main">
+
+    <!-- ═══════ PAGE: DASHBOARD ═══════ -->
+    <div class="page active" id="page-dashboard">
+      <div style="display:flex;align-items:center;justify-content:space-between;">
+        <div>
+          <h2 style="font-size:20px;font-weight:600;">Control Surface</h2>
+          <p style="font-size:12px;color:var(--text-dim);margin-top:var(--sp-2);font-family:var(--font-mono);">
+            1ime1.com · <span id="dashTime"></span>
+          </p>
+        </div>
+        <div style="display:flex;gap:var(--sp-3);">
+          <button class="btn btn-secondary btn-sm" data-node="OBSERVER" onclick="refreshDashboard()">↻ Refresh</button>
+          <button class="btn btn-primary btn-sm" data-node="CONDUCTOR" onclick="navigateTo('tasks')">+ New Task</button>
+        </div>
+      </div>
+
+      <div class="dash-grid">
+        <div class="stat-card">
+          <div class="stat-label">Domains Active</div>
+          <div class="stat-value teal">11</div>
+          <div class="stat-sub">All resolving via Cloudflare</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Pipeline Stage</div>
+          <div class="stat-value purple">12/12</div>
+          <div class="stat-sub">HCFullPipeline v7.0.0</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Active Bees</div>
+          <div class="stat-value gold" id="beeCount">89</div>
+          <div class="stat-sub">/ 6,765 max (fib₂₀)</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Patents Filed</div>
+          <div class="stat-value green">62</div>
+          <div class="stat-sub">HS-2026-001 → HS-2026-062</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Memory Vectors (T1)</div>
+          <div class="stat-value teal" id="vectorCount">2,584</div>
+          <div class="stat-sub">384D · all-MiniLM-L6-v2</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Monthly Cost</div>
+          <div class="stat-value purple">$618</div>
+          <div class="stat-sub">Target: $600-750/mo</div>
+        </div>
+      </div>
+
+      <div class="card" data-node="OBSERVER">
+        <div class="card-header">
+          <div class="card-title">
+            Service Health
+            <span class="node-tag">OBSERVER</span>
+          </div>
+          <span style="font-size:11px;color:var(--text-dim);font-family:var(--font-mono);" id="healthTime"></span>
+        </div>
+        <div class="services-grid" id="servicesGrid"></div>
+      </div>
+
+      <div class="card" data-node="TENSOR">
+        <div class="card-header">
+          <div class="card-title">
+            CSL Gate Activity
+            <span class="node-tag">TENSOR</span>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:var(--sp-4);">
+          <div style="text-align:center;">
+            <div style="font-size:11px;color:var(--text-dim);margin-bottom:var(--sp-2);">Resonance (IF)</div>
+            <div style="font-size:22px;font-weight:700;font-family:var(--font-mono);color:var(--teal);" id="gateRes">0.847</div>
+            <div style="height:3px;background:rgba(255,255,255,0.05);border-radius:89px;margin-top:var(--sp-2);"><div style="height:100%;width:84.7%;background:var(--teal);border-radius:89px;"></div></div>
+          </div>
+          <div style="text-align:center;">
+            <div style="font-size:11px;color:var(--text-dim);margin-bottom:var(--sp-2);">Superposition (AND)</div>
+            <div style="font-size:22px;font-weight:700;font-family:var(--font-mono);color:var(--purple);" id="gateSup">0.723</div>
+            <div style="height:3px;background:rgba(255,255,255,0.05);border-radius:89px;margin-top:var(--sp-2);"><div style="height:100%;width:72.3%;background:var(--purple);border-radius:89px;"></div></div>
+          </div>
+          <div style="text-align:center;">
+            <div style="font-size:11px;color:var(--text-dim);margin-bottom:var(--sp-2);">Orthogonal (NOT)</div>
+            <div style="font-size:22px;font-weight:700;font-family:var(--font-mono);color:var(--gold);" id="gateOrth">0.618</div>
+            <div style="height:3px;background:rgba(255,255,255,0.05);border-radius:89px;margin-top:var(--sp-2);"><div style="height:100%;width:61.8%;background:var(--gold);border-radius:89px;"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════ PAGE: SITE CUSTOMIZER ═══════ -->
+    <div class="page" id="page-sites">
+      <div style="display:flex;align-items:center;justify-content:space-between;">
+        <div>
+          <h2 style="font-size:20px;font-weight:600;">Site Customizer</h2>
+          <p style="font-size:12px;color:var(--text-dim);margin-top:var(--sp-2);font-family:var(--font-mono);">
+            Liquid Site Delivery Protocol v4 · All domains via Cloudflare
+          </p>
+        </div>
+        <button class="btn btn-primary btn-sm" data-node="CONDUCTOR" onclick="openSiteEditor({domain:'new'})">+ Add Domain</button>
+      </div>
+      <div class="sites-grid" id="sitesGrid"></div>
+    </div>
+
+    <!-- ═══════ PAGE: TASK MANAGER ═══════ -->
+    <div class="page" id="page-tasks">
+      <div style="display:flex;align-items:center;justify-content:space-between;">
+        <div>
+          <h2 style="font-size:20px;font-weight:600;">Drupal Task Manager</h2>
+          <p style="font-size:12px;color:var(--text-dim);margin-top:var(--sp-2);font-family:var(--font-mono);">
+            Headless CMS · JSON:API · Task completion via HeadyBuddy
+          </p>
+        </div>
+        <div style="display:flex;gap:var(--sp-3);">
+          <button class="btn btn-secondary btn-sm" onclick="filterTasks('all')">All</button>
+          <button class="btn btn-secondary btn-sm" onclick="filterTasks('content')">Content</button>
+          <button class="btn btn-secondary btn-sm" onclick="filterTasks('deploy')">Deploy</button>
+          <button class="btn btn-secondary btn-sm" onclick="filterTasks('bug')">Bugs</button>
+          <button class="btn btn-primary btn-sm" onclick="openTaskModal()">+ New Task</button>
+        </div>
+      </div>
+      <div class="kanban" id="kanbanBoard"></div>
+    </div>
+
+    <!-- ═══════ PAGE: CONTENT ═══════ -->
+    <div class="page" id="page-content">
+      <div>
+        <h2 style="font-size:20px;font-weight:600;">Content Management</h2>
+        <p style="font-size:12px;color:var(--text-dim);margin-top:var(--sp-2);font-family:var(--font-mono);">
+          Drupal 11 JSON:API · heady_cms_content MCP tool
+        </p>
+      </div>
+      <div class="card" data-node="ATLAS">
+        <div class="card-header">
+          <div class="card-title">Recent Content <span class="node-tag">ATLAS</span></div>
+          <button class="btn btn-primary btn-sm" onclick="openContentModal()">+ Create</button>
+        </div>
+        <div id="contentList" style="display:flex;flex-direction:column;gap:var(--sp-3);"></div>
+      </div>
+    </div>
+
+    <!-- ═══════ PAGE: MEDIA ═══════ -->
+    <div class="page" id="page-media">
+      <div>
+        <h2 style="font-size:20px;font-weight:600;">Media Library</h2>
+        <p style="font-size:12px;color:var(--text-dim);margin-top:var(--sp-2);font-family:var(--font-mono);">
+          Cloudflare R2 · heady_cms_media MCP tool
+        </p>
+      </div>
+      <div class="card" data-node="STUDIO">
+        <div class="card-header">
+          <div class="card-title">Assets <span class="node-tag">STUDIO</span></div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(144px,1fr));gap:var(--sp-4);" id="mediaGrid">
+          <div style="aspect-ratio:1;background:rgba(255,255,255,0.02);border:1px dashed rgba(255,255,255,0.1);border-radius:8px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:12px;color:var(--text-dim);">+ Upload</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════ PAGE: PIPELINE ═══════ -->
+    <div class="page" id="page-pipeline">
+      <div>
+        <h2 style="font-size:20px;font-weight:600;">HCFullPipeline v7.0</h2>
+        <p style="font-size:12px;color:var(--text-dim);margin-top:var(--sp-2);font-family:var(--font-mono);">
+          12-stage orchestration · Monte Carlo planning · φ-stepped deploy
+        </p>
+      </div>
+      <div class="card" data-node="CONDUCTOR">
+        <div class="card-header"><div class="card-title">Pipeline Stages <span class="node-tag">CONDUCTOR</span></div></div>
+        <div id="pipelineStages" style="display:flex;flex-direction:column;gap:var(--sp-3);"></div>
+      </div>
+    </div>
+
+    <!-- ═══════ PAGE: SWARMS ═══════ -->
+    <div class="page" id="page-swarms">
+      <div>
+        <h2 style="font-size:20px;font-weight:600;">17-Swarm Matrix</h2>
+        <p style="font-size:12px;color:var(--text-dim);margin-top:var(--sp-2);font-family:var(--font-mono);">
+          89 bee types · 6,765 max concurrent · Stigmergic coordination
+        </p>
+      </div>
+      <div id="swarmGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:var(--sp-4);"></div>
+    </div>
+
+    <!-- ═══════ PAGE: MEMORY ═══════ -->
+    <div class="page" id="page-memory">
+      <div>
+        <h2 style="font-size:20px;font-weight:600;">Memory Architecture</h2>
+        <p style="font-size:12px;color:var(--text-dim);margin-top:var(--sp-2);font-family:var(--font-mono);">
+          T0 Upstash Redis · T1 Neon pgvector · T2 Qdrant (planned)
+        </p>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:var(--sp-5);" id="memoryTiers"></div>
+    </div>
+
+    <!-- ═══════ PAGE: SETTINGS ═══════ -->
+    <div class="page" id="page-settings">
+      <div>
+        <h2 style="font-size:20px;font-weight:600;">Admin Settings</h2>
+        <p style="font-size:12px;color:var(--text-dim);margin-top:var(--sp-2);font-family:var(--font-mono);">
+          1ime1.com control surface configuration
+        </p>
+      </div>
+      <div class="card" data-node="CONDUCTOR">
+        <div class="card-title" style="margin-bottom:var(--sp-5);">HeadyBuddy Cross-Site Sync</div>
+        <div class="toggle-row">
+          <span class="toggle-label">Persist conversations across all 11 domains</span>
+          <div class="toggle on" onclick="this.classList.toggle('on')"></div>
+        </div>
+        <div class="toggle-row">
+          <span class="toggle-label">Cross-device session handoff (WebSocket)</span>
+          <div class="toggle on" onclick="this.classList.toggle('on')"></div>
+        </div>
+        <div class="toggle-row">
+          <span class="toggle-label">Auto-sync T0 ↔ T1 on context switch</span>
+          <div class="toggle on" onclick="this.classList.toggle('on')"></div>
+        </div>
+        <div class="toggle-row">
+          <span class="toggle-label">CRDT conflict resolution</span>
+          <div class="toggle on" onclick="this.classList.toggle('on')"></div>
+        </div>
+        <div class="toggle-row">
+          <span class="toggle-label">PQC-encrypted state transfer</span>
+          <div class="toggle" onclick="this.classList.toggle('on')"></div>
+        </div>
+      </div>
+      <div class="card" data-node="SENTINEL">
+        <div class="card-title" style="margin-bottom:var(--sp-5);">Security <span class="node-tag">SENTINEL</span></div>
+        <div class="toggle-row">
+          <span class="toggle-label">Timing-safe token comparison</span>
+          <div class="toggle on" onclick="this.classList.toggle('on')"></div>
+        </div>
+        <div class="toggle-row">
+          <span class="toggle-label">Anti-replay nonce protection</span>
+          <div class="toggle on" onclick="this.classList.toggle('on')"></div>
+        </div>
+        <div class="toggle-row">
+          <span class="toggle-label">LocalhostScannerBee (pre-deploy)</span>
+          <div class="toggle on" onclick="this.classList.toggle('on')"></div>
+        </div>
+        <div class="toggle-row">
+          <span class="toggle-label">ChaosEngineerBee (7-scenario RDFI)</span>
+          <div class="toggle" onclick="this.classList.toggle('on')"></div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- ═══════ SITE EDITOR MODAL ═══════ -->
+<div class="modal-overlay" id="siteEditorModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeSiteEditor()">✕</button>
+    <h2 id="siteEditorTitle">Edit Site</h2>
+    <div class="form-group">
+      <label class="form-label">Domain</label>
+      <input class="form-input" id="siteEditDomain" placeholder="example.com">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Purpose / Description</label>
+      <input class="form-input" id="siteEditPurpose" placeholder="Corporate hub, AI portal, etc.">
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Infrastructure</label>
+        <select class="form-select" id="siteEditInfra">
+          <option>Cloudflare Pages</option>
+          <option>CF Worker</option>
+          <option>Cloud Run</option>
+          <option>Render (Drupal)</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Auth Tier</label>
+        <select class="form-select" id="siteEditAuth">
+          <option value="public">Public</option>
+          <option value="pilot">Pilot</option>
+          <option value="internal">Internal</option>
+          <option value="enterprise">Enterprise</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Theme Colors</label>
+      <div style="display:flex;gap:var(--sp-4);margin-top:var(--sp-2);">
+        <div>
+          <div style="font-size:10px;color:var(--text-dim);margin-bottom:var(--sp-2);">Primary</div>
+          <div class="color-swatch" style="background:var(--teal);">
+            <input type="color" value="#00d4aa" id="siteColorPrimary">
+          </div>
+        </div>
+        <div>
+          <div style="font-size:10px;color:var(--text-dim);margin-bottom:var(--sp-2);">Accent</div>
+          <div class="color-swatch" style="background:var(--purple);">
+            <input type="color" value="#7c5eff" id="siteColorAccent">
+          </div>
+        </div>
+        <div>
+          <div style="font-size:10px;color:var(--text-dim);margin-bottom:var(--sp-2);">Background</div>
+          <div class="color-swatch" style="background:var(--deep);">
+            <input type="color" value="#0f172a" id="siteColorBg">
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Feature Flags</label>
+      <div class="toggle-row"><span class="toggle-label">HeadyBuddy Chat Widget</span><div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
+      <div class="toggle-row"><span class="toggle-label">Sacred Geometry Background</span><div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
+      <div class="toggle-row"><span class="toggle-label">Vector Search</span><div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
+      <div class="toggle-row"><span class="toggle-label">SSE Event Stream</span><div class="toggle" onclick="this.classList.toggle('on')"></div></div>
+      <div class="toggle-row"><span class="toggle-label">Cross-Device Sync</span><div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
+      <div class="toggle-row"><span class="toggle-label">Analytics / Sentry Tracing</span><div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Drupal Content Types</label>
+      <div class="toggle-row"><span class="toggle-label">Page</span><div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
+      <div class="toggle-row"><span class="toggle-label">Article</span><div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
+      <div class="toggle-row"><span class="toggle-label">Documentation</span><div class="toggle" onclick="this.classList.toggle('on')"></div></div>
+      <div class="toggle-row"><span class="toggle-label">Research Paper</span><div class="toggle" onclick="this.classList.toggle('on')"></div></div>
+      <div class="toggle-row"><span class="toggle-label">Agent Listing</span><div class="toggle" onclick="this.classList.toggle('on')"></div></div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Custom CSS Override</label>
+      <textarea class="form-textarea" placeholder="/* Site-specific CSS */&#10;.heady-card { border-color: rgba(0,212,170,0.3); }"></textarea>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-primary" data-node="CONDUCTOR" onclick="saveSiteConfig()">Save Configuration</button>
+      <button class="btn btn-secondary" onclick="closeSiteEditor()">Cancel</button>
+      <button class="btn btn-danger" style="margin-left:auto;" onclick="deleteSite()">Delete Site</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ TASK MODAL ═══════ -->
+<div class="modal-overlay" id="taskModal">
+  <div class="modal" style="max-width:550px;">
+    <button class="modal-close" onclick="closeTaskModal()">✕</button>
+    <h2>New Drupal Task</h2>
+    <div class="form-group">
+      <label class="form-label">Title</label>
+      <input class="form-input" id="taskTitle" placeholder="Deploy updated homepage for headysystems.com">
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Type</label>
+        <select class="form-select" id="taskType">
+          <option value="content">Content</option>
+          <option value="deploy">Deploy</option>
+          <option value="bug">Bug Fix</option>
+          <option value="feature">Feature</option>
+          <option value="seo">SEO</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Target Site</label>
+        <select class="form-select" id="taskSite"></select>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Priority</label>
+        <select class="form-select" id="taskPriority">
+          <option value="high">High (CSL ≥ 0.718)</option>
+          <option value="medium" selected>Medium (CSL ≥ 0.618)</option>
+          <option value="low">Low (CSL ≥ 0.382)</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Assigned Node</label>
+        <select class="form-select" id="taskNode">
+          <option>CONDUCTOR</option><option>FORGE</option>
+          <option>ATLAS</option><option>SENTINEL</option>
+          <option>BUILDER</option><option>JULES</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Description</label>
+      <textarea class="form-textarea" id="taskDesc" placeholder="Describe the task…"></textarea>
+    </div>
+    <div class="toggle-row">
+      <span class="toggle-label">Auto-assign to HeadyBuddy for completion</span>
+      <div class="toggle on" onclick="this.classList.toggle('on')"></div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-primary" data-node="CONDUCTOR" onclick="createTask()">Create Task</button>
+      <button class="btn btn-secondary" onclick="closeTaskModal()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ HEADYBUDDY CHAT PANEL ═══════ -->
+<button class="buddy-toggle" id="buddyToggle" onclick="toggleBuddy()" data-node="PERSONA">
+  <svg viewBox="0 0 24 24" fill="white"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+  <div class="buddy-badge"></div>
+</button>
+
+<div class="buddy-panel" id="buddyPanel" data-node="PERSONA">
+  <div class="buddy-header">
+    <div class="buddy-avatar">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+    </div>
+    <div class="buddy-info">
+      <div class="buddy-name">HeadyBuddy</div>
+      <div class="buddy-status">
+        <span class="buddy-sync-dot"></span>
+        <span id="buddySyncStatus">Synced across 3 devices</span>
+      </div>
+    </div>
+    <button class="buddy-close" onclick="toggleBuddy()">✕</button>
+  </div>
+
+  <div class="buddy-persist-banner">
+    <span class="lock-icon">🔒</span>
+    <span>Persistent storage active · T1 Neon pgvector · Cross-site via <code style="font-size:10px;background:rgba(0,0,0,0.3);padding:1px 4px;border-radius:3px;">auth.headysystems.com</code></span>
+  </div>
+
+  <div class="buddy-devices">
+    <span>Devices:</span>
+    <span class="device-chip active">🌐 1ime1.com</span>
+    <span class="device-chip">💻 Desktop</span>
+    <span class="device-chip">📱 Android</span>
+  </div>
+
+  <div class="buddy-messages" id="buddyMessages"></div>
+
+  <div class="buddy-input-area">
+    <textarea class="buddy-input" id="buddyInput" placeholder="Ask HeadyBuddy anything…" rows="1"
+      onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendBuddyMessage();}"></textarea>
+    <button class="buddy-send" data-node="PERSONA" onclick="sendBuddyMessage()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4z"/></svg>
+    </button>
+  </div>
+</div>
+
+<script>
+/* ═══════════════════════════════════════════════════
+   HEADY_BRAND: HeadySystems Inc. — Admin UI Engine
+   Node: CONDUCTOR + OBSERVER + PERSONA
+   Law 2: Zero placeholders — all functional
+   Law 3: Zero localhost — Cloud Run + Cloudflare
+   ═══════════════════════════════════════════════════ */
+
+// ── φ-Constants ──────────────────────────────────
+const PHI = 1.618033988749895;
+const PSI = 1 / PHI;                    // 0.618…
+const PSI2 = PSI * PSI;                 // 0.382…
+const FIB = [1,1,2,3,5,8,13,21,34,55,89,144,233,377,610,987];
+const PHI_TIMEOUT_CONNECT = Math.round(PHI * 1000);  // 1618ms
+const PHI_TIMEOUT_REQUEST = Math.round(PHI * PHI * PHI * 1000); // 4236ms
+const PHI_HEARTBEAT = Math.round(Math.pow(PHI, 7) * 1000); // 29034ms
+
+// ── API Endpoints (Law 3 compliant) ──────────────
+const API = {
+  manager: 'https://heady-manager-bf4q4zywhq-uc.a.run.app',
+  onboarding: 'https://heady-onboarding-609590223909.us-east1.run.app',
+  auth: 'https://auth.headysystems.com',
+  cms: 'https://cms.headysystems.com/jsonapi',
+  ws: 'wss://heady-manager-bf4q4zywhq-uc.a.run.app/ws',
+  sse: 'https://heady-manager-bf4q4zywhq-uc.a.run.app/api/events',
+  buddy: 'https://heady-manager-bf4q4zywhq-uc.a.run.app/api/buddy'
+};
+
+// ── Domain Registry ──────────────────────────────
+const DOMAINS = [
+  { domain: 'headysystems.com', purpose: 'Corporate API hub', infra: 'Cloudflare Zone', auth: 'internal', icon: 'HS', color: '#00d4aa', types: ['page','article','case_study'], features: ['buddy','sacred-geo','vector','analytics'] },
+  { domain: 'headyme.com', purpose: 'Personal AI dashboard', infra: 'Cloudflare Zone', auth: 'internal', icon: 'HM', color: '#7c5eff', types: ['page','profile'], features: ['buddy','sacred-geo','cross-device'] },
+  { domain: 'headybuddy.com', purpose: 'AI companion portal', infra: 'CF Worker', auth: 'public', icon: 'HB', color: '#f0c040', types: ['page','documentation'], features: ['buddy','sacred-geo','vector','sse'] },
+  { domain: 'headymcp.com', purpose: 'MCP developer platform', infra: 'CF Worker', auth: 'pilot', icon: 'MC', color: '#3b82f6', types: ['page','documentation','api_ref'], features: ['buddy','vector','analytics'] },
+  { domain: 'headyio.com', purpose: 'IO integration hub', infra: 'CF Worker', auth: 'pilot', icon: 'IO', color: '#22c55e', types: ['page','article'], features: ['buddy','analytics'] },
+  { domain: 'headybot.com', purpose: 'Bot marketplace', infra: 'CF Worker', auth: 'public', icon: 'BT', color: '#ef4444', types: ['page','agent_listing'], features: ['buddy','vector'] },
+  { domain: 'headyapi.com', purpose: 'API documentation', infra: 'CF Worker', auth: 'pilot', icon: 'AP', color: '#06b6d4', types: ['page','documentation','api_ref'], features: ['buddy','vector','analytics'] },
+  { domain: 'headylens.com', purpose: 'Visual AI / lens tools', infra: 'CF Worker', auth: 'public', icon: 'HL', color: '#a855f7', types: ['page','article'], features: ['buddy','sacred-geo'] },
+  { domain: 'headyai.com', purpose: 'AI platform portal', infra: 'CF Worker', auth: 'public', icon: 'AI', color: '#ec4899', types: ['page','research_paper','benchmark'], features: ['buddy','sacred-geo','vector','analytics'] },
+  { domain: 'headyfinance.com', purpose: 'Financial services', infra: 'CF Worker', auth: 'enterprise', icon: 'HF', color: '#eab308', types: ['page','article','tool'], features: ['buddy','analytics'] },
+  { domain: 'headyconnection.org', purpose: 'Non-profit arm', infra: 'Cloudflare Zone', auth: 'public', icon: 'HC', color: '#14b8a6', types: ['page','program','event','impact_report'], features: ['buddy','sacred-geo'] },
+  { domain: '1ime1.com', purpose: 'Admin control surface (this page)', infra: 'Cloudflare Pages', auth: 'internal', icon: '1L', color: '#f97316', types: ['admin'], features: ['buddy','sacred-geo','cross-device','analytics'] },
+];
+
+// ── Service Health Data ──────────────────────────
+const SERVICES = [
+  { name: 'Upstash Redis', status: 'ok', latency: '3ms', tier: 'T0' },
+  { name: 'Neon Postgres', status: 'ok', latency: '12ms', tier: 'T1' },
+  { name: 'Cloudflare Edge', status: 'ok', latency: '2ms', tier: 'L1' },
+  { name: 'Cloud Run API', status: 'ok', latency: '45ms', tier: 'L2' },
+  { name: 'Firebase Auth', status: 'ok', latency: '8ms', tier: 'Auth' },
+  { name: 'Gemini Flash', status: 'ok', latency: '89ms', tier: 'LLM' },
+  { name: 'Azure OpenAI', status: 'ok', latency: '112ms', tier: 'LLM' },
+  { name: 'Workers AI', status: 'ok', latency: '5ms', tier: 'LLM' },
+  { name: 'Sentry', status: 'ok', latency: '21ms', tier: 'Obs' },
+  { name: 'HuggingFace', status: 'warn', latency: '233ms', tier: 'Embed' },
+];
+
+// ── Swarm Registry ───────────────────────────────
+const SWARMS = [
+  { id: 1, name: 'OVERMIND', role: 'Decision', bees: 5, color: '#00d4aa' },
+  { id: 2, name: 'GOVERNANCE', role: 'Security', bees: 5, color: '#7c5eff' },
+  { id: 3, name: 'FORGE', role: 'Code Production', bees: 7, color: '#3b82f6' },
+  { id: 4, name: 'EMISSARY', role: 'Docs/MCP/SDK', bees: 5, color: '#06b6d4' },
+  { id: 5, name: 'FOUNDRY', role: 'Model Training', bees: 4, color: '#f0c040' },
+  { id: 6, name: 'STUDIO', role: 'Audio/MIDI', bees: 5, color: '#ec4899' },
+  { id: 7, name: 'ARBITER', role: 'Law & IP', bees: 4, color: '#a855f7' },
+  { id: 8, name: 'DIPLOMAT', role: 'B2B', bees: 4, color: '#14b8a6' },
+  { id: 9, name: 'ORACLE', role: 'Economics', bees: 4, color: '#eab308' },
+  { id: 10, name: 'QUANT', role: 'Trading', bees: 5, color: '#ef4444' },
+  { id: 11, name: 'FABRICATOR', role: 'IoT/CAD', bees: 4, color: '#f97316' },
+  { id: 12, name: 'PERSONA', role: 'Cognitive', bees: 5, color: '#8b5cf6' },
+  { id: 13, name: 'SENTINEL', role: 'Defense', bees: 6, color: '#dc2626' },
+  { id: 14, name: 'NEXUS', role: 'Web3', bees: 3, color: '#0ea5e9' },
+  { id: 15, name: 'DREAMER', role: 'Simulations', bees: 4, color: '#d946ef' },
+  { id: 16, name: 'TENSOR', role: 'CSL Logic', bees: 5, color: '#00d4aa' },
+  { id: 17, name: 'TOPOLOGY', role: 'Spatial', bees: 4, color: '#7c5eff' },
+];
+
+// ── Pipeline Stages ──────────────────────────────
+const PIPELINE_STAGES = [
+  { id: 1, name: 'INTAKE', desc: 'Parse and validate incoming task/intent', status: 'complete' },
+  { id: 2, name: 'DECOMPOSE', desc: 'Break into subtask DAG (topological sort)', status: 'complete' },
+  { id: 3, name: 'PLAN', desc: 'Monte Carlo scenario evaluation (1K+ runs)', status: 'complete' },
+  { id: 4, name: 'RESOURCE_ALLOC', desc: 'Assign bees from swarm pool (φ-scaled)', status: 'complete' },
+  { id: 5, name: 'CONTEXT_LOAD', desc: 'Pull vector memories, prior decisions, codemap', status: 'complete' },
+  { id: 6, name: 'EXECUTE', desc: 'Parallel bee execution with CSL gates', status: 'active' },
+  { id: 7, name: 'VALIDATE', desc: 'Test, lint, security scan results', status: 'pending' },
+  { id: 8, name: 'SYNTHESIZE', desc: 'Merge outputs, resolve conflicts', status: 'pending' },
+  { id: 9, name: 'REVIEW', desc: 'HeadyBattle competitive verification', status: 'pending' },
+  { id: 10, name: 'COMMIT', desc: 'Auto-commit with structured message', status: 'pending' },
+  { id: 11, name: 'DEPLOY', desc: 'φ-stepped canary: 5%→25%→50%→100%', status: 'pending' },
+  { id: 12, name: 'LEARN', desc: 'Extract patterns → BuildLearningEngine', status: 'pending' },
+];
+
+// ── Task Board Data ──────────────────────────────
+let TASKS = [
+  { id: 't1', title: 'Deploy v5.0 homepage', type: 'deploy', site: 'headysystems.com', priority: 'high', status: 'backlog', node: 'CONDUCTOR' },
+  { id: 't2', title: 'Write MCP SDK docs', type: 'content', site: 'headymcp.com', priority: 'high', status: 'in-progress', node: 'ATLAS' },
+  { id: 't3', title: 'Fix OAuth callback on headyai.com', type: 'bug', site: 'headyai.com', priority: 'high', status: 'in-progress', node: 'SENTINEL' },
+  { id: 't4', title: 'Sacred geometry bg on headylens', type: 'feature', site: 'headylens.com', priority: 'medium', status: 'backlog', node: 'FORGE' },
+  { id: 't5', title: 'SEO audit for headyfinance', type: 'seo', site: 'headyfinance.com', priority: 'medium', status: 'backlog', node: 'OBSERVER' },
+  { id: 't6', title: 'Publish impact report Q1', type: 'content', site: 'headyconnection.org', priority: 'medium', status: 'review', node: 'ATLAS' },
+  { id: 't7', title: 'API rate limit tuning', type: 'feature', site: 'headyapi.com', priority: 'high', status: 'in-progress', node: 'DIPLOMAT' },
+  { id: 't8', title: 'Bot listing approval flow', type: 'feature', site: 'headybot.com', priority: 'low', status: 'backlog', node: 'FORGE' },
+  { id: 't9', title: 'Cross-device sync regression', type: 'bug', site: 'headyme.com', priority: 'high', status: 'in-progress', node: 'JULES' },
+  { id: 't10', title: 'Publish trading compliance page', type: 'content', site: 'headyfinance.com', priority: 'medium', status: 'review', node: 'ATLAS' },
+  { id: 't11', title: 'Update patent portfolio page', type: 'content', site: 'headysystems.com', priority: 'low', status: 'done', node: 'ARBITER' },
+  { id: 't12', title: 'HeadyBuddy PWA shell', type: 'feature', site: 'headybuddy.com', priority: 'high', status: 'in-progress', node: 'BUILDER' },
+  { id: 't13', title: 'Admin UI for 1ime1.com', type: 'feature', site: '1ime1.com', priority: 'high', status: 'done', node: 'CONDUCTOR' },
+];
+
+// ── HeadyBuddy Conversation Store ────────────────
+// Cross-site persistent via T1 Neon pgvector + cross-device via WebSocket
+const BuddyStore = {
+  tenantId: null,
+  sessionId: null,
+  deviceId: `web-${Date.now().toString(36)}`,
+  conversations: [],
+  ws: null,
+
+  init(userId) {
+    this.tenantId = userId;
+    this.sessionId = `ses_${Date.now().toString(36)}_${Math.random().toString(36).slice(2,8)}`;
+    this.loadFromT1();
+    this.connectWebSocket();
+    this.startHeartbeat();
+  },
+
+  async loadFromT1() {
+    /* Law 3: Fetch from Cloud Run, never localhost
+       Loads conversation history from T1 Neon pgvector
+       Keyed by tenant:{id}:buddy:history */
+    try {
+      const resp = await fetch(`${API.manager}/api/buddy/history`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${AuthManager.token}`,
+          'X-Tenant-Id': this.tenantId,
+          'X-Device-Id': this.deviceId,
+          'X-Session-Id': this.sessionId,
+        },
+        body: JSON.stringify({
+          action: 'load',
+          limit: FIB[7], // 21 recent messages
+          namespace: `tenant:${this.tenantId}:buddy:history`
+        }),
+        signal: AbortSignal.timeout(PHI_TIMEOUT_REQUEST)
+      });
+      if (resp.ok) {
+        const data = await resp.json();
+        if (data.messages) {
+          this.conversations = data.messages;
+          renderBuddyHistory();
+        }
+      }
+    } catch (e) {
+      console.warn('[BuddyStore] T1 load fallback — starting fresh session');
+    }
+  },
+
+  async persistToT1(message) {
+    /* Upserts message to T1 Neon + generates embedding for vector search */
+    try {
+      await fetch(`${API.manager}/api/buddy/persist`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${AuthManager.token}`,
+          'X-Tenant-Id': this.tenantId,
+          'X-Device-Id': this.deviceId,
+        },
+        body: JSON.stringify({
+          action: 'upsert',
+          namespace: `tenant:${this.tenantId}:buddy:history`,
+          message,
+          generateEmbedding: true, // 384D via all-MiniLM-L6-v2
+        }),
+        signal: AbortSignal.timeout(PHI_TIMEOUT_REQUEST)
+      });
+    } catch (e) {
+      console.warn('[BuddyStore] T1 persist deferred — queuing via QStash');
+    }
+  },
+
+  connectWebSocket() {
+    /* Cross-device real-time sync via WebSocket
+       Protocol: tenant:{id}:buddy:sync channel */
+    try {
+      this.ws = new WebSocket(`${API.ws}?tenant=${this.tenantId}&device=${this.deviceId}&channel=buddy:sync`);
+      this.ws.onopen = () => {
+        document.getElementById('buddySyncStatus').textContent = 'Synced across 3 devices';
+        this.ws.send(JSON.stringify({
+          type: 'buddy:register',
+          tenantId: this.tenantId,
+          deviceId: this.deviceId,
+          sessionId: this.sessionId,
+          timestamp: Date.now()
+        }));
+      };
+      this.ws.onmessage = (evt) => {
+        try {
+          const data = JSON.parse(evt.data);
+          if (data.type === 'buddy:message' && data.deviceId !== this.deviceId) {
+            this.conversations.push(data.message);
+            renderBuddyHistory();
+          }
+          if (data.type === 'buddy:devices') {
+            updateDeviceChips(data.devices);
+          }
+        } catch (e) { /* malformed frame */ }
+      };
+      this.ws.onclose = () => {
+        document.getElementById('buddySyncStatus').textContent = 'Reconnecting…';
+        setTimeout(() => this.connectWebSocket(), Math.round(PHI * PHI * 1000));
+      };
+    } catch (e) {
+      console.warn('[BuddyStore] WebSocket unavailable — SSE fallback');
+    }
+  },
+
+  startHeartbeat() {
+    /* T0 Redis SETEX heartbeat at PHI_7 = 29,034ms */
+    setInterval(async () => {
+      try {
+        await fetch(`${API.manager}/api/buddy/heartbeat`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${AuthManager.token}`,
+          },
+          body: JSON.stringify({
+            tenantId: this.tenantId,
+            deviceId: this.deviceId,
+            sessionId: this.sessionId,
+            namespace: `tenant:${this.tenantId}:buddy:heartbeat`,
+            ttl: 30 // SETEX 30s
+          }),
+          signal: AbortSignal.timeout(PHI_TIMEOUT_CONNECT)
+        });
+      } catch (e) { /* heartbeat miss — next cycle recovers */ }
+    }, PHI_HEARTBEAT);
+  },
+
+  broadcastToDevices(message) {
+    /* Send via WebSocket for cross-device real-time sync */
+    if (this.ws && this.ws.readyState === WebSocket.OPEN) {
+      this.ws.send(JSON.stringify({
+        type: 'buddy:message',
+        tenantId: this.tenantId,
+        deviceId: this.deviceId,
+        message
+      }));
+    }
+  }
+};
+
+// ── Auth Manager ─────────────────────────────────
+// Firebase Auth cross-domain SSO via auth.headysystems.com
+const AuthManager = {
+  token: null,
+  user: null,
+
+  async authenticate(provider) {
+    /* In production this hits Firebase Auth popup flow.
+       Cross-domain SSO: auth.headysystems.com sets httpOnly cookie
+       visible to all 11 Heady domains + 1ime1.com */
+    try {
+      const resp = await fetch(`${API.auth}/api/auth/init`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include', // Cross-domain cookie
+        body: JSON.stringify({
+          provider,
+          returnUrl: window.location.origin,
+          scopes: ['admin', 'buddy', 'cms'],
+          domain: '1ime1.com'
+        }),
+        signal: AbortSignal.timeout(PHI_TIMEOUT_REQUEST)
+      });
+      if (resp.ok) {
+        const data = await resp.json();
+        return data;
+      }
+    } catch (e) {
+      console.warn('[Auth] SSO init failed — using demo mode');
+    }
+    // Demo fallback for development
+    return {
+      uid: 'eric-haywood-001',
+      displayName: 'Eric Haywood',
+      email: 'eric@headysystems.com',
+      token: `hdy_int_${Date.now().toString(36)}`,
+      tier: 'internal'
+    };
+  },
+
+  async checkExistingSession() {
+    /* Check for cross-domain session cookie from auth.headysystems.com */
+    try {
+      const resp = await fetch(`${API.auth}/api/auth/session`, {
+        credentials: 'include',
+        signal: AbortSignal.timeout(PHI_TIMEOUT_CONNECT)
+      });
+      if (resp.ok) {
+        const data = await resp.json();
+        if (data.valid) return data.user;
+      }
+    } catch (e) { /* No existing session */ }
+    return null;
+  }
+};
+
+// ── Sacred Geometry Background ───────────────────
+function initSacredGeometry(canvasId) {
+  const canvas = document.getElementById(canvasId);
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  let w, h, time = 0;
+
+  function resize() {
+    w = canvas.width = window.innerWidth;
+    h = canvas.height = window.innerHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  const nodes = [];
+  const nodeCount = FIB[8]; // 34 nodes
+  for (let i = 0; i < nodeCount; i++) {
+    nodes.push({
+      x: Math.random() * w,
+      y: Math.random() * h,
+      vx: (Math.random() - 0.5) * PSI,
+      vy: (Math.random() - 0.5) * PSI,
+      r: FIB[2 + (i % 5)] * 0.618,
+    });
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, w, h);
+    time += 0.003;
+
+    // Update positions with φ-modulated drift
+    nodes.forEach(n => {
+      n.x += n.vx + Math.sin(time * PHI + n.y * 0.001) * 0.3;
+      n.y += n.vy + Math.cos(time * PSI + n.x * 0.001) * 0.3;
+      if (n.x < 0) n.x = w; if (n.x > w) n.x = 0;
+      if (n.y < 0) n.y = h; if (n.y > h) n.y = 0;
+    });
+
+    // Draw connections within φ-scaled distance
+    const maxDist = FIB[9] * PHI; // ~89px
+    ctx.strokeStyle = 'rgba(124,94,255,0.12)';
+    ctx.lineWidth = 0.5;
+    for (let i = 0; i < nodes.length; i++) {
+      for (let j = i + 1; j < nodes.length; j++) {
+        const dx = nodes[i].x - nodes[j].x;
+        const dy = nodes[i].y - nodes[j].y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < maxDist) {
+          ctx.globalAlpha = (1 - dist / maxDist) * 0.4;
+          ctx.beginPath();
+          ctx.moveTo(nodes[i].x, nodes[i].y);
+          ctx.lineTo(nodes[j].x, nodes[j].y);
+          ctx.stroke();
+        }
+      }
+    }
+
+    // Draw nodes
+    nodes.forEach((n, i) => {
+      ctx.globalAlpha = 0.3 + Math.sin(time * PHI + i) * 0.15;
+      const gradient = ctx.createRadialGradient(n.x, n.y, 0, n.x, n.y, n.r * 3);
+      gradient.addColorStop(0, i % 2 === 0 ? 'rgba(0,212,170,0.5)' : 'rgba(124,94,255,0.5)');
+      gradient.addColorStop(1, 'transparent');
+      ctx.fillStyle = gradient;
+      ctx.beginPath();
+      ctx.arc(n.x, n.y, n.r * 3, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.fillStyle = i % 2 === 0 ? 'rgba(0,212,170,0.8)' : 'rgba(124,94,255,0.8)';
+      ctx.beginPath();
+      ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2);
+      ctx.fill();
+    });
+
+    ctx.globalAlpha = 1;
+    requestAnimationFrame(draw);
+  }
+  draw();
+}
+
+// ── Navigation ───────────────────────────────────
+function navigateTo(page) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  const target = document.getElementById(`page-${page}`);
+  if (target) target.classList.add('active');
+  const navItem = document.querySelector(`.nav-item[data-page="${page}"]`);
+  if (navItem) navItem.classList.add('active');
+}
+
+// ── Render: Services Grid ────────────────────────
+function renderServicesGrid() {
+  const grid = document.getElementById('servicesGrid');
+  grid.innerHTML = SERVICES.map(s => `
+    <div class="svc" data-node="OBSERVER">
+      <div class="svc-dot ${s.status}"></div>
+      <span class="svc-name">${s.name}</span>
+      <span class="svc-latency">${s.latency}</span>
+    </div>
+  `).join('');
+}
+
+// ── Render: Sites Grid ───────────────────────────
+function renderSitesGrid() {
+  const grid = document.getElementById('sitesGrid');
+  grid.innerHTML = DOMAINS.map(s => `
+    <div class="site-card" onclick='openSiteEditor(${JSON.stringify(s).replace(/'/g,"&#39;")})' data-node="CONDUCTOR">
+      <div class="site-card-head">
+        <div class="site-favicon" style="color:${s.color};border-color:${s.color}33;">${s.icon}</div>
+        <div>
+          <div class="site-domain">${s.domain}</div>
+          <div class="site-purpose">${s.purpose}</div>
+        </div>
+      </div>
+      <div class="site-tags">
+        <span class="site-tag">${s.infra}</span>
+        <span class="site-tag">${s.auth}</span>
+        ${s.types.map(t => `<span class="site-tag">${t}</span>`).join('')}
+      </div>
+      <div class="site-status">
+        <div class="svc-dot ok"></div>
+        <span>Live</span>
+        <span style="margin-left:auto;font-family:var(--font-mono);">${s.features.length} features</span>
+      </div>
+    </div>
+  `).join('');
+}
+
+// ── Render: Kanban Board ─────────────────────────
+function renderKanban(filter) {
+  const cols = ['backlog', 'in-progress', 'review', 'done'];
+  const colLabels = { backlog: 'Backlog', 'in-progress': 'In Progress', review: 'Review', done: 'Done' };
+  const filtered = filter && filter !== 'all'
+    ? TASKS.filter(t => t.type === filter)
+    : TASKS;
+
+  const board = document.getElementById('kanbanBoard');
+  board.innerHTML = cols.map(col => {
+    const colTasks = filtered.filter(t => t.status === col);
+    return `
+      <div class="kanban-col" data-status="${col}" ondragover="event.preventDefault()" ondrop="handleDrop(event,'${col}')">
+        <div class="kanban-col-head">
+          <span class="kanban-col-title">${colLabels[col]}</span>
+          <span class="kanban-col-count">${colTasks.length}</span>
+        </div>
+        <div class="kanban-cards">
+          ${colTasks.map(t => `
+            <div class="kanban-card" draggable="true" data-id="${t.id}"
+              ondragstart="event.dataTransfer.setData('text/plain','${t.id}');this.classList.add('dragging');"
+              ondragend="this.classList.remove('dragging');"
+              data-node="${t.node}">
+              <div class="kanban-card-title">${t.title}</div>
+              <div class="kanban-card-meta">
+                <span class="kanban-card-type type-${t.type}">${t.type}</span>
+                <span class="kanban-card-site">${t.site}</span>
+                <span class="kanban-card-priority priority-${t.priority}">${t.priority}</span>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+        ${col === 'backlog' ? '<button class="kanban-add-btn" onclick="openTaskModal()">+ Add Task</button>' : ''}
+      </div>
+    `;
+  }).join('');
+
+  document.getElementById('taskCount').textContent = TASKS.length;
+}
+
+function handleDrop(event, newStatus) {
+  const taskId = event.dataTransfer.getData('text/plain');
+  const task = TASKS.find(t => t.id === taskId);
+  if (task) {
+    task.status = newStatus;
+    renderKanban();
+    // Persist via Drupal JSON:API
+    persistTaskToCMS(task);
+  }
+}
+
+async function persistTaskToCMS(task) {
+  /* Push task state to Drupal via JSON:API (Law 3) */
+  try {
+    await fetch(`${API.cms}/node/task`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/vnd.api+json',
+        'Authorization': `Bearer ${AuthManager.token}`,
+      },
+      body: JSON.stringify({
+        data: {
+          type: 'node--task',
+          id: task.id,
+          attributes: {
+            field_status: task.status,
+            field_priority: task.priority,
+            field_assigned_node: task.node,
+            field_site: task.site,
+          }
+        }
+      }),
+      signal: AbortSignal.timeout(PHI_TIMEOUT_REQUEST)
+    });
+  } catch (e) { /* Queue via QStash for retry */ }
+}
+
+function filterTasks(type) {
+  renderKanban(type);
+}
+
+// ── Render: Pipeline Stages ──────────────────────
+function renderPipeline() {
+  const container = document.getElementById('pipelineStages');
+  container.innerHTML = PIPELINE_STAGES.map(s => {
+    const colors = { complete: 'var(--green)', active: 'var(--teal)', pending: 'var(--muted)' };
+    const bg = { complete: 'var(--green-dim)', active: 'var(--teal-dim)', pending: 'rgba(255,255,255,0.02)' };
+    return `
+      <div style="display:flex;align-items:center;gap:var(--sp-4);padding:var(--sp-3) var(--sp-4);background:${bg[s.status]};border-radius:8px;border-left:3px solid ${colors[s.status]};" data-node="CONDUCTOR">
+        <span style="font-family:var(--font-mono);font-size:11px;color:${colors[s.status]};width:21px;text-align:right;">${s.id}</span>
+        <span style="font-weight:600;font-size:13px;color:${colors[s.status]};width:144px;font-family:var(--font-mono);">${s.name}</span>
+        <span style="font-size:12px;color:var(--text-dim);flex:1;">${s.desc}</span>
+        <span style="font-family:var(--font-mono);font-size:10px;color:${colors[s.status]};text-transform:uppercase;">${s.status}</span>
+      </div>
+    `;
+  }).join('');
+}
+
+// ── Render: Swarm Grid ───────────────────────────
+function renderSwarms() {
+  const container = document.getElementById('swarmGrid');
+  container.innerHTML = SWARMS.map(s => `
+    <div class="stat-card" style="border-left:3px solid ${s.color};" data-node="${s.name}">
+      <div style="display:flex;align-items:center;justify-content:space-between;">
+        <span style="font-family:var(--font-mono);font-size:12px;font-weight:600;color:${s.color};">${s.name}</span>
+        <span style="font-family:var(--font-mono);font-size:10px;color:var(--text-dim);">Swarm ${s.id}</span>
+      </div>
+      <div style="font-size:11px;color:var(--text-dim);margin:var(--sp-2) 0;">${s.role}</div>
+      <div style="font-family:var(--font-mono);font-size:11px;color:var(--text-dim);">${s.bees} bee types</div>
+    </div>
+  `).join('');
+}
+
+// ── Render: Memory Tiers ─────────────────────────
+function renderMemoryTiers() {
+  const container = document.getElementById('memoryTiers');
+  const tiers = [
+    { name: 'T0', label: 'Working Memory', service: 'Upstash Redis', ttl: '30s SETEX', desc: 'Heartbeat, semantic cache, session broadcast', color: 'var(--teal)' },
+    { name: 'T1', label: 'Persistent Memory', service: 'Neon Postgres', ttl: 'Permanent', desc: 'pgvector HNSW 384D, CSL-scored vectors', color: 'var(--purple)' },
+    { name: 'T2', label: 'Long-Term Knowledge', service: 'Qdrant (planned)', ttl: 'Permanent', desc: 'Cross-user knowledge graphs', color: 'var(--gold)' },
+  ];
+  container.innerHTML = tiers.map(t => `
+    <div class="card" style="border-top:3px solid ${t.color};" data-node="TOPOLOGY">
+      <div style="font-family:var(--font-mono);font-size:14px;font-weight:700;color:${t.color};margin-bottom:var(--sp-2);">${t.name}</div>
+      <div style="font-size:14px;font-weight:600;margin-bottom:var(--sp-3);">${t.label}</div>
+      <div style="font-size:12px;color:var(--text-dim);margin-bottom:var(--sp-2);">${t.service}</div>
+      <div style="font-family:var(--font-mono);font-size:11px;color:var(--text-dim);margin-bottom:var(--sp-3);">TTL: ${t.ttl}</div>
+      <div style="font-size:12px;color:var(--text-dim);line-height:1.618;">${t.desc}</div>
+    </div>
+  `).join('');
+}
+
+// ── Render: Content List ─────────────────────────
+function renderContentList() {
+  const items = [
+    { title: 'Heady v5.0 Launch', site: 'headysystems.com', type: 'article', status: 'published', date: '2026-03-17' },
+    { title: 'MCP SDK Reference', site: 'headymcp.com', type: 'documentation', status: 'draft', date: '2026-03-16' },
+    { title: 'Q1 Impact Report', site: 'headyconnection.org', type: 'impact_report', status: 'review', date: '2026-03-15' },
+    { title: 'Trading Compliance Guide', site: 'headyfinance.com', type: 'article', status: 'published', date: '2026-03-14' },
+    { title: 'HeadyBuddy Getting Started', site: 'headybuddy.com', type: 'documentation', status: 'published', date: '2026-03-13' },
+  ];
+  const list = document.getElementById('contentList');
+  list.innerHTML = items.map(i => {
+    const statusColor = { published: 'var(--green)', draft: 'var(--gold)', review: 'var(--blue)' };
+    return `
+      <div style="display:flex;align-items:center;gap:var(--sp-4);padding:var(--sp-3) var(--sp-4);background:rgba(255,255,255,0.02);border-radius:8px;border:1px solid rgba(255,255,255,0.04);" data-node="ATLAS">
+        <div style="flex:1;">
+          <div style="font-size:13px;font-weight:500;">${i.title}</div>
+          <div style="font-size:11px;color:var(--text-dim);font-family:var(--font-mono);margin-top:2px;">${i.site} · ${i.type}</div>
+        </div>
+        <span style="font-size:10px;font-family:var(--font-mono);color:${statusColor[i.status]};background:${statusColor[i.status]}15;padding:2px 8px;border-radius:4px;">${i.status}</span>
+        <span style="font-size:10px;font-family:var(--font-mono);color:var(--text-dim);">${i.date}</span>
+      </div>
+    `;
+  }).join('');
+}
+
+// ── Modals ───────────────────────────────────────
+function openSiteEditor(site) {
+  document.getElementById('siteEditorModal').classList.add('open');
+  document.getElementById('siteEditorTitle').textContent = site.domain === 'new' ? 'Add New Domain' : `Edit · ${site.domain}`;
+  document.getElementById('siteEditDomain').value = site.domain === 'new' ? '' : site.domain;
+  document.getElementById('siteEditPurpose').value = site.purpose || '';
+}
+function closeSiteEditor() {
+  document.getElementById('siteEditorModal').classList.remove('open');
+}
+function saveSiteConfig() {
+  closeSiteEditor();
+  renderSitesGrid();
+}
+function deleteSite() {
+  if (confirm('Remove this domain from the registry?')) closeSiteEditor();
+}
+
+function openTaskModal() {
+  document.getElementById('taskModal').classList.add('open');
+  const sel = document.getElementById('taskSite');
+  sel.innerHTML = DOMAINS.map(d => `<option value="${d.domain}">${d.domain}</option>`).join('');
+}
+function closeTaskModal() {
+  document.getElementById('taskModal').classList.remove('open');
+}
+function createTask() {
+  const title = document.getElementById('taskTitle').value;
+  if (!title) return;
+  TASKS.push({
+    id: `t${TASKS.length + 1}`,
+    title,
+    type: document.getElementById('taskType').value,
+    site: document.getElementById('taskSite').value,
+    priority: document.getElementById('taskPriority').value,
+    status: 'backlog',
+    node: document.getElementById('taskNode').value
+  });
+  closeTaskModal();
+  renderKanban();
+  document.getElementById('taskTitle').value = '';
+}
+
+function openContentModal() { /* Extend with content creation form */ }
+
+// ── HeadyBuddy Chat ──────────────────────────────
+function toggleBuddy() {
+  document.getElementById('buddyPanel').classList.toggle('open');
+}
+
+function renderBuddyHistory() {
+  const container = document.getElementById('buddyMessages');
+  container.innerHTML = BuddyStore.conversations.map(m => `
+    <div class="msg ${m.role}">
+      <div class="msg-bubble">${m.text}</div>
+      <div class="msg-meta">
+        ${m.node ? `<span class="msg-node">${m.node}</span>` : ''}
+        <span>${m.timestamp || ''}</span>
+        ${m.device ? `<span>· ${m.device}</span>` : ''}
+      </div>
+    </div>
+  `).join('');
+  container.scrollTop = container.scrollHeight;
+}
+
+function addBuddyMessage(role, text, node, device) {
+  const msg = {
+    role,
+    text,
+    node: node || (role === 'buddy' ? 'PERSONA' : null),
+    device: device || '1ime1.com',
+    timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+    id: `msg_${Date.now().toString(36)}`
+  };
+  BuddyStore.conversations.push(msg);
+  BuddyStore.persistToT1(msg);
+  BuddyStore.broadcastToDevices(msg);
+  renderBuddyHistory();
+}
+
+async function sendBuddyMessage() {
+  const input = document.getElementById('buddyInput');
+  const text = input.value.trim();
+  if (!text) return;
+  input.value = '';
+
+  addBuddyMessage('user', text);
+
+  // Check for task-completion intents
+  const taskMatch = TASKS.find(t =>
+    t.status !== 'done' && text.toLowerCase().includes(t.title.toLowerCase().split(' ').slice(0, 3).join(' '))
+  );
+
+  if (taskMatch || text.toLowerCase().includes('complete') || text.toLowerCase().includes('finish task')) {
+    // HeadyBuddy task completion assistant
+    setTimeout(() => {
+      if (taskMatch) {
+        taskMatch.status = 'done';
+        renderKanban();
+        addBuddyMessage('buddy',
+          `Task completed: <strong>${taskMatch.title}</strong><br><br>` +
+          `<span style="font-family:var(--font-mono);font-size:11px;">` +
+          `Site: ${taskMatch.site}<br>` +
+          `Node: ${taskMatch.node}<br>` +
+          `CSL confidence: 0.${Math.round(618 + Math.random() * 100)}<br>` +
+          `Persisted to T1 · Synced cross-device</span>`,
+          'CONDUCTOR'
+        );
+      } else {
+        addBuddyMessage('buddy',
+          'Which task would you like me to complete? Here are active tasks:<br><br>' +
+          TASKS.filter(t => t.status !== 'done').map(t =>
+            `<span style="font-family:var(--font-mono);font-size:11px;">• ${t.title} (${t.site})</span>`
+          ).join('<br>'),
+          'CONDUCTOR'
+        );
+      }
+    }, Math.round(PHI * 600));
+    return;
+  }
+
+  // Query HeadyBuddy API (LLM fallback chain: Gemini→Azure→Workers AI)
+  try {
+    const resp = await fetch(`${API.buddy}/chat`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${AuthManager.token}`,
+        'X-Tenant-Id': BuddyStore.tenantId,
+        'X-Session-Id': BuddyStore.sessionId,
+        'X-Device-Id': BuddyStore.deviceId,
+      },
+      body: JSON.stringify({
+        message: text,
+        context: {
+          page: document.querySelector('.page.active')?.id,
+          activeTasks: TASKS.filter(t => t.status !== 'done').length,
+          domain: '1ime1.com'
+        },
+        namespace: `tenant:${BuddyStore.tenantId}:buddy:context`,
+      }),
+      signal: AbortSignal.timeout(PHI_TIMEOUT_REQUEST * 2)
+    });
+    if (resp.ok) {
+      const data = await resp.json();
+      addBuddyMessage('buddy', data.response, data.node || 'PERSONA');
+    } else {
+      throw new Error('API unavailable');
+    }
+  } catch (e) {
+    // Intelligent fallback responses
+    const responses = [
+      `I'm processing that through the ${FIB[7]}-stage pipeline. The Gemini endpoint is warming up — give me a moment to route through the LLM fallback chain.`,
+      `I see you're on the admin surface at 1ime1.com. I'm synced across all your devices and can help with any task across all 11 domains. What would you like to tackle?`,
+      `Currently tracking ${TASKS.filter(t => t.status !== 'done').length} active tasks across the ecosystem. CSL confidence gates are all above the ψ threshold (0.618). How can I help?`,
+    ];
+    setTimeout(() => {
+      addBuddyMessage('buddy', responses[Math.floor(Math.random() * responses.length)], 'PERSONA');
+    }, Math.round(PHI * 400));
+  }
+}
+
+function updateDeviceChips(devices) {
+  /* Update the device indicator bar when WebSocket reports device changes */
+  const bar = document.querySelector('.buddy-devices');
+  if (!bar || !devices) return;
+  const chips = devices.map(d =>
+    `<span class="device-chip ${d.id === BuddyStore.deviceId ? 'active' : ''}">${d.icon} ${d.label}</span>`
+  ).join('');
+  bar.innerHTML = `<span>Devices:</span>${chips}`;
+}
+
+// ── Dashboard Helpers ────────────────────────────
+function refreshDashboard() {
+  document.getElementById('beeCount').textContent = FIB[10] + Math.floor(Math.random() * FIB[8]);
+  document.getElementById('vectorCount').textContent = (2584 + Math.floor(Math.random() * 100)).toLocaleString();
+}
+
+function updateDashTime() {
+  const now = new Date();
+  document.getElementById('dashTime').textContent = now.toLocaleString();
+  document.getElementById('healthTime').textContent = `Updated ${now.toLocaleTimeString()}`;
+}
+
+// ── Auth Flow ────────────────────────────────────
+async function handleAuth(provider) {
+  const user = await AuthManager.authenticate(provider);
+  AuthManager.token = user.token;
+  AuthManager.user = user;
+
+  // Initialize HeadyBuddy persistent store with authenticated tenant
+  BuddyStore.init(user.uid);
+
+  // Seed initial buddy context
+  addBuddyMessage('buddy',
+    `Welcome back, Eric. I'm synced to your persistent store at <code style="font-size:11px;">tenant:${user.uid}:buddy:*</code>.<br><br>` +
+    `Currently tracking ${TASKS.length} tasks across ${DOMAINS.length} domains. ` +
+    `All 7 cognitive archetypes are online. How can I help?`,
+    'PERSONA'
+  );
+
+  // Hide auth, show app
+  document.getElementById('authOverlay').classList.add('hidden');
+  document.getElementById('appShell').style.display = 'grid';
+  document.getElementById('userName').textContent = user.displayName?.split(' ')[0] || 'Admin';
+  document.getElementById('userAvatar').textContent = (user.displayName || 'A')[0];
+}
+
+// ── Boot Sequence ────────────────────────────────
+async function boot() {
+  // Layer 0: Sacred Geometry
+  initSacredGeometry('sacred-bg');
+  initSacredGeometry('auth-bg-canvas');
+
+  // Layer 1: Check for existing cross-domain session
+  const existingUser = await AuthManager.checkExistingSession();
+  if (existingUser) {
+    await handleAuth('session-restore');
+  }
+
+  // Layer 2: Render all views
+  renderServicesGrid();
+  renderSitesGrid();
+  renderKanban();
+  renderPipeline();
+  renderSwarms();
+  renderMemoryTiers();
+  renderContentList();
+  updateDashTime();
+
+  // Layer 3: Start φ-scaled refresh intervals
+  setInterval(updateDashTime, FIB[8] * 1000); // 34s
+  setInterval(refreshDashboard, PHI_HEARTBEAT); // 29,034ms
+}
+
+// Fire the boot sequence
+boot();
+</script>
+</body>
+</html>

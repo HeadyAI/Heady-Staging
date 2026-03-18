@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<!--
+  ╔═══════════════════════════════════════════════════════════════════╗
+  ║  HEADY_BRAND: HeadySystems Inc.                                   ║
+  ║  Module: HeadyMCP Service Constellation — Visual Showcase          ║
+  ║  Node: EMISSARY (MCP/SDK) + CONDUCTOR (Orchestrator)               ║
+  ║  Architecture: Liquid Architecture v9.0                           ║
+  ║  Sacred Geometry: Dense wireframe · Color cycling · High opacity   ║
+  ║  Author: Eric Haywood, Founder & CEO                              ║
+  ╚═══════════════════════════════════════════════════════════════════╝
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>HeadyMCP · Service Constellation · Sacred Geometry</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --phi:1.618;--psi:0.618;
+  --void:#020408;--abyss:#060c18;--deep:#0a1628;--surface:#142040;
+  --teal:#00ffcc;--purple:#9966ff;--gold:#ffaa00;--rose:#ff3388;
+  --blue:#3399ff;--green:#00ff88;--red:#ff4466;--cyan:#00ddff;
+  --text:#e8eef8;--dim:#6688aa;--muted:#334466;
+  --glass:rgba(8,16,36,0.65);--glass-hi:rgba(12,24,48,0.75);
+  --glass-border:rgba(100,140,255,0.15);
+  --font:'Outfit',sans-serif;--mono:'JetBrains Mono',monospace;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:var(--font);background:var(--void);color:var(--text);overflow-x:hidden;min-height:100vh;}
+
+/* ═══ GLOBAL SACRED GEOMETRY CANVAS ═══ */
+canvas#cosmos{position:fixed;inset:0;z-index:0;pointer-events:none;}
+
+/* ═══ COLOR-CYCLING GRADIENT OVERLAY ═══ */
+.color-cycle{position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:conic-gradient(from var(--hue-angle,0deg) at 50% 50%,
+    rgba(0,255,204,0.03),rgba(153,102,255,0.03),rgba(255,170,0,0.03),
+    rgba(0,221,255,0.03),rgba(255,51,136,0.03),rgba(0,255,204,0.03));
+  animation:hueRotate 34s linear infinite;}
+@keyframes hueRotate{to{--hue-angle:360deg;filter:hue-rotate(360deg);}}
+@property --hue-angle{syntax:'<angle>';initial-value:0deg;inherits:false;}
+
+/* ═══ TOPBAR ═══ */
+.topbar{position:fixed;top:0;left:0;right:0;z-index:100;height:55px;
+  display:flex;align-items:center;padding:0 34px;
+  background:rgba(4,8,16,0.88);backdrop-filter:blur(21px);
+  border-bottom:1px solid var(--glass-border);}
+.topbar-brand{display:flex;align-items:center;gap:13px;}
+.topbar-brand h1{font-size:18px;font-weight:800;letter-spacing:2px;
+  background:linear-gradient(135deg,var(--teal),var(--purple),var(--gold));
+  background-size:200% 200%;animation:gradShift 8s ease infinite;
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+@keyframes gradShift{0%,100%{background-position:0% 50%;}50%{background-position:100% 50%;}}
+.topbar-sub{font-size:10px;color:var(--dim);font-family:var(--mono);}
+.topbar-right{margin-left:auto;display:flex;align-items:center;gap:21px;font-size:11px;color:var(--dim);font-family:var(--mono);}
+.live-pip{width:8px;height:8px;border-radius:50%;background:var(--green);
+  box-shadow:0 0 13px var(--green);animation:livePulse 2.618s infinite;}
+@keyframes livePulse{0%,100%{opacity:1;box-shadow:0 0 13px var(--green);}50%{opacity:0.3;box-shadow:0 0 3px var(--green);}}
+
+/* ═══ CONTENT WRAPPER ═══ */
+.content{position:relative;z-index:1;padding:89px 34px 55px;}
+.content-max{max-width:1400px;margin:0 auto;}
+
+/* ═══ HERO ═══ */
+.hero{text-align:center;padding:55px 0 89px;position:relative;}
+.hero-glyph{position:relative;width:233px;height:233px;margin:0 auto 34px;}
+.hero-glyph canvas{width:100%;height:100%;}
+.hero-title{font-size:clamp(36px,6vw,64px);font-weight:900;letter-spacing:3px;line-height:1.1;
+  background:linear-gradient(135deg,var(--teal),var(--purple),var(--gold),var(--rose));
+  background-size:300% 300%;animation:gradShift 13s ease infinite;
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.hero-sub{font-size:18px;color:var(--dim);margin-top:21px;max-width:700px;margin-left:auto;margin-right:auto;line-height:1.618;}
+.hero-stats{display:flex;justify-content:center;gap:55px;margin-top:55px;flex-wrap:wrap;}
+.hero-stat{text-align:center;}
+.hero-stat-val{font-size:34px;font-weight:800;font-family:var(--mono);
+  background:linear-gradient(135deg,var(--teal),var(--cyan));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.hero-stat-val.purple{background:linear-gradient(135deg,var(--purple),var(--rose));-webkit-background-clip:text;}
+.hero-stat-val.gold{background:linear-gradient(135deg,var(--gold),var(--green));-webkit-background-clip:text;}
+.hero-stat-label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:1.618px;margin-top:5px;}
+
+/* ═══ SECTION HEADERS ═══ */
+.section-head{text-align:center;margin:89px 0 34px;position:relative;}
+.section-head h2{font-size:32px;font-weight:800;letter-spacing:2px;
+  background:linear-gradient(135deg,var(--teal),var(--purple));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;display:inline-block;}
+.section-head p{font-size:13px;color:var(--dim);margin-top:8px;font-family:var(--mono);}
+
+/* ═══ MCP SERVICE CARDS — with individual geometry canvases ═══ */
+.services-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:21px;}
+.svc-card{position:relative;border-radius:21px;overflow:hidden;
+  border:1px solid var(--glass-border);
+  transition:all 0.618s cubic-bezier(0.16,1,0.3,1);cursor:default;}
+.svc-card:hover{border-color:var(--card-accent,var(--teal));
+  box-shadow:0 0 55px color-mix(in srgb,var(--card-accent,var(--teal)) 20%,transparent);
+  transform:translateY(-5px) scale(1.01);}
+
+/* Individual card geometry canvas — dense wireframe background */
+.svc-card canvas.card-geo{position:absolute;inset:0;width:100%;height:100%;z-index:0;
+  pointer-events:none;opacity:0.35;}
+.svc-card:hover canvas.card-geo{opacity:0.55;transition:opacity 0.618s;}
+
+/* Card glass overlay */
+.svc-card-glass{position:relative;z-index:1;padding:34px;
+  background:var(--glass);backdrop-filter:blur(13px);}
+
+/* Card accent bar */
+.svc-card-accent{position:absolute;top:0;left:0;right:0;height:3px;z-index:2;
+  background:linear-gradient(90deg,var(--card-accent,var(--teal)),transparent);}
+
+/* Card content */
+.svc-icon{font-size:28px;margin-bottom:13px;
+  filter:drop-shadow(0 0 13px var(--card-accent,var(--teal)));}
+.svc-name{font-size:16px;font-weight:700;font-family:var(--mono);
+  color:var(--card-accent,var(--teal));margin-bottom:5px;}
+.svc-tagline{font-size:13px;color:var(--text);font-weight:600;margin-bottom:13px;}
+.svc-desc{font-size:12px;color:var(--dim);line-height:1.618;margin-bottom:21px;}
+.svc-tools{display:flex;flex-direction:column;gap:5px;}
+.svc-tool{display:flex;align-items:center;gap:8px;font-size:11px;font-family:var(--mono);
+  padding:5px 8px;background:rgba(0,0,0,0.3);border-radius:5px;
+  border-left:2px solid var(--card-accent,var(--teal));}
+.svc-tool-name{color:var(--card-accent,var(--teal));font-weight:600;}
+.svc-tool-desc{color:var(--dim);}
+.svc-meta{display:flex;gap:8px;margin-top:13px;flex-wrap:wrap;}
+.svc-tag{font-size:9px;padding:3px 8px;border-radius:89px;font-family:var(--mono);font-weight:500;
+  background:color-mix(in srgb,var(--card-accent,var(--teal)) 10%,transparent);
+  border:1px solid color-mix(in srgb,var(--card-accent,var(--teal)) 25%,transparent);
+  color:var(--card-accent,var(--teal));}
+.svc-swarm{position:absolute;top:13px;right:13px;font-size:9px;font-family:var(--mono);
+  padding:3px 8px;border-radius:5px;z-index:3;
+  background:rgba(0,0,0,0.5);color:var(--dim);backdrop-filter:blur(8px);}
+
+/* ═══ ARCHITECTURE DIAGRAM ═══ */
+.arch-diagram{position:relative;margin:55px auto;max-width:900px;
+  background:var(--glass);backdrop-filter:blur(21px);
+  border:1px solid var(--glass-border);border-radius:21px;
+  padding:34px;overflow:hidden;}
+.arch-diagram canvas{position:absolute;inset:0;width:100%;height:100%;z-index:0;opacity:0.3;}
+.arch-diagram-content{position:relative;z-index:1;}
+.arch-title{font-size:18px;font-weight:700;text-align:center;margin-bottom:21px;
+  background:linear-gradient(135deg,var(--teal),var(--purple));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.arch-flow{display:flex;flex-direction:column;gap:8px;font-family:var(--mono);font-size:11px;}
+.arch-row{display:flex;align-items:center;gap:8px;padding:8px 13px;
+  background:rgba(0,0,0,0.25);border-radius:8px;
+  border-left:3px solid var(--teal);}
+.arch-row.purple{border-left-color:var(--purple);}
+.arch-row.gold{border-left-color:var(--gold);}
+.arch-row.rose{border-left-color:var(--rose);}
+.arch-row.cyan{border-left-color:var(--cyan);}
+.arch-arrow{color:var(--dim);font-size:14px;text-align:center;padding:3px 0;}
+
+/* ═══ FOOTER ═══ */
+.footer{text-align:center;padding:55px 34px;font-size:11px;color:var(--muted);
+  font-family:var(--mono);border-top:1px solid var(--glass-border);
+  margin-top:89px;position:relative;z-index:1;}
+.footer-brand{font-size:28px;font-weight:900;letter-spacing:4px;margin-bottom:13px;
+  background:linear-gradient(135deg,var(--teal),var(--purple),var(--gold));
+  background-size:200%;animation:gradShift 8s ease infinite;
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+
+/* ═══ SCROLLBAR ═══ */
+::-webkit-scrollbar{width:5px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:linear-gradient(var(--teal),var(--purple));border-radius:89px;}
+
+/* ═══ ANIMATIONS ═══ */
+@keyframes float{0%,100%{transform:translateY(0);}50%{transform:translateY(-8px);}}
+@keyframes shimmer{0%{background-position:-200% 0;}100%{background-position:200% 0;}}
+</style>
+</head>
+<body>
+
+<canvas id="cosmos"></canvas>
+<div class="color-cycle"></div>
+
+<!-- TOPBAR -->
+<nav class="topbar">
+  <div class="topbar-brand">
+    <svg width="34" height="34" viewBox="0 0 34 34" fill="none">
+      <circle cx="17" cy="17" r="15.5" stroke="url(#tg)" stroke-width="1.5"/>
+      <circle cx="17" cy="17" r="9" stroke="url(#tg)" stroke-width="1" opacity=".6"/>
+      <circle cx="17" cy="17" r="4" fill="url(#tg)"/>
+      <defs><linearGradient id="tg" x1="0" y1="0" x2="34" y2="34">
+        <stop stop-color="#00ffcc"/><stop offset=".5" stop-color="#9966ff"/><stop offset="1" stop-color="#ffaa00"/>
+      </linearGradient></defs>
+    </svg>
+    <div>
+      <h1>HEADY™ MCP</h1>
+      <div class="topbar-sub">Model Context Protocol · Service Constellation</div>
+    </div>
+  </div>
+  <div class="topbar-right">
+    <span style="display:flex;align-items:center;gap:5px;"><span class="live-pip"></span>ALL SERVICES LIVE</span>
+    <span id="clock"></span>
+    <span>headymcp.com</span>
+  </div>
+</nav>
+
+<div class="content">
+<div class="content-max">
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-glyph"><canvas id="heroGlyph" width="466" height="466"></canvas></div>
+  <h1 class="hero-title">SERVICE<br>CONSTELLATION</h1>
+  <p class="hero-sub">44 MCP tools across 14 autonomous services — each backed by a dedicated swarm, wired to the 12-stage pipeline, and governed by Continuous Semantic Logic gates.</p>
+  <div class="hero-stats">
+    <div class="hero-stat"><div class="hero-stat-val">44</div><div class="hero-stat-label">MCP Tools</div></div>
+    <div class="hero-stat"><div class="hero-stat-val purple">14</div><div class="hero-stat-label">Services</div></div>
+    <div class="hero-stat"><div class="hero-stat-val gold">17</div><div class="hero-stat-label">Swarms</div></div>
+    <div class="hero-stat"><div class="hero-stat-val">89</div><div class="hero-stat-label">Bee Types</div></div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section>
+  <div class="section-head">
+    <h2>MCP SERVICE CATALOG</h2>
+    <p>JSON-RPC 2.0 · Streamable HTTP · Zod-validated inputs · φ-scaled rate limits</p>
+  </div>
+  <div class="services-grid" id="servicesGrid"></div>
+</section>
+
+<!-- ARCHITECTURE -->
+<section>
+  <div class="section-head">
+    <h2>SERVICE CONSTELLATION TOPOLOGY</h2>
+    <p>Every tool call flows through the MCP Gateway → Pipeline → Swarm → LLM Fallback Chain</p>
+  </div>
+  <div class="arch-diagram">
+    <canvas id="archGeo" width="900" height="500"></canvas>
+    <div class="arch-diagram-content">
+      <div class="arch-title">Request Flow · MCP Gateway → Pipeline → Execution</div>
+      <div class="arch-flow">
+        <div class="arch-row">🔮 <strong>Client</strong> → JSON-RPC 2.0 tool call via stdio / Streamable HTTP</div>
+        <div class="arch-arrow">↓</div>
+        <div class="arch-row purple">🛡️ <strong>MCP Gateway</strong> → Zod validation · Rate limiter (FIB-scaled) · Auth check</div>
+        <div class="arch-arrow">↓</div>
+        <div class="arch-row gold">⚡ <strong>HCFullPipeline</strong> → 12 stages: INTAKE → DECOMPOSE → PLAN → EXECUTE → LEARN</div>
+        <div class="arch-arrow">↓</div>
+        <div class="arch-row rose">🐝 <strong>Swarm Dispatch</strong> → Route to correct swarm (1-17) · Spawn bees · CSL gate check</div>
+        <div class="arch-arrow">↓</div>
+        <div class="arch-row cyan">🧠 <strong>LLM Fallback</strong> → Gemini → Azure GPT → Workers AI → Colab vLLM</div>
+        <div class="arch-arrow">↓</div>
+        <div class="arch-row">✅ <strong>Response</strong> → Trust receipt signed (Ed25519) · Persisted to T1 · Distilled to memory</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+</div>
+</div>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-brand">HEADY™</div>
+  © 2024-2026 HeadySystems Inc. & HeadyConnection Inc.<br>
+  Liquid Architecture v9.0 · 60+ Patents Filed · φ = 1.618 · ψ = 0.618<br>
+  <span style="color:var(--teal);">φ · ψ · ∞</span>
+</footer>
+
+<script>
+/* ═══════════════════════════════════════════════════
+   HEADY_BRAND: Sacred Geometry Engine v4.0
+   Dense wireframes · Color cycling · High opacity
+   Node: TENSOR (CSL Logic) + TOPOLOGY (Spatial)
+   ═══════════════════════════════════════════════════ */
+
+const PHI = 1.618033988749895, PSI = 1/PHI, TAU = Math.PI * 2;
+const FIB = [1,1,2,3,5,8,13,21,34,55,89,144,233,377];
+
+// ── Color cycling palette ──
+function hslCycle(t, offset = 0, s = 80, l = 65) {
+  const h = ((t * 30) + offset) % 360;
+  return `hsla(${h},${s}%,${l}%,`;
+}
+
+// ══════════════════════════════════════════════════
+// SACRED GEOMETRY PRIMITIVES
+// ══════════════════════════════════════════════════
+
+function project3D(x, y, z, cx, cy, scale, rotX, rotY, rotZ) {
+  // Rotate around Y axis
+  let x1 = x * Math.cos(rotY) - z * Math.sin(rotY);
+  let z1 = x * Math.sin(rotY) + z * Math.cos(rotY);
+  // Rotate around X axis
+  let y1 = y * Math.cos(rotX) - z1 * Math.sin(rotX);
+  let z2 = y * Math.sin(rotX) + z1 * Math.cos(rotX);
+  // Rotate around Z axis
+  let x2 = x1 * Math.cos(rotZ) - y1 * Math.sin(rotZ);
+  let y2 = x1 * Math.sin(rotZ) + y1 * Math.cos(rotZ);
+  // Perspective
+  const perspective = 4 / (4 + z2 * 0.3);
+  return { x: cx + x2 * scale * perspective, y: cy + y2 * scale * perspective, z: z2, p: perspective };
+}
+
+// Metatron's Cube vertices (13 circles in Fruit of Life + all connecting lines)
+function metatronsCube(radius) {
+  const pts = [[0, 0, 0]]; // Center
+  // Inner ring (6 points)
+  for (let i = 0; i < 6; i++) {
+    const a = (i / 6) * TAU;
+    pts.push([Math.cos(a) * radius, Math.sin(a) * radius, 0]);
+  }
+  // Outer ring (6 points)
+  for (let i = 0; i < 6; i++) {
+    const a = (i / 6) * TAU + TAU / 12;
+    pts.push([Math.cos(a) * radius * PHI, Math.sin(a) * radius * PHI, 0]);
+  }
+  // Z-displaced rings
+  for (let i = 0; i < 6; i++) {
+    const a = (i / 6) * TAU;
+    pts.push([Math.cos(a) * radius * PSI, Math.sin(a) * radius * PSI, radius * PSI]);
+    pts.push([Math.cos(a) * radius * PSI, Math.sin(a) * radius * PSI, -radius * PSI]);
+  }
+  // All edges: connect every vertex to every other (Metatron's dense wireframe)
+  const edges = [];
+  for (let i = 0; i < pts.length; i++)
+    for (let j = i + 1; j < pts.length; j++)
+      edges.push([i, j]);
+  return { pts, edges };
+}
+
+// Icosahedron (20 faces, 12 vertices, 30 edges)
+function icosahedron(radius) {
+  const t = PHI;
+  const pts = [
+    [-1, t, 0],[1, t, 0],[-1,-t, 0],[1,-t, 0],
+    [0,-1, t],[0, 1, t],[0,-1,-t],[0, 1,-t],
+    [t, 0,-1],[t, 0, 1],[-t, 0,-1],[-t, 0, 1]
+  ].map(p => {
+    const len = Math.sqrt(p[0]**2 + p[1]**2 + p[2]**2);
+    return [p[0]/len*radius, p[1]/len*radius, p[2]/len*radius];
+  });
+  const edges = [
+    [0,1],[0,5],[0,7],[0,10],[0,11],[1,5],[1,7],[1,8],[1,9],
+    [2,3],[2,4],[2,6],[2,10],[2,11],[3,4],[3,6],[3,8],[3,9],
+    [4,5],[4,9],[4,11],[5,9],[5,11],[6,7],[6,8],[6,10],
+    [7,8],[7,10],[8,9],[10,11]
+  ];
+  return { pts, edges };
+}
+
+// Torus (ring wireframe)
+function torus(R, r, segsMain, segsTube) {
+  const pts = [], edges = [];
+  for (let i = 0; i < segsMain; i++) {
+    const a = (i / segsMain) * TAU;
+    for (let j = 0; j < segsTube; j++) {
+      const b = (j / segsTube) * TAU;
+      pts.push([
+        (R + r * Math.cos(b)) * Math.cos(a),
+        (R + r * Math.cos(b)) * Math.sin(a),
+        r * Math.sin(b)
+      ]);
+      const idx = i * segsTube + j;
+      const nextJ = i * segsTube + ((j + 1) % segsTube);
+      const nextI = ((i + 1) % segsMain) * segsTube + j;
+      edges.push([idx, nextJ], [idx, nextI]);
+    }
+  }
+  return { pts, edges };
+}
+
+// Flower of Life (overlapping circles)
+function flowerOfLife(radius, layers) {
+  const circles = [{ x: 0, y: 0, z: 0, r: radius }];
+  for (let l = 1; l <= layers; l++) {
+    const count = 6 * l;
+    for (let i = 0; i < count; i++) {
+      const a = (i / count) * TAU;
+      circles.push({ x: Math.cos(a) * radius * l * PSI, y: Math.sin(a) * radius * l * PSI, z: (Math.random() - 0.5) * radius * 0.2, r: radius });
+    }
+  }
+  return circles;
+}
+
+// ══════════════════════════════════════════════════
+// GLOBAL COSMOS CANVAS — Dense Metatron's + particles
+// ══════════════════════════════════════════════════
+(function initCosmos() {
+  const c = document.getElementById('cosmos'), ctx = c.getContext('2d');
+  let w, h, t = 0;
+  const resize = () => { w = c.width = innerWidth; h = c.height = innerHeight; };
+  resize(); addEventListener('resize', resize);
+
+  const meta = metatronsCube(0.9);
+  const ico = icosahedron(0.6);
+  const tor = torus(0.7, 0.25, 21, 13);
+  const particles = Array.from({ length: FIB[9] }, () => ({
+    x: Math.random() * 2 - 1, y: Math.random() * 2 - 1, z: Math.random() * 2 - 1,
+    vx: (Math.random() - 0.5) * 0.002, vy: (Math.random() - 0.5) * 0.002,
+    size: Math.random() * 2 + 0.5,
+  }));
+
+  function drawWireframe(shape, cx, cy, scale, rotX, rotY, rotZ, alpha, colorOffset) {
+    const projected = shape.pts.map(p => project3D(p[0], p[1], p[2], cx, cy, scale, rotX, rotY, rotZ));
+    shape.edges.forEach(([a, b]) => {
+      const pa = projected[a], pb = projected[b];
+      if (!pa || !pb) return;
+      ctx.globalAlpha = alpha * Math.min(pa.p, pb.p) * 0.8;
+      ctx.strokeStyle = hslCycle(t, colorOffset, 70, 55) + (alpha * 0.7) + ')';
+      ctx.lineWidth = 0.5 * Math.min(pa.p, pb.p);
+      ctx.beginPath();
+      ctx.moveTo(pa.x, pa.y);
+      ctx.lineTo(pb.x, pb.y);
+      ctx.stroke();
+    });
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, w, h);
+    t += 0.004;
+    const rY = t * PSI, rX = t * PSI * 0.7, rZ = t * PSI * 0.3;
+
+    // Central Metatron's Cube — large, dense, high opacity
+    drawWireframe(meta, w * 0.5, h * 0.45, Math.min(w, h) * 0.35, rX, rY, rZ * 0.5, 0.18, 0);
+
+    // Icosahedron — offset left
+    drawWireframe(ico, w * 0.2, h * 0.3, Math.min(w, h) * 0.18, rX * 1.3, rY * 0.8, rZ, 0.12, 120);
+
+    // Torus — offset right
+    drawWireframe(tor, w * 0.8, h * 0.6, Math.min(w, h) * 0.15, rX * 0.9, rY * 1.2, rZ * 0.6, 0.12, 240);
+
+    // Second Metatron's — bottom
+    drawWireframe(meta, w * 0.35, h * 0.8, Math.min(w, h) * 0.2, rX * 0.6, rY * 1.5, rZ * 0.8, 0.08, 180);
+
+    // Floating particles with glow
+    particles.forEach(p => {
+      p.x += p.vx; p.y += p.vy;
+      if (Math.abs(p.x) > 1.2) p.vx *= -1;
+      if (Math.abs(p.y) > 1.2) p.vy *= -1;
+      const sx = w * 0.5 + p.x * w * 0.5;
+      const sy = h * 0.5 + p.y * h * 0.5;
+      ctx.globalAlpha = 0.3 + Math.sin(t * PHI + p.x * 10) * 0.15;
+      const grad = ctx.createRadialGradient(sx, sy, 0, sx, sy, p.size * 5);
+      grad.addColorStop(0, hslCycle(t, p.x * 180, 80, 70) + '0.6)');
+      grad.addColorStop(1, 'transparent');
+      ctx.fillStyle = grad;
+      ctx.beginPath();
+      ctx.arc(sx, sy, p.size * 5, 0, TAU);
+      ctx.fill();
+    });
+
+    ctx.globalAlpha = 1;
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+// ══════════════════════════════════════════════════
+// HERO GLYPH — Spinning Metatron's Cube (high opacity)
+// ══════════════════════════════════════════════════
+(function initHeroGlyph() {
+  const c = document.getElementById('heroGlyph'), ctx = c.getContext('2d');
+  const meta = metatronsCube(1.0);
+  let t = 0;
+
+  function draw() {
+    ctx.clearRect(0, 0, 466, 466);
+    t += 0.008;
+    const rY = t, rX = t * PSI, rZ = t * 0.3;
+
+    meta.edges.forEach(([a, b]) => {
+      const pa = project3D(meta.pts[a][0], meta.pts[a][1], meta.pts[a][2], 233, 233, 100, rX, rY, rZ);
+      const pb = project3D(meta.pts[b][0], meta.pts[b][1], meta.pts[b][2], 233, 233, 100, rX, rY, rZ);
+      ctx.globalAlpha = 0.4 * Math.min(pa.p, pb.p);
+      ctx.strokeStyle = hslCycle(t * 2, a * 13, 80, 60) + '0.8)';
+      ctx.lineWidth = 0.8 * Math.min(pa.p, pb.p);
+      ctx.beginPath();
+      ctx.moveTo(pa.x, pa.y);
+      ctx.lineTo(pb.x, pb.y);
+      ctx.stroke();
+    });
+
+    // Draw vertices as glowing dots
+    meta.pts.forEach((p, i) => {
+      const pp = project3D(p[0], p[1], p[2], 233, 233, 100, rX, rY, rZ);
+      ctx.globalAlpha = 0.6 * pp.p;
+      const g = ctx.createRadialGradient(pp.x, pp.y, 0, pp.x, pp.y, 6);
+      g.addColorStop(0, hslCycle(t * 2, i * 30, 90, 70) + '0.9)');
+      g.addColorStop(1, 'transparent');
+      ctx.fillStyle = g;
+      ctx.beginPath();
+      ctx.arc(pp.x, pp.y, 6, 0, TAU);
+      ctx.fill();
+    });
+
+    ctx.globalAlpha = 1;
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+// ══════════════════════════════════════════════════
+// CARD GEOMETRY CANVASES — Unique shape per service
+// ══════════════════════════════════════════════════
+function initCardCanvas(canvas, shapeType, colorOffset) {
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const w = canvas.width = canvas.parentElement.offsetWidth;
+  const h = canvas.height = canvas.parentElement.offsetHeight;
+  let t = Math.random() * 100; // Offset so each card starts differently
+
+  const shapes = {
+    metatron: metatronsCube(0.8),
+    icosahedron: icosahedron(0.7),
+    torus: torus(0.6, 0.2, 13, 8),
+  };
+  const shape = shapes[shapeType] || shapes.metatron;
+
+  function draw() {
+    ctx.clearRect(0, 0, w, h);
+    t += 0.005;
+    const rY = t * PSI, rX = t * PSI * 0.6, rZ = t * 0.2;
+    const scale = Math.min(w, h) * 0.38;
+
+    if (shape.edges) {
+      shape.edges.forEach(([a, b]) => {
+        if (!shape.pts[a] || !shape.pts[b]) return;
+        const pa = project3D(shape.pts[a][0], shape.pts[a][1], shape.pts[a][2], w/2, h/2, scale, rX, rY, rZ);
+        const pb = project3D(shape.pts[b][0], shape.pts[b][1], shape.pts[b][2], w/2, h/2, scale, rX, rY, rZ);
+        ctx.globalAlpha = 0.35 * Math.min(pa.p, pb.p);
+        ctx.strokeStyle = hslCycle(t, colorOffset, 60, 50) + '0.5)';
+        ctx.lineWidth = 0.6;
+        ctx.beginPath();
+        ctx.moveTo(pa.x, pa.y);
+        ctx.lineTo(pb.x, pb.y);
+        ctx.stroke();
+      });
+    }
+
+    ctx.globalAlpha = 1;
+    requestAnimationFrame(draw);
+  }
+  draw();
+}
+
+// ══════════════════════════════════════════════════
+// MCP SERVICE DATA — 14 New Creative Services
+// ══════════════════════════════════════════════════
+const SERVICES = [
+  {
+    id: 'heady_dreamscape', icon: '🌌', name: 'heady_dreamscape',
+    tagline: 'Monte Carlo Futures Visualizer',
+    desc: 'Run 6,765 (FIB₂₀) parallel simulations of any decision, strategy, or system change. Outputs probability distributions, confidence cones, and risk-adjusted recommendations. Powers DREAMER swarm.',
+    accent: '#00ffcc', swarm: 'DREAMER (#15)', shape: 'metatron', colorOff: 0,
+    tools: [
+      { name: 'dream_simulate', desc: 'Run N-scenario Monte Carlo over any parameter space' },
+      { name: 'dream_visualize', desc: 'Generate 3D probability cone from simulation results' },
+      { name: 'dream_compare', desc: 'Side-by-side scenario comparison with φ-weighted scoring' },
+    ],
+    tags: ['Monte Carlo', 'FIB₂₀ scenarios', 'DREAMER', 'Risk Analysis'],
+  },
+  {
+    id: 'heady_genome', icon: '🧬', name: 'heady_genome',
+    tagline: 'Code DNA Mutation Engine',
+    desc: 'Treat your codebase as a genome. ASTMutatorBee parses source into abstract syntax trees, identifies optimization sites, and applies targeted mutations — refactoring, deduplication, and performance improvements — all while preserving Patent Lock zones.',
+    accent: '#9966ff', swarm: 'FORGE (#3)', shape: 'icosahedron', colorOff: 60,
+    tools: [
+      { name: 'genome_scan', desc: 'Parse repo into AST genome map with mutation hotspots' },
+      { name: 'genome_mutate', desc: 'Apply targeted AST mutations with rollback support' },
+      { name: 'genome_evolve', desc: 'Multi-generation evolution — breed best code variants' },
+    ],
+    tags: ['AST Mutation', 'Code Evolution', 'FORGE', 'Patent Safe'],
+  },
+  {
+    id: 'heady_chrysalis', icon: '🦋', name: 'heady_chrysalis',
+    tagline: 'Self-Evolving Prompt Optimizer',
+    desc: 'DSPy-powered prompt optimization loop. Feeds pipeline outputs through MAPE-K self-improvement: Monitor → Analyze → Plan → Execute → Knowledge. Weekly optimization cycles on Colab Pro+ Runtime Delta.',
+    accent: '#ffaa00', swarm: 'FOUNDRY (#5)', shape: 'torus', colorOff: 120,
+    tools: [
+      { name: 'chrysalis_optimize', desc: 'Run DSPy optimization over prompt template set' },
+      { name: 'chrysalis_eval', desc: 'Evaluate prompt variant against golden test set' },
+      { name: 'chrysalis_deploy', desc: 'Promote winning prompt to production (φ-canary)' },
+    ],
+    tags: ['DSPy', 'MAPE-K', 'QLoRA', 'FOUNDRY', 'Self-Improvement'],
+  },
+  {
+    id: 'heady_meridian', icon: '🌐', name: 'heady_meridian',
+    tagline: 'IoT Mesh Network Orchestrator',
+    desc: 'Bridges Home Assistant, environmental sensors, and MIDI hardware into the Heady intelligence layer. IoTEnvironmentBee controls lighting, HVAC, media — all via MCP tool calls with CSL confidence gating.',
+    accent: '#00ff88', swarm: 'FABRICATOR (#11)', shape: 'metatron', colorOff: 180,
+    tools: [
+      { name: 'meridian_sense', desc: 'Read all sensor data (temp, humidity, light, noise)' },
+      { name: 'meridian_control', desc: 'Send command to any IoT device (lights, HVAC, locks)' },
+      { name: 'meridian_automate', desc: 'Create CSL-gated automation rule (IF resonance ≥ 0.618)' },
+      { name: 'meridian_scene', desc: 'Activate multi-device scene (work, relax, creative)' },
+    ],
+    tags: ['Home Assistant', 'IoT', 'FABRICATOR', 'Sensor Fusion'],
+  },
+  {
+    id: 'heady_alchemy', icon: '⚗️', name: 'heady_alchemy',
+    tagline: 'Data Transformation Pipeline',
+    desc: 'Transform any data between any formats — CSV to pgvector, JSON to Drupal nodes, PDF to embeddings, audio to MIDI events. Every transformation is logged to the audit chain and scored by CSL gates.',
+    accent: '#ff3388', swarm: 'EMISSARY (#4)', shape: 'icosahedron', colorOff: 240,
+    tools: [
+      { name: 'alchemy_transform', desc: 'Convert data between formats with schema validation' },
+      { name: 'alchemy_embed', desc: 'Generate 384D embeddings for any text/document' },
+      { name: 'alchemy_ingest', desc: 'Bulk ingest data into T1 pgvector with dedup' },
+    ],
+    tags: ['ETL', 'Embeddings', 'EMISSARY', 'Schema Validation'],
+  },
+  {
+    id: 'heady_echo', icon: '🔮', name: 'heady_echo',
+    tagline: 'Temporal Conversation Recall',
+    desc: 'Semantic search across all HeadyBuddy conversations, cross-site and cross-device. Ask "what did we discuss about deployment last week?" and Echo finds it in T1 pgvector with CSL-scored relevance ranking.',
+    accent: '#00ddff', swarm: 'PERSONA (#12)', shape: 'torus', colorOff: 300,
+    tools: [
+      { name: 'echo_recall', desc: 'Semantic search across conversation history (384D cosine)' },
+      { name: 'echo_timeline', desc: 'Reconstruct conversation timeline for any topic' },
+      { name: 'echo_distill', desc: 'Extract key facts from conversation range (Stage 22)' },
+    ],
+    tags: ['Semantic Search', 'pgvector', 'PERSONA', 'Cross-Site Recall'],
+  },
+  {
+    id: 'heady_vinci', icon: '🎨', name: 'heady_vinci',
+    tagline: 'Creative Generation Studio',
+    desc: 'Multi-modal creative engine. Generate sacred geometry SVGs, compose MIDI sequences via CloudMIDIBee, produce audio analysis, and create visual assets — all with HeadyBattle quality scoring across multiple models.',
+    accent: '#ff6644', swarm: 'STUDIO (#6)', shape: 'metatron', colorOff: 30,
+    tools: [
+      { name: 'vinci_generate', desc: 'Generate creative asset (SVG, MIDI, audio, text)' },
+      { name: 'vinci_compose', desc: 'Compose MIDI sequence with DAW bridge (Ableton Link)' },
+      { name: 'vinci_battle', desc: 'Multi-model creative competition → best output wins' },
+    ],
+    tags: ['MIDI', 'SVG', 'Audio', 'STUDIO', 'HeadyBattle'],
+  },
+  {
+    id: 'heady_compass', icon: '🧭', name: 'heady_compass',
+    tagline: 'Multi-Model Intelligence Router',
+    desc: 'Patent HS-001: Deterministic Context Feed. Routes queries to the optimal LLM based on real-time latency, thermal data, budget, and task complexity. φ-scaled temperature: 0.618 default. Automatic fallback chain.',
+    accent: '#3399ff', swarm: 'OVERMIND (#1)', shape: 'icosahedron', colorOff: 90,
+    tools: [
+      { name: 'compass_route', desc: 'Route query to optimal model (latency/cost/quality)' },
+      { name: 'compass_benchmark', desc: 'Live benchmark all models on a sample query' },
+      { name: 'compass_council', desc: 'Run HeadyBattle council vote across all models' },
+    ],
+    tags: ['LLM Router', 'Patent HS-001', 'OVERMIND', 'Fallback Chain'],
+  },
+  {
+    id: 'heady_aegis', icon: '🛡️', name: 'heady_aegis',
+    tagline: 'PQC Security Fortress',
+    desc: 'Post-Quantum Cryptography readiness layer. CRYSTALS-Kyber key exchange, Ed25519 trust receipt signing, timing-safe token validation, 7-scenario chaos engineering, and continuous vulnerability scanning.',
+    accent: '#ff4466', swarm: 'SENTINEL (#13)', shape: 'torus', colorOff: 150,
+    tools: [
+      { name: 'aegis_scan', desc: 'Deep security audit (deps, containers, API surface)' },
+      { name: 'aegis_sign', desc: 'Ed25519 sign pipeline output as trust receipt' },
+      { name: 'aegis_chaos', desc: 'Run 7-scenario RDFI chaos engineering test' },
+      { name: 'aegis_pqc', desc: 'Generate PQC-ready key pair (CRYSTALS-Kyber)' },
+    ],
+    tags: ['PQC', 'Ed25519', 'Chaos Engineering', 'SENTINEL', 'Zero-Trust'],
+  },
+  {
+    id: 'heady_loom', icon: '🕸️', name: 'heady_loom',
+    tagline: 'Knowledge Graph Weaver',
+    desc: 'Constructs and traverses knowledge graphs from T1 vector memory. ManifoldBee performs PCA → k-means → Shannon entropy analysis. Discovers hidden relationships between memories, patents, code, and conversations.',
+    accent: '#aa66ff', swarm: 'TOPOLOGY (#17)', shape: 'metatron', colorOff: 210,
+    tools: [
+      { name: 'loom_weave', desc: 'Build knowledge graph from vector memory cluster' },
+      { name: 'loom_traverse', desc: 'Walk graph edges to find connected knowledge' },
+      { name: 'loom_entropy', desc: 'Shannon entropy analysis of knowledge domain' },
+      { name: 'loom_project', desc: 'Project 384D → 3D for spatial visualization' },
+    ],
+    tags: ['Knowledge Graph', 'PCA', 'Shannon Entropy', 'TOPOLOGY', '384D→3D'],
+  },
+  {
+    id: 'heady_pulse', icon: '💓', name: 'heady_pulse',
+    tagline: 'System Vitals & Anomaly Prediction',
+    desc: 'Real-time health monitoring across all 10 services. Sparkline telemetry, predictive anomaly detection via PredictiveBee, and automatic circuit breaking at FIB[10] = 89 failures. Sentry integration with 10% trace sampling.',
+    accent: '#00ffaa', swarm: 'SENTINEL (#13)', shape: 'icosahedron', colorOff: 270,
+    tools: [
+      { name: 'pulse_health', desc: 'Full health check across all 10 services' },
+      { name: 'pulse_predict', desc: 'Predictive anomaly detection (next φ⁵ ms window)' },
+      { name: 'pulse_trace', desc: 'Distributed trace for any request ID (Sentry)' },
+    ],
+    tags: ['Health Check', 'Anomaly Detection', 'Sentry', 'Circuit Breaker'],
+  },
+  {
+    id: 'heady_resonance', icon: '〰️', name: 'heady_resonance',
+    tagline: 'Live CSL Gate Tuner',
+    desc: 'Adjust Continuous Semantic Logic gate thresholds in real-time. Tune Resonance (IF), Superposition (AND), and Orthogonal (NOT) gates per-tenant, per-swarm, or globally. All thresholds derived from φ.',
+    accent: '#66ffcc', swarm: 'TENSOR (#16)', shape: 'torus', colorOff: 330,
+    tools: [
+      { name: 'resonance_tune', desc: 'Set CSL gate threshold (must be φ-derived)' },
+      { name: 'resonance_probe', desc: 'Test input against all 3 gate types with scoring' },
+      { name: 'resonance_profile', desc: 'Tenant-specific gate profile calibration' },
+    ],
+    tags: ['CSL Gates', 'Resonance', 'Superposition', 'Orthogonal', 'TENSOR'],
+  },
+  {
+    id: 'heady_oracle', icon: '📊', name: 'heady_oracle',
+    tagline: 'Financial Intelligence Engine',
+    desc: 'QUANT + ORACLE swarms combined. MarketAnalyzerBee for technicals, RiskManagerBee for Monte Carlo risk, BudgetGuardianBee for φ-scaled spend limits (38.2%, 61.8%, 80%), and 990 XML parser for non-profit giving trends.',
+    accent: '#ffcc00', swarm: 'QUANT (#10) + ORACLE (#9)', shape: 'metatron', colorOff: 45,
+    tools: [
+      { name: 'oracle_analyze', desc: 'Market analysis with φ-scaled technical indicators' },
+      { name: 'oracle_risk', desc: 'Monte Carlo risk assessment (1K-10K scenarios)' },
+      { name: 'oracle_budget', desc: 'Budget check against φ-threshold guardrails' },
+      { name: 'oracle_990', desc: 'Parse IRS 990 XML into giving trends data' },
+    ],
+    tags: ['QUANT', 'ORACLE', 'Monte Carlo', 'Budget φ-Thresholds', '990 Parser'],
+  },
+  {
+    id: 'heady_nexus', icon: '⛓️', name: 'heady_nexus',
+    tagline: 'Web3 Smart Contract Deployer',
+    desc: 'Deploy and interact with smart contracts on Ethereum and Solana. Tokenize Heady IP assets on-chain. DIDVerifierBee provides decentralized identity as alternative auth. Protected by patent claims.',
+    accent: '#44aaff', swarm: 'NEXUS (#14)', shape: 'icosahedron', colorOff: 75,
+    tools: [
+      { name: 'nexus_deploy', desc: 'Deploy smart contract (Solidity/Rust) to chain' },
+      { name: 'nexus_tokenize', desc: 'Mint semantic token representing IP asset' },
+      { name: 'nexus_verify', desc: 'DID-based identity verification (zero-trust)' },
+    ],
+    tags: ['Ethereum', 'Solana', 'DID', 'NEXUS', 'Tokenization'],
+  },
+];
+
+// ── Render service cards with individual canvas backgrounds ──
+const grid = document.getElementById('servicesGrid');
+SERVICES.forEach((svc, idx) => {
+  const card = document.createElement('div');
+  card.className = 'svc-card';
+  card.style.setProperty('--card-accent', svc.accent);
+  card.innerHTML = `
+    <canvas class="card-geo" id="cardGeo${idx}"></canvas>
+    <div class="svc-card-accent"></div>
+    <span class="svc-swarm">${svc.swarm}</span>
+    <div class="svc-card-glass">
+      <div class="svc-icon">${svc.icon}</div>
+      <div class="svc-name">${svc.name}</div>
+      <div class="svc-tagline">${svc.tagline}</div>
+      <div class="svc-desc">${svc.desc}</div>
+      <div class="svc-tools">
+        ${svc.tools.map(t => `
+          <div class="svc-tool">
+            <span class="svc-tool-name">${t.name}</span>
+            <span class="svc-tool-desc">— ${t.desc}</span>
+          </div>
+        `).join('')}
+      </div>
+      <div class="svc-meta">
+        ${svc.tags.map(t => `<span class="svc-tag">${t}</span>`).join('')}
+      </div>
+    </div>
+  `;
+  grid.appendChild(card);
+
+  // Init individual card canvas with its own shape
+  requestAnimationFrame(() => {
+    const canvas = document.getElementById(`cardGeo${idx}`);
+    initCardCanvas(canvas, svc.shape, svc.colorOff);
+  });
+});
+
+// ── Architecture diagram background ──
+(function initArchGeo() {
+  const c = document.getElementById('archGeo'), ctx = c.getContext('2d');
+  const tor = torus(0.8, 0.3, 21, 13);
+  let t = 0;
+  function draw() {
+    ctx.clearRect(0, 0, 900, 500);
+    t += 0.004;
+    tor.edges.forEach(([a, b]) => {
+      const pa = project3D(tor.pts[a][0], tor.pts[a][1], tor.pts[a][2], 450, 250, 180, t*PSI*0.5, t*PSI, t*0.2);
+      const pb = project3D(tor.pts[b][0], tor.pts[b][1], tor.pts[b][2], 450, 250, 180, t*PSI*0.5, t*PSI, t*0.2);
+      ctx.globalAlpha = 0.2 * Math.min(pa.p, pb.p);
+      ctx.strokeStyle = hslCycle(t, 0, 50, 45) + '0.4)';
+      ctx.lineWidth = 0.5;
+      ctx.beginPath(); ctx.moveTo(pa.x, pa.y); ctx.lineTo(pb.x, pb.y); ctx.stroke();
+    });
+    ctx.globalAlpha = 1;
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+// ── Clock ──
+setInterval(() => {
+  document.getElementById('clock').textContent = new Date().toLocaleTimeString();
+}, 1000);
+</script>
+</body>
+</html>
