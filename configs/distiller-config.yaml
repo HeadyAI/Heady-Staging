@@ -55,25 +55,29 @@ distiller:
     target_ratio: 0.5  # keep 50% of tokens
     u_curve_weight: 0.2  # weight for position-based importance (lost-in-the-middle)
 
-  # ─── COLAB GPU OFFLOAD ──────────────────────────────────────────────────
-  colab:
+  # ─── GPU OFFLOAD (Cloud Run GPU — migrated from Colab Pro+) ────────────
+  # Migrated 2026-03-18: Colab Pro+ ($300/month) → Cloud Run GPU L4 (~$120/month)
+  # See: docs/infrastructure/gpu_migration_guide.md
+  gpu:
     enabled: true
-    gateway_url: "${COLAB_GATEWAY_URL:-http://colab-gateway:3366}"
+    # heady-embed: nomic-embed-text-v1, L4 GPU, FastAPI, port 8080
+    embed_url: "${HEADY_EMBED_URL:-https://heady-embed-ue.a.run.app}"
+    # heady-inference: llama.cpp Mistral-7B Q4_K_M, L4 GPU, port 8080
+    inference_url: "${HEADY_INFERENCE_URL:-https://heady-inference-ue.a.run.app}"
     # Pool assignments for distill tasks
-    filter_pool: "cold"        # GPU filtering on cold runtime (experiments)
-    optimize_pool: "cold"      # Prompt optimization on cold runtime
-    embed_pool: "hot"          # Embedding generation on hot runtime (real-time)
-    synthesize_pool: "cold"    # Skill synthesis on cold runtime
+    filter_pool: "cold"        # GPU filtering on Cloud Run (auto-scale)
+    optimize_pool: "cold"      # Prompt optimization on Cloud Run GPU
+    embed_pool: "hot"          # Embedding via heady-embed service (L4 GPU)
+    synthesize_pool: "cold"    # Skill synthesis on Cloud Run
     # Auto-offload: switch from CPU to GPU when trace count exceeds threshold
     auto_offload_threshold: 100
-    # Feedback loop: push optimized prompts back to cold runtime for validation
+    # Feedback loop: push optimized prompts back for validation
     feedback_loop: true
-    # API endpoints mounted at /distill/* on the Colab gateway
+    # API endpoints on heady-embed and heady-inference services
     routes:
-      status: "/distill/status"
-      traces: "/distill/traces"
-      optimize: "/distill/optimize"
-      pipeline: "/distill/pipeline"
+      embed: "/embed"
+      health: "/health"
+      infer: "/infer"
 
   # ─── CACHING ───────────────────────────────────────────────────────────
   caching:

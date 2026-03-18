@@ -283,6 +283,42 @@ async function stage21_deliveryAndMemoryWrite(ctx) {
 
 async function stage22_distillation(ctx) {
   const output = ctx.stages[11]?.synthesizedOutput || '';
+  const qualityScore = ctx.stages[12]?.score ?? 0;
+  const distillerUrl = process.env.DISTILLER_URL || 'http://localhost:3375';
+  let distillerTriggered = false;
+
+  // ── Primary: forward trace to heady-distiller for full SKILL.md synthesis ──
+  // Only fires when quality gate score >= CSL.INCLUDE (0.618) — high-quality runs only
+  if (qualityScore >= CSL.INCLUDE) {
+    try {
+      const outputHash = createHash('sha256')
+        .update(output.substring(0, 2000))
+        .digest('hex')
+        .slice(0, 16);
+
+      const trace = {
+        judgeScore: qualityScore,
+        prompt: ctx.input.substring(0, 1000),
+        outputHash,
+        stages: Object.fromEntries(
+          Object.entries(ctx.stages).map(([k, v]) => [k, { name: v?.name, passed: v?.passed, score: v?.score }])
+        ),
+        config: { sessionId: ctx.sessionId, userId: ctx.userId, stageCount: 22 },
+      };
+
+      await fetch(`${distillerUrl}/api/distill`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ trace }),
+        signal: AbortSignal.timeout(5000),
+      });
+      distillerTriggered = true;
+    } catch {
+      // non-blocking: distiller offline degrades gracefully
+    }
+  }
+
+  // ── Fallback: inline LLM compression directly to memory (always runs) ──
   try {
     const compressionRes = await chat({
       messages: [
@@ -302,8 +338,8 @@ async function stage22_distillation(ctx) {
         }
       }
     }
-    return { stage: 22, name: 'DISTILLATION', patternsAdded, passed: true };
+    return { stage: 22, name: 'DISTILLATION', patternsAdded, distillerTriggered, passed: true };
   } catch {
-    return { stage: 22, name: 'DISTILLATION', patternsAdded: 0, passed: true };
+    return { stage: 22, name: 'DISTILLATION', patternsAdded: 0, distillerTriggered, passed: true };
   }
 }

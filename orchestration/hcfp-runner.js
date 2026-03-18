@@ -127,6 +127,7 @@ const HCFP_STAGES = Object.freeze([
   { id: 'NotifyStakeholders',   index: 18, category: STAGE_CATEGORY.MAINTENANCE, pool: 'COLD',       cslThreshold: CSL_THRESHOLDS.LOW,      timeout: FIB[9] * FIB[5],            retries: FIB[3], dependsOn: ['CoherenceCheck', 'MetricsPublish'],           parallel: true,  phiWeight: PSI3,                   rollback: 'queueNotificationRetry' },
   { id: 'ArchiveArtifacts',     index: 19, category: STAGE_CATEGORY.MAINTENANCE, pool: 'COLD',       cslThreshold: CSL_THRESHOLDS.LOW,      timeout: FIB[10] * FIB[5],           retries: FIB[2], dependsOn: ['MetricsPublish', 'IndexUpdate'],               parallel: true,  phiWeight: PSI3,                   rollback: 'retainInHotStorage' },
   { id: 'SelfHealCheck',        index: 20, category: STAGE_CATEGORY.MAINTENANCE, pool: 'GOVERNANCE', cslThreshold: CSL_THRESHOLDS.MEDIUM,   timeout: FIB[10] * FIB[4],           retries: FIB[1], dependsOn: ['ArchiveArtifacts', 'NotifyStakeholders'],     parallel: false, phiWeight: PHI / PHI2,             rollback: 'escalateToOperator' },
+  { id: 'Distillation',         index: 21, category: STAGE_CATEGORY.MAINTENANCE, pool: 'COLD',       cslThreshold: CSL_THRESHOLDS.LOW,      timeout: FIB[11] * FIB[5],           retries: FIB[1], dependsOn: ['SelfHealCheck'],                              parallel: false, phiWeight: PSI3,                   rollback: 'skipDistillation' },
 ]);
 
 const STAGE_MAP = new Map();
@@ -236,6 +237,22 @@ class HCFPRunner {
 
     /** @private */
     this._stageHandlers = new Map();
+
+    // Register built-in Distillation stage handler — forwards to heady-distiller service
+    this._stageHandlers.set('Distillation', async (context) => {
+      const distillerUrl = process.env.DISTILLER_URL || 'http://localhost:3375';
+      const judgeScore = context.previousStages?.SelfHealCheck?.score ?? PSI;
+      try {
+        const res = await fetch(`${distillerUrl}/health`, {
+          signal: AbortSignal.timeout(FIB[7] * FIB[5]), // 1045ms liveness check
+        });
+        const alive = cslGate(res.ok ? CSL_THRESHOLDS.HIGH : CSL_THRESHOLDS.LOW, CSL_THRESHOLDS.MEDIUM);
+        return { score: alive.signal === 'PASS' ? judgeScore : PSI2, output: { distillerReachable: alive.signal === 'PASS' } };
+      } catch {
+        // distiller offline — pass with PSI2 (degraded) rather than failing
+        return { score: PSI2, output: { distillerReachable: false } };
+      }
+    });
   }
 
   /**
@@ -380,7 +397,57 @@ class HCFPRunner {
     });
     this._notify('run:complete', { runId, status: pipelineRun.status });
 
+    // fire run:stopped so hookPipeline trace recorder can close the trace
+    this._notify('run:stopped', { runId, reason: pipelineRun.status });
+
+    // trigger heady-distiller for high-quality completed runs (non-blocking)
+    const distillTriggerGate = cslGate(
+      pipelineRun.status === RUN_STATUS.COMPLETED ? CSL_THRESHOLDS.HIGH : CSL_THRESHOLDS.LOW,
+      CSL_THRESHOLDS.MEDIUM
+    );
+    if (distillTriggerGate.signal === 'PASS') {
+      const judgeScore = pipelineRun.metrics.stagesCompleted / HCFP_STAGES.length;
+      this._triggerDistiller(pipelineRun, judgeScore).catch(() => {});
+    }
+
     return this._serializeRun(pipelineRun);
+  }
+
+  /**
+   * POST the completed pipeline run to heady-distiller for SKILL.md synthesis.
+   * Non-blocking — distillation failure never stalls the pipeline.
+   * Only fires when judgeScore >= CSL_THRESHOLDS.HIGH (high-quality runs only).
+   * @private
+   */
+  async _triggerDistiller(pipelineRun, judgeScore) {
+    const scoreGate = cslGate(judgeScore, CSL_THRESHOLDS.HIGH);
+    if (scoreGate.signal !== 'PASS') return;
+
+    const distillerUrl = process.env.DISTILLER_URL || 'http://localhost:3375';
+    const outputHash = await sha256(JSON.stringify(pipelineRun.stages)).catch(() => 'unknown');
+
+    const trace = {
+      judgeScore,
+      prompt: pipelineRun.task,
+      outputHash,
+      stages: Object.fromEntries(
+        Object.entries(pipelineRun.stages).map(([k, v]) => [
+          k, { score: v?.score, duration: v?.duration, passed: v?.passed, pool: v?.pool }
+        ])
+      ),
+      config: { seed: pipelineRun.seed, stageCount: HCFP_STAGES.length, founder: pipelineRun.founder },
+    };
+
+    try {
+      await fetch(`${distillerUrl}/api/distill`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ trace }),
+        signal: AbortSignal.timeout(FIB[11] * FIB[5]), // 5592ms
+      });
+    } catch {
+      // non-blocking: distillation errors never surface to caller
+    }
   }
 
   /**
@@ -391,6 +458,7 @@ class HCFPRunner {
     const stage = STAGE_MAP.get(stageId);
     const startTime = Date.now();
     let lastResult = null;
+    this._notify('stage:start', { runId: pipelineRun.id, stageId, name: stage.id });
 
     for (let attempt = 0; attempt <= stage.retries; attempt++) {
       const retryGate = cslGate(
@@ -459,6 +527,7 @@ class HCFPRunner {
       }
     }
 
+    this._notify('stage:end', { runId: pipelineRun.id, stageId, status: lastResult?.passed ? 'complete' : 'failed' });
     return lastResult;
   }
 
