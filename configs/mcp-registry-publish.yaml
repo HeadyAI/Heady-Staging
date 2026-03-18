@@ -1,0 +1,168 @@
+# HEADY_BRAND:BEGIN
+# ╔══════════════════════════════════════════════════════════════════╗
+# ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
+# ║  ██║  ██║██╔════╝██╔══██╗██╔══██╗╚██╗ ██╔╝                     ║
+# ║  ███████║█████╗  ███████║██║  ██║ ╚████╔╝                      ║
+# ║  ██╔══██║██╔══╝  ██╔══██║██║  ██║  ╚██╔╝                       ║
+# ║  ██║  ██║███████╗██║  ██║██████╔╝   ██║                        ║
+# ║  ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝    ╚═╝                        ║
+# ║                                                                  ║
+# ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
+# ║  FILE: configs/mcp-registry-publish.yaml                         ║
+# ╚══════════════════════════════════════════════════════════════════╝
+# HEADY_BRAND:END
+#
+# MCP Registry Publication — PulseMCP + Glama + MCP.so
+# Version: 1.0.0  |  Date: 2026-03-18
+#
+# PURPOSE: Fix Heady's zero public footprint.
+# The MCP ecosystem has 16,000+ indexed servers. Heady has ZERO public listings.
+# Publishing to PulseMCP, Glama, and MCP.so provides:
+#   - Discovery by the 97M+ monthly MCP SDK users
+#   - SEO via registry backlinks to headymcp.com
+#   - Community credibility and contributor attraction
+#   - Competitive visibility alongside Dify, OpenClaw, etc.
+
+version: "1.0.0"
+
+# ─── SERVER IDENTITY ──────────────────────────────────────────────
+server:
+  name: "HeadyMCP"
+  display_name: "Heady™ Sovereign AI Platform"
+  description: >
+    The world's first φ-scaled sovereign AI operating system with 55 tools spanning
+    intelligence, memory, orchestration, and sacred geometry. Features a unique 3-tier
+    biologically-inspired memory system (Redis→pgvector→Qdrant) with golden-ratio
+    φ-decay forgetting, multi-model routing (Claude/GPT-4o/Gemini/Groq), 21-stage
+    HCFullPipeline, and the only MCP server implementing Continuous Semantic Logic (CSL)
+    gates. Built by Eric Haywood / HeadySystems Inc.
+  version: "5.1.0"
+  homepage: "https://headymcp.com"
+  documentation: "https://docs.headysystems.com"
+  repository: null              # TODO: Open-source Mnemosyne + CSL as Phase 3 priority
+  license: "Proprietary"
+  author: "Eric Haywood / HeadySystems Inc."
+  keywords:
+    - "sovereign-ai"
+    - "mcp"
+    - "agent-orchestration"
+    - "vector-memory"
+    - "sacred-geometry"
+    - "phi-scaling"
+    - "multi-model"
+    - "autonomous-agents"
+    - "heady"
+    - "csl"
+
+# ─── ENDPOINT ─────────────────────────────────────────────────────
+endpoints:
+  primary:
+    url: "https://mcp.headymcp.com/mcp/v1"
+    transport: "streamable-http"
+    spec_version: "2025-06-18"
+  fallback:
+    url: "https://mcp.headymcp.com/mcp/v1/sse"
+    transport: "sse"
+  server_card: "https://mcp.headymcp.com/.well-known/mcp.json"
+
+# ─── TOOL CATEGORIES (55 tools) ───────────────────────────────────
+tool_categories:
+  intelligence:
+    count: 8
+    tools: ["heady_chat", "heady_claude", "heady_openai", "heady_gemini",
+            "heady_groq", "heady_complete", "heady_csl_engine", "mandala_phi"]
+  memory:
+    count: 10
+    tools: ["mnemosyne_remember", "mnemosyne_recall", "mnemosyne_consolidate",
+            "mnemosyne_forget", "heady_memory", "heady_recall", "heady_learn",
+            "heady_embed", "heady_vector_search", "heady_vector_store"]
+  agents:
+    count: 8
+    tools: ["heady_agent_orchestration", "heady_auto_flow", "heady_battle",
+            "heady_buddy", "heady_jules_task", "heady_coder", "heady_vinci", "heady_soul"]
+  observability:
+    count: 7
+    tools: ["heady_health", "aegis_heartbeat", "aegis_service_check",
+            "heady_telemetry", "heady_analyze", "heady_deep_scan", "heady_lens"]
+  infrastructure:
+    count: 7
+    tools: ["heady_deploy", "heady_ops", "heady_maintenance", "heady_hcfp_status",
+            "heady_maid", "heady_template_stats", "heady_memory_stats"]
+  sacred_geometry:
+    count: 3
+    tools: ["mandala_constants", "mandala_phi", "heady_patterns"]
+  cms:
+    count: 5
+    tools: ["heady_cms_content", "heady_cms_media", "heady_cms_search",
+            "heady_cms_taxonomy", "heady_cms_views"]
+  advanced:
+    count: 7
+    tools: ["heady_risks", "heady_refactor", "heady_search", "heady_edge_ai",
+            "heady_notebooklm", "heady_vector_stats", "heady_huggingface_model"]
+
+# ─── REGISTRY TARGETS ──────────────────────────────────────────────
+registries:
+
+  - name: PulseMCP
+    url: "https://pulsemcp.com"
+    submission_url: "https://pulsemcp.com/submit"
+    format: "web_form"
+    status: "pending"
+    fields_required:
+      name: "HeadyMCP"
+      description: "55-tool sovereign AI platform with φ-memory and sacred geometry"
+      endpoint: "https://mcp.headymcp.com/mcp/v1"
+      transport: "streamable-http"
+      auth: "oauth2"
+      homepage: "https://headymcp.com"
+      logo_url: "https://headysystems.com/assets/heady-logo.svg"
+      categories: ["agents", "memory", "ai", "orchestration"]
+    priority: "HIGH"
+    notes: "PulseMCP indexes 16,000+ servers. Submit immediately for discovery."
+
+  - name: Glama
+    url: "https://glama.ai/mcp/servers"
+    submission_url: "https://glama.ai/mcp/servers/submit"
+    format: "web_form"
+    status: "pending"
+    fields_required:
+      name: "HeadyMCP — Sovereign AI Platform"
+      description: "World's first φ-scaled sovereign AI OS: 55 MCP tools, 3-tier memory, 21-stage pipeline"
+      github_or_homepage: "https://headymcp.com"
+      endpoint: "https://mcp.headymcp.com/mcp/v1"
+    priority: "HIGH"
+
+  - name: MCP.so
+    url: "https://mcp.so"
+    submission_url: "https://mcp.so/submit"
+    format: "github_pr_or_form"
+    status: "pending"
+    priority: "MEDIUM"
+
+  - name: MCP Registry (Linux Foundation)
+    url: "https://registry.mcpservers.org"
+    submission_url: "https://github.com/modelcontextprotocol/servers"
+    format: "github_pr"
+    status: "pending"
+    notes: "Official LF-governed registry. Requires .well-known/mcp.json — already present."
+    priority: "HIGH"
+
+# ─── SERVER CARD DEPLOY ────────────────────────────────────────────
+# .well-known/mcp.json must be served at each domain's root.
+# Deploy to all 9 Heady domains for maximum discovery.
+server_card_domains:
+  - "https://headymcp.com/.well-known/mcp.json"
+  - "https://headysystems.com/.well-known/mcp.json"
+  - "https://headyme.com/.well-known/mcp.json"
+  - "https://headyconnection.org/.well-known/mcp.json"
+  - "https://headybuddy.org/.well-known/mcp.json"
+  - "https://headyio.com/.well-known/mcp.json"
+  - "https://headyai.com/.well-known/mcp.json"
+  - "https://headyapi.com/.well-known/mcp.json"
+  - "https://headybot.com/.well-known/mcp.json"
+
+# CloudFlare Workers route: serve .well-known/mcp.json on all domains
+cloudflare_worker_route:
+  pattern: "*/.well-known/mcp.json"
+  worker: "heady-server-card-worker"
+  source: ".well-known/mcp.json"

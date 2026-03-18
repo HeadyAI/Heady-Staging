@@ -1,0 +1,323 @@
+/**
+ * HEADY™ — φ-Scaled Responsive Breakpoints + Fibonacci Media Queries
+ * © 2026 HeadySystems Inc. All Rights Reserved.
+ *
+ * Breakpoints derived from Fibonacci sequence × 1px:
+ *   fib(14) = 377px  — small mobile
+ *   fib(15) = 610px  — large mobile / small tablet
+ *   fib(16) = 987px  — tablet / small desktop
+ *   fib(17) = 1597px — desktop
+ *   fib(18) = 2584px — wide / 4K
+ *
+ * Typography ramp (φ-interval from 10px base → ×φ each step):
+ *   10px → 16px → 26px → 42px → 68px  (× PHI each level)
+ *
+ * Companion to heady-design.css — import after the main design system.
+ * @import './heady-fibonacci-breakpoints.css';
+ */
+
+/* ═══════════════════════════════════════════════════════════════════
+   FIBONACCI BREAKPOINT CUSTOM PROPERTIES
+   ═══════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* Fibonacci breakpoints (px) */
+  --bp-xs:    377px;   /* fib(14) — small mobile */
+  --bp-sm:    610px;   /* fib(15) — large mobile */
+  --bp-md:    987px;   /* fib(16) — tablet */
+  --bp-lg:   1597px;   /* fib(17) — desktop */
+  --bp-xl:   2584px;   /* fib(18) — wide / 4K */
+
+  /* Responsive font base (overridden at each breakpoint below) */
+  --font-base-px: 14;
+  --font-base: calc(var(--font-base-px) * 1px);
+
+  /* φ-Scaled typography (base × PHI^n) */
+  --text-phi-0:   10px;   /* base × φ^0 */
+  --text-phi-1:   16px;   /* base × φ^1 (≈ 10 × 1.618) */
+  --text-phi-2:   26px;   /* base × φ^2 (≈ 10 × 2.618) */
+  --text-phi-3:   42px;   /* base × φ^3 (≈ 10 × 4.236) */
+  --text-phi-4:   68px;   /* base × φ^4 (≈ 10 × 6.854) */
+
+  /* φ-Scaled layout widths */
+  --layout-narrow:    610px;
+  --layout-standard:  987px;
+  --layout-wide:     1597px;
+  --layout-full:     2584px;
+
+  /* Sidebar: golden ratio split (content = 61.8%, sidebar = 38.2%) */
+  --content-width:  61.8%;
+  --sidebar-width:  38.2%;
+
+  /* Container max-width at each breakpoint */
+  --container-xs:   355px;   /* 377 - 2×space-8 */
+  --container-sm:   566px;   /* 610 - 2×space-21 */
+  --container-md:   921px;   /* 987 - 2×space-34 */
+  --container-lg:  1487px;   /* 1597 - 2×space-55 */
+  --container-xl:  2440px;   /* 2584 - 2×space-55×2 */
+
+  /* φ-Scaled grid columns (Fibonacci: 1, 2, 3, 5, 8) */
+  --grid-cols-xs:   1;
+  --grid-cols-sm:   2;
+  --grid-cols-md:   3;
+  --grid-cols-lg:   5;
+  --grid-cols-xl:   8;
+
+  /* Fibonacci-indexed z-index scale */
+  --z-base:     1;
+  --z-raised:   2;
+  --z-overlay:  3;
+  --z-modal:    5;
+  --z-toast:    8;
+  --z-tooltip:  13;
+  --z-dropdown: 21;
+  --z-drawer:   34;
+  --z-max:      55;
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   BASE — default (< 377px, tiny screens)
+   ═══════════════════════════════════════════════════════════════════ */
+
+:root {
+  --font-base-px: 13;
+  --current-breakpoint: "xs-tiny";
+  --current-cols: var(--grid-cols-xs);
+  --current-container: calc(100vw - var(--space-8) * 2);
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   φ-XS  — 377px+  (fib(14) — small mobile)
+   ═══════════════════════════════════════════════════════════════════ */
+
+@media (min-width: 377px) {
+  :root {
+    --font-base-px: 14;
+    --current-breakpoint: "xs";
+    --current-cols: var(--grid-cols-xs);
+    --current-container: var(--container-xs);
+  }
+
+  .phi-container { max-width: var(--container-xs); }
+  .phi-grid      { grid-template-columns: repeat(var(--grid-cols-xs), 1fr); }
+  .phi-hero-text { font-size: var(--text-phi-2); }  /* 26px */
+  .phi-body-text { font-size: var(--text-phi-1); }  /* 16px */
+
+  /* Golden ratio stack: full-width on tiny screens */
+  .phi-layout-sidebar { flex-direction: column; }
+  .phi-layout-content, .phi-layout-aside { width: 100%; }
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   φ-SM  — 610px+  (fib(15) — large mobile)
+   ═══════════════════════════════════════════════════════════════════ */
+
+@media (min-width: 610px) {
+  :root {
+    --font-base-px: 15;
+    --current-breakpoint: "sm";
+    --current-cols: var(--grid-cols-sm);
+    --current-container: var(--container-sm);
+  }
+
+  .phi-container { max-width: var(--container-sm); }
+  .phi-grid      { grid-template-columns: repeat(var(--grid-cols-sm), 1fr); }
+  .phi-hero-text { font-size: var(--text-phi-3); }  /* 42px */
+
+  /* 2-column card grid */
+  .phi-card-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-13);
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   φ-MD  — 987px+  (fib(16) — tablet / small desktop)
+   ═══════════════════════════════════════════════════════════════════ */
+
+@media (min-width: 987px) {
+  :root {
+    --font-base-px: 16;
+    --current-breakpoint: "md";
+    --current-cols: var(--grid-cols-md);
+    --current-container: var(--container-md);
+  }
+
+  .phi-container { max-width: var(--container-md); }
+  .phi-grid      { grid-template-columns: repeat(var(--grid-cols-md), 1fr); }
+  .phi-hero-text { font-size: var(--text-phi-3); }  /* 42px */
+
+  /* Golden ratio two-column layout */
+  .phi-layout-sidebar {
+    flex-direction: row;
+    gap: var(--space-21);
+  }
+  .phi-layout-content { width: var(--content-width); }
+  .phi-layout-aside   { width: var(--sidebar-width); }
+
+  /* 3-column card grid */
+  .phi-card-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-13);
+  }
+
+  /* Show sidebar navigation */
+  .phi-sidebar-nav { display: flex; }
+  .phi-mobile-nav  { display: none; }
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   φ-LG  — 1597px+  (fib(17) — desktop)
+   ═══════════════════════════════════════════════════════════════════ */
+
+@media (min-width: 1597px) {
+  :root {
+    --font-base-px: 17;
+    --current-breakpoint: "lg";
+    --current-cols: var(--grid-cols-lg);
+    --current-container: var(--container-lg);
+  }
+
+  .phi-container { max-width: var(--container-lg); }
+  .phi-grid      { grid-template-columns: repeat(var(--grid-cols-lg), 1fr); }
+  .phi-hero-text { font-size: var(--text-phi-4); }  /* 68px */
+
+  /* 5-column card grid */
+  .phi-card-grid {
+    grid-template-columns: repeat(5, 1fr);
+    gap: var(--space-21);
+  }
+
+  /* Wide layout: 3-column with golden ratio center */
+  .phi-layout-3col {
+    display: grid;
+    grid-template-columns: 1fr calc(var(--content-width) * 0.618) 1fr;
+    gap: var(--space-21);
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   φ-XL  — 2584px+  (fib(18) — 4K / ultra-wide)
+   ═══════════════════════════════════════════════════════════════════ */
+
+@media (min-width: 2584px) {
+  :root {
+    --font-base-px: 18;
+    --current-breakpoint: "xl";
+    --current-cols: var(--grid-cols-xl);
+    --current-container: var(--container-xl);
+  }
+
+  .phi-container { max-width: var(--container-xl); }
+  .phi-grid      { grid-template-columns: repeat(var(--grid-cols-xl), 1fr); }
+
+  /* 8-column card grid */
+  .phi-card-grid {
+    grid-template-columns: repeat(8, 1fr);
+    gap: var(--space-34);
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   φ-SCALED LAYOUT UTILITIES
+   ═══════════════════════════════════════════════════════════════════ */
+
+.phi-container {
+  width: 100%;
+  margin-inline: auto;
+  padding-inline: var(--space-13);
+}
+
+.phi-grid {
+  display: grid;
+  gap: var(--space-13);
+}
+
+/* Glassmorphism panel — max 2-3 per viewport for performance */
+.phi-glass {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: calc(var(--space-5) * var(--phi));
+  /* Colored rim lighting instead of pure white */
+  box-shadow:
+    inset 0 1px 0 rgba(124, 94, 255, 0.12),   /* --accent-violet rim */
+    inset 0 -1px 0 rgba(64, 224, 208, 0.06),  /* --accent-cyan rim */
+    0 var(--space-5) var(--space-21) rgba(0, 0, 0, 0.4);
+}
+
+/* Ambient gradient orb — position behind glass panels */
+.phi-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(calc(var(--space-55) * var(--phi)));
+  pointer-events: none;
+  opacity: 0.15;
+  animation: phi-breathe calc(var(--phi) * 4s) ease-in-out infinite;
+}
+
+.phi-orb--violet { background: radial-gradient(circle, var(--accent-violet), transparent 70%); }
+.phi-orb--cyan   { background: radial-gradient(circle, var(--accent-cyan),   transparent 70%); }
+
+/* φ-breathing animation — scales by PSI (0.618 → 1.0) */
+@keyframes phi-breathe {
+  0%, 100% { transform: scale(1.0);   opacity: 0.10; }
+  50%       { transform: scale(1.618); opacity: 0.20; }
+}
+
+/* φ-pulse for active states */
+@keyframes phi-pulse {
+  0%   { box-shadow: 0 0 0 0 var(--accent-glow); }
+  61.8%{ box-shadow: 0 0 0 calc(var(--space-5) * var(--phi)) transparent; }
+  100% { box-shadow: 0 0 0 0 transparent; }
+}
+
+.phi-pulse-active { animation: phi-pulse calc(var(--phi) * 1s) ease-out infinite; }
+
+/* Golden spiral progress indicator */
+.phi-progress {
+  width: 100%;
+  height: 3px;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.phi-progress__bar {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent-violet), var(--accent-cyan));
+  border-radius: 2px;
+  transition: width calc(var(--phi) * 300ms) ease;
+}
+
+/* φ-ratio card aspect */
+.phi-card-ratio {
+  aspect-ratio: calc(var(--phi));  /* 1.618:1 golden ratio */
+}
+
+/* Typography utilities */
+.phi-text-hero { font-size: var(--text-phi-4); line-height: var(--phi); font-weight: 700; }
+.phi-text-h1   { font-size: var(--text-phi-3); line-height: var(--phi); font-weight: 600; }
+.phi-text-h2   { font-size: var(--text-phi-2); line-height: calc(var(--phi) * 1.1); font-weight: 600; }
+.phi-text-body { font-size: var(--text-phi-1); line-height: calc(var(--phi) * 1.2); }
+.phi-text-sm   { font-size: var(--text-phi-0); line-height: calc(var(--phi) * 1.3); }
+
+/* Fibonacci-stepped spacing utilities */
+.phi-p-1  { padding: var(--space-1); }
+.phi-p-2  { padding: var(--space-2); }
+.phi-p-3  { padding: var(--space-3); }
+.phi-p-5  { padding: var(--space-5); }
+.phi-p-8  { padding: var(--space-8); }
+.phi-p-13 { padding: var(--space-13); }
+.phi-p-21 { padding: var(--space-21); }
+.phi-p-34 { padding: var(--space-34); }
+
+.phi-gap-1  { gap: var(--space-1); }
+.phi-gap-2  { gap: var(--space-2); }
+.phi-gap-3  { gap: var(--space-3); }
+.phi-gap-5  { gap: var(--space-5); }
+.phi-gap-8  { gap: var(--space-8); }
+.phi-gap-13 { gap: var(--space-13); }
+.phi-gap-21 { gap: var(--space-21); }

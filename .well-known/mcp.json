@@ -12,11 +12,20 @@
   },
   "authentication": {
     "schemes": ["bearer", "dpop"],
+    "spec_version": "2025-06-18",
     "oauth": {
+      "version": "2.1",
       "authorization_url": "https://auth.headysystems.com/authorize",
       "token_url": "https://auth.headysystems.com/token",
-      "scopes": ["read", "write", "admin", "agent:execute", "tool:invoke"]
-    }
+      "registration_url": "https://auth.headysystems.com/register",
+      "scopes": ["read", "write", "admin", "agent:execute", "tool:invoke"],
+      "resource_indicators": true,
+      "resource": "https://mcp.headymcp.com",
+      "pkce_required": true,
+      "dpop_required": false,
+      "dpop_supported": true
+    },
+    "note": "OAuth 2.1 with Resource Indicators (RFC 8707) per MCP June 2025 spec. 8.5% of MCP servers implement OAuth — Heady leads."
   },
   "capabilities": {
     "tools": true,

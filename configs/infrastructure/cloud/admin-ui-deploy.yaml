@@ -1,0 +1,129 @@
+# HEADY_BRAND:BEGIN
+# ╔══════════════════════════════════════════════════════════════════╗
+# ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
+# ║  ██║  ██║██╔════╝██╔══██╗██╔══██╗╚██╗ ██╔╝                     ║
+# ║  ███████║█████╗  ███████║██║  ██║ ╚████╔╝                      ║
+# ║  ██╔══██║██╔══╝  ██╔══██║██║  ██║  ╚██╔╝                       ║
+# ║  ██║  ██║███████╗██║  ██║██████╔╝   ██║                        ║
+# ║  ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝    ╚═╝                        ║
+# ║                                                                  ║
+# ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
+# ║  FILE: configs/infrastructure/cloud/admin-ui-deploy.yaml         ║
+# ╚══════════════════════════════════════════════════════════════════╝
+# HEADY_BRAND:END
+#
+# Admin UI Deployment Fix — Cloud Run
+# Version: 1.0.0  |  Date: 2026-03-18
+#
+# ROOT CAUSE: admin.headysystems.com returns 404 nginx/1.29.5
+# The Cloudflare DNS target 'heady-admin-headysystems.headysystems.com'
+# resolves to a bare nginx Cloud Run service, NOT the services/admin-ui
+# Express server (which has the correct SPA catch-all route).
+#
+# DIAGNOSIS:
+#   Current: admin.headysystems.com → heady-admin-headysystems (nginx, no SPA config) → 404
+#   Target:  admin.headysystems.com → heady-admin-ui (Node/Express, SPA catch-all) → 200
+#
+# The services/admin-ui is complete and correct:
+#   - Node.js 20, ESM, Express 4.21
+#   - public/index.html: HeadyBuddy Command Center (multi-provider AI chat)
+#   - server.js: /health, /api/chat, /api/status, catch-all SPA → index.html
+#   - Dockerfile: node:20-slim, EXPOSE 8080, CMD node server.js
+#   - NO nginx dependency — pure Express static serving
+#
+# FIX: Build and deploy services/admin-ui to Cloud Run as 'heady-admin-ui'
+#      then update Cloudflare DNS CNAME to point to the new service URL.
+
+version: "1.0.0"
+service_name: heady-admin-ui
+source_path: services/admin-ui
+domain: admin.headysystems.com
+status: NEEDS_DEPLOY
+
+# ─── DEPLOYMENT COMMANDS ──────────────────────────────────────────
+# Run from repo root:
+
+steps:
+  - step: 1
+    name: "Deploy admin-ui to Cloud Run"
+    cmd: >
+      gcloud run deploy heady-admin-ui
+      --source=services/admin-ui
+      --region=us-east1
+      --project=gen-lang-client-0920560496
+      --allow-unauthenticated
+      --port=8080
+      --min-instances=0
+      --max-instances=3
+      --memory=256Mi
+      --cpu=1
+      --timeout=60
+      --set-env-vars=NODE_ENV=production
+    note: "Deploy from source — Cloud Build auto-detects Node.js, installs deps, runs npm start"
+
+  - step: 2
+    name: "Get the new service URL"
+    cmd: >
+      gcloud run services describe heady-admin-ui
+      --region=us-east1
+      --format='value(status.url)'
+
+  - step: 3
+    name: "Map admin.headysystems.com domain"
+    cmd: >
+      gcloud run domain-mappings create
+      --service=heady-admin-ui
+      --domain=admin.headysystems.com
+      --region=us-east1
+      --project=gen-lang-client-0920560496
+    note: "Verify domain ownership in Search Console first if not already verified"
+
+  - step: 4
+    name: "Update Cloudflare DNS"
+    action: "Update admin.headysystems.com CNAME target to new Cloud Run service URL"
+    file: "configs/infrastructure/cloud/cloudflare-dns.yaml"
+    current_target: "heady-admin-headysystems.headysystems.com"
+    new_target: "<output of step 2 — *.run.app URL>"
+    proxied: true
+
+  - step: 5
+    name: "Verify fix"
+    cmd: "curl -s https://admin.headysystems.com/health | jq ."
+    expected: '{"status":"ok","ts":"<timestamp>"}'
+
+# ─── ENV VARS NEEDED (set in Cloud Run secrets) ───────────────────
+env_vars:
+  required:
+    - name: OPENAI_API_KEY
+      source: "Secret Manager: heady-openai-key"
+    - name: ANTHROPIC_API_KEY
+      source: "Secret Manager: heady-anthropic-key"
+    - name: GEMINI_API_KEY
+      source: "Secret Manager: heady-gemini-key"
+    - name: GROQ_API_KEY
+      source: "Secret Manager: heady-groq-key"
+  note: "Without API keys, admin-ui falls back gracefully with HeadyBuddy offline message"
+
+# ─── HEALTH CHECK ────────────────────────────────────────────────
+health_check:
+  path: /health
+  initial_delay: 5s
+  period: 30s
+  expected_response: '{"status":"ok"}'
+
+# ─── CLOUDFLARE DNS UPDATE (apply after step 3) ──────────────────
+cloudflare_dns_record:
+  name: "admin.headysystems.com"
+  type: "CNAME"
+  proxied: true
+  ttl: 1  # Auto
+
+# ─── QUICK FIX ALTERNATIVE (no redeploy needed) ──────────────────
+# If domain mapping update is faster than redeployment:
+quick_fix:
+  description: "Point admin.headysystems.com directly to headybuddy.org until admin-ui deployed"
+  cloudflare_page_rule:
+    match: "admin.headysystems.com/*"
+    action: "Forwarding URL (302 Temporary)"
+    destination: "https://headybuddy.org/$1"
+  revert_after: "heady-admin-ui Cloud Run service deployed"

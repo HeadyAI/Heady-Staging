@@ -1,0 +1,181 @@
+# HEADY_BRAND:BEGIN
+# ╔══════════════════════════════════════════════════════════════════╗
+# ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
+# ║  ██║  ██║██╔════╝██╔══██╗██╔══██╗╚██╗ ██╔╝                     ║
+# ║  ███████║█████╗  ███████║██║  ██║ ╚████╔╝                      ║
+# ║  ██╔══██║██╔══╝  ██╔══██║██║  ██║  ╚██╔╝                       ║
+# ║  ██║  ██║███████╗██║  ██║██████╔╝   ██║                        ║
+# ║  ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝    ╚═╝                        ║
+# ║                                                                  ║
+# ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
+# ║  FILE: configs/cloudflare-ai-gateway.yaml                        ║
+# ╚══════════════════════════════════════════════════════════════════╝
+# HEADY_BRAND:END
+#
+# Cloudflare AI Gateway — Semantic Caching + Unified Inference Routing
+# Version: 1.0.0  |  Date: 2026-03-18
+#
+# PURPOSE: Route all LLM inference through Cloudflare AI Gateway to:
+#   1. Semantic caching — saves 30-70% of inference costs (semantically identical prompts served from cache)
+#   2. Unified billing — single Cloudflare account, no per-provider billing overhead
+#   3. Rate limiting — φ-scaled per-provider burst limits
+#   4. Fallback routing — automatic failover on provider errors (PHI_BACKOFF)
+#   5. Analytics — token usage, latency, cost per request in one dashboard
+#
+# Base URL pattern: https://gateway.ai.cloudflare.com/v1/{account_id}/{gateway_name}/{provider}/...
+#
+# Semantic cache: recognizes semantically identical prompts (e.g., "what is 2+2?" == "2+2=?")
+# using cosine similarity ≥ CSL.MEDIUM (0.809). Cache TTL: Fibonacci-scaled by importance.
+
+version: "1.0.0"
+
+# ─── GATEWAY IDENTITY ──────────────────────────────────────────────
+gateway:
+  name: "heady-ai-gateway"
+  account_id: "${CF_ACCOUNT_ID}"
+  base_url: "https://gateway.ai.cloudflare.com/v1/${CF_ACCOUNT_ID}/heady-ai-gateway"
+
+# ─── SEMANTIC CACHING ──────────────────────────────────────────────
+# Cloudflare AI Gateway semantic cache uses embeddings to find similar prompts.
+# Cost savings: 30-70% depending on workload repetition.
+semantic_cache:
+  enabled: true
+
+  # Similarity threshold for cache hit (CSL.MEDIUM = 0.809)
+  similarity_threshold: 0.809
+
+  # TTL by content category (Fibonacci-scaled seconds)
+  ttl_seconds:
+    default:       3600    # 1 hour
+    code:          7200    # 2 hours — code rarely changes within a session
+    documentation: 86400  # 24 hours — docs are stable
+    analysis:      1800   # 30 min — analysis may need freshness
+    creative:      900    # 15 min — creative content should vary
+    tool_call:     300    # 5 min — tool results may change frequently
+    ephemeral:     60     # 1 min — real-time queries
+
+  # Cache bypass conditions
+  bypass_if:
+    - temperature_gt: 1.0    # High temperature = user wants randomness
+    - max_tokens_gt:  4096   # Long-form = likely unique
+    - stream: true            # Streaming responses not cacheable
+
+  # Cache key includes: model + prompt hash (semantic similarity applied after lookup)
+  cache_key_fields: ["model", "messages", "system"]
+  exclude_fields:   ["user_id", "session_id", "timestamp"]  # Not part of semantic key
+
+# ─── PROVIDER ROUTING ──────────────────────────────────────────────
+providers:
+  - name: anthropic
+    gateway_path: "/anthropic"
+    models: ["claude-opus-4-6", "claude-sonnet-4-6", "claude-haiku-4-5-20251001"]
+    priority: 1           # Primary provider
+    rate_limit:
+      requests_per_minute: 89    # fib(11) = 89
+      tokens_per_minute: 100000
+    timeout_ms: 30000
+    # φ-backoff on error
+    backoff: [1618, 2618, 4236]  # PHI^1, PHI^2, PHI^3 × 1000ms
+
+  - name: openai
+    gateway_path: "/openai"
+    models: ["gpt-4o", "gpt-4o-mini", "o1", "o3"]
+    priority: 2
+    rate_limit:
+      requests_per_minute: 55    # fib(10) = 55
+      tokens_per_minute: 90000
+    timeout_ms: 30000
+    backoff: [1618, 2618, 4236]
+
+  - name: google-ai-studio
+    gateway_path: "/google-ai-studio"
+    models: ["gemini-2.0-flash", "gemini-2.0-pro"]
+    priority: 3
+    rate_limit:
+      requests_per_minute: 34    # fib(9) = 34
+      tokens_per_minute: 60000
+    timeout_ms: 30000
+    backoff: [1618, 2618, 4236]
+
+  - name: groq
+    gateway_path: "/groq"
+    models: ["llama-3.3-70b-versatile", "mixtral-8x7b-32768"]
+    priority: 4
+    use_case: "low_latency"     # Route to Groq when latency < 100ms required
+    rate_limit:
+      requests_per_minute: 144   # fib(12) = 144
+      tokens_per_minute: 500000
+    timeout_ms: 5000
+    backoff: [618, 1000, 1618]   # Faster backoff for speed-critical path
+
+# ─── ROUTING RULES ────────────────────────────────────────────────
+routing:
+  # Default: route to provider with highest priority that has capacity
+  default_strategy: "priority_with_fallback"
+
+  # Smart routing rules (applied in order)
+  rules:
+    - name: "low_latency_route"
+      condition: "latency_budget_ms < 500"
+      route_to: "groq"
+      description: "Time-sensitive requests → Groq LPU (<100ms)"
+
+    - name: "long_context_route"
+      condition: "estimated_tokens > 100000"
+      route_to: "anthropic"
+      description: "Long context → Claude (200K context window)"
+
+    - name: "code_generation"
+      condition: "task_type == 'code'"
+      route_to: "anthropic"
+      preferred_model: "claude-sonnet-4-6"
+
+    - name: "multimodal_route"
+      condition: "has_images == true"
+      route_to: "google-ai-studio"
+      preferred_model: "gemini-2.0-flash"
+
+    - name: "cost_optimized"
+      condition: "priority == 'low'"
+      route_to: "groq"
+      description: "Background/batch tasks → cheapest provider"
+
+  # Automatic failover chain
+  failover_chain: ["anthropic", "openai", "google-ai-studio", "groq"]
+
+# ─── ANALYTICS ────────────────────────────────────────────────────
+analytics:
+  enabled: true
+  # Store logs in Cloudflare Logpush → R2 for analysis
+  logpush:
+    enabled: true
+    destination: "r2://heady-ai-logs/gateway/"
+    fields: ["RequestID", "Provider", "Model", "RequestTokens", "ResponseTokens",
+             "CacheStatus", "CacheHit", "Latency", "StatusCode", "Error"]
+
+  # Cost tracking (estimated USD per 1M tokens)
+  cost_per_million_tokens:
+    "claude-opus-4-6":       { input: 15.00, output: 75.00 }
+    "claude-sonnet-4-6":     { input: 3.00,  output: 15.00 }
+    "claude-haiku-4-5-20251001": { input: 0.80,  output: 4.00 }
+    "gpt-4o":                { input: 5.00,  output: 15.00 }
+    "gpt-4o-mini":           { input: 0.15,  output: 0.60 }
+    "gemini-2.0-flash":      { input: 0.075, output: 0.30 }
+    "groq/llama-3.3-70b":    { input: 0.59,  output: 0.79 }
+
+# ─── INTEGRATION — heady-brain router ────────────────────────────
+# heady-brain should route ALL LLM calls through this gateway.
+# Replace direct provider API calls with gateway base URL.
+integration:
+  env_var: "AI_GATEWAY_BASE_URL"
+  value: "https://gateway.ai.cloudflare.com/v1/${CF_ACCOUNT_ID}/heady-ai-gateway"
+
+  # Headers to add to every gateway request
+  required_headers:
+    cf-aig-cache-ttl: "3600"           # Override TTL per-request if needed
+    cf-aig-skip-cache: "false"         # Set to "true" to bypass cache for a specific call
+    # cf-aig-metadata: JSON string for logging enrichment (agent name, user ID, etc.)
+
+  # Example URL transform (anthropic):
+  # Before: https://api.anthropic.com/v1/messages
+  # After:  https://gateway.ai.cloudflare.com/v1/{account}/heady-ai-gateway/anthropic/v1/messages

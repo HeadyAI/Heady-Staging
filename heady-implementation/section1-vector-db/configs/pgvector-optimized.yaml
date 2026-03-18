@@ -1,12 +1,23 @@
 # =============================================================================
 # pgvector-optimized.yaml
-# Purpose:  pgvector configuration for Heady™ Latent OS production deployments
+# Purpose:  pgvector 0.8.0+ configuration for Heady™ Latent OS production deployments
 # Platform: Cloud Run + Cloud SQL PostgreSQL 16 (or self-hosted PostgreSQL 16+)
-# Created:  2026-03-07
+# Created:  2026-03-07  |  Updated: 2026-03-18 (0.8.0 explicit upgrade)
 #
-# Based on benchmarks from research/section1_vector_db.md:
-#   - HNSW @ 1M × 1536d: 253 QPS, 5.51ms p99 (pgvector 0.7.0+)
-#   - pgvector 0.8.0 iterative scan: 100x better result completeness on filtered queries
+# TARGET VERSION: pgvector >= 0.8.0 (REQUIRED — iterative scans are a 0.8.0 feature)
+#   Install/upgrade: ALTER EXTENSION vector UPDATE;  -- or reinstall from pgvector 0.8.0+
+#   Verify: SELECT extversion FROM pg_extension WHERE extname = 'vector';
+#
+# 0.8.0 Key improvements (vs 0.7.x):
+#   - hnsw.iterative_scan = relaxed_order: 5.7× faster filtered queries, 100× more complete results
+#   - Improved HNSW cost estimation: planner correctly auto-selects HNSW vs B-tree per filter selectivity
+#   - Iterative scans with SET hnsw.ef_search = 100-200: production-grade recall on agent memory
+#   - relaxed_order mode: returns nearest results within scanned nodes (slight order trade-off for completeness)
+#
+# Benchmark context (pgvector 0.8.0):
+#   - HNSW @ 1M × 1536d: 253 QPS, 5.51ms p99
+#   - Filtered query (metadata filter + vector): 5.7× faster vs 0.7.x with iterative_scan
+#   - 100× more relevant results on low-selectivity metadata filters
 #   - halfvec scalar quantization: 50% memory savings, ~3x faster build
 #   - binary quantization: 32x memory savings, ~67x faster build (with re-ranking)
 # =============================================================================
@@ -61,13 +72,20 @@ postgresql:
     max_wal_size: "4GB"
     min_wal_size: "1GB"
 
-  # --- Planner settings for HNSW ---
+  # --- Planner settings for HNSW (pgvector 0.8.0+) ---
   planner:
-    # pgvector 0.8.0 improved cost estimation for index selection
-    # Enable to allow planner to correctly choose B-tree over HNSW
-    # for highly selective metadata-only filters
-    enable_seqscan: "on"                  # Don't disable; let planner choose
+    # pgvector 0.8.0 improved cost estimation for index selection.
+    # The planner now correctly auto-selects between HNSW and B-tree
+    # based on filter selectivity — no manual hints needed.
+    enable_seqscan: "on"                  # Don't disable; let 0.8.0 planner choose
     random_page_cost: 1.1                 # For NVMe SSD; reduce to 1.0 for RAM-resident
+
+  # --- pgvector 0.8.0 iterative scan (SET per-session or globally) ---
+  # Apply these BEFORE queries involving metadata filters on vector_memories.
+  iterative_scan_session_settings: |
+    SET hnsw.iterative_scan = relaxed_order;
+    SET hnsw.ef_search = 100;              -- Start here; increase to 200 for higher recall
+    SET hnsw.max_scan_tuples = 20000;      -- Upper bound; tune based on result quality
 
   # --- Logging ---
   logging:

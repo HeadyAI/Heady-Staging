@@ -1,0 +1,162 @@
+# HEADY_BRAND:BEGIN
+# ╔══════════════════════════════════════════════════════════════════╗
+# ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
+# ║  ██║  ██║██╔════╝██╔══██╗██╔══██╗╚██╗ ██╔╝                     ║
+# ║  ███████║█████╗  ███████║██║  ██║ ╚████╔╝                      ║
+# ║  ██╔══██║██╔══╝  ██╔══██║██║  ██║  ╚██╔╝                       ║
+# ║  ██║  ██║███████╗██║  ██║██████╔╝   ██║                        ║
+# ║  ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝    ╚═╝                        ║
+# ║                                                                  ║
+# ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
+# ║  FILE: configs/headyconnection-com-fix.yaml                      ║
+# ╚══════════════════════════════════════════════════════════════════╝
+# HEADY_BRAND:END
+#
+# headyconnection.com Outage Remediation Plan
+# Version: 1.0.0  |  Date: 2026-03-18
+#
+# DIAGNOSIS: headyconnection.com times out at 8,000ms.
+# headyconnection.ORG responds in 69ms — the .org is healthy.
+# The .com is either: (a) pointing to wrong/dead Cloud Run service,
+#                      (b) Cloudflare DNS mis-routed, or
+#                      (c) Cloud Run service not deployed for .com domain.
+#
+# IMPACT: φ_health contribution loss, user confusion (.org vs .com),
+#         commercial domain down while nonprofit .org is live.
+#
+# Aegis heartbeat evidence:
+#   headyconnection.org  → 69ms  ✓ HEALTHY
+#   headyconnection.com  → 8000ms ✗ TIMEOUT
+
+version: "1.0.0"
+service: "headyconnection.com"
+status: "TIMEOUT — 8000ms"
+priority: "P0"
+
+# ─── ROOT CAUSE CHECKLIST ─────────────────────────────────────────
+diagnosis:
+  check_1_cloudflare_dns:
+    description: "Verify headyconnection.com CNAME/A record in Cloudflare"
+    expected: "CNAME → Cloud Run service URL (proxied: true)"
+    action: "gcloud run services describe heady-connection-com --region=us-east1"
+
+  check_2_cloud_run_service:
+    description: "Confirm Cloud Run service exists and is deployed for .com"
+    action: "gcloud run services list --region=us-east1 | grep connection"
+    common_cause: "Service may be named for .org but .com domain not mapped"
+
+  check_3_domain_mapping:
+    description: "Check Cloud Run domain mappings"
+    action: "gcloud run domain-mappings list --region=us-east1"
+    expected: "headyconnection.com → heady-connection service"
+
+  check_4_service_health:
+    description: "Direct health check bypassing Cloudflare"
+    action: "curl -v https://heady-connection-[hash]-uc.a.run.app/health"
+
+  check_5_timeout_source:
+    description: "8000ms = Aegis probe timeout, not a slow response"
+    implication: "Service likely NOT responding at all (connection refused or wrong DNS)"
+
+# ─── REMEDIATION STEPS ────────────────────────────────────────────
+remediation:
+  step_1_immediate_redirect:
+    description: "Add Cloudflare Page Rule: redirect headyconnection.com → headyconnection.org"
+    reason: "Immediate user experience fix while root cause is resolved"
+    cloudflare_page_rule:
+      match: "headyconnection.com/*"
+      action: "Forwarding URL (301 Permanent)"
+      destination: "https://headyconnection.org/$1"
+    estimated_time: "5 minutes"
+    priority: "DO FIRST"
+
+  step_2_deploy_com_service:
+    description: "Deploy dedicated Cloud Run service for .com if missing"
+    commands:
+      - description: "Deploy headyconnection-com service"
+        cmd: >
+          gcloud run deploy heady-connection-com
+          --image=gcr.io/gen-lang-client-0920560496/heady-connection:latest
+          --region=us-east1
+          --project=gen-lang-client-0920560496
+          --allow-unauthenticated
+          --min-instances=0
+          --max-instances=5
+          --memory=512Mi
+          --cpu=1
+          --timeout=300
+
+      - description: "Map headyconnection.com domain to service"
+        cmd: >
+          gcloud run domain-mappings create
+          --service=heady-connection-com
+          --domain=headyconnection.com
+          --region=us-east1
+
+  step_3_cloudflare_dns_update:
+    description: "Update Cloudflare DNS to point .com to the working service"
+    dns_records:
+      - name: "headyconnection.com"
+        type: "CNAME"
+        target: "heady-connection-com-[hash]-ue.a.run.app"
+        proxied: true
+        ttl: 1
+
+  step_4_health_probe_update:
+    description: "Update app-readiness.yaml to probe .com separately from .org"
+    file: "configs/app-readiness.yaml"
+    add_probe:
+      name: "headyconnection-com"
+      type: "http"
+      url: "https://headyconnection.com/health"
+      method: "GET"
+      expectedStatus: 200
+      maxLatencyMs: 2000
+      interval: 60
+      criticality: "high"
+
+# ─── ADMIN UI 404 FIX ─────────────────────────────────────────────
+admin_ui_fix:
+  description: "admin.headysystems.com returns 404 — admin UI not deployed"
+  current_status: "404 NOT FOUND"
+  cloudflare_dns_target: "heady-admin-headysystems.headysystems.com"
+
+  root_cause_options:
+    a: "Cloud Run service 'heady-admin-headysystems' not deployed"
+    b: "Service deployed but serving wrong port or missing index.html"
+    c: "Cloudflare Worker not routing /admin/* correctly"
+
+  fix_deploy_admin:
+    commands:
+      - description: "Build and deploy admin UI"
+        cmd: >
+          cd apps/admin-ui &&
+          npm run build &&
+          gcloud run deploy heady-admin
+          --source=.
+          --region=us-east1
+          --project=gen-lang-client-0920560496
+          --allow-unauthenticated
+          --min-instances=0
+          --max-instances=3
+
+      - description: "Map admin.headysystems.com"
+        cmd: >
+          gcloud run domain-mappings create
+          --service=heady-admin
+          --domain=admin.headysystems.com
+          --region=us-east1
+
+  fix_cloudflare_worker:
+    description: "If admin UI is a SPA, add Cloudflare Worker to serve index.html for all routes"
+    worker_snippet: |
+      export default {
+        async fetch(request, env) {
+          const url = new URL(request.url);
+          // SPA fallback: serve index.html for all non-asset routes
+          if (!url.pathname.match(/\.(js|css|png|jpg|svg|ico|woff2?)$/)) {
+            url.pathname = '/index.html';
+          }
+          return fetch(url.toString(), request);
+        }
+      };
