@@ -1,0 +1,26 @@
+{
+  "schema": "https://purl.org/a2a/agent-card/v1",
+  "name": "HeadyAI",
+  "description": "Sovereign AI Operating System with 55 MCP tools, φ-scaled 3-tier memory, and sacred geometry orchestration",
+  "url": "https://headymcp.com",
+  "version": "5.0.0",
+  "capabilities": {
+    "mcp": { "version": "2025-11-25", "tools": 55 },
+    "a2a": { "version": "1.0", "streaming": true },
+    "memory": { "tiers": 3, "decay": "phi", "vector_dims": 384 },
+    "inference": { "models": ["gemini", "claude", "gpt-4o", "groq"], "routing": "phi-weighted" }
+  },
+  "authentication": {
+    "schemes": ["oauth2.1"],
+    "required": true
+  },
+  "skills": [
+    { "id": "cognitive", "name": "Cognitive Analysis", "tools": 15 },
+    { "id": "memory", "name": "Vector Memory & Recall", "tools": 8 },
+    { "id": "creative", "name": "Code & Content Generation", "tools": 10 },
+    { "id": "cms", "name": "CMS Management", "tools": 6 },
+    { "id": "ops", "name": "Operations & Deploy", "tools": 5 },
+    { "id": "sacred", "name": "Sacred Geometry & Mandala", "tools": 6 },
+    { "id": "identity", "name": "Identity & Auth", "tools": 5 }
+  ]
+}

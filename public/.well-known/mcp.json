@@ -1,0 +1,47 @@
+{
+  "schema": "https://modelcontextprotocol.io/server-card/v1",
+  "name": "HeadyMCP",
+  "description": "Heady™ Sovereign AI Operating System — 55 MCP tools across cognitive, memory, deployment, creative, CMS, identity, and φ-scaled sacred geometry domains",
+  "version": "5.0.0",
+  "vendor": "HeadySystems Inc.",
+  "homepage": "https://headysystems.com",
+  "documentation": "https://headymcp.com/docs",
+  "source": "https://github.com/HeadySystems/heady-mcp-server",
+  "license": "AGPL-3.0",
+  "protocol_version": "2025-11-25",
+  "transports": [
+    { "type": "streamable-http", "url": "https://headymcp.com/mcp" },
+    { "type": "sse", "url": "https://headymcp.com/mcp/sse" }
+  ],
+  "authentication": {
+    "type": "oauth2.1",
+    "authorization_url": "https://headymcp.com/auth/authorize",
+    "token_url": "https://headymcp.com/auth/token",
+    "scopes": {
+      "cognitive:read": "Read-only access to cognitive tools",
+      "cognitive:write": "Write access to cognitive tools",
+      "memory:read": "Read memory and recall",
+      "memory:write": "Write and learn new memories",
+      "code:write": "Code generation and refactoring",
+      "admin:deploy": "Deploy and ops operations"
+    }
+  },
+  "capabilities": {
+    "tools": 55,
+    "resources": true,
+    "prompts": true,
+    "sampling": true,
+    "logging": true
+  },
+  "tool_tiers": {
+    "tier1_readonly": 38,
+    "tier2_write": 14,
+    "tier3_destructive": 3
+  },
+  "tags": ["ai-platform", "mcp", "sovereign-ai", "sacred-geometry", "multi-model", "vector-memory"],
+  "contact": {
+    "name": "Eric Haywood",
+    "email": "eric@headysystems.com",
+    "organization": "HeadySystems Inc."
+  }
+}
