@@ -1,0 +1,454 @@
+# ═══════════════════════════════════════════════════════════════════════
+# HEADY™ ADVANCED MCP SERVICES — Docker Compose
+# ═══════════════════════════════════════════════════════════════════════
+# 45 new φ-scaled microservices for the MCP ecosystem
+# All ports follow the φ-indexed allocation scheme (34xx-36xx)
+#
+# Usage:
+#   docker compose -f docker-compose.advanced-mcp.yml up
+#   docker compose -f docker-compose.advanced-mcp.yml up heady-chrono heady-nexus
+#
+# @version 5.1.0
+
+x-heady-defaults: &heady-defaults
+  restart: unless-stopped
+  networks:
+    - heady-mesh
+  environment: &heady-env
+    NODE_ENV: production
+    LOG_LEVEL: info
+    DATABASE_URL: ${DATABASE_URL}
+    REDIS_URL: ${REDIS_URL}
+    HEADY_SERVICE_HOST: ${HEADY_SERVICE_HOST:-host.docker.internal}
+  healthcheck:
+    test: ["CMD", "wget", "--spider", "-q", "http://localhost:${PORT:-3310}/health"]
+    interval: 30s
+    timeout: 5s
+    retries: 3
+    start_period: 10s
+  deploy:
+    resources:
+      limits:
+        memory: 256M
+        cpus: '0.5'
+      reservations:
+        memory: 128M
+        cpus: '0.25'
+
+services:
+  # ═══ Tier 0 — Critical Intelligence ═══════════════════════════════
+  heady-chrono:
+    <<: *heady-defaults
+    build: ./services/heady-chrono
+    container_name: heady-chrono
+    ports: ["3400:3400"]
+    environment:
+      <<: *heady-env
+      PORT: 3400
+
+  heady-cartograph:
+    <<: *heady-defaults
+    build: ./services/heady-cartograph
+    container_name: heady-cartograph
+    ports: ["3401:3401"]
+    environment:
+      <<: *heady-env
+      PORT: 3401
+
+  heady-synapse:
+    <<: *heady-defaults
+    build: ./services/heady-synapse
+    container_name: heady-synapse
+    ports: ["3402:3402"]
+    environment:
+      <<: *heady-env
+      PORT: 3402
+
+  heady-aurora:
+    <<: *heady-defaults
+    build: ./services/heady-aurora
+    container_name: heady-aurora
+    ports: ["3403:3403"]
+    environment:
+      <<: *heady-env
+      PORT: 3403
+
+  heady-nexus:
+    <<: *heady-defaults
+    build: ./services/heady-nexus
+    container_name: heady-nexus
+    ports: ["3404:3404"]
+    environment:
+      <<: *heady-env
+      PORT: 3404
+
+  # ═══ Tier 1 — Analysis & Orchestration ════════════════════════════
+  heady-prism:
+    <<: *heady-defaults
+    build: ./services/heady-prism
+    container_name: heady-prism
+    ports: ["3410:3410"]
+    environment:
+      <<: *heady-env
+      PORT: 3410
+
+  heady-loom:
+    <<: *heady-defaults
+    build: ./services/heady-loom
+    container_name: heady-loom
+    ports: ["3411:3411"]
+    environment:
+      <<: *heady-env
+      PORT: 3411
+
+  heady-axiom:
+    <<: *heady-defaults
+    build: ./services/heady-axiom
+    container_name: heady-axiom
+    ports: ["3412:3412"]
+    environment:
+      <<: *heady-env
+      PORT: 3412
+
+  heady-mosaic:
+    <<: *heady-defaults
+    build: ./services/heady-mosaic
+    container_name: heady-mosaic
+    ports: ["3413:3413"]
+    environment:
+      <<: *heady-env
+      PORT: 3413
+
+  heady-cadence:
+    <<: *heady-defaults
+    build: ./services/heady-cadence
+    container_name: heady-cadence
+    ports: ["3414:3414"]
+    environment:
+      <<: *heady-env
+      PORT: 3414
+
+  heady-chimera:
+    <<: *heady-defaults
+    build: ./services/heady-chimera
+    container_name: heady-chimera
+    ports: ["3415:3415"]
+    environment:
+      <<: *heady-env
+      PORT: 3415
+
+  heady-tapestry:
+    <<: *heady-defaults
+    build: ./services/heady-tapestry
+    container_name: heady-tapestry
+    ports: ["3416:3416"]
+    environment:
+      <<: *heady-env
+      PORT: 3416
+
+  # ═══ Tier 2 — Operations & Security ═══════════════════════════════
+  heady-echo:
+    <<: *heady-defaults
+    build: ./services/heady-echo
+    container_name: heady-echo
+    ports: ["3420:3420"]
+    environment:
+      <<: *heady-env
+      PORT: 3420
+
+  heady-vault-svc:
+    <<: *heady-defaults
+    build: ./services/heady-vault
+    container_name: heady-vault
+    ports: ["3421:3421"]
+    environment:
+      <<: *heady-env
+      PORT: 3421
+
+  heady-aegis:
+    <<: *heady-defaults
+    build: ./services/heady-aegis
+    container_name: heady-aegis
+    ports: ["3422:3422"]
+    environment:
+      <<: *heady-env
+      PORT: 3422
+
+  heady-crucible:
+    <<: *heady-defaults
+    build: ./services/heady-crucible
+    container_name: heady-crucible
+    ports: ["3423:3423"]
+    environment:
+      <<: *heady-env
+      PORT: 3423
+
+  heady-arbiter:
+    <<: *heady-defaults
+    build: ./services/heady-arbiter
+    container_name: heady-arbiter
+    ports: ["3424:3424"]
+    environment:
+      <<: *heady-env
+      PORT: 3424
+
+  heady-ouroboros:
+    <<: *heady-defaults
+    build: ./services/heady-ouroboros
+    container_name: heady-ouroboros
+    ports: ["3425:3425"]
+    environment:
+      <<: *heady-env
+      PORT: 3425
+
+  heady-mycelium:
+    <<: *heady-defaults
+    build: ./services/heady-mycelium
+    container_name: heady-mycelium
+    ports: ["3426:3426"]
+    environment:
+      <<: *heady-env
+      PORT: 3426
+
+  heady-rune:
+    <<: *heady-defaults
+    build: ./services/heady-rune
+    container_name: heady-rune
+    ports: ["3427:3427"]
+    environment:
+      <<: *heady-env
+      PORT: 3427
+
+  # ═══ Tier 3 — Intelligence & Optimization ═════════════════════════
+  heady-oracle:
+    <<: *heady-defaults
+    build: ./services/heady-oracle
+    container_name: heady-oracle
+    ports: ["3500:3500"]
+    environment:
+      <<: *heady-env
+      PORT: 3500
+
+  heady-nimbus:
+    <<: *heady-defaults
+    build: ./services/heady-nimbus
+    container_name: heady-nimbus
+    ports: ["3501:3501"]
+    environment:
+      <<: *heady-env
+      PORT: 3501
+
+  heady-patina:
+    <<: *heady-defaults
+    build: ./services/heady-patina
+    container_name: heady-patina
+    ports: ["3502:3502"]
+    environment:
+      <<: *heady-env
+      PORT: 3502
+
+  heady-polaris:
+    <<: *heady-defaults
+    build: ./services/heady-polaris
+    container_name: heady-polaris
+    ports: ["3503:3503"]
+    environment:
+      <<: *heady-env
+      PORT: 3503
+
+  heady-solstice:
+    <<: *heady-defaults
+    build: ./services/heady-solstice
+    container_name: heady-solstice
+    ports: ["3504:3504"]
+    environment:
+      <<: *heady-env
+      PORT: 3504
+
+  heady-quantum:
+    <<: *heady-defaults
+    build: ./services/heady-quantum
+    container_name: heady-quantum
+    ports: ["3505:3505"]
+    environment:
+      <<: *heady-env
+      PORT: 3505
+
+  heady-tempest:
+    <<: *heady-defaults
+    build: ./services/heady-tempest
+    container_name: heady-tempest
+    ports: ["3506:3506"]
+    environment:
+      <<: *heady-env
+      PORT: 3506
+
+  heady-verdant:
+    <<: *heady-defaults
+    build: ./services/heady-verdant
+    container_name: heady-verdant
+    ports: ["3507:3507"]
+    environment:
+      <<: *heady-env
+      PORT: 3507
+
+  # ═══ Tier 4 — Developer Experience ════════════════════════════════
+  heady-compass:
+    <<: *heady-defaults
+    build: ./services/heady-compass
+    container_name: heady-compass
+    ports: ["3510:3510"]
+    environment:
+      <<: *heady-env
+      PORT: 3510
+
+  heady-scribe:
+    <<: *heady-defaults
+    build: ./services/heady-scribe
+    container_name: heady-scribe
+    ports: ["3511:3511"]
+    environment:
+      <<: *heady-env
+      PORT: 3511
+
+  heady-fossil:
+    <<: *heady-defaults
+    build: ./services/heady-fossil
+    container_name: heady-fossil
+    ports: ["3512:3512"]
+    environment:
+      <<: *heady-env
+      PORT: 3512
+
+  heady-genesis:
+    <<: *heady-defaults
+    build: ./services/heady-genesis
+    container_name: heady-genesis
+    ports: ["3513:3513"]
+    environment:
+      <<: *heady-env
+      PORT: 3513
+
+  heady-labyrinth:
+    <<: *heady-defaults
+    build: ./services/heady-labyrinth
+    container_name: heady-labyrinth
+    ports: ["3514:3514"]
+    environment:
+      <<: *heady-env
+      PORT: 3514
+
+  heady-mimic:
+    <<: *heady-defaults
+    build: ./services/heady-mimic
+    container_name: heady-mimic
+    ports: ["3515:3515"]
+    environment:
+      <<: *heady-env
+      PORT: 3515
+
+  # ═══ Tier 5 — Data & Communication ════════════════════════════════
+  heady-alchemy:
+    <<: *heady-defaults
+    build: ./services/heady-alchemy
+    container_name: heady-alchemy
+    ports: ["3600:3600"]
+    environment:
+      <<: *heady-env
+      PORT: 3600
+
+  heady-weave:
+    <<: *heady-defaults
+    build: ./services/heady-weave
+    container_name: heady-weave
+    ports: ["3601:3601"]
+    environment:
+      <<: *heady-env
+      PORT: 3601
+
+  heady-herald:
+    <<: *heady-defaults
+    build: ./services/heady-herald
+    container_name: heady-herald
+    ports: ["3602:3602"]
+    environment:
+      <<: *heady-env
+      PORT: 3602
+
+  heady-resonance:
+    <<: *heady-defaults
+    build: ./services/heady-resonance
+    container_name: heady-resonance
+    ports: ["3603:3603"]
+    environment:
+      <<: *heady-env
+      PORT: 3603
+
+  heady-ember:
+    <<: *heady-defaults
+    build: ./services/heady-ember
+    container_name: heady-ember
+    ports: ["3604:3604"]
+    environment:
+      <<: *heady-env
+      PORT: 3604
+
+  heady-sigil:
+    <<: *heady-defaults
+    build: ./services/heady-sigil
+    container_name: heady-sigil
+    ports: ["3605:3605"]
+    environment:
+      <<: *heady-env
+      PORT: 3605
+
+  heady-tessera:
+    <<: *heady-defaults
+    build: ./services/heady-tessera
+    container_name: heady-tessera
+    ports: ["3606:3606"]
+    environment:
+      <<: *heady-env
+      PORT: 3606
+
+  # ═══ Tier 6 — Platform Services ═══════════════════════════════════
+  heady-lingua:
+    <<: *heady-defaults
+    build: ./services/heady-lingua
+    container_name: heady-lingua
+    ports: ["3610:3610"]
+    environment:
+      <<: *heady-env
+      PORT: 3610
+
+  heady-meridian:
+    <<: *heady-defaults
+    build: ./services/heady-meridian
+    container_name: heady-meridian
+    ports: ["3611:3611"]
+    environment:
+      <<: *heady-env
+      PORT: 3611
+
+  heady-spectra:
+    <<: *heady-defaults
+    build: ./services/heady-spectra
+    container_name: heady-spectra
+    ports: ["3612:3612"]
+    environment:
+      <<: *heady-env
+      PORT: 3612
+
+  heady-aether:
+    <<: *heady-defaults
+    build: ./services/heady-aether
+    container_name: heady-aether
+    ports: ["3613:3613"]
+    environment:
+      <<: *heady-env
+      PORT: 3613
+
+networks:
+  heady-mesh:
+    external: true
+    name: heady-mesh

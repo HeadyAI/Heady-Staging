@@ -1,0 +1,320 @@
+# =============================================================================
+# Heady Liquid Dynamic Parallel Async Distributed OS
+# Parallel Async Distributed Orchestration Configuration
+# =============================================================================
+# All numeric constants derived from PHI (1.618033988749895) and the
+# Fibonacci sequence: 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89.
+# =============================================================================
+
+constants:
+  PHI: &PHI 1.618033988749895
+  FIB: &FIB [1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89]
+
+# -----------------------------------------------------------------------------
+# Execution Modes
+# -----------------------------------------------------------------------------
+execution_modes:
+  PARALLEL:
+    description: Fan-out to multiple services simultaneously.
+    strategy: promise_all_settled
+    max_concurrency: 21               # FIB[8]
+    timeout_ms: 6854                  # PHI^4 * 1000
+    fan_out:
+      partition_strategy: csl_weighted_round_robin
+      min_services: 2
+      max_services: 13                # FIB[7]
+    fan_in:
+      merge_strategy: quality_weighted_merge
+      quorum: 0.618                   # 1/PHI — golden ratio complement
+      partial_results: accept
+    error_handling:
+      strategy: best_effort
+      min_success_ratio: 0.618
+      fallback: degrade_to_sequential
+
+  SEQUENTIAL:
+    description: Stage-by-stage pipeline execution (HCFP).
+    strategy: pipeline
+    max_stages: 13                    # FIB[7]
+    stage_timeout_ms: 2618           # PHI^2 * 1000
+    pipeline:
+      pass_context: true
+      checkpoint_every: 3             # FIB[4] stages
+      rollback_on_failure: true
+    error_handling:
+      strategy: retry_then_skip
+      retry_attempts: 5              # FIB[5]
+      skip_non_critical: true
+
+  SAGA:
+    description: Distributed transaction with compensation actions.
+    strategy: orchestrated_saga
+    coordinator: Conductor
+    timeout_ms: 11090                 # PHI^5 * 1000
+    steps:
+      max_forward: 13                 # FIB[7]
+      max_compensate: 13
+    compensation:
+      order: reverse
+      retry_attempts: 8              # FIB[6]
+      backoff_base_ms: 100
+      backoff_multiplier: *PHI
+    log:
+      backend: NATS_JetStream
+      stream: "heady.saga.log"
+      retention: 89h                 # FIB[11] hours
+
+  SWARM:
+    description: Bee-based parallel execution for exploration tasks.
+    strategy: swarm_intelligence
+    swarm_size: 21                    # FIB[8]
+    queen: Conductor
+    worker_timeout_ms: 4236          # PHI^3 * 1000
+    bee_roles:
+      scout:
+        count: 5                     # FIB[5]
+        task: explore_solution_space
+        report_interval_ms: 1618
+      worker:
+        count: 13                    # FIB[7]
+        task: execute_subtask
+        collaboration: stigmergy
+      inspector:
+        count: 3                     # FIB[4]
+        task: validate_output
+    convergence:
+      strategy: pheromone_decay
+      decay_rate: 0.382              # 1 - 1/PHI
+      convergence_threshold: 0.9
+      max_iterations: 34             # FIB[9]
+
+  LIQUID:
+    description: Dynamic assembly based on runtime context and CSL scores.
+    strategy: context_adaptive
+    assembly:
+      analyzer: Aware
+      planner: Conductor
+      csl_minimum: 0.5
+      reassemble_interval_ms: 2618
+    mode_selection:
+      rules:
+        - if: "task.subtasks.count == 1"
+          then: SEQUENTIAL
+        - if: "task.subtasks.independent == true"
+          then: PARALLEL
+        - if: "task.requires_atomicity == true"
+          then: SAGA
+        - if: "task.exploration_needed == true"
+          then: SWARM
+        - if: "task.context.ambiguous == true"
+          then: LIQUID
+      fallback: SEQUENTIAL
+
+# -----------------------------------------------------------------------------
+# Async Patterns
+# -----------------------------------------------------------------------------
+async_patterns:
+  fan_out:
+    implementation: promise_all_settled
+    timeout_scaling: phi_exponential
+    timeouts:
+      tier_1_ms: 1618                # PHI * 1000
+      tier_2_ms: 2618                # PHI^2 * 1000
+      tier_3_ms: 4236                # PHI^3 * 1000
+      tier_4_ms: 6854                # PHI^4 * 1000
+    result_collection:
+      strategy: streaming
+      buffer_size: 34                # FIB[9]
+      flush_interval_ms: 618
+
+  event_driven:
+    backend: NATS_JetStream
+    streams:
+      commands:
+        name: "heady.commands"
+        retention: limits
+        max_msgs: 10946              # FIB[21] (large Fibonacci)
+        max_age: "89h"               # FIB[11] hours
+        replicas: 3                  # FIB[4]
+      events:
+        name: "heady.events"
+        retention: interest
+        max_msgs: 17711              # FIB[22]
+        max_age: "144h"              # FIB[12] hours
+        replicas: 3
+      state_changes:
+        name: "heady.state"
+        retention: workqueue
+        max_msgs: 6765               # FIB[20]
+        replicas: 3
+    consumers:
+      durable: true
+      ack_wait_ms: 4236             # PHI^3 * 1000
+      max_deliver: 8                # FIB[6]
+      filter_subject_transform: true
+
+  crdt_sync:
+    description: Conflict-free replicated data types for shared state.
+    backend: redis
+    types:
+      g_counter:
+        use_case: request_counts
+        merge: max_per_node
+      lww_register:
+        use_case: service_config
+        clock: hybrid_logical
+      or_set:
+        use_case: active_tasks
+        merge: union_with_tombstones
+    sync_interval_ms: 1618
+    gossip_fanout: 5                 # FIB[5]
+
+  optimistic_concurrency:
+    strategy: version_vectors
+    vector_clock:
+      node_ids: auto_discover
+      conflict_resolution: last_writer_wins
+      merge_on_read: true
+    retry_on_conflict:
+      max_attempts: 8               # FIB[6]
+      backoff_base_ms: 100
+      backoff_multiplier: *PHI
+
+# -----------------------------------------------------------------------------
+# Distribution Strategy
+# -----------------------------------------------------------------------------
+distribution:
+  edge_first:
+    platform: cloudflare_workers
+    regions: [us-east, us-west, eu-west, ap-south, ap-northeast]
+    routing: anycast
+    services:
+      - BRIDGE
+      - APIBridge
+      - RateLimiter
+      - CacheMaster
+      - SignalRouter
+    cache:
+      strategy: stale_while_revalidate
+      ttl_ms: 2618                   # PHI^2 * 1000
+      stale_ttl_ms: 6854            # PHI^4 * 1000
+    kv_namespaces:
+      session: { ttl: "89m" }       # FIB[11] minutes
+      config: { ttl: "34m" }        # FIB[9] minutes
+
+  origin_fallback:
+    platform: cloud_run
+    region: us-central1
+    scaling:
+      min_instances: 1
+      max_instances: 55              # FIB[10]
+      concurrency_per_instance: 21   # FIB[8]
+      scale_up_threshold: 0.618
+    services:
+      - Conductor
+      - Brains
+      - Vinci
+      - JULES
+      - BUILDER
+      - OBSERVER
+      - MURPHY
+      - ATLAS
+      - PYTHIA
+      - HeadySoul
+
+  latent_space:
+    platform: colab_gpu
+    accelerator: T4
+    services:
+      - MemoryForge
+      - InferencePool
+      - ReasonGraph
+      - CausalNet
+      - HypothesisEngine
+    batching:
+      strategy: dynamic_fibonacci
+      sizes: [1, 1, 2, 3, 5, 8, 13]
+      adaptive: true
+      target_latency_ms: 1618
+
+  memory_local:
+    backends:
+      redis:
+        role: ephemeral_state
+        max_memory: "512mb"
+        eviction: allkeys-lfu
+        services: [StateKeeper, CacheMaster, EventNexus]
+      pgvector:
+        role: persistent_embeddings
+        dimensions: 1536
+        index: ivfflat
+        lists: 89                    # FIB[11]
+        services: [MemoryForge, ATLAS, SOPHIA]
+
+# -----------------------------------------------------------------------------
+# Optimization Rules (all PHI-derived)
+# -----------------------------------------------------------------------------
+optimization:
+  batch_sizes:
+    description: Fibonacci sequence governs all batch sizing.
+    sequence: [1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89]
+    default: 13                      # FIB[7]
+    small_payload: 21                # FIB[8]
+    large_payload: 5                 # FIB[5]
+    gpu_inference: 8                 # FIB[6]
+
+  pool_sizes:
+    description: Connection and worker pool bounds scaled by PHI.
+    min: 5                           # FIB[5]
+    max: 55                          # FIB[10]
+    idle: 8                          # FIB[6]
+    growth_factor: *PHI
+    shrink_factor: 0.618             # 1/PHI
+
+  concurrency:
+    max_parallel_tasks: 21           # FIB[8]
+    max_pending_queue: 89            # FIB[11]
+    semaphore_permits: 34            # FIB[9]
+    worker_threads: 13               # FIB[7]
+
+  backoff:
+    strategy: phi_exponential
+    base_ms: 100
+    multiplier: *PHI
+    max_ms: 11090                    # PHI^5 * 1000
+    jitter: 0.1
+    schedule_ms:                     # PHI^n * 100
+      - 162                          # PHI^1 * 100
+      - 262                          # PHI^2 * 100
+      - 424                          # PHI^3 * 100
+      - 685                          # PHI^4 * 100
+      - 1109                         # PHI^5 * 100
+      - 1794                         # PHI^6 * 100
+      - 2903                         # PHI^7 * 100
+
+  cache:
+    ttl_strategy: phi_scaled
+    base_ttl_ms: 1000
+    tiers:
+      hot:
+        ttl_ms: 1618                 # PHI * 1000
+        max_entries: 987             # FIB[16]
+      warm:
+        ttl_ms: 2618                 # PHI^2 * 1000
+        max_entries: 610             # FIB[15]
+      cold:
+        ttl_ms: 6854                 # PHI^4 * 1000
+        max_entries: 377             # FIB[14]
+    invalidation:
+      strategy: event_driven
+      channel: "heady:cache:invalidate"
+      propagation: crdt_or_set
+
+  rate_limiting:
+    algorithm: sliding_window
+    windows:
+      per_second: 34                 # FIB[9]
+      per_minute: 987                # FIB[16]
+      burst: 55                      # FIB[10]
+    overflow: queue_with_backpressure
+    queue_depth: 89                  # FIB[11]

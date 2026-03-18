@@ -1,0 +1,44 @@
+# ═══════════════════════════════════════════════════════════════════════
+# HEADY™ MCP Service — Shared Dockerfile Template
+# ═══════════════════════════════════════════════════════════════════════
+# Multi-stage build with φ-optimized layer caching
+# Usage: docker build -f Dockerfile.mcp-service --build-arg SERVICE=heady-chrono .
+#
+# @version 5.1.0
+
+ARG NODE_VERSION=22-alpine
+FROM node:${NODE_VERSION} AS base
+
+# φ-scaled metadata
+LABEL org.opencontainers.image.vendor="HeadySystems Inc."
+LABEL org.opencontainers.image.source="https://github.com/HeadyAI/Heady"
+LABEL heady.phi.version="5.1"
+
+WORKDIR /app
+
+# Install dependencies (cached layer)
+FROM base AS deps
+COPY services/${SERVICE:-heady-mcp-server}/package*.json ./
+RUN npm ci --omit=dev --ignore-scripts 2>/dev/null || npm install --omit=dev
+
+# Production image
+FROM base AS runner
+ENV NODE_ENV=production
+ENV LOG_LEVEL=info
+
+# Non-root user
+RUN addgroup -g 1001 -S heady && \
+    adduser -S heady -u 1001 -G heady
+
+COPY --from=deps /app/node_modules ./node_modules
+COPY services/${SERVICE:-heady-mcp-server}/src ./src
+COPY services/${SERVICE:-heady-mcp-server}/package.json ./
+
+USER heady
+
+HEALTHCHECK --interval=30s --timeout=5s --retries=3 --start-period=10s \
+  CMD wget --spider -q http://localhost:${PORT:-3310}/health || exit 1
+
+EXPOSE ${PORT:-3310}
+
+CMD ["node", "src/index.js"]
