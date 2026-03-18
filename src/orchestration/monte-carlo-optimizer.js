@@ -116,7 +116,7 @@ class MonteCarloOptimizer {
         this._defaultSeed = opts.defaultSeed !== undefined ? opts.defaultSeed : 42;
         this._historyFile = opts.historyFile || HISTORY_FILE;
         this._chunkSize = opts.chunkSize || CHUNK_SIZE;
-        this._maxBudgetUSD = opts.maxBudgetUSD || 1.0;
+        this._maxBudgetUSD = opts.maxBudgetUSD || 25.0;
 
         // Per-pool win counts (persisted across restarts)
         // [FIX P2-9] Loaded from disk at construction time

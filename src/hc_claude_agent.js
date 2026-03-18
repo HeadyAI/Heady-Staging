@@ -29,6 +29,53 @@ const IS_WIN = process.platform === "win32";
 const CLAUDE_BIN = process.env.CLAUDE_BIN || (IS_WIN ? "claude.cmd" : "claude");
 const CLAUDE_OUTPUT_DIR = path.join(PROJECT_ROOT, "pipeline-output", "claude");
 
+// ─── DYNAMIC BUDGET CONFIG ──────────────────────────────────────────────────
+// All limits are env-var-driven. No hard blocks — just flags for diagnosis.
+// Override any tier: HEADY_BUDGET_LIGHT=2.0 HEADY_BUDGET_HEAVY=20.0 node ...
+const BUDGET = {
+  LIGHT:    parseFloat(process.env.HEADY_BUDGET_LIGHT    || '1.0'),   // Simple reads, short tasks
+  MEDIUM:   parseFloat(process.env.HEADY_BUDGET_MEDIUM   || '5.0'),   // Analysis, doc gen, audits
+  HEAVY:    parseFloat(process.env.HEADY_BUDGET_HEAVY    || '10.0'),  // Deep scans, multi-file work
+  PIPELINE: parseFloat(process.env.HEADY_BUDGET_PIPELINE || '25.0'),  // Full pipeline orchestration
+};
+const TIMEOUT = {
+  SHORT:  parseInt(process.env.HEADY_TIMEOUT_SHORT  || '120000', 10),  // 2 min
+  MEDIUM: parseInt(process.env.HEADY_TIMEOUT_MEDIUM || '300000', 10),  // 5 min
+  LONG:   parseInt(process.env.HEADY_TIMEOUT_LONG   || '600000', 10),  // 10 min
+};
+// Open tool access — agents use what they need
+const TOOLS_FULL = ["Read", "Grep", "Glob", "Write", "Bash(git:*)", "Bash(npm:*)", "Bash(curl:*)", "Bash(echo:*,cat:*)"];
+const TOOLS_READ = ["Read", "Grep", "Glob"];
+const TOOLS_READ_WRITE = ["Read", "Grep", "Glob", "Write", "Bash(echo:*,cat:*)"];
+
+// ─── USAGE TRACKER & FLAG SYSTEM ────────────────────────────────────────────
+// Doesn't block — logs and flags for diagnosis
+const _usageLog = [];
+function trackUsage(taskName, budgetUsd, durationMs) {
+  const entry = { task: taskName, budget: budgetUsd, duration: durationMs, ts: new Date().toISOString() };
+  _usageLog.push(entry);
+  if (budgetUsd > BUDGET.HEAVY * 0.8) {
+    log.warning(`[USAGE FLAG] High-budget task: ${taskName} — $${budgetUsd.toFixed(2)} (threshold: $${BUDGET.HEAVY})`, entry);
+  }
+  if (durationMs > TIMEOUT.MEDIUM * 0.8) {
+    log.warning(`[USAGE FLAG] Long-running task: ${taskName} — ${(durationMs/1000).toFixed(1)}s`, entry);
+  }
+  const sessionTotal = _usageLog.reduce((sum, e) => sum + (e.budget || 0), 0);
+  if (sessionTotal > BUDGET.PIPELINE * 2) {
+    log.warning(`[USAGE FLAG] Session cumulative: $${sessionTotal.toFixed(2)} (2× pipeline threshold)`, { totalTasks: _usageLog.length });
+  }
+}
+function getUsageReport() {
+  return {
+    tasks: _usageLog.length,
+    totalBudget: _usageLog.reduce((s, e) => s + (e.budget || 0), 0),
+    totalDurationMs: _usageLog.reduce((s, e) => s + (e.duration || 0), 0),
+    flags: _usageLog.filter(e => e.budget > BUDGET.HEAVY * 0.8).length,
+    entries: _usageLog.slice(-20),
+    config: { BUDGET, TIMEOUT },
+  };
+}
+
 // Ensure output directory exists
 function ensureOutputDir() {
   if (!fs.existsSync(CLAUDE_OUTPUT_DIR)) {
@@ -206,6 +253,8 @@ function runClaude(prompt, options = {}) {
         parsed,
         durationMs,
       });
+      // Track usage for diagnosis (non-blocking)
+      trackUsage(prompt.slice(0, 60), maxBudgetUsd || 0, durationMs);
     });
 
     proc.on("error", (err) => {
@@ -232,10 +281,10 @@ Return JSON: {"issues": [{"file": "...", "line": N, "severity": "high|medium|low
 
   return runClaude(prompt, {
     outputFormat: "text",
-    allowedTools: ["Read", "Grep", "Glob"],
+    allowedTools: TOOLS_FULL,
     systemPrompt: HEADY_SYSTEM_PROMPT,
-    maxBudgetUsd: 0.50,
-    timeoutMs: 180000,
+    maxBudgetUsd: BUDGET.MEDIUM,
+    timeoutMs: TIMEOUT.MEDIUM,
   });
 }
 
@@ -249,10 +298,10 @@ Return markdown documentation.`;
 
   return runClaude(prompt, {
     outputFormat: "text",
-    allowedTools: ["Read", "Grep", "Glob"],
+    allowedTools: TOOLS_READ_WRITE,
     systemPrompt: HEADY_SYSTEM_PROMPT,
-    maxBudgetUsd: 0.30,
-    timeoutMs: 120000,
+    maxBudgetUsd: BUDGET.MEDIUM,
+    timeoutMs: TIMEOUT.MEDIUM,
   });
 }
 
@@ -266,10 +315,10 @@ Return JSON: {"findings": [{"severity": "critical|high|medium|low", "category": 
 
   return runClaude(prompt, {
     outputFormat: "text",
-    allowedTools: ["Read", "Grep", "Glob", "Bash(npm:*)"],
+    allowedTools: TOOLS_FULL,
     systemPrompt: HEADY_SYSTEM_PROMPT,
-    maxBudgetUsd: 0.50,
-    timeoutMs: 180000,
+    maxBudgetUsd: BUDGET.MEDIUM,
+    timeoutMs: TIMEOUT.MEDIUM,
   });
 }
 
@@ -284,10 +333,10 @@ Return JSON: {"aligned": [{"concept": "...", "status": "ok|missing|partial"}], "
 
   return runClaude(prompt, {
     outputFormat: "text",
-    allowedTools: ["Read", "Grep", "Glob"],
+    allowedTools: TOOLS_READ,
     systemPrompt: HEADY_SYSTEM_PROMPT,
-    maxBudgetUsd: 0.25,
-    timeoutMs: 90000,
+    maxBudgetUsd: BUDGET.LIGHT,
+    timeoutMs: TIMEOUT.SHORT,
   });
 }
 
@@ -302,10 +351,10 @@ Return JSON: {"compliant": true|false, "issues": [{"policy": "...", "violation":
 
   return runClaude(prompt, {
     outputFormat: "text",
-    allowedTools: ["Read", "Grep"],
+    allowedTools: TOOLS_READ,
     systemPrompt: HEADY_SYSTEM_PROMPT,
-    maxBudgetUsd: 0.20,
-    timeoutMs: 60000,
+    maxBudgetUsd: BUDGET.LIGHT,
+    timeoutMs: TIMEOUT.SHORT,
   });
 }
 
@@ -320,10 +369,10 @@ Return JSON: {"tasks": [{"id": "...", "name": "...", "agent": "...", "dependsOn"
 
   return runClaude(prompt, {
     outputFormat: "text",
-    allowedTools: ["Read"],
+    allowedTools: TOOLS_READ,
     systemPrompt: HEADY_SYSTEM_PROMPT,
-    maxBudgetUsd: 0.25,
-    timeoutMs: 60000,
+    maxBudgetUsd: BUDGET.LIGHT,
+    timeoutMs: TIMEOUT.SHORT,
   });
 }
 
@@ -333,10 +382,10 @@ Return JSON: {"tasks": [{"id": "...", "name": "...", "agent": "...", "dependsOn"
 async function claudeExecute(prompt, opts = {}) {
   return runClaude(prompt, {
     outputFormat: opts.outputFormat || "text",
-    allowedTools: opts.allowedTools || ["Read", "Grep", "Glob"],
+    allowedTools: opts.allowedTools || TOOLS_FULL,
     systemPrompt: opts.systemPrompt || HEADY_SYSTEM_PROMPT,
-    maxBudgetUsd: opts.maxBudgetUsd || 0.25,
-    timeoutMs: opts.timeoutMs || 120000,
+    maxBudgetUsd: opts.maxBudgetUsd || BUDGET.MEDIUM,
+    timeoutMs: opts.timeoutMs || TIMEOUT.MEDIUM,
     model: opts.model || null,
     cwd: opts.cwd || PROJECT_ROOT,
   });
@@ -355,7 +404,7 @@ function registerClaudeHandlers(registerFn) {
   registerFn("ingest_news_feeds", withFallback("ingest_news_feeds", async (ctx) => {
     const result = await claudeExecute(
       "Fetch top 10 recent Hacker News stories about AI, MCP protocol, or developer tools from hn.algolia.com/api/v1/search?query=AI+MCP+developer+tools&tags=story&hitsPerPage=10. Summarize each. Return JSON: {\"stories\": [{\"title\": \"...\", \"url\": \"...\", \"points\": N}], \"count\": N, \"relevantToHeady\": N}",
-      { allowedTools: ["Read", "Bash(curl:*)"], maxBudgetUsd: 0.10, timeoutMs: 60000 }
+      { allowedTools: ["Read", "Bash(curl:*)"], maxBudgetUsd: 1.00, timeoutMs: 120000 }
     );
     return { task: "ingest_news_feeds", status: result.ok ? "completed" : "failed", output: result.output, durationMs: result.durationMs };
   }));
@@ -363,7 +412,7 @@ function registerClaudeHandlers(registerFn) {
   registerFn("ingest_external_apis", withFallback("ingest_external_apis", async (ctx) => {
     const result = await claudeExecute(
       "Check external API availability: 1) curl -s https://heady-manager-bf4q4zywhq-uc.a.run.app/api/health 2) curl -s https://api.github.com/rate_limit 3) curl -s https://huggingface.co/api/models?limit=1. Report reachability and latency. Return JSON: {\\\"apis\\\": [{\\\"name\\\": \\\"...\\\", \\\"reachable\\\": true|false, \\\"latencyMs\\\": N}], \\\"allHealthy\\\": true|false}",
-      { allowedTools: ["Bash(curl:*)"], maxBudgetUsd: 0.10, timeoutMs: 60000 }
+      { allowedTools: ["Read", "Bash(curl:*)"], maxBudgetUsd: 1.00, timeoutMs: 120000 }
     );
     return { task: "ingest_external_apis", status: result.ok ? "completed" : "failed", output: result.output, durationMs: result.durationMs };
   }));
@@ -371,7 +420,7 @@ function registerClaudeHandlers(registerFn) {
   registerFn("ingest_repo_changes", withFallback("ingest_repo_changes", async (ctx) => {
     const result = await claudeExecute(
       "Summarize recent git changes: run 'git log --oneline -20' and 'git diff --stat HEAD~5'. Return JSON: {\"commits\": N, \"filesChanged\": N, \"summary\": \"...\"}",
-      { allowedTools: ["Read", "Bash(git:*)"], maxBudgetUsd: 0.10 }
+      { allowedTools: ["Read", "Grep", "Bash(git:*)"], maxBudgetUsd: 1.00, timeoutMs: 120000 }
     );
     return { task: "ingest_repo_changes", status: result.ok ? "completed" : "failed", output: result.output, durationMs: result.durationMs };
   }));
@@ -379,7 +428,7 @@ function registerClaudeHandlers(registerFn) {
   registerFn("ingest_health_metrics", withFallback("ingest_health_metrics", async (ctx) => {
     const result = await claudeExecute(
       "Check system health: read heady-manager.js health endpoint logic, check package.json for outdated patterns, verify configs/ YAML integrity. Return JSON: {\"healthy\": true|false, \"checks\": [{\"name\": \"...\", \"ok\": true|false}]}",
-      { allowedTools: ["Read", "Grep"], maxBudgetUsd: 0.10 }
+      { allowedTools: ["Read", "Grep", "Glob"], maxBudgetUsd: 1.00, timeoutMs: 120000 }
     );
     return { task: "ingest_health_metrics", status: result.ok ? "completed" : "failed", output: result.output, durationMs: result.durationMs };
   }));
@@ -393,7 +442,7 @@ function registerClaudeHandlers(registerFn) {
   registerFn("assign_priorities", withFallback("assign_priorities", async (ctx) => {
     const result = await claudeExecute(
       "Read configs/service-catalog.yaml and configs/resource-policies.yaml. For each agent and service, assign execution priority (critical/high/medium/low) based on criticality and node pool membership (hot/warm/cold). Return JSON: {\"assignments\": [{\"name\": \"...\", \"priority\": \"...\", \"pool\": \"...\", \"reason\": \"...\"}], \"criticalCount\": N, \"totalAssigned\": N}",
-      { allowedTools: ["Read"], maxBudgetUsd: 0.10, timeoutMs: 60000 }
+      { allowedTools: ["Read", "Grep", "Glob"], maxBudgetUsd: 1.00, timeoutMs: 120000 }
     );
     return { task: "assign_priorities", status: result.ok ? "completed" : "failed", output: result.output, durationMs: result.durationMs };
   }));
@@ -401,7 +450,7 @@ function registerClaudeHandlers(registerFn) {
   registerFn("estimate_costs", withFallback("estimate_costs", async (ctx) => {
     const result = await claudeExecute(
       "Read configs/resource-policies.yaml costBudgets section. Compare daily budget ($50) against estimated costs for this pipeline run: LLM calls (~$0.10 each x task count), external API calls, compute time. Return JSON: {\"estimatedCostUsd\": N, \"budgetRemainingUsd\": N, \"breakdown\": [{\"category\": \"...\", \"estimatedUsd\": N}], \"withinBudget\": true|false}",
-      { allowedTools: ["Read"], maxBudgetUsd: 0.05, timeoutMs: 45000 }
+      { allowedTools: ["Read", "Grep"], maxBudgetUsd: 1.00, timeoutMs: 120000 }
     );
     return { task: "estimate_costs", status: result.ok ? "completed" : "failed", output: result.output, durationMs: result.durationMs };
   }));
@@ -415,7 +464,7 @@ function registerClaudeHandlers(registerFn) {
   registerFn("route_to_agents", withFallback("route_to_agents", async (ctx) => {
     const result = await claudeExecute(
       "Read configs/service-catalog.yaml. List all agents with their skills and routing config. Verify each agent has a valid routing strategy. Return JSON: {\"agents\": [{\"name\": \"...\", \"routing\": \"...\", \"ready\": true|false}], \"totalReady\": N}",
-      { allowedTools: ["Read"], maxBudgetUsd: 0.10 }
+      { allowedTools: ["Read", "Grep", "Glob"], maxBudgetUsd: 1.00, timeoutMs: 120000 }
     );
     return { task: "route_to_agents", status: result.ok ? "completed" : "failed", output: result.output, durationMs: result.durationMs };
   }));
@@ -434,7 +483,7 @@ function registerClaudeHandlers(registerFn) {
   registerFn("evaluate_failures", withFallback("evaluate_failures", async (ctx) => {
     const result = await claudeExecute(
       "Read hc_pipeline.log if it exists. Analyze any error patterns. Return JSON: {\"errors\": N, \"patterns\": [\"...\"], \"recoverable\": N, \"unrecoverable\": N}",
-      { allowedTools: ["Read", "Grep"], maxBudgetUsd: 0.10 }
+      { allowedTools: ["Read", "Grep", "Glob"], maxBudgetUsd: 1.00, timeoutMs: 120000 }
     );
     return { task: "evaluate_failures", status: result.ok ? "completed" : "failed", output: result.output, durationMs: result.durationMs };
   }));
@@ -442,7 +491,7 @@ function registerClaudeHandlers(registerFn) {
   registerFn("apply_compensation", withFallback("apply_compensation", async (ctx) => {
     const result = await claudeExecute(
       "Read hc_pipeline.log if it exists. For any failed tasks, determine if compensating actions are needed (e.g., rollback partial writes, clear stale cache). Return JSON: {\"compensations\": [{\"task\": \"...\", \"action\": \"...\", \"applied\": true|false}], \"totalApplied\": N}",
-      { allowedTools: ["Read", "Grep"], maxBudgetUsd: 0.10, timeoutMs: 60000 }
+      { allowedTools: ["Read", "Grep", "Glob"], maxBudgetUsd: 1.00, timeoutMs: 120000 }
     );
     return { task: "apply_compensation", status: result.ok ? "completed" : "failed", output: result.output, durationMs: result.durationMs };
   }));
@@ -450,7 +499,7 @@ function registerClaudeHandlers(registerFn) {
   registerFn("retry_recoverable", withFallback("retry_recoverable", async (ctx) => {
     const result = await claudeExecute(
       "Analyze current pipeline state errors. Classify each as recoverable (transient network, timeout) or unrecoverable (missing config, auth failure). For recoverable errors, suggest retry strategy. Return JSON: {\"recoverable\": [{\"task\": \"...\", \"error\": \"...\", \"retryStrategy\": \"...\"}], \"unrecoverable\": [{\"task\": \"...\", \"error\": \"...\"}], \"recoverableCount\": N}",
-      { allowedTools: ["Read", "Grep"], maxBudgetUsd: 0.10, timeoutMs: 60000 }
+      { allowedTools: ["Read", "Grep", "Glob"], maxBudgetUsd: 1.00, timeoutMs: 120000 }
     );
     return { task: "retry_recoverable", status: result.ok ? "completed" : "failed", output: result.output, durationMs: result.durationMs };
   }));
@@ -458,7 +507,7 @@ function registerClaudeHandlers(registerFn) {
   registerFn("escalate_unrecoverable", withFallback("escalate_unrecoverable", async (ctx) => {
     const result = await claudeExecute(
       "Review any unrecoverable errors from this pipeline run. Generate an escalation report with severity, affected services, and recommended manual actions. Return JSON: {\"escalations\": [{\"severity\": \"...\", \"service\": \"...\", \"error\": \"...\", \"recommendation\": \"...\"}], \"requiresManualIntervention\": true|false, \"totalEscalations\": N}",
-      { allowedTools: ["Read", "Grep"], maxBudgetUsd: 0.10, timeoutMs: 60000 }
+      { allowedTools: ["Read", "Grep", "Glob"], maxBudgetUsd: 1.00, timeoutMs: 120000 }
     );
     return { task: "escalate_unrecoverable", status: result.ok ? "completed" : "failed", output: result.output, durationMs: result.durationMs };
   }));
@@ -467,7 +516,7 @@ function registerClaudeHandlers(registerFn) {
   registerFn("persist_results", withFallback("persist_results", async (ctx) => {
     const result = await claudeExecute(
       "Gather all pipeline stage results and persist a run summary. Write key metrics (tasks completed, failed, readiness score, elapsed time) to audit_logs.jsonl. Return JSON: {\"persisted\": true, \"logFile\": \"audit_logs.jsonl\", \"metricsSnapshot\": {\"completed\": N, \"failed\": N, \"readiness\": N}}",
-      { allowedTools: ["Read", "Bash(echo:*,cat:*)"], maxBudgetUsd: 0.10, timeoutMs: 60000 }
+      { allowedTools: ["Read", "Write", "Bash(echo:*,cat:*)"], maxBudgetUsd: 1.00, timeoutMs: 120000 }
     );
     return { task: "persist_results", status: result.ok ? "completed" : "failed", output: result.output, durationMs: result.durationMs };
   }));
@@ -475,7 +524,7 @@ function registerClaudeHandlers(registerFn) {
   registerFn("update_concept_index", withFallback("update_concept_index", async (ctx) => {
     const result = await claudeExecute(
       "Read configs/concepts-index.yaml. Verify all implementedConcepts have matching code locations that exist. Flag any that are stale or missing. Return JSON: {\"concepts\": [{\"name\": \"...\", \"status\": \"verified|stale|missing\", \"location\": \"...\"}], \"totalVerified\": N, \"totalStale\": N}",
-      { allowedTools: ["Read", "Grep", "Glob"], maxBudgetUsd: 0.15, timeoutMs: 90000 }
+      { allowedTools: ["Read", "Grep", "Glob", "Write"], maxBudgetUsd: 2.00, timeoutMs: 180000 }
     );
     return { task: "update_concept_index", status: result.ok ? "completed" : "failed", output: result.output, durationMs: result.durationMs };
   }));
@@ -483,7 +532,7 @@ function registerClaudeHandlers(registerFn) {
   registerFn("send_checkpoint_email", withFallback("send_checkpoint_email", async (ctx) => {
     const result = await claudeExecute(
       "Generate a pipeline checkpoint email summary. Include: run ID, status, stages completed, error count, readiness score, top recommendations. Format as plain text email body. Return JSON: {\"subject\": \"...\", \"body\": \"...\", \"generated\": true}",
-      { allowedTools: ["Read"], maxBudgetUsd: 0.05, timeoutMs: 45000 }
+      { allowedTools: ["Read", "Grep"], maxBudgetUsd: 1.00, timeoutMs: 120000 }
     );
     return { task: "send_checkpoint_email", status: result.ok ? "completed" : "failed", output: result.output, durationMs: result.durationMs };
   }));
@@ -491,7 +540,7 @@ function registerClaudeHandlers(registerFn) {
   registerFn("compute_readiness_score", withFallback("compute_readiness_score", async (ctx) => {
     const result = await claudeExecute(
       "Read all files in configs/ directory. Evaluate overall system readiness based on: 1) All 5 config files present and valid YAML 2) Service catalog has all critical services 3) Governance policies are complete 4) Resource policies define circuit breakers 5) Concepts index tracks implementation status. Score 0-100. Return JSON: {\"score\": N, \"breakdown\": [{\"category\": \"...\", \"score\": N, \"maxScore\": N}], \"recommendations\": [\"...\"]}",
-      { allowedTools: ["Read", "Grep", "Glob"], maxBudgetUsd: 0.20 }
+      { allowedTools: ["Read", "Grep", "Glob"], maxBudgetUsd: 3.00, timeoutMs: 180000 }
     );
     return { task: "compute_readiness_score", status: result.ok ? "completed" : "failed", output: result.output, durationMs: result.durationMs };
   }));
@@ -499,7 +548,7 @@ function registerClaudeHandlers(registerFn) {
   registerFn("log_run_config_hash", withFallback("log_run_config_hash", async (ctx) => {
     const result = await claudeExecute(
       "Read configs/hcfullpipeline.yaml. Compute a summary hash of the pipeline definition by listing: version, stage count, task count, global settings. Return JSON: {\"version\": \"...\", \"stages\": N, \"tasks\": N, \"hash\": \"summary-fingerprint\"}",
-      { allowedTools: ["Read"], maxBudgetUsd: 0.05 }
+      { allowedTools: ["Read", "Grep"], maxBudgetUsd: 1.00, timeoutMs: 120000 }
     );
     return { task: "log_run_config_hash", status: result.ok ? "completed" : "failed", output: result.output, durationMs: result.durationMs };
   }));
@@ -531,5 +580,8 @@ module.exports = {
   registerClaudeHandlers,
   saveClaudeOutput,
   isClaudeAvailable,
+  getUsageReport,
   HEADY_SYSTEM_PROMPT,
+  BUDGET,
+  TIMEOUT,
 };
