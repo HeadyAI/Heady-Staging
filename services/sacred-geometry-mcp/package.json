@@ -1,0 +1,13 @@
+{
+  "name": "@heady-ai/sacred-geometry-mcp",
+  "version": "1.0.0",
+  "description": "Zero-competition MCP server for sacred geometry computation — φ-parameterized SVG output",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "keywords": ["sacred-geometry", "mcp", "phi", "golden-ratio", "svg", "heady"],
+  "license": "UNLICENSED",
+  "private": true
+}
