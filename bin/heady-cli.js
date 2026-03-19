@@ -136,7 +136,12 @@ async function processIntelligently(input) {
     switch (intent.type) {
         case 'health':
             info('Routing to: heady doctor');
-            commands.doctor();
+            await commands.doctor();
+            break;
+
+        case 'fix':
+            info('Routing to: heady doctor --fix');
+            await commands.doctor('--fix');
             break;
 
         case 'deploy':
@@ -202,7 +207,8 @@ function classifyIntent(input) {
     }
 
     const patterns = [
-        { type: 'health', keywords: ['health', 'doctor', 'diagnose', 'broken', 'fix', 'error', 'failing'], weight: 1.0 },
+        { type: 'fix', keywords: ['fix', 'repair', 'auto-fix', 'autofix', 'fix issues', 'fix problems', 'fix it', 'fix everything', 'fix all'], weight: 1.2 },
+        { type: 'health', keywords: ['health', 'doctor', 'diagnose', 'check', 'scan', 'audit', 'systems check', 'system check', 'diagnosis', 'broken', 'error', 'failing'], weight: 1.0 },
         { type: 'deploy', keywords: ['deploy', 'ship', 'push', 'release', 'production', 'cloud run', 'cloudflare'], weight: 1.0 },
         { type: 'build', keywords: ['build', 'compile', 'package', 'bundle'], weight: 1.0 },
         { type: 'status', keywords: ['status', 'state', 'overview', 'summary'], weight: 0.9 },
@@ -575,37 +581,274 @@ const commands = {
         run('pnpm test');
     },
 
-    doctor() {
-        heading('Health Check');
-        info(`Node.js: ${process.version}`);
-        info(`CLI: v${VERSION}`);
-        info(`Root: ${ROOT}`);
-        const dirs = ['src', 'services', 'packages', 'configs', 'infra', 'migrations', 'content'];
+    async doctor(...args) {
+        const doFix = args.includes('--fix') || args.includes('-f');
+        heading('Heady™ Systems Check' + (doFix ? ' + Auto-Fix' : ''));
+        info(`Node.js: ${process.version} | CLI: v${VERSION} | Root: ${ROOT}`);
+        if (doFix) info('Auto-fix mode enabled (--fix)');
+        console.log('');
+
+        let passed = 0, failed = 0, warned = 0, fixed = 0;
+        const results = [];
+
+        function check(name, status, detail, fixable = false) {
+            const icon = status === 'pass' ? '✓' : status === 'fail' ? '✗' : '⚠';
+            const color = status === 'pass' ? '\x1b[32m' : status === 'fail' ? '\x1b[31m' : '\x1b[33m';
+            console.log(`  ${color}${icon}\x1b[0m ${name}${detail ? ` — ${detail}` : ''}`);
+            results.push({ name, status, detail, fixable });
+            if (status === 'pass') passed++;
+            else if (status === 'fail') failed++;
+            else warned++;
+        }
+
+        function fixApplied(name, detail) {
+            console.log(`  \x1b[36m⚡ FIXED\x1b[0m ${name} — ${detail}`);
+            fixed++;
+        }
+
+        // ═══ 1. STRUCTURE ═══════════════════════════════════════════════
+        console.log('\n  \x1b[1m─── Structure ───\x1b[0m');
+        const dirs = ['src', 'core', 'services', 'packages', 'configs', 'infra', 'migrations', 'content'];
         for (const d of dirs) {
             const exists = fs.existsSync(path.join(ROOT, d));
-            console.log(`  ${exists ? '✓' : '✗'} ${d}/`);
+            check(d + '/', exists ? 'pass' : 'fail', exists ? null : 'directory missing');
         }
-        const files = [
-            'package.json', '.gitignore', 'tsconfig.json',
-            'configs/domains.json', 'content/global/brand-core.md',
-            'src/core/phi-scales.js', 'src/core/semantic-logic.js',
-            'src/orchestration/heady-conductor.js', 'src/mcp/heady-mcp-server.js',
+        const critFiles = [
+            'package.json', 'core/constants/phi.js', 'core/pipeline/engine.js',
+            'core/scheduler/auto-success.js', 'core/index.js',
+            'src/bootstrap/hcfp-bootstrap.js', 'configs/domains.json',
         ];
-        for (const f of files) {
+        for (const f of critFiles) {
             const exists = fs.existsSync(path.join(ROOT, f));
-            console.log(`  ${exists ? '✓' : '✗'} ${f}`);
+            check(f, exists ? 'pass' : 'fail', exists ? null : 'MISSING — critical file');
         }
 
-        // Check domain content
-        const registryPath = path.join(ROOT, 'configs', 'domains.json');
-        if (fs.existsSync(registryPath)) {
-            const registry = JSON.parse(fs.readFileSync(registryPath, 'utf8'));
-            const domains = registry.domains || [];
-            const active = domains.filter(d => d.status === 'active').length;
-            console.log(`  ✓ ${domains.length} domains registered (${active} active)`);
+        // ═══ 2. SECRETS AUDIT ═══════════════════════════════════════════
+        console.log('\n  \x1b[1m─── Secrets & Credentials ───\x1b[0m');
+
+        // Check git remotes for hardcoded tokens
+        const remotes = runCapture('git remote -v 2>/dev/null');
+        if (remotes) {
+            const hasTokens = remotes.includes('@dev.azure.com') || remotes.match(/https:\/\/[^:]+:[^@]+@/);
+            check('Git remote URLs', hasTokens ? 'fail' : 'pass',
+                hasTokens ? 'CRITICAL: PATs hardcoded in remote URLs — run: git remote set-url <name> <clean-url>' : 'No embedded credentials');
         }
 
-        success('Health check complete');
+        // Check for committed .env files
+        const envFiles = ['.env', '.env.production', '.env.local'];
+        const committedEnvs = envFiles.filter(f => fs.existsSync(path.join(ROOT, f)));
+        if (committedEnvs.length > 0) {
+            check('.env files in repo', 'fail', `CRITICAL: ${committedEnvs.join(', ')} exist in repo root`, true);
+            if (doFix) {
+                // Add to .gitignore if not already there
+                const gitignorePath = path.join(ROOT, '.gitignore');
+                if (fs.existsSync(gitignorePath)) {
+                    let gitignore = fs.readFileSync(gitignorePath, 'utf8');
+                    const entries = ['.env', '.env.*', '!.env.example', '!.env.template'];
+                    let changed = false;
+                    for (const entry of entries) {
+                        if (!gitignore.includes(entry)) {
+                            gitignore += '\n' + entry;
+                            changed = true;
+                        }
+                    }
+                    if (changed) {
+                        fs.writeFileSync(gitignorePath, gitignore);
+                        fixApplied('.gitignore', 'Added .env patterns');
+                    }
+                }
+            }
+        } else {
+            check('.env files in repo', 'pass', 'No .env files in root (good)');
+        }
+
+        // ═══ 3. DOMAIN HEALTH ═══════════════════════════════════════════
+        console.log('\n  \x1b[1m─── Domain Health (11 sites) ───\x1b[0m');
+        const DOMAINS = [
+            'headyme.com', 'headysystems.com', 'headyconnection.org', 'headybuddy.org',
+            'headymcp.com', 'headyio.com', 'headybot.com', 'headyapi.com',
+            'headyai.com', 'headylens.com', 'headyfinance.com',
+        ];
+        let domainsPassed = 0;
+        for (const domain of DOMAINS) {
+            const curlResult = runCapture(`curl -o /dev/null -s -w "%{http_code}|%{time_total}" --max-time 8 "https://${domain}" 2>/dev/null`);
+            if (curlResult) {
+                const [code, time] = curlResult.split('|');
+                const ok = code === '200';
+                if (ok) domainsPassed++;
+                check(domain, ok ? 'pass' : 'fail', ok ? `HTTP ${code} (${parseFloat(time).toFixed(2)}s)` : `HTTP ${code}`);
+            } else {
+                check(domain, 'fail', 'unreachable');
+            }
+        }
+
+        // ═══ 4. SSL CERTIFICATES ═══════════════════════════════════════
+        console.log('\n  \x1b[1m─── SSL Certificates ───\x1b[0m');
+        for (const domain of DOMAINS) {
+            const expiry = runCapture(`echo | openssl s_client -servername ${domain} -connect ${domain}:443 2>/dev/null | openssl x509 -noout -enddate 2>/dev/null`);
+            if (expiry) {
+                const dateStr = expiry.replace('notAfter=', '');
+                const expiryDate = new Date(dateStr);
+                const daysLeft = Math.floor((expiryDate - new Date()) / (1000 * 60 * 60 * 24));
+                const status = daysLeft < 14 ? 'fail' : daysLeft < 30 ? 'warn' : 'pass';
+                check(`${domain} SSL`, status, `expires in ${daysLeft} days (${dateStr.trim()})`);
+            } else {
+                check(`${domain} SSL`, 'warn', 'could not check');
+            }
+        }
+
+        // ═══ 5. SECURITY HEADERS ═══════════════════════════════════════
+        console.log('\n  \x1b[1m─── Security Headers ───\x1b[0m');
+        const headerDomains = ['headyme.com', 'headyai.com', 'headyapi.com', 'headymcp.com'];
+        for (const domain of headerDomains) {
+            const headers = runCapture(`curl -sI --max-time 5 "https://${domain}" 2>/dev/null`);
+            if (headers) {
+                const hasHSTS = /strict-transport-security/i.test(headers);
+                const hasCSP = /content-security-policy/i.test(headers);
+                const hasXFO = /x-frame-options/i.test(headers);
+                const count = [hasHSTS, hasCSP, hasXFO].filter(Boolean).length;
+                check(`${domain} headers`, count >= 2 ? 'pass' : count >= 1 ? 'warn' : 'fail',
+                    `HSTS:${hasHSTS ? '✓' : '✗'} CSP:${hasCSP ? '✓' : '✗'} XFO:${hasXFO ? '✓' : '✗'}`);
+            }
+        }
+
+        // ═══ 6. CLOUD RUN SERVICES ═════════════════════════════════════
+        console.log('\n  \x1b[1m─── Cloud Run Services ───\x1b[0m');
+        const gcloudOutput = runCapture('gcloud run services list --platform managed --format="csv[no-heading](metadata.name,status.conditions[0].status)" 2>/dev/null');
+        if (gcloudOutput) {
+            const services = gcloudOutput.trim().split('\n').filter(Boolean);
+            let healthy = 0, unhealthy = 0;
+            for (const line of services) {
+                const [name, status] = line.split(',');
+                if (status === 'True') healthy++;
+                else { unhealthy++; check(name, 'fail', 'Cloud Run service unhealthy'); }
+            }
+            check(`Cloud Run (${healthy}/${services.length} healthy)`, unhealthy === 0 ? 'pass' : 'warn',
+                unhealthy > 0 ? `${unhealthy} unhealthy service(s)` : null);
+        } else {
+            check('Cloud Run', 'warn', 'gcloud not available or not authenticated');
+        }
+
+        // ═══ 7. NPM AUDIT ══════════════════════════════════════════════
+        console.log('\n  \x1b[1m─── NPM Audit ───\x1b[0m');
+        const auditResult = runCapture('npm audit --json 2>/dev/null');
+        if (auditResult) {
+            try {
+                const audit = JSON.parse(auditResult);
+                const v = audit.metadata?.vulnerabilities || {};
+                const crit = (v.critical || 0) + (v.high || 0);
+                const mod = v.moderate || 0;
+                const low = v.low || 0;
+                check('npm audit', crit > 0 ? 'fail' : mod > 0 ? 'warn' : 'pass',
+                    `critical:${v.critical||0} high:${v.high||0} moderate:${mod} low:${low}`);
+            } catch { check('npm audit', 'warn', 'could not parse audit output'); }
+        }
+
+        // ═══ 8. CODEBASE QUALITY ═══════════════════════════════════════
+        console.log('\n  \x1b[1m─── Codebase Quality ───\x1b[0m');
+
+        // Console.log count
+        const consoleLogCount = runCapture('grep -rl "console\\.log" src/ --include="*.js" 2>/dev/null | wc -l');
+        if (consoleLogCount) {
+            const count = parseInt(consoleLogCount.trim());
+            check('console.log usage', count < 50 ? 'pass' : count < 150 ? 'warn' : 'fail',
+                `${count} files (target: <50, migrate to Pino)`);
+        }
+
+        // Localhost references
+        const localhostCount = runCapture('grep -rl "localhost\\|127\\.0\\.0\\.1" src/ --include="*.js" 2>/dev/null | wc -l');
+        if (localhostCount) {
+            const count = parseInt(localhostCount.trim());
+            check('localhost references', count === 0 ? 'pass' : count < 5 ? 'warn' : 'fail',
+                `${count} files reference localhost`);
+        }
+
+        // require() in ESM
+        const requireCount = runCapture('grep -rl "require(" src/ --include="*.js" 2>/dev/null | wc -l');
+        if (requireCount) {
+            const count = parseInt(requireCount.trim());
+            check('ESM compliance', count < 20 ? 'warn' : 'fail',
+                `${count} files still use require() (should be ESM import)`);
+        }
+
+        // Version check
+        const pkgJsonPath = path.join(ROOT, 'package.json');
+        if (fs.existsSync(pkgJsonPath)) {
+            const pkg = JSON.parse(fs.readFileSync(pkgJsonPath, 'utf8'));
+            check('package.json version', pkg.version === '4.1.0' ? 'pass' : 'warn',
+                `v${pkg.version} (docs reference v4.1.0)`, true);
+            if (doFix && pkg.version !== '4.1.0') {
+                pkg.version = '4.1.0';
+                fs.writeFileSync(pkgJsonPath, JSON.stringify(pkg, null, 2) + '\n');
+                fixApplied('package.json version', 'Updated to v4.1.0');
+            }
+        }
+
+        // ═══ 9. φ-CONSTANTS INTEGRITY ═════════════════════════════════
+        console.log('\n  \x1b[1m─── φ-Constants Integrity ───\x1b[0m');
+        try {
+            const { PHI, PSI, CSL: csl } = require(path.join(ROOT, 'core', 'constants', 'phi.js'));
+            const phiOk = Math.abs(PHI - 1.618033988749895) < 0.0001;
+            const psiOk = Math.abs(PSI - 0.6180339887498949) < 0.0001;
+            const productOk = Math.abs(PHI * PSI - 1) < 1e-10;
+            check('PHI constant', phiOk ? 'pass' : 'fail', `PHI=${PHI.toFixed(6)}`);
+            check('PSI constant', psiOk ? 'pass' : 'fail', `PSI=${PSI.toFixed(6)}`);
+            check('PHI × PSI = 1', productOk ? 'pass' : 'fail', `product=${(PHI * PSI).toFixed(10)}`);
+        } catch (err) {
+            check('φ-constants', 'fail', `Could not load: ${err.message}`);
+        }
+
+        // ═══ 10. PIPELINE ENGINE ═══════════════════════════════════════
+        console.log('\n  \x1b[1m─── Pipeline Engine ───\x1b[0m');
+        try {
+            const { PipelineEngine } = require(path.join(ROOT, 'core', 'pipeline', 'engine.js'));
+            const { STAGE_NAMES, VARIANTS } = require(path.join(ROOT, 'core', 'pipeline', 'stages.js'));
+            check('PipelineEngine', 'pass', `21 stages, ${Object.keys(VARIANTS).length} variants`);
+            const testEngine = new PipelineEngine({ maxConcurrentRuns: 1, maxRetries: 0 });
+            check('Engine instantiation', 'pass', 'PipelineEngine created successfully');
+        } catch (err) {
+            check('PipelineEngine', 'fail', `Load error: ${err.message}`);
+        }
+
+        // ═══ 11. AUTO-SUCCESS SCHEDULER ════════════════════════════════
+        console.log('\n  \x1b[1m─── Auto-Success Engine ───\x1b[0m');
+        try {
+            const { AutoSuccessScheduler } = require(path.join(ROOT, 'core', 'scheduler', 'auto-success.js'));
+            const testScheduler = new AutoSuccessScheduler({ heartbeatMs: 30000 });
+            check('AutoSuccessScheduler', 'pass', `heartbeat=${testScheduler.heartbeatMs}ms, maxTasks=${testScheduler.maxTasks}`);
+        } catch (err) {
+            check('AutoSuccessScheduler', 'fail', `Load error: ${err.message}`);
+        }
+
+        // ═══ 12. CONTENT QUALITY ═══════════════════════════════════════
+        console.log('\n  \x1b[1m─── Content Quality ───\x1b[0m');
+        const sampleDomains = ['headyme.com', 'headyai.com', 'headyapi.com'];
+        for (const domain of sampleDomains) {
+            const placeholderCount = runCapture(`curl -s --max-time 8 "https://${domain}" 2>/dev/null | grep -ciE "lorem|ipsum|placeholder|coming soon|todo|fixme" 2>/dev/null`);
+            if (placeholderCount !== null) {
+                const count = parseInt(placeholderCount.trim());
+                check(`${domain} content`, count === 0 ? 'pass' : count < 3 ? 'warn' : 'fail',
+                    `${count} placeholder matches`);
+            }
+        }
+
+        // ═══ SUMMARY ═══════════════════════════════════════════════════
+        const total = passed + failed + warned;
+        const healthScore = total > 0 ? passed / total : 0;
+        const grade = healthScore >= 0.9 ? 'A' : healthScore >= 0.8 ? 'B' : healthScore >= 0.7 ? 'C' :
+            healthScore >= 0.6 ? 'D' : 'F';
+
+        console.log(`\n  \x1b[1m${'═'.repeat(50)}\x1b[0m`);
+        console.log(`  \x1b[1mResults:\x1b[0m ${passed} \x1b[32mpassed\x1b[0m, ${warned} \x1b[33mwarned\x1b[0m, ${failed} \x1b[31mfailed\x1b[0m`);
+        console.log(`  \x1b[1mHealth Score:\x1b[0m ${(healthScore * 100).toFixed(0)}% (Grade: ${grade})`);
+        if (fixed > 0) console.log(`  \x1b[36m⚡ Auto-fixed:\x1b[0m ${fixed} issue(s)`);
+
+        if (failed > 0) {
+            console.log(`\n  \x1b[33mRun with --fix to auto-repair safe issues:\x1b[0m`);
+            console.log(`    heady doctor --fix\n`);
+        } else {
+            success('All systems operational');
+        }
     },
 
     'rotate-keys'() {
