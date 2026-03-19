@@ -16,7 +16,7 @@ services:
     - key: HEADY_MODE
       value: "CLOUD_ONLY"
     - key: HEADY_VERSION
-      value: "3.0.0"
+      value: "4.1.0"
     - key: DISABLE_LOCALHOST
       value: "true"
     - key: CLOUD_FIRST

@@ -89,19 +89,24 @@ const SECURITY_HEADERS = {
   'Referrer-Policy': 'strict-origin-when-cross-origin',
   'Permissions-Policy': 'camera=(), microphone=(), geolocation=()',
   'Strict-Transport-Security': 'max-age=31536000; includeSubDomains; preload',
-  'Content-Security-Policy': "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; connect-src 'self' https://*.headysystems.com https://*.headyme.com"
+  'Content-Security-Policy': "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://*.headysystems.com https://*.headyme.com https://*.headymcp.com https://*.headyai.com https://*.headyapi.com https://*.headyio.com https://*.headybot.com https://*.headybuddy.com https://*.headylens.com https://*.headyfinance.com https://*.headyconnection.org https://*.headyconnection.com"
 };
 
 // ─── CORS Configuration ─────────────────────────────────────────────────────
 const ALLOWED_ORIGINS = [
   'https://headyme.com', 'https://www.headyme.com',
   'https://headysystems.com', 'https://www.headysystems.com',
-  'https://heady-ai.com', 'https://www.heady-ai.com',
-  'https://headyos.com', 'https://www.headyos.com',
+  'https://headyai.com', 'https://www.headyai.com',
+  'https://headybuddy.com', 'https://www.headybuddy.com',
+  'https://headybuddy.org', 'https://www.headybuddy.org',
+  'https://headymcp.com', 'https://www.headymcp.com',
+  'https://headyio.com', 'https://www.headyio.com',
+  'https://headybot.com', 'https://www.headybot.com',
+  'https://headyapi.com', 'https://www.headyapi.com',
+  'https://headylens.com', 'https://www.headylens.com',
+  'https://headyfinance.com', 'https://www.headyfinance.com',
   'https://headyconnection.org', 'https://www.headyconnection.org',
   'https://headyconnection.com', 'https://www.headyconnection.com',
-  'https://headyex.com', 'https://www.headyex.com',
-  'https://headyfinance.com', 'https://www.headyfinance.com',
   'https://admin.headysystems.com'
 ];
 

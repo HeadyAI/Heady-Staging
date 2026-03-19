@@ -22,18 +22,33 @@ class HttpTransport {
   _setup() {
     const app = this.app;
 
+    // Security: Remove X-Powered-By header
+    app.disable('x-powered-by');
+
+    // Security headers
+    app.use((req, res, next) => {
+      res.setHeader('X-Content-Type-Options', 'nosniff');
+      res.setHeader('X-Frame-Options', 'DENY');
+      res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+      res.setHeader('Permissions-Policy', 'camera=(), microphone=(), geolocation=()');
+      next();
+    });
+
     // Middleware
     app.use(cors({
       origin: [
-        /\.headysystems\.com$/,
-        /\.headyme\.com$/,
-        /\.heady-ai\.com$/,
-        /\.headyos\.com$/,
-        /\.headyconnection\.(com|org)$/,
-        /\.headyex\.com$/,
-        /\.headyfinance\.com$/,
-        /\.headymcp\.com$/,
-        /localhost/,
+        /^https?:\/\/(www\.)?headysystems\.com$/,
+        /^https?:\/\/(www\.)?headyme\.com$/,
+        /^https?:\/\/(www\.)?headyai\.com$/,
+        /^https?:\/\/(www\.)?headybuddy\.(com|org)$/,
+        /^https?:\/\/(www\.)?headyconnection\.(com|org)$/,
+        /^https?:\/\/(www\.)?headymcp\.com$/,
+        /^https?:\/\/(www\.)?headyio\.com$/,
+        /^https?:\/\/(www\.)?headybot\.com$/,
+        /^https?:\/\/(www\.)?headyapi\.com$/,
+        /^https?:\/\/(www\.)?headylens\.com$/,
+        /^https?:\/\/(www\.)?headyfinance\.com$/,
+        /^https?:\/\/admin\.headysystems\.com$/,
       ],
       credentials: true,
     }));
@@ -143,7 +158,7 @@ class HttpTransport {
       res.json({
         name: 'heady-mcp-server',
         version: '5.0.0',
-        description: 'Heady™ Master Control Program — 42 MCP tools',
+        description: `Heady™ Master Control Program — ${this.protocol.registry.tools.length} MCP tools`,
         endpoints: {
           streamable_http: '/mcp',
           sse: '/mcp/sse',
@@ -168,7 +183,18 @@ class HttpTransport {
         });
       }
       res.send(`<!DOCTYPE html>
-<html><head><title>Heady™ MCP Server</title>
+<html lang="en"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Heady™ MCP Server — 55 Tools, φ-Scaled Orchestration</title>
+<meta name="description" content="Heady MCP Server — 55 tools for AI orchestration, memory, code generation, and analysis via Model Context Protocol.">
+<meta property="og:title" content="Heady™ MCP Server">
+<meta property="og:description" content="55 MCP tools for AI orchestration, memory, code generation, and analysis.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://headymcp.com">
+<meta name="twitter:card" content="summary">
+<link rel="canonical" href="https://headymcp.com">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐝</text></svg>">
 <style>body{font-family:system-ui;background:#0a0a0f;color:#e0e0e0;max-width:800px;margin:0 auto;padding:2rem}
 h1{color:#7c5eff}a{color:#40e0d0}code{background:#1a1a2e;padding:2px 6px;border-radius:4px}
 .tools{display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;margin:1rem 0}
