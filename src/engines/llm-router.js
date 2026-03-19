@@ -477,24 +477,41 @@ class ProviderHealthTracker {
   constructor(providerId, costPerKTokens) {
     this.providerId       = providerId;
     this.costPerKTokens   = costPerKTokens;
-    /** @type {Array<{success: boolean, latencyMs: number, ts: number}>} */
-    this._window          = [];
+    /** Circular buffer: fixed-size array + head pointer + count. O(1) insert. */
+    this._buf             = new Array(HEALTH_WINDOW);
+    this._head            = 0;   // next write index
+    this._count           = 0;   // entries currently stored (≤ HEALTH_WINDOW)
     this._totalCalls      = 0;
     this._totalSuccess    = 0;
     this._totalLatencyMs  = 0;
+    // Running sums over the circular window for O(1) score computation.
+    this._winSuccesses    = 0;
+    this._winLatencySum   = 0;
   }
 
   /**
    * Record the outcome of a single call.
+   * O(1) — overwrites the oldest slot in the circular buffer.
    * @param {boolean} success
    * @param {number}  latencyMs
    */
   record(success, latencyMs) {
-    const entry = { success, latencyMs, ts: Date.now() };
-    this._window.push(entry);
-    if (this._window.length > HEALTH_WINDOW) {
-      this._window.shift();
+    // If buffer is full, subtract the entry we are about to overwrite.
+    if (this._count === HEALTH_WINDOW) {
+      const old = this._buf[this._head];
+      this._winSuccesses  -= old.success ? 1 : 0;
+      this._winLatencySum -= old.latencyMs;
+    } else {
+      this._count += 1;
     }
+
+    const entry = { success, latencyMs, ts: Date.now() };
+    this._buf[this._head] = entry;
+    this._head = (this._head + 1) % HEALTH_WINDOW;
+
+    this._winSuccesses  += success ? 1 : 0;
+    this._winLatencySum += latencyMs;
+
     this._totalCalls   += 1;
     this._totalSuccess += success ? 1 : 0;
     this._totalLatencyMs += latencyMs;
@@ -511,12 +528,11 @@ class ProviderHealthTracker {
    * @returns {number} Health score in [0, 1].
    */
   getScore() {
-    if (this._window.length === 0) return PSI; // ≈ 0.618 — neutral seed
+    if (this._count === 0) return PSI; // ≈ 0.618 — neutral seed
 
-    const successes    = this._window.filter(e => e.success).length;
-    const successRate  = successes / this._window.length;
+    const successRate  = this._winSuccesses / this._count;
 
-    const avgLatency   = this._window.reduce((s, e) => s + e.latencyMs, 0) / this._window.length;
+    const avgLatency   = this._winLatencySum / this._count;
     const latencyScore = 1 - Math.min(1, avgLatency / LATENCY_CEIL_MS);
 
     // Max realistic cost per K tokens across all providers ≈ 0.030 USD
@@ -531,12 +547,9 @@ class ProviderHealthTracker {
    * @returns {{ totalCalls: number, successRate: number, avgLatencyMs: number, windowSize: number }}
    */
   getStats() {
-    const wLen        = this._window.length;
-    const successes   = this._window.filter(e => e.success).length;
-    const successRate = wLen > 0 ? successes / wLen : 0;
-    const avgLatency  = wLen > 0
-      ? this._window.reduce((s, e) => s + e.latencyMs, 0) / wLen
-      : 0;
+    const wLen        = this._count;
+    const successRate = wLen > 0 ? this._winSuccesses / wLen : 0;
+    const avgLatency  = wLen > 0 ? this._winLatencySum / wLen : 0;
     return {
       totalCalls:    this._totalCalls,
       successRate:   parseFloat(successRate.toFixed(4)),

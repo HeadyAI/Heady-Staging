@@ -1,12 +1,8 @@
 {
-  "name": "@heady/heady-guard",
+  "name": "@heady/guard",
   "version": "1.0.0",
-  "description": "Heady heady-guard package",
+  "description": "HeadyGuard — enterprise governance, kill-switch, audit trail, and hallucination detection",
   "main": "src/index.js",
-  "scripts": {
-    "test": "jest --passWithNoTests",
-    "lint": "eslint src/"
-  },
-  "keywords": ["heady", "heady-guard"],
-  "license": "UNLICENSED"
+  "author": "HeadySystems Inc.",
+  "license": "SEE LICENSE IN LICENSE.md"
 }

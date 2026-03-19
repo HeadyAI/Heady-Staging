@@ -241,6 +241,9 @@ class LLMRouter extends EventEmitter {
     this._monthlySpend = 0;
     this._heartbeatRef = null;
 
+    /** @type {import('../governance/governance-engine').GovernanceEngine|null} */
+    this._governanceEngine = opts.governanceEngine || null;
+
     this._registerDefaultModels();
 
     if (opts.enableHeartbeat !== false) {
@@ -343,6 +346,9 @@ class LLMRouter extends EventEmitter {
 
     const data = await res.json();
     model.cb.recordSuccess();
+    if (this._governanceEngine) {
+      this._governanceEngine.circuitBreakerSuccess(model.providerFamily);
+    }
     model.callCount++;
 
     // Budget tracking
@@ -388,6 +394,12 @@ class LLMRouter extends EventEmitter {
     for (let attempt = 0; attempt < modelChain.length; attempt++) {
       const model = modelChain[attempt];
 
+      // Governance-level circuit breaker check (provider family)
+      if (this._governanceEngine && !this._governanceEngine.circuitBreakerCanRequest(model.providerFamily)) {
+        this.emit('cb:governance-blocked', { modelId: model.modelId, provider: model.providerFamily, attempt });
+        continue;
+      }
+
       if (!model.cb.canRequest()) {
         this.emit('cb:blocked', { modelId: model.modelId, attempt });
         continue;
@@ -413,6 +425,9 @@ class LLMRouter extends EventEmitter {
         }
 
         model.cb.recordFailure();
+        if (this._governanceEngine) {
+          this._governanceEngine.circuitBreakerFailure(model.providerFamily);
+        }
         model.errorCount++;
         this.emit('request:error', { modelId: model.modelId, error: err.message, attempt });
 
