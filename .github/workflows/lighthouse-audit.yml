@@ -170,7 +170,7 @@ jobs:
 
       - name: Open issue if score below 50
         if: steps.parse.outputs.any_below_50 == 'true'
-        uses: actions/github-script@v7
+        uses: actions/github-script@v8
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
