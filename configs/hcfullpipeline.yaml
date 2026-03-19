@@ -41,7 +41,7 @@ _changelog:
       - "ADDED: 'execute' (stage 12) — actual execution with metacognitive gate (confidence ≥ 20%)"
       - "FIXED: retryBackoffMs now uses phi-backoff sequence [1618, 2618, 4236] per MASTER_DIRECTIVES §7.3"
       - "FIXED: userFirstPolicy hotPoolTasks updated to canonical stage IDs"
-      - "FIXED: stage count corrected from ~14 to 21 canonical stages (fib(8) = Sacred Geometry aligned)"
+      - "FIXED: stage count corrected from ~14 to 21 canonical stages, then extended to 22 with HeadyDistiller (Stage 21)"
       - "FIXED: PQC stages moved to parallel side lanes (not main pipeline stages)"
       - "FIXED: cross-device-sync, sync_priority_changes, deploy_priority demoted to system_operations lane"
       - "PRESERVED: all nodePools, stopRule, checkpointProtocol, lanes, signals, deployment_hooks"
@@ -62,7 +62,7 @@ pipeline:
   name: HCFullPipeline
   mode: event-driven              # NOT polling. NOT interval. NEVER interval.
   description: >
-    21-stage (fib(8)) intelligent, parallel, dynamically distributed, self-aware,
+    22-stage intelligent, parallel, dynamically distributed, self-aware,
     self-optimizing, trial-and-error capable, continuously learning execution pipeline
     for all Heady workloads (local and remote). v8.0.0: Event-driven latent space
     instantaneous execution — tasks propagate instantly via EventSpine, zero polling.
@@ -147,15 +147,15 @@ pipeline:
       - type: user_queue_empty
         action: allow_background
 
-  # ─── STAGES (21 = fib(8) — Sacred Geometry aligned) ─────────────────────────
+  # ─── STAGES (22 — Sacred Geometry aligned) ───────────────────────────────────
   #
-  # Canonical flow (MASTER_DIRECTIVES §7.2):
+  # Canonical flow (MASTER_DIRECTIVES §7.2 + Stage 21 Distiller):
   #   channel-entry(0) → recon(1) → intake(2) → classify(3) → triage(4)
   #   → decompose(5) → trial-and-error(6) → orchestrate(7) → monte-carlo(8)
   #   → arena(9) → judge(10) → approve(11) → execute(12) → verify(13)
   #   → self-awareness(14) → self-critique(15) → mistake-analysis(16)
   #   → optimization-ops(17) → continuous-search(18) → evolution(19)
-  #   → receipt(20)
+  #   → receipt(20) → distiller(21)
   #   + parallel side lanes: pqc, system_operations, priority
   #
   stages:
@@ -329,19 +329,19 @@ pipeline:
         contextScopes: [FOCUSED, STANDARD, THOROUGH, EXHAUSTIVE]  # concurrent-equals: scope not priority
         pipelinePaths:
           FAST:
-            stages: [0, 2, 3, 4, 12, 13, 20]
+            stages: [0, 2, 3, 4, 12, 13, 20, 21]
             maxDurationMs: 60000
             useCase: "Simple, high-confidence requests; no ambiguity"
           FULL:
-            stages: [0, 1, 2, 3, 4, 5, 7, 8, 10, 12, 13, 14, 15, 16, 17, 20]
+            stages: [0, 1, 2, 3, 4, 5, 7, 8, 10, 12, 13, 14, 15, 16, 17, 20, 21]
             maxDurationMs: 240000
             useCase: "General-purpose requests requiring thorough reasoning"
           ARENA:
-            stages: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 20]
+            stages: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 20, 21]
             maxDurationMs: 300000
             useCase: "High-stakes decisions requiring adversarial solution selection"
           LEARNING:
-            stages: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
+            stages: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21]
             maxDurationMs: 300000
             useCase: "Sessions where system-level learning and strategy evolution are prioritised"
 
@@ -1012,6 +1012,62 @@ pipeline:
             - ide_status_bar
             - heady_buddy_notification
             - api_metrics_endpoint
+
+    # ── STAGE 21: Distiller (HeadyDistiller — Knowledge Distillation) ──────────
+    # The final stage: reverse-engineers the entire pipeline execution trace into
+    # optimized, reusable SKILL.md recipes. Compresses knowledge into 3 tiers.
+    - id: distiller
+      name: Distiller
+      order: 21
+      description: >
+        HeadyDistiller — Knowledge Distillation (Stage 22 in service catalog).
+        Reverse-engineers the complete execution trace from stages 0-20 into
+        optimized, reusable SKILL.md recipes. Operates in 3 tiers:
+          Tier 1 (Quick Recipe): Token-reduced action sequence — fast replay
+          Tier 2 (Full Recipe): Complete execution trace with decision points
+          Tier 3 (Meta Recipe): Cross-run pattern synthesis — evolving knowledge
+        Compresses pipeline learnings into deterministic recipes that can be
+        replayed without re-running the full 21-stage pipeline. Feeds the
+        continuous improvement loop and builds the institutional knowledge base.
+      checkpoint: true
+      parallel: false
+      required: true
+      dependsOn: [receipt]
+      tasks:
+        - extract_execution_trace            # Capture full stage-by-stage trace
+        - identify_decision_points           # Map every branching decision made
+        - compress_to_tier1_recipe           # Token-reduced action sequence
+        - compress_to_tier2_recipe           # Full trace with decision rationale
+        - synthesize_tier3_meta_recipe       # Cross-run pattern synthesis
+        - score_recipe_quality               # CSL gate: recipe must score > 0.618
+        - store_recipe_in_skills             # Write SKILL.md to .agents/skills/
+        - update_skill_manifest              # Update MANIFEST.md with new skill
+        - feed_recipes_to_memory             # Store in Mnemosyne T1 (warm) tier
+        - emit_distillation_metrics          # Publish compression ratio, quality score
+        - check_recipe_determinism           # Verify recipe produces same output on replay
+        - archive_trace_to_cold_storage      # Archive raw trace to Mnemosyne T2 (cold)
+      distillerConfig:
+        maxTokensPerRecipe: 4236            # φ³ × 1000 tokens
+        qualityGateThreshold: 0.618         # ψ — CSL gate minimum
+        compressionTarget: 0.382            # ψ² — target 38.2% of original tokens
+        recipePath: ".agents/skills/"
+        manifestPath: "MANIFEST.md"
+        tiers:
+          tier1:
+            name: "Quick Recipe"
+            description: "Minimal token sequence for fast replay"
+            maxTokens: 1618                 # φ × 1000
+          tier2:
+            name: "Full Recipe"
+            description: "Complete trace with decision rationale"
+            maxTokens: 4236                 # φ³ × 1000
+          tier3:
+            name: "Meta Recipe"
+            description: "Cross-run pattern synthesis — evolving knowledge"
+            maxTokens: 11090                # φ⁵ × 1000
+        tools:
+          - hf-distiller-v1
+          - qdrant
           seamlessnessChecks:
             - shared_identity_across_channels
             - shared_project_context

@@ -1,0 +1,554 @@
+# HEADY_BRAND:BEGIN
+# ╔══════════════════════════════════════════════════════════════════╗
+# ║  HEADY™ Standardized Patent Registry                           ║
+# ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces   ║
+# ║  FILE: configs/patent-registry-standardized.yaml               ║
+# ║  LAYER: config                                                 ║
+# ╚══════════════════════════════════════════════════════════════════╝
+# HEADY_BRAND:END
+
+# Generated: 2026-03-19
+# Assignee: HeadySystems Inc. / HeadyConnection Inc.
+# Inventor: Eric Haywood
+# Version: 1.0.0
+
+version: "1.0.0"
+
+metadata:
+  total_patents: 72
+  total_implemented_claims: 59
+  implementation_modules: 21
+  test_suites: 20
+  total_tests: 800
+  lines_of_code: 27000
+  external_dependencies: 0
+  assignees:
+    - HeadySystems Inc.
+    - HeadyConnection Inc.
+  inventor: Eric Haywood
+  customer_number: "221639"
+  portfolio_value_estimate: "$4.87M"
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# BATCH 4: HS-2026-051 through HS-2026-062 (Critical — Overdue)
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+batch_4_patents:
+  - id: "HS-2026-051"
+    title: "Vibe-Match Latency Delta with Adaptive Model Routing"
+    serial: "63/998,709"
+    filing_date: "2025-01-15"
+    non_provisional_deadline: "2026-01-15"
+    deadline_status: overdue
+    days_overdue: 63
+    assignee: "HeadySystems Inc."
+    inventor: "Eric Haywood"
+    domain: "Edge Routing"
+    category: "software"
+    claims_count: 6
+    claims_summary: "Model registry with latency delta, cognitive style vector matching, 3-tier degradation, recovery detection"
+    implementation_files:
+      - "src/routing/vibe-match-router.js"
+      - "heady-patent-implementations/src/routing/vibe-match-router.js"
+    patent_lock_zone: true
+    reduction_to_practice: verified
+    priority_tier: 1
+    section_101_defense: "Reduces data transmission bytes, optimizes hardware allocation for edge routing"
+
+  - id: "HS-2026-052"
+    title: "Shadow Memory Persistence with Projection Sync"
+    serial: "63/998,713"
+    filing_date: "2025-01-15"
+    non_provisional_deadline: "2026-01-15"
+    deadline_status: overdue
+    days_overdue: 63
+    assignee: "HeadySystems Inc."
+    inventor: "Eric Haywood"
+    domain: "Vector Memory"
+    category: "software"
+    claims_count: 6
+    claims_summary: "State as embeddings, projection to external stores, Fibonacci sharding, cosine K-nearest reconstitution"
+    implementation_files:
+      - "src/memory/shadow-memory-persistence.js"
+      - "heady-patent-implementations/src/memory/shadow-memory-persistence.js"
+    patent_lock_zone: true
+    reduction_to_practice: verified
+    priority_tier: 1
+    section_101_defense: "Reduces RAM utilization, improves cache locality for vector memory"
+
+  - id: "HS-2026-053"
+    title: "Neural Stream Telemetry with Proof-of-Inference"
+    serial: "63/998,718"
+    filing_date: "2025-01-15"
+    non_provisional_deadline: "2026-01-15"
+    deadline_status: overdue
+    days_overdue: 63
+    assignee: "HeadySystems Inc."
+    inventor: "Eric Haywood"
+    domain: "Observability"
+    category: "software"
+    claims_count: 7
+    claims_summary: "Telemetry interception, SHA-256 Proof-of-Inference, reasoning jitter, confidence drift, Shannon entropy, anomaly alerts"
+    implementation_files:
+      - "src/telemetry/neural-stream-telemetry.js"
+      - "heady-patent-implementations/src/telemetry/neural-stream-telemetry.js"
+    patent_lock_zone: true
+    reduction_to_practice: verified
+    priority_tier: 2
+
+  - id: "HS-2026-054"
+    title: "Post-Quantum mTLS Device Identity and Zero-Trust Mesh"
+    serial: "TBD"
+    filing_date: "2025-02-01"
+    non_provisional_deadline: "2026-02-01"
+    deadline_status: overdue
+    days_overdue: 46
+    assignee: "HeadySystems Inc."
+    inventor: "Eric Haywood"
+    domain: "Security"
+    category: "software"
+    claims_count: 0
+    claims_summary: "PQC mTLS with CRYSTALS-Kyber-768, device identity, zero-trust mesh"
+    implementation_files:
+      - "src/shared/mtls-manager.js"
+    patent_lock_zone: false
+    reduction_to_practice: partial
+    priority_tier: 2
+
+  - id: "HS-2026-055"
+    title: "Ed25519 Cryptographic Trust Receipt Signing"
+    serial: "TBD"
+    filing_date: "2025-02-01"
+    non_provisional_deadline: "2026-02-01"
+    deadline_status: overdue
+    days_overdue: 46
+    assignee: "HeadySystems Inc."
+    inventor: "Eric Haywood"
+    domain: "Security/Trust"
+    category: "software"
+    claims_count: 0
+    claims_summary: "Ed25519 trust receipt signing for cryptographic audit trails per pipeline completion"
+    implementation_files:
+      - "src/security/trust-receipt.js"
+    patent_lock_zone: false
+    reduction_to_practice: verified
+    priority_tier: 1
+
+  - id: "HS-2026-056"
+    title: "Monte Carlo Exploration for Pipeline Risk Assessment"
+    serial: "TBD"
+    filing_date: "2025-02-15"
+    non_provisional_deadline: "2026-02-15"
+    deadline_status: overdue
+    days_overdue: 32
+    assignee: "HeadySystems Inc."
+    inventor: "Eric Haywood"
+    domain: "AI Orchestration"
+    category: "software"
+    claims_count: 0
+    claims_summary: "1K+ scenario simulation, UCB1 with φ exploration, probabilistic outcome ranking"
+    implementation_files:
+      - "src/intelligence/monte-carlo-engine.js"
+      - "heady-patent-implementations/src/intelligence/monte-carlo-engine.js"
+    patent_lock_zone: false
+    reduction_to_practice: verified
+    priority_tier: 2
+
+  - id: "HS-2026-057"
+    title: "Sacred Geometry Topology for Concentric Agent Routing"
+    serial: "TBD"
+    filing_date: "2025-02-15"
+    non_provisional_deadline: "2026-02-15"
+    deadline_status: overdue
+    days_overdue: 32
+    assignee: "HeadySystems Inc."
+    inventor: "Eric Haywood"
+    domain: "Agent Architecture"
+    category: "software"
+    claims_count: 0
+    claims_summary: "φ-ratio allocation for agent routing, reduces bandwidth and inter-process overhead"
+    implementation_files:
+      - "src/core/heady-service-mesh.js"
+    patent_lock_zone: false
+    reduction_to_practice: partial
+    priority_tier: 2
+
+  - id: "HS-2026-058"
+    title: "Continuous Semantic Logic Gates with Sigmoid Activation"
+    serial: "63/998,721"
+    filing_date: "2025-02-15"
+    non_provisional_deadline: "2026-02-15"
+    deadline_status: overdue
+    days_overdue: 32
+    assignee: "HeadySystems Inc."
+    inventor: "Eric Haywood"
+    domain: "Core AI"
+    category: "software"
+    claims_count: 10
+    claims_summary: "Resonance gate, superposition gate, orthogonal gate, multi-resonance, weighted superposition, consensus, batch orthogonal, configurable sigmoid, system with API, boolean logic replacement"
+    implementation_files:
+      - "src/core/csl-gates-enhanced.js"
+      - "heady-patent-implementations/src/core/csl-gates-enhanced.js"
+      - "src/routes/csl-routes.js"
+    patent_lock_zone: true
+    reduction_to_practice: verified
+    priority_tier: 1
+    section_101_defense: "GPU/VPU acceleration reduces cycles per inference operation"
+
+  - id: "HS-2026-059"
+    title: "Self-Healing Attestation Mesh with Geometric Hallucination Detection"
+    serial: "63/998,726"
+    filing_date: "2025-03-01"
+    non_provisional_deadline: "2026-03-01"
+    deadline_status: overdue
+    days_overdue: 18
+    assignee: "HeadySystems Inc."
+    inventor: "Eric Haywood"
+    domain: "Reliability"
+    category: "software"
+    claims_count: 7
+    claims_summary: "Mesh consensus, cosine similarity with sigmoid, auto un-quarantine, suspect marking, phi heartbeat, consensus reconstitution"
+    implementation_files:
+      - "src/mesh/self-healing-attestation-mesh.js"
+      - "heady-patent-implementations/src/mesh/self-healing-attestation-mesh.js"
+    patent_lock_zone: true
+    reduction_to_practice: verified
+    priority_tier: 1
+
+  - id: "HS-2026-060"
+    title: "Dynamic Bee Factory with Swarm Consensus Protocol"
+    serial: "63/998,759"
+    filing_date: "2025-03-01"
+    non_provisional_deadline: "2026-03-01"
+    deadline_status: overdue
+    days_overdue: 18
+    assignee: "HeadySystems Inc."
+    inventor: "Eric Haywood"
+    domain: "Agent Intelligence"
+    category: "software"
+    claims_count: 9
+    claims_summary: "Runtime agent creation with SHA-256 identity, template creation, ephemeral spawn, persistent to disk, swarm consensus, dissolution protocol, work injection"
+    implementation_files:
+      - "src/agents/dynamic-bee-factory-enhanced.js"
+      - "heady-patent-implementations/src/agents/dynamic-bee-factory-enhanced.js"
+    patent_lock_zone: true
+    reduction_to_practice: verified
+    priority_tier: 1
+    section_101_defense: "Manages compute resources, reduces idle CPU through dynamic agent lifecycle"
+
+  - id: "HS-2026-061"
+    title: "Metacognitive Self-Awareness Loop with Ring Buffer Telemetry"
+    serial: "63/998,764"
+    filing_date: "2025-03-01"
+    non_provisional_deadline: "2026-03-01"
+    deadline_status: overdue
+    days_overdue: 18
+    assignee: "HeadySystems Inc."
+    inventor: "Eric Haywood"
+    domain: "AI Self-Awareness"
+    category: "software"
+    claims_count: 7
+    claims_summary: "Ring buffer telemetry, confidence formula with weights, operational recommendations, critical event penalty, configurable eviction, multi-domain branding awareness"
+    implementation_files:
+      - "src/awareness/metacognitive-loop.js"
+      - "heady-patent-implementations/src/awareness/metacognitive-loop.js"
+    patent_lock_zone: true
+    reduction_to_practice: verified
+    priority_tier: 1
+
+  - id: "HS-2026-062"
+    title: "Vector-Native Security Scanner with Cosine Threat Matching"
+    serial: "63/998,767"
+    filing_date: "2025-03-15"
+    non_provisional_deadline: "2026-03-15"
+    deadline_status: overdue
+    days_overdue: 4
+    assignee: "HeadySystems Inc."
+    inventor: "Eric Haywood"
+    domain: "Security"
+    category: "software"
+    claims_count: 7
+    claims_summary: "Threat pattern registry, poisoning detection, phi-squared outlier threshold, anti-sprawl density, pre-deployment gate, geometric threat signatures"
+    implementation_files:
+      - "src/security/vector-native-scanner.js"
+      - "heady-patent-implementations/src/security/vector-native-scanner.js"
+    patent_lock_zone: true
+    reduction_to_practice: verified
+    priority_tier: 1
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# MARCH 2026 BATCH: HS-2026-001 through HS-2026-010
+# Filed: 2026-03-03 | Deadline: 2027-03-03 | Status: Preexam
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+march_2026_batch:
+  - id: "HS-2026-001"
+    title: "Multi-Agent Orchestration Using Golden Ratio Proportional Scaling"
+    serial: "63/995,266"
+    confirmation: "4140"
+    filing_date: "2026-03-03"
+    non_provisional_deadline: "2027-03-03"
+    deadline_status: safe
+    days_remaining: 349
+    assignee: "HeadySystems Inc."
+    domain: "AI Orchestration"
+    reduction_to_practice: verified
+
+  - id: "HS-2026-002"
+    title: "Three-Dimensional Spatial Indexing of AI Agent Memory Using Octree"
+    serial: "63/995,268"
+    confirmation: "5012"
+    filing_date: "2026-03-03"
+    non_provisional_deadline: "2027-03-03"
+    deadline_status: safe
+    days_remaining: 349
+    assignee: "HeadySystems Inc."
+    domain: "Data & Memory"
+    reduction_to_practice: verified
+
+  - id: "HS-2026-003"
+    title: "Headless Cloud-Native Sequencer with Latency-Compensated DAW Sync"
+    serial: "63/995,272"
+    confirmation: "1678"
+    filing_date: "2026-03-03"
+    non_provisional_deadline: "2027-03-03"
+    deadline_status: safe
+    days_remaining: 349
+    assignee: "HeadySystems Inc."
+    domain: "Music/Audio"
+    reduction_to_practice: verified
+
+  - id: "HS-2026-004"
+    title: "Unified Zero-Trust Software Package Compilation Pipeline with Deterministic AST Validation"
+    serial: "63/995,274"
+    confirmation: "1724"
+    filing_date: "2026-03-03"
+    non_provisional_deadline: "2027-03-03"
+    deadline_status: safe
+    days_remaining: 349
+    assignee: "HeadySystems Inc."
+    domain: "Security/Build"
+    reduction_to_practice: verified
+
+  - id: "HS-2026-005"
+    title: "Predictive Cross-Vector Threat Modeling System with Time-Reversal Network Forensics"
+    serial: "63/995,278"
+    confirmation: "3518"
+    filing_date: "2026-03-03"
+    non_provisional_deadline: "2027-03-03"
+    deadline_status: safe
+    days_remaining: 349
+    assignee: "HeadySystems Inc."
+    domain: "Security"
+    reduction_to_practice: verified
+
+  - id: "HS-2026-006"
+    title: "AI Session Replay Engine with Dual-Pane Temporal Scrubbing"
+    serial: "63/995,318"
+    confirmation: "7203"
+    filing_date: "2026-03-03"
+    non_provisional_deadline: "2027-03-03"
+    deadline_status: safe
+    days_remaining: 349
+    assignee: "HeadySystems Inc."
+    domain: "AI Observability"
+    reduction_to_practice: verified
+
+  - id: "HS-2026-007"
+    title: "Autonomous API Connector Synthesis with DLP Enforcement"
+    serial: "63/995,320"
+    confirmation: "4822"
+    filing_date: "2026-03-03"
+    non_provisional_deadline: "2027-03-03"
+    deadline_status: safe
+    days_remaining: 349
+    assignee: "HeadySystems Inc."
+    domain: "Integration"
+    reduction_to_practice: verified
+
+  - id: "HS-2026-008"
+    title: "Tournament-Based Competitive AI Strategy Selection"
+    serial: "63/995,322"
+    confirmation: "4395"
+    filing_date: "2026-03-03"
+    non_provisional_deadline: "2027-03-03"
+    deadline_status: safe
+    days_remaining: 349
+    assignee: "HeadySystems Inc."
+    domain: "AI Competition"
+    reduction_to_practice: verified
+
+  - id: "HS-2026-009"
+    title: "Liquid Runtime Architecture with GPU-Proportional Allocation"
+    serial: "63/995,325"
+    confirmation: "1182"
+    filing_date: "2026-03-03"
+    non_provisional_deadline: "2027-03-03"
+    deadline_status: safe
+    days_remaining: 349
+    assignee: "HeadySystems Inc."
+    domain: "Infrastructure"
+    reduction_to_practice: verified
+
+  - id: "HS-2026-010"
+    title: "Cross-Device Sync with Phi-Interval Heartbeat"
+    serial: "63/995,330"
+    confirmation: "6326"
+    filing_date: "2026-03-03"
+    non_provisional_deadline: "2027-03-03"
+    deadline_status: safe
+    days_remaining: 349
+    assignee: "HeadySystems Inc."
+    domain: "Sync/Connectivity"
+    reduction_to_practice: verified
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# FOUNDATIONAL PORTFOLIO: HS-001 through HS-050
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+foundational_patents:
+  hardware_origins:
+    - { id: "HS-001", title: "PTACA — Physical Trust-Anchored Cryptographic Authorization", assignee: "HeadySystems Inc.", category: "hardware" }
+    - { id: "HS-002", title: "RAAS — Remote-Attested Actuator Systems", assignee: "HeadySystems Inc.", category: "hardware" }
+    - { id: "HS-003", title: "Sovereign Identity Root", assignee: "HeadySystems Inc.", category: "hardware" }
+    - { id: "HS-004", title: "HSM Federation Protocol", assignee: "HeadySystems Inc.", category: "hardware" }
+    - { id: "HS-005", title: "Biometric-Locked Keys", assignee: "HeadySystems Inc.", category: "hardware" }
+    - { id: "HS-006", title: "Secure Mesh Transport", assignee: "HeadySystems Inc.", category: "hardware" }
+    - { id: "HS-007", title: "Data Sovereignty Vaults", assignee: "HeadySystems Inc.", category: "hardware" }
+    - { id: "HS-008", title: "HeadyConnection Protocol — DAO-Based Governance", assignee: "HeadySystems Inc.", category: "hardware" }
+    - { id: "HS-009", title: "Legacy API Bridge Security Wrapper", assignee: "HeadySystems Inc.", category: "hardware" }
+    - { id: "HS-010", title: "Initial Trust Domain Partitioning", assignee: "HeadySystems Inc.", category: "hardware" }
+
+  software_core:
+    - { id: "HS-011", title: "AI Tool Safety Gateway — Two-Phase Confirmation", assignee: "HeadySystems Inc.", category: "software" }
+    - { id: "HS-012", title: "PromptOps Governance — Versioned Prompt Deployment", assignee: "HeadySystems Inc.", category: "software" }
+    - { id: "HS-013", title: "Deterministic Repo Builder", assignee: "HeadySystems Inc.", category: "software" }
+    - { id: "HS-014", title: "RAA Execution Fabric — Risk/Authorization/Attestation", assignee: "HeadySystems Inc.", category: "software" }
+    - { id: "HS-015", title: "PQC Evidence Chain — Post-Quantum Audit Logs", assignee: "HeadySystems Inc.", category: "software" }
+    - { id: "HS-016", title: "Tunnel-Only Origin Architecture", assignee: "HeadySystems Inc.", category: "software" }
+    - { id: "HS-017", title: "Policy Supply Chain — Version-Locked Dependencies", assignee: "HeadySystems Inc.", category: "software" }
+
+  society_safety:
+    - { id: "HS-018", title: "HeadySymphony — Narrative-to-MIDI Construction", assignee: "HeadySystems Inc.", category: "society" }
+    - { id: "HS-019", title: "HeadyBio — Privacy Pipeline with Proof of Ephemerality", assignee: "HeadySystems Inc.", category: "society" }
+    - { id: "HS-020", title: "HeadyEd — Adaptive Education Engine", assignee: "HeadySystems Inc.", category: "society" }
+    - { id: "HS-021", title: "HeadyGuard — Hardware-Enforced AI Safety Limiter", assignee: "HeadySystems Inc.", category: "society" }
+    - { id: "HS-022", title: "HeadyArmistice — Physical Weapon Engagement Interlock", assignee: "HeadySystems Inc.", category: "society" }
+
+  interface_optimization:
+    - { id: "HS-023", title: "HeadyUI — Context-Aware Dynamic UI", assignee: "HeadySystems Inc.", category: "interface" }
+    - { id: "HS-024", title: "HeadyLearn — Knowledge Capture from Interaction", assignee: "HeadySystems Inc.", category: "interface" }
+    - { id: "HS-025", title: "HeadyStyle — Taste-Vector Recommendations", assignee: "HeadySystems Inc.", category: "interface" }
+    - { id: "HS-026", title: "HeadyStore — Reverse Marketplace Generation", assignee: "HeadySystems Inc.", category: "interface" }
+    - { id: "HS-027", title: "HeadyFest — Event Scheduling with Crowd Telemetry", assignee: "HeadySystems Inc.", category: "interface" }
+    - { id: "HS-028", title: "HeadyGoose — Autonomous Agent Governance Wrapper", assignee: "HeadySystems Inc.", category: "interface" }
+    - { id: "HS-029", title: "HeadyReflect — Mandatory Validation Cycles", assignee: "HeadySystems Inc.", category: "interface" }
+    - { id: "HS-030", title: "HeadyConductor — Intent-Based Infrastructure", assignee: "HeadySystems Inc.", category: "interface" }
+    - { id: "HS-031", title: "HeadyResonance — Spectral Optimization for Waveform", assignee: "HeadySystems Inc.", category: "interface" }
+    - { id: "HS-032", title: "HeadyTempo — Predictive Task Timing", assignee: "HeadySystems Inc.", category: "interface" }
+    - { id: "HS-033", title: "HeadyMint — Token Minting via Proof of Physical Work", assignee: "HeadySystems Inc.", category: "interface" }
+    - { id: "HS-034", title: "HeadyPhi — Golden Ratio Optimization System", assignee: "HeadySystems Inc.", category: "interface" }
+
+  regeneration_media:
+    - { id: "HS-035", title: "HeadyMake — 3D Printing QA with Proof-of-Structure", assignee: "HeadySystems Inc.", category: "regeneration" }
+    - { id: "HS-036", title: "HeadyField — Soil Sensor Network as Financial Oracle", assignee: "HeadySystems Inc.", category: "regeneration" }
+    - { id: "HS-037", title: "HeadyLegacy — Dead Man's Switch for Key Transfer", assignee: "HeadySystems Inc.", category: "regeneration" }
+    - { id: "HS-038", title: "HeadyTube — Anti-Feed Ranking Algorithm", assignee: "HeadySystems Inc.", category: "regeneration" }
+    - { id: "HS-039", title: "HeadyStudio — Provenance-Tagged Media Production", assignee: "HeadySystems Inc.", category: "regeneration" }
+    - { id: "HS-040", title: "HeadyStream — P2P CDN with Incentive Mechanism", assignee: "HeadySystems Inc.", category: "regeneration" }
+    - { id: "HS-041", title: "HeadyAid — Crisis Mesh for Infrastructure Collapse", assignee: "HeadySystems Inc.", category: "regeneration" }
+
+  pivot:
+    - { id: "HS-042", title: "HeadyRecovery — Sovereign Rehab OS", assignee: "HeadySystems Inc.", category: "society" }
+
+  next_gen:
+    - { id: "HS-043", title: "HeadyBet — Provable Fair Gaming with CSL Entropy", assignee: "HeadyConnection Inc.", filing_date: "2026-01-24", category: "finance" }
+    - { id: "HS-044", title: "HeadyFinance — Triple-Entry Accounting", assignee: "HeadyConnection Inc.", filing_date: "2026-01-24", category: "finance" }
+    - { id: "HS-045", title: "HeadyBare — Just-in-Time Hypervisor", assignee: "HeadyConnection Inc.", filing_date: "2026-01-24", category: "infrastructure" }
+    - { id: "HS-046", title: "HeadyHome — Smart-Home with Local Firewall", assignee: "HeadyConnection Inc.", filing_date: "2026-01-24", category: "physical" }
+    - { id: "HS-047", title: "HeadyKiosk — Tamper-Evident Public Access Terminal", assignee: "HeadyConnection Inc.", filing_date: "2026-01-24", category: "physical" }
+    - { id: "HS-048", title: "HeadyCorrections — Sovereign Rehab OS (Restricted)", assignee: "HeadyConnection Inc.", filing_date: "2026-01-24", category: "society" }
+    - { id: "HS-049", title: "HeadyLegal — Smart Dispute Resolution via CSL", assignee: "HeadyConnection Inc.", filing_date: "2026-01-24", category: "legal" }
+    - { id: "HS-050", title: "HeadyArchive — Forever Vault with Self-Describing Data", assignee: "HeadyConnection Inc.", filing_date: "2026-01-24", category: "infrastructure" }
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# PROSECUTION CALENDAR
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+prosecution_calendar:
+  overdue:
+    - "HS-2026-051"  # 63 days overdue
+    - "HS-2026-052"  # 63 days overdue
+    - "HS-2026-053"  # 63 days overdue
+    - "HS-2026-054"  # 46 days overdue
+    - "HS-2026-055"  # 46 days overdue
+    - "HS-2026-056"  # 32 days overdue
+    - "HS-2026-057"  # 32 days overdue
+    - "HS-2026-058"  # 32 days overdue
+    - "HS-2026-059"  # 18 days overdue
+    - "HS-2026-060"  # 18 days overdue
+    - "HS-2026-061"  # 18 days overdue
+    - "HS-2026-062"  # 4 days overdue
+  due_30_days: []
+  due_90_days: []
+  safe:
+    - "HS-2026-001"  # 349 days remaining
+    - "HS-2026-002"
+    - "HS-2026-003"
+    - "HS-2026-004"
+    - "HS-2026-005"
+    - "HS-2026-006"
+    - "HS-2026-007"
+    - "HS-2026-008"
+    - "HS-2026-009"
+    - "HS-2026-010"
+
+filing_recommendations:
+  tier_1_immediate:
+    description: "File within 30 days — highest commercial value + strongest claims"
+    patents:
+      - "HS-2026-058"  # CSL Gates — 10 claims, core platform primitive
+      - "HS-2026-060"  # Bee Factory — 9 claims, highest commercial value
+      - "HS-2026-052"  # Shadow Memory — 6 claims, strong § 101 defense
+      - "HS-2026-061"  # Metacognitive Loop — 7 claims, novel self-awareness
+      - "HS-2026-059"  # Self-Healing Mesh — 7 claims, reliability innovation
+
+  tier_2_soon:
+    description: "File within 90 days — strong claims with IP differentiation"
+    patents:
+      - "HS-2026-055"  # Ed25519 Trust Receipt
+      - "HS-2026-051"  # Vibe-Match Router
+      - "HS-2026-053"  # Neural Telemetry
+      - "HS-2026-062"  # Vector Security Scanner
+
+  tier_3_planned:
+    description: "File within 12 months — strategic portfolio expansion"
+    patents:
+      - "HS-2026-054"  # PQC mTLS
+      - "HS-2026-056"  # Monte Carlo
+      - "HS-2026-057"  # Sacred Geometry Topology
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# PATENT LOCK ZONES (Protected by ARBITER swarm)
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+patent_lock_zones:
+  - zone_id: "HS-2026-058"
+    file: "src/core/csl-gates-enhanced.js"
+    protection: "No modification without IP counsel review"
+  - zone_id: "HS-2026-060"
+    file: "src/agents/dynamic-bee-factory-enhanced.js"
+    protection: "No modification without IP counsel review"
+  - zone_id: "HS-2026-059"
+    file: "src/mesh/self-healing-attestation-mesh.js"
+    protection: "No modification without IP counsel review"
+  - zone_id: "HS-2026-061"
+    file: "src/awareness/metacognitive-loop.js"
+    protection: "No modification without IP counsel review"
+  - zone_id: "HS-2026-062"
+    file: "src/security/vector-native-scanner.js"
+    protection: "No modification without IP counsel review"
+  - zone_id: "HS-2026-052"
+    file: "src/memory/shadow-memory-persistence.js"
+    protection: "No modification without IP counsel review"
+  - zone_id: "HS-2026-051"
+    file: "src/routing/vibe-match-router.js"
+    protection: "No modification without IP counsel review"
+  - zone_id: "HS-2026-053"
+    file: "src/telemetry/neural-stream-telemetry.js"
+    protection: "No modification without IP counsel review"

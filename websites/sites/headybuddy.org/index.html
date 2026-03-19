@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HeadyBuddy — Your AI Companion, Everywhere</title>
+    <meta name="description" content="HeadyBuddy is your always-on AI companion — Chrome extension, PWA, conversation history, and cross-site chat powered by HeadySystems Inc.">
+    <meta property="og:title" content="HeadyBuddy — Your AI Companion, Everywhere">
+    <meta property="og:description" content="HeadyBuddy is your always-on AI companion — Chrome extension, PWA, conversation history, and cross-site chat powered by HeadySystems Inc.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://headybuddy.org">
+    <meta property="og:image" content="https://headybuddy.org/og-image.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="HeadyBuddy — Your AI Companion, Everywhere">
+    <meta name="twitter:description" content="HeadyBuddy is your always-on AI companion — Chrome extension, PWA, conversation history, and cross-site chat powered by HeadySystems Inc.">
+    <meta name="twitter:image" content="https://headybuddy.org/og-image.png">
+    <link rel="canonical" href="https://headybuddy.org">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #12121a;
+            --bg-card: #16161f;
+            --bg-card-hover: #1c1c28;
+            --bg-code: #0d0d14;
+            --border: #1e1e2e;
+            --border-accent: #2a2a3e;
+            --text-primary: #e8e8f0;
+            --text-secondary: #9898b0;
+            --text-muted: #6868a0;
+            --accent: #f0c040;
+            --accent-bright: #fbbf24;
+            --accent-glow: rgba(240, 192, 64, 0.15);
+            --accent-2: #06b6d4;
+            --accent-3: #00d4aa;
+            --gold: #fbbf24;
+            --phi: 1.618;
+            --radius: 12px;
+            --radius-lg: 16px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; scroll-padding-top: 80px; }
+
+        body {
+            font-family: 'Inter', -apple-system, system-ui, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.7;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        code, pre { font-family: 'JetBrains Mono', monospace; }
+
+        nav {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+            backdrop-filter: blur(20px) saturate(180%);
+            background: rgba(10, 10, 15, 0.82);
+            border-bottom: 1px solid var(--border);
+            padding: 0 2rem; height: 64px;
+            display: flex; align-items: center; justify-content: space-between;
+        }
+
+        .nav-brand {
+            display: flex; align-items: center; gap: 10px;
+            font-weight: 800; font-size: 1.1rem; letter-spacing: -0.02em;
+            text-decoration: none; color: var(--text-primary);
+        }
+        .nav-brand span { color: var(--accent-bright); }
+
+        .nav-links { display: flex; gap: 2rem; align-items: center; }
+        .nav-links a { color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; font-weight: 500; transition: color 0.2s; }
+        .nav-links a:hover, .nav-links a.active { color: var(--text-primary); }
+        .nav-links .btn-nav { padding: 8px 18px; border-radius: 8px; font-size: 0.82rem; background: var(--accent); color: #0a0a0f; font-weight: 600; transition: all 0.2s; }
+        .nav-links .btn-nav:hover { background: var(--accent-bright); transform: translateY(-1px); }
+
+        .page-wrapper { position: relative; z-index: 1; flex: 1; display: flex; flex-direction: column; padding-top: 64px; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 2rem; width: 100%; }
+
+        .hero { padding-top: 80px; padding-bottom: 80px; text-align: center; position: relative; }
+        .hero h1 { font-size: clamp(2.5rem, 5.5vw, 4rem); font-weight: 900; line-height: 1.1; letter-spacing: -0.03em; margin-bottom: 20px; background: linear-gradient(135deg, var(--text-primary) 0%, var(--accent-bright) 50%, var(--accent-2) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .hero p { font-size: 1.15rem; color: var(--text-secondary); max-width: 620px; margin: 0 auto 36px; }
+        .hero-actions { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+
+        .btn { padding: 12px 28px; border-radius: 10px; font-size: 0.9rem; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; transition: all 0.25s; border: none; cursor: pointer; }
+        .btn-primary { background: linear-gradient(135deg, var(--accent), var(--accent-3)); color: #0a0a0f; box-shadow: 0 4px 20px rgba(240, 192, 64, 0.3); }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(240, 192, 64, 0.4); }
+        .btn-secondary { background: var(--bg-card); color: var(--text-primary); border: 1px solid var(--border-accent); }
+        .btn-secondary:hover { background: var(--bg-card-hover); border-color: var(--accent); }
+
+        .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; margin-top: 30px; margin-bottom: 40px; }
+        .feature-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; transition: all 0.25s; }
+        .feature-card:hover { border-color: var(--accent); transform: translateY(-4px); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2); }
+        .feature-card h4 { font-size: 1.1rem; font-weight: 700; margin-bottom: 12px; color: var(--text-primary); }
+        .feature-card p { font-size: 0.9rem; margin-bottom: 0; color: var(--text-secondary); }
+
+        .section-header { text-align: center; padding: 60px 0 40px; }
+        .section-header h2 { font-size: 2.2rem; font-weight: 800; margin-bottom: 16px; letter-spacing: -0.02em; }
+        .section-header p { color: var(--text-secondary); font-size: 1.1rem; max-width: 600px; margin: 0 auto; }
+
+        footer { padding: 60px 0; border-top: 1px solid var(--border); background: var(--bg-primary); margin-top: auto; }
+        .footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 40px; margin-bottom: 40px; }
+        .footer-col h4 { font-size: 0.9rem; font-weight: 700; color: var(--text-primary); margin-bottom: 20px; text-transform: uppercase; letter-spacing: 0.05em; }
+        .footer-col ul { list-style: none; }
+        .footer-col li { margin-bottom: 12px; }
+        .footer-col a { color: var(--text-secondary); text-decoration: none; font-size: 0.9rem; transition: color 0.2s; }
+        .footer-col a:hover { color: var(--accent-bright); }
+        .footer-bottom { text-align: center; padding-top: 30px; border-top: 1px solid var(--border); color: var(--text-muted); font-size: 0.85rem; }
+
+        @media (max-width: 900px) {
+            .nav-links { display: none; }
+            .card-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="https://headybuddy.org" class="nav-brand">
+            <div class="logo-icon">H</div>
+            Heady<span>Buddy</span>
+        </a>
+        <div class="nav-links">
+            <a href="#features" class="active">Features</a>
+            <a href="#platforms">Platforms</a>
+            <a href="#ecosystem">Ecosystem</a>
+            <a href="https://headysystems.com" class="btn-nav">Heady Platform</a>
+        </div>
+    </nav>
+
+    <div class="page-wrapper">
+        <section class="hero">
+            <div class="container">
+                <h1>HeadyBuddy</h1>
+                <p>Your always-on AI companion — available as a Chrome extension, PWA, and embedded widget across all Heady sites.</p>
+                <div class="hero-actions">
+                    <a href="#features" class="btn btn-primary">Get Started</a>
+                    <a href="https://headyio.com" class="btn btn-secondary">API Docs</a>
+                </div>
+            </div>
+        </section>
+
+        <div class="container">
+            <div class="section-header" id="features">
+                <h2>Your AI Companion, Everywhere</h2>
+                <p>Persistent context, cross-site memory, and intelligent conversation</p>
+            </div>
+
+            <div class="card-grid">
+                <div class="feature-card">
+                    <h4>Chrome Extension</h4>
+                    <p>AI assistance on any webpage with context-aware suggestions, summaries, and inline chat.</p>
+                </div>
+                <div class="feature-card">
+                    <h4>Cross-Site Memory</h4>
+                    <p>Persistent conversation history and context that follows you across all Heady domains.</p>
+                </div>
+                <div class="feature-card">
+                    <h4>Multi-Model Intelligence</h4>
+                    <p>Powered by Claude, GPT, Gemini, and Groq — automatically selecting the best model for each task.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h4>Core Platforms</h4>
+                    <ul>
+                        <li><a href="https://headysystems.com">HeadySystems</a></li>
+                        <li><a href="https://headyio.com">HeadyIO</a></li>
+                        <li><a href="https://headyme.com">HeadyMe</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Intelligence</h4>
+                    <ul>
+                        <li><a href="https://heady-ai.com">Heady AI</a></li>
+                        <li><a href="https://headymcp.com">HeadyMCP</a></li>
+                        <li><a href="https://headylens.com">HeadyLens</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Community</h4>
+                    <ul>
+                        <li><a href="https://headyconnection.org">HeadyConnection</a></li>
+                        <li><a href="https://headyfinance.com">HeadyFinance</a></li>
+                        <li><a href="https://headyex.com">HeadyEx</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 HeadySystems Inc. &middot; <a href="https://headysystems.com">headysystems.com</a> &middot; v4.1.0 &middot; Sacred Geometry &middot; Organic Systems</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,192 @@
+# HEADY_BRAND:BEGIN
+# ╔══════════════════════════════════════════════════════════════════╗
+# ║  HEADY™ Competitive Intelligence & Integration System (Pythia) ║
+# ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces   ║
+# ║  FILE: configs/competitive-intelligence.yaml                   ║
+# ║  LAYER: config                                                 ║
+# ╚══════════════════════════════════════════════════════════════════╝
+# HEADY_BRAND:END
+
+version: "1.0.0"
+phi: 1.618033988749895
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# COMPETITOR LANDSCAPE — 15 Categories, 5+ Competitors Each
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+competitorMap:
+  orchestration:
+    heady_impl: "HCFullPipeline 21-stage + Orchestrator-Conductor"
+    competitors:
+      - { name: "LangGraph", repo: "langchain-ai/langgraph", license: "MIT", integration_potential: high, strengths: ["graph-based orchestration", "checkpointing", "human-in-loop"], weaknesses: ["Python only", "no φ-optimization", "no CSL gates"] }
+      - { name: "CrewAI", repo: "joaomdmoura/crewAI", license: "MIT", integration_potential: medium, strengths: ["role-based agents", "process flows"], weaknesses: ["less customizable", "no battle arena"] }
+      - { name: "AutoGen", repo: "microsoft/autogen", license: "CC-BY-4.0", integration_potential: medium, strengths: ["multi-agent conversation", "code execution"], weaknesses: ["complex setup", "Microsoft lock-in"] }
+      - { name: "Semantic Kernel", repo: "microsoft/semantic-kernel", license: "MIT", integration_potential: medium, strengths: [".NET + Python", "plugin ecosystem"], weaknesses: ["Microsoft ecosystem", "no swarm support"] }
+      - { name: "Agency Swarm", repo: "VRSEN/agency-swarm", license: "MIT", integration_potential: high, strengths: ["agency-based", "tool creation"], weaknesses: ["smaller community", "less battle-tested"] }
+
+  memory_systems:
+    heady_impl: "Mnemosyne 3-tier (Redis T0/pgvector T1/Qdrant T2)"
+    competitors:
+      - { name: "Mem0", repo: "mem0ai/mem0", license: "Apache-2.0", integration_potential: high, strengths: ["user+agent memory", "graph memory", "auto-extraction"], weaknesses: ["no φ-decay", "no 3-tier architecture"] }
+      - { name: "LangMem", repo: "langchain-ai/langmem", license: "MIT", integration_potential: medium, strengths: ["semantic memory", "conversation indexing"], weaknesses: ["LangChain dependency"] }
+      - { name: "Zep", repo: "getzep/zep", license: "Apache-2.0", integration_potential: high, strengths: ["session memory", "fact extraction", "graph"], weaknesses: ["no phi-decay", "no spatial indexing"] }
+      - { name: "MemoryScope", repo: "modelscope/memoryscope", license: "Apache-2.0", integration_potential: medium, strengths: ["long-term memory", "consolidation"], weaknesses: ["Chinese docs primarily"] }
+
+  mcp_protocol:
+    heady_impl: "47-tool MCP Gateway on headymcp.com"
+    competitors:
+      - { name: "MCP Servers (Anthropic)", repo: "modelcontextprotocol/servers", license: "MIT", integration_potential: high, strengths: ["reference implementations", "broad coverage"], weaknesses: ["no unified gateway"] }
+      - { name: "MCP TypeScript SDK", repo: "modelcontextprotocol/typescript-sdk", license: "MIT", integration_potential: high, strengths: ["official SDK", "well-documented"], weaknesses: ["generic, not specialized"] }
+
+  vector_operations:
+    heady_impl: "heady_embed + FAISS GPU + pgvector HNSW"
+    competitors:
+      - { name: "ChromaDB", repo: "chroma-core/chroma", license: "Apache-2.0", integration_potential: high, strengths: ["simple API", "embedded mode", "multi-modal"], weaknesses: ["no GPU acceleration", "no φ-sharding"] }
+      - { name: "Weaviate", repo: "weaviate/weaviate", license: "BSD-3", integration_potential: medium, strengths: ["GraphQL API", "hybrid search", "modules"], weaknesses: ["heavy resource usage", "Go-based"] }
+      - { name: "Milvus", repo: "milvus-io/milvus", license: "Apache-2.0", integration_potential: medium, strengths: ["distributed", "GPU support", "billion-scale"], weaknesses: ["complex deployment"] }
+      - { name: "Qdrant", repo: "qdrant/qdrant", license: "Apache-2.0", integration_potential: high, strengths: ["Rust performance", "filtering", "payload"], weaknesses: ["smaller ecosystem"] }
+
+  agent_frameworks:
+    heady_impl: "Bee Swarm (144 types, 21 swarms, dynamic bee-factory)"
+    competitors:
+      - { name: "OpenAI Swarm", repo: "openai/swarm", license: "MIT", integration_potential: high, strengths: ["lightweight", "handoff patterns", "routines"], weaknesses: ["experimental", "no persistence", "no swarm consensus"] }
+      - { name: "BeeAI Framework", repo: "i-am-bee/bee-agent-framework", license: "Apache-2.0", integration_potential: high, strengths: ["tool use", "memory", "structured output"], weaknesses: ["no φ-optimization"] }
+      - { name: "Mastra", repo: "mastra-ai/mastra", license: "MIT", integration_potential: medium, strengths: ["TypeScript", "workflow engine", "integrations"], weaknesses: ["newer project"] }
+      - { name: "Pydantic AI", repo: "pydantic/pydantic-ai", license: "MIT", integration_potential: medium, strengths: ["type-safe", "structured outputs", "dependency injection"], weaknesses: ["Python only"] }
+      - { name: "SmolAgents", repo: "huggingface/smolagents", license: "Apache-2.0", integration_potential: medium, strengths: ["code agents", "HuggingFace integration"], weaknesses: ["limited orchestration"] }
+
+  code_generation:
+    heady_impl: "heady_coder + heady_refactor + HeadyBattle"
+    competitors:
+      - { name: "Aider", repo: "paul-gauthier/aider", license: "Apache-2.0", integration_potential: high, strengths: ["git integration", "multi-file editing", "architect mode"], weaknesses: ["CLI only", "no battle arena"] }
+      - { name: "OpenHands", repo: "All-Hands-AI/OpenHands", license: "MIT", integration_potential: high, strengths: ["full IDE", "browser automation", "sandboxed"], weaknesses: ["heavy resource usage"] }
+      - { name: "SWE-agent", repo: "princeton-nlp/SWE-agent", license: "MIT", integration_potential: medium, strengths: ["benchmark leader", "issue resolution"], weaknesses: ["research project"] }
+      - { name: "Continue", repo: "continuedev/continue", license: "Apache-2.0", integration_potential: high, strengths: ["IDE extension", "tab completion", "context"], weaknesses: ["no multi-agent"] }
+
+  observability:
+    heady_impl: "Aegis φ-heartbeat + heady_telemetry + Langfuse + Sentry"
+    competitors:
+      - { name: "Langfuse", repo: "langfuse/langfuse", license: "MIT", integration_potential: high, strengths: ["LLM tracing", "prompt management", "evaluation"], weaknesses: ["no φ-scoring"] }
+      - { name: "Phoenix (Arize)", repo: "Arize-ai/phoenix", license: "Elastic-2.0", integration_potential: medium, strengths: ["LLM evals", "tracing", "embeddings viz"], weaknesses: ["license restrictions"] }
+      - { name: "OpenLIT", repo: "openlit/openlit", license: "Apache-2.0", integration_potential: high, strengths: ["OpenTelemetry native", "GPU monitoring", "cost tracking"], weaknesses: ["newer project"] }
+      - { name: "Helicone", repo: "Helicone/helicone", license: "Apache-2.0", integration_potential: medium, strengths: ["proxy-based", "caching", "rate limiting"], weaknesses: ["proxy overhead"] }
+
+  security:
+    heady_impl: "Prompt Guard 5-layer + PQC + HMAC-SHA256 + Vector Scanner"
+    competitors:
+      - { name: "LLM Guard", repo: "protectai/llm-guard", license: "MIT", integration_potential: high, strengths: ["input/output scanning", "anonymization", "toxicity"], weaknesses: ["no PQC", "no vector-native scanning"] }
+      - { name: "NeMo Guardrails", repo: "NVIDIA/NeMo-Guardrails", license: "Apache-2.0", integration_potential: high, strengths: ["Colang DSL", "topical rails", "moderation"], weaknesses: ["NVIDIA ecosystem"] }
+      - { name: "Rebuff", repo: "protectai/rebuff", license: "Apache-2.0", integration_potential: medium, strengths: ["prompt injection detection", "canary tokens"], weaknesses: ["limited scope"] }
+
+  voice_ai:
+    heady_impl: "Voice Relay (STT/TTS, 89ms frames, VAD 0.382)"
+    competitors:
+      - { name: "Vapi", repo: "VapiAI/server-sdk-python", license: "MIT", integration_potential: high, strengths: ["real-time voice", "phone integration", "low latency"], weaknesses: ["SaaS dependency"] }
+      - { name: "LiveKit", repo: "livekit/agents", license: "Apache-2.0", integration_potential: high, strengths: ["WebRTC", "agent framework", "multi-modal"], weaknesses: ["complex setup"] }
+      - { name: "Pipecat", repo: "pipecat-ai/pipecat", license: "BSD-2", integration_potential: high, strengths: ["pipeline framework", "multi-modal", "open-source"], weaknesses: ["newer project"] }
+
+  cms_integration:
+    heady_impl: "Drupal CMS + MCP REST bridge"
+    competitors:
+      - { name: "Strapi", repo: "strapi/strapi", license: "MIT", integration_potential: medium, strengths: ["headless CMS", "REST+GraphQL", "customizable"], weaknesses: ["Node.js only"] }
+      - { name: "Payload CMS", repo: "payloadcms/payload", license: "MIT", integration_potential: medium, strengths: ["TypeScript", "self-hosted", "access control"], weaknesses: ["React admin"] }
+      - { name: "Directus", repo: "directus/directus", license: "BSL-1.1", integration_potential: low, strengths: ["database-first", "any SQL DB"], weaknesses: ["license"] }
+
+  edge_ai:
+    heady_impl: "Cloudflare Workers AI + heady_edge_ai + Durable Objects"
+    competitors:
+      - { name: "Vercel AI SDK", repo: "vercel/ai", license: "Apache-2.0", integration_potential: high, strengths: ["streaming", "tool calling", "multi-provider"], weaknesses: ["Vercel ecosystem"] }
+      - { name: "Cloudflare Workers AI", repo: "cloudflare/workers-sdk", license: "Apache-2.0", integration_potential: high, strengths: ["edge inference", "global CDN"], weaknesses: ["model selection limited"] }
+
+  knowledge_graphs:
+    heady_impl: "HeadyConstellation + Octree Spatial Index + CSL entanglement"
+    competitors:
+      - { name: "LightRAG", repo: "HKUDS/LightRAG", license: "MIT", integration_potential: high, strengths: ["graph RAG", "lightweight", "dual-level retrieval"], weaknesses: ["no spatial indexing"] }
+      - { name: "GraphRAG", repo: "microsoft/graphrag", license: "MIT", integration_potential: high, strengths: ["community detection", "summarization", "global queries"], weaknesses: ["heavy compute"] }
+      - { name: "Neo4j", repo: "neo4j/neo4j", license: "GPL-3.0", integration_potential: low, strengths: ["mature graph DB", "Cypher query"], weaknesses: ["GPL license", "heavy"] }
+
+  workflow_automation:
+    heady_impl: "Auto-Success Engine (144 tasks, φ⁷ heartbeat)"
+    competitors:
+      - { name: "n8n", repo: "n8n-io/n8n", license: "Sustainable Use", integration_potential: medium, strengths: ["visual workflows", "400+ integrations"], weaknesses: ["license restrictions"] }
+      - { name: "Temporal", repo: "temporalio/temporal", license: "MIT", integration_potential: high, strengths: ["durable execution", "saga support", "versioning"], weaknesses: ["complex infrastructure"] }
+      - { name: "Inngest", repo: "inngest/inngest", license: "Apache-2.0", integration_potential: high, strengths: ["event-driven", "step functions", "retries"], weaknesses: ["SaaS-first"] }
+
+  csl_logic:
+    heady_impl: "CSL Engine — continuous 0.0→1.0 gates (NOVEL, PATENTED)"
+    competitors:
+      - { name: "Fuzzy Logic (scikit-fuzzy)", repo: "scikit-fuzzy/scikit-fuzzy", license: "BSD-3", integration_potential: low, strengths: ["fuzzy sets", "defuzzification"], weaknesses: ["no semantic vectors", "no agent routing"] }
+      - { name: "Pyro (Probabilistic)", repo: "pyro-ppl/pyro", license: "Apache-2.0", integration_potential: low, strengths: ["probabilistic programming", "Bayesian inference"], weaknesses: ["different paradigm entirely"] }
+    note: "CSL is largely novel — no direct competitor implements continuous semantic logic with cosine-similarity gates"
+
+  battle_arena:
+    heady_impl: "HeadyBattle multi-model arena with CSL scoring"
+    competitors:
+      - { name: "Chatbot Arena (LMSYS)", repo: "lm-sys/FastChat", license: "Apache-2.0", integration_potential: medium, strengths: ["human evaluation", "ELO ratings", "large scale"], weaknesses: ["chat-only", "no code evaluation"] }
+      - { name: "AlpacaEval", repo: "tatsu-lab/alpaca_eval", license: "Apache-2.0", integration_potential: medium, strengths: ["automated eval", "leaderboard"], weaknesses: ["text-only"] }
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# ANALYSIS PIPELINE
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+analysisPipeline:
+  stages:
+    - name: discover
+      description: "Automated discovery via GitHub, HuggingFace, ArXiv, HN"
+      frequency: weekly
+      bee_type: research-bee
+      timeout_ms: 4236  # φ³ × 1000
+
+    - name: catalog
+      description: "Map features to Heady equivalents, check IP compliance"
+      bee_type: catalog-bee
+      timeout_ms: 2618  # φ² × 1000
+
+    - name: sandbox_test
+      description: "Deploy in isolated sandbox, run standardized benchmarks"
+      environment: "HeadySystems/sandbox or Colab"
+      bee_type: testing-bee
+      timeout_ms: 11090  # φ⁵ × 1000
+
+    - name: battle_compare
+      description: "HeadyBattle arena head-to-head comparison"
+      scoring_weights:
+        correctness: 1.618   # φ
+        security: 1.618      # φ
+        performance: 1.0
+        code_quality: 0.618  # ψ
+        sacred_geometry: 0.382  # ψ²
+      bee_type: arena-bee
+
+    - name: extract
+      description: "Identify beneficial components (CSL gate > 0.618)"
+      ip_check: "configs/ip-registry.yaml restrictedIP"
+      csl_threshold: 0.618
+      bee_type: extraction-bee
+
+    - name: integrate
+      description: "Implement with Heady standards, battle-verify"
+      approval: "Auto-merge if all CSL gates pass (> 0.618)"
+      bee_type: integration-bee
+
+    - name: surpass
+      description: "Verify Heady exceeds competitor on all dimensions"
+      threshold: 0.786  # φ × ψ²
+      bee_type: validation-bee
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# HEADY UNIQUE ADVANTAGES (No Competitor Equivalent)
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+headyUniqueAdvantages:
+  - "Sacred Geometry φ-mathematical optimization across ALL systems"
+  - "CSL Continuous Semantic Logic gates (patented, HS-2026-058)"
+  - "3-tier Mnemosyne memory with φ-decay consolidation"
+  - "144 bee types across 21 swarms (dynamic bee-factory, patented HS-2026-060)"
+  - "Ed25519 trust receipts per pipeline completion (patented HS-2026-055)"
+  - "Post-Quantum Cryptography (CRYSTALS-Kyber-768 + Dilithium2)"
+  - "Liquid 11-domain site delivery from single codebase"
+  - "HeadyBattle multi-model arena with CSL scoring (patented HS-2026-008)"
+  - "Auto-Success Engine (144 tasks, φ⁷ heartbeat, self-healing)"
+  - "Metacognitive pipeline stages 13-16 (perceive→reason→act→reflect, patented HS-2026-061)"
+  - "21-stage HCFullPipeline with Monte Carlo risk simulation (1K+ scenarios)"
+  - "Vector-native security scanner with cosine threat matching (patented HS-2026-062)"
+  - "Self-healing attestation mesh with geometric hallucination detection (patented HS-2026-059)"
+  - "72+ patent portfolio covering core architecture"
