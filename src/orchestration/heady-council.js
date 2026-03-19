@@ -322,8 +322,27 @@ export class HeadyCouncil {
       );
     }
 
-    // 2. Collect responses in parallel
-    const responses = await this.collectResponses(prompt, selectedIds, timeout);
+    // 2. AutoContext enrichment — inject workspace context into council prompt
+    let enrichedPrompt = prompt;
+    const autoCtx = global.__autoContext;
+    if (autoCtx && typeof autoCtx.enrichForCouncil === 'function') {
+      try {
+        const enrichResult = await autoCtx.enrichForCouncil(prompt, {
+          taskType,
+          councilMembers: selectedIds,
+        });
+        enrichedPrompt = enrichResult.enrichedPrompt || prompt;
+        this._log('info', `AutoContext enriched council prompt`, {
+          sourcesUsed: enrichResult.stats?.sourcesUsed || 0,
+          tokensUsed: enrichResult.stats?.tokensUsed || 0,
+        });
+      } catch (e) {
+        this._log('warn', `AutoContext enrichment failed (proceeding without):`, { error: e.message });
+      }
+    }
+
+    // 3. Collect responses in parallel
+    const responses = await this.collectResponses(enrichedPrompt, selectedIds, timeout);
 
     // Filter successful responses
     const validResponses = responses.filter(r => !r.timedOut && !r.error);

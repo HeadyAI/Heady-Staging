@@ -12,6 +12,11 @@ const EventEmitter = require('events');
 const logger = require('../utils/logger');
 const crypto = require('crypto');
 
+// ─── HeadyAutoContext — enrich every battle with workspace context ──────────
+let _getAutoContext;
+try { ({ getAutoContext: _getAutoContext } = require('./heady-auto-context')); }
+catch (_) { _getAutoContext = () => null; }
+
 class HeadyBattleService extends EventEmitter {
     constructor(config = {}) {
         super();
@@ -83,9 +88,24 @@ class HeadyBattleService extends EventEmitter {
                 prompt: prompt.slice(0, 80),
             });
 
+            // ── AutoContext enrichment — inject workspace context BEFORE battle ──
+            let enrichedPrompt = prompt;
+            let contextStats = null;
+            const autoCtx = _getAutoContext();
+            if (autoCtx) {
+                try {
+                    const enrichResult = await autoCtx.enrichForBattle(prompt, opts);
+                    enrichedPrompt = enrichResult.enrichedPrompt || prompt;
+                    contextStats = enrichResult.stats;
+                    logger.info('[HeadyBattle] AutoContext enriched', contextStats);
+                } catch (e) {
+                    logger.warn('[HeadyBattle] AutoContext enrich failed (proceeding without):', e.message);
+                }
+            }
+
             const messages = [
                 { role: 'system', content: 'Provide your best, most complete response. Be concise but thorough.' },
-                { role: 'user', content: prompt },
+                { role: 'user', content: enrichedPrompt },
             ];
 
             // Fire at all available providers in parallel

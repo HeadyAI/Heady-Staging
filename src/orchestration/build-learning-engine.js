@@ -18,6 +18,11 @@ const fs = require('fs');
 const path = require('path');
 const logger = require('../utils/logger');
 
+// ─── HeadyAutoContext — enrich every build with workspace context ──────────
+let _getAutoContext;
+try { ({ getAutoContext: _getAutoContext } = require('../services/heady-auto-context')); }
+catch (_) { _getAutoContext = () => null; }
+
 // ─── Constants ────────────────────────────────────────────────────────────────
 
 const PHI = 1.618033988749895;
@@ -243,10 +248,25 @@ class BuildLearningEngine extends EventEmitter {
 
     async _decompose(spec) {
         try {
+            // AutoContext enrichment — give decomposer full workspace awareness
+            let enrichedSpec = spec;
+            const autoCtx = _getAutoContext();
+            if (autoCtx) {
+                try {
+                    const enrichResult = await autoCtx.enrich(spec, { domain: 'code' });
+                    const ctxBlock = enrichResult.systemContext || '';
+                    if (ctxBlock) {
+                        enrichedSpec = `${spec}\n\n=== WORKSPACE CONTEXT ===\n${ctxBlock.slice(0, 2000)}`;
+                    }
+                } catch (e) {
+                    logger.warn('[BuildLearning] AutoContext enrich failed:', e.message);
+                }
+            }
+
             const result = await this._gateway.complete(
                 [
                     { role: 'system', content: DECOMPOSITION_PROMPT },
-                    { role: 'user', content: spec },
+                    { role: 'user', content: enrichedSpec },
                 ],
                 { temperature: 0 } // Deterministic decomposition
             );

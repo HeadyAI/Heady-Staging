@@ -17,7 +17,7 @@ const path = require("path");
 // Instantiated ONCE at module load so all engines share the same indexed instance.
 let _autoContext = null;
 try {
-    const { getAutoContext } = require("../../shared/heady-auto-context");
+    const { getAutoContext } = require("../services/heady-auto-context");
     const projectRoot = path.resolve(__dirname, "../..");
     _autoContext = getAutoContext({ workspaceRoot: projectRoot, alwaysOn: true });
     // Expose globally for liquid architecture access
@@ -116,11 +116,24 @@ function wireEngines(app, deps = {}) {
         });
         // Wire AutoContext into InferenceGateway if available
         try {
-            const { wireGateway } = require("../../shared/heady-auto-context");
+            const { wireGateway } = require("../services/heady-auto-context");
             const inferenceGateway = global.__inferenceGateway;
             if (inferenceGateway) {
                 wireGateway(inferenceGateway, _autoContext);
                 logger.logNodeActivity("CONDUCTOR", "  ∞ HeadyAutoContext ↔ InferenceGateway: WIRED (auto-enrichment on all complete/battle/race calls)");
+            } else {
+                // Deferred wiring: gateway may not exist yet at boot — retry after 3s
+                setTimeout(() => {
+                    try {
+                        const gw = global.__inferenceGateway;
+                        if (gw && !gw._autoContextWired) {
+                            wireGateway(gw, _autoContext);
+                            gw._autoContextWired = true;
+                            logger.logNodeActivity("CONDUCTOR", "  ∞ HeadyAutoContext ↔ InferenceGateway: DEFERRED WIRE complete");
+                        }
+                    } catch { /* not critical */ }
+                }, 3000);
+                logger.logNodeActivity("CONDUCTOR", "  ⏳ HeadyAutoContext: InferenceGateway not yet available — deferred wire in 3s");
             }
         } catch { /* InferenceGateway may not be available yet — will wire on first use */ }
         logger.logNodeActivity("CONDUCTOR", "  ∞ HeadyAutoContext: LOADED (always-on, background indexer, vector memory, phi-scaled)");
