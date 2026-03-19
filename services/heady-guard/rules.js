@@ -367,6 +367,35 @@ function checkReload(filePath) {
 // Initialize with defaults
 _rules = [...DEFAULT_RULES];
 
+
+// ── Load external guard-rules.json (auto-merged with defaults) ───────────────
+const GUARD_RULES_PATH = path.resolve(__dirname, '../../configs/guard-rules.json');
+
+function _loadExternalRules() {
+  try {
+    if (fs.existsSync(GUARD_RULES_PATH)) {
+      const raw = JSON.parse(fs.readFileSync(GUARD_RULES_PATH, 'utf8'));
+      const extRules = raw.rules || raw;
+      if (Array.isArray(extRules)) {
+        // Merge: external rules replace defaults with same id
+        const merged = [...DEFAULT_RULES];
+        for (const ext of extRules) {
+          const idx = merged.findIndex(r => r.id === ext.id);
+          if (idx >= 0) merged[idx] = ext;
+          else merged.push(ext);
+        }
+        return merged;
+      }
+    }
+  } catch (e) {
+    console.warn('[HeadyGuard] Failed to load guard-rules.json:', e.message);
+  }
+  return DEFAULT_RULES;
+}
+
+// Initialize rules from external config on load
+_rules = _loadExternalRules();
+
 module.exports = {
   evaluate,
   loadFromFile,

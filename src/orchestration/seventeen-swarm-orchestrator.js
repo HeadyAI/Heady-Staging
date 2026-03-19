@@ -12,6 +12,18 @@ const PHI = 1.6180339887;
 
 // ─── The 17 Canonical Swarms ──────────────────────────────────────────────────
 
+
+// ── Load swarm taxonomy from config (enriches SWARM_NAMES with metadata) ──────
+const TAXONOMY_PATH = require('path').resolve(__dirname, '../../configs/swarm-taxonomy.json');
+let _swarmTaxonomy = null;
+try {
+  _swarmTaxonomy = JSON.parse(require('fs').readFileSync(TAXONOMY_PATH, 'utf8'));
+} catch (e) {
+  // taxonomy not required for core operation
+}
+
+function getSwarmTaxonomy() { return _swarmTaxonomy; }
+
 const SWARM_NAMES = [
   'Deploy',
   'Battle',
