@@ -12,10 +12,7 @@
 const path = require("path");
 const express = require("express");
 const fs = require("fs");
-<<<<<<< HEAD
 const logger = require("../../shared/logger").createChildLogger("static-hosting");
-=======
->>>>>>> hc-testing/dependabot/docker/node-25-slim
 
 const PHI = 1.6180339887498948;
 
@@ -34,11 +31,7 @@ function mountStaticHosting(app, projectRoot) {
     const publicDir = path.resolve(projectRoot || process.cwd(), "public");
 
     if (!fs.existsSync(publicDir)) {
-<<<<<<< HEAD
         logger.warn("Static hosting: public/ directory not found, skipping");
-=======
-        console.warn("⚠ Static hosting: public/ directory not found, skipping");
->>>>>>> hc-testing/dependabot/docker/node-25-slim
         return;
     }
 
