@@ -1,9 +1,15 @@
 name: Deploy Domain Sites to Cloud Run
 on:
+  push:
+    branches: [main]
+    paths:
+      - 'sites/**'
+      - 'shared/worker-router.js'
+      - 'services/heady-web/**'
   workflow_dispatch:
     inputs:
       site:
-        description: 'Site to deploy (all, headyme-com, headysystems-com, headyio-com, headymcp-com, headybuddy-org, headyconnection-org, headydocs)'
+        description: 'Site to deploy (all, or a specific site name)'
         required: true
         default: 'all'
 
@@ -19,25 +25,41 @@ jobs:
           - name: headysystems-com
             domain: headysystems.com
             service: heady-site-headysystems
+          - name: heady-ai-com
+            domain: heady-ai.com
+            service: heady-site-heady-ai
           - name: headyio-com
             domain: headyio.com
             service: heady-site-headyio
           - name: headymcp-com
             domain: headymcp.com
             service: heady-site-headymcp
+          - name: headybuddy-com
+            domain: headybuddy.com
+            service: heady-site-headybuddy
           - name: headybuddy-org
             domain: headybuddy.org
-            service: heady-site-headybuddy
+            service: heady-site-headybuddy-org
           - name: headyconnection-org
             domain: headyconnection.org
             service: heady-site-headyconnection
+          - name: headybot-com
+            domain: headybot.com
+            service: heady-site-headybot
+          - name: headylens-com
+            domain: headylens.com
+            service: heady-site-headylens
+          - name: headyfinance-com
+            domain: headyfinance.com
+            service: heady-site-headyfinance
+          - name: headyapi-com
+            domain: headyapi.com
+            service: heady-site-headyapi
           - name: headydocs
             domain: docs.headysystems.com
             service: heady-site-headydocs
     steps:
       - uses: actions/checkout@v4
-        with:
-          repository: HeadyMe/${{ matrix.site.name }}
       - name: Auth to GCP
         uses: google-github-actions/auth@v2
         with:
@@ -55,7 +77,7 @@ jobs:
             --platform managed \
             --allow-unauthenticated \
             --port 8080 \
-            --memory 256Mi \
+            --memory 512Mi \
             --cpu 1 \
-            --min-instances 0 \
-            --max-instances 3
+            --min-instances 1 \
+            --max-instances 5

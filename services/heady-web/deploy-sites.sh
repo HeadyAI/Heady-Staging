@@ -12,8 +12,7 @@ DIR="$(cd "$(dirname "$0")" && pwd)"
 # Site → Cloud Run service name → Custom domain
 declare -A SITES=(
   [headyme]="heady-web-headyme:headyme.com"
-  [headyai]="heady-web-ai:headyai.com"
-  [heady-ai]="heady-web-ai-alt:heady-ai.com"
+  [heady-ai]="heady-web-ai:heady-ai.com"
   [headyos]="heady-web-os:headyos.com"
   [headysystems]="heady-web-systems:headysystems.com"
   [headyex]="heady-web-ex:headyex.com"
