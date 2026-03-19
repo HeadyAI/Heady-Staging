@@ -32,6 +32,10 @@ const http = require('http');
 const crypto = require('crypto');
 const logger = require('../utils/logger').child('dynamic-sites');
 const { getContentForDomain } = require('./content-sections');
+const { initSentry, captureError, addBreadcrumb } = require('./sentry-init');
+
+// Initialize Sentry early
+initSentry();
 
 const PORT = process.env.PORT || process.env.SITE_PORT || 8080;
 const PHI = 1.6180339887;
@@ -1337,11 +1341,30 @@ const server = http.createServer((req, res) => {
   res.end(renderSite(site, host));
 });
 
+// Catch uncaught errors and report to Sentry
+server.on('error', (err) => {
+  captureError(err, { domain: 'server', path: 'server.error' });
+  logger.error('Server error:', err.message);
+});
+
+process.on('uncaughtException', (err) => {
+  captureError(err, { domain: 'process', path: 'uncaughtException' });
+  logger.error('Uncaught exception:', err.message);
+  process.exit(1);
+});
+
+process.on('unhandledRejection', (reason) => {
+  captureError(reason instanceof Error ? reason : new Error(String(reason)), { domain: 'process', path: 'unhandledRejection' });
+  logger.error('Unhandled rejection:', reason);
+});
+
 server.listen(PORT, () => {
-  logger.info(`Heady Dynamic Sites listening on :${PORT}`);
+  logger.info(`Heady Dynamic Sites v4.1.0 listening on :${PORT}`);
   logger.info(`${Object.keys(SITES).length} domains registered`);
   logger.info(`${AUTH_PROVIDERS.oauth.length + AUTH_PROVIDERS.apikey.length} auth providers`);
   logger.info('HeadyBuddy widget: embedded');
+  logger.info('Sentry monitoring: ' + (process.env.SENTRY_DSN ? 'active' : 'disabled'));
+  addBreadcrumb('Server started', 'lifecycle', { port: PORT, domains: Object.keys(SITES).length });
   for (const [domain, site] of Object.entries(SITES)) {
     logger.info(`  ${site.icon} ${domain} → ${site.brand}`);
   }
