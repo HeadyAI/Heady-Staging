@@ -59,7 +59,7 @@ jobs:
             domain: docs.headysystems.com
             service: heady-site-headydocs
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Auth to GCP
         uses: google-github-actions/auth@v2
         with:
