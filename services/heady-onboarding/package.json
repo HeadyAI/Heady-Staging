@@ -64,6 +64,8 @@
     "typescript": "^5.9.3"
   },
   "overrides": {
-    "next": ">=16.2.0"
+    "flatted": ">=3.3.3",
+    "glob": ">=11.0.0",
+    "@tootallnate/once": ">=3.0.1"
   }
 }
