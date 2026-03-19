@@ -6,6 +6,7 @@
 'use strict';
 
 const { EventEmitter } = require('events');
+const crypto = require('crypto');
 const logger = require('../utils/logger');
 const { PolicyEngine } = require('./policy-engine');
 
@@ -54,6 +55,11 @@ class GovernanceEngine extends EventEmitter {
     this._policyEngine  = options.policyEngine  || new PolicyEngine();
     this._auditMaxEntries = options.auditMaxEntries || 10_000;
     this._auditTrail    = [];
+    this._auditArchive  = [];          // Archived entries when trail exceeds max
+    this._lastAuditHash = '0'.repeat(64); // Genesis hash for SHA-256 chain
+
+    // ─── Circuit Breaker Registry ────────────────────────────────────────────
+    this._circuitBreakers = new Map(); // serviceName → CircuitBreakerState
 
     this._budgetLimits = options.budgetLimits || {
       tokens: 100_000,  // Per session
@@ -433,7 +439,7 @@ class GovernanceEngine extends EventEmitter {
   // ─── Audit Trail ─────────────────────────────────────────────────────────────
 
   _audit(result) {
-    this._auditTrail.push({
+    const entry = {
       governanceId: result.governanceId,
       actionId:     result.actionId,
       actionType:   result.actionType,
@@ -443,12 +449,231 @@ class GovernanceEngine extends EventEmitter {
       userId:       result.userId,
       evaluatedAt:  result.evaluatedAt,
       duration:     result.duration,
-    });
+    };
 
-    // Trim to max
+    // SHA-256 hash chain: each entry includes hash of previous entry for tamper evidence
+    const payload = JSON.stringify(entry) + this._lastAuditHash;
+    entry.prevHash = this._lastAuditHash;
+    entry.hash = crypto.createHash('sha256').update(payload).digest('hex');
+    this._lastAuditHash = entry.hash;
+
+    this._auditTrail.push(entry);
+
+    // Archive overflow entries instead of discarding them
     if (this._auditTrail.length > this._auditMaxEntries) {
-      this._auditTrail.splice(0, this._auditTrail.length - this._auditMaxEntries);
+      const overflow = this._auditTrail.splice(0, this._auditTrail.length - this._auditMaxEntries);
+      this._auditArchive.push(...overflow);
+      // Keep archive bounded at 5x max entries
+      const archiveMax = this._auditMaxEntries * 5;
+      if (this._auditArchive.length > archiveMax) {
+        this._auditArchive.splice(0, this._auditArchive.length - archiveMax);
+      }
     }
+  }
+
+  /**
+   * Export the full audit trail with integrity verification.
+   * Walks the hash chain and flags any tampered entries.
+   *
+   * @returns {{ entries: object[], archived: number, integrity: { valid: boolean, checked: number, broken: number, firstBrokenIndex: number|null } }}
+   */
+  exportAuditTrail() {
+    let checked = 0;
+    let broken = 0;
+    let firstBrokenIndex = null;
+
+    for (let i = 0; i < this._auditTrail.length; i++) {
+      const entry = this._auditTrail[i];
+      checked++;
+
+      // Reconstruct expected hash from entry data + prevHash
+      const { hash, prevHash, ...data } = entry;
+      const expectedPayload = JSON.stringify(data) + prevHash;
+      const expectedHash = crypto.createHash('sha256').update(expectedPayload).digest('hex');
+
+      if (expectedHash !== hash) {
+        broken++;
+        if (firstBrokenIndex === null) firstBrokenIndex = i;
+      }
+
+      // Verify chain linkage (entry i's prevHash should equal entry i-1's hash)
+      if (i > 0 && entry.prevHash !== this._auditTrail[i - 1].hash) {
+        broken++;
+        if (firstBrokenIndex === null) firstBrokenIndex = i;
+      }
+    }
+
+    return {
+      entries: [...this._auditTrail],
+      archived: this._auditArchive.length,
+      integrity: {
+        valid: broken === 0,
+        checked,
+        broken,
+        firstBrokenIndex,
+      },
+    };
+  }
+
+  /**
+   * Get archived audit entries (oldest entries that overflowed the active trail).
+   * @param {number} [limit] - Max entries to return
+   * @returns {object[]}
+   */
+  getAuditArchive(limit = null) {
+    return limit ? this._auditArchive.slice(-limit) : [...this._auditArchive];
+  }
+
+  // ─── Circuit Breaker for External APIs ──────────────────────────────────────
+
+  /**
+   * Get or create a circuit breaker for a named service.
+   * States: CLOSED (healthy) → OPEN (failing) → HALF_OPEN (probing) → CLOSED
+   *
+   * @param {string} serviceName - e.g. 'anthropic', 'openai', 'vector-db'
+   * @param {object} [opts]
+   * @param {number} [opts.failThreshold=5]  - Failures before opening
+   * @param {number} [opts.resetTimeoutMs=30000] - Time in OPEN before probing
+   * @param {number} [opts.halfOpenMax=2]    - Max probes in HALF_OPEN
+   * @returns {object} Circuit breaker state
+   */
+  _getCircuitBreaker(serviceName, opts = {}) {
+    if (!this._circuitBreakers.has(serviceName)) {
+      this._circuitBreakers.set(serviceName, {
+        serviceName,
+        state: 'CLOSED',
+        failures: 0,
+        successes: 0,
+        lastFailureAt: null,
+        lastSuccessAt: null,
+        openedAt: null,
+        halfOpenProbes: 0,
+        failThreshold: opts.failThreshold || 5,
+        resetTimeoutMs: opts.resetTimeoutMs || 30_000,
+        halfOpenMax: opts.halfOpenMax || 2,
+        totalTrips: 0,
+      });
+    }
+    return this._circuitBreakers.get(serviceName);
+  }
+
+  /**
+   * Check if a service circuit breaker allows a request.
+   * Automatically transitions OPEN → HALF_OPEN after resetTimeout.
+   *
+   * @param {string} serviceName
+   * @returns {boolean} true if request is allowed
+   */
+  circuitBreakerCanRequest(serviceName) {
+    const cb = this._getCircuitBreaker(serviceName);
+
+    if (cb.state === 'CLOSED') return true;
+
+    if (cb.state === 'OPEN') {
+      const elapsed = Date.now() - cb.openedAt;
+      // Use PHI-scaled backoff for reset timeout
+      const effectiveTimeout = cb.resetTimeoutMs * Math.pow(PHI, Math.min(cb.totalTrips - 1, 5));
+      if (elapsed > effectiveTimeout) {
+        cb.state = 'HALF_OPEN';
+        cb.halfOpenProbes = 0;
+        logger.info('[GovernanceEngine] Circuit breaker HALF_OPEN', { serviceName });
+        this.emit('circuit-breaker:half-open', { serviceName });
+        return true;
+      }
+      return false;
+    }
+
+    // HALF_OPEN: allow limited probes
+    if (cb.halfOpenProbes < cb.halfOpenMax) {
+      cb.halfOpenProbes++;
+      return true;
+    }
+    return false;
+  }
+
+  /**
+   * Record a successful request for a service.
+   * Transitions HALF_OPEN → CLOSED on success.
+   *
+   * @param {string} serviceName
+   */
+  circuitBreakerSuccess(serviceName) {
+    const cb = this._getCircuitBreaker(serviceName);
+    cb.failures = 0;
+    cb.successes++;
+    cb.lastSuccessAt = Date.now();
+    if (cb.state === 'HALF_OPEN') {
+      cb.state = 'CLOSED';
+      logger.info('[GovernanceEngine] Circuit breaker CLOSED (recovered)', { serviceName });
+      this.emit('circuit-breaker:closed', { serviceName });
+    }
+  }
+
+  /**
+   * Record a failed request for a service.
+   * Transitions CLOSED → OPEN after failThreshold consecutive failures.
+   * Transitions HALF_OPEN → OPEN on any failure.
+   *
+   * @param {string} serviceName
+   */
+  circuitBreakerFailure(serviceName) {
+    const cb = this._getCircuitBreaker(serviceName);
+    cb.failures++;
+    cb.lastFailureAt = Date.now();
+
+    if (cb.state === 'HALF_OPEN') {
+      // Any failure in half-open trips back to open
+      cb.state = 'OPEN';
+      cb.openedAt = Date.now();
+      cb.totalTrips++;
+      logger.warn('[GovernanceEngine] Circuit breaker OPEN (half-open probe failed)', { serviceName });
+      this.emit('circuit-breaker:open', { serviceName, reason: 'half_open_probe_failed' });
+      return;
+    }
+
+    if (cb.failures >= cb.failThreshold) {
+      cb.state = 'OPEN';
+      cb.openedAt = Date.now();
+      cb.totalTrips++;
+      logger.warn('[GovernanceEngine] Circuit breaker OPEN', {
+        serviceName,
+        failures: cb.failures,
+        totalTrips: cb.totalTrips,
+      });
+      this.emit('circuit-breaker:open', { serviceName, reason: 'threshold_exceeded' });
+    }
+  }
+
+  /**
+   * Get status of all circuit breakers.
+   * @returns {object} Map of serviceName → state summary
+   */
+  getCircuitBreakerStatus() {
+    const status = {};
+    for (const [name, cb] of this._circuitBreakers) {
+      status[name] = {
+        state: cb.state,
+        failures: cb.failures,
+        successes: cb.successes,
+        totalTrips: cb.totalTrips,
+        lastFailureAt: cb.lastFailureAt,
+        lastSuccessAt: cb.lastSuccessAt,
+      };
+    }
+    return status;
+  }
+
+  /**
+   * Reset a circuit breaker to CLOSED state.
+   * @param {string} serviceName
+   */
+  circuitBreakerReset(serviceName) {
+    const cb = this._getCircuitBreaker(serviceName);
+    cb.state = 'CLOSED';
+    cb.failures = 0;
+    cb.halfOpenProbes = 0;
+    logger.info('[GovernanceEngine] Circuit breaker manually reset', { serviceName });
+    this.emit('circuit-breaker:reset', { serviceName });
   }
 }
 

@@ -275,4 +275,4 @@ function createLogger(component, context = {}) {
   return rootLogger.child(component, context);
 }
 
-module.exports = HeadyLogger;
+module.exports = { HeadyLogger, createLogger };

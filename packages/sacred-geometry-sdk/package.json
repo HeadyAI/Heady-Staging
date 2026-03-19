@@ -1,0 +1,17 @@
+{
+  "name": "@heady/sacred-geometry-sdk",
+  "version": "1.0.0",
+  "description": "Sacred Geometry Design System SDK — the only design system built on mathematical harmony",
+  "main": "src/index.js",
+  "exports": {
+    ".": "./src/index.js",
+    "./css": "./src/css/sacred-geometry.css",
+    "./constants": "./src/constants.js",
+    "./fibonacci": "./src/fibonacci.js",
+    "./layouts": "./src/layouts.js"
+  },
+  "keywords": ["sacred-geometry", "fibonacci", "golden-ratio", "phi", "design-system", "css"],
+  "author": "HeadySystems Inc.",
+  "license": "SEE LICENSE IN LICENSE.md",
+  "repository": { "type": "git", "url": "https://github.com/HeadyMe/heady-sacred-geometry-sdk" }
+}

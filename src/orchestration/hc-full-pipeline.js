@@ -248,8 +248,12 @@ class HCFullPipeline extends EventEmitter {
                             stage.metrics.selfHealed = true;
                             this.emit("stage:completed", { runId, stage: stage.name, result: retryResult, selfHealed: true });
                             continue; // Move to next stage
-                        } catch {
-                            // Self-heal retry failed — fall through to rollback
+                        } catch (retryErr) {
+                            // Self-heal retry failed — emit event and fall through to rollback
+                            stage.status = STATUS.FAILED;
+                            stage.error = retryErr.message;
+                            stage.finishedAt = new Date().toISOString();
+                            this.emit("stage:failed", { runId, stage: stage.name, error: retryErr.message, selfHealRetryFailed: true });
                         }
                     }
 

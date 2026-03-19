@@ -60,16 +60,19 @@ const CSL_LOW  = 0.382; // ψ² — minimum confidence to proceed
 // ─── EVENT NAME TRANSLATION MAP ──────────────────────────────────────────────
 // HCFPRunner internal event  →  global.eventBus event
 const EVENT_MAP = Object.freeze({
-  'run:start':     'pipeline:started',
-  'run:complete':  'pipeline:completed',
-  'run:stopped':   'pipeline:completed',  // also maps to completed (with status)
-  'stage:start':   'pipeline:stage:start',
-  'stage:end':     'pipeline:stage:end',
-  'stage:passed':  'pipeline:stage:passed',
-  'stage:failed':  'pipeline:failed',
-  'run:paused':    'pipeline:paused',
-  'run:resumed':   'pipeline:resumed',
-  'run:cancelled': 'pipeline:failed',
+  'run:start':       'pipeline:started',
+  'run:complete':    'pipeline:completed',
+  'run:stopped':     'pipeline:completed',  // also maps to completed (with status)
+  'stage:start':     'pipeline:stage:start',
+  'stage:end':       'pipeline:stage:end',
+  'stage:passed':    'pipeline:stage:passed',
+  'stage:pass':      'pipeline:stage:passed',   // v3 compatibility
+  'stage:completed': 'pipeline:stage:passed',   // v4 compatibility
+  'stage:failed':    'pipeline:failed',
+  'stage:fail':      'pipeline:failed',         // v3 compatibility
+  'run:paused':      'pipeline:paused',
+  'run:resumed':     'pipeline:resumed',
+  'run:cancelled':   'pipeline:failed',
 });
 
 // ─── REVERSE MAP: global.eventBus → HCFPRunner ───────────────────────────────
@@ -99,14 +102,15 @@ class HCFPEventBridge {
     if (!runner) throw new Error('HCFPEventBridge: runner is required');
     if (!eventBus) throw new Error('HCFPEventBridge: eventBus is required');
 
-    this._runner   = runner;
-    this._bus      = eventBus;
-    this._running  = false;
-    this._timer    = null;
-    this._initial  = null;
-    this._cycleN   = 0;
-    this._lastRunAt = 0;
-    this._wiredEvents = [];
+    this._runner        = runner;
+    this._bus           = eventBus;
+    this._running       = false;
+    this._runInProgress = false;
+    this._timer         = null;
+    this._initial       = null;
+    this._cycleN        = 0;
+    this._lastRunAt     = 0;
+    this._wiredEvents   = [];
   }
 
   /**
@@ -137,8 +141,11 @@ class HCFPEventBridge {
       this._wiredEvents.push({ dir: 'runner→bus', runnerEvent, busEvent, handler });
     }
 
-    // Track last run completion for CSL-gated autonomous trigger
-    this._runner.on('run:complete', () => { this._lastRunAt = Date.now(); });
+    // Track run lifecycle for concurrency guard and CSL-gated autonomous trigger
+    this._runner.on('run:start', () => { this._runInProgress = true; });
+    this._runner.on('run:complete', () => { this._runInProgress = false; this._lastRunAt = Date.now(); });
+    this._runner.on('run:stopped', () => { this._runInProgress = false; this._lastRunAt = Date.now(); });
+    this._runner.on('run:cancelled', () => { this._runInProgress = false; });
 
     // ── 2. Bus → Runner (allow external pipeline control) ────────────────────
     for (const [busEvent, action] of Object.entries(REVERSE_MAP)) {
@@ -186,7 +193,7 @@ class HCFPEventBridge {
     // Clean up all wired listeners
     for (const w of this._wiredEvents) {
       try {
-        if (w.dir === 'runner→bus') this._runner._listeners?.delete?.(w.runnerEvent);
+        if (w.dir === 'runner→bus' && typeof this._runner.removeListener === 'function') this._runner.removeListener(w.runnerEvent, w.handler);
         if (w.dir === 'bus→runner') this._bus.removeListener(w.busEvent, w.handler);
       } catch { /* graceful */ }
     }
@@ -204,6 +211,12 @@ class HCFPEventBridge {
    * This prevents pile-ups if pipeline is already running.
    */
   _autonomousTrigger() {
+    // Concurrency guard: skip if a pipeline run is currently in progress
+    if (this._runInProgress) {
+      log('debug', `trigger skipped — pipeline run already in progress (cycle ${this._cycleN + 1})`);
+      return;
+    }
+
     const timeSinceLast = Date.now() - this._lastRunAt;
     const idleThreshold = PIPELINE_TRIGGER_INTERVAL_MS * PSI2; // 0.382 × cycle
 

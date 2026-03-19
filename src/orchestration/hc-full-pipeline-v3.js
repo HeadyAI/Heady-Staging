@@ -1682,7 +1682,9 @@ class HCFullPipeline extends EventEmitter {
   }
 
   async _safeCall(fn) {
-    try { return await fn(); } catch { /* swallow */ }
+    try { return await fn(); } catch (err) {
+      if (this._bus) this._bus.emit('pipeline:safe_call_error', { error: err.message, ts: Date.now() });
+    }
   }
 }
 

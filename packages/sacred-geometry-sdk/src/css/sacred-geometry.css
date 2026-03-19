@@ -1,0 +1,320 @@
+/**
+ * @heady/sacred-geometry-sdk — Sacred Geometry CSS
+ * Fibonacci breakpoints, phi-timing properties, golden ratio spacing, torus animations.
+ * All values derived from φ = 1.6180339887498948
+ *
+ * © 2024-2026 HeadySystems Inc. All Rights Reserved.
+ */
+
+/* ═══════════════════════════════════════════════════════════════════════════════
+   PHI CORE CONSTANTS (CSS Custom Properties)
+   ═══════════════════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* Core phi constants */
+  --phi:          1.6180339887;
+  --psi:          0.6180339887;
+  --phi-sq:       2.6180339887;
+  --phi-cubed:    4.2360679775;
+  --psi-sq:       0.3819660113;
+  --sqrt5:        2.2360679775;
+  --golden-angle: 137.508deg;
+
+  /* ═════════════════════════════════════════════════════════════════════════════
+     FIBONACCI SPACING SCALE
+     1, 2, 3, 5, 8, 13, 21, 34, 55, 89 px
+     ═════════════════════════════════════════════════════════════════════════════ */
+
+  --space-1:   1px;
+  --space-2:   2px;
+  --space-3:   3px;
+  --space-5:   5px;
+  --space-8:   8px;
+  --space-13:  13px;
+  --space-21:  21px;
+  --space-34:  34px;
+  --space-55:  55px;
+  --space-89:  89px;
+
+  /* Semantic spacing aliases */
+  --space-xs:    var(--space-3);
+  --space-sm:    var(--space-5);
+  --space-md:    var(--space-8);
+  --space-lg:    var(--space-13);
+  --space-xl:    var(--space-21);
+  --space-2xl:   var(--space-34);
+  --space-3xl:   var(--space-55);
+  --space-4xl:   var(--space-89);
+
+  /* ═════════════════════════════════════════════════════════════════════════════
+     PHI TYPOGRAPHY SCALE (base 10px × φ^n)
+     10, 16, 26, 42, 69, 111 px
+     ═════════════════════════════════════════════════════════════════════════════ */
+
+  --type-caption: 10px;
+  --type-body:    16px;
+  --type-h4:      26px;
+  --type-h3:      42px;
+  --type-h2:      69px;
+  --type-h1:      111px;
+
+  /* Line heights: φ-ratio */
+  --line-height-tight:   1.382;    /* 1 + ψ² */
+  --line-height-normal:  1.618;    /* φ */
+  --line-height-loose:   2.058;    /* φ + ψ² */
+
+  /* ═════════════════════════════════════════════════════════════════════════════
+     PHI TIMING / TRANSITIONS
+     UI animation durations from Fibonacci × 10ms
+     ═════════════════════════════════════════════════════════════════════════════ */
+
+  --timing-instant:  20ms;     /* fib(3) × 10 */
+  --timing-fast:     50ms;     /* fib(5) × 10 */
+  --timing-normal:   130ms;    /* fib(7) × 10 */
+  --timing-slow:     210ms;    /* fib(8) × 10 */
+  --timing-glacial:  340ms;    /* fib(9) × 10 */
+
+  /* Phi-power timings (for system-level animations) */
+  --timing-phi-1:   1618ms;
+  --timing-phi-2:   2618ms;
+  --timing-phi-3:   4236ms;
+  --timing-phi-4:   6854ms;
+  --timing-phi-5:  11090ms;
+
+  /* Easing curves — organic phi-based beziers */
+  --ease-phi-in:     cubic-bezier(0.618, 0, 1, 1);
+  --ease-phi-out:    cubic-bezier(0, 0, 0.382, 1);
+  --ease-phi-inout:  cubic-bezier(0.618, 0, 0.382, 1);
+  --ease-golden:     cubic-bezier(0.382, 0, 0.618, 1);
+
+  /* ═════════════════════════════════════════════════════════════════════════════
+     GOLDEN RATIO LAYOUT
+     ═════════════════════════════════════════════════════════════════════════════ */
+
+  --golden-primary:    61.8%;
+  --golden-secondary:  38.2%;
+  --golden-major:      61.8%;
+  --golden-minor:      38.2%;
+
+  /* ═════════════════════════════════════════════════════════════════════════════
+     SACRED GEOMETRY COLORS (phi-derived hue rotation)
+     Hue steps at golden angle intervals (137.508°)
+     ═════════════════════════════════════════════════════════════════════════════ */
+
+  --sacred-hue-0:    0deg;
+  --sacred-hue-1:    137.508deg;
+  --sacred-hue-2:    275.016deg;
+  --sacred-hue-3:    52.524deg;
+  --sacred-hue-4:    190.032deg;
+
+  --sacred-color-0:  hsl(var(--sacred-hue-0), 61.8%, 50%);
+  --sacred-color-1:  hsl(var(--sacred-hue-1), 61.8%, 50%);
+  --sacred-color-2:  hsl(var(--sacred-hue-2), 61.8%, 50%);
+  --sacred-color-3:  hsl(var(--sacred-hue-3), 61.8%, 50%);
+  --sacred-color-4:  hsl(var(--sacred-hue-4), 61.8%, 50%);
+
+  /* ═════════════════════════════════════════════════════════════════════════════
+     BORDER RADIUS (Fibonacci scale for organic feel)
+     ═════════════════════════════════════════════════════════════════════════════ */
+
+  --radius-xs:   2px;
+  --radius-sm:   3px;
+  --radius-md:   5px;
+  --radius-lg:   8px;
+  --radius-xl:   13px;
+  --radius-2xl:  21px;
+  --radius-full: 9999px;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════════
+   FIBONACCI BREAKPOINTS
+   233, 377, 610, 987, 1597, 2584 px
+   ═══════════════════════════════════════════════════════════════════════════════ */
+
+/* xs: ≥ 233px — small mobile */
+@media (min-width: 233px) {
+  :root { --current-breakpoint: 'xs'; }
+}
+
+/* sm: ≥ 377px — mobile */
+@media (min-width: 377px) {
+  :root { --current-breakpoint: 'sm'; }
+}
+
+/* md: ≥ 610px — tablet portrait */
+@media (min-width: 610px) {
+  :root { --current-breakpoint: 'md'; }
+}
+
+/* lg: ≥ 987px — tablet landscape / small desktop */
+@media (min-width: 987px) {
+  :root { --current-breakpoint: 'lg'; }
+}
+
+/* xl: ≥ 1597px — desktop */
+@media (min-width: 1597px) {
+  :root { --current-breakpoint: 'xl'; }
+}
+
+/* xxl: ≥ 2584px — large desktop / ultra-wide */
+@media (min-width: 2584px) {
+  :root { --current-breakpoint: 'xxl'; }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════════
+   GOLDEN RATIO GRID UTILITY CLASSES
+   ═══════════════════════════════════════════════════════════════════════════════ */
+
+.golden-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-13);
+}
+
+@media (min-width: 610px) {
+  .golden-grid {
+    grid-template-columns: var(--golden-primary) var(--golden-secondary);
+  }
+}
+
+.golden-grid--reverse {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-13);
+}
+
+@media (min-width: 610px) {
+  .golden-grid--reverse {
+    grid-template-columns: var(--golden-secondary) var(--golden-primary);
+  }
+}
+
+.golden-grid--thirds {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-8);
+}
+
+@media (min-width: 610px) {
+  .golden-grid--thirds {
+    /* φ-weighted three columns: 38.2%, 23.6%, 38.2% */
+    grid-template-columns: 38.2% 23.6% 38.2%;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════════
+   FIBONACCI SPACING UTILITY CLASSES
+   ═══════════════════════════════════════════════════════════════════════════════ */
+
+.gap-fib-1  { gap: var(--space-1);  }
+.gap-fib-2  { gap: var(--space-2);  }
+.gap-fib-3  { gap: var(--space-3);  }
+.gap-fib-5  { gap: var(--space-5);  }
+.gap-fib-8  { gap: var(--space-8);  }
+.gap-fib-13 { gap: var(--space-13); }
+.gap-fib-21 { gap: var(--space-21); }
+.gap-fib-34 { gap: var(--space-34); }
+.gap-fib-55 { gap: var(--space-55); }
+
+.p-fib-3  { padding: var(--space-3);  }
+.p-fib-5  { padding: var(--space-5);  }
+.p-fib-8  { padding: var(--space-8);  }
+.p-fib-13 { padding: var(--space-13); }
+.p-fib-21 { padding: var(--space-21); }
+.p-fib-34 { padding: var(--space-34); }
+
+.m-fib-3  { margin: var(--space-3);  }
+.m-fib-5  { margin: var(--space-5);  }
+.m-fib-8  { margin: var(--space-8);  }
+.m-fib-13 { margin: var(--space-13); }
+.m-fib-21 { margin: var(--space-21); }
+.m-fib-34 { margin: var(--space-34); }
+
+/* ═══════════════════════════════════════════════════════════════════════════════
+   TORUS-FLOW ANIMATION KEYFRAMES
+   Organic breathing / orbital motion based on phi timing
+   ═══════════════════════════════════════════════════════════════════════════════ */
+
+@keyframes torus-breathe {
+  0%   { transform: scale(1);       opacity: 1; }
+  38%  { transform: scale(1.0618);  opacity: 0.927; }
+  62%  { transform: scale(0.9382);  opacity: 0.882; }
+  100% { transform: scale(1);       opacity: 1; }
+}
+
+@keyframes torus-orbit {
+  0%   { transform: rotate(0deg)      translateX(var(--orbit-radius, 100px)) rotate(0deg); }
+  100% { transform: rotate(360deg)    translateX(var(--orbit-radius, 100px)) rotate(-360deg); }
+}
+
+@keyframes torus-pulse {
+  0%   { box-shadow: 0 0 0 0 currentColor; }
+  38%  { box-shadow: 0 0 0 var(--space-8) transparent; }
+  100% { box-shadow: 0 0 0 0 transparent; }
+}
+
+@keyframes phi-spiral-in {
+  0%   { transform: rotate(0deg)   scale(0); opacity: 0; }
+  62%  { transform: rotate(222deg) scale(0.618); opacity: 0.618; }
+  100% { transform: rotate(360deg) scale(1); opacity: 1; }
+}
+
+@keyframes golden-fade-in {
+  0%   { opacity: 0; transform: translateY(var(--space-13)); }
+  62%  { opacity: 0.618; }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes sacred-shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+/* Animation utility classes */
+.animate-torus-breathe {
+  animation: torus-breathe var(--timing-phi-2) var(--ease-phi-inout) infinite;
+}
+
+.animate-torus-orbit {
+  animation: torus-orbit var(--timing-phi-5) linear infinite;
+}
+
+.animate-torus-pulse {
+  animation: torus-pulse var(--timing-phi-1) var(--ease-phi-out) infinite;
+}
+
+.animate-phi-spiral-in {
+  animation: phi-spiral-in var(--timing-slow) var(--ease-phi-out) forwards;
+}
+
+.animate-golden-fade-in {
+  animation: golden-fade-in var(--timing-normal) var(--ease-phi-out) forwards;
+}
+
+.animate-sacred-shimmer {
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.1) 38.2%,
+    rgba(255, 255, 255, 0.2) 61.8%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  animation: sacred-shimmer var(--timing-phi-3) linear infinite;
+}
+
+/* Phi transition defaults */
+.transition-phi {
+  transition-duration: var(--timing-normal);
+  transition-timing-function: var(--ease-phi-inout);
+}
+
+.transition-phi-fast {
+  transition-duration: var(--timing-fast);
+  transition-timing-function: var(--ease-phi-out);
+}
+
+.transition-phi-slow {
+  transition-duration: var(--timing-slow);
+  transition-timing-function: var(--ease-phi-inout);
+}
