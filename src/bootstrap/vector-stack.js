@@ -94,10 +94,28 @@ module.exports = function mountVectorStack(app, { logger, eventBus }) {
     }
 
     // Spatial subsystems
-    try { require('../services/spatial-embedder').registerRoutes(app); } catch { }
-    try { require('../services/octree-manager').registerRoutes(app); } catch { }
-    try { require('../services/redis-sync-bridge').registerRoutes(app); } catch { }
-    try { require('../services/buddy-system').registerRoutes(app); } catch { }
+    const _failedModules = [];
+    const spatialSubsystems = [
+        ['../services/spatial-embedder', 'SpatialEmbedder'],
+        ['../services/octree-manager', 'OctreeManager'],
+        ['../services/redis-sync-bridge', 'RedisSyncBridge'],
+        ['../services/buddy-system', 'BuddySystem'],
+    ];
+    for (const [mod, name] of spatialSubsystems) {
+        try {
+            require(mod).registerRoutes(app);
+        } catch (err) {
+            logger.logNodeActivity("CONDUCTOR", `  ⚠ ${name} (${mod}) not loaded: ${err.message}`);
+            _failedModules.push(mod);
+        }
+    }
+    if (_failedModules.length > 0) {
+        eventBus.emit('vector_stack:module_failures', {
+            failed: _failedModules,
+            count: _failedModules.length,
+            timestamp: Date.now(),
+        });
+    }
 
     // Heady™ core services (registerRoutes pattern)
     const coreServices = [
