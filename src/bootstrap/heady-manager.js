@@ -17,13 +17,37 @@
 'use strict';
 
 const express    = require('express');
-const { PHI, PSI, CSL_THRESHOLDS } = require('../../shared/phi-math');
-const { boot }   = require('./bootstrap');
-const { createHealthRouter } = require('../core/health-probes');
+const helmet     = require('helmet');
+const compression = require('compression');
+const rateLimit  = require('express-rate-limit');
 const { createLogger }       = require('../core/heady-logger');
-const { bus }                = require('../core/event-bus');
 
 const log = createLogger('heady-manager');
+
+// ─── Lazy-loaded heavy modules (deferred until first use for cold-start perf) ─
+let _phiMath = null;
+function getPhiMath() {
+  if (!_phiMath) _phiMath = require('../../shared/phi-math');
+  return _phiMath;
+}
+
+let _bootstrap = null;
+function getBootstrap() {
+  if (!_bootstrap) _bootstrap = require('./bootstrap');
+  return _bootstrap;
+}
+
+let _healthProbes = null;
+function getHealthProbes() {
+  if (!_healthProbes) _healthProbes = require('../core/health-probes');
+  return _healthProbes;
+}
+
+let _eventBus = null;
+function getEventBus() {
+  if (!_eventBus) _eventBus = require('../core/event-bus');
+  return _eventBus;
+}
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
@@ -33,6 +57,55 @@ const DEFAULT_PORT = parseInt(process.env.PORT || '3301', 10);
 // ─── Express App ──────────────────────────────────────────────────────────────
 
 const app = express();
+
+// ─── Security Headers (helmet) ───────────────────────────────────────────────
+app.use(helmet({
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc:  ["'self'"],
+      styleSrc:   ["'self'", "'unsafe-inline'"],
+      imgSrc:     ["'self'", 'data:'],
+      connectSrc: ["'self'"],
+      fontSrc:    ["'self'"],
+      objectSrc:  ["'none'"],
+      frameAncestors: ["'none'"],
+    },
+  },
+  frameguard:              { action: 'deny' },          // X-Frame-Options: DENY
+  noSniff:                 true,                         // X-Content-Type-Options: nosniff
+  hsts:                    { maxAge: 31536000, includeSubDomains: true, preload: true }, // Strict-Transport-Security
+  referrerPolicy:          { policy: 'strict-origin-when-cross-origin' },
+  crossOriginEmbedderPolicy: false,                     // disabled for MCP compatibility
+}));
+
+// ─── Response Compression (gzip/brotli) ──────────────────────────────────────
+app.use(compression({
+  level: 6,
+  threshold: 1024,  // only compress responses > 1KB
+  filter: (req, res) => {
+    if (req.headers['x-no-compression']) return false;
+    return compression.filter(req, res);
+  },
+}));
+
+// ─── Rate Limiting (100 req/min per IP) ──────────────────────────────────────
+const apiLimiter = rateLimit({
+  windowMs: parseInt(process.env.RATE_LIMIT_WINDOW, 10) || 60000,
+  max:      parseInt(process.env.RATE_LIMIT_MAX_REQUESTS, 10) || 100,
+  standardHeaders: true,
+  legacyHeaders:   false,
+  handler: (_req, res) => {
+    res.status(429).json({
+      error: {
+        code:       'RATE_LIMITED',
+        message:    'Too many requests. Try again later.',
+        retryAfter: Math.ceil((parseInt(process.env.RATE_LIMIT_WINDOW, 10) || 60000) / 1000),
+      },
+    });
+  },
+});
+app.use(apiLimiter);
 
 // Parse JSON bodies for MCP and API endpoints
 app.use(express.json({ limit: '4mb' }));
@@ -45,7 +118,7 @@ app.use((req, _res, next) => {
 
 // ─── Health Routes ────────────────────────────────────────────────────────────
 
-app.use('/', createHealthRouter());
+app.use('/', getHealthProbes().createHealthRouter());
 
 // ─── MCP JSON-RPC 2.0 Endpoint ───────────────────────────────────────────────
 
@@ -70,6 +143,7 @@ app.post('/mcp', (req, res) => {
   }
 
   const { id, method, params } = body;
+  const { PHI } = getPhiMath();
 
   // Built-in MCP capabilities
   if (method === 'mcp/capabilities') {
@@ -100,7 +174,8 @@ app.post('/mcp', (req, res) => {
   }
 
   // Route to EventBus for registered method handlers
-  bus.emit('task', {
+  const { PSI, CSL_THRESHOLDS } = getPhiMath();
+  getEventBus().bus.emit('task', {
     type:     'mcp_request',
     data:     { id, method, params },
     temporal: CSL_THRESHOLDS.MEDIUM,   // 0.809
@@ -126,7 +201,7 @@ app.get('/', (_req, res) => {
     name:    'Heady Latent OS',
     version: process.env.HEADY_VERSION || '1.0.0',
     env:     process.env.HEADY_ENV     || 'development',
-    phi:     PHI,
+    phi:     getPhiMath().PHI,
     routes: {
       health:   ['/healthz', '/readyz', '/startupz'],
       mcp:      '/mcp',
@@ -138,7 +213,7 @@ app.get('/', (_req, res) => {
 // ─── 404 Catch-all ────────────────────────────────────────────────────────────
 
 app.use((_req, res) => {
-  res.status(404).json({ error: 'not_found', phi: PHI });
+  res.status(404).json({ error: 'not_found', phi: getPhiMath().PHI });
 });
 
 // ─── Error Handler ────────────────────────────────────────────────────────────
@@ -157,7 +232,7 @@ app.use((err, _req, res, _next) => {
  */
 async function startServer() {
   // Run 10-phase boot sequence first
-  await boot();
+  await getBootstrap().boot();
 
   return new Promise((resolve, reject) => {
     const server = app.listen(DEFAULT_PORT, (err) => {
@@ -165,9 +240,9 @@ async function startServer() {
       log.info('Heady Manager listening', {
         port: DEFAULT_PORT,
         env:  process.env.HEADY_ENV,
-        phi:  PHI,
+        phi:  getPhiMath().PHI,
       });
-      bus.emit('lifecycle', {
+      getEventBus().bus.emit('lifecycle', {
         type:     'http_ready',
         data:     { port: DEFAULT_PORT },
         temporal: 0.9,
