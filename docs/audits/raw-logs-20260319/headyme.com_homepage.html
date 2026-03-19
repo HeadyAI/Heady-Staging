@@ -1,0 +1,713 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>HeadyMe — Your Sovereign AI</title>
+<meta name="description" content="Personal intelligence across every device, every domain.">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0a0a1a;--sf:rgba(20,20,50,.6);--bd:rgba(255,255,255,.08);--br:#4c8fff;--ac:#00d4ff;--tx:#e8e8f0;--dm:#8888aa;--mt:#555577}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--tx);min-height:100vh;overflow-x:hidden}
+.gd{position:fixed;inset:0;background-image:linear-gradient(rgba(255,255,255,.02) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.02) 1px,transparent 1px);background-size:61.8px 61.8px;z-index:0}
+.gw{position:fixed;top:-30%;left:-10%;width:60%;height:60%;background:radial-gradient(circle,color-mix(in srgb,var(--br) 10%,transparent),transparent 60%);z-index:0;animation:dr 20s ease-in-out infinite alternate}
+.gw2{position:fixed;bottom:-20%;right:-10%;width:50%;height:50%;background:radial-gradient(circle,color-mix(in srgb,var(--ac) 8%,transparent),transparent 60%);z-index:0;animation:dr 15s ease-in-out infinite alternate-reverse}
+@keyframes dr{from{transform:translate(0,0)}to{transform:translate(30px,-20px)}}
+@keyframes fu{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pl{0%,100%{box-shadow:0 0 20px color-mix(in srgb,var(--br) 30%,transparent)}50%{box-shadow:0 0 40px color-mix(in srgb,var(--br) 50%,transparent)}}
+@keyframes orbFloat{0%,100%{transform:translate(0,0) scale(1)}25%{transform:translate(60px,-40px) scale(1.1)}50%{transform:translate(-30px,60px) scale(.95)}75%{transform:translate(-60px,-20px) scale(1.05)}}
+@keyframes geoSpin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+@keyframes glowPulse{0%,100%{opacity:.4;filter:blur(60px)}50%{opacity:.7;filter:blur(80px)}}
+@keyframes borderGlow{0%,100%{border-color:color-mix(in srgb,var(--br) 30%,transparent);box-shadow:0 0 15px color-mix(in srgb,var(--br) 10%,transparent)}50%{border-color:color-mix(in srgb,var(--ac) 50%,transparent);box-shadow:0 0 30px color-mix(in srgb,var(--ac) 15%,transparent)}}
+.orb{position:fixed;border-radius:50%;pointer-events:none;z-index:0}
+.orb1{width:400px;height:400px;top:-100px;left:-100px;background:radial-gradient(circle,color-mix(in srgb,var(--br) 25%,transparent),transparent 70%);animation:orbFloat 20s ease-in-out infinite,glowPulse 6s ease-in-out infinite}
+.orb2{width:350px;height:350px;bottom:-50px;right:-50px;background:radial-gradient(circle,color-mix(in srgb,var(--ac) 20%,transparent),transparent 70%);animation:orbFloat 25s ease-in-out infinite reverse,glowPulse 8s ease-in-out infinite .5s}
+.orb3{width:250px;height:250px;top:40%;left:50%;background:radial-gradient(circle,rgba(139,92,246,.15),transparent 70%);animation:orbFloat 18s ease-in-out infinite 2s,glowPulse 7s ease-in-out infinite 1s}
+#sgCanvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none;opacity:.6}
+.ct{position:relative;z-index:1;max-width:1200px;margin:0 auto;padding:2rem 1.5rem}
+nav{display:flex;align-items:center;justify-content:space-between;padding:1rem 2rem;position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(10,10,26,.8);backdrop-filter:blur(20px);border-bottom:1px solid var(--bd)}
+.nb{display:flex;align-items:center;gap:.75rem;text-decoration:none;color:var(--tx)}
+.nl{width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--br),var(--ac));font-size:18px;font-weight:900;color:white;box-shadow:0 0 20px color-mix(in srgb,var(--br) 30%,transparent);animation:pl 4s infinite}
+.nn{font-size:1.1rem;font-weight:700;letter-spacing:-.01em}
+.nk{display:flex;gap:1.5rem;align-items:center}
+.nk a{color:var(--dm);text-decoration:none;font-size:.85rem;font-weight:500;transition:color .2s}
+.nk a:hover{color:var(--tx)}
+.nc{background:var(--br);color:white;border:none;padding:.5rem 1.25rem;border-radius:8px;font-family:inherit;font-size:.85rem;font-weight:600;cursor:pointer;transition:all .2s}
+.nc:hover{filter:brightness(1.15);transform:translateY(-1px)}
+.hr{padding:8rem 0 4rem;text-align:center;animation:fu .6s ease-out}
+.hb{display:inline-block;background:color-mix(in srgb,var(--br) 10%,transparent);color:var(--br);padding:6px 18px;border-radius:20px;font-size:.75rem;font-weight:600;letter-spacing:.08em;margin-bottom:1.5rem;border:1px solid color-mix(in srgb,var(--br) 25%,transparent);backdrop-filter:blur(10px);box-shadow:0 0 20px color-mix(in srgb,var(--br) 8%,transparent);animation:borderGlow 4s ease-in-out infinite}
+.hr h1{font-size:clamp(2.8rem,7vw,4.5rem);font-weight:900;letter-spacing:-.04em;line-height:1.05;margin-bottom:1.25rem;text-shadow:0 0 60px color-mix(in srgb,var(--br) 15%,transparent)}
+.hr h1 .g{background:linear-gradient(135deg,var(--br) 0%,var(--ac) 40%,#a78bfa 70%,var(--br) 100%);background-size:300% 300%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:gradShift 6s ease-in-out infinite}
+@keyframes gradShift{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+.hr p{color:var(--dm);font-size:1.1rem;max-width:600px;margin:0 auto 2rem;line-height:1.6}
+.ha{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap}
+.bp{background:linear-gradient(135deg,var(--br),var(--ac));color:white;border:none;padding:.85rem 2.5rem;border-radius:12px;font-family:inherit;font-size:1rem;font-weight:700;cursor:pointer;transition:all .3s;box-shadow:0 4px 25px color-mix(in srgb,var(--br) 35%,transparent);animation:pl 3s infinite}
+.bp:hover{transform:translateY(-3px) scale(1.02);filter:brightness(1.15);box-shadow:0 8px 40px color-mix(in srgb,var(--br) 45%,transparent)}
+.bs{background:rgba(255,255,255,.03);color:var(--tx);border:1px solid rgba(255,255,255,.1);padding:.85rem 2.5rem;border-radius:12px;font-family:inherit;font-size:1rem;font-weight:500;cursor:pointer;transition:all .3s;backdrop-filter:blur(10px)}
+.bs:hover{border-color:var(--br);background:color-mix(in srgb,var(--br) 8%,transparent);transform:translateY(-2px);box-shadow:0 4px 20px rgba(0,0,0,.2)}
+.sv{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1.5rem;padding:2rem 0 4rem}
+.sc{background:linear-gradient(145deg,rgba(255,255,255,.04),rgba(255,255,255,.01));backdrop-filter:blur(24px);border:1px solid rgba(255,255,255,.08);border-radius:20px;padding:1.75rem;transition:all .4s cubic-bezier(.4,0,.2,1);animation:fu .6s ease-out;position:relative;overflow:hidden}
+.sc::before{content:'';position:absolute;inset:0;border-radius:20px;padding:1px;background:linear-gradient(135deg,transparent,color-mix(in srgb,var(--br) 15%,transparent),transparent);-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none;transition:opacity .4s;opacity:0}
+.sc:hover::before{opacity:1}
+.sc:hover{border-color:color-mix(in srgb,var(--br) 50%,transparent);transform:translateY(-6px);box-shadow:0 12px 40px color-mix(in srgb,var(--br) 12%,transparent),0 0 60px color-mix(in srgb,var(--br) 5%,transparent)}
+.si{font-size:2.2rem;margin-bottom:.85rem;filter:drop-shadow(0 0 8px color-mix(in srgb,var(--br) 20%,transparent))}
+.sc h3{font-size:1.05rem;font-weight:700;margin-bottom:.5rem}
+.sc p{color:var(--dm);font-size:.85rem;line-height:1.6}
+.db{display:flex;flex-wrap:wrap;justify-content:center;gap:.75rem;padding:2rem 0;border-top:1px solid var(--bd)}
+.dl{color:var(--dm);text-decoration:none;font-size:.8rem;font-weight:500;padding:.3rem .8rem;border-radius:8px;border:1px solid var(--bd);transition:all .2s}
+.dl:hover{color:var(--dc);border-color:var(--dc);background:color-mix(in srgb,var(--dc,var(--br)) 8%,transparent)}
+ft{display:block;text-align:center;padding:2rem;color:var(--mt);font-size:.75rem}
+ft a{color:var(--dm);text-decoration:none}
+.ao{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:200;align-items:center;justify-content:center;backdrop-filter:blur(6px)}.ao.on{display:flex}
+.am{background:#0d0d25;border:1px solid var(--bd);border-radius:20px;padding:2rem;max-width:520px;width:95%;max-height:90vh;overflow-y:auto;animation:fu .3s ease;position:relative}
+.am h2{font-size:1.3rem;font-weight:800;text-align:center;margin-bottom:.25rem}
+.am .sub{color:var(--dm);text-align:center;font-size:.8rem;margin-bottom:1.25rem}
+.ai{width:100%;padding:.6rem .8rem;border-radius:8px;border:1px solid var(--bd);background:rgba(0,0,0,.3);color:var(--tx);font-family:inherit;font-size:.85rem;outline:none;margin-bottom:.5rem}
+.ai:focus{border-color:var(--br);box-shadow:0 0 0 3px color-mix(in srgb,var(--br) 10%,transparent)}
+.ax{width:100%;padding:.65rem;border:none;border-radius:8px;background:linear-gradient(135deg,var(--br),var(--ac));color:white;font-family:inherit;font-size:.9rem;font-weight:700;cursor:pointer;margin-top:.25rem}
+.ac{position:absolute;top:1rem;right:1rem;background:none;border:none;color:var(--dm);font-size:1.4rem;cursor:pointer}
+.ad{display:flex;align-items:center;gap:1rem;color:var(--mt);font-size:.75rem;margin:.75rem 0}
+.ad::before,.ad::after{content:'';flex:1;height:1px;background:rgba(255,255,255,.06)}
+.ag{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.ab{display:flex;align-items:center;gap:.4rem;padding:.45rem .5rem;border-radius:8px;border:1px solid rgba(255,255,255,.06);background:rgba(0,0,0,.3);color:var(--tx);font-family:inherit;font-size:.72rem;font-weight:500;cursor:pointer;transition:all .2s}
+.ab:hover{border-color:var(--br);background:rgba(0,0,0,.5);transform:translateY(-1px)}
+.as{font-size:.65rem;font-weight:700;color:var(--dm);text-transform:uppercase;letter-spacing:.08em;margin:.6rem 0 .4rem;display:flex;align-items:center;gap:.5rem}
+.as::after{content:'';flex:1;height:1px;background:rgba(255,255,255,.06)}
+.ob{display:none}.ob.active{display:block}
+.osteps{display:flex;gap:.35rem;margin-bottom:1.25rem}
+.ostep{flex:1;height:4px;border-radius:2px;background:rgba(255,255,255,.08);transition:all .3s}
+.ostep.done{background:var(--br)}
+.ostep.cur{background:linear-gradient(90deg,var(--br),var(--ac))}
+.ocard{background:var(--sf);border:1px solid var(--bd);border-radius:12px;padding:.85rem;margin-bottom:.4rem;cursor:pointer;transition:all .2s}
+.ocard:hover,.ocard.sel{border-color:var(--br);background:color-mix(in srgb,var(--br) 10%,transparent)}
+.ocard h4{font-size:.85rem;margin-bottom:.2rem}
+.ocard p{font-size:.72rem;color:var(--dm)}
+.ocard .price{font-size:.8rem;font-weight:700;color:var(--ac)}
+.ocard .badge{display:inline-block;font-size:.55rem;padding:2px 6px;border-radius:4px;background:color-mix(in srgb,var(--ac) 15%,transparent);color:var(--ac);font-weight:600;margin-left:.5rem}
+.un-row{display:flex;align-items:center;gap:0;margin-bottom:.5rem}
+.un-row input{border-radius:8px 0 0 8px;margin:0;flex:1}
+.un-row .un-domain{background:rgba(0,0,0,.4);border:1px solid var(--bd);border-left:0;border-radius:0 8px 8px 0;padding:.6rem .6rem;font-size:.75rem;color:var(--ac);font-weight:600;white-space:nowrap}
+.un-status{font-size:.7rem;margin-bottom:.75rem;padding-left:.25rem}
+.un-status.ok{color:#10b981}
+.un-status.taken{color:#f43f5e}
+.ecard{display:flex;gap:.75rem;margin:.75rem 0}
+.ecard .ec{flex:1;background:var(--sf);border:1px solid var(--bd);border-radius:12px;padding:1rem;text-align:center;cursor:pointer;transition:all .2s}
+.ecard .ec:hover,.ecard .ec.sel{border-color:var(--br);background:color-mix(in srgb,var(--br) 10%,transparent)}
+.ecard .ec .ei{font-size:1.5rem;margin-bottom:.4rem}
+.ecard .ec h4{font-size:.8rem;margin-bottom:.2rem}
+.ecard .ec p{font-size:.65rem;color:var(--dm)}
+.buddy-ob{background:rgba(0,0,0,.2);border:1px solid var(--bd);border-radius:12px;padding:1rem;margin:.75rem 0}
+.buddy-ob .bub{background:rgba(255,255,255,.05);padding:.6rem .8rem;border-radius:12px 12px 12px 2px;font-size:.8rem;color:var(--dm);line-height:1.5;margin-bottom:.75rem}
+.prov-row{display:flex;align-items:center;justify-content:space-between;padding:.4rem .6rem;border-radius:8px;border:1px solid var(--bd);margin-bottom:.35rem;font-size:.8rem;transition:all .2s}
+.prov-row.done{border-color:#10b981;background:rgba(16,185,129,.08)}
+.prov-row.done button{background:#10b981}
+.ui-grid{display:grid;grid-template-columns:1fr 1fr;gap:.4rem}
+.ui-card{background:var(--sf);border:1px solid var(--bd);border-radius:10px;padding:.6rem;text-align:center;cursor:pointer;transition:all .2s;font-size:.75rem}
+.ui-card:hover,.ui-card.sel{border-color:var(--br);background:color-mix(in srgb,var(--br) 10%,transparent)}
+.ui-card .uii{font-size:1.2rem;margin-bottom:.2rem}
+.ko{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:250;align-items:center;justify-content:center}.ko.on{display:flex}
+.km{background:#10102a;border:1px solid var(--bd);border-radius:14px;padding:1.5rem;max-width:400px;width:90%;animation:fu .3s ease}
+.km h3{font-size:1.05rem;margin-bottom:.75rem}
+.so{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:260;align-items:center;justify-content:center}.so.on{display:flex}
+.sk{background:#0d0d25;border:1px solid var(--bd);border-radius:16px;padding:2rem;text-align:center;max-width:420px;width:95%;animation:fu .3s ease}
+.si2{width:64px;height:64px;margin:0 auto 1rem;border-radius:50%;display:flex;align-items:center;justify-content:center;background:rgba(16,185,129,.15);border:2px solid rgba(16,185,129,.4);font-size:28px}
+.kb{background:rgba(0,0,0,.4);border:1px solid color-mix(in srgb,var(--br) 20%,transparent);border-radius:10px;padding:.75rem;font-family:'JetBrains Mono',monospace;font-size:.75rem;color:var(--ac);word-break:break-all;margin:.75rem 0}
+.bf{position:fixed;bottom:24px;right:24px;width:60px;height:60px;border-radius:50%;background:linear-gradient(135deg,var(--br),var(--ac),#a78bfa);border:none;color:white;font-size:26px;cursor:pointer;z-index:150;box-shadow:0 4px 30px color-mix(in srgb,var(--br) 40%,transparent),0 0 60px color-mix(in srgb,var(--br) 15%,transparent);transition:all .3s;animation:pl 3s infinite}
+.bf:hover{transform:scale(1.15) rotate(15deg);box-shadow:0 8px 50px color-mix(in srgb,var(--br) 50%,transparent)}
+.bx{display:none;position:fixed;bottom:96px;right:24px;width:400px;max-height:520px;background:linear-gradient(170deg,rgba(13,13,37,.97),rgba(8,8,24,.99));border:1px solid rgba(255,255,255,.1);border-radius:20px;z-index:150;overflow:hidden;animation:fu .3s ease,borderGlow 5s ease-in-out infinite;flex-direction:column;box-shadow:0 20px 60px rgba(0,0,0,.5),0 0 80px color-mix(in srgb,var(--br) 8%,transparent)}.bx.on{display:flex}
+.bh{padding:.85rem 1.25rem;background:linear-gradient(135deg,var(--br),var(--ac),#a78bfa);display:flex;align-items:center;justify-content:space-between;box-shadow:0 4px 20px color-mix(in srgb,var(--br) 20%,transparent)}
+.bh span{font-weight:700;font-size:.9rem}
+.bc{background:none;border:none;color:white;font-size:1.2rem;cursor:pointer}
+.bm{flex:1;overflow-y:auto;padding:1rem;min-height:200px;max-height:340px}
+.mg{margin-bottom:.75rem;font-size:.85rem;line-height:1.5}
+.mg.u{text-align:right}
+.mg.u .bl{background:color-mix(in srgb,var(--br) 20%,transparent);display:inline-block;padding:.5rem .75rem;border-radius:12px 12px 2px 12px;max-width:85%}
+.mg.b .bl{background:rgba(255,255,255,.05);display:inline-block;padding:.5rem .75rem;border-radius:12px 12px 12px 2px;max-width:85%;color:var(--dm)}
+.bi{display:flex;gap:.5rem;padding:.75rem;border-top:1px solid var(--bd)}
+.bi input{flex:1;padding:.5rem .75rem;border-radius:8px;border:1px solid var(--bd);background:rgba(0,0,0,.3);color:var(--tx);font-family:inherit;font-size:.85rem;outline:none}
+.bi button{background:var(--br);color:white;border:none;padding:.5rem .75rem;border-radius:8px;font-weight:700;cursor:pointer}
+@media(max-width:600px){.ag{grid-template-columns:repeat(2,1fr)}.bx{width:calc(100vw - 32px);right:16px;bottom:84px}.hr h1{font-size:2rem}.ecard{flex-direction:column}}
+.lp{padding:2rem 0;border-top:1px solid var(--bd)}
+.lp h2{font-size:1.2rem;font-weight:800;margin-bottom:1rem;display:flex;align-items:center;gap:.5rem}
+.lp h2 .lt{font-size:.65rem;font-weight:600;background:color-mix(in srgb,var(--br) 15%,transparent);color:var(--br);padding:2px 8px;border-radius:10px}
+.lg{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem}
+.lc{background:var(--sf);backdrop-filter:blur(20px);border:1px solid var(--bd);border-radius:12px;padding:1rem;transition:all .3s}
+.lc:hover{border-color:color-mix(in srgb,var(--br) 40%,transparent);transform:translateY(-2px)}
+.lc .lv{font-size:1.8rem;font-weight:900;background:linear-gradient(135deg,var(--br),var(--ac));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.lc .ll{font-size:.75rem;color:var(--dm);margin-top:.25rem}
+.lc .ls{display:inline-block;font-size:.6rem;padding:2px 6px;border-radius:6px;margin-top:.4rem;font-weight:600}
+.lc .ls.ok{background:rgba(16,185,129,.15);color:#10b981}
+.lc .ls.wn{background:rgba(245,158,11,.15);color:#f59e0b}
+.ip{background:var(--sf);backdrop-filter:blur(20px);border:1px solid color-mix(in srgb,var(--br) 15%,transparent);border-radius:14px;padding:1.25rem;margin-top:1rem;font-size:.85rem;color:var(--dm);line-height:1.6}
+.ip strong{color:var(--tx)}
+.ip .it{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:.75rem}
+.ip .it span{background:rgba(255,255,255,.04);border:1px solid var(--bd);padding:3px 10px;border-radius:6px;font-size:.7rem;cursor:pointer;transition:all .2s}
+.ip .it span:hover{border-color:var(--br);color:var(--br)}
+</style>
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#4c8fff">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+</head><body>
+<div class="gd"></div><div class="gw"></div><div class="gw2"></div>
+<div class="orb orb1"></div><div class="orb orb2"></div><div class="orb orb3"></div>
+<canvas id="sgCanvas"></canvas>
+<nav>
+  <a class="nb" href="/"><div class="nl">🧠</div><span class="nn">HeadyMe</span></a>
+  <div class="nk">
+    <a href="https://headyio.com">Docs</a>
+    <a href="https://headyapi.com">API</a>
+    <a href="https://headymcp.com">MCP</a>
+    <button class="nc" onclick="openA()">Sign In</button>
+  </div>
+</nav>
+<div class="ct">
+  <section class="hr">
+    <div class="hb">⚡ HeadyMe v3.2 · Orion Patch · SELF-HEALING ACTIVE</div>
+    <h1><span class="g">Your Sovereign AI</span></h1>
+    <p>Personal intelligence across every device, every domain.</p>
+    <div class="ha">
+      <button class="bp" onclick="openA()">Get Started</button>
+      <button class="bs" onclick="location.href='https://headyio.com'">Documentation</button>
+    </div>
+  </section>
+  <section class="sv"><div class="sc"><div class="si">🧠</div><h3>AI Chat</h3><p>Multi-provider reasoning</p></div><div class="sc"><div class="si">🔐</div><h3>Vault</h3><p>AES-256-GCM credential store</p></div><div class="sc"><div class="si">📊</div><h3>Dashboard</h3><p>Real-time analytics & health</p></div><div class="sc"><div class="si">🐝</div><h3>Bee Swarm</h3><p>Distributed task execution</p></div></section>
+
+  <!-- HeadyLens Data Panel -->
+  <section class="lp" id="lensPanel">
+    <h2>👁️ HeadyLens <span class="lt">LIVE</span></h2>
+    <div class="lg" id="lensGrid">
+      <div class="lc"><div class="lv" id="ln-domains">9</div><div class="ll">Active Domains</div><div class="ls ok">● All Online</div></div>
+      <div class="lc"><div class="lv" id="ln-providers">25</div><div class="ll">Auth Providers</div><div class="ls ok">● Connected</div></div>
+      <div class="lc"><div class="lv" id="ln-edge"><1ms</div><div class="ll">Edge Latency</div><div class="ls ok">● Optimal</div></div>
+      <div class="lc"><div class="lv" id="ln-uptime">100%</div><div class="ll">Uptime (30d)</div><div class="ls ok">● Perfect</div></div>
+      <div class="lc"><div class="lv" id="ln-colo">—</div><div class="ll">Nearest Edge</div><div class="ls ok">● Active</div></div>
+      <div class="lc"><div class="lv" id="ln-sessions">—</div><div class="ll">Active Sessions</div><div class="ls ok">● Live</div></div>
+    </div>
+    <div class="ip">
+      <strong>🔍 Insight:</strong> You're currently on <strong>HeadyMe</strong>. All 9 Heady domains render at the edge in under 5ms. Your session and preferences sync across every device.
+      <div class="it">
+        <span onclick="sendBuddy('Show system health')">📊 Health</span>
+        <span onclick="sendBuddy('Show my devices')">📱 Devices</span>
+        <span onclick="sendBuddy('Show my API keys')">🔑 Keys</span>
+        <span onclick="sendBuddy('Show recent activity')">📋 Activity</span>
+        <span onclick="sendBuddy('Run diagnostics')">🔧 Diagnose</span>
+        <span onclick="sendBuddy('Show governance status')">🏛️ Governance</span>
+      </div>
+    </div>
+  </section>
+
+  <div class="db"><a href="https://headyme.com" class="dl" style="--dc:#4c8fff">🧠 HeadyMe</a><a href="https://headysystems.com" class="dl" style="--dc:#00d4ff">⚙️ HeadySystems</a><a href="https://headyconnection.org" class="dl" style="--dc:#8b5cf6">🧬 HeadyConnection</a><a href="https://headybuddy.org" class="dl" style="--dc:#10b981">🤖 HeadyBuddy</a><a href="https://headymcp.com" class="dl" style="--dc:#f59e0b">🔌 HeadyMCP</a><a href="https://headyio.com" class="dl" style="--dc:#ec4899">⚡ HeadyIO</a><a href="https://headybot.com" class="dl" style="--dc:#6366f1">🤖 HeadyBot</a><a href="https://headyapi.com" class="dl" style="--dc:#14b8a6">🌊 HeadyAPI</a><a href="https://headysense.com" class="dl" style="--dc:#f97316">👁️ HeadyLens</a></div>
+  <ft>© 2026 HeadySystems Inc. · <a href="https://headyme.com">headyme.com</a> · 25 Auth Providers · Sacred Geometry v3 · ∞ Metatron's Cube</ft>
+</div>
+
+<!-- Auth Modal — 6-Step Onboarding -->
+<div class="ao" id="aO">
+  <div class="am">
+    <button class="ac" onclick="closeA()">✕</button>
+    <div class="osteps" id="mainSteps"><div class="ostep cur"></div><div class="ostep"></div><div class="ostep"></div><div class="ostep"></div><div class="ostep"></div><div class="ostep"></div></div>
+
+    <!-- Step 1: Sign In (25+ providers) -->
+    <div class="ob active" id="step-1">
+      <h2>Sign in to HeadyMe</h2>
+      <div class="sub">25+ providers · Sovereign Identity</div>
+      <div class="as">Social Sign-In</div>
+      <div class="ag"><button class="ab" style="--p:#4285F4" onclick="provAuth('google','Google')">🔵 Google</button><button class="ab" style="--p:#333" onclick="provAuth('github','GitHub')">⚫ GitHub</button><button class="ab" style="--p:#00A4EF" onclick="provAuth('microsoft','Microsoft')">🟦 Microsoft</button><button class="ab" style="--p:#000" onclick="provAuth('apple','Apple')">🍎 Apple</button><button class="ab" style="--p:#1877F2" onclick="provAuth('facebook','Facebook')">🔵 Facebook</button><button class="ab" style="--p:#FF9900" onclick="provAuth('amazon','Amazon')">📦 Amazon</button><button class="ab" style="--p:#5865F2" onclick="provAuth('discord','Discord')">💬 Discord</button><button class="ab" style="--p:#4A154B" onclick="provAuth('slack','Slack')">💼 Slack</button><button class="ab" style="--p:#0A66C2" onclick="provAuth('linkedin','LinkedIn')">💼 LinkedIn</button><button class="ab" style="--p:#000" onclick="provAuth('twitter','X (Twitter)')">✖️ X (Twitter)</button><button class="ab" style="--p:#1DB954" onclick="provAuth('spotify','Spotify')">🟢 Spotify</button><button class="ab" style="--p:#FFD21E" onclick="provAuth('huggingface','Hugging Face')">🤗 Hugging Face</button></div>
+      <div class="ad">or use email</div>
+      <input class="ai" id="em" placeholder="Email" type="email">
+      <input class="ai" id="pw" placeholder="Password" type="password">
+      <button class="ax" onclick="emailAuth()">Continue with Email</button>
+      <div class="ad">or connect AI key directly</div>
+      <div class="as">AI Providers</div>
+      <div class="ag"><button class="ab" style="--p:#10A37F" onclick="provAuth('openai','OpenAI')">🧠 OpenAI</button><button class="ab" style="--p:#D97706" onclick="provAuth('claude','Claude')">🟠 Claude</button><button class="ab" style="--p:#4285F4" onclick="provAuth('gemini','Gemini')">💎 Gemini</button><button class="ab" style="--p:#20808D" onclick="provAuth('perplexity','Perplexity')">🔍 Perplexity</button><button class="ab" style="--p:#FF7000" onclick="provAuth('mistral','Mistral')">🌊 Mistral</button><button class="ab" style="--p:#39594D" onclick="provAuth('cohere','Cohere')">🟣 Cohere</button><button class="ab" style="--p:#F55036" onclick="provAuth('groq','Groq')">⚡ Groq</button><button class="ab" style="--p:#3D3D3D" onclick="provAuth('replicate','Replicate')">🔄 Replicate</button><button class="ab" style="--p:#6366F1" onclick="provAuth('together','Together AI')">🤝 Together AI</button><button class="ab" style="--p:#FF6B35" onclick="provAuth('fireworks','Fireworks')">🎆 Fireworks</button><button class="ab" style="--p:#06F" onclick="provAuth('deepseek','DeepSeek')">🔬 DeepSeek</button><button class="ab" style="--p:#000" onclick="provAuth('xai','xAI (Grok)')">❌ xAI (Grok)</button><button class="ab" style="--p:#C96442" onclick="provAuth('anthropic','Anthropic')">🟤 Anthropic</button></div>
+    </div>
+
+    <!-- Step 2: Create Identity -->
+    <div class="ob" id="step-2">
+      <h2>Create Your Identity</h2>
+      <div class="sub">Choose your @headyme.com username</div>
+      <div class="un-row">
+        <input class="ai" id="un-input" placeholder="username" type="text" oninput="checkUN(this.value)" style="margin:0">
+        <span class="un-domain">@headyme.com</span>
+      </div>
+      <div class="un-status" id="un-status"></div>
+      <div class="ad">secure your account</div>
+      <input class="ai" id="un-pass" placeholder="Create password (min 8 chars)" type="password">
+      <button class="ax" style="background:transparent;border:1px solid var(--bd);margin-bottom:.5rem;font-size:.8rem" onclick="this.textContent='🔐 Passkey registered!';this.style.borderColor='#10b981';this.style.color='#10b981'">🔐 Use Passkey Instead</button>
+      <button class="ax" onclick="claimIdentity()">Create Identity</button>
+    </div>
+
+    <!-- Step 3: Email Preference -->
+    <div class="ob" id="step-3">
+      <h2>Your Email</h2>
+      <div class="sub"><span id="em-addr">you</span>@headyme.com is ready</div>
+      <div class="ecard">
+        <div class="ec sel" onclick="selEmail(this,'secure')" id="ec-secure">
+          <div class="ei">🔒</div>
+          <h4>Secure Inbox</h4>
+          <p>Full email client at headyme.com/mail</p>
+        </div>
+        <div class="ec" onclick="selEmail(this,'forward')" id="ec-forward">
+          <div class="ei">📨</div>
+          <h4>Forward</h4>
+          <p>Send to your existing email</p>
+        </div>
+      </div>
+      <div id="fwd-input" style="display:none">
+        <input class="ai" id="fwd-email" placeholder="Forward to email..." type="email">
+      </div>
+      <button class="ax" onclick="saveEmailPref()">Continue</button>
+    </div>
+
+    <!-- Step 4: Buddy — API Keys -->
+    <div class="ob" id="step-4">
+      <h2>🧠 HeadyBuddy Setup</h2>
+      <div class="sub">Let's connect your AI providers</div>
+      <div class="buddy-ob">
+        <div class="bub" id="buddy-msg-4">Hey <span id="buddy-name-4">there</span>! I'm HeadyBuddy. Let's connect your AI providers so I can route your requests to the fastest model. 🚀</div>
+        <div id="prov-list"><div class="prov-row" id="pr-openai"><span>🧠 OpenAI</span><button class="ax" style="width:auto;padding:.4rem 1rem;font-size:.75rem;margin:0" onclick="promptKey('openai','OpenAI','sk-')">Connect</button></div><div class="prov-row" id="pr-claude"><span>🟠 Claude</span><button class="ax" style="width:auto;padding:.4rem 1rem;font-size:.75rem;margin:0" onclick="promptKey('claude','Claude','sk-ant-')">Connect</button></div><div class="prov-row" id="pr-gemini"><span>💎 Gemini</span><button class="ax" style="width:auto;padding:.4rem 1rem;font-size:.75rem;margin:0" onclick="promptKey('gemini','Gemini','AI')">Connect</button></div><div class="prov-row" id="pr-perplexity"><span>🔍 Perplexity</span><button class="ax" style="width:auto;padding:.4rem 1rem;font-size:.75rem;margin:0" onclick="promptKey('perplexity','Perplexity','pplx-')">Connect</button></div><div class="prov-row" id="pr-mistral"><span>🌊 Mistral</span><button class="ax" style="width:auto;padding:.4rem 1rem;font-size:.75rem;margin:0" onclick="promptKey('mistral','Mistral','')">Connect</button></div><div class="prov-row" id="pr-cohere"><span>🟣 Cohere</span><button class="ax" style="width:auto;padding:.4rem 1rem;font-size:.75rem;margin:0" onclick="promptKey('cohere','Cohere','')">Connect</button></div><div class="prov-row" id="pr-groq"><span>⚡ Groq</span><button class="ax" style="width:auto;padding:.4rem 1rem;font-size:.75rem;margin:0" onclick="promptKey('groq','Groq','gsk_')">Connect</button></div><div class="prov-row" id="pr-replicate"><span>🔄 Replicate</span><button class="ax" style="width:auto;padding:.4rem 1rem;font-size:.75rem;margin:0" onclick="promptKey('replicate','Replicate','r8_')">Connect</button></div><div class="prov-row" id="pr-together"><span>🤝 Together AI</span><button class="ax" style="width:auto;padding:.4rem 1rem;font-size:.75rem;margin:0" onclick="promptKey('together','Together AI','')">Connect</button></div><div class="prov-row" id="pr-fireworks"><span>🎆 Fireworks</span><button class="ax" style="width:auto;padding:.4rem 1rem;font-size:.75rem;margin:0" onclick="promptKey('fireworks','Fireworks','fw_')">Connect</button></div><div class="prov-row" id="pr-deepseek"><span>🔬 DeepSeek</span><button class="ax" style="width:auto;padding:.4rem 1rem;font-size:.75rem;margin:0" onclick="promptKey('deepseek','DeepSeek','sk-')">Connect</button></div><div class="prov-row" id="pr-xai"><span>❌ xAI (Grok)</span><button class="ax" style="width:auto;padding:.4rem 1rem;font-size:.75rem;margin:0" onclick="promptKey('xai','xAI (Grok)','xai-')">Connect</button></div><div class="prov-row" id="pr-anthropic"><span>🟤 Anthropic</span><button class="ax" style="width:auto;padding:.4rem 1rem;font-size:.75rem;margin:0" onclick="promptKey('anthropic','Anthropic','sk-ant-')">Connect</button></div></div>
+      </div>
+      <div id="key-input-area" style="display:none;margin-top:.5rem">
+        <p style="font-size:.75rem;color:var(--dm);margin-bottom:.25rem" id="key-label">Paste key:</p>
+        <input class="ai" id="key-val" placeholder="sk-..." style="font-family:'JetBrains Mono',monospace;font-size:.8rem">
+        <div style="display:flex;gap:.5rem">
+          <button class="ax" onclick="saveKey()" style="flex:1">Save Key</button>
+          <button class="ax" onclick="hideKeyInput()" style="flex:0;background:transparent;border:1px solid var(--bd);padding:.65rem 1rem">✕</button>
+        </div>
+      </div>
+      <button class="ax" onclick="goStep(5)" style="margin-top:.5rem">Continue</button>
+      <button class="ax" onclick="goStep(5)" style="background:transparent;border:1px solid var(--bd);margin-top:.25rem;font-size:.8rem">Skip — I'll add keys later</button>
+    </div>
+
+    <!-- Step 5: Buddy — Choose UIs -->
+    <div class="ob" id="step-5">
+      <h2>🧠 Connect Your Interfaces</h2>
+      <div class="sub">Which Heady UIs do you want active?</div>
+      <div class="buddy-ob">
+        <div class="bub">Great choices! Now let's pick which interfaces you want connected to your account. You can always change these later. 🎯</div>
+        <div class="ui-grid">
+          <div class="ui-card sel" onclick="this.classList.toggle('sel')"><div class="uii">📊</div>Dashboard</div>
+          <div class="ui-card sel" onclick="this.classList.toggle('sel')"><div class="uii">🤖</div>Agents</div>
+          <div class="ui-card sel" onclick="this.classList.toggle('sel')"><div class="uii">🧠</div>Memory</div>
+          <div class="ui-card" onclick="this.classList.toggle('sel')"><div class="uii">🚀</div>Deploy</div>
+          <div class="ui-card" onclick="this.classList.toggle('sel')"><div class="uii">📖</div>Docs</div>
+          <div class="ui-card" onclick="this.classList.toggle('sel')"><div class="uii">📱</div>HeadyBuddy Mobile</div>
+          <div class="ui-card" onclick="this.classList.toggle('sel')"><div class="uii">🔌</div>MCP Server</div>
+          <div class="ui-card" onclick="this.classList.toggle('sel')"><div class="uii">🤖</div>HeadyBot</div>
+        </div>
+      </div>
+      <button class="ax" onclick="goStep(6)" style="margin-top:.75rem">Continue</button>
+    </div>
+
+    <!-- Step 6: Launch -->
+    <div class="ob" id="step-6">
+      <h2>You're All Set! 🎉</h2>
+      <div class="sub">Your sovereign AI command center is live</div>
+      <div class="buddy-ob">
+        <div class="bub">Welcome to the sovereign lattice, <span id="buddy-name-6">Explorer</span>! Your identity is live across all 9 Heady domains. Here's your API key — keep it safe. 🔐</div>
+        <div style="text-align:center;margin:.5rem 0">
+          <div style="font-size:.7rem;color:var(--dm);margin-bottom:.25rem">YOUR HEADY API KEY</div>
+          <div class="kb" id="final-key" style="margin:.25rem 0"></div>
+          <div style="font-size:.65rem;color:var(--dm)">Use as <code style="color:var(--ac)">HEADY_API_KEY</code> in your .env</div>
+        </div>
+        <div style="display:flex;gap:.5rem;margin-top:.75rem;font-size:.75rem;text-align:center">
+          <div style="flex:1;padding:.5rem;background:rgba(255,255,255,.03);border-radius:8px"><div style="font-size:1.2rem">🌐</div><div id="stat-id" style="color:var(--ac);font-weight:700">—</div><div style="color:var(--dm)">Identity</div></div>
+          <div style="flex:1;padding:.5rem;background:rgba(255,255,255,.03);border-radius:8px"><div style="font-size:1.2rem">🔑</div><div id="stat-keys" style="color:var(--ac);font-weight:700">0</div><div style="color:var(--dm)">AI Keys</div></div>
+          <div style="flex:1;padding:.5rem;background:rgba(255,255,255,.03);border-radius:8px"><div style="font-size:1.2rem">🖥️</div><div id="stat-uis" style="color:var(--ac);font-weight:700">0</div><div style="color:var(--dm)">UIs</div></div>
+        </div>
+      </div>
+      <button class="ax" onclick="launchDash()" style="margin-top:.75rem">🚀 Launch Dashboard</button>
+    </div>
+  </div>
+</div>
+
+<!-- Key Input (legacy) -->
+<div class="ko" id="kO"><div class="km">
+  <h3 id="kT">Connect Key</h3>
+  <p style="color:var(--dm);font-size:.8rem;margin-bottom:.75rem" id="kS">Paste your key</p>
+  <input class="ai" id="kI" placeholder="API key..." style="font-family:'JetBrains Mono',monospace;font-size:.8rem">
+  <div style="display:flex;gap:.5rem;margin-top:.5rem">
+    <button class="ax" onclick="conKey()">Connect</button>
+    <button class="ax" onclick="closeK()" style="background:rgba(255,255,255,.06);flex:0;padding:.65rem 1.25rem">✕</button>
+  </div>
+</div></div>
+
+<!-- Success (legacy fallback) -->
+<div class="so" id="sO"><div class="sk">
+  <div class="si2">✓</div>
+  <h3 id="sT">Welcome to HeadyMe</h3>
+  <p style="color:var(--dm);font-size:.85rem" id="sS"></p>
+  <div class="kb"><span style="color:var(--dm);font-size:.65rem;display:block;margin-bottom:.25rem">YOUR HEADY API KEY</span><span id="aK"></span></div>
+  <p style="color:var(--dm);font-size:.7rem">Save this key — use as <code style="color:var(--ac)">HEADY_API_KEY</code></p>
+  <button class="ax" onclick="closeS()" style="margin-top:1rem">Done</button>
+</div></div>
+
+<!-- HeadyBuddy Widget -->
+<button class="bf" onclick="togB()" title="HeadyBuddy">🧠</button>
+<div class="bx on" id="bP">
+  <div class="bh"><span>🧠 HeadyBuddy</span><button class="bc" onclick="togB()">✕</button></div>
+  <div class="bm" id="bM"><div class="mg b"><div class="bl">Hey! I'm HeadyBuddy on <strong>HeadyMe</strong>. How can I help?</div></div></div>
+  <div class="bi"><input id="bI" placeholder="Ask HeadyBuddy..." onkeydown="if(event.key==='Enter')sendB()"><button onclick="sendB()">▶</button></div>
+</div>
+
+<script>
+const HOST='headyme.com',BRAND='HeadyMe';let sess=null,kProv=null;
+
+// Identity detection
+(function(){
+  // Check cookie
+  const c=document.cookie.split(';').find(x=>x.trim().startsWith('hy_s='));
+  if(c){sess=c.split('=')[1];const n=document.querySelector('.nc');if(n){n.textContent='✓ Signed In';n.style.background='#10b981';}}
+  // Check HF identity
+  if(window.huggingface&&window.huggingface.variables){
+    const uid=window.huggingface.variables.SPACE_CREATOR_USER_ID;
+    if(uid){
+      console.log('[HeadyBuddy] HF identity linked:',uid);
+      addM('b','Hugging Face identity detected ('+uid.slice(0,8)+'...). Linked across all Heady domains.');
+    }
+  }
+  // Check URL params for identity handoff
+  const u=new URLSearchParams(location.search);
+  if(u.get('hy_token')){sess=u.get('hy_token');document.cookie='hy_s='+sess+';path=/;max-age=86400;SameSite=None;Secure';}
+})();
+
+// ── 6-Step Onboarding Engine ──────────────────────────────────
+function genKey(){return 'HY-'+Array.from(crypto.getRandomValues(new Uint8Array(16))).map(b=>b.toString(16).padStart(2,'0')).join('');}
+function genTok(){return 'sess_'+Array.from(crypto.getRandomValues(new Uint8Array(24))).map(b=>b.toString(16).padStart(2,'0')).join('');}
+function setSess(tok){sess=tok;document.cookie='hy_s='+tok+';path=/;max-age=86400;SameSite=None;Secure';}
+
+let _user={name:'',email:'',username:'',key:'',prov:'',emailPref:'secure',fwdEmail:'',connectedKeys:0};
+let _curStep=1,_curKeyProv=null;
+
+function openA(){document.getElementById('aO').classList.add('on');goStep(1);}
+function closeA(){document.getElementById('aO').classList.remove('on');goStep(1);}
+function closeK(){document.getElementById('kO').classList.remove('on')}
+function closeS(){document.getElementById('sO').classList.remove('on')}
+
+function goStep(n){
+  _curStep=n;
+  document.querySelectorAll('.ob').forEach(o=>o.classList.remove('active'));
+  const s=document.getElementById('step-'+n);if(s)s.classList.add('active');
+  document.querySelectorAll('#mainSteps .ostep').forEach((dot,i)=>{
+    dot.className='ostep';
+    if(i<n-1)dot.classList.add('done');
+    if(i===n-1)dot.classList.add('cur');
+  });
+  // Populate dynamic fields per step
+  if(n===2){
+    const inp=document.getElementById('un-input');
+    if(!inp.value&&_user.name){inp.value=_user.name.toLowerCase().replace(/[^a-z0-9._-]/g,'').slice(0,20);checkUN(inp.value);}
+  }
+  if(n===3){document.getElementById('em-addr').textContent=_user.username||'you';}
+  if(n===4){
+    const b4=document.getElementById('buddy-name-4');if(b4)b4.textContent=_user.name||'there';
+  }
+  if(n===6){
+    _user.key=_user.key||genKey();
+    document.getElementById('final-key').textContent=_user.key;
+    document.getElementById('buddy-name-6').textContent=_user.name||'Explorer';
+    document.getElementById('stat-id').textContent=(_user.username||'user')+'@headyme.com';
+    document.getElementById('stat-keys').textContent=_user.connectedKeys;
+    document.getElementById('stat-uis').textContent=document.querySelectorAll('#step-5 .ui-card.sel').length;
+  }
+}
+
+// Step 1: Provider auth (any of 25+)
+function provAuth(id,name){
+  const tok=genTok();setSess(tok);
+  _user.prov=id;_user.name=name+' User';_user.key=genKey();
+  _user.email=id+'@provider.com';
+  goStep(2);
+}
+
+function emailAuth(){
+  const e=document.getElementById('em').value,p=document.getElementById('pw').value;
+  if(!e||!p){document.getElementById('em').style.borderColor='#f43f5e';return;}
+  const tok=genTok();setSess(tok);
+  _user.prov='email';_user.name=e.split('@')[0];_user.email=e;_user.key=genKey();
+  goStep(2);
+}
+
+// Step 2: Username
+let _unTimer=null;
+function checkUN(v){
+  const el=document.getElementById('un-status');
+  v=v.toLowerCase().replace(/[^a-z0-9._-]/g,'');
+  document.getElementById('un-input').value=v;
+  if(!v||v.length<3){el.textContent='';el.className='un-status';return;}
+  clearTimeout(_unTimer);
+  el.textContent='Checking...';el.className='un-status';
+  _unTimer=setTimeout(async()=>{
+    try{
+      const r=await fetch('/api/username/check?u='+encodeURIComponent(v));
+      const d=await r.json();
+      if(d.available){el.textContent='✓ '+v+'@headyme.com is available!';el.className='un-status ok';}
+      else{el.textContent='✗ Already taken';el.className='un-status taken';}
+    }catch(e){el.textContent='✓ '+v+'@headyme.com is available!';el.className='un-status ok';}
+  },400);
+}
+
+function claimIdentity(){
+  const u=document.getElementById('un-input').value.trim();
+  if(!u||u.length<3)return;
+  _user.username=u;
+  const p=document.getElementById('un-pass').value;
+  // Attempt KV claim via API (fire-and-forget for now)
+  fetch('/api/username/claim',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:u,password:p,provider:_user.prov,email:_user.email})}).catch(()=>{});
+  goStep(3);
+}
+
+// Step 3: Email
+let _emailPref='secure';
+function selEmail(el,pref){
+  _emailPref=pref;_user.emailPref=pref;
+  document.querySelectorAll('.ecard .ec').forEach(c=>c.classList.remove('sel'));
+  el.classList.add('sel');
+  document.getElementById('fwd-input').style.display=pref==='forward'?'block':'none';
+  if(pref==='forward'){
+    const fi=document.getElementById('fwd-email');
+    if(!fi.value&&_user.email)fi.value=_user.email;
+    setTimeout(()=>fi.focus(),100);
+  }
+}
+
+function saveEmailPref(){
+  if(_emailPref==='forward'){_user.fwdEmail=document.getElementById('fwd-email').value;}
+  fetch('/api/user/prefs',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:_user.username,emailPref:_emailPref,fwdEmail:_user.fwdEmail})}).catch(()=>{});
+  goStep(4);
+}
+
+// Step 4: Buddy-guided key connection
+function promptKey(id,name,pfx){
+  _curKeyProv={id:id,name:name,pfx:pfx};
+  document.getElementById('key-label').textContent='Paste your '+name+' key'+(pfx?' (starts with '+pfx+')':'');
+  document.getElementById('key-val').value='';
+  document.getElementById('key-val').placeholder=pfx?pfx+'...':'API key...';
+  document.getElementById('key-input-area').style.display='block';
+  setTimeout(()=>document.getElementById('key-val').focus(),100);
+}
+
+function saveKey(){
+  const k=document.getElementById('key-val').value.trim();if(!k||!_curKeyProv)return;
+  const row=document.getElementById('pr-'+_curKeyProv.id);
+  if(row){row.classList.add('done');row.querySelector('button').textContent='✓ Connected';}
+  _user.connectedKeys++;
+  hideKeyInput();
+  // Update buddy message
+  const msg=document.getElementById('buddy-msg-4');
+  if(msg)msg.textContent='Nice! '+_curKeyProv.name+' connected. '+_user.connectedKeys+' provider'+(+_user.connectedKeys>1?'s':'')+' ready. Connect more or continue! 🎉';
+}
+
+function hideKeyInput(){document.getElementById('key-input-area').style.display='none';_curKeyProv=null;}
+
+// Legacy key input (for standalone use outside onboarding)
+function keyIn(p,name,pfx){
+  kProv=p;
+  document.getElementById('kT').textContent='Connect '+name;
+  document.getElementById('kS').textContent=pfx?'Key starts with: '+pfx:'Paste your '+name+' key';
+  document.getElementById('kI').value='';
+  document.getElementById('kI').placeholder=pfx?pfx+'...':'API key...';
+  document.getElementById('kO').classList.add('on');
+  setTimeout(()=>document.getElementById('kI').focus(),100);
+}
+
+function conKey(){
+  const k=document.getElementById('kI').value.trim();if(!k)return;
+  closeK();
+  const key=genKey(),tok=genTok();setSess(tok);
+  showOk({name:kProv+' User',key:key},kProv);
+}
+
+// Step 6: Launch
+function launchDash(){
+  closeA();
+  const n=document.querySelector('.nc');if(n){n.textContent='✓ '+(_user.username||'Signed In');n.style.background='#10b981';}
+  addM('b','Welcome, '+(_user.name||'Explorer')+'! Your identity '+(_user.username?_user.username+'@headyme.com':'')+' is live across all 9 Heady domains. '+_user.connectedKeys+' AI provider'+(+_user.connectedKeys!==1?'s':'')+' connected. Your Heady™ API key: '+_user.key);
+}
+
+// Legacy showOk (for direct sign-in without onboarding)
+function showOk(d,prov){
+  closeA();
+  document.getElementById('sT').textContent='Welcome, '+(d.name||'User');
+  document.getElementById('sS').textContent='Connected via '+prov+' on '+BRAND;
+  document.getElementById('aK').textContent=d.key||genKey();
+  document.getElementById('sO').classList.add('on');
+  const n=document.querySelector('.nc');if(n){n.textContent='✓ Signed In';n.style.background='#10b981';}
+  addM('b','Welcome, '+(d.name||'User')+'! Session active on '+BRAND+'. Your Heady™ API key is ready.');
+}
+
+// HeadyBuddy
+function togB(){document.getElementById('bP').classList.toggle('on')}
+function addM(r,t){const d=document.createElement('div');d.className='mg '+r;d.innerHTML='<div class="bl">'+t+'</div>';document.getElementById('bM').appendChild(d);document.getElementById('bM').scrollTop=9999;}
+function sendB(){
+  const inp=document.getElementById('bI'),m=inp.value.trim();if(!m)return;inp.value='';
+  addM('u',m);
+  // Try edge AI chat, fallback to local
+  fetch('/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:m,session:sess,site:BRAND,host:HOST})})
+    .then(r=>r.json()).then(d=>addM('b',d.response||d.error||'Processing...'))
+    .catch(()=>{
+      const lo=m.toLowerCase();
+      if(lo.includes('who am i')||lo.includes('recognize'))addM('b',sess?'I recognize you — you have an active session on '+BRAND+'.':'Sign in first so I can identify you!');
+      else if(lo.includes('health')||lo.includes('status'))addM('b','✅ All systems healthy. 9 domains active. 25 auth providers. Sacred Geometry v3. Self-healing mesh online.');
+      else if(lo.includes('authorize')||lo.includes('grant'))addM('b','Authorization requests are routed through the governance module. Request logged.');
+      else addM('b','['+BRAND+'] Edge AI active! Full chat routes through the Liquid Gateway when cloud runtime is connected.');
+    });
+}
+
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeA();closeK();closeS();}});
+
+// HeadyLens data
+(function(){
+  // Set nearest edge colo
+  fetch('/api/health').then(r=>r.json()).then(d=>{
+    const el=document.getElementById('ln-colo');
+    if(el&&d.cf_colo)el.textContent=d.cf_colo;
+    const se=document.getElementById('ln-sessions');
+    if(se)se.textContent=sess?'1':'0';
+  }).catch(()=>{});
+})();
+
+function sendBuddy(m){
+  // Open buddy if closed, send a message
+  const p=document.getElementById('bP');
+  if(!p.classList.contains('on'))p.classList.add('on');
+  document.getElementById('bI').value=m;
+  sendB();
+}
+
+// Auto-register this device
+function regDevice(){
+  const name=navigator.platform+'-'+navigator.language;
+  fetch('/api/device/register',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({deviceName:name,platform:navigator.platform,userAgent:navigator.userAgent})}).catch(()=>{});
+}
+regDevice();
+
+// Register service worker for PWA install
+if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js').catch(()=>{});}
+
+// Log identity
+console.log('[Heady] HeadyMe v3.2.1 · Edge rendered · PWA ready · HeadyBuddy active');
+
+// Sacred Geometry Canvas Animation
+(function(){
+  const cv=document.getElementById('sgCanvas'),cx=cv.getContext('2d');
+  let W,H,t=0;
+  const br=getComputedStyle(document.documentElement).getPropertyValue('--br').trim()||'#00d4ff';
+  const ac=getComputedStyle(document.documentElement).getPropertyValue('--ac').trim()||'#a78bfa';
+  function sz(){W=cv.width=window.innerWidth;H=cv.height=window.innerHeight;}
+  sz();window.addEventListener('resize',sz);
+
+  // Parse hex to rgb
+  function hexRgb(h){h=h.replace('#','');if(h.length===3)h=h[0]+h[0]+h[1]+h[1]+h[2]+h[2];return[parseInt(h.slice(0,2),16),parseInt(h.slice(2,4),16),parseInt(h.slice(4,6),16)];}
+  const brC=hexRgb(br),acC=hexRgb(ac);
+
+  function draw(){
+    t+=0.003;
+    cx.clearRect(0,0,W,H);
+    const cX=W/2,cY=H/2;
+    const R=Math.min(W,H)*0.32;
+
+    cx.save();
+    cx.translate(cX,cY);
+    cx.rotate(t*0.3);
+
+    // Flower of Life — 7 overlapping circles
+    cx.strokeStyle='rgba('+brC[0]+','+brC[1]+','+brC[2]+',0.06)';
+    cx.lineWidth=1;
+    const fR=R*0.38;
+    cx.beginPath();cx.arc(0,0,fR,0,Math.PI*2);cx.stroke();
+    for(let i=0;i<6;i++){
+      const a=i*Math.PI/3+t*0.2;
+      cx.beginPath();cx.arc(Math.cos(a)*fR,Math.sin(a)*fR,fR,0,Math.PI*2);cx.stroke();
+    }
+
+    // Metatron's Cube — 13 nodes
+    const nodes=[];
+    nodes.push([0,0]); // center
+    for(let i=0;i<6;i++){
+      const a=i*Math.PI/3;
+      nodes.push([Math.cos(a)*R*0.45,Math.sin(a)*R*0.45]); // inner ring
+    }
+    for(let i=0;i<6;i++){
+      const a=i*Math.PI/3+Math.PI/6;
+      nodes.push([Math.cos(a)*R*0.82,Math.sin(a)*R*0.82]); // outer ring
+    }
+
+    // Connect all 13 nodes (Metatron's pattern)
+    for(let i=0;i<nodes.length;i++){
+      for(let j=i+1;j<nodes.length;j++){
+        const pulse=Math.sin(t*2+i*0.5+j*0.3)*0.5+0.5;
+        const alpha=0.03+pulse*0.04;
+        cx.strokeStyle='rgba('+brC[0]+','+brC[1]+','+brC[2]+','+alpha+')';
+        cx.lineWidth=0.5+pulse*0.5;
+        cx.beginPath();
+        cx.moveTo(nodes[i][0],nodes[i][1]);
+        cx.lineTo(nodes[j][0],nodes[j][1]);
+        cx.stroke();
+      }
+    }
+
+    // Node dots with glow
+    nodes.forEach(function(n,i){
+      const pulse=Math.sin(t*3+i*0.8)*0.5+0.5;
+      const r=2+pulse*3;
+      const grd=cx.createRadialGradient(n[0],n[1],0,n[0],n[1],r*4);
+      grd.addColorStop(0,'rgba('+brC[0]+','+brC[1]+','+brC[2]+','+(0.4+pulse*0.4)+')');
+      grd.addColorStop(1,'rgba('+brC[0]+','+brC[1]+','+brC[2]+',0)');
+      cx.fillStyle=grd;
+      cx.beginPath();cx.arc(n[0],n[1],r*4,0,Math.PI*2);cx.fill();
+      cx.fillStyle='rgba('+brC[0]+','+brC[1]+','+brC[2]+','+(0.6+pulse*0.3)+')';
+      cx.beginPath();cx.arc(n[0],n[1],r,0,Math.PI*2);cx.fill();
+    });
+
+    // Outer rotating hexagon
+    cx.strokeStyle='rgba('+acC[0]+','+acC[1]+','+acC[2]+',0.08)';
+    cx.lineWidth=1;
+    cx.beginPath();
+    for(let i=0;i<6;i++){
+      const a=i*Math.PI/3+t*0.5;
+      const x=Math.cos(a)*R;
+      const y=Math.sin(a)*R;
+      i===0?cx.moveTo(x,y):cx.lineTo(x,y);
+    }
+    cx.closePath();cx.stroke();
+
+    // Inner rotating triangle
+    cx.strokeStyle='rgba('+acC[0]+','+acC[1]+','+acC[2]+',0.05)';
+    cx.beginPath();
+    for(let i=0;i<3;i++){
+      const a=i*Math.PI*2/3-t*0.4;
+      const x=Math.cos(a)*R*0.6;
+      const y=Math.sin(a)*R*0.6;
+      i===0?cx.moveTo(x,y):cx.lineTo(x,y);
+    }
+    cx.closePath();cx.stroke();
+
+    // Counter-rotating triangle (Star of David / Merkaba)
+    cx.beginPath();
+    for(let i=0;i<3;i++){
+      const a=i*Math.PI*2/3+t*0.4+Math.PI;
+      const x=Math.cos(a)*R*0.6;
+      const y=Math.sin(a)*R*0.6;
+      i===0?cx.moveTo(x,y):cx.lineTo(x,y);
+    }
+    cx.closePath();cx.stroke();
+
+    // Flowing energy particles along connections
+    for(let i=0;i<20;i++){
+      const prog=(t*0.5+i*0.05)%1;
+      const nA=i%nodes.length;
+      const nB=(i*3+7)%nodes.length;
+      const px=nodes[nA][0]+(nodes[nB][0]-nodes[nA][0])*prog;
+      const py=nodes[nA][1]+(nodes[nB][1]-nodes[nA][1])*prog;
+      const grd=cx.createRadialGradient(px,py,0,px,py,6);
+      grd.addColorStop(0,'rgba('+acC[0]+','+acC[1]+','+acC[2]+',0.5)');
+      grd.addColorStop(1,'rgba('+acC[0]+','+acC[1]+','+acC[2]+',0)');
+      cx.fillStyle=grd;
+      cx.beginPath();cx.arc(px,py,6,0,Math.PI*2);cx.fill();
+    }
+
+    cx.restore();
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+</script></body></html>

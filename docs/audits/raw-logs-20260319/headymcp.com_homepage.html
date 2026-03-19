@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html><head><title>Heady™ MCP Server</title>
+<style>body{font-family:system-ui;background:#0a0a0f;color:#e0e0e0;max-width:800px;margin:0 auto;padding:2rem}
+h1{color:#7c5eff}a{color:#40e0d0}code{background:#1a1a2e;padding:2px 6px;border-radius:4px}
+.tools{display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;margin:1rem 0}
+.tool{background:#1a1a2e;padding:0.5rem;border-radius:4px;font-size:0.85rem}</style></head>
+<body>
+<h1>🐝 Heady™ MCP Server v5.0.0</h1>
+<p>55 tools registered | φ-scaled orchestration | CSL gates</p>
+<h2>Endpoints</h2>
+<ul>
+<li><code>POST /mcp</code> — Streamable HTTP (JSON-RPC)</li>
+<li><code>GET /mcp/sse</code> — Server-Sent Events</li>
+<li><code>GET /health</code> — Health check</li>
+<li><code>GET /tools</code> — List all tools</li>
+<li><code>GET /.well-known/mcp.json</code> — MCP discovery</li>
+</ul>
+<h2>Connect</h2>
+<p>Add to <code>claude_desktop_config.json</code>:</p>
+<pre><code>{
+  "mcpServers": {
+    "heady": {
+      "command": "node",
+      "args": ["path/to/services/heady-mcp-server/src/index.js"],
+      "env": { "HEADY_MCP_TRANSPORT": "stdio" }
+    }
+  }
+}</code></pre>
+<h2>Tools</h2>
+<div class="tools">
+<div class="tool"><strong>heady_deep_scan</strong><br>Deep project scanning: maps files, extracts structure, generates embeddings into...</div>
+<div class="tool"><strong>heady_auto_flow</strong><br>Full auto-success pipeline — chains Battle + Coder + Analyze + Risks + Patterns ...</div>
+<div class="tool"><strong>heady_memory</strong><br>Search HeadyMemory (3D vector space) for persistent facts, embeddings, and knowl...</div>
+<div class="tool"><strong>heady_embed</strong><br>Generate vector embeddings via Heady™ embedding service (384D, nomic-embed-text)...</div>
+<div class="tool"><strong>heady_soul</strong><br>HeadySoul — awareness layer: values arbiter, coherence guardian, mission alignme...</div>
+<div class="tool"><strong>heady_vinci</strong><br>HeadyVinci — session planner: topology maintainer, multi-step reasoning engine....</div>
+<div class="tool"><strong>heady_analyze</strong><br>Unified analysis — code, research, architecture, security, performance, academic...</div>
+<div class="tool"><strong>heady_risks</strong><br>Risk assessment, vulnerability scanning, mitigation plans with CSL-weighted seve...</div>
+<div class="tool"><strong>heady_coder</strong><br>Code generation and multi-assistant workflows via Heady™Coder....</div>
+<div class="tool"><strong>heady_battle</strong><br>HeadyBattle Arena — AI node competition, evaluation, leaderboard, cross-model co...</div>
+<div class="tool"><strong>heady_patterns</strong><br>Design pattern detection and deep code analysis — antipatterns, suggestions, lib...</div>
+<div class="tool"><strong>heady_refactor</strong><br>Code refactoring suggestions — clean code, SOLID, DRY, with phi-weighted priorit...</div>
+<div class="tool"><strong>heady_chat</strong><br>Chat with Heady™ Brain — multi-model inference with automatic routing....</div>
+<div class="tool"><strong>heady_claude</strong><br>Advanced reasoning via Anthropic Claude with extended thinking....</div>
+<div class="tool"><strong>heady_openai</strong><br>GPT integration with function calling — GPT-4o, o1, o3....</div>
+<div class="tool"><strong>heady_gemini</strong><br>Multimodal AI via Google Gemini — text, image, video analysis....</div>
+<div class="tool"><strong>heady_groq</strong><br>Ultra-fast inference via Groq LPU — sub-100ms latency....</div>
+<div class="tool"><strong>heady_complete</strong><br>Code/text completion via Heady™ Brain with multi-model fallback....</div>
+<div class="tool"><strong>heady_buddy</strong><br>HeadyBuddy — multi-provider personal AI assistant with memory....</div>
+<div class="tool"><strong>heady_deploy</strong><br>Trigger deployment/service actions — deploy, restart, status, logs, scale....</div>
+<div class="tool"><strong>heady_health</strong><br>Check health/status of all Heady services with φ-scaled telemetry....</div>
+<div class="tool"><strong>heady_ops</strong><br>DevOps automation — infrastructure, monitoring, scaling....</div>
+<div class="tool"><strong>heady_maintenance</strong><br>Health monitoring, backups, updates, restoration....</div>
+<div class="tool"><strong>heady_maid</strong><br>System cleanup and scheduling — garbage collection, temp purge....</div>
+<div class="tool"><strong>heady_learn</strong><br>Store a learning in 3D vector memory — directives, preferences, patterns....</div>
+<div class="tool"><strong>heady_recall</strong><br>Search 3D vector memory for relevant past interactions and knowledge....</div>
+<div class="tool"><strong>heady_vector_store</strong><br>Store a vector embedding in 3D GPU vector space (384D pgvector + HNSW)....</div>
+<div class="tool"><strong>heady_vector_search</strong><br>Search 3D GPU vector space for similar vectors via HNSW....</div>
+<div class="tool"><strong>heady_vector_stats</strong><br>Get 3D vector space statistics — dimensions, count, memory usage....</div>
+<div class="tool"><strong>heady_memory_stats</strong><br>Get continuous learning stats — total memories, categories, storage....</div>
+<div class="tool"><strong>heady_search</strong><br>Search Heady knowledge base, service catalog, docs, and registry....</div>
+<div class="tool"><strong>heady_edge_ai</strong><br>Cloudflare edge AI — embeddings, chat, classification, vector search at the edge...</div>
+<div class="tool"><strong>heady_lens</strong><br>Visual analysis and image processing — object detection, OCR, classification....</div>
+<div class="tool"><strong>heady_notebooklm</strong><br>Sync Heady Knowledge Vault to NotebookLM — bidirectional knowledge sync....</div>
+<div class="tool"><strong>heady_jules_task</strong><br>Dispatch async background coding task to Jules/Codex....</div>
+<div class="tool"><strong>heady_huggingface_model</strong><br>Search and interact with HuggingFace models — search, info, inference....</div>
+<div class="tool"><strong>heady_orchestrator</strong><br>HeadyOrchestrator — system-wide communication, alignment, coordination....</div>
+<div class="tool"><strong>heady_hcfp_status</strong><br>HCFP auto-success engine status — pipeline metrics, queue depth, throughput....</div>
+<div class="tool"><strong>heady_telemetry</strong><br>Get comprehensive telemetry — request rates, latencies, error budgets....</div>
+<div class="tool"><strong>heady_template_stats</strong><br>Get template auto-generation stats — templates created, cache hits....</div>
+<div class="tool"><strong>heady_csl_engine</strong><br>CSL Engine — Continuous Semantic Logic gates, resonance, superposition, entangle...</div>
+<div class="tool"><strong>heady_agent_orchestration</strong><br>Latent OS agent decomposition — planner-executor-validator with swarm coordinati...</div>
+<div class="tool"><strong>heady_cms_content</strong><br>Manage Drupal CMS content — create, read, update, delete pages, articles, and cu...</div>
+<div class="tool"><strong>heady_cms_taxonomy</strong><br>Manage Drupal taxonomies — tags, categories, and vocabulary terms for content or...</div>
+<div class="tool"><strong>heady_cms_media</strong><br>Manage Drupal media — images, files, videos for all HEADY sites....</div>
+<div class="tool"><strong>heady_cms_views</strong><br>Execute Drupal Views — pre-built queries for content listings, reports, dashboar...</div>
+<div class="tool"><strong>heady_cms_search</strong><br>Search Drupal content via Search API — full-text search across all HEADY sites w...</div>
+<div class="tool"><strong>aegis_heartbeat</strong><br>Aegis φ-resonant heartbeat — unified health score (0→1.618) across all infrastru...</div>
+<div class="tool"><strong>aegis_service_check</strong><br>Aegis single-service health probe with latency, status code, and response body....</div>
+<div class="tool"><strong>mandala_phi</strong><br>Sacred geometry φ-computation: golden ratio, Fibonacci, phi-layout, harmonic ana...</div>
+<div class="tool"><strong>mandala_constants</strong><br>Return all φ-derived constants used across the Heady system — thresholds, Fibona...</div>
+<div class="tool"><strong>mnemosyne_remember</strong><br>Store a memory with importance-based auto-placement across 3 tiers: Redis (hot),...</div>
+<div class="tool"><strong>mnemosyne_recall</strong><br>Search across all 3 memory tiers (Redis→pgvector→Qdrant) for relevant memories w...</div>
+<div class="tool"><strong>mnemosyne_forget</strong><br>Apply φ-decay forgetting to memories. Memories halve in strength every φ cycles ...</div>
+<div class="tool"><strong>mnemosyne_consolidate</strong><br>Run memory consolidation: migrate between tiers based on access patterns, reinfo...</div>
+</div>
+</body></html>
