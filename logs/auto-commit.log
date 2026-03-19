@@ -8632,3 +8632,28 @@ To https://github.com/HeadyMe/heady-production.git
  ! [remote rejected]       main -> main (pre-receive hook declined)
 error: failed to push some refs to 'https://github.com/HeadyMe/heady-production.git'
 [39m
+Committed: 62de3a04b6 — 
+Push failed: Command failed: git push production main
+remote: error: GH008: Your push referenced at least 11 unknown Git LFS objects:        
+remote:     3a9bf886ee50b688f87d228791daa49c909ff6689b6a466132885e08b7553ec0        
+remote:     3e34ad4fddcbec490fa1bdfb41c524f33f215b05a239f6c4a7e28a1f5650e867        
+remote:     c3461addd84ab58e2e9a98c467b6171cfc6b3df3ec3a9492b6b0569d4da6cecb        
+remote:     ...        
+remote: Try to push them with 'git lfs push --all'.        
+To https://github.com/HeadyMe/heady-production.git
+ ! [remote rejected]       main -> main (pre-receive hook declined)
+error: failed to push some refs to 'https://github.com/HeadyMe/heady-production.git'
+
+[2026-03-19 04:35:02.562 -0600] [32mINFO[39m: [36m[auto-commit] [2026-03-19T10:35:02.561Z] [INFO] Committed 62de3a04b6: HCFP-AUTO: 2 file(s) changed — auto-commit.log, pattern_store.json[39m
+    [35mcomponent[39m: "system"
+[2026-03-19 04:35:14.197 -0600] [31mERROR[39m: [36m[auto-commit] [2026-03-19T10:35:14.197Z] [ERROR] Push failed (attempt 1), next backoff: 2000ms — Command failed: git push production main
+remote: error: GH008: Your push referenced at least 11 unknown Git LFS objects:        
+remote:     3a9bf886ee50b688f87d228791daa49c909ff6689b6a466132885e08b7553ec0        
+remote:     3e34ad4fddcbec490fa1bdfb41c524f33f215b05a239f6c4a7e28a1f5650e867        
+remote:     c3461addd84ab58e2e9a98c467b6171cfc6b3df3ec3a9492b6b0569d4da6cecb        
+remote:     ...        
+remote: Try to push them with 'git lfs push --all'.        
+To https://github.com/HeadyMe/heady-production.git
+ ! [remote rejected]       main -> main (pre-receive hook declined)
+error: failed to push some refs to 'https://github.com/HeadyMe/heady-production.git'
+[39m
