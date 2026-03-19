@@ -5,6 +5,7 @@ docker==7.1.0
 requests>=2.32.3
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 pydantic==2.12.5
 python-dotenv==1.2.2
 asyncio-mqtt==0.16.2
@@ -13,6 +14,9 @@ fastapi==0.135.1
 uvicorn==0.42.0
 =======
 pydantic==2.5.0
+=======
+pydantic==2.12.5
+>>>>>>> hc-testing/dependabot/pip/midi_bridge/pydantic-2.12.5
 =======
 pydantic==2.12.5
 >>>>>>> hc-testing/dependabot/pip/midi_bridge/pydantic-2.12.5
