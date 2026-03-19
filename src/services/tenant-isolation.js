@@ -1,12 +1,13 @@
 /**
- * Multi-Tenant Isolation Layer — Tenant context management for
- * Cloud Run SaaS deployment of Heady™ Latent OS.
+ * Multi-Tenant Isolation Layer — Postgres-Backed Tenant Management
+ * for HeadyConnection™ IaaS deployment.
  *
- * Provides per-tenant data isolation, request context, resource
- * quotas, and tenant-aware routing for shared infrastructure.
+ * Provides per-tenant data isolation via Neon RLS, request context
+ * via AsyncLocalStorage, hashed API key auth, quota enforcement,
+ * and Stripe metering integration.
  *
  * @module src/services/tenant-isolation
- * @version 1.0.0
+ * @version 2.0.0
  * @author HeadySystems™
  * @license Proprietary — HeadySystems™ & HeadyConnection™
  */
@@ -15,252 +16,262 @@
 
 const { EventEmitter } = require('events');
 const crypto = require('crypto');
+const { AsyncLocalStorage } = require('async_hooks');
 
 const PHI = 1.618033988749895;
 const FIB = [1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377];
 
-/**
- * TenantContext — carries tenant identity through async execution.
- * Uses AsyncLocalStorage for zero-overhead request-scoped isolation.
- */
+// ─── Tier Definitions ───────────────────────────────────────────────
+const TIER_CONFIG = {
+    developer:  { multiplier: 1,                 rpm: FIB[12],                 features: ['vector_memory', 'basic_search'] },
+    starter:    { multiplier: PHI,               rpm: Math.round(FIB[12] * PHI),  features: ['vector_memory', 'basic_search', 'namespaces', 'webhooks'] },
+    pro:        { multiplier: PHI * PHI,         rpm: Math.round(FIB[12] * PHI * PHI), features: ['vector_memory', 'basic_search', 'namespaces', 'webhooks', 'batch_ops', 'analytics'] },
+    enterprise: { multiplier: PHI * PHI * PHI,   rpm: Math.round(FIB[12] * PHI * PHI * PHI), features: ['all'] },
+};
+
+// ─── Tenant Context (AsyncLocalStorage) ─────────────────────────────
 class TenantContext {
     constructor() {
-        const { AsyncLocalStorage } = require('async_hooks');
         this.storage = new AsyncLocalStorage();
     }
 
-    /** Run callback within a tenant context */
     run(tenantId, callback) {
         return this.storage.run({ tenantId, startedAt: Date.now() }, callback);
     }
 
-    /** Get current tenant ID (or null if outside tenant context) */
     getTenantId() {
         return this.storage.getStore()?.tenantId || null;
     }
 
-    /** Get full tenant store */
     getStore() {
         return this.storage.getStore();
     }
 }
 
-/**
- * TenantIsolation — manages tenant lifecycle, quotas, and data isolation.
- */
+// ─── Main Isolation Class ───────────────────────────────────────────
 class TenantIsolation {
     constructor(opts = {}) {
         this.context = new TenantContext();
         this.events = new EventEmitter();
-        this.tenants = new Map();
+        this.db = opts.db || null; // neon-db module injected at init
 
-        // Default quotas (φ-scaled)
-        this.defaultQuotas = {
-            maxAgents: Math.round(FIB[8] * PHI),       // ~55 agents
-            maxProjections: FIB[7],                     // 13 projections
-            maxVectorMemoryMB: Math.round(FIB[10] * PHI), // ~89 MB
-            maxRequestsPerMinute: FIB[12],              // 144 req/min
-            maxConcurrentTasks: FIB[6],                 // 8 tasks
-            vectorDimensionLimit: FIB[13],              // 377 dimensions
-        };
+        // In-memory cache for hot tenants (TTL: 60s)
+        this._cache = new Map();
+        this._cacheTTL = 60_000;
 
-        this.plans = {
-            free: { multiplier: 1, features: ['basic_agents', 'vector_memory'] },
-            starter: { multiplier: PHI, features: ['basic_agents', 'vector_memory', 'projections', 'mcp'] },
-            pro: { multiplier: PHI * PHI, features: ['basic_agents', 'vector_memory', 'projections', 'mcp', 'spatial_debug', 'midi'] },
-            enterprise: { multiplier: PHI * PHI * PHI, features: ['all'] },
+        // Rate limit windows (in-memory, per-process)
+        this._rateWindows = new Map();
+    }
+
+    /** Inject the database module (call once at startup) */
+    setDatabase(db) {
+        this.db = db;
+    }
+
+    // ─── Tenant CRUD (Postgres-backed) ──────────────────────────────
+
+    /**
+     * Register a new tenant and generate an API key.
+     * @returns {{ tenantId, apiKey, keyPrefix, tier }}
+     */
+    async registerTenant({ companyName, contactEmail, tier = 'developer', stripeCustomerId = null }) {
+        if (!this.db) throw new Error('Database not initialized');
+
+        // Insert tenant
+        const result = await this.db.query(
+            `INSERT INTO tenants (company_name, contact_email, subscription_tier, stripe_customer_id, rate_limit_rpm)
+             VALUES ($1, $2, $3, $4, $5)
+             RETURNING tenant_id`,
+            [companyName, contactEmail, tier, stripeCustomerId, TIER_CONFIG[tier]?.rpm || FIB[12]]
+        );
+
+        if (!result.ok || result.rows.length === 0) {
+            throw new Error(`Failed to create tenant: ${result.error}`);
+        }
+
+        const tenantId = result.rows[0].tenant_id;
+
+        // Generate API key: hc_<32 random hex chars>
+        const rawKey = `hc_${crypto.randomBytes(32).toString('hex')}`;
+        const keyHash = crypto.createHash('sha256').update(rawKey).digest('hex');
+        const keyPrefix = rawKey.slice(0, 11); // 'hc_' + 8 chars
+
+        await this.db.query(
+            `INSERT INTO api_keys (key_hash, tenant_id, key_prefix, label, scopes)
+             VALUES ($1, $2, $3, $4, $5)`,
+            [keyHash, tenantId, keyPrefix, `${companyName} default key`, ['read', 'write']]
+        );
+
+        this.events.emit('tenant:registered', { tenantId, tier, companyName });
+
+        return {
+            tenantId,
+            apiKey: rawKey,  // Only time the plaintext key is ever exposed
+            keyPrefix,
+            tier,
+            rateLimitRpm: TIER_CONFIG[tier]?.rpm || FIB[12],
         };
     }
 
-    // ─── Tenant Lifecycle ───────────────────────────────────────────
-
     /**
-     * Register a new tenant.
-     * @param {string} tenantId
-     * @param {Object} opts — { plan, displayName, email }
+     * Get tenant by ID (cached).
      */
-    registerTenant(tenantId, opts = {}) {
-        const plan = opts.plan || 'free';
-        const multiplier = this.plans[plan]?.multiplier || 1;
-
-        const tenant = {
-            id: tenantId,
-            plan,
-            displayName: opts.displayName || tenantId,
-            email: opts.email || null,
-            apiKey: crypto.randomBytes(32).toString('hex'),
-            createdAt: Date.now(),
-            quotas: {},
-            usage: { agents: 0, projections: 0, vectorMemoryMB: 0, requests: 0, tasks: 0 },
-            active: true,
-        };
-
-        // Apply plan-scaled quotas
-        for (const [key, baseValue] of Object.entries(this.defaultQuotas)) {
-            tenant.quotas[key] = Math.round(baseValue * multiplier);
+    async getTenant(tenantId) {
+        // Check cache
+        const cached = this._cache.get(tenantId);
+        if (cached && Date.now() - cached._cachedAt < this._cacheTTL) {
+            return cached;
         }
 
-        this.tenants.set(tenantId, tenant);
-        this.events.emit('tenant:registered', { tenantId, plan });
-        return { id: tenantId, apiKey: tenant.apiKey, quotas: tenant.quotas };
+        if (!this.db) return null;
+
+        const result = await this.db.query(
+            `SELECT tenant_id, company_name, contact_email, subscription_tier,
+                    request_count, rate_limit_rpm, is_active, metadata, created_at
+             FROM tenants WHERE tenant_id = $1`,
+            [tenantId]
+        );
+
+        if (!result.ok || result.rows.length === 0) return null;
+
+        const tenant = result.rows[0];
+        tenant._cachedAt = Date.now();
+        this._cache.set(tenantId, tenant);
+        return tenant;
     }
 
     /**
      * Deactivate a tenant (soft delete).
      */
-    deactivateTenant(tenantId) {
-        const tenant = this.tenants.get(tenantId);
-        if (tenant) {
-            tenant.active = false;
-            this.events.emit('tenant:deactivated', { tenantId });
-        }
+    async deactivateTenant(tenantId) {
+        if (!this.db) return;
+        await this.db.query(
+            'UPDATE tenants SET is_active = false WHERE tenant_id = $1',
+            [tenantId]
+        );
+        this._cache.delete(tenantId);
+        this.events.emit('tenant:deactivated', { tenantId });
     }
 
+    // ─── API Key Auth ───────────────────────────────────────────────
+
     /**
-     * Get tenant info.
+     * Validate an API key from an Authorization header.
+     * @param {string} authHeader — 'Bearer hc_...'
+     * @returns {{ ok, tenantId, scopes, tier } | { ok: false }}
      */
-    getTenant(tenantId) {
-        return this.tenants.get(tenantId) || null;
+    async authenticateRequest(authHeader) {
+        if (!authHeader || !authHeader.startsWith('Bearer ')) {
+            return { ok: false, reason: 'missing_auth' };
+        }
+
+        const rawKey = authHeader.slice(7);
+        if (!rawKey.startsWith('hc_')) {
+            return { ok: false, reason: 'invalid_key_format' };
+        }
+
+        if (!this.db) {
+            return { ok: false, reason: 'db_unavailable' };
+        }
+
+        return this.db.validateApiKey(rawKey);
     }
 
-    // ─── Middleware ─────────────────────────────────────────────────
+    // ─── Express Middleware ─────────────────────────────────────────
 
     /**
-     * Express middleware — extracts tenant from header or API key.
+     * Auth middleware — validates API key, sets tenant context + RLS.
      */
     middleware() {
-        return (req, res, next) => {
-            const tenantId = req.headers['x-heady-tenant'] ||
-                req.headers['x-tenant-id'] ||
-                this._extractFromApiKey(req.headers.authorization);
+        return async (req, res, next) => {
+            const auth = await this.authenticateRequest(req.headers.authorization);
 
-            if (!tenantId) {
-                return res.status(401).json({ error: 'Missing tenant context' });
+            if (!auth.ok) {
+                return res.status(401).json({
+                    error: 'unauthorized',
+                    message: auth.reason === 'missing_auth'
+                        ? 'Missing Authorization header. Use: Bearer hc_<your_api_key>'
+                        : 'Invalid or expired API key',
+                });
             }
 
-            const tenant = this.tenants.get(tenantId);
-            if (!tenant || !tenant.active) {
-                return res.status(403).json({ error: 'Invalid or inactive tenant' });
+            // Set RLS context in the database
+            if (this.db) {
+                await this.db.setTenantContext(auth.tenantId);
             }
 
-            // Run within tenant context
-            this.context.run(tenantId, () => {
-                req.tenantId = tenantId;
-                req.tenant = tenant;
+            // Run within AsyncLocalStorage context
+            this.context.run(auth.tenantId, () => {
+                req.tenantId = auth.tenantId;
+                req.tenantTier = auth.tier;
+                req.tenantScopes = auth.scopes;
                 next();
             });
         };
     }
 
     /**
-     * Rate limiting middleware (per-tenant).
+     * Rate limiting middleware (per-tenant, in-memory windows).
      */
     rateLimiter() {
-        const windows = new Map(); // tenantId → { count, resetAt }
-
-        return (req, res, next) => {
+        return async (req, res, next) => {
             const tenantId = req.tenantId;
             if (!tenantId) return next();
 
-            const tenant = this.tenants.get(tenantId);
+            const tenant = await this.getTenant(tenantId);
             if (!tenant) return next();
 
             const now = Date.now();
             const windowKey = tenantId;
 
-            if (!windows.has(windowKey) || windows.get(windowKey).resetAt < now) {
-                windows.set(windowKey, { count: 0, resetAt: now + 60000 });
+            if (!this._rateWindows.has(windowKey) || this._rateWindows.get(windowKey).resetAt < now) {
+                this._rateWindows.set(windowKey, { count: 0, resetAt: now + 60_000 });
             }
 
-            const window = windows.get(windowKey);
+            const window = this._rateWindows.get(windowKey);
             window.count++;
-            tenant.usage.requests = window.count;
 
-            if (window.count > tenant.quotas.maxRequestsPerMinute) {
+            const limit = tenant.rate_limit_rpm || FIB[12];
+
+            if (window.count > limit) {
                 return res.status(429).json({
-                    error: 'Rate limit exceeded',
-                    limit: tenant.quotas.maxRequestsPerMinute,
+                    error: 'rate_limit_exceeded',
+                    limit,
                     retryAfter: Math.ceil((window.resetAt - now) / 1000),
                 });
+            }
+
+            // Meter the request for Stripe billing
+            if (this.db) {
+                this.db.meterRequest(tenantId, 'api_call').catch(() => {});
             }
 
             next();
         };
     }
 
-    // ─── Quota Enforcement ──────────────────────────────────────────
+    // ─── Data Isolation Helpers ──────────────────────────────────────
 
-    /**
-     * Check if tenant can create a new resource.
-     * @param {string} tenantId
-     * @param {string} resourceType — 'agents' | 'projections' | 'tasks'
-     * @returns {{ allowed: boolean, reason?: string }}
-     */
-    checkQuota(tenantId, resourceType) {
-        const tenant = this.tenants.get(tenantId);
-        if (!tenant) return { allowed: false, reason: 'Unknown tenant' };
-
-        const quotaMap = {
-            agents: 'maxAgents',
-            projections: 'maxProjections',
-            tasks: 'maxConcurrentTasks',
-        };
-
-        const quotaKey = quotaMap[resourceType];
-        if (!quotaKey) return { allowed: true };
-
-        const current = tenant.usage[resourceType] || 0;
-        const limit = tenant.quotas[quotaKey];
-
-        if (current >= limit) {
-            return { allowed: false, reason: `${resourceType} limit reached (${current}/${limit})` };
-        }
-        return { allowed: true };
-    }
-
-    /**
-     * Increment usage counter.
-     */
-    incrementUsage(tenantId, resourceType, delta = 1) {
-        const tenant = this.tenants.get(tenantId);
-        if (tenant) {
-            tenant.usage[resourceType] = (tenant.usage[resourceType] || 0) + delta;
-        }
-    }
-
-    // ─── Data Isolation ─────────────────────────────────────────────
-
-    /**
-     * Get tenant-scoped database schema prefix.
-     */
-    getSchemaPrefix(tenantId) {
-        return `tenant_${tenantId.replace(/[^a-zA-Z0-9]/g, '_')}`;
-    }
-
-    /**
-     * Get tenant-scoped Redis key prefix.
-     */
     getRedisPrefix(tenantId) {
         return `heady:t:${tenantId}`;
     }
 
-    /**
-     * Get tenant-scoped vector collection name.
-     */
-    getVectorCollection(tenantId) {
-        return `vectors_${tenantId}`;
+    getVectorNamespace(tenantId, namespace = 'default') {
+        return `${tenantId}:${namespace}`;
     }
 
-    // ─── Internal ───────────────────────────────────────────────────
+    // ─── Health ─────────────────────────────────────────────────────
 
-    _extractFromApiKey(authHeader) {
-        if (!authHeader || !authHeader.startsWith('Bearer ')) return null;
-        const key = authHeader.slice(7);
-        for (const [id, tenant] of this.tenants) {
-            if (tenant.apiKey === key) return id;
-        }
-        return null;
+    health() {
+        return {
+            service: 'tenant-isolation',
+            version: '2.0.0',
+            backing: this.db ? 'postgres' : 'none',
+            cachedTenants: this._cache.size,
+            activeRateWindows: this._rateWindows.size,
+            tiers: Object.keys(TIER_CONFIG),
+        };
     }
 }
 
-module.exports = { TenantIsolation, TenantContext };
+module.exports = { TenantIsolation, TenantContext, TIER_CONFIG };

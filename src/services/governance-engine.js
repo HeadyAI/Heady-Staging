@@ -21,12 +21,13 @@ const GovernanceDecision = Object.freeze({
 
 // ─── Policy type registry ─────────────────────────────────────────────────────
 const PolicyType = Object.freeze({
-  ACCESS_CONTROL:   'ACCESS_CONTROL',
-  BUDGET_LIMIT:     'BUDGET_LIMIT',
-  CONTENT_SAFETY:   'CONTENT_SAFETY',
-  MISSION_ALIGNMENT: 'MISSION_ALIGNMENT',
-  RATE_LIMIT:       'RATE_LIMIT',
-  DATA_PRIVACY:     'DATA_PRIVACY',
+  ACCESS_CONTROL:       'ACCESS_CONTROL',
+  BUDGET_LIMIT:         'BUDGET_LIMIT',
+  CONTENT_SAFETY:       'CONTENT_SAFETY',
+  MISSION_ALIGNMENT:    'MISSION_ALIGNMENT',
+  RATE_LIMIT:           'RATE_LIMIT',
+  DATA_PRIVACY:         'DATA_PRIVACY',
+  TRADING_CONSISTENCY:  'TRADING_CONSISTENCY',
 });
 
 /**
@@ -79,8 +80,19 @@ class GovernanceEngine extends EventEmitter {
     this._qualityGates = new Map();  // gateId → QualityGateResult
     this._certifications = new Map(); // certId → CertificationResult
 
+    // ─── Trading Consistency Kill-Switch (50% rule, Apex PA, March 2026) ──
+    this._tradingState = new Map(); // accountId → { accumulatedProfit, dailyPnL, sessionDate, killSwitchFired }
+    this._killSwitchConfig = options.killSwitch || {
+      consistencyThreshold: 0.50,     // 50% rule (PA accounts)
+      safetyBuffer: 0.05,             // fire at 45% to ensure never hit 50%
+      effectiveThreshold: 0.45,       // consistencyThreshold - safetyBuffer
+      eodSessionBoundary: '16:59',    // 4:59 PM ET
+      resetTime: '17:00',             // 5:00 PM ET
+    };
+
     logger.info('[GovernanceEngine] Initialized', {
       budgetLimits: this._budgetLimits,
+      killSwitchThreshold: `${this._killSwitchConfig.effectiveThreshold * 100}%`,
     });
   }
 
@@ -147,7 +159,19 @@ class GovernanceEngine extends EventEmitter {
       denyReason = denyReason || missionCheck.reason;
     }
 
-    // ── Check 5: Policy Engine (custom policies) ────────────────────────────
+    // ── Check 5: Trading Consistency (50% Kill-Switch) ──────────────────────
+    if (action.type === 'trade_execute' || action.type === 'trade_signal') {
+      const tradingCheck = this._checkTradingConsistency(action, context);
+      checks.push({ type: PolicyType.TRADING_CONSISTENCY, ...tradingCheck });
+      if (tradingCheck.decision === GovernanceDecision.DENY) {
+        decision = GovernanceDecision.DENY;
+        denyReason = denyReason || tradingCheck.reason;
+        // Trigger kill-switch protocol
+        this._executeKillSwitch(context.accountId || 'default', tradingCheck);
+      }
+    }
+
+    // ── Check 6: Policy Engine (custom policies) ────────────────────────────
     const policyResult = await this._policyEngine.evaluate(action, context);
     checks.push({ type: 'POLICY_ENGINE', ...policyResult });
     if (policyResult.decision === GovernanceDecision.DENY) {
@@ -428,6 +452,180 @@ class GovernanceEngine extends EventEmitter {
     }
 
     return { decision: GovernanceDecision.ALLOW };
+  }
+
+  // ─── Trading Consistency Kill-Switch ────────────────────────────────────────
+
+  /**
+   * 50% Consistency Rule — March 2026 Apex PA update.
+   * No single trading day can exceed 50% of total accumulated profit.
+   * Kill-switch fires at 45% (5% safety buffer) to guarantee compliance.
+   *
+   * Sequence: (1) Flatten all positions, (2) Cancel pending orders, (3) Revoke API token.
+   */
+  _checkTradingConsistency(action, context) {
+    const accountId = context.accountId || action.payload?.accountId || 'default';
+    const today = new Date().toISOString().split('T')[0];
+
+    let state = this._tradingState.get(accountId);
+    if (!state) {
+      state = {
+        accumulatedProfit: 0,
+        dailyPnL: 0,
+        sessionDate: today,
+        killSwitchFired: false,
+        killSwitchHistory: [],
+      };
+      this._tradingState.set(accountId, state);
+    }
+
+    // Reset daily PnL on new session
+    if (state.sessionDate !== today) {
+      state.sessionDate = today;
+      state.dailyPnL = 0;
+      state.killSwitchFired = false;
+    }
+
+    // If kill-switch already fired today, deny all trades
+    if (state.killSwitchFired) {
+      return {
+        decision: GovernanceDecision.DENY,
+        reason: `Kill-switch active for ${accountId}. No trading until ${this._killSwitchConfig.resetTime} ET.`,
+        killSwitch: true,
+        accountId,
+      };
+    }
+
+    // Update daily PnL from action payload
+    const tradePnL = action.payload?.pnl || action.payload?.floatingPnL || 0;
+    state.dailyPnL += tradePnL;
+
+    // Calculate Max_Daily_Profit allowed
+    const maxDailyProfit = state.accumulatedProfit * this._killSwitchConfig.effectiveThreshold;
+
+    // If accumulated profit is 0, allow trading (evaluation phase)
+    if (state.accumulatedProfit <= 0) {
+      return { decision: GovernanceDecision.ALLOW, dailyPnL: state.dailyPnL, maxAllowed: 'unlimited (no prior profit)' };
+    }
+
+    // Check if daily PnL exceeds kill-switch threshold
+    if (state.dailyPnL >= maxDailyProfit) {
+      state.killSwitchFired = true;
+      state.killSwitchHistory.push({
+        date: today,
+        dailyPnL: state.dailyPnL,
+        maxAllowed: maxDailyProfit,
+        accumulatedProfit: state.accumulatedProfit,
+        firedAt: new Date().toISOString(),
+      });
+
+      return {
+        decision: GovernanceDecision.DENY,
+        reason: `50% KILL-SWITCH: Daily PnL $${state.dailyPnL.toFixed(2)} >= $${maxDailyProfit.toFixed(2)} (45% of $${state.accumulatedProfit.toFixed(2)})`,
+        killSwitch: true,
+        flattenAndSever: true,
+        protocol: [
+          '1. FLATTEN: Close all open positions immediately',
+          '2. CANCEL: Cancel all pending/working orders',
+          '3. SEVER: Revoke API trading token until next session',
+        ],
+        accountId,
+        dailyPnL: state.dailyPnL,
+        maxAllowed: maxDailyProfit,
+        accumulatedProfit: state.accumulatedProfit,
+      };
+    }
+
+    // Proximity warning at 80% of threshold
+    const warningLevel = maxDailyProfit * 0.80;
+    if (state.dailyPnL >= warningLevel) {
+      this.emit('governance:trading:proximity-warning', {
+        accountId,
+        dailyPnL: state.dailyPnL,
+        warningLevel,
+        maxAllowed: maxDailyProfit,
+        percentUsed: ((state.dailyPnL / maxDailyProfit) * 100).toFixed(1) + '%',
+      });
+    }
+
+    return {
+      decision: GovernanceDecision.ALLOW,
+      dailyPnL: state.dailyPnL,
+      maxAllowed: maxDailyProfit,
+      percentUsed: ((state.dailyPnL / maxDailyProfit) * 100).toFixed(1) + '%',
+      accountId,
+    };
+  }
+
+  /**
+   * Execute the Flatten-and-Sever protocol.
+   * Emits events to connected broker adapters.
+   */
+  _executeKillSwitch(accountId, checkResult) {
+    logger.warn('[GovernanceEngine] 🚨 KILL-SWITCH ACTIVATED', {
+      accountId,
+      dailyPnL: checkResult.dailyPnL,
+      maxAllowed: checkResult.maxAllowed,
+      protocol: checkResult.protocol,
+    });
+
+    // Step 1: Flatten
+    this.emit('governance:trading:flatten', { accountId, reason: '50% consistency kill-switch' });
+
+    // Step 2: Cancel
+    this.emit('governance:trading:cancel-all', { accountId, reason: '50% consistency kill-switch' });
+
+    // Step 3: Sever
+    this.emit('governance:trading:revoke-token', {
+      accountId,
+      reason: '50% consistency kill-switch',
+      restoreAt: this._killSwitchConfig.resetTime,
+    });
+
+    this._audit({
+      governanceId: `ks-${accountId}-${Date.now()}`,
+      actionId: 'kill-switch',
+      actionType: 'trading_kill_switch',
+      decision: GovernanceDecision.DENY,
+      reason: checkResult.reason,
+      sessionId: null,
+      userId: null,
+      evaluatedAt: Date.now(),
+      duration: 0,
+    });
+  }
+
+  /**
+   * Update accumulated profit for a trading account.
+   * Should be called at EOD session close (5:00 PM ET).
+   */
+  updateAccumulatedProfit(accountId, totalProfit) {
+    let state = this._tradingState.get(accountId);
+    if (!state) {
+      state = {
+        accumulatedProfit: totalProfit,
+        dailyPnL: 0,
+        sessionDate: new Date().toISOString().split('T')[0],
+        killSwitchFired: false,
+        killSwitchHistory: [],
+      };
+      this._tradingState.set(accountId, state);
+    } else {
+      state.accumulatedProfit = totalProfit;
+    }
+
+    logger.info('[GovernanceEngine] Updated accumulated profit', {
+      accountId,
+      totalProfit,
+      maxDailyAllowed: totalProfit * this._killSwitchConfig.effectiveThreshold,
+    });
+  }
+
+  /**
+   * Get trading state for a specific account.
+   */
+  getTradingState(accountId) {
+    return this._tradingState.get(accountId) || null;
   }
 
   // ─── Audit Trail ─────────────────────────────────────────────────────────────

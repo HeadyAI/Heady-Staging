@@ -252,6 +252,134 @@ function health() {
     };
 }
 
+// ═══════════════════════════════════════════════════════════════
+// Multi-Tenant IaaS Operations
+// ═══════════════════════════════════════════════════════════════
+
+/**
+ * Set the tenant context for RLS enforcement.
+ * Must be called at the start of every tenant-scoped transaction.
+ * @param {string} tenantId — UUID of the tenant
+ */
+async function setTenantContext(tenantId) {
+    return query("SELECT set_config('app.current_tenant_id', $1, true)", [tenantId]);
+}
+
+/**
+ * Execute a query within a tenant's RLS context.
+ * Automatically sets app.current_tenant_id before running the query.
+ * @param {string} tenantId — UUID of the tenant
+ * @param {string} text — SQL query
+ * @param {Array} params — Query parameters
+ */
+async function tenantQuery(tenantId, text, params = []) {
+    if (!_pool) {
+        const conn = await connect();
+        if (!conn.ok) return { ok: false, error: conn.error, rows: [] };
+    }
+
+    let client;
+    try {
+        client = await _pool.connect();
+        // Set tenant context within this connection
+        await client.query("SELECT set_config('app.current_tenant_id', $1, true)", [tenantId]);
+        const result = await client.query(text, params);
+        _queryCount++;
+        return { ok: true, rows: result.rows, rowCount: result.rowCount };
+    } catch (err) {
+        _lastError = err.message;
+        logger.error("[neon-db] Tenant query failed", { tenantId, error: err.message, query: text.slice(0, 100) });
+        return { ok: false, error: err.message, rows: [] };
+    } finally {
+        if (client) client.release();
+    }
+}
+
+/**
+ * Meter a tenant API request (atomic increment + usage log).
+ * @param {string} tenantId — UUID of the tenant
+ * @param {string} operation — 'api_call', 'vector_insert', 'vector_search'
+ */
+async function meterRequest(tenantId, operation = 'api_call') {
+    return query("SELECT meter_tenant_request($1, $2)", [tenantId, operation]);
+}
+
+/**
+ * Tenant-scoped vector similarity search.
+ * @param {string} tenantId — UUID
+ * @param {number[]} queryEmbedding — 1536-dim vector
+ * @param {Object} opts — { contextType, namespace, limit }
+ */
+async function searchVectors(tenantId, queryEmbedding, opts = {}) {
+    const { contextType = null, namespace = null, limit = 5 } = opts;
+    const embeddingStr = `[${queryEmbedding.join(',')}]`;
+    return query(
+        "SELECT * FROM search_tenant_vectors($1, $2::vector, $3, $4, $5)",
+        [tenantId, embeddingStr, contextType, namespace, limit]
+    );
+}
+
+/**
+ * Validate an API key by hashing and looking up.
+ * @param {string} plaintextKey — The raw API key from the request header
+ * @returns {{ ok: boolean, tenantId?: string, scopes?: string[] }}
+ */
+async function validateApiKey(plaintextKey) {
+    const crypto = require('crypto');
+    const keyHash = crypto.createHash('sha256').update(plaintextKey).digest('hex');
+
+    const result = await query(
+        `SELECT k.tenant_id, k.scopes, t.is_active AS tenant_active, t.subscription_tier
+         FROM api_keys k
+         JOIN tenants t ON t.tenant_id = k.tenant_id
+         WHERE k.key_hash = $1
+           AND k.is_active = true
+           AND (k.expires_at IS NULL OR k.expires_at > NOW())`,
+        [keyHash]
+    );
+
+    if (!result.ok || result.rows.length === 0) {
+        return { ok: false };
+    }
+
+    const row = result.rows[0];
+    if (!row.tenant_active) {
+        return { ok: false, reason: 'tenant_inactive' };
+    }
+
+    // Update last_used_at
+    query("UPDATE api_keys SET last_used_at = NOW() WHERE key_hash = $1", [keyHash]).catch(() => {});
+
+    return {
+        ok: true,
+        tenantId: row.tenant_id,
+        scopes: row.scopes,
+        tier: row.subscription_tier,
+    };
+}
+
+/**
+ * Run the multi-tenant IaaS migration.
+ */
+async function migrateIaaS() {
+    const fs = require("fs");
+    const path = require("path");
+    const schemaPath = path.join(__dirname, "..", "..", "db", "migrations", "002_multi_tenant_iaas.sql");
+
+    if (!fs.existsSync(schemaPath)) {
+        return { ok: false, error: "002_multi_tenant_iaas.sql not found" };
+    }
+
+    const sql = fs.readFileSync(schemaPath, "utf-8");
+    const result = await query(sql);
+
+    if (result.ok) {
+        logger.info("[neon-db] Multi-tenant IaaS migration complete");
+    }
+
+    return result;
+}
+
 /**
  * Graceful shutdown — drain the connection pool.
  */
@@ -267,6 +395,7 @@ module.exports = {
     connect,
     query,
     migrate,
+    migrateIaaS,
     disconnect,
     health,
     neonApi,
@@ -274,5 +403,10 @@ module.exports = {
     getProject,
     listBranches,
     createBranch,
+    setTenantContext,
+    tenantQuery,
+    meterRequest,
+    searchVectors,
+    validateApiKey,
     NEON_CONFIG,
 };
