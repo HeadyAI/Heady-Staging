@@ -164,8 +164,12 @@ class HCFPEventBridge {
       this._pendingStages.set(stageId, timer);
     });
 
-    const clearPendingStage = (data) => {
+    // Track which stages received an explicit completion event (complete/passed/failed)
+    this._completedStages = new Set();
+
+    const markStageCompleted = (data) => {
       const stageId = data?.stageId || data?.stage || 'unknown';
+      this._completedStages.add(stageId);
       const timer = this._pendingStages.get(stageId);
       if (timer) {
         clearTimeout(timer);
@@ -173,10 +177,33 @@ class HCFPEventBridge {
       }
     };
 
-    this._runner.on('stage:complete', clearPendingStage);
-    this._runner.on('stage:passed', clearPendingStage);
-    this._runner.on('stage:failed', clearPendingStage);
-    this._runner.on('stage:end', clearPendingStage);
+    // stage:end may fire without an explicit complete/failed — synthesize stage:complete if missing
+    const handleStageEnd = (data) => {
+      const stageId = data?.stageId || data?.stage || 'unknown';
+      if (!this._completedStages.has(stageId)) {
+        // stage:end arrived without stage:complete or stage:failed — synthesize stage:complete
+        const completePayload = {
+          stageId,
+          runId: data?.runId,
+          synthesized: true,
+          reason: 'stage_end_without_completion_event',
+          ts: Date.now(),
+        };
+        this._runner.emit?.('stage:complete', completePayload);
+        log('warn', `synthesized stage:complete for "${stageId}" — stage:end fired without explicit completion`, { stageId });
+      }
+      this._completedStages.delete(stageId);
+      const timer = this._pendingStages.get(stageId);
+      if (timer) {
+        clearTimeout(timer);
+        this._pendingStages.delete(stageId);
+      }
+    };
+
+    this._runner.on('stage:complete', markStageCompleted);
+    this._runner.on('stage:passed', markStageCompleted);
+    this._runner.on('stage:failed', markStageCompleted);
+    this._runner.on('stage:end', handleStageEnd);
 
     // Track last run completion for CSL-gated autonomous trigger
     this._runner.on('run:complete', () => { this._lastRunAt = Date.now(); });
@@ -228,6 +255,9 @@ class HCFPEventBridge {
     if (this._pendingStages) {
       for (const timer of this._pendingStages.values()) clearTimeout(timer);
       this._pendingStages.clear();
+    }
+    if (this._completedStages) {
+      this._completedStages.clear();
     }
 
     // Clean up all wired listeners

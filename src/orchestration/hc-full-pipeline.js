@@ -897,9 +897,12 @@ class HCFullPipeline extends EventEmitter {
                 } catch (err) {
                     stage.status = STATUS.FAILED;
                     stage.error = err.message;
+                    stage.finishedAt = new Date().toISOString();
+                    stage.metrics.durationMs = new Date(stage.finishedAt) - new Date(stage.startedAt);
+                    this.emit("stage:failed", { runId, stage: stage.name, error: err.message });
                     run.status = STATUS.FAILED;
                     run.finishedAt = new Date().toISOString();
-                    this.emit("run:failed", { runId, error: err.message });
+                    this.emit("run:failed", { runId, error: err.message, failedStage: stage.name });
                     return run;
                 }
             }
