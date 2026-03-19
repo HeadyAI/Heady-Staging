@@ -230,6 +230,106 @@ function executeCheckpointResponsibility(state, responsibility, _cp) {
     }
 }
 
+// ─── DAG CYCLE DETECTION (Kahn's algorithm) ─────────────────────────────────
+
+/**
+ * Detect cycles in the stage dependency graph using Kahn's algorithm.
+ * If a cycle exists, traces the cycle path and throws a descriptive error.
+ *
+ * @param {Array<{id: string, dependsOn?: string[]}>} stages
+ * @returns {string[]} Cycle path (empty if acyclic)
+ */
+function detectDAGCycles(stages) {
+    const graph = new Map();     // adjacency list: dep → [dependents]
+    const inDegree = new Map();
+    const reverseGraph = new Map(); // dependent → [deps] for cycle tracing
+
+    for (const s of stages) {
+        graph.set(s.id, []);
+        reverseGraph.set(s.id, []);
+        inDegree.set(s.id, 0);
+    }
+
+    for (const s of stages) {
+        if (s.dependsOn) {
+            for (const dep of s.dependsOn) {
+                if (!graph.has(dep)) continue; // skip unknown deps
+                graph.get(dep).push(s.id);
+                reverseGraph.get(s.id).push(dep);
+                inDegree.set(s.id, (inDegree.get(s.id) || 0) + 1);
+            }
+        }
+    }
+
+    // Kahn's algorithm — peel off zero-indegree nodes
+    const queue = [];
+    for (const [id, deg] of inDegree) {
+        if (deg === 0) queue.push(id);
+    }
+
+    const sorted = [];
+    while (queue.length > 0) {
+        const current = queue.shift();
+        sorted.push(current);
+        for (const neighbor of graph.get(current) || []) {
+            inDegree.set(neighbor, inDegree.get(neighbor) - 1);
+            if (inDegree.get(neighbor) === 0) queue.push(neighbor);
+        }
+    }
+
+    if (sorted.length === stages.length) {
+        return []; // acyclic
+    }
+
+    // Cycle exists — trace it from any remaining node with non-zero indegree
+    const remaining = new Set();
+    for (const [id, deg] of inDegree) {
+        if (deg > 0) remaining.add(id);
+    }
+
+    // DFS from first remaining node to find cycle path
+    const cyclePath = [];
+    const visited = new Set();
+    const stack = new Set();
+
+    function dfs(node) {
+        if (stack.has(node)) {
+            // Found cycle — extract it
+            const cycleStart = node;
+            const cycle = [cycleStart];
+            for (let i = cyclePath.length - 1; i >= 0; i--) {
+                cycle.unshift(cyclePath[i]);
+                if (cyclePath[i] === cycleStart) break;
+            }
+            return cycle;
+        }
+        if (visited.has(node) || !remaining.has(node)) return null;
+
+        visited.add(node);
+        stack.add(node);
+        cyclePath.push(node);
+
+        for (const neighbor of graph.get(node) || []) {
+            if (remaining.has(neighbor)) {
+                const cycle = dfs(neighbor);
+                if (cycle) return cycle;
+            }
+        }
+
+        stack.delete(node);
+        cyclePath.pop();
+        return null;
+    }
+
+    for (const node of remaining) {
+        const cycle = dfs(node);
+        if (cycle) return cycle;
+    }
+
+    // Fallback: return all nodes in cycle (shouldn't reach here)
+    return [...remaining];
+}
+
 // ─── TOPOLOGY SORT (dependency order) ───────────────────────────────────────
 
 function topologicalSort(stages) {
@@ -270,10 +370,31 @@ function topologicalSort(stages) {
     }
 
     if (sorted.length !== stages.length) {
-        throw new Error("Circular dependency detected in pipeline stages");
+        // Use cycle detection to provide a detailed error message
+        const cycle = detectDAGCycles(stages);
+        const cycleStr = cycle.length > 0 ? cycle.join(' → ') : 'unknown cycle';
+        throw new Error(`Circular dependency detected in pipeline stages: ${cycleStr}`);
     }
 
     return sorted;
+}
+
+/**
+ * Validate pipeline stage dependencies at initialization.
+ * Runs DAG cycle detection and throws if any cycle is found.
+ *
+ * @param {Array<{id: string, dependsOn?: string[]}>} stages
+ * @throws {Error} If a dependency cycle is detected
+ */
+function validateDAG(stages) {
+    const cycle = detectDAGCycles(stages);
+    if (cycle.length > 0) {
+        throw new Error(
+            `Pipeline DAG validation failed — cycle detected: ${cycle.join(' → ')}. ` +
+            `All stage dependencies must be acyclic.`
+        );
+    }
+    return true;
 }
 
 module.exports = {
@@ -286,4 +407,6 @@ module.exports = {
     applyStopAction,
     runCheckpoint,
     topologicalSort,
+    detectDAGCycles,
+    validateDAG,
 };

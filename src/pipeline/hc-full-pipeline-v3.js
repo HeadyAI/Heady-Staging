@@ -776,6 +776,62 @@ class HCFullPipelineV3 extends EventEmitter {
     this._activeContext = null;
     this._status = 'idle';
     this._backoffSeq = phiBackoffSequence(8, BACKOFF_BASE_MS);
+
+    // DAG cycle detection at initialization — Kahn's algorithm
+    // Ensures all stage dependsOn references form a valid DAG before any run
+    this._validateStageDAG();
+  }
+
+  /**
+   * Validate that STAGE_DEFINITIONS form an acyclic dependency graph.
+   * Uses Kahn's algorithm: peel off zero-indegree nodes, if any remain there is a cycle.
+   * @throws {Error} If a dependency cycle is detected, listing the cycle path.
+   * @private
+   */
+  _validateStageDAG() {
+    const stages = STAGE_DEFINITIONS;
+    const inDegree = new Map();
+    const graph = new Map();
+
+    for (const s of stages) {
+      inDegree.set(s.id, 0);
+      graph.set(s.id, []);
+    }
+
+    for (const s of stages) {
+      for (const dep of (s.dependsOn || [])) {
+        if (!graph.has(dep)) continue;
+        graph.get(dep).push(s.id);
+        inDegree.set(s.id, (inDegree.get(s.id) || 0) + 1);
+      }
+    }
+
+    // Kahn's: process zero-indegree nodes
+    const queue = [];
+    for (const [id, deg] of inDegree) {
+      if (deg === 0) queue.push(id);
+    }
+
+    const sorted = [];
+    while (queue.length > 0) {
+      const current = queue.shift();
+      sorted.push(current);
+      for (const neighbor of graph.get(current) || []) {
+        inDegree.set(neighbor, inDegree.get(neighbor) - 1);
+        if (inDegree.get(neighbor) === 0) queue.push(neighbor);
+      }
+    }
+
+    if (sorted.length !== stages.length) {
+      // Identify nodes in the cycle (those with remaining indegree > 0)
+      const cycleNodes = stages
+        .filter(s => inDegree.get(s.id) > 0)
+        .map(s => `${s.id}:${s.name}`);
+      throw new Error(
+        `Pipeline DAG validation failed — cycle detected among stages: ${cycleNodes.join(' → ')}. ` +
+        `All stage dependencies must be acyclic.`
+      );
+    }
   }
 
   // ── Public API ─────────────────────────────────────────────────────────────
