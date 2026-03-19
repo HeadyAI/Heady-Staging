@@ -14,7 +14,7 @@
 
 const PSI = 0.618;
 const SENTRY_DSN = process.env.SENTRY_DSN || '';
-const RELEASE = 'heady-dynamic-sites@4.1.0';
+const RELEASE = 'heady-dynamic-sites@4.2.0';
 const ENVIRONMENT = process.env.NODE_ENV || 'production';
 
 let Sentry = null;
@@ -65,7 +65,7 @@ function captureError(err, context = {}) {
     if (context.site) scope.setTag('heady.site', context.site);
     if (context.domain) scope.setTag('heady.domain', context.domain);
     if (context.path) scope.setTag('heady.path', context.path);
-    scope.setTag('heady.version', '4.1.0');
+    scope.setTag('heady.version', '4.2.0');
     if (context.extra) scope.setExtras(context.extra);
     Sentry.captureException(err);
   });

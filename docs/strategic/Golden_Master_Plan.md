@@ -8195,11 +8195,7 @@ With this, Cloudflare Workers become a clean, automated edge layer for your Head
 
 [^66_11]: https://rwsdk.com/blog/zero-drama-cloudflare-workers-github-actions
 
-<<<<<<< HEAD
 [^66_12]: https://tessl.io/skills/github/secondsky/heady-skills/workers-ci-cd
-=======
-[^66_12]: https://tessl.io/skills/github/secondsky/claude-skills/workers-ci-cd
->>>>>>> hc-testing/dependabot/docker/node-25-slim
 
 [^66_13]: https://www.youtube.com/watch?v=9Ba53m1Efl0
 

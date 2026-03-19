@@ -416,8 +416,93 @@ const EXPANDED_DOMAIN_CONTENT = {
   },
 };
 
-// Merge expanded content into OTHER_DOMAIN_CONTENT
-Object.assign(OTHER_DOMAIN_CONTENT, EXPANDED_DOMAIN_CONTENT);
+// === Wave 4: Additional Domains ===
+
+const WAVE4_DOMAIN_CONTENT = {
+  'headyfinance.com': {
+    about: {
+      title: 'AI-Native Financial Intelligence. Built on Sacred Geometry.',
+      paragraphs: [
+        'HeadyFinance applies Continuous Semantic Logic and phi-scaled quantitative models to financial analysis, portfolio optimization, and risk management. Every market signal flows through 384-dimensional vector space where correlations invisible to traditional models become geometrically obvious.',
+        'The Apex Trading Intelligence engine uses Monte Carlo simulation trees with phi-weighted position sizing and CSL-gated circuit breakers. Portfolio allocations follow golden ratio diversification — 34% core, 21% growth, 13% alternative, 8% reserve — the same proportions that optimize natural systems.',
+        'From real-time market sentiment embedding to automated compliance monitoring, HeadyFinance gives institutional traders, portfolio managers, and fintech builders tools that see the geometry behind the markets.',
+      ],
+    },
+    deepDive: {
+      title: 'Quantitative Intelligence Meets Geometric Intuition',
+      items: [
+        { icon: '📊', title: 'Apex Trading Engine', desc: 'Monte Carlo simulation with phi-scaled position sizing. CSL confidence gates prevent trades below coherence thresholds. Fibonacci retracement levels computed from 384D market state vectors.' },
+        { icon: '🛡️', title: 'Risk Management', desc: 'Circuit breakers trigger at phi-derived drawdown levels. Portfolio heat maps in vector space reveal hidden correlation clusters. Value-at-Risk computed with CSL-weighted scenario analysis.' },
+        { icon: '📈', title: 'Market Sentiment Embedding', desc: 'Real-time news, social signals, and earnings transcripts embedded in 384D space. Semantic similarity reveals sentiment shifts before they hit price action.' },
+        { icon: '💰', title: 'Golden Ratio Allocation', desc: 'Portfolio diversification using Fibonacci-weighted asset tiers — mathematically optimal allocation that mirrors the proportions found in resilient natural systems.' },
+        { icon: '🔍', title: 'Compliance Automation', desc: 'Automated regulatory monitoring with CSL-scored alert classification. SOX, MiFID II, and SEC reporting automated through semantic document analysis.' },
+        { icon: '⚡', title: 'Real-Time Analytics', desc: 'Sub-millisecond market data ingestion through Cloudflare edge workers. DuckDB-powered local analytics for instant quantitative queries without round-trip latency.' },
+      ],
+    },
+    faq: [
+      { q: 'What makes HeadyFinance different from Bloomberg Terminal?', a: 'HeadyFinance operates in continuous 384-dimensional vector space rather than discrete data feeds. Market signals that appear unrelated in traditional tools show geometric proximity in our semantic embedding, revealing alpha invisible to conventional analysis.' },
+      { q: 'Is HeadyFinance SEC-compliant?', a: 'HeadyFinance provides compliance automation tools but does not constitute financial advice. All trading signals are informational. Users are responsible for their own regulatory compliance.' },
+      { q: 'What data sources does HeadyFinance ingest?', a: 'Real-time market feeds, SEC filings, earnings transcripts, news wire services, social sentiment streams, and alternative data — all embedded in 384D vector space with CSL-scored relevance filtering.' },
+    ],
+  },
+
+  'headyex.com': {
+    about: {
+      title: 'The AI Exchange. Where Intelligence Meets Market.',
+      paragraphs: [
+        'HeadyEX is the marketplace layer of the Heady ecosystem — an exchange for AI models, trained agents, skill packs, datasets, and computational resources. Buy, sell, and trade AI capabilities using HeadyCoin credits on a phi-scaled pricing engine.',
+        'Every asset on HeadyEX carries a 384D embedding representing its capabilities, quality scores, and domain affinity. CSL-powered semantic matching connects buyers with exactly the AI resources they need — no keyword search required, just describe your use case.',
+        'From pre-trained HeadyBee swarm configurations to fine-tuned embedding models, specialized MCP tool servers to curated training datasets, HeadyEX is where the Heady ecosystem economy lives.',
+      ],
+    },
+    deepDive: {
+      title: 'A Marketplace Built on Continuous Semantic Logic',
+      items: [
+        { icon: '🏪', title: 'Skill Marketplace', desc: 'Browse, purchase, and deploy AI skill packs created by the Heady community. Each skill carries ORS quality scores, lineage trees, and fitness ratings computed through evolutionary selection.' },
+        { icon: '🤖', title: 'Agent Trading', desc: 'Pre-configured HeadyBee agents and swarm configurations available for instant deployment. Trained on specific domains — legal, medical, financial, creative — with verified performance benchmarks.' },
+        { icon: '🪙', title: 'HeadyCoin Economy', desc: 'Phi-scaled credit system powering all marketplace transactions. Earn HeadyCoin by contributing skills, completing bounties, or providing computational resources to the network.' },
+        { icon: '🔎', title: 'Semantic Discovery', desc: 'CSL-powered search that understands intent, not just keywords. Describe what you need in natural language and the 384D embedding matcher finds the optimal resources.' },
+        { icon: '📦', title: 'Dataset Exchange', desc: 'Curated, privacy-compliant training datasets with provenance tracking. Every dataset carries a CycloneDX SBOM and Ed25519 integrity signature.' },
+        { icon: '⚖️', title: 'Reputation System', desc: 'Decentralized trust scoring using phi-weighted ELO ratings, CSL-gated quality thresholds, and Fibonacci-windowed behavioral history. Quality rises to the top.' },
+      ],
+    },
+    faq: [
+      { q: 'What can I buy on HeadyEX?', a: 'AI models, trained agents, skill packs, MCP tool servers, curated datasets, computational credits, and swarm configurations — everything you need to build on the Heady platform.' },
+      { q: 'How does HeadyCoin work?', a: 'HeadyCoin is the internal credit system. Purchase credits, earn them through contributions, or receive them as bounty rewards. Phi-scaled pricing ensures fair value across all resource types.' },
+      { q: 'Is my data safe on HeadyEX?', a: 'All marketplace assets carry Ed25519 cryptographic signatures, CycloneDX SBOMs, and full provenance chains. The OracleChain audit trail makes every transaction tamper-proof.' },
+    ],
+  },
+
+  'headyos.com': {
+    about: {
+      title: 'The Operating System for Intelligence.',
+      paragraphs: [
+        'HeadyOS is the latent operating system — a continuous semantic runtime where AI agents, services, and data coexist in 384-dimensional vector space. Not a traditional OS with file systems and processes, but a cognitive substrate where computation is reasoning and memory is geometry.',
+        'Every component in HeadyOS — from the smallest HeadyBee worker to the full HCFullPipeline orchestration — exists as a vector with position, momentum, and coherence. The Sacred Geometry topology governs placement: Center (HeadySoul), Inner Ring (Conductor, AutoSuccess), Middle Ring (JULES, BUILDER, OBSERVER), Outer Ring (BRIDGE, SENTINEL, CIPHER), and Governance layer.',
+        'HeadyOS boots through a 6-layer cognitive sequence, manages resources via phi-scaled pools (Hot 34%, Warm 21%, Cold 13%, Reserve 8%), and maintains system coherence through continuous self-modeling. When the system\'s embedding of itself drifts beyond CSL thresholds, self-healing activates before humans notice.',
+      ],
+    },
+    deepDive: {
+      title: 'A Cognitive Substrate, Not Just an Operating System',
+      items: [
+        { icon: '🧬', title: '384D Vector Runtime', desc: 'Every process, agent, data object, and service endpoint exists as a point in 384-dimensional vector space. Scheduling is geometric proximity. Memory is embedding. Communication is cosine similarity.' },
+        { icon: '🌀', title: 'Sacred Geometry Topology', desc: 'Five concentric rings govern component placement and communication patterns. Center nodes orchestrate, Inner nodes execute core logic, Middle nodes bridge domains, Outer nodes interface with the world, Governance nodes audit everything.' },
+        { icon: '⚡', title: 'Phi-Scaled Resource Pools', desc: 'CPU, memory, tokens, and bandwidth allocated using golden ratio proportions — 34% Hot, 21% Warm, 13% Cold, 8% Reserve. The same ratios that optimize natural systems optimize compute.' },
+        { icon: '🔄', title: 'Self-Healing Cycles', desc: 'HeadyOS maintains a vector embedding of its own architecture. When semantic drift exceeds CSL thresholds, self-healing routines activate — quarantine, diagnose, repair, verify — before degradation becomes visible.' },
+        { icon: '🚀', title: '21-Stage Pipeline', desc: 'The HCFullPipeline orchestrates requests through 21 stages from CHANNEL_ENTRY to RECEIPT. Fast path (7 stages), Full path (21 stages), Arena path (9 stages), and Learning path (7 stages).' },
+        { icon: '🛡️', title: 'Sovereign Security', desc: 'Post-quantum cryptography readiness, zero-trust tool execution, semantic firewall, and the Digital Immune System — three defense layers modeled after biological immunity.' },
+      ],
+    },
+    faq: [
+      { q: 'Is HeadyOS a replacement for Linux or Windows?', a: 'HeadyOS operates at a different abstraction level. It runs on top of traditional operating systems (deployed on Cloud Run / Cloudflare Workers) but provides a cognitive layer where AI agents and services interact through vector geometry rather than system calls.' },
+      { q: 'What hardware does HeadyOS require?', a: 'HeadyOS is cloud-native — it runs on Cloudflare edge workers for low-latency operations and Google Cloud Run for origin computation. No special hardware required. GPU acceleration available for embedding operations.' },
+      { q: 'How does the Sacred Geometry topology work?', a: 'Components are assigned to concentric rings based on their role and criticality. Center (HeadySoul) orchestrates everything. Each ring has specific communication rules — inner rings can reach outer rings, but not vice versa without CSL-gated permission.' },
+    ],
+  },
+};
+
+// Merge all domain content
+Object.assign(OTHER_DOMAIN_CONTENT, EXPANDED_DOMAIN_CONTENT, WAVE4_DOMAIN_CONTENT);
 
 /**
  * Get content sections for a given domain.

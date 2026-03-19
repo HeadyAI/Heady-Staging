@@ -131,7 +131,7 @@ class WebsiteServer {
 
   _handleRequest(req, res) {
     this.requestCount++;
-    const url = new URL(req.url, `http://localhost:${this.config.port}`);
+    const url = new URL(req.url, `http://${process.env.HOST || "localhost"}:${this.config.port}`);
 
     // Security headers
     const headers = {

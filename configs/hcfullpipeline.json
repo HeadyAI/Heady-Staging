@@ -1,7 +1,6 @@
 {
   "_meta": {
     "name": "HCFullPipeline",
-<<<<<<< HEAD
     "version": "8.0.0",
     "description": "Heady\u2122 AI Platform 21-Stage (fib(8)) Cognitive Pipeline \u2014 \u03c6-scaled throughout, zero magic numbers",
     "copyright": "\u00a9 2026-2026 HeadySystems Inc. All Rights Reserved.",
@@ -9,40 +8,6 @@
     "audit": "All constants \u03c6-derived per FIXED-VALUE-AUDIT and phi-math-foundation",
     "dataFlowAudit": "2026-03-11 \u2014 all 21 stages verified connected, 6 engine bindings confirmed",
     "totalStages": 22
-=======
-    "version": "4.0.0",
-    "description": "Heady™ 21-Stage (fib(8)) Cognitive Pipeline — 100% φ-compliant",
-    "copyright": "© 2026-2026 HeadySystems Inc.",
-    "generatedFrom": "hcfullpipeline.yaml",
-    "phiCompliance": "100%",
-    "phi": 1.6180339887,
-    "psi": 0.6180339887,
-    "fibSeries": [
-      1,
-      1,
-      2,
-      3,
-      5,
-      8,
-      13,
-      21,
-      34,
-      55,
-      89,
-      144,
-      233,
-      377,
-      610,
-      987,
-      1597,
-      2584,
-      4181,
-      6765,
-      10946,
-      17711
-    ],
-    "dataFlowAudit": "2026-03-11 — all 21 stages verified connected, 6 engine bindings confirmed"
->>>>>>> hc-testing/dependabot/docker/node-25-slim
   },
   "pipeline": {
     "id": "hcfullpipeline",
@@ -62,7 +27,6 @@
       ],
       "backoffMs_source": "\u03c6\u00b9\u00d71000, \u03c6\u00b2\u00d71000, \u03c6\u00b3\u00d71000 (replaces 1000/2000/4000)",
       "maxBackoffMs": 11090,
-<<<<<<< HEAD
       "maxBackoffMs_source": "\u03c6\u2075 \u00d7 1000 (replaces arbitrary 10000)"
     }
   },
@@ -998,555 +962,6 @@
         19,
         20
       ]
-=======
-      "_note": "maxRetries=fib(4), backoffMs=φ×1000, maxBackoffMs=φ⁵×1000"
-    },
-    "coherenceThreshold": 0.809,
-    "deduplicationThreshold": 0.972,
-    "pressureLevels": {
-      "NOMINAL": [
-        0,
-        0.382
-      ],
-      "ELEVATED": [
-        0.382,
-        0.618
-      ],
-      "HIGH": [
-        0.618,
-        0.854
-      ],
-      "CRITICAL": [
-        0.91,
-        1
-      ]
-    }
-  },
-  "stages": [
-    {
-      "id": 0,
-      "name": "CHANNEL_ENTRY",
-      "timeout": 2618,
-      "parallel": true,
-      "required": true,
-      "tokenBudget": 1597,
-      "_timeoutNote": "φ²×1000",
-      "_tokenNote": "fib(17)",
-      "description": "Ingest and normalize channel input; assign correlation ID and session token",
-      "outputs": [
-        "normalized_input",
-        "session_id",
-        "channel_meta"
-      ]
-    },
-    {
-      "id": 1,
-      "name": "RECON",
-      "timeout": 6854,
-      "parallel": true,
-      "required": true,
-      "tokenBudget": 2584,
-      "_timeoutNote": "φ⁴×1000",
-      "_tokenNote": "fib(18)",
-      "description": "Retrieve context, history, and prior sessions; build situational awareness",
-      "outputs": [
-        "context_snapshot",
-        "history_summary",
-        "user_profile"
-      ]
-    },
-    {
-      "id": 2,
-      "name": "INTAKE",
-      "timeout": 4236,
-      "parallel": true,
-      "required": true,
-      "tokenBudget": 2584,
-      "_timeoutNote": "φ³×1000",
-      "_tokenNote": "fib(18)",
-      "description": "Parse, validate and structure the incoming request; extract entities and intent",
-      "outputs": [
-        "structured_request",
-        "entities",
-        "intent_vector"
-      ]
-    },
-    {
-      "id": 3,
-      "name": "CLASSIFY",
-      "timeout": 2618,
-      "parallel": false,
-      "required": true,
-      "tokenBudget": 1597,
-      "_timeoutNote": "φ²×1000",
-      "_tokenNote": "fib(17)",
-      "description": "Assign task type, domain, criticality level and routing tags",
-      "outputs": [
-        "task_class",
-        "criticality",
-        "routing_tags"
-      ]
-    },
-    {
-      "id": 4,
-      "name": "TRIAGE",
-      "timeout": 2618,
-      "parallel": false,
-      "required": true,
-      "tokenBudget": 1597,
-      "_timeoutNote": "φ²×1000",
-      "_tokenNote": "fib(17)",
-      "description": "Prioritize workload; apply SRE adaptive throttle; gate via CSL",
-      "outputs": [
-        "priority_score",
-        "admission_decision",
-        "shed_rationale"
-      ]
-    },
-    {
-      "id": 5,
-      "name": "DECOMPOSE",
-      "timeout": 6854,
-      "parallel": true,
-      "required": true,
-      "tokenBudget": 2584,
-      "_timeoutNote": "φ⁴×1000",
-      "_tokenNote": "fib(18)",
-      "description": "Break complex tasks into atomic sub-tasks; emit dependency graph",
-      "outputs": [
-        "subtask_graph",
-        "dependency_map",
-        "execution_plan"
-      ]
-    },
-    {
-      "id": 6,
-      "name": "TRIAL_AND_ERROR",
-      "timeout": 17944,
-      "parallel": true,
-      "required": false,
-      "tokenBudget": 6765,
-      "_timeoutNote": "φ⁶×1000",
-      "_tokenNote": "fib(20)",
-      "description": "Exploratory hypothesis generation; sandboxed execution of candidate solutions",
-      "outputs": [
-        "candidate_solutions",
-        "trial_scores",
-        "failure_modes"
-      ]
-    },
-    {
-      "id": 7,
-      "name": "ORCHESTRATE",
-      "timeout": 11090,
-      "parallel": true,
-      "required": true,
-      "tokenBudget": 4181,
-      "_timeoutNote": "φ⁵×1000",
-      "_tokenNote": "fib(19)",
-      "description": "Coordinate bee swarms; dispatch sub-agents; manage semantic backpressure",
-      "outputs": [
-        "swarm_assignments",
-        "backpressure_state",
-        "agent_telemetry"
-      ]
-    },
-    {
-      "id": 8,
-      "name": "MONTE_CARLO",
-      "timeout": 17944,
-      "parallel": false,
-      "required": false,
-      "tokenBudget": 4181,
-      "_timeoutNote": "φ⁶×1000",
-      "_tokenNote": "fib(19)",
-      "description": "Probabilistic outcome simulation; risk quantification via phi-weighted sampling",
-      "outputs": [
-        "outcome_distribution",
-        "risk_scores",
-        "confidence_intervals"
-      ]
-    },
-    {
-      "id": 9,
-      "name": "ARENA",
-      "timeout": 29034,
-      "parallel": false,
-      "required": false,
-      "tokenBudget": 6765,
-      "_timeoutNote": "φ⁷×1000",
-      "_tokenNote": "fib(20)",
-      "description": "Head-to-head model or strategy tournament; Elo-rated comparison of candidates",
-      "outputs": [
-        "arena_rankings",
-        "elo_scores",
-        "winner_rationale"
-      ]
-    },
-    {
-      "id": 10,
-      "name": "JUDGE",
-      "timeout": 6854,
-      "parallel": false,
-      "required": false,
-      "tokenBudget": 2584,
-      "_timeoutNote": "φ⁴×1000",
-      "_tokenNote": "fib(18)",
-      "description": "Quantitative scoring across correctness, safety, performance, quality, elegance",
-      "gate": {
-        "weights": {
-          "correctness": 0.34,
-          "safety": 0.21,
-          "performance": 0.21,
-          "quality": 0.13,
-          "elegance": 0.11,
-          "_sum": 1,
-          "_note": "34+21+21+13+11=100; mirrors Fibonacci proportions"
-        },
-        "minPassScore": 0.618,
-        "blockOnFail": true
-      },
-      "outputs": [
-        "judge_score",
-        "dimension_scores",
-        "judge_rationale"
-      ]
-    },
-    {
-      "id": 11,
-      "name": "APPROVE",
-      "timeout": 46979,
-      "parallel": false,
-      "required": false,
-      "requiredFor": [
-        "HIGH",
-        "CRITICAL"
-      ],
-      "tokenBudget": 987,
-      "_timeoutNote": "φ⁸×1000",
-      "_tokenNote": "fib(16)",
-      "description": "Human-in-the-loop or policy-gate approval for HIGH and CRITICAL tasks",
-      "outputs": [
-        "approval_status",
-        "approver_id",
-        "approval_notes"
-      ]
-    },
-    {
-      "id": 12,
-      "name": "EXECUTE",
-      "timeout": 46979,
-      "parallel": true,
-      "required": true,
-      "tokenBudget": 17711,
-      "_timeoutNote": "φ⁸×1000",
-      "_tokenNote": "fib(21)",
-      "description": "Primary task execution; tool calls, code generation, API actions",
-      "outputs": [
-        "execution_result",
-        "tool_call_log",
-        "side_effects"
-      ]
-    },
-    {
-      "id": 13,
-      "name": "VERIFY",
-      "timeout": 11090,
-      "parallel": false,
-      "required": true,
-      "tokenBudget": 2584,
-      "_timeoutNote": "φ⁵×1000",
-      "_tokenNote": "fib(18)",
-      "description": "Validate execution result against task spec; run unit/integration/property tests",
-      "outputs": [
-        "verification_status",
-        "test_results",
-        "failure_details"
-      ]
-    },
-    {
-      "id": 14,
-      "name": "SELF_AWARENESS",
-      "timeout": 11090,
-      "parallel": false,
-      "required": true,
-      "tokenBudget": 4181,
-      "_timeoutNote": "φ⁵×1000",
-      "_tokenNote": "fib(19)",
-      "description": "Measure coherence score, confidence estimation, epistemic uncertainty",
-      "gate": {
-        "confidenceThreshold": 0.618,
-        "_note": "ψ = 1/φ ≈ 0.618; below this triggers SELF_CRITIQUE escalation"
-      },
-      "outputs": [
-        "coherence_score",
-        "confidence_estimate",
-        "uncertainty_map"
-      ]
-    },
-    {
-      "id": 15,
-      "name": "SELF_CRITIQUE",
-      "timeout": 11090,
-      "parallel": false,
-      "required": true,
-      "tokenBudget": 4181,
-      "_timeoutNote": "φ⁵×1000",
-      "_tokenNote": "fib(19)",
-      "description": "Adversarial self-review; identify logical gaps, hallucinations, and edge cases",
-      "outputs": [
-        "critique_report",
-        "identified_gaps",
-        "revision_suggestions"
-      ]
-    },
-    {
-      "id": 16,
-      "name": "MISTAKE_ANALYSIS",
-      "timeout": 11090,
-      "parallel": false,
-      "required": true,
-      "tokenBudget": 2584,
-      "_timeoutNote": "φ⁵×1000",
-      "_tokenNote": "fib(18)",
-      "description": "5-whys root cause analysis; generate prevention rules for wisdom store",
-      "outputs": [
-        "root_causes",
-        "prevention_rules",
-        "mistake_fingerprint"
-      ]
-    },
-    {
-      "id": 17,
-      "name": "OPTIMIZATION_OPS",
-      "timeout": 17944,
-      "parallel": true,
-      "required": true,
-      "tokenBudget": 2584,
-      "_timeoutNote": "φ⁶×1000",
-      "_tokenNote": "fib(18)",
-      "description": "Performance profiling, cost optimization, latency reduction, token efficiency",
-      "outputs": [
-        "optimization_report",
-        "cost_delta",
-        "perf_improvements"
-      ]
-    },
-    {
-      "id": 18,
-      "name": "CONTINUOUS_SEARCH",
-      "timeout": 29034,
-      "parallel": true,
-      "required": false,
-      "tokenBudget": 4181,
-      "_timeoutNote": "φ⁷×1000",
-      "_tokenNote": "fib(19)",
-      "description": "Background web search, paper ingestion, knowledge base refresh",
-      "outputs": [
-        "search_results",
-        "kb_updates",
-        "novelty_score"
-      ]
-    },
-    {
-      "id": 19,
-      "name": "EVOLUTION",
-      "timeout": 29034,
-      "parallel": false,
-      "required": false,
-      "tokenBudget": 6765,
-      "_timeoutNote": "φ⁷×1000",
-      "_tokenNote": "fib(20)",
-      "description": "Controlled mutation and fitness-based evolution of prompts, configs, and strategies",
-      "evolutionConfig": {
-        "mutationRate": 0.0618,
-        "populationSize": 8,
-        "maxMagnitude": 0.13,
-        "_note": "mutationRate=ψ/10, populationSize=fib(6), maxMagnitude=fib(7)/100"
-      },
-      "outputs": [
-        "evolved_population",
-        "fitness_scores",
-        "champion_genome"
-      ]
-    },
-    {
-      "id": 20,
-      "name": "RECEIPT",
-      "timeout": 4236,
-      "parallel": false,
-      "required": true,
-      "tokenBudget": 1597,
-      "_timeoutNote": "φ³×1000",
-      "_tokenNote": "fib(17)",
-      "description": "Final response assembly, telemetry flush, session state commit, audit log write",
-      "outputs": [
-        "final_response",
-        "session_receipt",
-        "audit_record"
-      ]
-    }
-  ],
-  "pools": {
-    "llm_tokens": {
-      "base": 8192,
-      "tiers": {
-        "working": 8192,
-        "session": 21450,
-        "memory": 56131,
-        "artifacts": 146920
-      },
-      "_tierNotes": {
-        "working": "base",
-        "session": "base × φ²",
-        "memory": "base × φ⁴",
-        "artifacts": "base × φ⁶"
-      },
-      "stageAllocations": {
-        "CHANNEL_ENTRY": 1597,
-        "RECON": 2584,
-        "INTAKE": 2584,
-        "CLASSIFY": 1597,
-        "TRIAGE": 1597,
-        "DECOMPOSE": 2584,
-        "TRIAL_AND_ERROR": 6765,
-        "ORCHESTRATE": 4181,
-        "MONTE_CARLO": 4181,
-        "ARENA": 6765,
-        "JUDGE": 2584,
-        "APPROVE": 987,
-        "EXECUTE": 17711,
-        "VERIFY": 2584,
-        "SELF_AWARENESS": 4181,
-        "SELF_CRITIQUE": 4181,
-        "MISTAKE_ANALYSIS": 2584,
-        "OPTIMIZATION_OPS": 2584,
-        "CONTINUOUS_SEARCH": 4181,
-        "EVOLUTION": 6765,
-        "RECEIPT": 1597
-      }
-    },
-    "concurrent_requests": {
-      "default": 5,
-      "max": 21,
-      "_defaultNote": "fib(5)",
-      "_maxNote": "fib(8)",
-      "perNode": {
-        "llm_primary": 8,
-        "llm_secondary": 5,
-        "tools": 13,
-        "embeddings": 13,
-        "search": 8,
-        "_note": "all Fibonacci numbers: 8=fib(6), 5=fib(5), 13=fib(7)"
-      }
-    },
-    "bee_workers": {
-      "default": 3,
-      "max": 13,
-      "ttl": 233000,
-      "_defaultNote": "fib(4)",
-      "_maxNote": "fib(7)",
-      "_ttlNote": "fib(13)×1000 ms",
-      "spawnBatchSize": 3,
-      "heartbeatIntervalMs": 4236,
-      "_heartbeatNote": "φ³×1000 ms"
-    },
-    "cost_usd": {
-      "default": 1.618,
-      "max": 6.854,
-      "fullAutoMax": 4.236,
-      "_note": "default=φ, max=φ⁴/10, fullAutoMax=φ³"
-    }
-  },
-  "variants": {
-    "FAST_PATH": {
-      "stages": [
-        0,
-        1,
-        2,
-        7,
-        12,
-        13,
-        20
-      ],
-      "description": "Minimal latency path — intake, orchestrate, execute, verify, receipt",
-      "maxDurationMs": 110900,
-      "_durationNote": "φ⁵×10000"
-    },
-    "FULL_PATH": {
-      "stages": [
-        0,
-        1,
-        2,
-        3,
-        4,
-        5,
-        6,
-        7,
-        8,
-        9,
-        10,
-        11,
-        12,
-        13,
-        14,
-        15,
-        16,
-        17,
-        18,
-        19,
-        20
-      ],
-      "description": "Complete 21-stage sovereign cognitive pipeline",
-      "maxDurationMs": 290340,
-      "_durationNote": "φ⁷×10000"
-    },
-    "ARENA_PATH": {
-      "stages": [
-        0,
-        1,
-        2,
-        3,
-        4,
-        8,
-        9,
-        10,
-        20
-      ],
-      "description": "Competition path — classify, triage, Monte Carlo simulation, arena tournament, judge",
-      "maxDurationMs": 110900
-    },
-    "LEARNING_PATH": {
-      "stages": [
-        0,
-        1,
-        16,
-        17,
-        18,
-        19,
-        20
-      ],
-      "description": "Self-improvement loop — recon, mistake analysis, optimization, search, evolution",
-      "maxDurationMs": 110900
-    }
-  },
-  "fullAutoMode": {
-    "enabled": true,
-    "maxCostUsd": 4.236,
-    "maxDurationMs": 290340,
-    "coherenceFloor": 0.618,
-    "requireJudgeGate": true,
-    "allowEvolution": true,
-    "allowArena": true,
-    "allowMonteCarlo": true,
-    "tokenBudgetWarningAt": 0.764,
-    "tokenBudgetCriticalAt": 0.854,
-    "tokenBudgetHardStopAt": 0.91,
-    "_thresholdNotes": {
-      "warning": "1 - ψ²  ≈ 0.764",
-      "critical": "1 - ψ³  ≈ 0.854",
-      "hardStop": "1 - ψ⁴  ≈ 0.910"
->>>>>>> hc-testing/dependabot/docker/node-25-slim
     }
   },
   "pools": {
@@ -1636,7 +1051,6 @@
     "evolution_simulation": 29034
   },
   "errorHandling": {
-<<<<<<< HEAD
     "onStageFailure": "skip_optional_continue_required",
     "onStepFailure": "retry_then_skip",
     "onGovernanceDeny": "halt_immediately",
@@ -1658,41 +1072,15 @@
     "onPipelineStart": [
       "story_driver.record",
       "budget.checkpoint",
-=======
-    "retryableErrors": [
-      "TIMEOUT",
-      "RATE_LIMIT",
-      "TRANSIENT_FAILURE",
-      "COHERENCE_DRIFT"
-    ],
-    "fatalErrors": [
-      "SAFETY_VIOLATION",
-      "BUDGET_EXCEEDED",
-      "CRITICAL_COHERENCE_LOSS"
-    ],
-    "onFatalError": "EMIT_RECEIPT_AND_HALT",
-    "maxCascadeDepth": 5,
-    "_maxCascadeNote": "fib(5)"
-  },
-  "hooks": {
-    "onPipelineStart": [
-      "telemetry.pipelineStart",
-      "story_driver.record",
->>>>>>> hc-testing/dependabot/docker/node-25-slim
       "resource_manager.snapshot",
       "pattern_engine.observeStart"
     ],
     "onStageStart": [
-<<<<<<< HEAD
       "budget.checkpoint",
-=======
-      "telemetry.stageStart",
->>>>>>> hc-testing/dependabot/docker/node-25-slim
       "resource_manager.checkPressure",
       "story_driver.recordStageEntry"
     ],
     "onStageComplete": [
-<<<<<<< HEAD
 =======
       "telemetry.stageComplete",
 >>>>>>> hc-testing/dependabot/docker/node-25-slim
@@ -1700,27 +1088,15 @@
       "mc_scheduler.feedStageTiming",
       "pattern_engine.feedTaskTiming"
     ],
-<<<<<<< HEAD
     "onPipelineComplete": [
       "story_driver.record",
       "budget.finalize",
       "coherence.update",
-=======
-    "onStageError": [
-      "telemetry.stageError",
-      "self_critique.recordFailure",
-      "pattern_engine.observeError"
-    ],
-    "onPipelineComplete": [
-      "telemetry.pipelineComplete",
-      "story_driver.record",
->>>>>>> hc-testing/dependabot/docker/node-25-slim
       "self_critique.recordRunCritique",
       "pattern_engine.analyzeRun",
       "mc_scheduler.updateBaseline",
       "resource_manager.releaseReservations"
     ],
-<<<<<<< HEAD
     "onPipelineError": [
       "story_driver.record",
       "budget.finalize",
@@ -1729,11 +1105,6 @@
       "pattern_engine.observeError",
       "resource_manager.releaseReservations"
     ],
-=======
-    "onCoherenceDrop": "wisdom.recordCoherenceEvent",
-    "onBudgetWarning": "costTracker.emitWarning",
-    "onEvolution": "wisdom.recordEvolutionEvent",
->>>>>>> hc-testing/dependabot/docker/node-25-slim
     "onStopRuleTriggered": [
       "story_driver.record",
       "self_critique.recordEscalation",
@@ -1747,7 +1118,6 @@
   "engineBindings": {
     "_description": "All 6 core engines that the pipeline must bind() to at startup for full data flow",
     "required": [
-<<<<<<< HEAD
       {
         "engine": "mcScheduler",
         "source": "src/hc_monte_carlo.js",
@@ -1828,22 +1198,6 @@
       {
         "from": "stage_channel_entry",
         "to": "stage_recon",
-=======
-      "mcScheduler",
-      "patternEngine",
-      "selfCritique",
-      "storyDriver",
-      "resourceManager",
-      "taskScheduler"
-    ]
-  },
-  "dataFlow": {
-    "_description": "Explicit stage-to-stage data contracts — every output feeds a downstream input",
-    "connections": [
-      {
-        "from": 0,
-        "to": 1,
->>>>>>> hc-testing/dependabot/docker/node-25-slim
         "data": [
           "session_id",
           "channel_meta",
@@ -1851,20 +1205,14 @@
         ]
       },
       {
-<<<<<<< HEAD
         "from": "stage_channel_entry",
         "to": "stage_intake",
-=======
-        "from": 0,
-        "to": 2,
->>>>>>> hc-testing/dependabot/docker/node-25-slim
         "data": [
           "normalized_input",
           "user_identity"
         ]
       },
       {
-<<<<<<< HEAD
         "from": "stage_recon",
         "to": "stage_intake",
         "data": [
@@ -1878,25 +1226,10 @@
         "to": "stage_triage",
         "data": [
           "env_map",
-=======
-        "from": 1,
-        "to": 2,
-        "data": [
-          "context_snapshot",
-          "history_summary"
-        ]
-      },
-      {
-        "from": 1,
-        "to": 4,
-        "data": [
-          "user_profile",
->>>>>>> hc-testing/dependabot/docker/node-25-slim
           "attack_surface"
         ]
       },
       {
-<<<<<<< HEAD
         "from": "stage_intake",
         "to": "stage_memory",
         "data": [
@@ -1935,50 +1268,10 @@
         "to": "stage_trial_and_error",
         "data": [
           "subtask_dag",
-=======
-        "from": 2,
-        "to": 3,
-        "data": [
-          "structured_request",
-          "intent_vector"
-        ]
-      },
-      {
-        "from": 2,
-        "to": 4,
-        "data": [
-          "entities",
-          "intent_vector"
-        ]
-      },
-      {
-        "from": 3,
-        "to": 4,
-        "data": [
-          "task_class",
-          "criticality",
-          "routing_tags"
-        ]
-      },
-      {
-        "from": 4,
-        "to": 5,
-        "data": [
-          "priority_score",
-          "admission_decision"
-        ]
-      },
-      {
-        "from": 5,
-        "to": 6,
-        "data": [
-          "subtask_graph",
->>>>>>> hc-testing/dependabot/docker/node-25-slim
           "execution_plan"
         ]
       },
       {
-<<<<<<< HEAD
         "from": "stage_decompose",
         "to": "stage_orchestrate",
         "data": [
@@ -2032,66 +1325,10 @@
         "to": "stage_approve",
         "data": [
           "composite_score",
-=======
-        "from": 5,
-        "to": 7,
-        "data": [
-          "subtask_graph",
-          "dependency_map",
-          "execution_plan"
-        ]
-      },
-      {
-        "from": 6,
-        "to": 7,
-        "data": [
-          "candidate_solutions",
-          "trial_scores"
-        ]
-      },
-      {
-        "from": 7,
-        "to": 8,
-        "data": [
-          "swarm_assignments",
-          "agent_telemetry"
-        ]
-      },
-      {
-        "from": 7,
-        "to": 9,
-        "data": [
-          "swarm_assignments",
-          "backpressure_state"
-        ]
-      },
-      {
-        "from": 8,
-        "to": 10,
-        "data": [
-          "outcome_distribution",
-          "confidence_intervals"
-        ]
-      },
-      {
-        "from": 9,
-        "to": 10,
-        "data": [
-          "arena_rankings",
-          "elo_scores"
-        ]
-      },
-      {
-        "from": 10,
-        "to": 11,
-        "data": [
-          "judge_score",
->>>>>>> hc-testing/dependabot/docker/node-25-slim
           "gate_pass_fail"
         ]
       },
       {
-<<<<<<< HEAD
         "from": "stage_approve",
         "to": "stage_execute_verified",
         "data": [
@@ -2104,25 +1341,10 @@
         "to": "stage_execute_verified",
         "data": [
           "composite_score"
-=======
-        "from": 11,
-        "to": 12,
-        "data": [
-          "approval_status",
-          "approver_id"
-        ]
-      },
-      {
-        "from": 10,
-        "to": 12,
-        "data": [
-          "judge_score"
->>>>>>> hc-testing/dependabot/docker/node-25-slim
         ],
         "condition": "low_risk_bypass"
       },
       {
-<<<<<<< HEAD
         "from": "stage_execute_verified",
         "to": "stage_verify",
         "data": [
@@ -2191,82 +1413,12 @@
       {
         "from": "stage_verify",
         "to": "stage_receipt",
-=======
-        "from": 12,
-        "to": 13,
-        "data": [
-          "execution_result",
-          "tool_call_log"
-        ]
-      },
-      {
-        "from": 13,
-        "to": 14,
-        "data": [
-          "verification_status",
-          "test_results"
-        ]
-      },
-      {
-        "from": 14,
-        "to": 15,
-        "data": [
-          "coherence_score",
-          "confidence_estimate",
-          "uncertainty_map"
-        ]
-      },
-      {
-        "from": 15,
-        "to": 16,
-        "data": [
-          "critique_report",
-          "identified_gaps"
-        ]
-      },
-      {
-        "from": 16,
-        "to": 17,
-        "data": [
-          "root_causes",
-          "prevention_rules"
-        ]
-      },
-      {
-        "from": 17,
-        "to": 18,
-        "data": [
-          "optimization_report",
-          "perf_improvements"
-        ]
-      },
-      {
-        "from": 18,
-        "to": 19,
-        "data": [
-          "search_results",
-          "novelty_score"
-        ]
-      },
-      {
-        "from": 19,
-        "to": 20,
-        "data": [
-          "evolved_population",
-          "champion_genome"
-        ]
-      },
-      {
-        "from": 13,
-        "to": 20,
->>>>>>> hc-testing/dependabot/docker/node-25-slim
         "data": [
           "verification_status"
         ],
         "condition": "fast_path"
       },
       {
-<<<<<<< HEAD
         "from": "stage_receipt",
         "to": "external:vector_memory",
         "data": [
@@ -3986,31 +3138,5 @@
         "ztpPhase": 14
       }
     ]
-=======
-        "from": 20,
-        "to": "external:vector_memory",
-        "data": [
-          "final_response",
-          "session_receipt"
-        ]
-      },
-      {
-        "from": 20,
-        "to": "external:story_driver",
-        "data": [
-          "audit_record",
-          "session_receipt"
-        ]
-      },
-      {
-        "from": 20,
-        "to": "external:governance",
-        "data": [
-          "audit_record",
-          "ed25519_signature"
-        ]
-      }
-    ]
->>>>>>> hc-testing/dependabot/docker/node-25-slim
   }
 }

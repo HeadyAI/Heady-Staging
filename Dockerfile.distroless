@@ -1,0 +1,54 @@
+# ═══════════════════════════════════════════════════════════════════════
+#  HEADY SYSTEMS — Production Dockerfile (Distroless)
+#  ∞ Sacred Geometry · Organic Systems · Breathing Interfaces
+#  Blueprint-compliant: distroless multi-stage build
+# ═══════════════════════════════════════════════════════════════════════
+#
+#  Multi-stage build with phi-derived resource configuration.
+#  Target: Google Cloud Run
+#
+# ─── Stage 1: Build (Alpine for npm ci) ─────────────────────────────
+FROM node:22-alpine AS builder
+
+WORKDIR /app
+
+# Copy package files first for layer caching
+COPY package.json package-lock.json* ./
+
+# Install production dependencies only
+RUN npm ci --omit=dev --ignore-scripts 2>/dev/null || npm install --omit=dev --ignore-scripts
+
+# Copy application source
+COPY . .
+
+# Remove dev artifacts and sensitive files
+RUN rm -rf .git .github .turbo .heady_cache tests __tests__ \
+    *.test.js *.spec.js .eslintrc.json .prettierrc.json \
+    scripts/kill-port.ps1 scripts/Heady-Sync.ps1 \
+    .env .env.* docs/ audit/ heady-academic-research/ \
+    sacred-projections/ heady-full-rebuild/ heady-output/ \
+    .bfg-report/ .benchmarks/
+
+# ─── Stage 2: Production (Distroless — no shell, no package manager) ─
+FROM gcr.io/distroless/nodejs22-debian12 AS production
+
+# Distroless: no adduser, no shell — runs as nonroot by default (UID 65534)
+WORKDIR /app
+
+# Copy built artifacts from builder
+COPY --from=builder /app /app
+
+# Environment
+ENV NODE_ENV=production
+ENV PORT=3301
+
+# Health check — Fibonacci intervals: 13s check, 8s timeout, 21s start, 5 retries
+# Note: distroless has no shell, so healthcheck uses node directly
+HEALTHCHECK --interval=13s --timeout=8s --start-period=21s --retries=5 \
+  CMD ["node", "-e", "const http=require('http');const r=http.get('http://0.0.0.0:'+process.env.PORT+'/health',{timeout:5000},(res)=>{process.exit(res.statusCode===200?0:1)});r.on('error',()=>process.exit(1))"]
+
+# Expose port (φ-derived: 3301 ~ 3000 + Fibonacci(7))
+EXPOSE 3301
+
+# Distroless uses array syntax only — no shell available
+CMD ["heady-manager.js"]

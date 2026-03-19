@@ -1,5 +1,8 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> production/main
 node_modules
 .git
 .env
@@ -53,34 +56,17 @@ docs
 notebooks
 *.md
 !README.md
-=======
-# ═══════════════════════════════════════════════════════════════
-# Heady™ .dockerignore
-# ═══════════════════════════════════════════════════════════════
 
-# Version control
-.git
-.gitignore
-
-# IDE & editor
-.vscode
-.cursor
-.windsurf
-.gemini
-.github
-
-# Build artifacts
-node_modules
-coverage
-dist
-.turbo
-.next
-*.tsbuildinfo
-
-# Archive & downloads (huge, not needed in images)
+# Non-production directories
 _archive
 _downloads
+audit
+context
+desktop-overlay
+HeadyAI-IDE
+distribution
 
+<<<<<<< HEAD
 # Documentation & tests (not in production images)
 tests
 notebooks
@@ -129,3 +115,7 @@ windsurf-next
 .heady
 offline-packages
 >>>>>>> heady-testing/claude/autonomous-agent-system-prompt-qarZg
+=======
+# Ensure assets are included (og:images)
+!assets/
+>>>>>>> production/main

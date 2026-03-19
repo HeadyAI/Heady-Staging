@@ -1,0 +1,195 @@
+{
+  "$schema": "heady://configs/swarm-taxonomy/v4.0",
+  "version": "4.0.0",
+  "patent": "HS-060",
+  "description": "Heady™ 17-Swarm Taxonomy — 3D vector resonance routing through 17 specialized swarms",
+  "copyright": "© 2026 HeadySystems Inc. All Rights Reserved. PATENT LOCK ZONE.",
+  "phi": 1.618033988749895,
+  "psi": 0.618033988749895,
+
+  "csl_thresholds": {
+    "low": 0.382,
+    "mid": 0.618,
+    "high": 0.718
+  },
+
+  "swarms": {
+    "overmind": {
+      "id": 1,
+      "category": "decision_orchestration",
+      "description": "Root swarm for goal decomposition and intent routing",
+      "bees": ["OrchestratorBee", "OvermindDirectorBee", "PriorityResolverBee"],
+      "resonance_frequency": 1.618,
+      "priority": "P0",
+      "state": "hot"
+    },
+    "governance": {
+      "id": 2,
+      "category": "decision_orchestration",
+      "description": "Policy enforcement, secrets, compliance, audit",
+      "bees": ["AuditBee", "ComplianceBee", "PermissionGuardBee"],
+      "resonance_frequency": 1.0,
+      "priority": "P0",
+      "state": "hot"
+    },
+    "forge": {
+      "id": 3,
+      "category": "operational_creative",
+      "description": "Code production — AST mutation, hologram generation, chaos testing",
+      "bees": ["ASTMutatorBee", "HologramBee", "ChaosTesterBee", "ContextWeaverBee"],
+      "resonance_frequency": 1.272,
+      "priority": "P1",
+      "state": "hot"
+    },
+    "emissary": {
+      "id": 4,
+      "category": "operational_creative",
+      "description": "Documentation, protocol bridging, SDK publishing",
+      "bees": ["DocumentationBee", "MCPProtocolBee", "SDKPublisherBee"],
+      "resonance_frequency": 0.618,
+      "priority": "P1",
+      "state": "warm"
+    },
+    "foundry": {
+      "id": 5,
+      "category": "operational_creative",
+      "description": "Fine-tuning — dataset curation, model adaptation",
+      "bees": ["DataCuratorBee", "TrainingOrchestratorBee"],
+      "resonance_frequency": 0.786,
+      "priority": "P2",
+      "state": "warm"
+    },
+    "studio": {
+      "id": 6,
+      "category": "operational_creative",
+      "description": "Ableton/MIDI — hardware SysEx, DAW bridge",
+      "bees": ["CloudMIDIBee", "DAWBridgeBee", "SysExReceiverBee"],
+      "resonance_frequency": 0.382,
+      "priority": "P3",
+      "state": "cold"
+    },
+    "arbiter": {
+      "id": 7,
+      "category": "business_ecosystem",
+      "description": "Law/IP — patent harvesting, license compliance",
+      "bees": ["PatentHarvestBee", "LicenseComplianceBee", "IPProtectionBee"],
+      "resonance_frequency": 0.854,
+      "priority": "P1",
+      "state": "warm"
+    },
+    "diplomat": {
+      "id": 8,
+      "category": "business_ecosystem",
+      "description": "Autonomous B2B — procurement, API negotiation",
+      "bees": ["ProcurementBee", "RateLimitNegotiatorBee"],
+      "resonance_frequency": 0.618,
+      "priority": "P2",
+      "state": "warm"
+    },
+    "oracle": {
+      "id": 9,
+      "category": "business_ecosystem",
+      "description": "Billing — budget monitoring, economic guardrails",
+      "bees": ["CostTrackerBee", "BudgetGuardianBee"],
+      "resonance_frequency": 0.5,
+      "priority": "P1",
+      "state": "hot"
+    },
+    "quant": {
+      "id": 10,
+      "category": "business_ecosystem",
+      "description": "Trading — backtesting, portfolio optimization, risk management",
+      "bees": ["MarketAnalyzerBee", "RiskManagerBee"],
+      "resonance_frequency": 1.618,
+      "priority": "P1",
+      "state": "hot"
+    },
+    "fabricator": {
+      "id": 11,
+      "category": "applied_reality",
+      "description": "Physical IoT — environment control, CAD generation",
+      "bees": ["IoTEnvironmentBee", "CADMutatorBee"],
+      "resonance_frequency": 0.382,
+      "priority": "P3",
+      "state": "cold"
+    },
+    "persona": {
+      "id": 12,
+      "category": "applied_reality",
+      "description": "Cognitive alignment — biometric sync, personality persistence",
+      "bees": ["BioSyncBee", "PersonaPersistenceBee"],
+      "resonance_frequency": 0.618,
+      "priority": "P2",
+      "state": "warm"
+    },
+    "sentinel": {
+      "id": 13,
+      "category": "applied_reality",
+      "description": "Defense — threat detection, vulnerability scanning, self-healing",
+      "bees": ["ThreatDetectorBee", "VulnScannerBee", "IncidentResponderBee"],
+      "resonance_frequency": 1.0,
+      "priority": "P0",
+      "state": "hot"
+    },
+    "nexus": {
+      "id": 14,
+      "category": "applied_reality",
+      "description": "Web3 — smart contracts, on-chain semantic tokenization",
+      "bees": ["SmartContractBee", "TokenizerBee"],
+      "resonance_frequency": 0.382,
+      "priority": "P3",
+      "state": "cold"
+    },
+    "dreamer": {
+      "id": 15,
+      "category": "applied_reality",
+      "description": "Simulations — Monte Carlo scenarios, What-If planning",
+      "bees": ["MonteCarloSimBee", "ScenarioPlannerBee"],
+      "resonance_frequency": 0.786,
+      "priority": "P2",
+      "state": "warm"
+    },
+    "tensor": {
+      "id": 16,
+      "category": "mathematical_core",
+      "description": "CSL geometric logic gates — VALU Tensor Core operations",
+      "bees": ["ResonanceBee", "SuperpositionBee", "OrthogonalBee"],
+      "resonance_frequency": 1.618,
+      "priority": "P0",
+      "state": "hot",
+      "gates": {
+        "resonance": { "operation": "cos(I, C) >= threshold", "strategy": "semantic_trigger" },
+        "superposition": { "operation": "normalize(a*A + (1-a)*B)", "strategy": "intent_fusion" },
+        "orthogonal": { "operation": "T - ((T.R)/(R.R))*R", "strategy": "purified_direction" }
+      }
+    },
+    "topology": {
+      "id": 17,
+      "category": "mathematical_core",
+      "description": "Spatial clustering, dependency integrity, entanglement tracking",
+      "bees": ["ManifoldBee", "EntanglementBee"],
+      "resonance_frequency": 1.272,
+      "priority": "P0",
+      "state": "hot",
+      "gates": {
+        "manifold": { "operation": "PCA -> k-means -> Shannon", "strategy": "entropy_optimization" },
+        "entanglement": { "operation": "edge(A,B) if resonance > T", "strategy": "dependency_tracking" }
+      }
+    }
+  },
+
+  "categories": {
+    "decision_orchestration": { "swarms": ["overmind", "governance"], "phi_coverage": 1.0 },
+    "operational_creative": { "swarms": ["forge", "emissary", "foundry", "studio"], "phi_coverage": 0.887 },
+    "business_ecosystem": { "swarms": ["arbiter", "diplomat", "oracle", "quant"], "phi_coverage": 0.786 },
+    "applied_reality": { "swarms": ["fabricator", "persona", "sentinel", "nexus", "dreamer"], "phi_coverage": 0.618 },
+    "mathematical_core": { "swarms": ["tensor", "topology"], "phi_coverage": 1.0 }
+  },
+
+  "metadata": {
+    "total_swarms": 17,
+    "total_bees": 42,
+    "generated": "2026-03-19T16:40:00Z",
+    "generator": "HeadyAI Autonomous Intelligence Layer"
+  }
+}

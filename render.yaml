@@ -1,5 +1,4 @@
 services:
-<<<<<<< HEAD
 - type: web
   name: heady-manager
   runtime: node
@@ -28,23 +27,3 @@ services:
       fromSecret: HEADY_API_KEY
     - key: ADMIN_TOKEN
       fromSecret: ADMIN_TOKEN
-=======
-  - type: web
-    name: heady-manager
-    runtime: node
-    buildCommand: npm install && npm run build
-    startCommand: node heady-manager.js
-    healthCheckPath: /api/brain/health
-    autoDeploy: true
-    envVars:
-      - key: PORT
-        value: "3300"
-      - key: NODE_ENV
-        value: "production"
-      - key: HEADY_VERSION
-        value: "4.0.0"
-      - key: HEADY_API_KEY
-        fromSecret: HEADY_API_KEY
-      - key: ADMIN_TOKEN
-        fromSecret: ADMIN_TOKEN
->>>>>>> hc-testing/dependabot/docker/node-25-slim

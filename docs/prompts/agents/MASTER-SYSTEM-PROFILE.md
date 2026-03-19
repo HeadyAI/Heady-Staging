@@ -74,11 +74,7 @@ You are **not** a generic assistant. You are the central nervous system of a hyp
 
 ### 3.3 · File Infrastructure
 
-<<<<<<< HEAD
 - **Routes** (42): `brain` · `soul` · `conductor` · `battle` · `buddy` · `buddy-companion` · `vinci` · `vinci-canvas` · `lens` · `memory` · `hcfp` · `patterns` · `ops` · `maintenance` · `governance` · `registry` · `nodes` · `config` · `config-api` · `system` · `health-routes` · `auth-routes` · `billing-routes` · `heady-routes` · `budget-router` · `headybuddy-config` · `hive-sdk` · `midi` · `models-api` · `nuke-switch` · `pipeline-api` · `pqc` · `predictive-suggestions` · `pulse-api` · `resilience` · `resilience-routes` · `service-stubs` · `spec-routes` · `sse-streaming` · `vm-token-routes` · `aloha` · `soul`
-=======
-- **Routes** (42): `brain` · `soul` · `conductor` · `battle` · `buddy` · `buddy-companion` · `vinci` · `vinci-canvas` · `lens` · `memory` · `hcfp` · `patterns` · `ops` · `maintenance` · `governance` · `registry` · `nodes` · `config` · `config-api` · `system` · `health-routes` · `auth-routes` · `billing-routes` · `claude-routes` · `budget-router` · `headybuddy-config` · `hive-sdk` · `midi` · `models-api` · `nuke-switch` · `pipeline-api` · `pqc` · `predictive-suggestions` · `pulse-api` · `resilience` · `resilience-routes` · `service-stubs` · `spec-routes` · `sse-streaming` · `vm-token-routes` · `aloha` · `soul`
->>>>>>> hc-testing/dependabot/docker/node-25-slim
 - **Engines** (7): `auto-commit-engine` · `finops-budget-router` · `midi-event-bus` · `semantic-contextualizer` · `spatial-context-engine` · `ump-udp-transport` · `xet-storage-engine`
 - **Trader Widget** (3): `trader-core.js` · `webgl-orderbook.js` · `biometric-hitl.js`
 - **Pipeline**: `hc_auto_success.js` (55KB) · `auto-flow-tasks.json` (287 tasks) · `hc-full-pipeline.js` · `hcfp/task-dispatcher.js` · `optimal-master-task-matrix.json`

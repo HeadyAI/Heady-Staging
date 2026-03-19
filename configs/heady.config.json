@@ -1,0 +1,215 @@
+{
+  "$schema": "heady://configs/heady.config/v4.0",
+  "version": "4.2.0",
+  "service": "heady-manager",
+  "copyright": "© 2026 HeadySystems Inc. All Rights Reserved.",
+
+  "runtime": {
+    "env": "production",
+    "port": 3301,
+    "host": "0.0.0.0",
+    "log_level": "info",
+    "log_format": "json",
+    "trust_proxy": true,
+    "node_options": "--max-old-space-size=4096"
+  },
+
+  "phi": {
+    "value": 1.618033988749895,
+    "psi": 0.618033988749895,
+    "psi2": 0.381966011250105,
+    "sqrt_phi": 1.272019649514026,
+    "fibonacci": [0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377, 610, 987]
+  },
+
+  "csl": {
+    "gates": ["resonance", "superposition", "orthogonal", "entanglement"],
+    "thresholds": {
+      "low": 0.382,
+      "mid": 0.618,
+      "high": 0.718
+    },
+    "confidence_floor": 0.382,
+    "confidence_ceiling": 0.718
+  },
+
+  "timeouts": {
+    "default_ms": 16180,
+    "boot_ms": 30000,
+    "shutdown_ms": 10000,
+    "health_ms": 5000,
+    "tool_ms": 30000,
+    "workflow_ms": 300000,
+    "human_ms": 300000,
+    "stream_ms": 60000
+  },
+
+  "retry": {
+    "max_attempts": 3,
+    "backoff_sequence_ms": [1000, 2000, 3000, 5000, 8000, 13000, 21000, 34000],
+    "budget_per_task": 3,
+    "dlq_max": 100
+  },
+
+  "circuit_breaker": {
+    "failure_threshold": 5,
+    "success_threshold": 3,
+    "timeout_ms": 30000,
+    "half_open_probes": 1,
+    "phi_backoff_base_ms": 1618,
+    "phi_backoff_max_ms": 30000
+  },
+
+  "llm": {
+    "fallback_chain": ["gemini", "gpt", "workers-ai", "colab-vllm"],
+    "default_model": "gpt-4.1-mini",
+    "judge_model": "gemini-2.5-flash-lite",
+    "routing_model": "gpt-5-nano",
+    "max_tokens": 4096,
+    "context_window": 128000,
+    "temperature": 0.618,
+    "production_gate_threshold": 0.05
+  },
+
+  "embeddings": {
+    "provider": "openai",
+    "model": "text-embedding-3-small",
+    "dimensions": 1536,
+    "batch_size": 100,
+    "max_tokens": 8191,
+    "pooling": "mean"
+  },
+
+  "database": {
+    "pool_size": 10,
+    "idle_timeout_ms": 10000,
+    "connect_timeout_ms": 5000,
+    "statement_timeout_ms": 30000,
+    "ssl": "require"
+  },
+
+  "vector": {
+    "dimensions": 1536,
+    "index_type": "hnsw",
+    "hnsw_m": 16,
+    "hnsw_ef_construction": 64,
+    "hnsw_ef_search": 40,
+    "distance_metric": "cosine",
+    "similarity_threshold": 0.85
+  },
+
+  "redis": {
+    "pool_max": 10,
+    "pool_min": 2,
+    "idle_timeout_ms": 10000,
+    "acquire_timeout_ms": 5000
+  },
+
+  "cache": {
+    "enabled": true,
+    "backend": "memory",
+    "max_size": 10000,
+    "ttl_ms": 3600000,
+    "eviction_policy": "lru",
+    "sliding_ttl": true,
+    "memory_threshold": 0.8
+  },
+
+  "health": {
+    "check_interval_ms": 30000,
+    "heartbeat_interval_ms": 29034,
+    "score_degraded": 80,
+    "score_critical": 50,
+    "timeout_ms": 5000
+  },
+
+  "canary": {
+    "enabled": true,
+    "steps": [0.05, 0.25, 0.50, 1.0],
+    "interval_ms": 47000,
+    "auto_branch": "main"
+  },
+
+  "guard": {
+    "port": 3302,
+    "rate_rpm": 60,
+    "rate_rph": 1000,
+    "block_threshold": 0.8,
+    "flag_threshold": 0.5,
+    "pii_mode": "redact",
+    "stages": ["pii", "toxicity", "prompt-injection", "content-filter"],
+    "rules_path": "./configs/guard-rules.json"
+  },
+
+  "mcp": {
+    "port": 3307,
+    "transport": "stdio",
+    "rate_limit": 100,
+    "server_id": "heady-mcp",
+    "total_tools": 42
+  },
+
+  "services": {
+    "heady_manager": { "port": 3301, "role": "primary" },
+    "heady_guard": { "port": 3302, "role": "content-safety" },
+    "heady_infer": { "port": 3303, "role": "inference" },
+    "heady_embed": { "port": 3304, "role": "embeddings" },
+    "heady_eval": { "port": 3305, "role": "evaluation" },
+    "heady_cache": { "port": 3306, "role": "semantic-cache" },
+    "heady_mcp": { "port": 3307, "role": "mcp-server" },
+    "edge_daemon": { "port": 3308, "role": "edge" },
+    "dashboard": { "port": 3309, "role": "monitoring" },
+    "gateway": { "port": 3310, "role": "api-gateway" },
+    "chain": { "port": 3311, "role": "llm-chain" },
+    "site": { "port": 3312, "role": "site-serve" }
+  },
+
+  "domains": {
+    "core": [
+      "headysystems.com",
+      "headyme.com",
+      "headymcp.com",
+      "headyio.com",
+      "headybot.com",
+      "headyapi.com",
+      "heady-ai.com",
+      "headybuddy.org",
+      "headyconnection.com",
+      "headyconnection.org",
+      "headyfinance.com",
+      "headylens.com"
+    ],
+    "cors_allowed": [
+      "https://headysystems.com",
+      "https://headyme.com",
+      "https://headymcp.com",
+      "https://headyio.com",
+      "https://headyapi.com",
+      "https://headybuddy.org",
+      "https://headyconnection.com",
+      "https://headyconnection.org"
+    ]
+  },
+
+  "budget": {
+    "monthly_cap_usd": 750,
+    "daily_cap_usd": 50,
+    "auto_downgrade": true,
+    "provider_caps": {
+      "openai": 250,
+      "anthropic": 200,
+      "google": 150,
+      "groq": 50
+    }
+  },
+
+  "metadata": {
+    "generated": "2026-03-19T16:40:00Z",
+    "generator": "HeadyAI Autonomous Intelligence Layer",
+    "monorepo_version": "4.2.0",
+    "total_microservices": 145,
+    "total_agents": 47,
+    "total_mcp_servers": 7,
+    "total_skills": 81
+  }
+}

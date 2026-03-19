@@ -1,86 +1,70 @@
-# Contributing to Heady Sovereign AI Platform
+# Contributing to Heady™ Latent OS
 
-Thank you for your interest in contributing to Heady! This document provides guidelines and information for contributors.
+Thank you for your interest in contributing to the Heady ecosystem. This document outlines the standards and workflow for contributions.
 
-## Code of Conduct
+## Architecture
 
-We are committed to fostering an open and welcoming environment. Please be respectful and constructive in all interactions.
+Heady is a sovereign AI platform built on:
+- **Node.js / Express** — Dynamic site server
+- **HTML/CSS/JS** — No React/Vue/Angular
+- **Cloud Run (GCP)** — Production deployment
+- **Cloudflare** — DNS, CDN, edge security
+- **Sacred Geometry Topology** — phi-scaled orchestration
 
-## Getting Started
+## Development Standards
 
-### Prerequisites
+### Code Quality
+- Zero `TODO`, `FIXME`, or placeholder comments
+- Zero `localhost` references — use environment variables
+- All inputs validated, all secrets externalized
+- Structured JSON logging with correlation IDs
+- ESLint compliance with max 50 warnings
 
-- **Node.js** v22 LTS
-- **pnpm** v9+ (do NOT use npm)
-- **Docker** and Docker Compose
-- **PostgreSQL** 16 with pgvector extension
-- **Redis** 7+
+### Design & Branding
+- **Dark mode** with sacred geometry backgrounds
+- **Phi-scaled typography** — golden ratio proportions
+- **Glassmorphism** — backdrop-blur, subtle borders
+- **Color palette** — purple/blue/cyan (#6C3CE1, #00D4FF, #7C3AED)
+- **Brand voice** — Premium, cutting-edge, technically sophisticated but approachable
 
-### Setup
+### Security
+- No hardcoded secrets (API keys, tokens, passwords)
+- DOMPurify for all user-generated content
+- Security headers on all responses
+- WCAG AA accessibility compliance
 
-```bash
-git clone git@github.com:HeadyMe/Heady-pre-production-9f2f0642.git
-cd Heady-pre-production-9f2f0642
-cp .env.example .env
-pnpm install
-pnpm dev
-```
+## Workflow
 
-### Architecture
-
-Heady uses a **six-layer architecture**: Edge → Gateway → Orchestration → Intelligence → Memory → Persistence.
-
-See `docs/architecture/OVERVIEW.md` for the full architecture guide.
-
-## Development Workflow
-
-1. **Fork** the repo and create a feature branch from `main`
-2. **Write tests** for any new functionality (minimum: health check per service)
-3. **Run the linter**: `pnpm lint`
-4. **Run tests**: `pnpm test`
+1. **Fork** the repository
+2. **Create a branch** from `main` — `feature/your-feature` or `fix/your-fix`
+3. **Write code** following the standards above
+4. **Test locally** — `node src/core/dynamic-site-server.js`
 5. **Open a PR** against `main` with a clear description
+6. **CI checks** must pass (lint, security scan, module loading)
+7. **Code review** by @erichaywood
 
-### Branch Naming
-
-- `feat/description` — new features
-- `fix/description` — bug fixes
-- `chore/description` — maintenance
-- `docs/description` — documentation changes
-
-### Commit Messages
+## Commit Messages
 
 Follow [Conventional Commits](https://www.conventionalcommits.org/):
 
 ```
-feat(telemetry): add OTel tracing middleware
-fix(auth): correct RBAC permission check for admin
-chore(deps): update opentelemetry packages
-docs(api): add health endpoint documentation
+feat: add headyfinance.com content sections
+fix: resolve protobufjs vulnerability override
+docs: update README with Wave 4 changes
+chore: clean up archived dependencies
 ```
 
-## Code Standards
+## Reporting Issues
 
-- **ESLint + Prettier**: Configuration in `.eslintrc.js` and `.prettierrc`
-- **JSDoc/TSDoc**: Required on all exported functions
-- **No `any`** types in TypeScript files
-- **Immutability**: Prefer `const` and frozen objects
-- **Error handling**: Always use structured error objects
+Use the issue templates provided:
+- **Bug Report** — for broken functionality
+- **Feature Request** — for new capabilities
+- **Security Vulnerability** — email security@headysystems.com directly
 
-## Pull Request Process
+## Questions?
 
-1. PRs require **1 approval** from a maintainer
-2. All CI checks must pass (lint, test, security scan, eval pipeline)
-3. Breaking changes must be documented in the PR description
-4. Update `CHANGELOG.md` for user-facing changes
-
-## Security
-
-If you discover a security vulnerability, please follow the disclosure process in `SECURITY.md`. Do **not** open a public issue.
-
-## License
-
-By contributing, you agree that your contributions will be licensed under the project's license.
+Open a discussion or reach out to eric@headyconnection.org.
 
 ---
 
-**Maintainer**: <eric@headyconnection.org>
+© 2026 HeadySystems Inc. — All rights reserved.

@@ -1,25 +1,19 @@
-# ═══════════════════════════════════════════════════════
-# HEADY™ CODEOWNERS — Automated review routing
-# © 2026 HeadySystems Inc.
-# ═══════════════════════════════════════════════════════
+# Heady™ Latent OS — Code Ownership
+# https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
 
-# Default: Eric Haywood reviews everything
-* @HeadyMe
+# Default — Eric Head reviews everything
+* @erichaywood
 
-# Core services — critical path
-src/core/                @HeadyMe
-src/sites/               @HeadyMe
-services/heady-manager/  @HeadyMe
+# Core server infrastructure
+src/core/ @erichaywood
+services/ @erichaywood
 
-# Security-sensitive
-src/security/            @HeadyMe
-services/heady-auth/     @HeadyMe
-services/heady-guard/    @HeadyMe
-workers/edge-auth-worker/ @HeadyMe
+# Security-sensitive files
+.github/ @erichaywood
+Dockerfile @erichaywood
+docker-compose*.yml @erichaywood
+*.env* @erichaywood
 
-# CI/CD
-.github/                 @HeadyMe
-
-# Infrastructure
-configs/                 @HeadyMe
-Dockerfile               @HeadyMe
+# Content and branding
+content/ @erichaywood
+public/ @erichaywood

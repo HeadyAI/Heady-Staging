@@ -69,7 +69,6 @@ _archive/misc/heady_unified_os.ipynb
 Heady-pre-production-9f2f0642-main/_archive/misc/heady_brain_gpu.ipynb
 Heady-pre-production-9f2f0642-main/_archive/misc/heady_unified_os.ipynb
 Heady-pre-production-9f2f0642-main/
-<<<<<<< HEAD
 
 # Secrets
 =======
@@ -178,6 +177,7 @@ core.*
 .secrets
 .vault-token
 *.zip
+<<<<<<< HEAD
 =======
 .shit
 # HeadyVault — SA keys, vault seeds, GCP credentials (NEVER commit)
@@ -190,3 +190,5 @@ package-lock.json
 =======
 >>>>>>> heady-testing/claude/autonomous-agent-system-prompt-qarZg
 logs/resource-events.jsonl
+=======
+>>>>>>> production/main

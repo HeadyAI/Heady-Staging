@@ -13,6 +13,8 @@
  */
 
 const http = require('http');
+const fs = require('fs');
+const path = require('path');
 const logger = require('../utils/logger').child('dynamic-sites');
 const { initSentry, captureError, addBreadcrumb } = require('./sentry-init');
 
@@ -58,6 +60,36 @@ const server = http.createServer((req, res) => {
     if (url.pathname === '/api/auth/apikey' && req.method === 'POST') return handleApiKeyAuth(req, res);
     if (url.pathname === '/api/auth/session')                          return handleSession(req, res);
     if (url.pathname === '/api/auth/logout' && req.method === 'POST') return handleLogout(req, res);
+
+    // ── SEO routes ────────────────────────────────────
+    if (url.pathname === '/robots.txt') {
+      res.writeHead(200, { 'Content-Type': 'text/plain', 'Cache-Control': 'public, max-age=86400' });
+      return res.end(`User-agent: *\nAllow: /\nSitemap: https://${host}/sitemap.xml\n`);
+    }
+    if (url.pathname === '/sitemap.xml') {
+      res.writeHead(200, { 'Content-Type': 'application/xml', 'Cache-Control': 'public, max-age=86400' });
+      return res.end(`<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n  <url><loc>https://${host}/</loc><changefreq>weekly</changefreq><priority>1.0</priority></url>\n  <url><loc>https://${host}/privacy</loc><changefreq>monthly</changefreq><priority>0.3</priority></url>\n  <url><loc>https://${host}/terms</loc><changefreq>monthly</changefreq><priority>0.3</priority></url>\n</urlset>`);
+    }
+    if (url.pathname === '/favicon.ico') {
+      res.writeHead(204); return res.end();
+    }
+
+    // ── OG image assets ───────────────────────────────
+    if (url.pathname.startsWith('/assets/og-') && url.pathname.endsWith('.png')) {
+      const filename = path.basename(url.pathname);
+      const assetPath = path.join(__dirname, '..', '..', 'assets', filename);
+      if (fs.existsSync(assetPath)) {
+        const data = fs.readFileSync(assetPath);
+        res.writeHead(200, {
+          'Content-Type': 'image/png',
+          'Content-Length': data.length,
+          'Cache-Control': 'public, max-age=604800',
+          'Access-Control-Allow-Origin': '*'
+        });
+        return res.end(data);
+      }
+      res.writeHead(404); return res.end('Not found');
+    }
 
     // ── Page routes ───────────────────────────────────
     if (url.pathname === '/onboarding') return html(res, renderOnboarding(site, host));
