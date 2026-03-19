@@ -1210,6 +1210,52 @@ const server = http.createServer((req, res) => {
     return;
   }
 
+  // ── SEO & Legal Routes ────────────────────────────────────
+  if (url.pathname === '/robots.txt') {
+    res.writeHead(200, { 'Content-Type': 'text/plain', 'Cache-Control': 'public, max-age=86400' });
+    res.end(`User-agent: *\nAllow: /\nDisallow: /api/\nDisallow: /onboarding\n\nSitemap: https://${host}/sitemap.xml\n\n# HeadySystems Inc. — ${site.brand}\n# Sacred Geometry Architecture`);
+    return;
+  }
+
+  if (url.pathname === '/sitemap.xml') {
+    const domains = Object.keys(SITES);
+    const urls = domains.map(d => `  <url>\n    <loc>https://${d}/</loc>\n    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>${d === host ? '1.0' : '0.8'}</priority>\n  </url>`).join('\n');
+    res.writeHead(200, { 'Content-Type': 'application/xml', 'Cache-Control': 'public, max-age=86400' });
+    res.end(`<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls}\n</urlset>`);
+    return;
+  }
+
+  if (url.pathname === '/privacy') {
+    res.writeHead(200, {
+      'Content-Type': 'text/html; charset=utf-8',
+      'Cache-Control': 'public, max-age=3600',
+      'X-Heady-Site': site.brand,
+      'Strict-Transport-Security': 'max-age=31536000; includeSubDomains; preload',
+      'X-Content-Type-Options': 'nosniff',
+    });
+    res.end(renderLegalPage(site, host, 'privacy'));
+    return;
+  }
+
+  if (url.pathname === '/terms') {
+    res.writeHead(200, {
+      'Content-Type': 'text/html; charset=utf-8',
+      'Cache-Control': 'public, max-age=3600',
+      'X-Heady-Site': site.brand,
+      'Strict-Transport-Security': 'max-age=31536000; includeSubDomains; preload',
+      'X-Content-Type-Options': 'nosniff',
+    });
+    res.end(renderLegalPage(site, host, 'terms'));
+    return;
+  }
+
+  // ── Favicon fallback ───────────────────────────────────────
+  if (url.pathname === '/favicon.ico') {
+    res.writeHead(200, { 'Content-Type': 'image/svg+xml', 'Cache-Control': 'public, max-age=604800' });
+    res.end(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">✦</text></svg>`);
+    return;
+  }
+
   // ── API Routes ──────────────────────────────────────────
   if (url.pathname === '/api/providers') {
     res.writeHead(200, { 'Content-Type': 'application/json' });

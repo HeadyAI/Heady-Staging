@@ -260,6 +260,7 @@ ${site.customCSS || ""}
 <div class="cards">${featuresHTML}</div>
 <footer>
   <p>© 2026 ${site.name} — Powered by <a href="https://headysystems.com">Heady Systems</a> · Sacred Geometry Architecture</p>
+  <p style="margin-top:.5rem"><a href="/privacy">Privacy Policy</a> · <a href="/terms">Terms of Service</a> · <a href="mailto:hello@headysystems.com">Contact</a></p>
 </footer>
 </div>
 ${chatHTML}

@@ -24,7 +24,7 @@ aiofiles==23.2.1
 
 # Authentication and security
 cryptography>=41.0.0
-PyJWT==2.8.0
+PyJWT>=2.10.1
 python-multipart==0.0.22
 
 # Data processing and serialization
@@ -77,7 +77,7 @@ pytest-cov==4.1.0
 httpx==0.26.0
 
 # Development tools
-black==24.3.0
+black>=25.1.0
 isort==5.13.2
 flake8==7.1.0
 mypy==1.8.0

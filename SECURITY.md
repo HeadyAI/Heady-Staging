@@ -1,77 +1,51 @@
-# Security Policy — HeadySystems™
+# Security Policy — HeadySystems Inc.
 
 ## Supported Versions
 
 | Version | Supported |
 |---------|-----------|
-| 3.x     | ✅ Active  |
-| 2.x     | ⚠️ Critical fixes only |
-| < 2.0   | ❌ End of life |
+| 4.x     | ✅ Active |
+| 3.x     | ⚠️ Critical fixes only |
+| < 3.0   | ❌ End of life |
 
 ## Reporting a Vulnerability
 
-**DO NOT** open a public issue for security vulnerabilities.
+**Do NOT create a public GitHub issue for security vulnerabilities.**
 
-### Responsible Disclosure Process
+Instead, please report vulnerabilities via one of these channels:
 
-1. **Email**: <security@headysystems.com>
-2. **PGP Key**: Available at <https://headysystems.com/.well-known/pgp-key.txt>
-3. **Response Time**: We will acknowledge within **24 hours** and provide a fix timeline within **72 hours**
+- **Email**: security@headysystems.com
+- **GitHub Security Advisories**: [Report a vulnerability](https://github.com/HeadyMe/heady-production/security/advisories/new)
 
-### What to Include
+### What to include
 
 - Description of the vulnerability
 - Steps to reproduce
-- Impact assessment
-- Suggested fix (if applicable)
+- Potential impact
+- Suggested fix (if any)
 
-### Scope
+### Response Timeline
 
-In scope:
+| Stage | Target |
+|-------|--------|
+| Acknowledgment | 24 hours |
+| Initial assessment | 72 hours |
+| Fix development | 7 days (critical) / 30 days (moderate) |
+| Public disclosure | After fix is deployed |
 
-- Authentication/authorization bypasses
-- API key or credential exposure
-- Injection vulnerabilities (SQL, NoSQL, command, XSS)
-- Insecure deserialization
-- SSRF, MCP protocol vulnerabilities
-- Sacred Geometry kernel logic exploits
-- Privilege escalation in multi-tenant isolation
+## Security Architecture
 
-## Security Measures
+HeadySystems employs defense-in-depth:
 
-### Credential Management
+- **Transport**: TLS 1.3, HSTS preload, mTLS between internal services
+- **Auth**: Device-based + OAuth 2.0, short-lived tokens, WARP-aware sessions
+- **Data**: AES-256-GCM at rest, pgvector row-level security
+- **Network**: Cloudflare DDoS protection, WAF, rate limiting
+- **Supply chain**: Dependabot, npm audit, signed commits
+- **Monitoring**: Sentry error tracking, structured logging, anomaly detection
 
-- All secrets via environment variables (never committed)
-- API keys rotated on schedule via `scripts/credential-rotation/`
-- `.env.hybrid` purged from git history
-- Pre-commit hooks prevent accidental credential commits
+## Intellectual Property Notice
 
-### Infrastructure
+This codebase contains technology protected by 60+ provisional patents filed by HeadySystems Inc. Unauthorized reproduction of patented methods is prohibited.
 
-- CIS benchmark compliance via `scripts/infrastructure-audit.sh`
-- OAuth 2.0 + PKCE for all authentication flows
-- CSP headers + CORS restricted to known origins
-- TLS 1.3 enforced, Redis ACL-based authentication
-- Chaos engineering resilience drills via `scripts/chaos-engine.py`
-
-### Code Security
-
-- ESLint `no-eval` / `no-implied-eval` / `no-new-func` enforced
-- `npm audit` on every CI run + SAST scanning
-- Post-quantum cryptography (Kyber + Dilithium) available
-
-### Monitoring
-
-- OTel real-time security event logging
-- API key usage anomaly detection
-- Automatic lockout after 5 failed auth attempts
-
-## Compliance
-
-- SOC 2 Type I preparation in progress
-- GDPR data handling documented
-- Multi-tenant data isolation at database, Redis, and vector store levels
-
----
-
-*HeadySystems™ & HeadyConnection™*
+© 2026 HeadySystems Inc. All rights reserved.

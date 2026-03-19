@@ -4,7 +4,7 @@
 
 version: 2
 updates:
-  # npm dependencies
+  # npm dependencies — root monorepo
   - package-ecosystem: "npm"
     directory: "/"
     schedule:
@@ -22,9 +22,40 @@ updates:
         update-types:
           - "minor"
           - "patch"
+    ignore:
+      # Ignore archived packages — not deployed
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major", "version-update:semver-minor", "version-update:semver-patch"]
     labels:
       - "dependencies"
       - "automated"
+
+  # Python dependencies — oracle_service
+  - package-ecosystem: "pip"
+    directory: "/oracle_service"
+    schedule:
+      interval: "weekly"
+    labels:
+      - "dependencies"
+      - "python"
+
+  # Python dependencies — midi_bridge
+  - package-ecosystem: "pip"
+    directory: "/midi_bridge"
+    schedule:
+      interval: "weekly"
+    labels:
+      - "dependencies"
+      - "python"
+
+  # Python dependencies — ai_workflow_engine
+  - package-ecosystem: "pip"
+    directory: "/apps/ai_workflow_engine"
+    schedule:
+      interval: "weekly"
+    labels:
+      - "dependencies"
+      - "python"
 
   # GitHub Actions
   - package-ecosystem: "github-actions"

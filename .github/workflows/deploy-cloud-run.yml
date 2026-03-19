@@ -71,7 +71,7 @@ jobs:
             --port=3301 \
             --concurrency=250 \
             --timeout=300s \
-            --set-env-vars="HEADY_VERSION=${{ github.sha }}" \
+            --set-env-vars="HEADY_VERSION=${{ github.sha }},SENTRY_DSN=${{ secrets.SENTRY_DSN }},NODE_ENV=production" \
             --format='value(status.latestCreatedRevisionName)'
           
           NEW_REV=$(gcloud run services describe $SERVICE \

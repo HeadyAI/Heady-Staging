@@ -1,33 +1,25 @@
-# ═══════════════════════════════════════════════════════════════
-# HEADY CODEOWNERS — IP Protection Layer (Ring 1)
-# HeadySystems Inc. — auto-review for sensitive paths
-# ═══════════════════════════════════════════════════════════════
+# ═══════════════════════════════════════════════════════
+# HEADY™ CODEOWNERS — Automated review routing
+# © 2026 HeadySystems Inc.
+# ═══════════════════════════════════════════════════════
 
-# ── Core Intellectual Property ──
-/heady-manager.js                    @HeadyMe/core-team
-/src/heady-conductor.js              @HeadyMe/core-team
-/src/agent-orchestrator.js           @HeadyMe/core-team
-/src/vector-memory.js                @HeadyMe/core-team
-/src/vector-pipeline.js              @HeadyMe/core-team
-/src/vector-space-ops.js             @HeadyMe/core-team
+# Default: Eric Haywood reviews everything
+* @HeadyMe
 
-# ── Security & Governance ──
-/src/security/                       @HeadyMe/core-team
-/src/auth/                           @HeadyMe/core-team
-/configs/code-governance.yaml        @HeadyMe/core-team
+# Core services — critical path
+src/core/                @HeadyMe
+src/sites/               @HeadyMe
+services/heady-manager/  @HeadyMe
 
-# ── Orchestration Layer ──
-/src/orchestration/                  @HeadyMe/core-team
+# Security-sensitive
+src/security/            @HeadyMe
+services/heady-auth/     @HeadyMe
+services/heady-guard/    @HeadyMe
+workers/edge-auth-worker/ @HeadyMe
 
-# ── Infrastructure & Deployment ──
-/Dockerfile*                         @HeadyMe/core-team
-/.github/workflows/                  @HeadyMe/core-team
-/infrastructure/                     @HeadyMe/core-team
+# CI/CD
+.github/                 @HeadyMe
 
-# ── SDK & Distribution ──
-/heady-hive-sdk/                     @HeadyMe/core-team
-/.npmignore                          @HeadyMe/core-team
-/.gitignore                          @HeadyMe/core-team
-
-# ── Agent Definitions ──
-/.agents/                            @HeadyMe/core-team
+# Infrastructure
+configs/                 @HeadyMe
+Dockerfile               @HeadyMe
