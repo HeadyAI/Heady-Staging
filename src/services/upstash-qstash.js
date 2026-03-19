@@ -107,7 +107,7 @@ class QStashClient {
      * Schedule a recurring CRON job.
      *
      * @param {string} destination - Target URL
-     * @param {string} cron - CRON expression (e.g., "*/5 * * * *")
+     * @param {string} cron - CRON expression (e.g., "0/5 * * * *")
      * @param {object} body - JSON payload
      */
     async schedule(destination, cron, body) {

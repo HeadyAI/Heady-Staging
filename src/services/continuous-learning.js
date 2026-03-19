@@ -28,7 +28,7 @@ const fs = require("fs");
 const path = require("path");
 const HeadyGateway = require(path.join(__dirname, "..", "heady-hive-sdk", "lib", "gateway"));
 const { createProviders } = require(path.join(__dirname, "..", "heady-hive-sdk", "lib", "providers"));
-const logger = require("./utils/logger");
+const logger = require("../utils/logger");
 
 const LEARN_LOG = path.join(__dirname, "..", "data", "learning-log.jsonl");
 const CURRICULUM_FILE = path.join(__dirname, "..", "data", "learning-curriculum.json");

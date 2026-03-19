@@ -14,13 +14,13 @@ const compression = require('compression');
 const PHI = 1.618033988749895;
 
 // Service imports
-const embedRoutes = require('./services/heady-embed/routes');
-const inferRoutes = require('./services/heady-infer/routes');
-const vectorRoutes = require('./services/heady-vector/routes');
-const chainRoutes = require('./services/heady-chain/routes');
-const cacheRoutes = require('./services/heady-cache/routes');
-const guardRoutes = require('./services/heady-guard/routes');
-const evalRoutes = require('./services/heady-eval/routes');
+const embedRoutes = require('./heady-embed/routes');
+const inferRoutes = require('./heady-infer/routes');
+const vectorRoutes = require('./heady-vector/routes');
+const chainRoutes = require('./heady-chain/routes');
+const cacheRoutes = require('./heady-cache/routes');
+const guardRoutes = require('./heady-guard/routes');
+const evalRoutes = require('./heady-eval/routes');
 
 const PORT = parseInt(process.env.HEADY_GATEWAY_PORT || '3100', 10);
 
