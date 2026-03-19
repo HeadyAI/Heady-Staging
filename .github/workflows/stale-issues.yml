@@ -24,7 +24,7 @@ jobs:
     name: Mark and Close Stale Issues
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/stale@v9
+      - uses: actions/stale@v10
         with:
           # ── Thresholds ──────────────────────────────────────────────────
           days-before-issue-stale: 30
