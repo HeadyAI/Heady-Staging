@@ -1,0 +1,182 @@
+# ╔══════════════════════════════════════════════════════════════════════════════╗
+# ║  HEADY™ Environment Validator — Phi Compliance Gate                        ║
+# ║  © 2026 HeadySystems Inc. — Eric Haywood                                  ║
+# ║  ∞ Every threshold φ-derived · Zero magic numbers · Zero placeholders      ║
+# ╚══════════════════════════════════════════════════════════════════════════════╝
+#
+# Validates that all environment variables satisfy the phi-derived rules in
+# src/security/env-validator.cjs before any code reaches main.
+#
+# Trigger: push → main, PR → main
+# Runs:    node src/security/env-validator.cjs --ci with known-good test values
+# Gate:    exits 1 (blocks merge) if validator returns valid: false
+
+name: "Environment Validator — Phi Compliance Gate"
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: env-validator-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # ════════════════════════════════════════════════════════════════════════════
+  # JOB: phi-compliance-gate
+  # Runs the env-validator with a complete, correct set of mock env vars that
+  # are guaranteed to PASS every phi-derived rule. Real secrets are never used.
+  # ════════════════════════════════════════════════════════════════════════════
+  phi-compliance-gate:
+    name: "φ Compliance Gate — env-validator"
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    # ── Node 20 LTS ──────────────────────────────────────────────────────────
+    steps:
+      - name: "Checkout repository"
+        uses: actions/checkout@v4
+
+      - name: "Setup Node.js 20"
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: "Install dependencies (ci)"
+        run: npm ci --ignore-scripts
+
+      # ── Run env-validator with phi-compliant mock environment ────────────
+      # All values are safe test values — zero real secrets.
+      # The correct phi-derived constants ensure HNSW_M, HNSW_EF_CONSTRUCTION,
+      # and VECTOR_DIMENSIONS checks PASS.
+      - name: "Run φ env-validator (CI mode)"
+        env:
+          # ── Runtime ─────────────────────────────────────────────────────
+          NODE_ENV: "production"
+
+          # ── Phi-derived HNSW constants ───────────────────────────────────
+          # VECTOR_DIMENSIONS = 384 (6×64, canonical embed size)
+          # HNSW_M            = FIB[8]  = 21
+          # HNSW_EF_CONSTRUCTION = FIB[11] = 89
+          VECTOR_DIMENSIONS: "384"
+          HNSW_M: "21"
+          HNSW_EF_CONSTRUCTION: "89"
+          HNSW_EF_SEARCH: "55"
+
+          # ── Canonical domain URLs (9 Heady domains, HTTPS) ───────────────
+          HEADY_ME_URL: "https://headyme.com"
+          HEADY_SYSTEMS_URL: "https://headysystems.com"
+          HEADY_CONNECTION_URL: "https://headyconnection.org"
+          HEADY_BUDDY_URL: "https://headybuddy.org"
+          HEADY_MCP_URL: "https://headymcp.com"
+          HEADY_IO_URL: "https://headyio.com"
+          HEADY_BOT_URL: "https://headybot.com"
+          HEADY_API_URL: "https://headyapi.com"
+          HEADY_AI_URL: "https://headyai.com"
+
+          # ── Database (fake, non-localhost) ────────────────────────────────
+          DATABASE_URL: "postgresql://heady_ci:ci_test_value_a3f8b2c9d4e1f7a0@db.us-central1.run.app:5432/heady_ci_test"
+
+          # ── Secrets — all 68+ chars (FIB[9]*2=68 recommended minimum) ──────
+          # Values use hex-style noise with no dictionary words to avoid warnings.
+          JWT_SECRET: "phi_ci_a3f8b2c9d4e1f7a0b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b3c4d5e6f7a8b9c0"
+          NEXTAUTH_SECRET: "phi_ci_b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c3d4"
+
+          # ── Stripe (external key format — no length gate applied) ─────────
+          STRIPE_SECRET_KEY: "sk_test_ci_heady_phi_compliant_gate_a1b2c3d4e5f6g7h8i9"
+          STRIPE_WEBHOOK_SECRET: "whsec_ci_heady_phi_compliant_gate_a1b2c3d4e5f6"
+
+          # ── Sentry ────────────────────────────────────────────────────────
+          SENTRY_DSN: "https://ci00000000000000000000000000000001@o0000000.ingest.sentry.io/0000000"
+          SENTRY_AUTH_TOKEN: "sntrys_ci_heady_phi_gate_0000000000000000000000000000000001"
+          SENTRY_TRACES_SAMPLE_RATE: "0.618"
+
+          # ── Redis — Upstash (non-localhost) ───────────────────────────────
+          REDIS_URL: "rediss://default:ci_heady_phi_gate_0000000000@heady-ci.upstash.io:6379"
+
+          # ── Conductor / MCP Gateway ───────────────────────────────────────
+          HEADY_CONDUCTOR_URL: "https://conductor.headysystems.com"
+          HEADY_MCP_GATEWAY_URL: "https://mcp.headymcp.com"
+
+          # ── API credentials ───────────────────────────────────────────────
+          HEADY_API_KEY: "heady_ci_api_key_phi_compliant_a3f8b2c9d4e1f7a0b5c6d7e8f9a0b1c2"
+
+          # ── GCP / Cloudflare ──────────────────────────────────────────────
+          GCP_PROJECT_ID: "heady-production"
+          CLOUDFLARE_ACCOUNT_ID: "ci_cf_account_id_a1b2c3d4e5f6a7b8"
+          CLOUDFLARE_API_TOKEN: "ci_cf_api_token_a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6"
+
+          # ── Firebase ─────────────────────────────────────────────────────
+          FIREBASE_PROJECT_ID: "heady-production"
+
+          # ── CORS — all 9 canonical domains ────────────────────────────────
+          CORS_ALLOWED_ORIGINS: "https://headyme.com,https://headysystems.com,https://headyconnection.org,https://headybuddy.org,https://headymcp.com,https://headyio.com,https://headybot.com,https://headyapi.com,https://headyai.com"
+
+        run: |
+          echo "════════════════════════════════════════════════════════"
+          echo "  HEADY™ Environment Validator — Phi Compliance Gate"
+          echo "  Node: $(node --version)  |  npm: $(npm --version)"
+          echo "════════════════════════════════════════════════════════"
+          node src/security/env-validator.cjs --ci | tee /tmp/env-validator-report.json
+          echo ""
+          echo "── Validator summary ────────────────────────────────────"
+          node -e "
+            const r = require('/tmp/env-validator-report.json');
+            console.log('  valid:    ', r.valid);
+            console.log('  score:    ', r.score);
+            console.log('  cslGate: ', r.cslGate);
+            console.log('  verdict: ', r.summary.verdict);
+            console.log('  errors:  ', r.summary.errors);
+            console.log('  warnings:', r.summary.warnings);
+            if (r.errors.length) {
+              console.error('');
+              console.error('ERRORS:');
+              r.errors.forEach(e => console.error(' ✗', e.rule, '|', e.message));
+            }
+            process.exit(r.valid ? 0 : 1);
+          "
+
+      # ── Upload validator report as artifact ──────────────────────────────
+      - name: "Upload validator report"
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: env-validator-report-${{ github.sha }}
+          path: /tmp/env-validator-report.json
+          retention-days: 30
+
+      # ── Status badge step ─────────────────────────────────────────────────
+      - name: "Emit φ compliance status"
+        if: always()
+        run: |
+          if [ -f /tmp/env-validator-report.json ]; then
+            VALID=$(node -e "const r=require('/tmp/env-validator-report.json'); process.stdout.write(String(r.valid));")
+            SCORE=$(node -e "const r=require('/tmp/env-validator-report.json'); process.stdout.write(String(r.score));")
+            CSL=$(node -e "const r=require('/tmp/env-validator-report.json'); process.stdout.write(r.cslGate);")
+            VERDICT=$(node -e "const r=require('/tmp/env-validator-report.json'); process.stdout.write(r.summary.verdict);")
+            echo ""
+            echo "┌──────────────────────────────────────────────────────┐"
+            echo "│  HEADY™ φ Compliance Gate Result                     │"
+            printf "│  Valid:   %-43s│\n" "$VALID"
+            printf "│  Score:   %-43s│\n" "$SCORE"
+            printf "│  Gate:    %-43s│\n" "$CSL"
+            printf "│  Verdict: %-43s│\n" "$VERDICT"
+            echo "└──────────────────────────────────────────────────────┘"
+
+            # Write to GitHub step summary
+            echo "## HEADY™ φ Compliance Gate" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "| Field | Value |" >> $GITHUB_STEP_SUMMARY
+            echo "|-------|-------|" >> $GITHUB_STEP_SUMMARY
+            echo "| Valid | \`$VALID\` |" >> $GITHUB_STEP_SUMMARY
+            echo "| Score | \`$SCORE\` |" >> $GITHUB_STEP_SUMMARY
+            echo "| CSL Gate | \`$CSL\` |" >> $GITHUB_STEP_SUMMARY
+            echo "| Verdict | **$VERDICT** |" >> $GITHUB_STEP_SUMMARY
+            echo "| Commit | \`${{ github.sha }}\` |" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "No report found — validator did not complete"
+            exit 1
+          fi

@@ -200,7 +200,7 @@ app.use(helmet({
       styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
       fontSrc: ["'self'", "https://fonts.gstatic.com"],
       imgSrc: ["'self'", "data:", "blob:", "https:"],
-      connectSrc: ["'self'", "https://heady-manager.onrender.com", "https://heady-testing.onrender.com", "https://heady-production.onrender.com", "https://*.onrender.com"],
+      connectSrc: ["'self'", "https://*.headyme.com", "https://*.headysystems.com", "https://*.us-central1.run.app"],
       frameSrc: ["'none'"],
       objectSrc: ["'none'"],
       baseUri: ["'self'"],
@@ -254,75 +254,47 @@ if (latentSpace && typeof latentSpace.middleware === 'function') {
   log.debug('Latent space middleware not available — HTTP ops will not be vector-indexed');
 }
 
-// Manual CORS middleware configuration
+// ─── CORS Configuration (canonical domains from heady-domains.js) ────────────
+// The 9 canonical Heady domains + admin subdomains + Cloud Run
 const allowedOrigins = [
-  // Heady Systems domains
-  'https://headysystems.com',
-  'https://www.headysystems.com',
-  'https://admin.headysystems.com',
-  'https://auth.headysystems.com',
-
-  // Heady alternative domains
+  // 9 Canonical Heady Domains (from src/shared/heady-domains.js)
   'https://headyme.com',
   'https://www.headyme.com',
-  'https://heady-ai.com',
-  'https://www.heady-ai.com',
-  'https://headyos.com',
-  'https://www.headyos.com',
+  'https://headysystems.com',
+  'https://www.headysystems.com',
   'https://headyconnection.org',
   'https://www.headyconnection.org',
-  'https://headyconnection.com',
-  'https://www.headyconnection.com',
-  'https://headyex.com',
-  'https://www.headyex.com',
-  'https://headyfinance.com',
-  'https://www.headyfinance.com',
-
-  // Audit ecosystem domains
-  'https://headyai.com',
-  'https://www.headyai.com',
+  'https://headybuddy.org',
+  'https://www.headybuddy.org',
+  'https://headymcp.com',
+  'https://www.headymcp.com',
+  'https://headyio.com',
+  'https://www.headyio.com',
+  'https://headybot.com',
+  'https://www.headybot.com',
   'https://headyapi.com',
   'https://www.headyapi.com',
-  'https://headyapis.com',
-  'https://www.headyapis.com',
-  'https://headyfullstack.com',
-  'https://www.headyfullstack.com',
-  'https://headymusic.net',
-  'https://www.headymusic.net',
-  'https://headycloud.io',
-  'https://www.headycloud.io',
-  'https://headydata.io',
-  'https://www.headydata.io',
-  'https://headyinc.com',
-  'https://www.headyinc.com',
-  'https://headyhc.com',
-  'https://www.headyhc.com',
-  'https://headygraphics.com',
-  'https://www.headygraphics.com',
+  'https://headyai.com',
+  'https://www.headyai.com',
 
-  // Render.com deployment domains
-  'https://heady-manager.onrender.com',
-  'https://heady-testing.onrender.com',
-  'https://heady-production.onrender.com',
+  // Admin subdomains
+  'https://auth.headysystems.com',
+  'https://admin.headysystems.com',
+  'https://api.headysystems.com',
+  'https://docs.headysystems.com',
+  'https://status.headysystems.com',
 
-  // Development localhost (ports 3000-3400)
-  'http://localhost:3000',
-  'http://localhost:3001',
-  'http://localhost:3002',
-  'http://localhost:3003',
-  'http://localhost:3100',
-  'http://localhost:3200',
-  'http://localhost:3300',
-  'http://localhost:3301',
-  'http://localhost:3400',
+  // Cloud Run deployment URLs
+  'https://headyme-site-667608982461.us-central1.run.app',
+  'https://heady-edge-gateway-609590223909.us-central1.run.app',
 ];
 
 app.use((req, res, next) => {
   const origin = req.get('origin');
 
-  // Check if origin is in whitelist or matches *.onrender.com pattern
+  // Check if origin is in whitelist or matches Cloud Run pattern
   const isAllowed = allowedOrigins.includes(origin) ||
-    (origin && origin.endsWith('.onrender.com'));
+    (origin && /\.us-central1\.run\.app$/.test(origin));
 
   if (isAllowed) {
     res.setHeader('Access-Control-Allow-Origin', origin);
