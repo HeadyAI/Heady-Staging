@@ -317,7 +317,130 @@ const TASK_CATALOG = [
     { id: "sub-opt-013", name: "Track Sentry event quota utilization", cat: "subscription-optimization", pool: "cold", w: 2, desc: "Monitor Sentry event consumption against plan limits" },
     { id: "sub-opt-014", name: "Audit unused API key subscriptions", cat: "subscription-optimization", pool: "cold", w: 2, desc: "Identify and cancel unused or underutilized API subscriptions" },
     { id: "sub-opt-015", name: "Calculate infrastructure ROI per angle", cat: "subscription-optimization", pool: "warm", w: 4, desc: "ROI analysis per strategic angle: trading, IaaS, licensing, consulting" },
+
+    // ─── ARCHITECTURE FIX TASKS (from merged architecture-fix-tasks.json) ──────
+    { id: "arch-fix-001", name: "Resolve heady-conductor import gaps", cat: "architecture-fix", pool: "hot", w: 5, desc: "Fix missing module imports in heady-conductor.js discovered during ecosystem audit" },
+    { id: "arch-fix-002", name: "Wire engine-wiring.js bootstrap sequence", cat: "architecture-fix", pool: "hot", w: 5, desc: "Ensure engine-wiring.js initializes all engines in correct dependency order" },
+    { id: "arch-fix-003", name: "Validate pipeline stage DAG integrity", cat: "architecture-fix", pool: "hot", w: 5, desc: "Run DAG cycle detection on all HCFullPipeline stage dependencies" },
+    { id: "arch-fix-004", name: "Fix orphaned event listeners", cat: "architecture-fix", pool: "warm", w: 4, desc: "Detect and clean up event listeners without matching emitters" },
+    { id: "arch-fix-005", name: "Resolve circular require() chains", cat: "architecture-fix", pool: "hot", w: 5, desc: "Break circular dependency loops in orchestration/ modules" },
+    { id: "arch-fix-006", name: "Standardize error propagation patterns", cat: "architecture-fix", pool: "warm", w: 4, desc: "Ensure all modules use consistent error wrapping with HeadyError" },
+    { id: "arch-fix-007", name: "Audit dead code in orchestration/", cat: "architecture-fix", pool: "warm", w: 3, desc: "Identify and remove unreachable code paths across orchestration modules" },
+    { id: "arch-fix-008", name: "Validate all module.exports signatures", cat: "architecture-fix", pool: "warm", w: 3, desc: "Check all exports match their documented API surface" },
+    { id: "arch-fix-009", name: "Fix stale singleton references", cat: "architecture-fix", pool: "warm", w: 4, desc: "Replace stale singleton references with fresh-init patterns" },
+    { id: "arch-fix-010", name: "Harden graceful shutdown hooks", cat: "architecture-fix", pool: "hot", w: 5, desc: "Ensure all new modules register SIGTERM/SIGINT handlers for clean shutdown" },
+
+    // ─── AUTOCONTEXT INTEGRATION (from merged autocontext-integration-tasks.json) ─
+    { id: "autoctx-001", name: "Bootstrap autocontext event listeners", cat: "autocontext-integration", pool: "hot", w: 5, desc: "Register autocontext pipeline events on global.eventBus" },
+    { id: "autoctx-002", name: "Wire vector-memory.js to pg-vector-adapter", cat: "autocontext-integration", pool: "hot", w: 5, desc: "Connect in-memory vector store to persistent pgvector backend" },
+    { id: "autoctx-003", name: "Implement context window rotation", cat: "autocontext-integration", pool: "warm", w: 4, desc: "Auto-rotate context windows based on token budget from budgetMonitor" },
+    { id: "autoctx-004", name: "Register CSL benchmark hooks", cat: "autocontext-integration", pool: "warm", w: 4, desc: "Wire cslBenchmark.js into pipeline telemetry for quality tracking" },
+    { id: "autoctx-005", name: "Connect change classifier to deploy pipeline", cat: "autocontext-integration", pool: "warm", w: 4, desc: "Feed changeClassifier.js output to auto-commit-deploy.js decisions" },
+    { id: "autoctx-006", name: "Wire patent tracker to IP governance", cat: "autocontext-integration", pool: "warm", w: 3, desc: "Connect patentTracker.js claims to governance engine IP checks" },
+    { id: "autoctx-007", name: "Register hallucination watchdog monitors", cat: "autocontext-integration", pool: "hot", w: 5, desc: "Activate heady-hallucination-watchdog.js on all LLM response paths" },
+    { id: "autoctx-008", name: "Wire webhook dispatcher to event bus", cat: "autocontext-integration", pool: "warm", w: 4, desc: "Connect heady-webhook-dispatcher.js to global event bus for outbound notifications" },
+    { id: "autoctx-009", name: "Connect budget monitor to governance engine", cat: "autocontext-integration", pool: "hot", w: 5, desc: "Wire budgetMonitor.js alerts to GovernanceEngine budget policy enforcement" },
+    { id: "autoctx-010", name: "Register competitive intel data feeds", cat: "autocontext-integration", pool: "warm", w: 3, desc: "Connect competitive-intelligence-engine.js to scheduled data ingestion" },
+
+    // ─── AUTONOMY ENHANCEMENT (from merged autonomy-enhancement-tasks.json) ──────
+    { id: "autonomy-001", name: "Enable self-healing pipeline restarts", cat: "autonomy-enhancement", pool: "hot", w: 5, desc: "Auto-restart failed pipeline stages with exponential backoff" },
+    { id: "autonomy-002", name: "Implement autonomous task generation", cat: "autonomy-enhancement", pool: "hot", w: 5, desc: "Generate new tasks from cslBenchmark gaps without human intervention" },
+    { id: "autonomy-003", name: "Deploy auto-commit-deploy.js in CI", cat: "autonomy-enhancement", pool: "warm", w: 4, desc: "Enable automatic commit+deploy for passing pipeline runs" },
+    { id: "autonomy-004", name: "Wire MAPE-K feedback loop", cat: "autonomy-enhancement", pool: "hot", w: 5, desc: "Connect mape-k.js Monitor-Analyze-Plan-Execute-Knowledge cycle" },
+    { id: "autonomy-005", name: "Enable argus-v2 autonomous monitoring", cat: "autonomy-enhancement", pool: "warm", w: 4, desc: "Activate argus-v2.js for continuous system observation" },
+    { id: "autonomy-006", name: "Enable hermes-v2 inter-agent messaging", cat: "autonomy-enhancement", pool: "warm", w: 4, desc: "Activate hermes-v2.js for cross-agent communication routing" },
+    { id: "autonomy-007", name: "Enable kronos-v2 temporal scheduling", cat: "autonomy-enhancement", pool: "warm", w: 4, desc: "Activate kronos-v2.js for time-aware task scheduling" },
+    { id: "autonomy-008", name: "Implement self-correction loop triggers", cat: "autonomy-enhancement", pool: "hot", w: 5, desc: "Wire self-correction-loop.js to auto-detect and fix regressions" },
+    { id: "autonomy-009", name: "Enable autonomous dependency updates", cat: "autonomy-enhancement", pool: "warm", w: 3, desc: "Auto-merge safe dependabot PRs after CI passes" },
+    { id: "autonomy-010", name: "Deploy sacred geometry topology health", cat: "autonomy-enhancement", pool: "warm", w: 3, desc: "Monitor SG topology node health and auto-rebalance" },
+
+    // ─── BENEFICIAL BUNDLE (from merged beneficial-bundle-tasks.json) ─────────────
+    { id: "bundle-001", name: "Bundle watchdog + hallucination detector", cat: "beneficial-bundle", pool: "hot", w: 5, desc: "Package watchdog + hallucination detector as standalone quality module" },
+    { id: "bundle-002", name: "Bundle vector adapter + memory layer", cat: "beneficial-bundle", pool: "warm", w: 4, desc: "Package pg-vector-adapter + vector-memory as portable memory module" },
+    { id: "bundle-003", name: "Bundle event bus + bridge as messaging kit", cat: "beneficial-bundle", pool: "warm", w: 4, desc: "Package heady-event-bus + hcfp-event-bridge as standalone messaging layer" },
+    { id: "bundle-004", name: "Bundle budget + governance as compliance kit", cat: "beneficial-bundle", pool: "warm", w: 4, desc: "Package budgetMonitor + governance-engine as enterprise compliance module" },
+    { id: "bundle-005", name: "Bundle CI engine + patent tracker as IP kit", cat: "beneficial-bundle", pool: "warm", w: 3, desc: "Package competitive-intelligence + patentTracker for IP management" },
+    { id: "bundle-006", name: "Bundle agents (argus+hermes+kronos) as swarm kit", cat: "beneficial-bundle", pool: "warm", w: 4, desc: "Package v2 agents as deployable multi-agent swarm module" },
+    { id: "bundle-007", name: "Bundle CSL + benchmark as quality SDK", cat: "beneficial-bundle", pool: "warm", w: 3, desc: "Package cslBenchmark + changeClassifier as quality assurance SDK" },
+    { id: "bundle-008", name: "Generate npm package.json per bundle", cat: "beneficial-bundle", pool: "warm", w: 3, desc: "Create scoped @heady/ package manifests for each bundle" },
+    { id: "bundle-009", name: "Generate bundle documentation", cat: "beneficial-bundle", pool: "cold", w: 2, desc: "Auto-generate README + API docs for each module bundle" },
+    { id: "bundle-010", name: "Validate bundle cross-dependency isolation", cat: "beneficial-bundle", pool: "warm", w: 4, desc: "Ensure bundles can be deployed independently without leaking deps" },
+
+    // ─── UNIMPLEMENTED ARCHITECTURE (from merged unimplemented-arch-tasks.json) ───
+    { id: "unimpl-001", name: "Implement real WebSocket transport layer", cat: "unimplemented-arch", pool: "hot", w: 5, desc: "Replace stub WS connections with real socket.io/ws transport" },
+    { id: "unimpl-002", name: "Implement persistent task queue", cat: "unimplemented-arch", pool: "hot", w: 5, desc: "Replace in-memory task queues with Redis/BullMQ persistence" },
+    { id: "unimpl-003", name: "Implement real metrics collection", cat: "unimplemented-arch", pool: "warm", w: 4, desc: "Wire OpenTelemetry metrics to actual collector endpoint" },
+    { id: "unimpl-004", name: "Implement distributed lock manager", cat: "unimplemented-arch", pool: "hot", w: 5, desc: "Add Redis-backed distributed locks for multi-instance safety" },
+    { id: "unimpl-005", name: "Implement real secret rotation", cat: "unimplemented-arch", pool: "hot", w: 5, desc: "Connect to GCP Secret Manager for automatic credential rotation" },
+    { id: "unimpl-006", name: "Implement circuit breaker for external APIs", cat: "unimplemented-arch", pool: "warm", w: 4, desc: "Add circuit breaker pattern to all external API calls (LLM, trading, etc.)" },
+    { id: "unimpl-007", name: "Implement real-time dashboard WebSocket feed", cat: "unimplemented-arch", pool: "warm", w: 4, desc: "Live dashboard data via WebSocket instead of polling" },
+    { id: "unimpl-008", name: "Implement multi-region failover", cat: "unimplemented-arch", pool: "cold", w: 3, desc: "Active-passive failover between us-east1 and us-central1" },
+    { id: "unimpl-009", name: "Implement audit log immutable storage", cat: "unimplemented-arch", pool: "warm", w: 4, desc: "Store governance audit trail in append-only immutable storage" },
+    { id: "unimpl-010", name: "Implement canary deployment pipeline", cat: "unimplemented-arch", pool: "warm", w: 3, desc: "Gradual traffic shifting for new Cloud Run revisions" },
+
+    // ─── NEW MODULE HEALTH CHECKS ────────────────────────────────────────────────
+    { id: "mod-health-001", name: "Health check: pg-vector-adapter", cat: "module-health", pool: "hot", w: 5, desc: "Validate pg-vector-adapter.js connects to Neon and responds to vector queries" },
+    { id: "mod-health-002", name: "Health check: hallucination-watchdog", cat: "module-health", pool: "hot", w: 5, desc: "Validate heady-hallucination-watchdog.js detects test hallucinations" },
+    { id: "mod-health-003", name: "Health check: webhook-dispatcher", cat: "module-health", pool: "warm", w: 4, desc: "Validate heady-webhook-dispatcher.js sends and confirms webhooks" },
+    { id: "mod-health-004", name: "Health check: budget-monitor", cat: "module-health", pool: "warm", w: 4, desc: "Validate budgetMonitor.js tracks spend and fires alerts at thresholds" },
+    { id: "mod-health-005", name: "Health check: competitive-intel", cat: "module-health", pool: "warm", w: 3, desc: "Validate competitive-intelligence-engine.js loads and parses market data" },
+    { id: "mod-health-006", name: "Health check: patent-tracker", cat: "module-health", pool: "cold", w: 2, desc: "Validate patentTracker.js claim registry loads and persists" },
+    { id: "mod-health-007", name: "Health check: argus-v2 agent", cat: "module-health", pool: "warm", w: 4, desc: "Validate argus-v2.js initializes, observes, and reports correctly" },
+    { id: "mod-health-008", name: "Health check: hermes-v2 agent", cat: "module-health", pool: "warm", w: 4, desc: "Validate hermes-v2.js inter-agent message routing works" },
+    { id: "mod-health-009", name: "Health check: kronos-v2 agent", cat: "module-health", pool: "warm", w: 4, desc: "Validate kronos-v2.js temporal scheduling is accurate" },
+    { id: "mod-health-010", name: "Health check: change-classifier", cat: "module-health", pool: "warm", w: 3, desc: "Validate changeClassifier.js categorizes diffs correctly" },
+    { id: "mod-health-011", name: "Health check: csl-benchmark", cat: "module-health", pool: "warm", w: 3, desc: "Validate cslBenchmark.js runs and produces valid quality reports" },
+    { id: "mod-health-012", name: "Health check: auto-commit-deploy", cat: "module-health", pool: "hot", w: 5, desc: "Validate auto-commit-deploy.js dry-run commit + deploy sequence" },
+    { id: "mod-health-013", name: "Health check: heady-event-bus", cat: "module-health", pool: "hot", w: 5, desc: "Validate heady-event-bus.js pub/sub, wildcard, and replay work" },
+    { id: "mod-health-014", name: "Health check: hcfp-event-bridge", cat: "module-health", pool: "hot", w: 5, desc: "Validate hcfp-event-bridge.js connects HCFPRunner events to global bus" },
+    { id: "mod-health-015", name: "Health check: engine-wiring bootstrap", cat: "module-health", pool: "hot", w: 5, desc: "Validate engine-wiring.js initializes all engines without errors" },
+
+    // ─── EVENT BUS + PIPELINE BRIDGE ─────────────────────────────────────────────
+    { id: "evt-pipe-001", name: "Boot heady-event-bus on startup", cat: "event-bus-pipeline", pool: "hot", w: 5, desc: "Initialize global.eventBus from heady-event-bus.js in bootstrap" },
+    { id: "evt-pipe-002", name: "Activate HCFP event bridge", cat: "event-bus-pipeline", pool: "hot", w: 5, desc: "Wire hcfp-event-bridge.js so HCFPRunner events flow to global bus" },
+    { id: "evt-pipe-003", name: "Register all pipeline stages with event bus", cat: "event-bus-pipeline", pool: "hot", w: 5, desc: "Emit stage:start/stage:complete events for all 8 pipeline stages" },
+    { id: "evt-pipe-004", name: "Connect auto-success to pipeline completions", cat: "event-bus-pipeline", pool: "hot", w: 5, desc: "Auto-success triggers on pipeline:completed events via bridge" },
+    { id: "evt-pipe-005", name: "Implement event replay for missed completions", cat: "event-bus-pipeline", pool: "warm", w: 4, desc: "Replay missed pipeline events to auto-success on reconnect" },
+    { id: "evt-pipe-006", name: "Wire governance decisions to event bus", cat: "event-bus-pipeline", pool: "warm", w: 4, desc: "Emit governance:allow/deny/escalate events for audit dashboard" },
+    { id: "evt-pipe-007", name: "Wire kill-switch events to webhook dispatcher", cat: "event-bus-pipeline", pool: "hot", w: 5, desc: "Trading kill-switch fires webhooks to Slack/Discord/PagerDuty" },
+    { id: "evt-pipe-008", name: "Implement event bus health heartbeat", cat: "event-bus-pipeline", pool: "warm", w: 3, desc: "60s heartbeat pulse on event bus to verify liveness" },
+
+    // ─── COMPETITIVE INTELLIGENCE ────────────────────────────────────────────────
+    { id: "ci-001", name: "Activate competitor tracking feeds", cat: "competitive-intel", pool: "warm", w: 4, desc: "Enable scheduled competitor data ingestion in CI engine" },
+    { id: "ci-002", name: "Build market position heatmap", cat: "competitive-intel", pool: "warm", w: 3, desc: "Generate visual market position map from CI engine data" },
+    { id: "ci-003", name: "Track AI agent framework releases", cat: "competitive-intel", pool: "warm", w: 3, desc: "Monitor releases of LangChain, AutoGen, CrewAI, etc." },
+    { id: "ci-004", name: "Analyze competitor pricing models", cat: "competitive-intel", pool: "warm", w: 3, desc: "Track SaaS pricing of competing AI platforms" },
+    { id: "ci-005", name: "Benchmark Heady vs competitors on latency", cat: "competitive-intel", pool: "warm", w: 4, desc: "Run latency benchmarks against OpenAI, Anthropic API gateways" },
+    { id: "ci-006", name: "Generate weekly competitive digest", cat: "competitive-intel", pool: "cold", w: 2, desc: "Auto-generate weekly competitor intelligence summary" },
+    { id: "ci-007", name: "Alert on competitive threat signals", cat: "competitive-intel", pool: "hot", w: 5, desc: "Fire alerts when competitors announce features in Heady's domain" },
 ];
 
+// ─── DYNAMIC JSON TASK LOADER ──────────────────────────────────────────────────
+// Auto-imports all 254 tasks from the 5 merged JSON task files
+const JSON_TASK_FILES = [
+  'architecture-fix-tasks.json',
+  'autocontext-integration-tasks.json',
+  'autonomy-enhancement-tasks.json',
+  'beneficial-bundle-tasks.json',
+  'unimplemented-arch-tasks.json',
+];
+
+let JSON_TASKS = [];
+try {
+  const path = require('path');
+  for (const file of JSON_TASK_FILES) {
+    const filePath = path.join(__dirname, '..', 'orchestration', file);
+    try {
+      const data = require(filePath);
+      const tasks = Array.isArray(data) ? data : (data.tasks || data.categories || []);
+      JSON_TASKS = JSON_TASKS.concat(tasks);
+    } catch (e) {
+      // Graceful skip if file not found (won't break catalog)
+    }
+  }
+} catch (e) {
+  // Fallback — no dynamic loading in non-Node environments
+}
+
 // ─── POOL ALLOCATION ────────────────────────────────────────────────────────
-module.exports = { TASK_CATALOG };
+module.exports = { TASK_CATALOG, JSON_TASKS, JSON_TASK_FILES };
