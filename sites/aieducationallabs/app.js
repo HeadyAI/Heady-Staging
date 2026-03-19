@@ -338,9 +338,14 @@ function renderLabWorkspace(labId) {
         <button class="btn btn-secondary btn-sm" onclick="labAction('record')">📊 Record Data</button>
         <button class="btn btn-secondary btn-sm" onclick="exportLabData('csv')">📥 Export CSV</button>
       </div>
+      <div style="background:rgba(99,102,241,0.08);border:1px solid rgba(99,102,241,0.2);border-radius:8px;padding:6px 12px;margin-top:4px;font-size:0.78rem;color:#818cf8;display:flex;align-items:center;gap:8px">
+        <span>🖱️</span>
+        <span id="canvas-hint">Click, drag, and interact directly with the simulation canvas</span>
+      </div>
     </div>
     <div class="lab-sidebar" style="max-height:80vh;overflow-y:auto">
       <div class="sidebar-panel"><h3>📋 Description</h3><p style="color:var(--text-secondary);font-size:0.9rem">${lab.desc}</p></div>
+      <div class="sidebar-panel"><h3>🖱️ How to Interact</h3><div id="interaction-guide" style="color:var(--text-secondary);font-size:0.82rem;line-height:1.5"></div></div>
       ${lab.objectives ? `<div class="sidebar-panel"><h3>🎯 Learning Objectives</h3><ol style="color:var(--text-secondary);font-size:0.85rem;padding-left:var(--sp-lg);margin:0">${lab.objectives.map(o=>`<li style="margin-bottom:4px">${o}</li>`).join('')}</ol></div>` : ''}
       ${lab.theory ? `<div class="sidebar-panel"><h3>📖 Theory Background</h3><p style="color:var(--text-secondary);font-size:0.85rem;line-height:1.6">${lab.theory}</p></div>` : ''}
       ${lab.concepts ? `<div class="sidebar-panel"><h3>🔑 Key Concepts</h3><div style="display:flex;flex-wrap:wrap;gap:4px">${lab.concepts.map(c=>`<span style="background:rgba(99,102,241,0.12);color:#818cf8;padding:2px 8px;border-radius:4px;font-size:0.75rem">${c}</span>`).join('')}</div></div>` : ''}
@@ -379,10 +384,39 @@ const LabSims = {
     this.renderSim(ctx, canvas, labId);
     this.setupControls(labId);
     this.setupMouseEvents(canvas, ctx, labId);
+    this.setupInteractionGuide(labId);
     window.addEventListener('resize', () => {
       canvas.width = canvas.offsetWidth; canvas.height = canvas.offsetHeight;
       this.renderSim(ctx, canvas, labId);
     });
+  },
+  setupInteractionGuide(labId) {
+    const el = document.getElementById('interaction-guide');
+    const hint = document.getElementById('canvas-hint');
+    if(!el) return;
+    const guides = {
+      'cell-explorer': {steps:['🔬 Click on organelles (nucleus, mitochondria) to learn about them','🔄 Use zoom slider to magnify structures','▶️ Press Play to animate organelle activity','📊 Record data to capture cell state'], hint:'Click organelles to identify them'},
+      'molecular-builder': {steps:['🧪 Select an atom type from controls (H, O, N, C, S)','🖱️ Click anywhere on canvas to place atoms','⚗️ Build molecules by placing atoms near each other','🔗 Watch bonds form automatically between nearby atoms'], hint:'Click to place atoms on canvas'},
+      'pathfinding': {steps:['🧱 Click grid cells to place or remove walls','🟢 Green cell = start position','🔴 Red cell = end position','▶️ Press Play to watch the algorithm find a path'], hint:'Click cells to toggle walls'},
+      'projectile-motion': {steps:['🎯 Adjust velocity, angle, and gravity with sliders','🖱️ Click canvas to launch the projectile','📐 Watch the parabolic trajectory','📏 Compare predicted vs actual range'], hint:'Click canvas to launch projectile!'},
+      'periodic-table': {steps:['🖱️ Click any element to select and highlight it','⚛️ Watch electron orbits animate around the nucleus','🔢 Data panel shows atomic mass and number'], hint:'Click elements to select them'},
+      'ecosystem-sim': {steps:['🖱️ Click canvas to add prey organisms at that location','🔧 Adjust prey/predator counts with sliders','▶️ Play to watch Lotka-Volterra dynamics','📊 Record population data at intervals'], hint:'Click to add prey organisms'},
+      'robot-arm': {steps:['🖱️ Click canvas to set target position for arm','🎛️ Adjust joint angles manually with sliders','✋ Toggle auto/manual mode for control method','🤏 Open/close gripper with toggle'], hint:'Click to position the robotic arm'},
+      'bridge-builder': {steps:['🖱️ Click canvas to set load position','📊 Watch stress distribution change in real-time','🏗️ Switch materials to compare strength','⚠️ Monitor safety factor indicator'], hint:'Click to set load position'},
+      'circuit-sim': {steps:['🔋 Click the battery to cycle voltage (3V-24V)','🎛️ Adjust resistance with slider','👀 Watch electrons flow through the circuit','📊 Monitor voltage, current, and power in data panel'], hint:'Click battery to change voltage'},
+      'reaction-sim': {steps:['🌡️ Increase temperature to speed up reactions','⚗️ Toggle catalyst to lower activation energy','📊 Watch reactant → product conversion','🎥 Record data at different temperatures'], hint:'Adjust temperature and watch reactions'},
+      'dna-replication': {steps:['▶️ Press Play to start helicase unwinding','🧬 Watch base pairs separate and replicate','🔬 Toggle enzyme labels for detail','📊 Track replication progress percentage'], hint:'Play to watch DNA replication'},
+      'optics-bench': {steps:['🔍 Adjust focal length to change lens power','💡 Add more rays to visualize light paths','🎯 Toggle focal point marker','📐 Observe convergence and magnification'], hint:'Adjust lens parameters'},
+      'sorting-viz': {steps:['📋 Select different algorithms to compare','▶️ Play to watch sorting in action','🔴 Active comparisons highlighted in red','📊 Track comparisons and swaps count'], hint:'Select algorithm and press Play'},
+      'neural-net': {steps:['🧠 Adjust learning rate to affect convergence','👀 Toggle weight visualization on/off','▶️ Play to advance training epochs','📉 Watch loss decrease over time'], hint:'Watch neural network train'},
+      'plate-tectonics': {steps:['▶️ Play to animate plate drift and convergence','🔥 Observe magma convection particles','🏔️ Watch mountain formation at boundaries','📊 Record drift rate over time'], hint:'Play to watch tectonic plates move'},
+      'weather-patterns': {steps:['🌡️ Adjust temperature and humidity sliders','💨 Change wind speed to affect cloud movement','📊 Monitor pressure, temp, and humidity readings','🌧️ Observe precipitation patterns'], hint:'Adjust weather parameters'},
+      'geological-layers': {steps:['▶️ Press Play to start the drill simulation','🪨 Each layer reveals different geological strata','🦴 Toggle fossil visibility for each layer','📅 Toggle radiometric dating overlay'], hint:'Play to drill through strata'},
+      'circuit-design': {steps:['🔌 Select gate type from dropdown','⚡ Watch signal propagation through gates','🟡 Yellow dot shows signal traveling','📐 Logic output shown in data panel'], hint:'Watch signal propagation'}
+    };
+    const g = guides[labId] || {steps:['▶️ Press Play to start the simulation','⏸️ Pause to freeze at any point','⏭️ Step to advance frame by frame','📊 Record data and export to CSV'],hint:'Interact with the simulation'};
+    el.innerHTML = g.steps.map(s=>`<div style="padding:3px 0;border-bottom:1px solid rgba(255,255,255,0.04)">${s}</div>`).join('');
+    if(hint) hint.textContent = g.hint;
   },
   setupMouseEvents(canvas, ctx, labId) {
     const getPos = (e) => { const r=canvas.getBoundingClientRect(); const t=e.touches?e.touches[0]:e; return {x:t.clientX-r.left,y:t.clientY-r.top}; };

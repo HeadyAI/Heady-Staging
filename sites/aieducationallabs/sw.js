@@ -1,5 +1,5 @@
 // AI Educational Labs — Service Worker (Offline/Online Sync)
-const CACHE_NAME = 'aieduclabs-v3';
+const CACHE_NAME = 'aieduclabs-v4';
 const ASSETS = ['/', '/index.html', '/styles.css', '/app.js', '/manifest.json'];
 
 self.addEventListener('install', e => {
