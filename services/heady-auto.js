@@ -13,6 +13,15 @@ const fs = require("fs");
 const path = require("path");
 const https = require("https");
 
+let HeadySyncDaemon, registerSyncRoutes;
+try {
+    const syncMod = require("./heady-sync-daemon");
+    HeadySyncDaemon = syncMod.HeadySyncDaemon;
+    registerSyncRoutes = syncMod.registerSyncRoutes;
+} catch (_) {
+    // Sync daemon is optional — doesn't break if missing
+}
+
 const ROOT = process.cwd();
 const PHI = 1.6180339887;
 
@@ -452,6 +461,11 @@ class HeadyAuto {
     this.importer = new AutoImport(opts);
     this.health = new AutoHealth(opts);
     this.dns = new AutoDNS(opts);
+    this.sync = HeadySyncDaemon ? new HeadySyncDaemon({
+      root: opts.root || ROOT,
+      dryRun: opts.dryRun || false,
+      autoDeploy: opts.autoDeploy !== false,
+    }) : null;
     this.initialized = false;
   }
 
@@ -461,6 +475,14 @@ class HeadyAuto {
     results.gitCredentials = this.git.setupCredentials();
     results.dropzoneImport = this.importer.scanAndImport();
     results.dropzoneWatcher = this.importer.startWatcher();
+    // Start sync daemon in production
+    if (this.sync) {
+      if (process.env.NODE_ENV === "production") {
+        results.syncDaemon = this.sync.start();
+      } else {
+        results.syncDaemon = { status: 'disabled', reason: 'dev mode — use POST /api/sync/trigger' };
+      }
+    }
     // Don't start health monitoring by default in dev — only in production
     if (process.env.NODE_ENV === "production") {
       results.healthMonitor = this.health.startMonitoring();
@@ -498,12 +520,14 @@ class HeadyAuto {
         hasToken: !!this.dns.apiToken,
         hasAccountId: !!this.dns.accountId,
       },
+      sync: this.sync ? this.sync.getStatus() : { available: false },
     };
   }
 
   shutdown() {
     this.importer.stopWatcher();
     this.health.stopMonitoring();
+    if (this.sync) this.sync.stop();
   }
 }
 
@@ -600,6 +624,10 @@ function registerAutoRoutes(app, auto) {
       res.status(500).json({ ok: false, error: e.message });
     }
   });
+  // Register sync daemon routes if available
+  if (auto.sync && registerSyncRoutes) {
+    registerSyncRoutes(app, auto.sync);
+  }
 }
 
 module.exports = { HeadyAuto, AutoGit, AutoDeploy, AutoImport, AutoHealth, AutoDNS, registerAutoRoutes };

@@ -43,7 +43,7 @@ export const SITE_REGISTRY: Record<string, SiteEntry> = {
   ...dual('headyadvisor.com',       'headyadvisor',        'product', T),
   ...dual('headyassist.com',        'headyassist',         'product', T),
   ...dual('headycheck.com',         'headycheck',          'product', T),
-  ...dual('headysense.com',         'headysense',          'product', T),
+  ...dual('headylens.com',         'headysense',          'product', T),
   ...dual('headydb.com',            'headydb',             'product', T),
   ...dual('headysafe.com',          'headysafe',           'product', T),
   ...dual('headysecure.com',        'headysecure',         'product', T),

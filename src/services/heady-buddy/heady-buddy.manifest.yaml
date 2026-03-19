@@ -47,7 +47,7 @@ spec:
             - name: SERVICE_VERSION
               value: "3.2.3"
             - name: HEADY_DOMAIN
-              value: headybuddy.com
+              value: headybuddy.org
             - name: PORT
               value: "3315"
             - name: OTEL_EXPORTER_OTLP_ENDPOINT
@@ -179,7 +179,7 @@ spec:
     - match:
         - headers:
             x-heady-domain:
-              exact: headybuddy.com
+              exact: headybuddy.org
       route:
         - destination:
             host: heady-buddy

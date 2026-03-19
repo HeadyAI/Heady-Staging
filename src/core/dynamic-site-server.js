@@ -157,7 +157,7 @@ const SITES = {
     ],
     showAuth: true,
   },
-  'headysense.com': {
+  'headylens.com': {
     brand: 'HeadyLens',
     tagline: 'Sovereign Sight',
     subtitle: 'Vision AI for screenshots, UI review, OCR, and visual code analysis.',
@@ -309,14 +309,24 @@ function hashPw(pw, salt) {
   return { hash, salt };
 }
 
+// ── Domain Aliases ───────────────────────────────────────────
+const DOMAIN_ALIASES = {
+  'headyai.com': 'heady-ai.com',
+  'www.headyai.com': 'heady-ai.com',
+};
+
 // ── Resolve site from Host header ────────────────────────────
 function resolveSite(host) {
   if (!host) return SITES['headyme.com'];
-  const clean = host.replace(/:\d+$/, '').toLowerCase();
+  let clean = host.replace(/:\d+$/, '').toLowerCase();
+  // Check aliases first
+  if (DOMAIN_ALIASES[clean]) clean = DOMAIN_ALIASES[clean];
   // Direct match
   if (SITES[clean]) return SITES[clean];
   // www. prefix
-  if (SITES[clean.replace(/^www\./, '')]) return SITES[clean.replace(/^www\./, '')];
+  const noWww = clean.replace(/^www\./, '');
+  if (DOMAIN_ALIASES[noWww]) { if (SITES[DOMAIN_ALIASES[noWww]]) return SITES[DOMAIN_ALIASES[noWww]]; }
+  if (SITES[noWww]) return SITES[noWww];
   // Subdomain match
   for (const domain of Object.keys(SITES)) {
     if (clean.endsWith(domain)) return SITES[domain];
@@ -467,7 +477,35 @@ function renderSite(site, host) {
       .auth-grid{grid-template-columns:repeat(2,1fr)}
       .buddy-panel{width:calc(100vw - 32px);right:16px;bottom:84px}
       .hero h1{font-size:2rem}
+      .stat-row{grid-template-columns:repeat(2,1fr)}
+      .tech-grid{grid-template-columns:1fr}
     }
+
+    /* ── About Section ─────────────────────── */
+    .about-section{padding:4rem 0;text-align:center;animation:fadeUp .6s ease-out}
+    .about-badge{display:inline-block;background:color-mix(in srgb,var(--brand) 12%,transparent);color:var(--brand);padding:4px 14px;border-radius:20px;font-size:.7rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;margin-bottom:1.25rem;border:1px solid color-mix(in srgb,var(--brand) 18%,transparent)}
+    .about-section h2{font-size:clamp(1.5rem,3vw,2.2rem);font-weight:900;letter-spacing:-.02em;margin-bottom:1rem}
+    .about-text{color:var(--dim);font-size:1rem;max-width:680px;margin:0 auto 2.5rem;line-height:1.7}
+    .stat-row{display:grid;grid-template-columns:repeat(4,1fr);gap:1.25rem;max-width:700px;margin:0 auto}
+    .stat-card{background:var(--surface);backdrop-filter:blur(20px);border:1px solid var(--border);border-radius:14px;padding:1.25rem .75rem;transition:all .3s}
+    .stat-card:hover{border-color:color-mix(in srgb,var(--brand) 40%,transparent);transform:translateY(-3px)}
+    .stat-num{font-size:1.8rem;font-weight:900;background:linear-gradient(135deg,var(--brand),var(--accent));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:.25rem}
+    .stat-label{color:var(--dim);font-size:.75rem;font-weight:600;text-transform:uppercase;letter-spacing:.04em}
+
+    /* ── Tech Section ──────────────────────── */
+    .tech-section{padding:4rem 0;text-align:center}
+    .tech-section h2{font-size:clamp(1.5rem,3vw,2.2rem);font-weight:900;letter-spacing:-.02em;margin-bottom:2rem}
+    .tech-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1.5rem}
+    .tech-card{background:var(--surface);backdrop-filter:blur(20px);border:1px solid var(--border);border-radius:16px;padding:1.5rem;text-align:left;transition:all .3s}
+    .tech-card:hover{border-color:color-mix(in srgb,var(--brand) 40%,transparent);transform:translateY(-4px);box-shadow:0 8px 30px rgba(0,0,0,0.3)}
+    .tech-icon{font-size:2rem;margin-bottom:.75rem;display:block}
+    .tech-card h3{font-size:1rem;font-weight:700;margin-bottom:.4rem}
+    .tech-card p{color:var(--dim);font-size:.85rem;line-height:1.5}
+
+    /* ── CTA Section ───────────────────────── */
+    .cta-section{padding:4rem 0;text-align:center;border-top:1px solid var(--border);margin-top:2rem}
+    .cta-section h2{font-size:clamp(1.5rem,3vw,2.2rem);font-weight:900;letter-spacing:-.02em;margin-bottom:.75rem}
+    .cta-section p{color:var(--dim);font-size:1.05rem;margin-bottom:2rem}
   </style>
 </head>
 <body>
@@ -501,12 +539,46 @@ function renderSite(site, host) {
 
     <section class="services">${serviceCards}</section>
 
+    <!-- About Section -->
+    <section class="about-section">
+      <div class="about-badge">About ${site.brand}</div>
+      <h2>${site.brand} <span class="gradient">at a Glance</span></h2>
+      <p class="about-text">${site.subtitle} Part of the Heady™ ecosystem — 11 domains, one intelligence layer, 60+ provisional patents protecting the architecture.</p>
+      <div class="stat-row">
+        <div class="stat-card"><div class="stat-num">60+</div><div class="stat-label">Patents Filed</div></div>
+        <div class="stat-card"><div class="stat-num">11</div><div class="stat-label">Domains</div></div>
+        <div class="stat-card"><div class="stat-num">25+</div><div class="stat-label">Auth Providers</div></div>
+        <div class="stat-card"><div class="stat-num">17</div><div class="stat-label">AI Swarms</div></div>
+      </div>
+    </section>
+
+    <!-- Technology Section -->
+    <section class="tech-section">
+      <h2>Powered by <span class="gradient">Liquid Architecture</span></h2>
+      <div class="tech-grid">
+        <div class="tech-card"><div class="tech-icon">φ</div><h3>Sacred Geometry</h3><p>Fibonacci-sharded routing, phi-backoff circuit breakers, golden ratio-scaled timeouts across every layer.</p></div>
+        <div class="tech-card"><div class="tech-icon">⚡</div><h3>Edge-First</h3><p>Cloudflare Workers + Cloud Run. Sub-100ms inference at the edge with automatic failover to 7 providers.</p></div>
+        <div class="tech-card"><div class="tech-icon">🔐</div><h3>Zero Trust</h3><p>AES-256-GCM encryption, hardened OAuth 2.0 edge pipeline, biometric-anchored identity across all domains.</p></div>
+        <div class="tech-card"><div class="tech-icon">🧬</div><h3>Self-Healing</h3><p>Continuous Semantic Logic gates, autonomous attestation, quarantine-and-respawn lifecycle management.</p></div>
+      </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+      <h2>Ready to <span class="gradient">Get Started</span>?</h2>
+      <p>Join the Heady™ ecosystem. One sign-in, access everywhere.</p>
+      <div class="hero-actions">
+        <button class="btn-primary" onclick="openAuth()">Create Free Account</button>
+        <a class="btn-secondary" href="https://headyio.com" style="text-decoration:none">Read the Docs →</a>
+      </div>
+    </section>
+
     <div class="domain-bar">${allDomains}</div>
 
     <footer>
       © 2026 Heady™Systems Inc. · All rights reserved ·
       <a href="https://headyme.com">headyme.com</a> ·
-      25+ Auth Providers · Sacred Geometry v3
+      25+ Auth Providers · Sacred Geometry v3 · 60+ Patents
     </footer>
   </div>
 

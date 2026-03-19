@@ -15,7 +15,7 @@
  *   Priority numbers are arbitrary, domain-unaware, and brittle.
  *   CSL routing uses cosine similarity between request embeddings and
  *   domain centroids to route with geometric precision. A request about
- *   "AI companion memory" routes to headybuddy.com not because someone
+ *   "AI companion memory" routes to headybuddy.org not because someone
  *   hard-coded a priority of 7, but because the cosine similarity to
  *   HeadyBuddy's semantic centroid exceeds the golden-ratio gate (ψ=0.618).
  *
@@ -80,7 +80,7 @@ const HEADY_DOMAINS = [
   },
   {
     id:          'headybuddy',
-    url:         'https://headybuddy.com',
+    url:         'https://headybuddy.org',
     description: 'AI companion, persistent memory, empathic chat, personal buddy experience',
     port:        443,
     serviceId:   'heady-buddy',

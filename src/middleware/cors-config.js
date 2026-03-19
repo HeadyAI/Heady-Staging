@@ -20,7 +20,7 @@ const ALLOWED_ORIGINS = [
     'https://headyapi.com', 'https://www.headyapi.com',
     'https://heady-ai.com', 'https://www.heady-ai.com',
     'https://headyos.com', 'https://www.headyos.com',
-    'https://headysense.com', 'https://www.headysense.com',
+    'https://headylens.com', 'https://www.headylens.com',
     'https://headyex.com', 'https://www.headyex.com',
     'https://headyfinance.com', 'https://www.headyfinance.com',
     'https://headyconnection.com', 'https://www.headyconnection.com',

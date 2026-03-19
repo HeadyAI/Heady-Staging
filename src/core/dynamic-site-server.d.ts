@@ -111,7 +111,7 @@ export const SITES: {
         }[];
         showAuth: boolean;
     };
-    'headysense.com': {
+    'headylens.com': {
         brand: string;
         tagline: string;
         subtitle: string;

@@ -60,7 +60,7 @@ HEADY ECOSYSTEM CONTEXT:
 - Services: 50+ microservices, 15+ branded websites
 - Domains: headyme.com, headysystems.com, headyapi.com, headyconnection.org,
   headybuddy.org, headymcp.com, headyio.com, headybot.com, heady-ai.com,
-  headyos.com, perfecttrader.com, headysense.com, headyfinance.com,
+  headyos.com, perfecttrader.com, headylens.com, headyfinance.com,
   headyex.com, headyconnection.com
 - Infrastructure: Google Cloud Run + Cloudflare Workers + pgvector
 - Auth: 25 OAuth/API-key providers (Google, GitHub, Microsoft, Apple, OpenAI, Claude, etc.)

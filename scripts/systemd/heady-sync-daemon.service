@@ -1,0 +1,31 @@
+[Unit]
+Description=Heady Sync Daemon — Intelligent Multi-Remote Git Sync
+Documentation=https://github.com/HeadyAI/Heady
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/node /home/headyme/Heady/services/heady-sync-daemon.js --root=/home/headyme/Heady
+WorkingDirectory=/home/headyme/Heady
+Environment=HOME=/home/headyme
+Environment=PATH=/usr/local/bin:/usr/bin:/bin
+Environment=NODE_ENV=production
+
+# Restart on failure with φ-scaled backoff
+Restart=on-failure
+RestartSec=10
+StartLimitIntervalSec=600
+StartLimitBurst=5
+
+# Logging
+StandardOutput=append:/home/headyme/Heady/logs/heady-sync-daemon.log
+StandardError=append:/home/headyme/Heady/logs/heady-sync-daemon.log
+
+# Safety limits
+TimeoutStopSec=30
+Nice=10
+MemoryMax=256M
+
+[Install]
+WantedBy=default.target

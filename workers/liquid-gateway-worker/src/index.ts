@@ -33,7 +33,7 @@ const SITE_REGISTRY: Record<string, { repo: string; tier: string; cacheTtl: numb
   'headyconnection.org':    { repo: 'headyconnection',     tier: 'core',    cacheTtl: PHI_TIMING.EPOCH },
   'headyconnection-org.pages.dev': { repo: 'headyconnection-org', tier: 'core', cacheTtl: PHI_TIMING.EPOCH },
   'headybuddy.org':         { repo: 'headybuddy-org',      tier: 'core',    cacheTtl: PHI_TIMING.EPOCH },
-  'headybuddy.com':         { repo: 'HeadyBuddy',          tier: 'core',    cacheTtl: PHI_TIMING.EPOCH },
+  'headybuddy.org':         { repo: 'HeadyBuddy',          tier: 'core',    cacheTtl: PHI_TIMING.EPOCH },
   '1ime1.com':              { repo: '1ime1',               tier: 'core',    cacheTtl: PHI_TIMING.EPOCH },
   'instant.headysystems.com': { repo: 'instant',           tier: 'core',    cacheTtl: PHI_TIMING.TIDE },
 

@@ -3,7 +3,7 @@
  * HeadyBuddy — AI companion, persistent memory, 10 personas
  * © 2026 HeadySystems Inc. — 60+ Provisional Patents
  *
- * Domain: headybuddy.com | Port: 3315
+ * Domain: headybuddy.org | Port: 3315
  * Health endpoints: /health /health/live /health/ready /health/startup /health/details
  * Routing: CSL cosine matching — NO priority-based routing
  */

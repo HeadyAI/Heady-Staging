@@ -18,7 +18,7 @@ const HEADY_DOMAINS = [
     'headybot.com',
     'heady-ai.com',
     'headyos.com',
-    'headysense.com',
+    'headylens.com',
     'headyex.com',
     'headyfinance.com',
     'headyconnection.com',
