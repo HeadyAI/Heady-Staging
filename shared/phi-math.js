@@ -413,4 +413,5 @@ module.exports = {
   TIMING, COLAB_RUNTIMES, RESOURCE_ALLOCATION, POOL_SIZES,
   // Additional constants
   PSI_SQ,
+  phiTimeout: phiMs,
 };
