@@ -58,7 +58,7 @@ class RemoteRegistry {
     _discover() {
         try {
             const raw = execSync('git remote -v', {
-                cwd: this._root, encoding: 'utf8', timeout: 10000,
+                cwd: this._root, encoding: 'utf8', timeout: FIB[7] * 1000, // 13s
             });
             const seen = new Set();
             for (const line of raw.trim().split('\n')) {
@@ -136,10 +136,10 @@ class RemoteRegistry {
         if (!r) return;
         r.consecutiveFailures++;
         r.lastError = error;
-        // Exponential backoff: φ^failures minutes, capped at 30min
+        // Exponential backoff: φ^failures minutes, capped at fib(8)=21min
         const backoffMs = Math.min(
             Math.pow(PHI, r.consecutiveFailures) * 60000,
-            30 * 60000,
+            FIB[8] * 60000, // 21 min cap
         );
         r.backoffUntil = Date.now() + backoffMs;
         log('WARN', `Remote ${name} backed off for ${(backoffMs / 60000).toFixed(1)}min`, {
@@ -167,7 +167,7 @@ class SyncEngine {
         this._root = root;
         this._registry = registry;
         this._dryRun = opts.dryRun || false;
-        this._timeout = opts.timeout || 60000;
+        this._timeout = opts.timeout || FIB[10] * 1000; // 55s
         this._history = [];
     }
 
@@ -323,7 +323,7 @@ class MergeOrchestrator {
         }
         return execSync(`git ${cmd}`, {
             cwd: this._root, encoding: 'utf8',
-            timeout: opts.timeout || 60000, stdio: 'pipe',
+            timeout: opts.timeout || FIB[10] * 1000, stdio: 'pipe', // 55s
         }).trim();
     }
 
@@ -475,7 +475,7 @@ class MergeOrchestrator {
             return { remote: remoteName, status: 'dry-run' };
         }
         try {
-            this._git(`push ${remoteName} ${branch}`, { timeout: 120000 });
+            this._git(`push ${remoteName} ${branch}`, { timeout: FIB[11] * 1000 }); // 89s
             return { remote: remoteName, status: 'pushed', branch };
         } catch (e) {
             return { remote: remoteName, status: 'error', error: e.message.slice(0, 200) };
@@ -504,7 +504,7 @@ class MergeOrchestrator {
         return results;
     }
 
-    getHistory() { return this._mergeHistory.slice(-50); }
+    getHistory() { return this._mergeHistory.slice(-FIB[10]); } // last 55
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -519,7 +519,7 @@ class DependabotManager {
 
     _git(cmd) {
         return execSync(`git ${cmd}`, {
-            cwd: this._root, encoding: 'utf8', timeout: 30000, stdio: 'pipe',
+            cwd: this._root, encoding: 'utf8', timeout: FIB[8] * 1000, stdio: 'pipe', // 21s
         }).trim();
     }
 
@@ -672,7 +672,7 @@ class DeployTrigger {
                 log('INFO', 'Deploy script not found, using gcloud deploy');
                 const output = execSync(
                     'gcloud run deploy heady-manager --source . --region us-east1 --quiet 2>&1',
-                    { cwd: this._root, encoding: 'utf8', timeout: 300000, stdio: 'pipe' }
+                    { cwd: this._root, encoding: 'utf8', timeout: FIB[13] * 1000, stdio: 'pipe' } // 233s
                 );
                 record.status = 'deployed';
                 record.method = 'gcloud';
@@ -680,7 +680,7 @@ class DeployTrigger {
             } else {
                 const output = execSync(
                     `node ${this._deployScript}`,
-                    { cwd: this._root, encoding: 'utf8', timeout: 300000, stdio: 'pipe' }
+                    { cwd: this._root, encoding: 'utf8', timeout: FIB[13] * 1000, stdio: 'pipe' } // 233s
                 );
                 record.status = 'deployed';
                 record.method = 'script';
@@ -698,7 +698,7 @@ class DeployTrigger {
         }
 
         this._deployHistory.push(record);
-        if (this._deployHistory.length > 50) this._deployHistory.shift();
+        if (this._deployHistory.length > FIB[10]) this._deployHistory.shift(); // cap at 55
         return record;
     }
 
@@ -712,7 +712,7 @@ class DeployTrigger {
 class SyncScheduler {
     constructor(opts = {}) {
         this._intervalMs = opts.intervalMs || Math.round(PHI * PHI * PHI * 60000); // ≈ 4.2 min
-        this._jitterMs = opts.jitterMs || 30000;   // ±30s
+        this._jitterMs = opts.jitterMs || FIB[8] * 1000; // ±21s (fib(8))
         this._timer = null;
         this._running = false;
         this._callback = opts.callback || (() => {});
@@ -842,7 +842,7 @@ class HeadySyncDaemon {
         this.scheduler.start();
 
         // Run first cycle immediately
-        setTimeout(() => this.runCycle({ cycleNumber: 0, isQuietHour: false }), 2000);
+        setTimeout(() => this.runCycle({ cycleNumber: 0, isQuietHour: false }), FIB[4] * 1000); // 3s
 
         return { ok: true, remotes: this.registry.size() };
     }
@@ -968,7 +968,7 @@ class HeadySyncDaemon {
     }
 
     /** Get cycle history */
-    getHistory(limit = 20) {
+    getHistory(limit = FIB[8]) { // default 21
         return this._cycleHistory.slice(-limit);
     }
 

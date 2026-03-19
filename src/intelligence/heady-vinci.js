@@ -9,6 +9,7 @@ const { EventEmitter } = require('events');
 const logger = require('../utils/logger');
 const { PatternEngine } = require('../patterns/pattern-engine');
 const { HeadyConductor } = require('../orchestration/heady-conductor');
+const { InstructionPatternLearner } = require('./instruction-pattern-learner');
 
 const PHI = 1.6180339887;
 
@@ -70,6 +71,7 @@ class HeadyVinci extends EventEmitter {
 
     this._patternEngine  = options.patternEngine || new PatternEngine();
     this._conductor      = options.conductor     || new HeadyConductor();
+    this._patternLearner = options.patternLearner || new InstructionPatternLearner();
     this._maxPlanDepth   = options.maxPlanDepth   || 5;
     this._socraticRounds = options.socraticRounds || 3;
 
@@ -96,9 +98,20 @@ class HeadyVinci extends EventEmitter {
     // Reasoning trace for Socratic loop
     this._reasoningTrace = [];
 
+    // Forward pattern learner events
+    this._patternLearner.on('pattern:repeated', (data) => {
+      logger.info('[HeadyVinci] 🔄 Repeated pattern detected', data);
+      this.emit('pattern:repeated', data);
+    });
+    this._patternLearner.on('pattern:automated', (data) => {
+      logger.info('[HeadyVinci] ⚡ New automation rule created', data);
+      this.emit('pattern:automated', data);
+    });
+
     logger.info('[HeadyVinci] Initialized', {
       maxPlanDepth: this._maxPlanDepth,
       socraticRounds: this._socraticRounds,
+      learnedRules: this._patternLearner.getAutomationRules().length,
     });
   }
 
@@ -118,6 +131,23 @@ class HeadyVinci extends EventEmitter {
   async plan(task, context = {}) {
     const planId = `plan-${task.id}-${Date.now()}`;
     logger.debug('[HeadyVinci] Planning', { planId, taskType: task.type });
+
+    // Step 0: Check for known instruction patterns (auto-handle repeated commands)
+    const instructionText = task.payload?.instruction || task.payload?.text || '';
+    const matchedRule = instructionText ? this._patternLearner.match(instructionText) : null;
+    if (matchedRule && matchedRule.confidence >= 0.8) {
+      logger.info('[HeadyVinci] ⚡ Auto-matched instruction pattern', {
+        ruleId: matchedRule.id,
+        canonical: matchedRule.canonical,
+        confidence: matchedRule.confidence,
+      });
+      this.emit('pattern:auto_matched', { planId, rule: matchedRule });
+    }
+
+    // Record instruction for future learning
+    if (instructionText) {
+      this._patternLearner.record(instructionText, context);
+    }
 
     // Step 1: Fetch relevant patterns for optimization
     const patterns = await this._patternEngine.match({
@@ -280,6 +310,55 @@ class HeadyVinci extends EventEmitter {
    */
   getReasoningTrace(limit = 20) {
     return this._reasoningTrace.slice(-limit);
+  }
+
+  // ─── Instruction Pattern Learning API ───────────────────────────────────────
+
+  /**
+   * Record a user instruction for pattern learning.
+   * @param {string} instruction
+   * @param {object} [context]
+   * @param {string} [outcome]
+   */
+  recordInstruction(instruction, context = {}, outcome = null) {
+    return this._patternLearner.record(instruction, context, outcome);
+  }
+
+  /**
+   * Check if an instruction matches a known pattern.
+   * @param {string} instruction
+   * @returns {object|null}  matching automation rule or null
+   */
+  matchInstruction(instruction) {
+    return this._patternLearner.match(instruction);
+  }
+
+  /**
+   * Get all learned patterns and automation rules.
+   * @returns {{ patterns: object[], rules: object[], stats: object }}
+   */
+  getLearnedPatterns() {
+    return {
+      patterns: this._patternLearner.getPatterns(),
+      rules: this._patternLearner.getAutomationRules(),
+      stats: this._patternLearner.getStats(),
+    };
+  }
+
+  /**
+   * Provide outcome feedback on a matched rule.
+   * @param {string} ruleId
+   * @param {boolean} success
+   */
+  feedbackOnRule(ruleId, success) {
+    this._patternLearner.feedback(ruleId, success);
+  }
+
+  /**
+   * Save learned patterns to disk.
+   */
+  saveLearnedPatterns() {
+    this._patternLearner.save();
   }
 
   // ─── Plan Building ────────────────────────────────────────────────────────────

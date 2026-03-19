@@ -505,7 +505,7 @@ export const BEE_FACTORY_CONFIG = {
   SPAWN_BATCH_SIZE: 13,      // fib(7)
   HEALTH_INTERVAL: 29_034,   // φ⁷ ms
   SWARM_COUNT: 21,           // fib(8)
-  HEARTBEAT_TTL: 30,         // seconds (SETEX)
+  HEARTBEAT_TTL: 34,         // fib(9) seconds (SETEX)
   PHEROMONE_DECAY: 0.618,    // 1/φ per cycle
 };
 ```
