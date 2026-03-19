@@ -13,6 +13,9 @@ const compression = require('compression');
 const config = require('./config');
 const router = require('./routes');
 const { defaultChain } = require('./index');
+const { getLogger } = require('../structured-logger');
+
+const log = getLogger('heady-chain');
 
 const app = express();
 
@@ -42,7 +45,7 @@ app.use((req, res, next) => {
 // Request logging
 app.use((req, res, next) => {
   if (config.LOG_LEVEL === 'debug') {
-    console.log(`[${new Date().toISOString()}] ${req.method} ${req.path}`);
+    log.debug('request', { method: req.method, path: req.path });
   }
   next();
 });
@@ -54,7 +57,7 @@ app.use('/', router);
 // ─── Error Handler ────────────────────────────────────────────────────────────
 
 app.use((err, req, res, next) => {
-  console.error(`[HeadyChain] Error on ${req.method} ${req.path}:`, err.message);
+  log.error('request error', { method: req.method, path: req.path, error: err.message });
   const status = err.status || err.statusCode || 500;
   res.status(status < 500 ? status : 422).json({
     error: err.message,
@@ -72,23 +75,20 @@ app.use((req, res) => {
 const PORT = config.PORT;
 
 const server = app.listen(PORT, '0.0.0.0', () => {
-  console.log(`[HeadyChain] 🌀 Service running on port ${PORT} (PHI=${config.PHI})`);
-  console.log(`[HeadyChain] Environment: ${process.env.NODE_ENV || 'development'}`);
-  console.log(`[HeadyChain] HeadyInfer: ${config.HEADY_INFER_URL}`);
-  console.log(`[HeadyChain] Checkpoints: ${config.CHECKPOINT_ENABLED ? config.CHECKPOINT_DIR : 'disabled'}`);
+  log.info('started', { port: PORT, phi: config.PHI, env: process.env.NODE_ENV || 'development', inferUrl: config.HEADY_INFER_URL, checkpoints: config.CHECKPOINT_ENABLED ? config.CHECKPOINT_DIR : 'disabled' });
 });
 
 server.on('error', (err) => {
-  console.error('[HeadyChain] Server error:', err);
+  log.error('server error', { error: err.message, stack: err.stack });
   process.exit(1);
 });
 
 // Graceful shutdown
 function gracefulShutdown(signal) {
-  console.log(`[HeadyChain] Received ${signal}, shutting down gracefully...`);
+  log.info('shutting down', { signal });
   server.close(() => {
     defaultChain.destroy();
-    console.log('[HeadyChain] Server closed.');
+    log.info('server closed');
     process.exit(0);
   });
   // Force exit after 10s
@@ -98,11 +98,11 @@ function gracefulShutdown(signal) {
 process.on('SIGTERM', () => gracefulShutdown('SIGTERM'));
 process.on('SIGINT', () => gracefulShutdown('SIGINT'));
 process.on('uncaughtException', (err) => {
-  console.error('[HeadyChain] Uncaught exception:', err);
+  log.fatal('uncaught exception', { error: err.message, stack: err.stack });
   process.exit(1);
 });
 process.on('unhandledRejection', (reason) => {
-  console.error('[HeadyChain] Unhandled rejection:', reason);
+  log.error('unhandled rejection', { reason: String(reason) });
 });
 
 module.exports = { app, server };

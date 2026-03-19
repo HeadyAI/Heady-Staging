@@ -17,6 +17,9 @@ const config     = require('./config');
 const { HeadyInfer } = require('./index');
 const { createRouter } = require('./routes');
 const { liveness }     = require('./health');
+const { getLogger } = require('../structured-logger');
+
+const log = getLogger('heady-infer');
 
 function createApp(cfg = config) {
   const app = express();
@@ -30,7 +33,7 @@ function createApp(cfg = config) {
   // Request logging middleware
   app.use((req, _res, next) => {
     if (cfg.logging.level !== 'silent') {
-      console.log(`[HeadyInfer] ${req.method} ${req.path} ${new Date().toISOString()}`);
+      log.info('request', { method: req.method, path: req.path });
     }
     next();
   });
@@ -68,17 +71,15 @@ if (require.main === module) {
   const port = config.port;
 
   const server = app.listen(port, '0.0.0.0', () => {
-    console.log(`[HeadyInfer] Server listening on port ${port} (${config.env})`);
-    console.log(`[HeadyInfer] Health: http://localhost:${port}/health`);
-    console.log(`[HeadyInfer] API:    http://localhost:${port}/api/v1/infer`);
+    log.info('started', { port, env: config.env });
   });
 
   // ─── Graceful Shutdown ─────────────────────────────────────────────────────
   const shutdown = async (signal) => {
-    console.log(`[HeadyInfer] ${signal} received. Shutting down...`);
+    log.info('shutting down', { signal });
     server.close(async () => {
       await gateway.shutdown();
-      console.log('[HeadyInfer] Server closed');
+      log.info('server closed');
       process.exit(0);
     });
     // Force-quit after 10s
@@ -89,7 +90,7 @@ if (require.main === module) {
   process.on('SIGINT',  () => shutdown('SIGINT'));
 
   process.on('unhandledRejection', (reason) => {
-    console.error('[HeadyInfer] Unhandled rejection:', reason);
+    log.error('unhandled rejection', { reason: String(reason) });
   });
 }
 

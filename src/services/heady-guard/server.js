@@ -16,6 +16,9 @@ const config = require('./config');
 const guard  = require('./index');
 const router = require('./routes');
 const health = require('./health');
+const { getLogger } = require('../structured-logger');
+
+const log = getLogger('heady-guard');
 
 const app = express();
 
@@ -54,7 +57,7 @@ app.use((req, res) => {
 
 // Global error handler
 app.use((err, req, res, _next) => {
-  console.error(`[HeadyGuard] Unhandled: ${err.stack || err.message}`);
+  log.error('unhandled error', { error: err.message, stack: err.stack });
   const status = typeof err.status === 'number' ? err.status : 500;
   res.status(status > 499 ? 422 : status).json({
     error:   'server_error',
@@ -69,14 +72,12 @@ async function start() {
     await guard.initialize();
 
     const server = app.listen(config.port, config.host, () => {
-      console.log(`[HeadyGuard] Listening on ${config.host}:${config.port}`);
-      console.log(`[HeadyGuard] Environment: ${config.nodeEnv}`);
-      console.log(`[HeadyGuard] PHI scale factor: ${config.phi}`);
+      log.info('started', { host: config.host, port: config.port, env: config.nodeEnv, phi: config.phi });
     });
 
     // Graceful shutdown
     const shutdown = async (signal) => {
-      console.log(`[HeadyGuard] ${signal} received — shutting down...`);
+      log.info('shutting down', { signal });
       server.close(async () => {
         await guard.shutdown();
         process.exit(0);
@@ -90,7 +91,7 @@ async function start() {
 
     return server;
   } catch (err) {
-    console.error(`[HeadyGuard] Startup failed: ${err.message}`);
+    log.fatal('startup failed', { error: err.message });
     process.exit(1);
   }
 }

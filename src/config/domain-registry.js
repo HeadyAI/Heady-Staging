@@ -138,7 +138,7 @@ const DOMAIN_DEFINITIONS = [
     rateLimit: { windowMs: 60_000, max: 200, burstMax: 400 },
     allowedMethods: ['GET', 'POST', 'OPTIONS'],
     cors: {
-      origins:     ['*'],
+      origins:     [...HEADY_ALLOWED_ORIGINS],
       credentials: false,
     },
     headers: {
@@ -198,7 +198,7 @@ const DOMAIN_DEFINITIONS = [
     tls: { mode: 'flexible', minVersion: 'TLS 1.2', hsts: true },
     rateLimit: { windowMs: 60_000, max: 500, burstMax: 1000 },
     allowedMethods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-    cors: { origins: ['*'], credentials: false },
+    cors: { origins: [...HEADY_ALLOWED_ORIGINS], credentials: false },
     headers: {
       'X-Heady-Domain':   'headyio',
       'X-API-Version':    'v4',

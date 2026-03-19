@@ -21,6 +21,9 @@ const config = require('./config');
 const { HeadyCache } = require('./index');
 const { createRouter } = require('./routes');
 const { healthCheck } = require('./health');
+const { getLogger } = require('../structured-logger');
+
+const log = getLogger('heady-cache');
 
 // ---------------------------------------------------------------------------
 // Initialize cache
@@ -46,15 +49,12 @@ app.use((req, res, next) => {
   res.on('finish', () => {
     const duration = Date.now() - start;
     if (process.env.NODE_ENV !== 'test') {
-      console.log(
-        JSON.stringify({
-          ts: new Date().toISOString(),
+      log.info('request', {
           method: req.method,
           path: req.path,
           status: res.statusCode,
           durationMs: duration,
-        })
-      );
+        });
     }
   });
   next();
@@ -81,7 +81,7 @@ app.use((req, res) => {
 
 // Error handler
 app.use((err, req, res, next) => { // eslint-disable-line no-unused-vars
-  console.error('[heady-cache] unhandled error:', err);
+  log.error('unhandled error', { error: err.message, stack: err.stack });
   res.status(500).json({ error: err.message || 'Internal server error' });
 });
 
@@ -92,22 +92,17 @@ app.use((err, req, res, next) => { // eslint-disable-line no-unused-vars
 async function start() {
   try {
     await cache.init();
-    console.log(`[heady-cache] cache initialized (backend=${config.backend})`);
+    log.info('cache initialized', { backend: config.backend });
 
     const server = app.listen(config.port, '0.0.0.0', () => {
-      console.log(
-        JSON.stringify({
-          ts: new Date().toISOString(),
-          service: 'heady-cache',
-          event: 'started',
+      log.info('started', {
           port: config.port,
           backend: config.backend,
           maxSize: config.maxSize,
           ttl: config.ttl,
           similarityThreshold: config.similarityThreshold,
           evictionPolicy: config.evictionPolicy,
-        })
-      );
+        });
     });
 
     // ---------------------------------------------------------------------------
@@ -115,14 +110,14 @@ async function start() {
     // ---------------------------------------------------------------------------
 
     const shutdown = async (signal) => {
-      console.log(`[heady-cache] received ${signal}, shutting down...`);
+      log.info('shutting down', { signal });
       server.close(async () => {
         try {
           await cache.close();
-          console.log('[heady-cache] shutdown complete');
+          log.info('shutdown complete');
           process.exit(0);
         } catch (err) {
-          console.error('[heady-cache] shutdown error:', err);
+          log.error('shutdown error', { error: err.message });
           process.exit(1);
         }
       });

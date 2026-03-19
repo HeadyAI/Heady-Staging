@@ -33,7 +33,7 @@ class WorkerPool {
         this.activeJobs++;
         const workerCode = `
       const { parentPort, workerData } = require('worker_threads');
-      const fn = eval('(' + workerData.taskFn + ')');
+      const fn = new Function('return (' + workerData.taskFn + ')')();
       Promise.resolve(fn(workerData.data))
         .then(result => parentPort.postMessage({ result }))
         .catch(err => parentPort.postMessage({ error: err.message }));
