@@ -41,3 +41,53 @@
 
 **Totals:** 17 tasks, ~41.0 estimated hours
 **hcfullpipeline-tasks.json:** v9.0.0 → v9.0.1 (761 total tasks)
+
+---
+
+## 2026-03-19 — Optimization Report + Env-Hardening Bundle (18 tasks)
+
+**Sources scanned:**
+- `heady-optimization-report.docx` — Cross-source intelligence synthesis (March 19, 2026)
+- `heady-env-hardening-bundle.zip` — ENV-AUDIT-REPORT.md, SECRET-ROTATION-GUIDE.md, env-validator.cjs
+
+### Optimization Report Blockers (5)
+
+| ID | Priority | Title | Hours |
+|----|----------|-------|-------|
+| FIX-026 | 🔴 CRITICAL | Resolve Dockerfile merge conflict markers | 0.5 |
+| FIX-027 | 🔴 CRITICAL | Fix heady-ai.com 522 — deploy Cloudflare Worker | 1 |
+| SECURITY-030 | 🔴 HIGH | Fix 13 Dependabot alerts (1 critical, 4 high) | 2 |
+| FIX-028 | 🔴 HIGH | Fix 3 consecutive CI/CD pipeline failures | 1 |
+| INFRASTRUCTURE-121 | 🟡 MEDIUM | Configure DNS for 8 portfolio domains | 2 |
+
+### Optimization Report Opportunities (6)
+
+| ID | Title | Hours | Phase |
+|----|-------|-------|-------|
+| INFRASTRUCTURE-122 | Archive 20+ inactive repos (40-50% reduction) | 3 | 4 |
+| SCALING-018 | Cloud Run billing + concurrency (20-40% savings) | 3 | 3 |
+| SCALING-019 | pgvector HNSW with Fibonacci params | 2 | 3 |
+| SCALING-020 | Edge embeddings via Workers AI (<50ms) | 4 | 3 |
+| INFRASTRUCTURE-123 | git gc to reduce 2.5GB bloat by 40-60% | 2 | 4 |
+| INFRASTRUCTURE-124 | Rationalize 19 Sentry projects | 2 | 4 |
+
+### Env-Hardening Findings (7)
+
+| ID | Priority | Title | Hours |
+|----|----------|-------|-------|
+| SECURITY-031 | 🔴 CRITICAL | EMERGENCY: Rotate 10 exposed secrets | 2 |
+| SECURITY-032 | 🔴 HIGH | Populate JWT, Stripe, Sentry empty configs | 1 |
+| QUALITY-034 | 🟡 | Fix 2 phi-constant mismatches | 0.5 |
+| QUALITY-035 | 🟡 | Remove 5 localhost references | 0.5 |
+| SECURITY-033 | 🟡 | Fix Drupal + NEXTAUTH weak secrets | 0.5 |
+| INFRASTRUCTURE-125 | 🟡 | Integrate env-validator into CI/CD gate | 1 |
+| QUALITY-036 | 🟡 | Fix 3 wrong domain URLs | 0.5 |
+
+**Totals:** 18 tasks, ~26 estimated hours
+**hcfullpipeline-tasks.json:** v9.0.1 → v9.0.2 (779 total tasks)
+
+**Also integrated into codebase:**
+- `src/security/env-validator.cjs` — 665-line validation script (14 checks)
+- `docs/ENV-AUDIT-REPORT.md` — Complete audit with 7 findings
+- `docs/SECRET-ROTATION-GUIDE.md` — Step-by-step for 10 exposed secrets
+- `.env.production.hardened` — Hardened v10.1 template

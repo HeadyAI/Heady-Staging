@@ -1,14 +1,14 @@
 {
   "$schema": "heady://pipeline/task-queue",
-  "version": "9.0.1",
+  "version": "9.0.2",
   "pipeline": "hcfullpipeline",
   "generatedAt": "2026-03-10T05:41:52Z",
-  "lastFineTuned": "2026-03-19T10:58:53.123805",
+  "lastFineTuned": "2026-03-19T11:11:24.077720",
   "phi": 1.618033988749895,
   "pipelineStages": 22,
   "pipelineCompletionTarget": "\u03c6\u2075 \u00d7 1.09 \u2248 12.1s",
   "description": "Complete task queue for HCFullPipeline v9.0 \u2014 22 stages (HeadyDistiller = Stage 22: Knowledge Distillation & Compression). Liquid Architecture v9.0 with 8 cloud providers, 4 Colab runtimes, Neon+Upstash+Qdrant data layer.",
-  "taskCount": 761,
+  "taskCount": 779,
   "concurrentEquals": true,
   "paradigm": "All tasks are concurrent-equals. No ranking, no priority tiering. CSL resonance determines contextual relevance, not importance hierarchy.",
   "categories": {
@@ -9473,6 +9473,203 @@
       "csl_confidence": 0.618,
       "estimated_hours": 0.5,
       "source": ".github/CODEOWNERS \u2014 new file, needs validation"
+    },
+    {
+      "id": "FIX-026",
+      "category": "FIX",
+      "title": "Resolve Dockerfile merge conflict markers",
+      "description": "Production Dockerfile has 3 unresolved <<<<<<< merge conflict markers. This blocks ALL Cloud Run deployments. Choose multi-stage build (Node 22 Alpine, tini, non-root user). Root cause of deployment paralysis.",
+      "status": "pending",
+      "csl_confidence": 0.927,
+      "estimated_hours": 0.5,
+      "source": "heady-optimization-report.docx \u2014 Blocker 1",
+      "priority": "CRITICAL",
+      "phase": 1
+    },
+    {
+      "id": "FIX-027",
+      "category": "FIX",
+      "title": "Fix heady-ai.com 522 error \u2014 deploy Cloudflare Worker",
+      "description": "heady-ai.com returns Cloudflare 522 (origin unreachable). The heady-ai-router Worker is not deployed. Deploy via wrangler or configure route in Cloudflare dashboard. Only domain scoring 0/10.",
+      "status": "pending",
+      "csl_confidence": 0.927,
+      "estimated_hours": 1,
+      "source": "heady-optimization-report.docx \u2014 Blocker 2",
+      "priority": "CRITICAL",
+      "phase": 1
+    },
+    {
+      "id": "SECURITY-030",
+      "category": "SECURITY",
+      "title": "Fix 13 Dependabot alerts \u2014 1 critical protobufjs, 4 high undici",
+      "description": "1 critical (protobufjs prototype pollution), 4 high (3 undici WebSocket, 1 fast-xml-parser entity expansion), 7 medium, 1 low. Use npm overrides in root package.json for workspace: protocol deps.",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 2,
+      "source": "heady-optimization-report.docx \u2014 Blocker 3",
+      "priority": "HIGH",
+      "phase": 2
+    },
+    {
+      "id": "FIX-028",
+      "category": "FIX",
+      "title": "Fix CI/CD pipeline failures \u2014 deploy-domain-sites has 3 consecutive failures",
+      "description": "deploy-domain-sites: 3 consecutive failures. deploy-cloud-run: skipped (gated on domain-sites). security-scan: also failing. Root cause is Dockerfile merge conflicts cascading across all workflows.",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "heady-optimization-report.docx \u2014 Blocker 4",
+      "priority": "HIGH",
+      "phase": 1
+    },
+    {
+      "id": "INFRASTRUCTURE-121",
+      "category": "INFRASTRUCTURE",
+      "title": "Configure DNS for 8 portfolio domains",
+      "description": "8 portfolio domains not resolving. Configure A/CNAME records in respective registrar or Cloudflare DNS. Affects brand coverage.",
+      "status": "pending",
+      "csl_confidence": 0.618,
+      "estimated_hours": 2,
+      "source": "heady-optimization-report.docx \u2014 Blocker 5",
+      "priority": "MEDIUM",
+      "phase": 4
+    },
+    {
+      "id": "INFRASTRUCTURE-122",
+      "category": "INFRASTRUCTURE",
+      "title": "Archive 20+ inactive GitHub repos to reduce maintenance surface",
+      "description": "HeadyMe org has 79 repos, many <1MB single-purpose. Archive inactive repos and use monorepo services/ dir. Estimated impact: reduce maintenance by 40-50%.",
+      "status": "pending",
+      "csl_confidence": 0.618,
+      "estimated_hours": 3,
+      "source": "heady-optimization-report.docx \u2014 Optimization A",
+      "phase": 4
+    },
+    {
+      "id": "SCALING-018",
+      "category": "SCALING",
+      "title": "Optimize Cloud Run billing and concurrency",
+      "description": "Switch to instance-based billing, co-locate with Neon Postgres region, min instances=0 for non-critical services, Cloud CDN for static assets, max concurrency=80. Estimated savings: 20-40%.",
+      "status": "pending",
+      "csl_confidence": 0.618,
+      "estimated_hours": 3,
+      "source": "heady-optimization-report.docx \u2014 Optimization B",
+      "phase": 3
+    },
+    {
+      "id": "SCALING-019",
+      "category": "SCALING",
+      "title": "Optimize pgvector HNSW indexes with Fibonacci parameters",
+      "description": "Use halfvec for 50% storage reduction. Set m=21 (Fib), ef_construction=89 (Fib). pg_prewarm for 3-5x throughput. Consider DiskANN for >10M vectors.",
+      "status": "pending",
+      "csl_confidence": 0.718,
+      "estimated_hours": 2,
+      "source": "heady-optimization-report.docx \u2014 Optimization C",
+      "phase": 3
+    },
+    {
+      "id": "SCALING-020",
+      "category": "SCALING",
+      "title": "Move embeddings to Cloudflare Workers AI for sub-50ms edge inference",
+      "description": "Workers AI supports Llama 4 Scout at edge. Move embedding gen to Workers AI, use KV/D1 for edge caching, implement Liquid Gateway Worker pattern.",
+      "status": "pending",
+      "csl_confidence": 0.618,
+      "estimated_hours": 4,
+      "source": "heady-optimization-report.docx \u2014 Optimization D",
+      "phase": 3
+    },
+    {
+      "id": "INFRASTRUCTURE-123",
+      "category": "INFRASTRUCTURE",
+      "title": "Run git gc and reduce 2.5GB monorepo bloat by 40-60%",
+      "description": "Production=783MB, staging=895MB, testing=862MB. Run git gc --aggressive, use .gitattributes with Git LFS, archive _downloads and _archive dirs, use DVC for large data.",
+      "status": "pending",
+      "csl_confidence": 0.618,
+      "estimated_hours": 2,
+      "source": "heady-optimization-report.docx \u2014 Optimization E",
+      "phase": 4
+    },
+    {
+      "id": "INFRASTRUCTURE-124",
+      "category": "INFRASTRUCTURE",
+      "title": "Consolidate and rationalize 19 Sentry projects",
+      "description": "19 Sentry projects with 0 errors. Consolidate heady-ai + heady-ai-cloudrun. Verify headybuddy/headyme frontends still active. Enable Session Replay for user-facing domains.",
+      "status": "pending",
+      "csl_confidence": 0.618,
+      "estimated_hours": 2,
+      "source": "heady-optimization-report.docx \u2014 Optimization F",
+      "phase": 4
+    },
+    {
+      "id": "SECURITY-031",
+      "category": "SECURITY",
+      "title": "EMERGENCY: Rotate all 10 exposed production secrets",
+      "description": "8 critical secret exposures in .env: 4 GitHub PATs (HeadyMe, HeadyConnection, HeadyAI, Deploy), Azure DevOps PAT, Cloudflare API Token. Follow SECRET-ROTATION-GUIDE.md for step-by-step rotation. Create fine-grained PATs with minimal scopes, 90-day expiry.",
+      "status": "pending",
+      "csl_confidence": 0.927,
+      "estimated_hours": 2,
+      "source": "heady-env-hardening-bundle.zip \u2014 ENV-AUDIT-REPORT Finding 1",
+      "priority": "CRITICAL"
+    },
+    {
+      "id": "SECURITY-032",
+      "category": "SECURITY",
+      "title": "Populate 4 empty critical configs: JWT_SECRET, Stripe keys, SENTRY_AUTH_TOKEN",
+      "description": "4 critical configs are empty in .env.production: JWT_SECRET, STRIPE_SECRET_KEY, STRIPE_PUBLISHABLE_KEY, SENTRY_AUTH_TOKEN. Generate secure values and store in GCP Secret Manager.",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "heady-env-hardening-bundle.zip \u2014 ENV-AUDIT-REPORT Finding 4"
+    },
+    {
+      "id": "QUALITY-034",
+      "category": "QUALITY",
+      "title": "Fix 2 phi-constant mismatches in .env (vectors and HNSW)",
+      "description": "Env audit found 2 phi-constant mismatches: vector dimensions and HNSW parameters not using phi-derived values. Fix per ENV-AUDIT-REPORT.md Finding 3.",
+      "status": "pending",
+      "csl_confidence": 0.618,
+      "estimated_hours": 0.5,
+      "source": "heady-env-hardening-bundle.zip \u2014 ENV-AUDIT-REPORT Finding 3"
+    },
+    {
+      "id": "QUALITY-035",
+      "category": "QUALITY",
+      "title": "Remove 5 localhost references from .env files",
+      "description": "5 localhost references found in environment configs. Replace with production URLs per /heady-no-local rule.",
+      "status": "pending",
+      "csl_confidence": 0.618,
+      "estimated_hours": 0.5,
+      "source": "heady-env-hardening-bundle.zip \u2014 ENV-AUDIT-REPORT Finding 5"
+    },
+    {
+      "id": "SECURITY-033",
+      "category": "SECURITY",
+      "title": "Fix 2 weak secrets: Drupal password and NEXTAUTH_SECRET",
+      "description": "Drupal admin password and NEXTAUTH_SECRET are weak/predictable. Generate cryptographically secure replacements.",
+      "status": "pending",
+      "csl_confidence": 0.618,
+      "estimated_hours": 0.5,
+      "source": "heady-env-hardening-bundle.zip \u2014 ENV-AUDIT-REPORT Finding 6"
+    },
+    {
+      "id": "INFRASTRUCTURE-125",
+      "category": "INFRASTRUCTURE",
+      "title": "Integrate env-validator.cjs into CI/CD predeploy gate",
+      "description": "665-line env-validator.cjs with 14 checks is now in src/security/. Wire it into package.json predeploy script and CI/CD workflows as a mandatory gate.",
+      "status": "pending",
+      "csl_confidence": 0.718,
+      "estimated_hours": 1,
+      "source": "heady-env-hardening-bundle.zip \u2014 MANIFEST.md"
+    },
+    {
+      "id": "QUALITY-036",
+      "category": "QUALITY",
+      "title": "Fix 3 wrong domain URLs in .env",
+      "description": "Env audit found 3 domain URLs that are incorrect or outdated. Fix per ENV-AUDIT-REPORT.md Finding 2.",
+      "status": "pending",
+      "csl_confidence": 0.618,
+      "estimated_hours": 0.5,
+      "source": "heady-env-hardening-bundle.zip \u2014 ENV-AUDIT-REPORT Finding 2"
     }
   ]
 }

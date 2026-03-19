@@ -1,0 +1,159 @@
+# HEADY™ Secret Rotation Guide
+## Emergency Rotation — 2026-03-19 Audit
+
+> **SEVERITY: CRITICAL** — Multiple production secrets were exposed in plaintext.
+> All tokens listed below must be rotated IMMEDIATELY.
+
+---
+
+## 1. GitHub Personal Access Tokens (4 tokens)
+
+**Exposed tokens:**
+- `ghp_OQI0...7E6D` (HeadyMe repo access)
+- `ghp_c5QT...Jmp6` (HeadyConnection repo access)
+- `ghp_LaQs...4Wo` (HeadyAI repo access)
+- `ghp_w3OL...wgKH` (Dewayne deploy token)
+
+**Rotation steps:**
+1. Go to https://github.com/settings/tokens
+2. Revoke ALL 4 tokens immediately
+3. Create new **fine-grained PATs** (not classic) with minimal scopes:
+   - HeadyMe: `contents:read`, `contents:write`, `metadata:read`
+   - HeadyConnection: same scopes, scoped to HeadyMe/heady-connection repo
+   - HeadyAI: same scopes, scoped to HeadyMe/heady-ai repo
+   - Deploy: `contents:read`, `actions:write` (for CI/CD only)
+4. Set expiration to 90 days (FIB[11] = 89 ≈ 90)
+5. Update in secret manager / CI/CD env vars
+
+## 2. Azure DevOps PAT
+
+**Exposed token:** `3cgt1Y...DO36Es`
+
+**Rotation steps:**
+1. Go to https://dev.azure.com → User Settings → Personal Access Tokens
+2. Revoke the exposed token
+3. Create new token with minimum required scopes
+4. Update `AZURE_DEVOPS_PAT` in secret manager
+
+## 3. Cloudflare API Token
+
+**Exposed token:** `Y4S0dZ...fgD8`
+
+**Rotation steps:**
+1. Go to https://dash.cloudflare.com/profile/api-tokens
+2. Delete/revoke the exposed token
+3. Create new token with these permissions only:
+   - Zone: DNS Edit (for domain management)
+   - Zone: Workers Routes Edit (for edge deployment)
+   - Account: Vectorize Edit (for vector index)
+4. Restrict to HeadyMe zones only
+5. Update `CLOUDFLARE_API_TOKEN` in secret manager
+
+## 4. Render API Key
+
+**Exposed token:** `rnd_aKAY...5oa6`
+
+**Rotation steps:**
+1. Go to https://dashboard.render.com/account/settings
+2. Regenerate API key
+3. Update `RENDER_API_KEY` in secret manager
+
+## 5. Heady Internal API Key
+
+**Exposed token:** `hdy_int_4d2d3f...143b89ab`
+
+**Rotation steps:**
+1. Generate new key: `node -e "console.log('hdy_int_' + require('crypto').randomBytes(34).toString('hex'))"`
+2. Update `HEADY_API_KEY` in all services simultaneously
+3. Coordinate rolling restart to avoid downtime
+
+## 6. Sentry DSN
+
+**Exposed DSN:** `https://1b34e12c...@o4510998791192576.ingest.us.sentry.io/...`
+
+**Rotation steps:**
+1. Go to Sentry → Settings → Projects → heady-systems → Client Keys
+2. Rotate the DSN (create new, then disable old after 24h)
+3. Update `SENTRY_DSN` in all deployed services
+4. Generate a new `SENTRY_AUTH_TOKEN` at https://sentry.io/settings/auth-tokens/
+
+## 7. Drupal Database Password
+
+**Exposed:** `heady2026` (hardcoded)
+
+**Rotation steps:**
+1. Generate strong password: `openssl rand -hex 21` (FIB[8]=21 bytes = 42 hex chars)
+2. Update in Neon Postgres: `ALTER USER drupal_heady WITH PASSWORD 'new_password';`
+3. Update `DRUPAL_DB_PASSWORD` in secret manager
+4. Restart Drupal service
+
+## 8. NEXTAUTH_SECRET
+
+**Exposed:** `heady-onboarding-dev-secret-key-32chars-min` (weak dev placeholder)
+
+**Rotation steps:**
+1. Generate: `openssl rand -hex 34` (FIB[9]=34 bytes = 68 hex chars)
+2. Update `NEXTAUTH_SECRET` — this will invalidate all existing sessions
+3. Plan for off-peak deployment
+
+## 9. JWT_SECRET (Currently Empty)
+
+**Issue:** Empty in production — authentication is broken or insecure
+
+**Steps:**
+1. Generate: `openssl rand -hex 34`
+2. Set `JWT_SECRET` in secret manager
+3. Deploy — all existing JWTs will be invalidated
+
+## 10. Stripe Keys (Currently Empty)
+
+**Issue:** `STRIPE_SECRET_KEY` and `STRIPE_WEBHOOK_SECRET` are empty
+
+**Steps:**
+1. Go to https://dashboard.stripe.com/apikeys
+2. Copy live secret key → `STRIPE_SECRET_KEY`
+3. Go to Developers → Webhooks → reveal signing secret → `STRIPE_WEBHOOK_SECRET`
+
+---
+
+## Post-Rotation Checklist
+
+- [ ] All 4 GitHub PATs revoked and regenerated
+- [ ] Azure DevOps PAT rotated
+- [ ] Cloudflare API token rotated with minimal scopes
+- [ ] Render API key regenerated
+- [ ] Heady internal API key regenerated
+- [ ] Sentry DSN rotated, AUTH_TOKEN generated
+- [ ] Drupal password changed from `heady2026`
+- [ ] NEXTAUTH_SECRET upgraded to 68+ char random
+- [ ] JWT_SECRET generated and deployed
+- [ ] Stripe keys populated
+- [ ] env-validator.js passes with 0 errors
+- [ ] All services restarted with new secrets
+- [ ] Monitor for auth failures in Sentry for 24h
+
+---
+
+## Secret Generation Quick Reference
+
+```bash
+# JWT/Session secrets (FIB[9]*2 = 68 hex chars)
+openssl rand -hex 34
+
+# Database passwords (FIB[8] = 21 bytes = 42 hex chars)
+openssl rand -hex 21
+
+# API keys (FIB[9] = 34 bytes = 68 hex chars)
+openssl rand -hex 34
+
+# Drupal hash salt (FIB[11] = 89 chars)
+openssl rand -base64 67 | tr -d '\n' | head -c 89
+
+# Heady-prefixed API key
+node -e "console.log('hdy_int_' + require('crypto').randomBytes(34).toString('hex'))"
+```
+
+---
+
+*Generated by HEADY™ Security Audit — 2026-03-19*
+*CSL Gate: CRITICAL — Immediate action required*
