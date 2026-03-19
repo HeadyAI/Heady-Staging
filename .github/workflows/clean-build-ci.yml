@@ -736,7 +736,7 @@ jobs:
           fetch-depth: 100  # Fetch history for performance analysis
 
       - name: Cache Monte Carlo models
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: ~/.heady/monte-carlo-models
           key: monte-carlo-${{ runner.os }}-${{ hashFiles('configs/deployment-strategies.yaml') }}
