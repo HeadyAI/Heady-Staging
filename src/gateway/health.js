@@ -80,7 +80,8 @@ async function checkMemoryStore() {
   const indexPath = path.join(storePath, 'index.json');
   if (fs.existsSync(indexPath)) {
     try {
-      const data = JSON.parse(fs.readFileSync(indexPath, 'utf8'));
+      const raw = await fs.promises.readFile(indexPath, 'utf8');
+      const data = JSON.parse(raw);
       memoryCount = Array.isArray(data) ? data.length : 0;
     } catch { /* corrupt index */ }
   }

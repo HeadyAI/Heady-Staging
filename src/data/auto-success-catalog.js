@@ -1,7 +1,17 @@
 /*
  * © 2026 Heady™Systems Inc. PROPRIETARY AND CONFIDENTIAL.
- * Auto-Success Task Catalog — 135+ tasks across 9 categories.
+ * Auto-Success Task Catalog — 209 tasks across 20 categories.
  * Extracted from hc_auto_success.js for maintainability.
+ *
+ * AUDIT (2026-03-19):
+ *   Inline tasks: 197 (learning:20, optimization:20, integration:15, monitoring:15,
+ *     maintenance:15, discovery:15, verification:15, creative:10, deep-intel:10,
+ *     hive-integration:20, mop-security:5, mop-architecture:5, mop-docs:3,
+ *     mop-infrastructure:4, mop-cicd:4, mop-mcp:5, mop-ai-gateway:9,
+ *     mop-performance:2, mop-auth:2, mop-sites:3)
+ *   External JSON: production-optimization-tasks.json (12 tasks)
+ *   Empty JSON files: auto-flow-tasks.json, nonprofit-tasks.json, buddy-tasks.json (0 each)
+ *   Total verified: 209 tasks (NOT the claimed 598)
  */
 
 // ─── EXTERNAL TASK SOURCES ──────────────────────────────────────────────────
@@ -255,4 +265,16 @@ const TASK_CATALOG = [
 ];
 
 // ─── POOL ALLOCATION ────────────────────────────────────────────────────────
-module.exports = { TASK_CATALOG };
+// Pool distribution (computed at load time):
+const POOL_COUNTS = TASK_CATALOG.reduce((acc, t) => {
+    acc[t.pool] = (acc[t.pool] || 0) + 1;
+    acc._total = (acc._total || 0) + 1;
+    return acc;
+}, {});
+
+const CATEGORY_COUNTS = TASK_CATALOG.reduce((acc, t) => {
+    acc[t.cat] = (acc[t.cat] || 0) + 1;
+    return acc;
+}, {});
+
+module.exports = { TASK_CATALOG, POOL_COUNTS, CATEGORY_COUNTS };
