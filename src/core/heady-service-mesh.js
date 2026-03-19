@@ -74,16 +74,24 @@ const DEFAULT_CONFIG = {
   lbStrategy:             LB_STRATEGY.PHI_WEIGHTED,
 };
 
+// ─── Production mode: skip localhost instances when NODE_ENV=production ─────
+const IS_PRODUCTION = process.env.NODE_ENV === 'production';
+
 // ─── Built-in seed registry (from heady-registry.json + alive-software-architecture.md)
+// NOTE: In production, localhost instances are excluded via filterInstances().
+// Heady is cloud-native — localhost is only for local development.
+const filterInstances = (instances) =>
+  IS_PRODUCTION ? instances.filter(i => !i.url.includes('localhost')) : instances;
+
 const SEED_SERVICES = [
   // ── Primary domains ────────────────────────────────────────────────────────
   {
     name: 'headyme',
     domain: 'headyme.com',
-    instances: [
+    instances: filterInstances([
       { url: 'http://localhost:3301', weight: 1.0, tags: ['local', 'primary'] },
       { url: 'https://heady-manager-609590223909.us-central1.run.app', weight: PHI, tags: ['cloud-run', 'primary'] },
-    ],
+    ]),
     healthPath: '/healthz',
     version: '3.1.0',
     tier: 'core',
@@ -91,10 +99,10 @@ const SEED_SERVICES = [
   {
     name: 'headyapi',
     domain: 'headyapi.com',
-    instances: [
+    instances: filterInstances([
       { url: 'http://localhost:3302', weight: 1.0, tags: ['local'] },
       { url: 'https://api.headyapi.com', weight: PHI, tags: ['production'] },
-    ],
+    ]),
     healthPath: '/healthz',
     version: '1.0.0',
     tier: 'core',
@@ -102,10 +110,10 @@ const SEED_SERVICES = [
   {
     name: 'headysystems',
     domain: 'headysystems.com',
-    instances: [
+    instances: filterInstances([
       { url: 'http://localhost:3303', weight: 1.0, tags: ['local'] },
       { url: 'https://systems.headysystems.com', weight: PHI, tags: ['production'] },
-    ],
+    ]),
     healthPath: '/healthz',
     version: '1.0.0',
     tier: 'core',
@@ -113,10 +121,10 @@ const SEED_SERVICES = [
   {
     name: 'headyconnection',
     domain: 'headyconnection.org',
-    instances: [
+    instances: filterInstances([
       { url: 'http://localhost:3304', weight: 1.0, tags: ['local'] },
       { url: 'https://headyconnection.org', weight: PHI, tags: ['production'] },
-    ],
+    ]),
     healthPath: '/healthz',
     version: '1.0.0',
     tier: 'community',
@@ -124,10 +132,10 @@ const SEED_SERVICES = [
   {
     name: 'headymcp',
     domain: 'headymcp.com',
-    instances: [
+    instances: filterInstances([
       { url: 'http://localhost:3305', weight: 1.0, tags: ['local'] },
       { url: 'https://mcp.headymcp.com', weight: PHI, tags: ['production'] },
-    ],
+    ]),
     healthPath: '/healthz',
     version: '1.0.0',
     tier: 'protocol',
@@ -135,10 +143,10 @@ const SEED_SERVICES = [
   {
     name: 'headybuddy',
     domain: 'headybuddy.org',
-    instances: [
+    instances: filterInstances([
       { url: 'http://localhost:3306', weight: 1.0, tags: ['local'] },
       { url: 'https://headybuddy.org', weight: PHI, tags: ['production'] },
-    ],
+    ]),
     healthPath: '/healthz',
     version: '1.0.0',
     tier: 'ai',
@@ -146,10 +154,10 @@ const SEED_SERVICES = [
   {
     name: 'headyio',
     domain: 'headyio.com',
-    instances: [
+    instances: filterInstances([
       { url: 'http://localhost:3307', weight: 1.0, tags: ['local'] },
       { url: 'https://headyio.com', weight: PHI, tags: ['production'] },
-    ],
+    ]),
     healthPath: '/healthz',
     version: '1.0.0',
     tier: 'io',
@@ -157,10 +165,10 @@ const SEED_SERVICES = [
   {
     name: 'headybot',
     domain: 'headybot.com',
-    instances: [
+    instances: filterInstances([
       { url: 'http://localhost:3308', weight: 1.0, tags: ['local'] },
       { url: 'https://headybot.com', weight: PHI, tags: ['production'] },
-    ],
+    ]),
     healthPath: '/healthz',
     version: '1.0.0',
     tier: 'bot',
@@ -168,10 +176,10 @@ const SEED_SERVICES = [
   {
     name: 'heady-ai',
     domain: 'heady-ai.com',
-    instances: [
+    instances: filterInstances([
       { url: 'http://localhost:3309', weight: 1.0, tags: ['local'] },
       { url: 'https://heady-ai.com', weight: PHI, tags: ['production'] },
-    ],
+    ]),
     healthPath: '/healthz',
     version: '1.0.0',
     tier: 'ai',
@@ -192,9 +200,10 @@ const SEED_SERVICES = [
   {
     name: 'vector-store',
     domain: null,
-    instances: [
+    instances: filterInstances([
       { url: 'http://localhost:5432', weight: 1.0, tags: ['postgres', 'pgvector'] },
-    ],
+      { url: process.env.DATABASE_URL || 'http://localhost:5432', weight: PHI, tags: ['neon', 'pgvector', 'production'] },
+    ]),
     healthPath: null,        // TCP probe only
     version: '16.0',
     tier: 'infrastructure',

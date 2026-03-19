@@ -538,7 +538,7 @@ export class PersonaRouter {
    */
   _log(msg, meta = {}) {
     if (this._verbose) {
-      console.log(`[PersonaRouter] ${msg}`, meta);
+      process.stdout.write(JSON.stringify({ timestamp: new Date().toISOString(), level: 'debug', service: 'PersonaRouter', message: msg, ...meta }) + '\n');
     }
   }
 }

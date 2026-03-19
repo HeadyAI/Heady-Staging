@@ -41,7 +41,7 @@ const config = {
   ),
 
   // HeadyEmbed service URL for computing embeddings
-  embedUrl: process.env.HEADY_EMBED_URL || 'http://localhost:3103',
+  embedUrl: process.env.HEADY_EMBED_URL || (process.env.NODE_ENV === 'production' ? '' : 'http://localhost:3103'),
 
   // Embedding dimensions (384 for all-MiniLM-L6-v2)
   embeddingDims: parseInt(process.env.HEADY_CACHE_EMBEDDING_DIMS || '384', 10),

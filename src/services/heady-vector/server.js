@@ -14,6 +14,9 @@ const compression = require('compression');
 const config = require('./config');
 const { getInstance } = require('./index');
 const { createRouter } = require('./routes');
+const { getLogger } = require('../structured-logger');
+
+const log = getLogger('heady-vector');
 
 async function main() {
   // ── Initialize HeadyVector ─────────────────────────────────────────────────
@@ -39,7 +42,7 @@ async function main() {
   if (config.nodeEnv !== 'test') {
     app.use((req, _res, next) => {
       if (req.path !== '/health/live' && req.path !== '/health/ready') {
-        console.log(`[${new Date().toISOString()}] ${req.method} ${req.path}`);
+        log.info('request', { method: req.method, path: req.path });
       }
       next();
     });
@@ -50,16 +53,15 @@ async function main() {
 
   // ── Start server ───────────────────────────────────────────────────────────
   const server = app.listen(config.port, config.host, () => {
-    console.log(`[heady-vector] Listening on http://${config.host}:${config.port}`);
-    console.log(`[heady-vector] PHI=${config.phi} | Node ${process.version}`);
+    log.info('started', { host: config.host, port: config.port, phi: config.phi, node: process.version });
   });
 
   // ── Graceful shutdown ──────────────────────────────────────────────────────
   const shutdown = async (signal) => {
-    console.log(`[heady-vector] Received ${signal}, shutting down...`);
+    log.info('shutting down', { signal });
     server.close(async () => {
       await hv.stop();
-      console.log('[heady-vector] Bye.');
+      log.info('shutdown complete');
       process.exit(0);
     });
     // Force exit after 10s
@@ -70,14 +72,14 @@ async function main() {
   process.on('SIGINT', () => shutdown('SIGINT'));
 
   process.on('unhandledRejection', (reason) => {
-    console.error('[heady-vector] Unhandled rejection:', reason);
+    log.error('unhandled rejection', { reason: String(reason) });
   });
 
   return { app, server, hv };
 }
 
 main().catch((err) => {
-  console.error('[heady-vector] Fatal startup error:', err);
+  log.fatal('fatal startup error', { error: err.message, stack: err.stack });
   process.exit(1);
 });
 

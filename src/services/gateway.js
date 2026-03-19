@@ -11,6 +11,9 @@ const helmet = require('helmet');
 const cors = require('cors');
 const compression = require('compression');
 
+const { getLogger } = require('./structured-logger');
+
+const log = getLogger('heady-gateway');
 const PHI = 1.618033988749895;
 
 // Service imports
@@ -48,7 +51,7 @@ function createGateway() {
     const start = Date.now();
     res.on('finish', () => {
       const duration = Date.now() - start;
-      console.log(`[Gateway] ${req.method} ${req.originalUrl} ${res.statusCode} ${duration}ms`);
+      log.info('request', { method: req.method, url: req.originalUrl, status: res.statusCode, durationMs: duration });
     });
     next();
   });
@@ -107,7 +110,7 @@ function createGateway() {
 
   // Error handler
   app.use((err, req, res, _next) => {
-    console.error('[Gateway] Error:', err.message);
+    log.error('request error', { error: err.message });
     res.status(err.status || 500).json({
       error: err.message || 'Internal Server Error',
       service: 'HeadyGateway',
@@ -121,32 +124,23 @@ function createGateway() {
 if (require.main === module) {
   const app = createGateway();
   const server = app.listen(PORT, () => {
-    console.log('');
-    console.log('╔══════════════════════════════════════════════════════════╗');
-    console.log('║          HeadyGateway — Sacred Geometry v3.0.0          ║');
-    console.log('║     Sovereign AI • Zero External Dependencies           ║');
-    console.log('╠══════════════════════════════════════════════════════════╣');
-    console.log(`║  Gateway:     http://localhost:${PORT}                      ║`);
-    console.log('║                                                          ║');
-    SERVICES.forEach(s => {
-      const line = `║  ${s.name.padEnd(12)} /api/v1${s.prefix.padEnd(8)} (standalone :${s.port})    ║`;
-      console.log(line);
+    log.info('started', {
+      port: PORT,
+      version: '3.0.0',
+      phi: PHI,
+      services: SERVICES.map(s => ({ name: s.name, prefix: `/api/v1${s.prefix}`, port: s.port })),
     });
-    console.log('║                                                          ║');
-    console.log(`║  PHI = ${PHI}                              ║`);
-    console.log('╚══════════════════════════════════════════════════════════╝');
-    console.log('');
   });
 
   // Graceful shutdown
   const shutdown = (signal) => {
-    console.log(`\n[Gateway] ${signal} received — shutting down gracefully...`);
+    log.info('shutting down', { signal });
     server.close(() => {
-      console.log('[Gateway] All connections closed. Goodbye.');
+      log.info('all connections closed');
       process.exit(0);
     });
     setTimeout(() => {
-      console.error('[Gateway] Forced shutdown after timeout');
+      log.error('forced shutdown after timeout');
       process.exit(1);
     }, 10000);
   };

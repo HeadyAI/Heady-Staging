@@ -552,7 +552,7 @@ async function createService(opts = {}) {
 
   // Error handler
   app.use((err, req, res, _next) => {
-    console.error('[heady-eval] Unhandled error:', err);
+    console.error(JSON.stringify({ timestamp: new Date().toISOString(), level: 'error', service: 'heady-eval', message: 'Unhandled error', error: err.message, stack: err.stack }));
     res.status(err.status || 500).json({
       error: err.message || 'Internal server error',
       ...(config.isDev && { stack: err.stack }),
@@ -561,7 +561,7 @@ async function createService(opts = {}) {
 
   return new Promise((resolve) => {
     const server = app.listen(config.port, config.host, () => {
-      console.log(`[heady-eval] Service listening on ${config.host}:${config.port}`);
+      process.stdout.write(JSON.stringify({ timestamp: new Date().toISOString(), level: 'info', service: 'heady-eval', message: 'started', host: config.host, port: config.port }) + '\n');
       resolve({ app, server, eval: evalInstance });
     });
   });
