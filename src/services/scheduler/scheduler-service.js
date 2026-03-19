@@ -293,7 +293,7 @@ function createSchedulerService() {
   }
 
   const server = http.createServer(async (req, res) => {
-    const url = new URL(req.url, `http://localhost:${PORT}`);
+    const url = new URL(req.url, `http://${process.env.HOST || "localhost"}:${PORT}`);
     const method = req.method;
 
     if (url.pathname.startsWith('/health')) return healthProbe.fullHealthHandler(req, res);

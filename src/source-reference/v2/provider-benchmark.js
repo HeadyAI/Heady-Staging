@@ -142,7 +142,7 @@ async function benchmarkHeadyJules() {
 
 async function benchmarkLocal() {
     const start = Date.now();
-    const ping = await httpPing("https://127.0.0.1:3301/api/pulse");
+    const ping = await httpPing(process.env.HEADY_HEALTH_URL || "https://api.headyconnection.org/api/pulse");
     return {
         provider: "local-manager", ok: ping.ok, pingLatency: ping.latency,
         totalLatency: Date.now() - start,

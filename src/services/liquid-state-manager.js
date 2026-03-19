@@ -337,7 +337,7 @@ function boot() {
         { id: 'github-monorepo', type: 'code-projection', url: 'https://github.com/HeadyMe/Heady-pre-production', tier: 1 },
         { id: 'huggingface-spaces', type: 'frontend-projection', url: 'https://huggingface.co/HeadyMe', tier: 2 },
         { id: 'colab-notebooks', type: 'compute-projection', url: 'https://colab.research.google.com', tier: 2 },
-        { id: 'local-dev', type: 'dev-projection', url: 'http://localhost:3301', tier: 3 },
+        { id: 'local-dev', type: 'dev-projection', url: process.env.HEADY_LOCAL_URL || 'http://localhost:3301', tier: 3 },
     ];
 
     for (const t of defaultTargets) {
