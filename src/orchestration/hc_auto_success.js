@@ -122,6 +122,9 @@ let phase5Tasks = [];
 try { phase5Tasks = require('./phase5-hardening-tasks.json'); } catch (e) { }
 let downloadsTasks = [];
 try { downloadsTasks = require('./downloads-extracted-tasks.json').tasks || []; } catch (e) { }
+// ─── AUDIT-DISCOVERED FIXES — tasks generated from deep audit 2026-03-19 ─────
+let auditFixTasks = [];
+try { auditFixTasks = require('./audit-fix-tasks.json'); } catch (e) { }
 const TASK_CATALOG = [
     ...extraTasks,
     ...nonprofitTasks,
@@ -131,6 +134,7 @@ const TASK_CATALOG = [
     ...orchProtocolTasks,
     ...phase5Tasks,
     ...downloadsTasks,
+    ...auditFixTasks,
     // ═══ LEARNING (20) — Targeted system learning ═══════════════════════════
     {
         id: "learn-001", name: "Analyze config drift patterns", cat: "learning", pool: "warm", w: 3,
@@ -1511,7 +1515,7 @@ class AutoSuccessEngine extends EventEmitter {
 
 // ─── ROUTE REGISTRATION ─────────────────────────────────────────────────────
 function registerAutoSuccessRoutes(app, engine) {
-    const express = require('core/heady-server');
+    const express = require('express');
     const router = express.Router();
 
     router.get("/health", (req, res) => {

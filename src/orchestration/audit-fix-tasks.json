@@ -1,0 +1,170 @@
+[
+  {
+    "id": "audit-fix-001",
+    "name": "Verify hc_pipeline.js taskName bug is patched",
+    "cat": "maintenance",
+    "pool": "hot",
+    "w": 5,
+    "desc": "Confirm the string-immutability TypeError (taskName.tags.push) in executeSingleTask is removed — patch applied 2026-03-19"
+  },
+  {
+    "id": "audit-fix-002",
+    "name": "Verify hc_auto_success.js express require path is corrected",
+    "cat": "maintenance",
+    "pool": "hot",
+    "w": 5,
+    "desc": "Confirm require('core/heady-server') is replaced with require('express') in registerAutoSuccessRoutes — patch applied 2026-03-19"
+  },
+  {
+    "id": "audit-fix-003",
+    "name": "Start heady-manager.js server process",
+    "cat": "ops",
+    "pool": "hot",
+    "w": 5,
+    "desc": "All 20 services are unhealthy (0/20). Root cause: heady-manager.js not running. Start server on port 3301 to enable all downstream services."
+  },
+  {
+    "id": "audit-fix-004",
+    "name": "Create data/ directory for auto-success persistence",
+    "cat": "maintenance",
+    "pool": "warm",
+    "w": 4,
+    "desc": "Ensure data/ directory exists for auto-success-tasks.json, auto-success-audit.json, and trial-ledger.json persistence"
+  },
+  {
+    "id": "audit-fix-005",
+    "name": "Null-guard logger calls in hc_auto_success.js",
+    "cat": "resilience",
+    "pool": "warm",
+    "w": 4,
+    "desc": "Lazy-loaded logger at line 45 of hc_auto_success.js can be null. All logger.logSystem() calls throw if logger is null. Add null guards."
+  },
+  {
+    "id": "audit-fix-006",
+    "name": "Resolve heady-manager.js ESM/CJS mixed module syntax",
+    "cat": "ops",
+    "pool": "hot",
+    "w": 5,
+    "desc": "heady-manager.js mixes import and require() without package.json 'type:module'. This causes SyntaxError on startup. Either add type:module or convert to CJS."
+  },
+  {
+    "id": "audit-fix-007",
+    "name": "Verify npm install resolves all pipeline dependencies",
+    "cat": "ops",
+    "pool": "hot",
+    "w": 4,
+    "desc": "js-yaml, express, js-yaml, EventEmitter and other deps required by hc_pipeline.js must be installed. Run npm install and verify node_modules/ exists."
+  },
+  {
+    "id": "audit-fix-008",
+    "name": "Wire eventBus to auto-success engine before start()",
+    "cat": "integration",
+    "pool": "hot",
+    "w": 5,
+    "desc": "AutoSuccessEngine.start() checks global.eventBus. If not set before start(), all 50+ reaction triggers are silently unwired and engine runs deaf to system events."
+  },
+  {
+    "id": "audit-fix-009",
+    "name": "Wire patternEngine, selfCritique, storyDriver to auto-success engine",
+    "cat": "integration",
+    "pool": "warm",
+    "w": 4,
+    "desc": "Engine.wire() must be called with all external systems for full feedback loop: patternEngine.observeSuccess/observeError, selfCritique.recordCritique, storyDriver.ingestSystemEvent"
+  },
+  {
+    "id": "audit-fix-010",
+    "name": "Set global.__vectorMemory before auto-success engine boot",
+    "cat": "integration",
+    "pool": "warm",
+    "w": 4,
+    "desc": "Bee workers write learnings to global.__vectorMemory. If not set, all bee reaction learning writes are silently skipped. Wire vector memory before engine.start()."
+  },
+  {
+    "id": "audit-fix-011",
+    "name": "Verify HCFullPipeline event-spine Redis connection",
+    "cat": "integration",
+    "pool": "hot",
+    "w": 5,
+    "desc": "Pipeline v8.0.0 uses Redis streams (heady:events, hcfp-consumers group) as event-spine with BLOCK 0 (instantaneous). Without Redis/Upstash connected, event-driven mode falls back."
+  },
+  {
+    "id": "audit-fix-012",
+    "name": "Ensure pipeline.bind() called after heady-manager bootstrap",
+    "cat": "integration",
+    "pool": "hot",
+    "w": 5,
+    "desc": "HCFullPipeline.bind({ mcScheduler, patternEngine, selfCritique }) must be called from heady-manager.js after all systems are loaded for post-run feedback loops to work."
+  },
+  {
+    "id": "audit-fix-013",
+    "name": "Validate all 21 pipeline stages load without circular deps",
+    "cat": "verification",
+    "pool": "warm",
+    "w": 4,
+    "desc": "Run topologicalSort on the 21-stage pipeline to confirm no circular dependencies. Stage order: channel-entry → recon → intake → classify → triage → decompose → trial-and-error → orchestrate → monte-carlo → arena → judge → approve → execute → verify → self-awareness → self-critique → mistake-analysis → optimization-ops → continuous-search → evolution → receipt"
+  },
+  {
+    "id": "audit-fix-014",
+    "name": "Verify Ed25519 receipt signing key exists at configs/pki/",
+    "cat": "security",
+    "pool": "warm",
+    "w": 4,
+    "desc": "Stage 20 (receipt) requires Ed25519 signing key at configs/pki/ed25519-receipt-key.pem. If missing, receipt stage fails. Generate with: openssl genpkey -algorithm ed25519 -out configs/pki/ed25519-receipt-key.pem"
+  },
+  {
+    "id": "audit-fix-015",
+    "name": "Check configs/pki/ directory and generate missing PKI assets",
+    "cat": "security",
+    "pool": "warm",
+    "w": 3,
+    "desc": "Pipeline receipt stage requires PKI directory. Verify configs/pki/ exists, create if missing, and generate Ed25519 key pair for trust receipt signing."
+  },
+  {
+    "id": "audit-fix-016",
+    "name": "Verify heady-manager.js auto-success engine instantiation",
+    "cat": "ops",
+    "pool": "hot",
+    "w": 5,
+    "desc": "heady-manager.js must import AutoSuccessEngine from src/services/auto-success.js, instantiate it, call .wire() then .start(). Verify this boot sequence exists and is correct."
+  },
+  {
+    "id": "audit-fix-017",
+    "name": "Test pipeline cold run via node -e require",
+    "cat": "verification",
+    "pool": "hot",
+    "w": 5,
+    "desc": "Run: node -e \"const { pipeline } = require('./src/hc_pipeline.js'); pipeline.load(); console.log(pipeline.getConfigSummary())\" to verify pipeline loads all configs correctly."
+  },
+  {
+    "id": "audit-fix-018",
+    "name": "Verify .heady_cache/ directory writeable for task cache",
+    "cat": "maintenance",
+    "pool": "warm",
+    "w": 3,
+    "desc": "Pipeline task cache writes to .heady_cache/pipeline_task_cache.json. Directory must exist and be writable. mkdir -p .heady_cache"
+  },
+  {
+    "id": "audit-fix-019",
+    "name": "Confirm improvement lane cron schedule is active",
+    "cat": "ops",
+    "pool": "warm",
+    "w": 4,
+    "desc": "The improvement side lane must run every 15 minutes (*/15 * * * *) for continuous autonomous optimization. Verify cron/scheduler is configured or use node-cron in heady-manager."
+  },
+  {
+    "id": "audit-fix-020",
+    "name": "Validate circuit breakers initialize from resource-policies.yaml",
+    "cat": "resilience",
+    "pool": "warm",
+    "w": 4,
+    "desc": "HCFullPipeline.load() reads resource-policies.yaml circuitBreaker section. Verify monitoredEndpoints are defined and breakers for llm-provider and external-news-api are correctly initialized."
+  },
+  {
+    "id": "audit-fix-021",
+    "name": "Verify heady-manager port 3301 not blocked by firewall or prior process",
+    "cat": "ops",
+    "pool": "warm",
+    "w": 3,
+    "desc": "Check lsof -ti:3301 before starting. If occupied, identify and stop the blocking process. Port 3301 is the canonical heady-manager MCP+API port."
+  }
+]
