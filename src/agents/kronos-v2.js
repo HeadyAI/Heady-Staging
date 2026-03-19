@@ -63,9 +63,23 @@ class KronosV2Agent {
   // ─────────────────────────────────────────────────────────────────
 
   async start() {
-    this._expiryInterval = setInterval(() => this._expireTasks(),  Math.round(30000  * PHI));
-    this._decayInterval  = setInterval(() => this._runPhiDecay(),  this.decayCycleMs);
-    return { status: 'active', agent: this.name, version: this.version };
+    try {
+      this._expiryInterval = setInterval(() => this._expireTasks(),  Math.round(30000  * PHI));
+      this._decayInterval  = setInterval(() => this._runPhiDecay(),  this.decayCycleMs);
+      return { status: 'active', agent: this.name, version: this.version };
+    } catch (err) {
+      const failure = {
+        type:    'agent_init_failure',
+        agent:   this.name,
+        version: this.version,
+        error:   err.message,
+        stack:   err.stack,
+        ts:      Date.now(),
+      };
+      // Emit on process so orchestrators can react even without a direct reference
+      process.emit('heady:agent:init_failure', failure);
+      throw err;
+    }
   }
 
   async stop() {

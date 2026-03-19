@@ -102,8 +102,28 @@ class ArgusV2Agent {
   // ─────────────────────────────────────────────────────────────────
 
   async start() {
-    this._checkInterval = setInterval(() => this._runDriftCheck(), Math.round(60000 * PHI));
-    return { status: 'active', agent: this.name, version: this.version };
+    try {
+      this._checkInterval = setInterval(() => this._runDriftCheck(), Math.round(60000 * PHI));
+      if (this.logEmitter) {
+        this.logEmitter.info({ type: 'agent_init', agent: this.name, status: 'active' });
+      }
+      return { status: 'active', agent: this.name, version: this.version };
+    } catch (err) {
+      const failure = {
+        type:    'agent_init_failure',
+        agent:   this.name,
+        version: this.version,
+        error:   err.message,
+        stack:   err.stack,
+        ts:      Date.now(),
+      };
+      if (this.logEmitter) {
+        this.logEmitter.error(failure);
+      }
+      // Emit on process so orchestrators can react even without a direct reference
+      process.emit('heady:agent:init_failure', failure);
+      throw err;
+    }
   }
 
   async stop() { if (this._checkInterval) clearInterval(this._checkInterval); }

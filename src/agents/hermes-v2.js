@@ -69,9 +69,23 @@ class HermesV2Agent {
   // ─────────────────────────────────────────────────────────────────
 
   async start() {
-    this.serverCard  = await this._loadServerCard();
-    this._gcInterval = setInterval(() => this._gcSessions(), Math.round(60000 * PHI));
-    return { status: 'active', agent: this.name, version: this.version, pool: this.pool };
+    try {
+      this.serverCard  = await this._loadServerCard();
+      this._gcInterval = setInterval(() => this._gcSessions(), Math.round(60000 * PHI));
+      return { status: 'active', agent: this.name, version: this.version, pool: this.pool };
+    } catch (err) {
+      const failure = {
+        type:    'agent_init_failure',
+        agent:   this.name,
+        version: this.version,
+        error:   err.message,
+        stack:   err.stack,
+        ts:      Date.now(),
+      };
+      // Emit on process so orchestrators can react even without a direct reference
+      process.emit('heady:agent:init_failure', failure);
+      throw err;
+    }
   }
 
   async stop() {
