@@ -27,7 +27,7 @@ jobs:
     name: 'Validate Edge Workers'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       # LR-005: Verify Host header deletion in edge proxy
       - name: 'LR-005: Check Host header handling'
@@ -55,7 +55,7 @@ jobs:
       run:
         working-directory: cloudflare/heady-edge-proxy
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - uses: actions/setup-node@v6
         with:
@@ -77,8 +77,13 @@ jobs:
       run:
         working-directory: cloudflare/worker-ai-gateway
     steps:
+<<<<<<< HEAD
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v6
+=======
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v4
+>>>>>>> hc-testing/dependabot/github_actions/actions/checkout-6
         with:
           node-version: '22'
       - run: npm install -g wrangler
@@ -95,8 +100,13 @@ jobs:
       run:
         working-directory: cloudflare/worker-mcp-telemetry
     steps:
+<<<<<<< HEAD
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v6
+=======
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v4
+>>>>>>> hc-testing/dependabot/github_actions/actions/checkout-6
         with:
           node-version: '22'
       - run: npm install -g wrangler
