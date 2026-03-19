@@ -471,5 +471,10 @@ module.exports = {
   getStatus() {
     return _singleton ? _singleton.getStatus() : { running: false };
   },
-  PHI, PSI, PSI2, FIB, COMMIT_CHECK_INTERVAL_MS,
+  // Trigger immediate inbound sync (fetch all remotes + auto-merge safe branches)
+  async fetchNow() {
+    if (_singleton) return _singleton.fetchNow();
+    return { error: 'not started' };
+  },
+  PHI, PSI, PSI2, FIB, COMMIT_CHECK_INTERVAL_MS, FETCH_MERGE_INTERVAL_MS, PUSH_REMOTES,
 };
