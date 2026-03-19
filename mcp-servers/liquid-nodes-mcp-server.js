@@ -13,7 +13,6 @@
 // ║  LAYER: root                                                  ║
 // ╚══════════════════════════════════════════════════════════════════╝
 // HEADY_BRAND:END
-#!/usr/bin/env node
 
 /**
  * Liquid Nodes MCP Server — Dynamic connectors for cloud & AI services
