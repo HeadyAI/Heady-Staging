@@ -770,10 +770,10 @@
     </footer>
 
     <!-- Sacred Geometry Canvas -->
-    <canvas id="sacred-geo" style="position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none;opacity:0.35;"></canvas>
+    <canvas id="sacred-geo" style="position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none;opacity:0.5;"></canvas>
 
     <script>
-    // ─── Sacred Geometry Engine v3.0 — Metatron's Cube ───
+    // ─── Sacred Geometry Engine v4.0 — Multi-Shape Wireframe ───
     (function() {
         const PHI = 1.618033988749895;
         const TAU = Math.PI * 2;
@@ -788,33 +788,83 @@
         window.addEventListener('resize', resize);
         resize();
 
-        // ── Metatron's Cube geometry ──
-        // 13 vertices: center + 6 inner hexagon + 6 outer hexagon
-        function buildMetatronsCube() {
-            const pts = [];
-            // Center
-            pts.push([0, 0, 0]);
-            // Inner hexagon (radius 1)
-            for (let i = 0; i < 6; i++) {
-                const a = (TAU / 6) * i;
-                pts.push([Math.cos(a), Math.sin(a), 0]);
-            }
-            // Outer hexagon (radius PHI)
-            for (let i = 0; i < 6; i++) {
-                const a = (TAU / 6) * i + TAU / 12;
-                pts.push([Math.cos(a) * PHI, Math.sin(a) * PHI, 0]);
-            }
-            // All connections — every vertex connects to every other
+        // ── Shape 1: Icosahedron (20 faces, 12 vertices, 30 edges) ──
+        function buildIcosahedron() {
+            const t = PHI;
+            const pts = [
+                [-1, t, 0], [1, t, 0], [-1,-t, 0], [1,-t, 0],
+                [0,-1, t], [0, 1, t], [0,-1,-t], [0, 1,-t],
+                [ t, 0,-1], [ t, 0, 1], [-t, 0,-1], [-t, 0, 1]
+            ];
+            const faces = [
+                [0,11,5],[0,5,1],[0,1,7],[0,7,10],[0,10,11],
+                [1,5,9],[5,11,4],[11,10,2],[10,7,6],[7,1,8],
+                [3,9,4],[3,4,2],[3,2,6],[3,6,8],[3,8,9],
+                [4,9,5],[2,4,11],[6,2,10],[8,6,7],[9,8,1]
+            ];
+            const edgeSet = new Set();
             const edges = [];
-            for (let i = 0; i < pts.length; i++) {
-                for (let j = i + 1; j < pts.length; j++) {
-                    edges.push([i, j]);
+            faces.forEach(f => {
+                for (let i = 0; i < 3; i++) {
+                    const a = Math.min(f[i], f[(i+1)%3]);
+                    const b = Math.max(f[i], f[(i+1)%3]);
+                    const key = a + ',' + b;
+                    if (!edgeSet.has(key)) { edgeSet.add(key); edges.push([a, b]); }
                 }
-            }
+            });
             return { pts, edges };
         }
 
-        // ── Torus knot for outer halo ──
+        // ── Shape 2: Stellated Octahedron (Stella Octangula) ──
+        function buildStellatedOctahedron() {
+            const s = 1.4;
+            // Two interlocking tetrahedra
+            const pts = [
+                // Tetrahedron 1
+                [ s, s, s], [ s,-s,-s], [-s, s,-s], [-s,-s, s],
+                // Tetrahedron 2
+                [-s,-s,-s], [-s, s, s], [ s,-s, s], [ s, s,-s],
+                // Octahedron core vertices for extra wireframe
+                [s*1.2, 0, 0], [-s*1.2, 0, 0], [0, s*1.2, 0], [0,-s*1.2, 0], [0, 0, s*1.2], [0, 0,-s*1.2]
+            ];
+            const edges = [
+                // Tetra 1: all edges
+                [0,1],[0,2],[0,3],[1,2],[1,3],[2,3],
+                // Tetra 2: all edges
+                [4,5],[4,6],[4,7],[5,6],[5,7],[6,7],
+                // Cross-connections (wireframe density)
+                [0,4],[0,5],[0,6],[0,7],[1,4],[1,5],[1,6],[1,7],
+                [2,4],[2,5],[2,6],[2,7],[3,4],[3,5],[3,6],[3,7],
+                // Octahedron core
+                [8,10],[8,11],[8,12],[8,13],[9,10],[9,11],[9,12],[9,13],
+                [10,12],[10,13],[11,12],[11,13]
+            ];
+            return { pts, edges };
+        }
+
+        // ── Shape 3: Dodecahedron (12 faces, 20 vertices, 30 edges) ──
+        function buildDodecahedron() {
+            const a = 1, b = 1/PHI, c = PHI;
+            const pts = [
+                // Cube vertices
+                [ 1, 1, 1],[ 1, 1,-1],[ 1,-1, 1],[ 1,-1,-1],
+                [-1, 1, 1],[-1, 1,-1],[-1,-1, 1],[-1,-1,-1],
+                // Rectangle vertices (3 golden rectangles)
+                [0, b, c],[0, b,-c],[0,-b, c],[0,-b,-c],
+                [ b, c, 0],[ b,-c, 0],[-b, c, 0],[-b,-c, 0],
+                [ c, 0, b],[ c, 0,-b],[-c, 0, b],[-c, 0,-b]
+            ];
+            const edges = [
+                [0,8],[0,12],[0,16],[1,9],[1,12],[1,17],
+                [2,10],[2,13],[2,16],[3,11],[3,13],[3,17],
+                [4,8],[4,14],[4,18],[5,9],[5,14],[5,19],
+                [6,10],[6,15],[6,18],[7,11],[7,15],[7,19],
+                [8,10],[9,11],[12,14],[13,15],[16,17],[18,19]
+            ];
+            return { pts, edges };
+        }
+
+        // ── Shape 4: Dense Torus Knot (p=3, q=5 — complex trefoil) ──
         function buildTorusKnot(p, q, segments, r1, r2) {
             const pts = [];
             for (let i = 0; i < segments; i++) {
@@ -829,127 +879,162 @@
             const edges = [];
             for (let i = 0; i < pts.length; i++) {
                 edges.push([i, (i + 1) % pts.length]);
+                // Cross-links every 8th segment for denser wireframe
+                if (i % 8 === 0) edges.push([i, (i + segments/3|0) % pts.length]);
             }
             return { pts, edges };
         }
 
-        const metatron = buildMetatronsCube();
-        const torus = buildTorusKnot(2, 3, 300, 2.2, 0.6);
+        // ── Shape 5: Flower of Life ring (6 overlapping circles in 3D) ──
+        function buildFlowerOfLife() {
+            const pts = [];
+            const edges = [];
+            const circleSegs = 48;
+            const radius = 1.0;
+            // 7 circles: 1 center + 6 surrounding
+            const centers = [[0, 0]];
+            for (let i = 0; i < 6; i++) {
+                const a = (TAU / 6) * i;
+                centers.push([Math.cos(a) * radius, Math.sin(a) * radius]);
+            }
+            centers.forEach((c, ci) => {
+                const baseIdx = pts.length;
+                for (let i = 0; i < circleSegs; i++) {
+                    const a = (TAU / circleSegs) * i;
+                    const z = Math.sin(a * 2 + ci) * 0.3; // slight 3D wobble per circle
+                    pts.push([c[0] + Math.cos(a) * radius, c[1] + Math.sin(a) * radius, z]);
+                    edges.push([baseIdx + i, baseIdx + (i + 1) % circleSegs]);
+                }
+            });
+            return { pts, edges };
+        }
 
-        // ── 3D rotation matrices (φ-governed speeds) ──
+        // Build all shapes
+        const icosahedron = buildIcosahedron();
+        const stella = buildStellatedOctahedron();
+        const dodecahedron = buildDodecahedron();
+        const torusKnot = buildTorusKnot(3, 5, 400, 2.0, 0.7);
+        const flower = buildFlowerOfLife();
+
+        // ── 3D rotation ──
         function rotatePoint(p, rx, ry, rz) {
             let [x, y, z] = p;
-            // Rotate X
             let cy = Math.cos(rx), sy = Math.sin(rx);
             let y1 = y * cy - z * sy, z1 = y * sy + z * cy;
             y = y1; z = z1;
-            // Rotate Y
             let cx = Math.cos(ry), sx = Math.sin(ry);
             let x1 = x * cx + z * sx, z2 = -x * sx + z * cx;
             x = x1; z = z2;
-            // Rotate Z
             let cz = Math.cos(rz), sz = Math.sin(rz);
             let x2 = x * cz - y * sz, y2 = x * sz + y * cz;
             return [x2, y2, z];
         }
 
         function project(p, scale, cx, cy) {
-            const fov = 4;
-            const zOffset = fov + p[2] * 0.3;
-            const f = fov / Math.max(zOffset, 0.1);
-            return {
-                x: cx + p[0] * scale * f,
-                y: cy + p[1] * scale * f,
-                depth: p[2]
-            };
+            const fov = 5;
+            const zOff = fov + p[2] * 0.25;
+            const f = fov / Math.max(zOff, 0.1);
+            return { x: cx + p[0] * scale * f, y: cy + p[1] * scale * f, depth: p[2] };
         }
 
-        // ── Flowing dot flow-field ──
-        const DOT_COUNT = 60;
+        // ── Flow-field particles ──
+        const DOT_COUNT = 120;
         const dots = [];
         for (let i = 0; i < DOT_COUNT; i++) {
             dots.push({
-                x: Math.random() * 2 - 1,
-                y: Math.random() * 2 - 1,
-                z: Math.random() * 2 - 1,
-                phase: Math.random() * TAU
+                x: Math.random() * 4 - 2, y: Math.random() * 4 - 2,
+                z: Math.random() * 4 - 2, phase: Math.random() * TAU
             });
         }
 
-        function drawShape(shape, rx, ry, rz, scale, cx, cy, hueBase, alpha) {
+        function drawShape(shape, rx, ry, rz, scale, cx, cy, hueBase, alpha, lineW) {
             const projected = shape.pts.map(p => {
                 const r = rotatePoint(p, rx, ry, rz);
                 return project(r, scale, cx, cy);
             });
-
             shape.edges.forEach(([a, b]) => {
+                if (a >= projected.length || b >= projected.length) return;
                 const pa = projected[a], pb = projected[b];
-                const avgDepth = (pa.depth + pb.depth) / 2;
-                const depthAlpha = Math.max(0.08, Math.min(1, 0.5 + avgDepth * 0.25));
-                const hue = (hueBase + avgDepth * 30 + time * 8) % 360;
-
+                const avgD = (pa.depth + pb.depth) / 2;
+                const dA = Math.max(0.1, Math.min(1, 0.55 + avgD * 0.2));
+                const hue = (hueBase + avgD * 25 + time * 6) % 360;
                 ctx.beginPath();
                 ctx.moveTo(pa.x, pa.y);
                 ctx.lineTo(pb.x, pb.y);
-                ctx.strokeStyle = `hsla(${hue}, 70%, 60%, ${depthAlpha * alpha})`;
-                ctx.lineWidth = 0.6 + depthAlpha * 0.5;
+                ctx.strokeStyle = `hsla(${hue}, 75%, 58%, ${dA * alpha})`;
+                ctx.lineWidth = lineW + dA * 0.6;
                 ctx.stroke();
             });
-
-            // Draw vertices as small dots
+            // Vertex nodes
             projected.forEach(p => {
-                const depthAlpha = Math.max(0.15, Math.min(1, 0.5 + p.depth * 0.3));
+                const dA = Math.max(0.2, Math.min(1, 0.5 + p.depth * 0.25));
                 ctx.beginPath();
-                ctx.arc(p.x, p.y, 1.5 + depthAlpha, 0, TAU);
-                ctx.fillStyle = `hsla(${hueBase}, 80%, 70%, ${depthAlpha * alpha * 0.8})`;
+                ctx.arc(p.x, p.y, 2 + dA * 1.5, 0, TAU);
+                ctx.fillStyle = `hsla(${hueBase}, 85%, 70%, ${dA * alpha * 0.7})`;
                 ctx.fill();
             });
         }
 
-        function drawFlowField(rx, ry, rz, scale, cx, cy) {
+        function drawFlowField(scale, cx, cy) {
             dots.forEach(d => {
-                d.phase += 0.003 * PHI;
-                const px = d.x + Math.sin(time * 0.3 + d.phase) * 0.15;
-                const py = d.y + Math.cos(time * 0.4 * PHI + d.phase) * 0.15;
-                const pz = d.z + Math.sin(time * 0.2 + d.phase * PHI) * 0.15;
-                const r = rotatePoint([px, py, pz], rx * 0.3, ry * 0.3, rz * 0.3);
-                const p = project(r, scale * 1.5, cx, cy);
-                const depthAlpha = Math.max(0.05, 0.3 + p.depth * 0.15);
+                d.phase += 0.002 * PHI;
+                const px = d.x + Math.sin(time * 0.25 + d.phase) * 0.2;
+                const py = d.y + Math.cos(time * 0.3 * PHI + d.phase) * 0.2;
+                const pz = d.z + Math.sin(time * 0.15 + d.phase * PHI) * 0.2;
+                const r = rotatePoint([px, py, pz], time * 0.02, time * 0.015, time * 0.01);
+                const p = project(r, scale * 0.8, cx, cy);
+                const dA = Math.max(0.03, 0.25 + p.depth * 0.1);
                 ctx.beginPath();
-                ctx.arc(p.x, p.y, 1, 0, TAU);
-                ctx.fillStyle = `hsla(175, 60%, 55%, ${depthAlpha})`;
+                ctx.arc(p.x, p.y, 1.2, 0, TAU);
+                ctx.fillStyle = `hsla(190, 50%, 55%, ${dA})`;
                 ctx.fill();
             });
         }
 
         function animate() {
-            time += 0.008;
+            time += 0.006;
             ctx.clearRect(0, 0, W, H);
 
             const cx = W / 2;
             const cy = H / 2;
-            const baseScale = Math.min(W, H) * 0.12;
+            const baseScale = Math.min(W, H) * 0.28;
 
-            // φ-governed rotation speeds (never synchronize)
-            const rx = time * 0.15 * PHI;
-            const ry = time * 0.12;
-            const rz = time * 0.09 / PHI;
+            // Breathing
+            const breathe = 1 + Math.sin(time * 0.4 * PHI) * 0.08;
+            const S = baseScale * breathe;
 
-            // Breathing scale (sin-based, 0.88 to 1.12)
-            const breathe = 1 + Math.sin(time * 0.5 * PHI) * 0.12;
-            const scale = baseScale * breathe;
+            // Draw flow field
+            drawFlowField(S, cx, cy);
 
-            // Draw flow field underneath
-            drawFlowField(rx, ry, rz, scale, cx, cy);
+            // Shape 1: ICOSAHEDRON — large, center, teal (φ-speed set 1)
+            const r1x = time * 0.10 * PHI;
+            const r1y = time * 0.08;
+            const r1z = time * 0.06 / PHI;
+            drawShape(icosahedron, r1x, r1y, r1z, S * 0.65, cx, cy, 175, 0.55, 1.2);
 
-            // Draw torus knot (outer halo, purple-ish)
-            drawShape(torus, rx * 0.7, ry * 0.8, rz * 0.6, scale * 0.45, cx, cy, 270, 0.2);
+            // Shape 2: STELLATED OCTAHEDRON — overlapping, gold/amber (φ-speed set 2)
+            const r2x = time * 0.07;
+            const r2y = time * 0.11 * PHI;
+            const r2z = time * 0.05;
+            drawShape(stella, r2x, r2y, r2z, S * 0.55, cx, cy, 38, 0.4, 1.0);
 
-            // Draw Metatron's Cube (center, teal/gold)
-            drawShape(metatron, rx, ry, rz, scale, cx, cy, 175, 0.6);
+            // Shape 3: DODECAHEDRON — behind, purple/violet (φ-speed set 3)
+            const r3x = time * 0.04 / PHI;
+            const r3y = time * 0.09;
+            const r3z = time * 0.13 * PHI;
+            drawShape(dodecahedron, r3x, r3y, r3z, S * 0.75, cx, cy, 270, 0.3, 1.4);
 
-            // Draw second Metatron's Cube rotated (golden shimmer)
-            drawShape(metatron, rx + Math.PI / 3, ry - Math.PI / 4, rz + Math.PI / 6, scale * 0.7, cx, cy, 42, 0.25);
+            // Shape 4: TORUS KNOT — large outer orbit, cyan wireframe
+            const r4x = time * 0.05;
+            const r4y = time * 0.03 * PHI;
+            const r4z = time * 0.07 / PHI;
+            drawShape(torusKnot, r4x, r4y, r4z, S * 0.35, cx, cy, 195, 0.18, 0.8);
+
+            // Shape 5: FLOWER OF LIFE — gentle rotation, rose/pink
+            const r5x = time * 0.03;
+            const r5y = time * 0.02 / PHI;
+            const r5z = time * 0.04 * PHI;
+            drawShape(flower, r5x, r5y, r5z, S * 0.50, cx, cy, 330, 0.2, 0.7);
 
             requestAnimationFrame(animate);
         }
