@@ -37,10 +37,17 @@
     "predeploy": "node src/security/env-validator.cjs --strict"
   },
   "dependencies": {
+<<<<<<< HEAD
     "@anthropic-ai/sdk": "^0.74.0",
     "@google/generative-ai": "^0.21.0",
     "@heady/phi-math": "file:packages/phi-math",
     "@heady/structured-logger": "file:packages/structured-logger",
+=======
+    "@anthropic-ai/sdk": "^0.78.0",
+    "@google/genai": "^1.42.0",
+    "@google/generative-ai": "^0.24.1",
+    "@huggingface/inference": "^4.13.12",
+>>>>>>> hs-main/dependabot/npm_and_yarn/anthropic-ai/sdk-0.78.0
     "@modelcontextprotocol/sdk": "^1.0.1",
     "@notionhq/client": "^2.2.15",
     "@octokit/auth-app": "^8.2.0",
