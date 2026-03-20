@@ -12022,3 +12022,22 @@ SyntaxError: Error parsing /home/headyme/Heady/package.json: Expected double-quo
 }
 
 Node.js v20.19.2
+node:internal/modules/package_json_reader:93
+        throw error;
+        ^
+
+SyntaxError: Error parsing /home/headyme/Heady/package.json: Expected double-quoted property name in JSON at position 2159
+    at parse (<anonymous>)
+    at read (node:internal/modules/package_json_reader:80:16)
+    at readPackage (node:internal/modules/package_json_reader:141:10)
+    at Object.readPackageScope (node:internal/modules/package_json_reader:164:19)
+    at trySelf (node:internal/modules/cjs/loader:587:58)
+    at Module._resolveFilename (node:internal/modules/cjs/loader:1189:24)
+    at Module._load (node:internal/modules/cjs/loader:1043:27)
+    at Module.require (node:internal/modules/cjs/loader:1298:19)
+    at require (node:internal/modules/helpers:182:18)
+    at [eval]:2:32 {
+  path: '/home/headyme/Heady/package.json'
+}
+
+Node.js v20.19.2
