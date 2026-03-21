@@ -1,11 +1,12 @@
 name: Deploy Domain Sites to Cloud Run
 on:
-  push:
+  # Trigger after CI pipeline completes (which includes build-sites validation)
+  workflow_run:
+    workflows: ['Heady Full Pipeline']
+    types: [completed]
     branches: [main]
-    paths:
-      - 'sites/**'
-      - 'shared/worker-router.js'
-      - 'services/heady-web/**'
+
+  # Keep manual dispatch for individual site deploys
   workflow_dispatch:
     inputs:
       site:
@@ -16,6 +17,7 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' || github.event_name == 'workflow_dispatch' }}
     strategy:
       matrix:
         site:
