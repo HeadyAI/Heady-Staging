@@ -6520,31 +6520,6 @@
     "status": "ongoing",
     "timeline": [
       {
-        "id": "a02755ae-b5f2-4272-9331-67cf4da2a5cd",
-        "timestamp": "2026-02-12T00:33:16.954Z",
-        "type": "CORRELATED_SLOWDOWN",
-        "description": "Event: CORRELATED_SLOWDOWN",
-        "refs": {
-          "patterns": [
-            "latency:pipeline:channel-entry",
-            "latency:pipeline:ingest",
-            "latency:pipeline:plan",
-            "latency:pipeline:execute-major-phase",
-            "latency:pipeline:recover",
-            "latency:pipeline:self-critique",
-            "latency:pipeline:optimize",
-            "latency:pipeline:monitor-feedback",
-            "latency:pipeline:sync_priority_changes",
-            "latency:pipeline:deploy_priority",
-            "latency:pipeline:pqc-operations",
-            "latency:pipeline:crypto"
-          ],
-          "count": 12
-        },
-        "severity": "info",
-        "source": "pattern_engine"
-      },
-      {
         "id": "19175288-30c1-4e48-9bed-9f215d4bbb17",
         "timestamp": "2026-02-12T00:35:16.941Z",
         "type": "ERROR_BURST_DETECTED",
@@ -14753,11 +14728,24 @@
         },
         "severity": "info",
         "source": "pattern_engine"
+      },
+      {
+        "id": "d0e0b293-37ab-4ac0-8e41-aa9d154eb6c3",
+        "timestamp": "2026-03-21T12:53:03.640Z",
+        "type": "ERROR_BURST_DETECTED",
+        "description": "Event: ERROR_BURST_DETECTED",
+        "refs": {
+          "patternId": "reliability::resource:RAM",
+          "name": "resource:RAM",
+          "count": 5
+        },
+        "severity": "info",
+        "source": "pattern_engine"
       }
     ],
     "links": {},
     "pinnedEvents": [],
     "createdAt": "2026-02-11T22:34:57.989Z",
-    "updatedAt": "2026-03-21T12:51:03.640Z"
+    "updatedAt": "2026-03-21T12:53:03.640Z"
   }
 }
