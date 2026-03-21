@@ -119,7 +119,7 @@ class AutoCommitEngine extends EventEmitter {
         return execSync(cmd, {
             cwd: this.repoRoot,
             encoding: "utf8",
-            timeout: 60_000,
+            timeout: 300_000,
             stdio: ["pipe", "pipe", "pipe"],
         }).trim();
     }
