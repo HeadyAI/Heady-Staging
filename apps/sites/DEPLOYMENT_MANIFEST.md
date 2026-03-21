@@ -18,7 +18,7 @@
 | 4 | HeadyIO | headyio.com | Developer Platform | /heady-sites/headyio/ |
 | 5 | HeadyBot | headybot.com | Autonomous Automation | /heady-sites/headybot/ |
 | 6 | HeadyAPI | headyapi.com | The Intelligence Interface | /heady-sites/headyapi/ |
-| 7 | HeadyAI | headyai.com | Intelligence Routing Hub | /heady-sites/headyai/ |
+| 7 | HeadyAI | heady-ai.com | Intelligence Routing Hub | /heady-sites/headyai/ |
 
 ### Each Site Includes
 - Custom SVG logo

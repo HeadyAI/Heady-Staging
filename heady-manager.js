@@ -274,8 +274,8 @@ const allowedOrigins = [
   'https://www.headybot.com',
   'https://headyapi.com',
   'https://www.headyapi.com',
-  'https://headyai.com',
-  'https://www.headyai.com',
+  'https://heady-ai.com',
+  'https://www.heady-ai.com',
 
   // Admin subdomains
   'https://auth.headysystems.com',

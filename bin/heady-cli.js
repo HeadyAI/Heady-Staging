@@ -680,7 +680,7 @@ const commands = {
         const DOMAINS = [
             'headyme.com', 'headysystems.com', 'headyconnection.org', 'headybuddy.org',
             'headymcp.com', 'headyio.com', 'headybot.com', 'headyapi.com',
-            'headyai.com', 'headylens.com', 'headyfinance.com',
+            'heady-ai.com', 'headylens.com', 'headyfinance.com',
         ];
         let domainsPassed = 0;
         for (const domain of DOMAINS) {
@@ -712,7 +712,7 @@ const commands = {
 
         // ═══ 5. SECURITY HEADERS ═══════════════════════════════════════
         console.log('\n  \x1b[1m─── Security Headers ───\x1b[0m');
-        const headerDomains = ['headyme.com', 'headyai.com', 'headyapi.com', 'headymcp.com'];
+        const headerDomains = ['headyme.com', 'heady-ai.com', 'headyapi.com', 'headymcp.com'];
         for (const domain of headerDomains) {
             const headers = runCapture(`curl -sI --max-time 5 "https://${domain}" 2>/dev/null`);
             if (headers) {
@@ -835,7 +835,7 @@ const commands = {
 
         // ═══ 12. CONTENT QUALITY ═══════════════════════════════════════
         console.log('\n  \x1b[1m─── Content Quality ───\x1b[0m');
-        const sampleDomains = ['headyme.com', 'headyai.com', 'headyapi.com'];
+        const sampleDomains = ['headyme.com', 'heady-ai.com', 'headyapi.com'];
         for (const domain of sampleDomains) {
             const placeholderCount = runCapture(`curl -s --max-time 8 "https://${domain}" 2>/dev/null | grep -ciE "lorem|ipsum|placeholder|coming soon|todo|fixme" 2>/dev/null`);
             if (placeholderCount !== null) {

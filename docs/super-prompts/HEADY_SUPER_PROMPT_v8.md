@@ -657,7 +657,7 @@ headyio.com          "#ff3d82"   API & integration hub
 headybot.com         "#4caf50"   Bot services
 headyapi.com         "#ff9800"   API gateway
 headylens.com        "#e91e8c"   Vision & perception
-headyai.com          "#00bcd4"   Core AI services, Sri Yantra
+heady-ai.com          "#00bcd4"   Core AI services, Sri Yantra
 headyfinance.com     "#4caf50"   Financial intelligence
 ```
 
@@ -832,7 +832,7 @@ Observability: OpenTelemetry → Tempo (traces), Loki (logs), Mimir (metrics), G
 Azure:         Subscription 6760eeb0-ae64-410c-b076-abb640de2cba, App: Heady-AI-Service
 Discord Bot:   App 1482908131469164624
 CORS:          headyme.com, headyapi.com, headysystems.com, headyconnection.org, headymcp.com,
-               headybuddy.org, headyio.com, headybot.com, heady-ai.com, headyai.com
+               headybuddy.org, headyio.com, headybot.com, heady-ai.com, heady-ai.com
 ```
 
 ---

@@ -25,8 +25,8 @@ const SENTRY_REGION = 'https://us.sentry.io';
 const SENTRY_PROJECTS = [
   { slug: 'heady-manager',         layer: 'Inner',      pool: 'Hot',  domain: 'headyme.com' },
   { slug: 'heady-systems',         layer: 'Inner',      pool: 'Hot',  domain: 'headysystems.com' },
-  { slug: 'heady-ai',              layer: 'Inner',      pool: 'Hot',  domain: 'headyai.com' },
-  { slug: 'heady-ai-cloudrun',     layer: 'Inner',      pool: 'Hot',  domain: 'headyai.com' },
+  { slug: 'heady-ai',              layer: 'Inner',      pool: 'Hot',  domain: 'heady-ai.com' },
+  { slug: 'heady-ai-cloudrun',     layer: 'Inner',      pool: 'Hot',  domain: 'heady-ai.com' },
   { slug: 'heady-api',             layer: 'Middle',     pool: 'Hot',  domain: 'headyapi.com' },
   { slug: 'heady-mcp',             layer: 'Middle',     pool: 'Hot',  domain: 'headymcp.com' },
   { slug: 'heady-mcp-server',      layer: 'Middle',     pool: 'Hot',  domain: 'headymcp.com' },

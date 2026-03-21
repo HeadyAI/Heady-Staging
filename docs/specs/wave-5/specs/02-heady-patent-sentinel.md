@@ -100,7 +100,7 @@ headyme.com (IP Intelligence panel)
     │
     ▼
 Patent Sentinel Service (new microservice, Cloud Run)
-    ├─ Disclosure Ingestion Parser (LLM extraction via headyai.com)
+    ├─ Disclosure Ingestion Parser (LLM extraction via heady-ai.com)
     ├─ Search Dispatcher
     │   ├─ USPTO Full-Text API client
     │   ├─ EPO OPS API client
@@ -125,7 +125,7 @@ heady-sentinel (existing)
 
 ```
 Disclosure submitted
-    → Ingestion Parser (headyai.com LLM call)
+    → Ingestion Parser (heady-ai.com LLM call)
     → CPC class suggestions + claim extraction
     → Search Dispatcher (parallel API calls, timeout: 90s)
     → Results aggregated, deduplicated
@@ -161,7 +161,7 @@ Watch Engine (nightly cron)
 |------------|-------|---------|
 | USPTO full-text search API access | External (USPTO) | Yes — P0 |
 | EPO OPS API credentials | External (EPO) | Yes — P0 |
-| headyai.com LLM router (extraction + reranker) | HeadyAI | Yes — P0 |
+| heady-ai.com LLM router (extraction + reranker) | HeadyAI | Yes — P0 |
 | pgvector `patent_vectors` table provisioning | HeadyMe engineering | Yes — P0 |
 | heady-sentinel event registry extension | Sentinel team | Yes — P0 |
 | headyapi-core route registration | HeadyAPI team | Yes — P0 |

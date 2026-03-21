@@ -1,7 +1,7 @@
 # Feature Spec: Mission Control Manager Surface
 
 **Feature ID:** HEADY-FEAT-005  
-**Domain:** headyme.com / headyai.com  
+**Domain:** headyme.com / heady-ai.com  
 **Status:** Draft  
 **Author:** Eric Haywood  
 **Date:** 2026-03-17  

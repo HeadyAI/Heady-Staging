@@ -3,7 +3,7 @@
 **Version:** 1.0  
 **Date:** 2026-03-17  
 **Author:** Eric Haywood / Heady Ecosystem  
-**Domain:** headysystems.com / headyai.com / headymcp.com  
+**Domain:** headysystems.com / heady-ai.com / headymcp.com  
 **Status:** Draft
 
 ---
@@ -13,7 +13,7 @@
 Heady Context Capsule Mesh is a cross-session, cross-domain context packaging and routing system. A "capsule" is a structured, serialized snapshot of the relevant context from a session — intent, working state, artifacts, active persona, memory refs, and partial results — that can be handed off between Heady domains, agents, or sessions without loss of meaning. The "Mesh" is the routing and resolution layer that ensures the right context arrives at the right agent at the right time.
 
 ### Problem Statement
-When a user switches from headybuddy.org to headyai.com, or when an orchestrator hands a subtask to a specialist agent, all session context is currently lost. Each agent starts cold. This creates disjointed experiences, forces users to re-explain their situation, and prevents multi-agent workflows from working cohesively across Heady's domain topology.
+When a user switches from headybuddy.org to heady-ai.com, or when an orchestrator hands a subtask to a specialist agent, all session context is currently lost. Each agent starts cold. This creates disjointed experiences, forces users to re-explain their situation, and prevents multi-agent workflows from working cohesively across Heady's domain topology.
 
 ### Goals
 1. Achieve zero-re-explanation handoffs between any two Heady domains for 90% of context-transfer events.
@@ -33,7 +33,7 @@ When a user switches from headybuddy.org to headyai.com, or when an orchestrator
 ## 2. User Experience
 
 ### User Personas
-- **The Domain Hopper** — starts research on headyai.com and wants to continue writing on headyme.com without re-explaining.
+- **The Domain Hopper** — starts research on heady-ai.com and wants to continue writing on headyme.com without re-explaining.
 - **The Multi-Agent Workflow Builder** — building a pipeline where a research agent hands a capsule to a writer agent and then a reviewer agent.
 - **The Context Bookmarker** — wants to save a complex mid-session state and return to it later without losing the thread.
 
@@ -69,13 +69,13 @@ When a user switches from headybuddy.org to headyai.com, or when an orchestrator
 
 | Component | Role | Domain |
 |---|---|---|
-| Capsule Creator | Serializes session state into a structured capsule object | headyai.com |
+| Capsule Creator | Serializes session state into a structured capsule object | heady-ai.com |
 | Capsule Store | Persistent store for capsule objects with TTL and access tracking | headysystems.com |
 | Capsule Mesh Router | Routes capsule tokens to correct store location; applies privacy scope filters | headymcp.com |
 | Privacy Scope Enforcer | Applies per-domain data access policies to capsule content before delivery | headysystems.com |
-| Capsule Resolver | Accepts a token from any agent and returns the scoped capsule payload | headyai.com |
+| Capsule Resolver | Accepts a token from any agent and returns the scoped capsule payload | heady-ai.com |
 | Capsule Library UI | User dashboard for managing saved capsules | headyme.com |
-| Session Integrator | Injects resolved capsule context into session at start | headyai.com |
+| Session Integrator | Injects resolved capsule context into session at start | heady-ai.com |
 
 ### Capsule Schema (JSON)
 ```json
@@ -84,7 +84,7 @@ When a user switches from headybuddy.org to headyai.com, or when an orchestrator
   "owner_user_id": "uuid",
   "created_at": "ISO8601",
   "expires_at": "ISO8601",
-  "origin_domain": "headyai.com",
+  "origin_domain": "heady-ai.com",
   "label": "string",
   "annotation": "string",
   "context": {
@@ -161,7 +161,7 @@ When a user switches from headybuddy.org to headyai.com, or when an orchestrator
 
 | Dependency | Owner | Status |
 |---|---|---|
-| headyai.com session orchestrator (must expose state-snapshot API) | headyai.com | Required |
+| heady-ai.com session orchestrator (must expose state-snapshot API) | heady-ai.com | Required |
 | headymcp.com MCP layer (for cross-domain routing) | headymcp.com | Required |
 | Heady Memory Sanctum (for memory_refs in capsules) | Second-wave | Complementary |
 | Heady Persona Studio (for active_persona_id in capsules) | Second-wave | Complementary |
@@ -182,7 +182,7 @@ When a user switches from headybuddy.org to headyai.com, or when an orchestrator
 ### Phase 2 — Privacy Scope + Agent Handoff (Weeks 5–8)
 - Privacy Scope Enforcer
 - Capsule Mesh Router with domain-scope enforcement
-- Agent-initiated capsule creation in headybot.com and headyai.com orchestrators
+- Agent-initiated capsule creation in headybot.com and heady-ai.com orchestrators
 - Access logging
 - Closed beta: 3 internal Heady domain pairs
 - Success gate: Zero unauthorized cross-domain context leakage in test suite
@@ -207,7 +207,7 @@ When a user switches from headybuddy.org to headyai.com, or when an orchestrator
 
 | Question | Owner | Blocking? |
 |---|---|---|
-| How is "session state snapshot" exposed by the headyai.com orchestrator? What fields are available? | Engineering | Yes — before Phase 1 |
+| How is "session state snapshot" exposed by the heady-ai.com orchestrator? What fields are available? | Engineering | Yes — before Phase 1 |
 | Should capsule tokens be single-use or multi-use? | Product | Yes — before Phase 2 |
 | What is the maximum capsule payload size? (Suggest 32KB) | Engineering | No |
 | Should capsule expiry be configurable per capsule or globally per user? | Product | No |

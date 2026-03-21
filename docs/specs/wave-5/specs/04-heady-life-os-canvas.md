@@ -118,7 +118,7 @@ Life OS Canvas Service (new microservice, Cloud Run)
 
 ```
 Canvas setup
-    → HeadyBuddy dialogue → structured extraction (headyai.com LLM)
+    → HeadyBuddy dialogue → structured extraction (heady-ai.com LLM)
     → Canvas schema JSON → written to pgvector canvas table
     → Context Packer generates 500-token summary
     → Summary injected into HeadyBuddy session context on next start
@@ -126,7 +126,7 @@ Canvas setup
 Weekly Review (scheduled trigger)
     → HeadyBuddy nudge sent
     → User response → Review Orchestrator
-    → LLM reflection generation (headyai.com)
+    → LLM reflection generation (heady-ai.com)
     → Review summary appended to canvas log
     → Optional: Canvas goal update if user revises intention
 
@@ -160,7 +160,7 @@ Notion/Obsidian sync
 |------------|-------|---------|
 | headybuddy-core intent classification ("canvas-setup", "weekly-review") | HeadyBuddy team | Yes — P0 |
 | pgvector canvas table schema | HeadyMe engineering | Yes — P0 |
-| headyai.com LLM (extraction + reflection) | HeadyAI | Yes — P0 |
+| heady-ai.com LLM (extraction + reflection) | HeadyAI | Yes — P0 |
 | Context injection hook in HeadyBuddy session init | HeadyBuddy team | Yes — P0 |
 | headymcp-core tool registration | HeadyMCP team | Yes (MCP tools) |
 | headyio-core Notion connector | HeadyIO team | No — P1 |

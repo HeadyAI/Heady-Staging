@@ -5,7 +5,7 @@
     "description": "HeadyAI-IDE MCP configuration for IDE-integrated AI assistance",
     "mcpServers": {
         "heady-mcp": {
-            "url": "https://headyai.com/mcp",
+            "url": "https://heady-ai.com/mcp",
             "transport": "sse",
             "auth": {
                 "type": "bearer",
@@ -21,7 +21,7 @@
             ]
         },
         "heady-memory": {
-            "url": "https://headyai.com/api/memory/mcp",
+            "url": "https://heady-ai.com/api/memory/mcp",
             "transport": "sse",
             "auth": {
                 "type": "bearer",
@@ -44,7 +44,7 @@
     },
     "domains": [
         "heady.ai",
-        "headyai.com",
+        "heady-ai.com",
         "headyme.com",
         "headysystems.com",
         "headyos.com",

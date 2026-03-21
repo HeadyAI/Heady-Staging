@@ -12,7 +12,7 @@ const PSI = 0.618033988749895;
 const FIB = [0,1,1,2,3,5,8,13,21,34,55,89,144,233,377,610,987];
 const CSL = { MINIMUM: 0.500, LOW: 0.691, MEDIUM: 0.809, HIGH: 0.882, CRITICAL: 0.927, DEDUP: 0.972 };
 
-const DOMAINS = ['headyme.com','headysystems.com','headyconnection.org','headybuddy.org','headymcp.com','headyio.com','headybot.com','headyapi.com','headyai.com'];
+const DOMAINS = ['headyme.com','headysystems.com','headyconnection.org','headybuddy.org','headymcp.com','headyio.com','headybot.com','headyapi.com','heady-ai.com'];
 
 class NexusNode {
   constructor(config = {}) {
@@ -38,7 +38,7 @@ class NexusNode {
       'headyio.com': { coreRepo: 'headyio-core', role: 'developer-sdk', ring: 'outer', services: ['sdk','docs','api-reference','examples'] },
       'headybot.com': { coreRepo: 'headybot-core', role: 'bot-framework', ring: 'outer', services: ['bots','swarm','automation','webhooks'] },
       'headyapi.com': { coreRepo: 'headyapi-core', role: 'api-gateway', ring: 'inner', services: ['routing','providers','racing','cache'] },
-      'headyai.com': { coreRepo: 'headyai-core', role: 'ai-platform', ring: 'center', services: ['models','training','inference','vectors'] }
+      'heady-ai.com': { coreRepo: 'headyai-core', role: 'ai-platform', ring: 'center', services: ['models','training','inference','vectors'] }
     };
     for (const [domain, cfg] of Object.entries(domainConfig)) {
       this.domainRoutes.set(domain, { ...cfg, domain, healthy: true, lastChecked: Date.now() });

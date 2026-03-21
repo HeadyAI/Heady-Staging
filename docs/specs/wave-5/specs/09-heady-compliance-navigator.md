@@ -107,13 +107,13 @@ Compliance Navigator Service (new microservice, Cloud Run)
     ├─ Regulatory Library Store (pgvector, regulations + requirement_units tables)
     ├─ Asset-Regulation Mapper (rule-based + LLM-assisted, reads Governance Atlas)
     ├─ Posture Checker (evaluates asset record against requirement unit criteria)
-    ├─ Gap Report Generator (headyai.com LLM for narrative + template engine for PDF)
+    ├─ Gap Report Generator (heady-ai.com LLM for narrative + template engine for PDF)
     ├─ Regulatory Change Monitor (daily scheduled worker)
     │   ├─ EUR-Lex poller
     │   ├─ FTC RSS poller
     │   ├─ NIST publications poller
     │   └─ Change classifier (LLM: is this a material change to a tracked regulation?)
-    ├─ Q&A Engine (RAG over regulatory library + headyai.com LLM)
+    ├─ Q&A Engine (RAG over regulatory library + heady-ai.com LLM)
     └─ headyapi-core adapter (/v1/compliance/*)
 
 Governance Atlas integration
@@ -141,14 +141,14 @@ Daily regulatory change scan
 
 Gap report request
     → Fresh Posture Checker run (full or single-asset scope)
-    → Gap Report Generator: headyai.com LLM narrative per gap
+    → Gap Report Generator: heady-ai.com LLM narrative per gap
     → Template engine: PDF with exec summary + gap table + remediation priorities
     → Presigned URL returned
 
 Compliance Q&A
     → User question → RAG over regulations table (pgvector semantic search)
     → Top-K requirement units retrieved
-    → headyai.com LLM: grounded answer with article citations
+    → heady-ai.com LLM: grounded answer with article citations
     → Response + citations returned
 ```
 
@@ -172,7 +172,7 @@ Compliance Q&A
 |------------|-------|---------|
 | Governance Atlas asset registry (asset risk tier + record) | Governance Atlas team (Wave 5) | Yes — P0 |
 | pgvector regulatory library + matrix schema | HeadyMe engineering | Yes — P0 |
-| headyai.com LLM (mapper + report + Q&A) | HeadyAI | Yes — P0 |
+| heady-ai.com LLM (mapper + report + Q&A) | HeadyAI | Yes — P0 |
 | headyapi-core route registration | HeadyAPI team | Yes — P0 |
 | EUR-Lex, FTC, NIST polling access | External (public) | Yes — P0 |
 | heady-sentinel event types for compliance alerts | Sentinel team | Yes — P0 |

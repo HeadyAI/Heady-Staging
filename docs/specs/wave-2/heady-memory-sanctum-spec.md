@@ -3,7 +3,7 @@
 **Version:** 1.0  
 **Date:** 2026-03-17  
 **Author:** Eric Haywood / Heady Ecosystem  
-**Domain:** headyme.com / headyai.com  
+**Domain:** headyme.com / heady-ai.com  
 **Status:** Draft
 
 ---
@@ -13,7 +13,7 @@
 Heady Memory Sanctum is a persistent, user-sovereign long-term memory layer for the Heady ecosystem. It solves the fundamental problem that AI sessions are stateless — every conversation forgets everything the user taught, shared, or built previously. The Sanctum captures, indexes, retrieves, and governs durable memory across all Heady services, turning each session into a continuation rather than a reset.
 
 ### Problem Statement
-Users across headyme.com, headybuddy.org, and headyai.com currently re-explain their preferences, context, goals, and history at the start of every session. This creates friction, degrades output quality, and makes the ecosystem feel transactional rather than relational. The cost of not solving it is low retention, shallow personalization, and competitive vulnerability against memory-native AI products.
+Users across headyme.com, headybuddy.org, and heady-ai.com currently re-explain their preferences, context, goals, and history at the start of every session. This creates friction, degrades output quality, and makes the ecosystem feel transactional rather than relational. The cost of not solving it is low retention, shallow personalization, and competitive vulnerability against memory-native AI products.
 
 ### Goals
 1. Reduce session re-priming time by ≥80% for returning users within 60 days of launch.
@@ -92,7 +92,7 @@ Users across headyme.com, headybuddy.org, and headyai.com currently re-explain t
 
 ### Technology Choices
 - **Vector Store:** Cloudflare Vectorize or Pinecone (per headysystems.com infrastructure preference); namespace-per-user isolation.
-- **Embedding Model:** text-embedding-3-small (OpenAI) or a self-hosted equivalent via headyai.com routing.
+- **Embedding Model:** text-embedding-3-small (OpenAI) or a self-hosted equivalent via heady-ai.com routing.
 - **Metadata DB:** PostgreSQL (Cloud Run) with row-level security enforcing user_id scope.
 - **Audit Log:** append-only table in PostgreSQL; no UPDATE or DELETE permissions on the log table role.
 
@@ -138,7 +138,7 @@ Users across headyme.com, headybuddy.org, and headyai.com currently re-explain t
 | Control | Implementation |
 |---|---|
 | User isolation | Namespace-per-user in vector store; row-level security in metadata DB |
-| Authentication | JWT from headyai.com auth service; short-lived tokens (15 min) |
+| Authentication | JWT from heady-ai.com auth service; short-lived tokens (15 min) |
 | Encryption at rest | AES-256 for all memory text and metadata |
 | Encryption in transit | TLS 1.3 on all API endpoints |
 | Consent gate | Memory write requires explicit user consent flag in account settings |
@@ -156,7 +156,7 @@ Memory text is classified as **Tier 1 Personal Data** — highest internal sensi
 
 | Dependency | Owner | Status |
 |---|---|---|
-| headyai.com auth service (JWT issuance) | headyai.com | Required — must be live before Sanctum |
+| heady-ai.com auth service (JWT issuance) | heady-ai.com | Required — must be live before Sanctum |
 | Embedding model API (OpenAI or self-hosted) | headysystems.com | Required |
 | Cloudflare Vectorize or Pinecone account | Infrastructure | Required |
 | headyme.com dashboard shell | headyme.com | Required for Management UI |

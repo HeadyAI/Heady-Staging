@@ -904,7 +904,7 @@ F(3)=2   F(7)=13  F(11)=89  F(15)=610
 | headyio.com | API Platform |
 | headybot.com | Bot Services |
 | headyapi.com | API Gateway |
-| headyai.com | AI Research |
+| heady-ai.com | AI Research |
 
 ---
 

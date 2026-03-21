@@ -3,7 +3,7 @@
 **Version:** 1.0  
 **Date:** 2026-03-17  
 **Author:** Eric Haywood / Heady Ecosystem  
-**Domain:** headyme.com / headyai.com / headysystems.com  
+**Domain:** headyme.com / heady-ai.com / headysystems.com  
 **Status:** Draft
 
 ---
@@ -72,8 +72,8 @@ Users accumulate substantial intelligence through their Heady sessions — in me
 |---|---|---|
 | Graph Extraction Pipeline | Reads new session data, Memory Sanctum entries, and SWC files; extracts entities and relationships | headysystems.com |
 | Knowledge Graph Store | Stores the entity-relationship graph (nodes + edges + attributes) | headysystems.com |
-| Graph Query Engine | Processes natural-language queries against the graph | headyai.com |
-| Insight Synthesizer | Generates AI-written insight summaries and weekly digest | headyai.com |
+| Graph Query Engine | Processes natural-language queries against the graph | heady-ai.com |
+| Insight Synthesizer | Generates AI-written insight summaries and weekly digest | heady-ai.com |
 | Graph Explorer UI | Interactive node-link visualization in headyme.com | headyme.com |
 | Manual Edit API | Allows user to rename, merge, annotate, archive nodes/edges | headyapi.com |
 | Privacy Enforcer | Ensures graph data never leaves user namespace; strictest access controls | headysystems.com |
@@ -151,7 +151,7 @@ Output:
 |---|---|---|
 | Heady Memory Sanctum (primary data source for graph build) | Second-wave | Required for rich graph |
 | Heady Sovereign Workspace Cloud (secondary data source) | Second-wave | Complementary |
-| headyai.com LLM routing (extraction + synthesis calls) | headyai.com | Required |
+| heady-ai.com LLM routing (extraction + synthesis calls) | heady-ai.com | Required |
 | Knowledge Graph Store (Neo4j or PostgreSQL+pgvector) | Infrastructure | Required |
 | headyme.com dashboard (Explorer UI) | headyme.com | Required |
 | D3.js or equivalent visualization library | Frontend | Required |

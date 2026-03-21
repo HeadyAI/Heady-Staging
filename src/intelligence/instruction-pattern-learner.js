@@ -92,13 +92,13 @@ const SEED_PATTERNS = [
   },
   {
     id: 'domain_heady_ai_alias',
-    canonical: 'headyai.com should serve heady-ai.com content',
-    keywords: ['headyai', 'headyai.com', 'heady-ai', 'alias', '403'],
+    canonical: 'heady-ai.com should serve heady-ai.com content',
+    keywords: ['headyai', 'heady-ai.com', 'heady-ai', 'alias', '403'],
     category: 'domain_alias',
     resolution: {
       type: 'code_edit',
       file: 'src/core/dynamic-site-server.js',
-      action: 'ensure headyai.com is aliased to heady-ai.com in DOMAIN_ALIASES',
+      action: 'ensure heady-ai.com is aliased to heady-ai.com in DOMAIN_ALIASES',
     },
     confidence: 0.9,
     occurrences: 3,
@@ -112,7 +112,7 @@ const SEED_PATTERNS = [
       type: 'knowledge',
       facts: {
         owned: ['headybuddy.org', 'heady-ai.com', 'headyme.com', 'headysystems.com', 'headyio.com', 'headybot.com', 'headyapi.com', 'headymcp.com', 'headylens.com', 'headyfinance.com', 'headyconnection.org'],
-        not_owned: ['headybuddy.com', 'headysense.com', 'headyai.com'],
+        not_owned: ['headybuddy.com', 'headysense.com', 'heady-ai.com'],
       },
     },
     confidence: 1.0,

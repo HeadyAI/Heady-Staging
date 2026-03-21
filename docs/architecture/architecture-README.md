@@ -90,20 +90,20 @@ Response → User
 User on headyme.com clicks "Go to HeadyAI"
     │
     ▼
-Domain Router: verifyRoute('headyme.com', 'https://headyai.com')
+Domain Router: verifyRoute('headyme.com', 'https://heady-ai.com')
     │ ── Checks canonical domain registry
     │ ── CSL gate: min(0.809, 0.882) = 0.809 ≥ 0.500 ✓
     ▼
-Domain Router: initiateAuthHandoff(userId, 'headyme.com', 'https://headyai.com')
+Domain Router: initiateAuthHandoff(userId, 'headyme.com', 'https://heady-ai.com')
     │ ── Generates one-time relay code (21 bytes, base64url)
     │ ── Returns handoff URL: auth.headysystems.com/relay?code=...&dest=...
     ▼
 Browser redirects to auth.headysystems.com/relay
     │ ── Relay verifies code (one-time, expires in 11 090ms)
-    │ ── Sets httpOnly __Host-heady_session cookie for headyai.com
-    │ ── Redirects to destination: headyai.com
+    │ ── Sets httpOnly __Host-heady_session cookie for heady-ai.com
+    │ ── Redirects to destination: heady-ai.com
     ▼
-headyai.com loads with valid session
+heady-ai.com loads with valid session
     │ ── Hidden iframe to auth.headysystems.com/bridge
     │ ── postMessage confirms session status
     │ ── All subsequent requests use httpOnly cookie

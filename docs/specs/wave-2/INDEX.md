@@ -18,15 +18,15 @@ This pack contains 10 fresh feature specifications for the Heady ecosystem's sec
 
 | # | Feature | File | Primary Domain(s) | Companion Skill |
 |---|---------|------|-------------------|-----------------|
-| 1 | **Heady Memory Sanctum** | `heady-memory-sanctum-spec.md` | headyme.com / headyai.com | heady-memory-sanctum |
-| 2 | **Heady Persona Studio** | `heady-persona-studio-spec.md` | headyme.com / headyai.com / headybuddy.org | heady-persona-studio |
+| 1 | **Heady Memory Sanctum** | `heady-memory-sanctum-spec.md` | headyme.com / heady-ai.com | heady-memory-sanctum |
+| 2 | **Heady Persona Studio** | `heady-persona-studio-spec.md` | headyme.com / heady-ai.com / headybuddy.org | heady-persona-studio |
 | 3 | **Heady Task Genome** | `heady-task-genome-spec.md` | headyme.com / headysystems.com / headybot.com | heady-task-genome |
-| 4 | **Heady Context Capsule Mesh** | `heady-context-capsule-mesh-spec.md` | headysystems.com / headyai.com / headymcp.com | heady-context-capsule-mesh |
+| 4 | **Heady Context Capsule Mesh** | `heady-context-capsule-mesh-spec.md` | headysystems.com / heady-ai.com / headymcp.com | heady-context-capsule-mesh |
 | 5 | **Heady Skill Bazaar** | `heady-skill-bazaar-spec.md` | headyme.com / headyio.com / headyapi.com | heady-skill-bazaar |
-| 6 | **Heady Simulation Sandbox** | `heady-simulation-sandbox-spec.md` | headyme.com / headysystems.com / headyai.com | heady-simulation-sandbox-design |
-| 7 | **Heady Presence Router** | `heady-presence-router-spec.md` | headyme.com / headyai.com / headymcp.com | heady-presence-router |
+| 6 | **Heady Simulation Sandbox** | `heady-simulation-sandbox-spec.md` | headyme.com / headysystems.com / heady-ai.com | heady-simulation-sandbox-design |
+| 7 | **Heady Presence Router** | `heady-presence-router-spec.md` | headyme.com / heady-ai.com / headymcp.com | heady-presence-router |
 | 8 | **Heady Sovereign Workspace Cloud** | `heady-sovereign-workspace-cloud-spec.md` | headyme.com / headysystems.com / headyio.com | heady-sovereign-workspace-cloud |
-| 9 | **Heady Insight Graph** | `heady-insight-graph-spec.md` | headyme.com / headyai.com / headysystems.com | heady-insight-graph |
+| 9 | **Heady Insight Graph** | `heady-insight-graph-spec.md` | headyme.com / heady-ai.com / headysystems.com | heady-insight-graph |
 | 10 | **Heady Ritual Engine** | `heady-ritual-engine-spec.md` | headyme.com / headybuddy.org / headybot.com | heady-ritual-engine |
 
 ---
@@ -91,7 +91,7 @@ Each specification in this pack covers:
 | Domain | Features Covered |
 |--------|-----------------|
 | headyme.com | All 10 (command center / dashboard) |
-| headyai.com | 7 of 10 |
+| heady-ai.com | 7 of 10 |
 | headysystems.com | 8 of 10 |
 | headymcp.com | Context Capsule Mesh, Presence Router |
 | headybot.com | Task Genome, Ritual Engine |

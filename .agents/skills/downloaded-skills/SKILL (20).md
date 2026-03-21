@@ -47,7 +47,7 @@ Treat the following ecosystem context as default background when it is relevant 
 | headyio.com | Developer platform and data flow |
 | headybot.com | Automation, webhooks, and autonomous agents |
 | headyapi.com | Public intelligence interface |
-| headyai.com | Intelligence hub and model routing |
+| heady-ai.com | Intelligence hub and model routing |
 
 Treat the following technical concepts as core parts of the operating context when applicable:
 

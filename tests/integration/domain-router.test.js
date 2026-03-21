@@ -27,9 +27,9 @@ function test(name, fn) {
 // ─── Route Verification Tests ───────────────────────────────────────────────
 
 test('verifyRoute accepts valid cross-domain route', () => {
-  const result = verifyRoute('headyme.com', 'https://headyai.com/dashboard');
+  const result = verifyRoute('headyme.com', 'https://heady-ai.com/dashboard');
   assert.strictEqual(result.valid, true);
-  assert.strictEqual(result.destination, 'headyai.com');
+  assert.strictEqual(result.destination, 'heady-ai.com');
   assert.strictEqual(result.destinationRole, 'intelligence_hub');
   assert.ok(result.routingConfidence >= CSL_THRESHOLDS.MINIMUM);
   assert.strictEqual(result.meetsThreshold, true);
@@ -68,7 +68,7 @@ test('verifyRoute works for all 9 domain combinations', () => {
 // ─── Auth Handoff Tests ─────────────────────────────────────────────────────
 
 test('initiateAuthHandoff succeeds for valid route', () => {
-  const result = initiateAuthHandoff('user_1', 'headyme.com', 'https://headyai.com/');
+  const result = initiateAuthHandoff('user_1', 'headyme.com', 'https://heady-ai.com/');
   assert.strictEqual(result.success, true);
   assert.ok(result.relay.code, 'should have relay code');
   assert.ok(result.relay.nonce, 'should have nonce');
@@ -92,17 +92,17 @@ test('getNavigationManifest returns full structure', () => {
 });
 
 test('getNavigationManifest marks current domain', () => {
-  const manifest = getNavigationManifest('headyai.com');
+  const manifest = getNavigationManifest('heady-ai.com');
   const current = manifest.domains.find((d) => d.isCurrent);
   assert.ok(current, 'should have current domain');
-  assert.strictEqual(current.host, 'headyai.com');
+  assert.strictEqual(current.host, 'heady-ai.com');
 });
 
 // ─── Route Logging Tests ────────────────────────────────────────────────────
 
 test('logRoute does not throw', () => {
   assert.doesNotThrow(() => {
-    logRoute('headyme.com', 'https://headyai.com', 'user_1', true);
+    logRoute('headyme.com', 'https://heady-ai.com', 'user_1', true);
   });
 });
 

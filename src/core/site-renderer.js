@@ -19,8 +19,8 @@ function hashPw(pw, salt) {
 
 // ── Domain Aliases ───────────────────────────────────────────
 const DOMAIN_ALIASES = {
-  'headyai.com': 'heady-ai.com',
-  'www.headyai.com': 'heady-ai.com',
+  'heady-ai.com': 'heady-ai.com',
+  'www.heady-ai.com': 'heady-ai.com',
 };
 
 // ── Resolve site from Host header ────────────────────────────

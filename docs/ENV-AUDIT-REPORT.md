@@ -100,7 +100,7 @@ HNSW_EF_SEARCH=55  # FIB[10]
 
 | Variable | .env v10.0 (Wrong) | Canonical (heady-domains.js) |
 |----------|-------------------|-----------------------------|
-| `HEADY_AI_URL` | `heady-ai.com` | `headyai.com` |
+| `HEADY_AI_URL` | `heady-ai.com` | `heady-ai.com` |
 | `HEADY_BUDDY_URL` | `headybuddy.com` | `headybuddy.org` |
 | `HEADY_CONNECTION_URL` | `headyconnection.com` | `headyconnection.org` |
 

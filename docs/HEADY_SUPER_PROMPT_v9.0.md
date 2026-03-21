@@ -1262,7 +1262,7 @@ postMessage Origin Validation:
     - "https://headybot.com"
     - "https://headyapi.com"
     - "https://headylens.com"
-    - "https://headyai.com"
+    - "https://heady-ai.com"
     - "https://headyfinance.com"
   validation: |
     window.addEventListener('message', (event) => {
@@ -1350,7 +1350,7 @@ headyio.com:         "#ff3d82", API & integration
 headybot.com:        "#4caf50", Bot services
 headyapi.com:        "#ff9800", API gateway
 headylens.com:       "#e91e8c", Vision & perception
-headyai.com:         "#00bcd4", Core AI services
+heady-ai.com:         "#00bcd4", Core AI services
 headyfinance.com:    "#4caf50", Financial intelligence
 ```
 

@@ -1,6 +1,6 @@
 import { MCPServer, MCPRequest } from '@heady-ai/mcp-server';
 
-const ALLOWED_ORIGINS = ['https://headyai.com', 'https://app.headyai.com'];
+const ALLOWED_ORIGINS = ['https://heady-ai.com', 'https://app.heady-ai.com'];
 
 function getCorsOrigin(request: Request): string {
   const origin = request.headers.get('Origin') || '';

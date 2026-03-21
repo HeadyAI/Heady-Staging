@@ -1,7 +1,7 @@
 # Feature Spec: Projection Composer for Context-Driven UI/App Delivery
 
 **Feature ID:** HEADY-FEAT-010  
-**Domain:** headyme.com / headysystems.com / headyai.com  
+**Domain:** headyme.com / headysystems.com / heady-ai.com  
 **Status:** Draft  
 **Author:** Eric Haywood  
 **Date:** 2026-03-17  

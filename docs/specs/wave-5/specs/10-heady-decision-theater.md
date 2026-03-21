@@ -108,8 +108,8 @@ headyme.com Decision Theater panel + headybuddy.org
     ▼
 Decision Theater Service (new microservice, Cloud Run)
     ├─ Decision Frame Orchestrator (HeadyBuddy intent: "decision-frame")
-    ├─ Option Analyzer (headyai.com LLM: pros/cons, assumptions, inversion test)
-    ├─ Pre-Mortem Generator (headyai.com LLM, structured failure mode output)
+    ├─ Option Analyzer (heady-ai.com LLM: pros/cons, assumptions, inversion test)
+    ├─ Pre-Mortem Generator (heady-ai.com LLM, structured failure mode output)
     ├─ Criteria Weighter (user-configured weights → option scoring matrix)
     ├─ Life OS Canvas Context Fetcher (reads Canvas summary for active domains)
     ├─ Monte Carlo Dispatcher (calls heady-montecarlo service via headyapi.com)
@@ -134,8 +134,8 @@ Decision frame creation (HeadyBuddy)
     → Written to decision_sessions table (status: framed)
 
 Option analysis
-    → Option Analyzer: headyai.com LLM per option (pros/cons, assumptions, inversion)
-    → Pre-Mortem Generator: headyai.com LLM for leading option
+    → Option Analyzer: heady-ai.com LLM per option (pros/cons, assumptions, inversion)
+    → Pre-Mortem Generator: heady-ai.com LLM for leading option
     → Results written to decision_sessions (status: analyzed)
     → Rendered in Decision Theater UI
 
@@ -162,7 +162,7 @@ Retrospective (30 days later)
 | Concern | Mitigation |
 |---------|------------|
 | Decision content sensitivity | Decision sessions stored in encrypted user namespace; no sharing or aggregation |
-| Life OS Canvas context | Canvas summary injected locally; not sent to external APIs beyond the standard headyai.com model call context |
+| Life OS Canvas context | Canvas summary injected locally; not sent to external APIs beyond the standard heady-ai.com model call context |
 | Decision log permanence | User can delete individual decision sessions or the full log at any time |
 | Monte Carlo financial parameters | Parameters scoped to user session; not retained after session closes unless user explicitly saves |
 | Legal/financial decision disclaimer | All Decision Theater sessions open with a brief disclaimer: "This is a structured thinking tool, not professional legal, medical, or financial advice" |
@@ -175,7 +175,7 @@ Retrospective (30 days later)
 |------------|-------|---------|
 | headybuddy-core intent classification ("decision-frame") | HeadyBuddy team | Yes — P0 |
 | pgvector decision_sessions table schema | HeadyMe engineering | Yes — P0 |
-| headyai.com LLM (option analysis + pre-mortem) | HeadyAI | Yes — P0 |
+| heady-ai.com LLM (option analysis + pre-mortem) | HeadyAI | Yes — P0 |
 | headymcp-core tool registration | HeadyMCP team | Yes (MCP tools) |
 | Life OS Canvas Context API | Life OS Canvas team (Wave 5) | No — P1 |
 | heady-montecarlo API (probabilistic modeling) | heady-montecarlo team | No — P1 |

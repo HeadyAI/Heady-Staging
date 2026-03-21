@@ -3,7 +3,7 @@
 **Version:** 1.0  
 **Date:** 2026-03-17  
 **Owner:** headysystems.com / headyio.com  
-**Domain:** headysystems.com, headyai.com  
+**Domain:** headysystems.com, heady-ai.com  
 **Skill Target:** heady-deployment-pulse
 
 ---

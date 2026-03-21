@@ -44,7 +44,7 @@ Treat these as default ecosystem anchors when relevant:
 | headyio.com | Developer platform |
 | headybot.com | Automation and agents |
 | headyapi.com | Public intelligence interface |
-| headyai.com | Intelligence routing hub |
+| heady-ai.com | Intelligence routing hub |
 
 ## Instructions
 

@@ -42,7 +42,7 @@ runTest('HEADY_DOMAINS includes all 9 canonical domains', () => {
   const expected = [
     'headyme.com', 'headysystems.com', 'headyconnection.org',
     'headybuddy.org', 'headymcp.com', 'headyio.com',
-    'headybot.com', 'headyapi.com', 'headyai.com',
+    'headybot.com', 'headyapi.com', 'heady-ai.com',
   ];
   for (const h of expected) {
     assert.ok(hosts.includes(h), `should include ${h}`);
@@ -121,9 +121,9 @@ runTest('getDomainByHost returns correct domain config', () => {
 });
 
 runTest('getDomainByHost strips www prefix', () => {
-  const result = getDomainByHost('www.headyai.com');
+  const result = getDomainByHost('www.heady-ai.com');
   assert.ok(result);
-  assert.strictEqual(result.host, 'headyai.com');
+  assert.strictEqual(result.host, 'heady-ai.com');
 });
 
 runTest('getDomainByHost returns null for unknown host', () => {
@@ -135,7 +135,7 @@ runTest('getDomainByHost returns null for unknown host', () => {
 
 runTest('isAllowedOrigin returns true for canonical origins', () => {
   assert.strictEqual(isAllowedOrigin('https://headyme.com'), true);
-  assert.strictEqual(isAllowedOrigin('https://headyai.com'), true);
+  assert.strictEqual(isAllowedOrigin('https://heady-ai.com'), true);
 });
 
 runTest('isAllowedOrigin returns false for non-Heady origins', () => {

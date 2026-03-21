@@ -16,7 +16,7 @@
 | headyio.com | Developer platform — SDKs, APIs, integration guides | Next.js + Cloud Run |
 | headybot.com | Automation and agents — bot management, swarm dashboard | Next.js + Cloud Run |
 | headyapi.com | Public intelligence interface — API gateway, rate limiting | Cloudflare Workers + Cloud Run |
-| headyai.com | Intelligence routing hub — model selection, liquid gateway | Cloudflare Workers |
+| heady-ai.com | Intelligence routing hub — model selection, liquid gateway | Cloudflare Workers |
 
 ---
 

@@ -91,7 +91,7 @@ node scripts/migrate.mjs up
 
 These gaps are reduced but not fully closed — they need iterative work:
 
-1. **Remaining 10 site scaffolds** — headysystems.com, headyconnection.org, headybuddy.com, headymcp.com, headyio.com, headybot.com, headyapi.com, headylens.com, headyai.com, headyfinance.com. Same design system, different accent colors and content.
+1. **Remaining 10 site scaffolds** — headysystems.com, headyconnection.org, headybuddy.com, headymcp.com, headyio.com, headybot.com, headyapi.com, headylens.com, heady-ai.com, headyfinance.com. Same design system, different accent colors and content.
 
 2. **heady-manager.js ESM migration** — The 109KB CJS file needs incremental conversion. The esm-bridge.cjs provides the bridge for now.
 

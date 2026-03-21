@@ -14,7 +14,7 @@ export const SWARM_AGENT_CARDS = [
   {
     name: 'HeadyOvermind',
     description: 'Goal decomposition, task routing, and DAG construction. Central orchestrator for all swarms.',
-    url: 'https://headyai.com/a2a/overmind',
+    url: 'https://heady-ai.com/a2a/overmind',
     version: '1.0.0',
     capabilities: {
       streaming: true,
@@ -34,7 +34,7 @@ export const SWARM_AGENT_CARDS = [
   {
     name: 'HeadyGovernance',
     description: 'Policy enforcement, secrets management, compliance, and audit logging.',
-    url: 'https://headyai.com/a2a/governance',
+    url: 'https://heady-ai.com/a2a/governance',
     version: '1.0.0',
     capabilities: { streaming: false, pushNotifications: true, stateTransitionHistory: true },
     skills: [
@@ -49,7 +49,7 @@ export const SWARM_AGENT_CARDS = [
   {
     name: 'HeadyForge',
     description: 'Code generation, AST mutation, testing, and hologram generation.',
-    url: 'https://headyai.com/a2a/forge',
+    url: 'https://heady-ai.com/a2a/forge',
     version: '1.0.0',
     capabilities: { streaming: true, pushNotifications: true, stateTransitionHistory: true },
     skills: [
@@ -65,7 +65,7 @@ export const SWARM_AGENT_CARDS = [
   {
     name: 'HeadyEmissary',
     description: 'Documentation, MCP protocol bridging, SDK publishing, and API design.',
-    url: 'https://headyai.com/a2a/emissary',
+    url: 'https://heady-ai.com/a2a/emissary',
     version: '1.0.0',
     capabilities: { streaming: true, pushNotifications: false, stateTransitionHistory: false },
     skills: [
@@ -79,7 +79,7 @@ export const SWARM_AGENT_CARDS = [
   },
   {
     name: 'HeadyFoundry', description: 'Dataset curation, model fine-tuning, LoRA training.',
-    url: 'https://headyai.com/a2a/foundry', version: '1.0.0',
+    url: 'https://heady-ai.com/a2a/foundry', version: '1.0.0',
     capabilities: { streaming: true, pushNotifications: true, stateTransitionHistory: true },
     skills: [
       { id: 'fine-tune', name: 'Model Fine-tuning', description: 'QLoRA fine-tuning on Colab GPUs', inputModes: ['data', 'file'], outputModes: ['data'] },
@@ -91,7 +91,7 @@ export const SWARM_AGENT_CARDS = [
   },
   {
     name: 'HeadyStudio', description: 'MIDI bridge, DAW integration, music production.',
-    url: 'https://headyai.com/a2a/studio', version: '1.0.0',
+    url: 'https://heady-ai.com/a2a/studio', version: '1.0.0',
     capabilities: { streaming: true, pushNotifications: false, stateTransitionHistory: false },
     skills: [
       { id: 'midi', name: 'MIDI Processing', description: 'Parse, generate, and transform MIDI', inputModes: ['data'], outputModes: ['data'] },
@@ -103,7 +103,7 @@ export const SWARM_AGENT_CARDS = [
   },
   {
     name: 'HeadyArbiter', description: 'IP protection, patent harvesting, license compliance.',
-    url: 'https://headyai.com/a2a/arbiter', version: '1.0.0',
+    url: 'https://heady-ai.com/a2a/arbiter', version: '1.0.0',
     capabilities: { streaming: false, pushNotifications: true, stateTransitionHistory: true },
     skills: [
       { id: 'patent-scan', name: 'Patent Scan', description: 'Detect patentable innovations and potential infringements', inputModes: ['text', 'file'], outputModes: ['data'] },
@@ -115,7 +115,7 @@ export const SWARM_AGENT_CARDS = [
   },
   {
     name: 'HeadyDiplomat', description: 'B2B procurement, partnership negotiation.',
-    url: 'https://headyai.com/a2a/diplomat', version: '1.0.0',
+    url: 'https://heady-ai.com/a2a/diplomat', version: '1.0.0',
     capabilities: { streaming: false, pushNotifications: true, stateTransitionHistory: false },
     skills: [
       { id: 'procure', name: 'Procurement', description: 'Evaluate vendors and negotiate terms', inputModes: ['text', 'data'], outputModes: ['text', 'data'] },
@@ -126,7 +126,7 @@ export const SWARM_AGENT_CARDS = [
   },
   {
     name: 'HeadyOracle', description: 'Economic guardrails, billing, cost tracking.',
-    url: 'https://headyai.com/a2a/oracle', version: '1.0.0',
+    url: 'https://heady-ai.com/a2a/oracle', version: '1.0.0',
     capabilities: { streaming: false, pushNotifications: true, stateTransitionHistory: true },
     skills: [
       { id: 'budget', name: 'Budget Management', description: 'Track spend, enforce caps, auto-downgrade', inputModes: ['data'], outputModes: ['data'] },
@@ -138,7 +138,7 @@ export const SWARM_AGENT_CARDS = [
   },
   {
     name: 'HeadyQuant', description: 'Trading strategies, portfolio optimization, risk management.',
-    url: 'https://headyai.com/a2a/quant', version: '1.0.0',
+    url: 'https://heady-ai.com/a2a/quant', version: '1.0.0',
     capabilities: { streaming: true, pushNotifications: true, stateTransitionHistory: true },
     skills: [
       { id: 'analyze', name: 'Market Analysis', description: 'Technical and fundamental analysis', inputModes: ['text', 'data'], outputModes: ['text', 'data'] },
@@ -150,7 +150,7 @@ export const SWARM_AGENT_CARDS = [
   },
   {
     name: 'HeadyFabricator', description: 'IoT control, CAD generation, hardware.',
-    url: 'https://headyai.com/a2a/fabricator', version: '1.0.0',
+    url: 'https://heady-ai.com/a2a/fabricator', version: '1.0.0',
     capabilities: { streaming: false, pushNotifications: true, stateTransitionHistory: false },
     skills: [
       { id: 'iot', name: 'IoT Control', description: 'Interface with IoT devices and sensors', inputModes: ['data'], outputModes: ['data'] },
@@ -161,7 +161,7 @@ export const SWARM_AGENT_CARDS = [
   },
   {
     name: 'HeadyPersona', description: 'Personality consistency, empathic adaptation.',
-    url: 'https://headyai.com/a2a/persona', version: '1.0.0',
+    url: 'https://heady-ai.com/a2a/persona', version: '1.0.0',
     capabilities: { streaming: true, pushNotifications: false, stateTransitionHistory: true },
     skills: [
       { id: 'adapt', name: 'Persona Adaptation', description: 'Adapt communication style to user context', inputModes: ['text', 'data'], outputModes: ['text'] },
@@ -172,7 +172,7 @@ export const SWARM_AGENT_CARDS = [
   },
   {
     name: 'HeadySentinel', description: 'Threat detection, vulnerability scanning, self-healing.',
-    url: 'https://headyai.com/a2a/sentinel', version: '1.0.0',
+    url: 'https://heady-ai.com/a2a/sentinel', version: '1.0.0',
     capabilities: { streaming: false, pushNotifications: true, stateTransitionHistory: true },
     skills: [
       { id: 'scan', name: 'Security Scan', description: 'Vulnerability and threat detection', inputModes: ['data', 'file'], outputModes: ['data'] },
@@ -184,7 +184,7 @@ export const SWARM_AGENT_CARDS = [
   },
   {
     name: 'HeadyNexus', description: 'Smart contracts, blockchain, tokenization.',
-    url: 'https://headyai.com/a2a/nexus', version: '1.0.0',
+    url: 'https://heady-ai.com/a2a/nexus', version: '1.0.0',
     capabilities: { streaming: false, pushNotifications: true, stateTransitionHistory: true },
     skills: [
       { id: 'deploy', name: 'Contract Deploy', description: 'Deploy and verify smart contracts', inputModes: ['text', 'file'], outputModes: ['data'] },
@@ -195,7 +195,7 @@ export const SWARM_AGENT_CARDS = [
   },
   {
     name: 'HeadyDreamer', description: 'Monte Carlo simulation, scenario modeling.',
-    url: 'https://headyai.com/a2a/dreamer', version: '1.0.0',
+    url: 'https://heady-ai.com/a2a/dreamer', version: '1.0.0',
     capabilities: { streaming: true, pushNotifications: true, stateTransitionHistory: true },
     skills: [
       { id: 'simulate', name: 'Monte Carlo Sim', description: '1K+ scenario risk simulation', inputModes: ['data'], outputModes: ['data'] },
@@ -207,7 +207,7 @@ export const SWARM_AGENT_CARDS = [
   },
   {
     name: 'HeadyTensor', description: 'Semantic logic: IF, AND, NOT in vector space.',
-    url: 'https://headyai.com/a2a/tensor', version: '1.0.0',
+    url: 'https://heady-ai.com/a2a/tensor', version: '1.0.0',
     capabilities: { streaming: false, pushNotifications: false, stateTransitionHistory: false },
     skills: [
       { id: 'csl-gate', name: 'CSL Gate Evaluation', description: 'Execute CSL logic operations on vectors', inputModes: ['data'], outputModes: ['data'] },
@@ -219,7 +219,7 @@ export const SWARM_AGENT_CARDS = [
   },
   {
     name: 'HeadyTopology', description: 'Dimensionality reduction, dependency tracking.',
-    url: 'https://headyai.com/a2a/topology', version: '1.0.0',
+    url: 'https://heady-ai.com/a2a/topology', version: '1.0.0',
     capabilities: { streaming: false, pushNotifications: false, stateTransitionHistory: false },
     skills: [
       { id: 'reduce', name: 'Dimensionality Reduction', description: 'PCA/K-Means on vector spaces', inputModes: ['data'], outputModes: ['data'] },

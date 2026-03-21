@@ -142,7 +142,7 @@ headytech.com
 headyops.com
 headysec.com
 headydata.com
-headyai.com
+heady-ai.com
 headyml.com
 headyauto.com
 headybot.com

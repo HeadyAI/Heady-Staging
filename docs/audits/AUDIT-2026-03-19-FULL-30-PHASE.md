@@ -37,7 +37,7 @@
 | 2 | `render.yaml` | HEADY_VERSION `3.0.0` → `4.1.0` | Same |
 | 3 | `configs/app-readiness.yaml` | version `3.0.0` → `4.1.0` | Same |
 | 4 | `configs/01-site-registry.json` | Added 4 missing domains: headybuddy.com, headymcp.com, headybot.com, headylens.com | Site registry only had 9 of 13 domains |
-| 5 | `configs/01-site-registry.json` | Added 8 domain aliases (headyai.com, headybuddy.org, www.* variants) | Missing alias mappings |
+| 5 | `configs/01-site-registry.json` | Added 8 domain aliases (heady-ai.com, headybuddy.org, www.* variants) | Missing alias mappings |
 | 6 | `services/heady-mcp-server/src/transports/http.js` | Added `app.disable('x-powered-by')` | X-Powered-By: Express leak on headymcp.com |
 | 7 | `services/heady-mcp-server/src/transports/http.js` | Added security headers middleware (X-Content-Type-Options, X-Frame-Options, Referrer-Policy, Permissions-Policy) | Missing security headers on MCP endpoints |
 | 8 | `services/heady-mcp-server/src/transports/http.js` | Updated CORS origins to include all 12 production domains, removed localhost | CORS only covered 8 domains + allowed localhost |
@@ -63,7 +63,7 @@
 | headyme.com | 200 ✅ | 52KB ✅ | ✅ 29ch | 126ms ✅ | Live |
 | headyconnection.org | 200 ✅ | 24KB ✅ | ✅ 59ch | 336ms ✅ | Live |
 | headyconnection.com | 200 ✅ | 23KB ✅ | ✅ 59ch | 390ms ✅ | Live |
-| headyai.com | **405** ❌ | 0 ❌ | — | 477ms | **DOWN** |
+| heady-ai.com | **405** ❌ | 0 ❌ | — | 477ms | **DOWN** |
 | headybuddy.com | **503** ❌ | 0 ❌ | — | 157ms | **DOWN** |
 | headybuddy.org | 200 ✅ | ✅ | ✅ | 206ms ✅ | Live |
 | headymcp.com | 200 ✅ | 8KB ✅ | ✅ 19ch | 162ms ✅ | Live |
@@ -73,7 +73,7 @@
 | headylens.com | 200 ✅ | 23KB ✅ | ✅ 46ch | 129ms ✅ | Live |
 | headyfinance.com | 200 ✅ | 23KB ✅ | ✅ 50ch | 295ms ✅ | Live |
 
-**10/12 domains live. headyai.com (405) and headybuddy.com (503) are down.**
+**10/12 domains live. heady-ai.com (405) and headybuddy.com (503) are down.**
 **headybuddy.org is live and serves HeadyBuddy content — recommend redirecting headybuddy.com → headybuddy.org.**
 
 ### Phase 2: Link Integrity
@@ -263,7 +263,7 @@ File: `src/auto-success-engine.ts` (75,608 bytes)
 
 | # | Item | Reason |
 |---|------|--------|
-| 1 | headyai.com deployment | Service returning 405 — needs Cloud Run redeployment |
+| 1 | heady-ai.com deployment | Service returning 405 — needs Cloud Run redeployment |
 | 2 | headybuddy.com deployment | Service returning 503 — needs Cloud Run redeployment or redirect to .org |
 | 3 | admin.headysystems.com | Returning 404 — needs deployment |
 | 4 | Full auth flow testing | Requires OAuth credentials |
@@ -283,7 +283,7 @@ File: `src/auto-success-engine.ts` (75,608 bytes)
 ## PRIORITY REMEDIATION PLAN
 
 ### P0 — This Week
-1. **Deploy headyai.com** — Currently 405
+1. **Deploy heady-ai.com** — Currently 405
 2. **Deploy headybuddy.com** or redirect to headybuddy.org
 3. **Deploy admin.headysystems.com**
 4. **Deploy the security header fixes** (this commit)

@@ -29,7 +29,7 @@ Client                Auth Service (3360)           Firebase
 
 ### Cross-Domain Navigation
 ```
-headyme.com         Domain Router (3366)      Auth (3360)         headyai.com
+headyme.com         Domain Router (3366)      Auth (3360)         heady-ai.com
   │                        │                     │                     │
   │── POST /auth-handoff──▶│                     │                     │
   │                        │── generateRelayCode │                     │

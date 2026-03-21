@@ -1798,7 +1798,7 @@ headymcp.com/*        → Worker: heady-mcp-server-worker
 headyio.com/*         → Worker: heady-io-worker
 headybot.com/*        → Worker: heady-bot-worker
 headyapi.com/*        → Worker: heady-api-gateway-worker
-headyai.com/*         → Worker: heady-ai-main-worker
+heady-ai.com/*         → Worker: heady-ai-main-worker
 ```
 
 **KV Namespaces:**
@@ -2282,7 +2282,7 @@ FAILURE ESCALATION:
 | headyio.com | I/O integrations, connector platform | BRIDGE, connectors-bee | heady-io-worker |
 | headybot.com | Bot interfaces (Slack, Discord, Telegram) | HeadyBuddy, BRIDGE | heady-bot-worker |
 | headyapi.com | Public API gateway, developer portal | HeadyManager, HeadyConductor | heady-api-gateway-worker |
-| headyai.com | AI capabilities showcase, primary AI surface | HeadyConductor, all nodes | heady-ai-main-worker |
+| heady-ai.com | AI capabilities showcase, primary AI surface | HeadyConductor, all nodes | heady-ai-main-worker |
 
 ---
 
@@ -2512,7 +2512,7 @@ Platform (Slack/Discord/Telegram)
 
 ---
 
-### 8.10 headyai.com
+### 8.10 heady-ai.com
 
 | Property | Detail |
 |---|---|
@@ -2539,8 +2539,8 @@ Platform (Slack/Discord/Telegram)
 | `/api/health/full` | GET | LENS + health-bee | Warm | Full system health report |
 | `/health` | GET | health-bee | — | Basic health check |
 
-**Node Coverage on headyai.com:**
-All 34 Sacred Geometry nodes are accessible via the headyai.com Studio surface. HeadyConductor has unrestricted routing authority on this domain — it can reach every node in every ring.
+**Node Coverage on heady-ai.com:**
+All 34 Sacred Geometry nodes are accessible via the heady-ai.com Studio surface. HeadyConductor has unrestricted routing authority on this domain — it can reach every node in every ring.
 
 ---
 

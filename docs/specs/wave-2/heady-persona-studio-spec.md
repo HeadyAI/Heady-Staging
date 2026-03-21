@@ -3,7 +3,7 @@
 **Version:** 1.0  
 **Date:** 2026-03-17  
 **Author:** Eric Haywood / Heady Ecosystem  
-**Domain:** headyme.com / headyai.com / headybuddy.org  
+**Domain:** headyme.com / heady-ai.com / headybuddy.org  
 **Status:** Draft
 
 ---
@@ -71,8 +71,8 @@ The current Heady AI experience presents a single undifferentiated "assistant" v
 |---|---|---|
 | Persona Config Service | CRUD API for persona definitions | headyapi.com |
 | Persona Config Store | Structured store for persona metadata and config JSON | headysystems.com |
-| Persona Renderer | Translates persona config into system prompt + tool config at session start | headyai.com |
-| Live Preview Service | Lightweight inference endpoint for Studio preview calls | headyai.com |
+| Persona Renderer | Translates persona config into system prompt + tool config at session start | heady-ai.com |
+| Live Preview Service | Lightweight inference endpoint for Studio preview calls | heady-ai.com |
 | Persona Library UI | User's collection of created/saved personas | headyme.com |
 | Persona Card Service | Generates and serves shareable persona URLs | headyme.com |
 | Skill Bazaar Integration | Exposes personas for listing/discovery | Heady Skill Bazaar |
@@ -130,7 +130,7 @@ The current Heady AI experience presents a single undifferentiated "assistant" v
 2. User types test prompt in Live Preview panel
 3. POST /persona/preview {config_delta, test_prompt}
 4. Persona Renderer applies config_delta to base system prompt
-5. Preview call to headyai.com inference (short timeout, low cost model)
+5. Preview call to heady-ai.com inference (short timeout, low cost model)
 6. Response streamed back to preview panel
 ```
 
@@ -153,7 +153,7 @@ The current Heady AI experience presents a single undifferentiated "assistant" v
 
 | Dependency | Owner | Status |
 |---|---|---|
-| headyai.com session orchestrator (must accept persona system prompt fragments) | headyai.com | Required |
+| heady-ai.com session orchestrator (must accept persona system prompt fragments) | heady-ai.com | Required |
 | headyapi.com API gateway | headyapi.com | Required |
 | Heady Memory Sanctum (for memory scope enforcement) | Second-wave | Complementary |
 | Heady Skill Bazaar (for persona listing/monetization) | Second-wave | Complementary |

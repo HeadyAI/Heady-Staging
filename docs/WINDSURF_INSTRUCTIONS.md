@@ -179,7 +179,7 @@ async function bootstrap() {
 | `headymcp.com` | `headymcp` | `/mcp` | Yes |
 | `headyio.com` | `headyio` | `/io` | Yes |
 | `headybot.com` | `headybot` | `/bot` | Yes |
-| `headyai.com` | `headyai` | `/ai` | Yes |
+| `heady-ai.com` | `headyai` | `/ai` | Yes |
 
 **Note:** `headyos.com` is referenced in the codebase but absent from the routing table and Cloudflare config. This is a known gap — file an issue before adding any code that assumes headyos.com is live.
 

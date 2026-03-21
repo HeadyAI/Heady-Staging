@@ -45,7 +45,7 @@ runTest('generateRelayCode returns code and nonce', () => {
 
 runTest('generateRelayCode TTL uses PHI_TIMING.PHI_5', () => {
   const before = Date.now();
-  const result = generateRelayCode('user_2', 'headyai.com');
+  const result = generateRelayCode('user_2', 'heady-ai.com');
   const expectedExpiry = before + PHI_TIMING.PHI_5;
   assert.ok(Math.abs(result.expiresAt - expectedExpiry) < 100, 'TTL should match PHI_5');
 });

@@ -69,7 +69,7 @@ Each site contains at minimum `index.html`, `robots.txt`, `sitemap.xml`, and a `
 | headyio.com | Developer Platform | Cloud Run (us-central1) | production |
 | headybot.com | Automation & Agents | Cloud Run (us-central1) | production |
 | headyapi.com | Public Intelligence Interface | Cloud Run (us-central1) | production |
-| headyai.com | Intelligence Routing Hub | Cloudflare Workers (pure edge) | production |
+| heady-ai.com | Intelligence Routing Hub | Cloudflare Workers (pure edge) | production |
 
 ### Full-Rebuild Registry Domains
 
@@ -121,7 +121,7 @@ Unique domains referenced as service targets:
 | headysystems.com | Yes | Yes | Yes | Yes | Yes |
 | headyconnection.org | Yes | Yes | Yes | Yes | Yes |
 | headyconnection.com | Yes | Yes | — | — | — |
-| heady-ai.com | Yes | Yes | Yes (as headyai.com) | — | — |
+| heady-ai.com | Yes | Yes | Yes (as heady-ai.com) | — | — |
 | headyos.com | Yes | Yes | — | — | — |
 | headyex.com | Yes | Yes | — | — | — |
 | headyfinance.com | Yes | Yes | — | — | — |
@@ -134,7 +134,7 @@ Unique domains referenced as service targets:
 | heady.io | — | — | — | — | Yes |
 | headybot.com | — | — | Yes | — | — |
 | headyapi.com | — | — | Yes | — | Yes |
-| headyai.com | — | — | Yes | — | — |
+| heady-ai.com | — | — | Yes | — | — |
 | headybee.co | — | — | — | Yes | Yes |
 | headylens.ai | — | — | — | Yes | Yes |
 | headyarena.io | — | — | — | Yes | — |
@@ -148,7 +148,7 @@ Unique domains referenced as service targets:
    - Full-rebuild domains.yaml: **infrastructure** domains (9 service endpoints)
    - Full-rebuild registry: **internal service** domains (9 node-facing endpoints)
 
-2. **heady-ai.com vs headyai.com.** Perplexity and system-build use `heady-ai.com` (hyphenated). Full-rebuild domains.yaml uses `headyai.com` (no hyphen). These may be the same property or separate domains.
+2. **heady-ai.com vs heady-ai.com.** Perplexity and system-build use `heady-ai.com` (hyphenated). Full-rebuild domains.yaml uses `heady-ai.com` (no hyphen). These may be the same property or separate domains.
 
 3. **headybuddy.org vs headybuddy.com.** Full-rebuild domains.yaml and registry use `headybuddy.org`. System-build SERVICE_INDEX uses `headybuddy.com`. Neither appears in the Perplexity site-registry.
 

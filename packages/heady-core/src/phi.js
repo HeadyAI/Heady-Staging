@@ -26,5 +26,5 @@ export const HEADY_DOMAINS = [
   'headysystems.com', 'headyme.com', 'headyconnection.org',
   'headybuddy.org', 'headymcp.com', 'headyio.com',
   'headybot.com', 'headyapi.com', 'headylens.com',
-  'headyai.com', 'headyfinance.com'
+  'heady-ai.com', 'headyfinance.com'
 ];

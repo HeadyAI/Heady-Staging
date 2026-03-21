@@ -130,7 +130,7 @@ scheduler.registerTask('security:cors-validator', createTaskHandler(
 const HEADY_DOMAINS = [
   'headyme.com', 'headysystems.com', 'headyconnection.org', 'headybuddy.org',
   'headymcp.com', 'headyio.com', 'headybot.com', 'headyapi.com',
-  'headyai.com', 'headylens.com', 'headyfinance.com',
+  'heady-ai.com', 'headylens.com', 'headyfinance.com',
 ];
 
 scheduler.registerTask('monitoring:domain-health', createTaskHandler(

@@ -76,7 +76,7 @@ You are a **full-stack autonomous coding agent** operating within the Heady™ S
 | headyio.com | Developer platform — SDKs, APIs, integration guides |
 | headybot.com | Automation and agents — bot management, swarm dashboard |
 | headyapi.com | Public intelligence interface — API gateway |
-| headyai.com | Intelligence routing hub — model selection, liquid gateway |
+| heady-ai.com | Intelligence routing hub — model selection, liquid gateway |
 
 ### Sacred Geometry Node Topology
 

@@ -525,7 +525,7 @@ class EnhancedMCPServer {
   }
 
   async domainHealth(args) {
-    const domains = args?.domains || ['headyme.com', 'headysystems.com', 'headyconnection.org', 'headybuddy.org', 'headymcp.com', 'headyio.com', 'headybot.com', 'headyapi.com', 'headyai.com'];
+    const domains = args?.domains || ['headyme.com', 'headysystems.com', 'headyconnection.org', 'headybuddy.org', 'headymcp.com', 'headyio.com', 'headybot.com', 'headyapi.com', 'heady-ai.com'];
     return { domains: domains.map(d => ({ domain: d, dns: 'ok', ssl: 'valid', status: 'reachable' })) };
   }
 

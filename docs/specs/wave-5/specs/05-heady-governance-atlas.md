@@ -10,7 +10,7 @@
 
 ## 1. Problem Statement
 
-By mid-2026, the EU AI Act's high-risk provisions are fully in force, Colorado's AI regulations are active, and the FTC's AI compliance program is issuing enforcement actions. Enterprise teams deploying AI systems face a governance gap: they have AI capabilities in production but lack a structured, auditable map of which AI systems exist, what risk tier they sit in, who owns them, what policies govern them, and whether those policies are currently satisfied. Heady's production platform (heady-production, headyai.com, headymcp-core) already orchestrates multiple AI agents and model calls. Governance Atlas turns the Heady control plane into a governance-aware registry that maps AI assets, tracks compliance posture, and publishes attestations.
+By mid-2026, the EU AI Act's high-risk provisions are fully in force, Colorado's AI regulations are active, and the FTC's AI compliance program is issuing enforcement actions. Enterprise teams deploying AI systems face a governance gap: they have AI capabilities in production but lack a structured, auditable map of which AI systems exist, what risk tier they sit in, who owns them, what policies govern them, and whether those policies are currently satisfied. Heady's production platform (heady-production, heady-ai.com, headymcp-core) already orchestrates multiple AI agents and model calls. Governance Atlas turns the Heady control plane into a governance-aware registry that maps AI assets, tracks compliance posture, and publishes attestations.
 
 **Cost of not solving it:** Regulatory exposure for Heady and its enterprise customers; missed opportunity to lead in AI governance tooling as it becomes mandatory infrastructure.
 
@@ -110,9 +110,9 @@ Governance Atlas Service (new microservice, Cloud Run)
     ├─ Policy Engine (YAML policy loader + evaluator)
     │   ├─ Policy Store (pgvector governance_policies table)
     │   └─ Policy Evaluator Worker (scheduled + event-driven)
-    ├─ Attestation Report Generator (headyai.com LLM for narrative + template engine for PDF)
+    ├─ Attestation Report Generator (heady-ai.com LLM for narrative + template engine for PDF)
     ├─ Change History Logger (append-only audit_log table)
-    ├─ Risk Tier Classifier (headyai.com LLM call)
+    ├─ Risk Tier Classifier (heady-ai.com LLM call)
     └─ headyapi-core route adapter (/v1/governance/*)
 
 heady-sentinel integration
@@ -141,7 +141,7 @@ Policy evaluation (scheduled, every 15 min + on-demand)
 Attestation report request
     → Governance Atlas Service
     → Fresh policy evaluation run
-    → headyai.com LLM: generate narrative summaries per asset
+    → heady-ai.com LLM: generate narrative summaries per asset
     → Template engine: compose PDF with asset table + narrative
     → PDF written to secure storage, presigned URL returned
 ```
@@ -167,7 +167,7 @@ Attestation report request
 | heady-sentinel pub/sub event registry (new event types) | Sentinel team | Yes — P0 |
 | headymcp-core tool registration events | HeadyMCP team | Yes — P0 |
 | pgvector governance tables schema | HeadyMe engineering | Yes — P0 |
-| headyai.com LLM (narrative + classification) | HeadyAI | Yes — P0 |
+| heady-ai.com LLM (narrative + classification) | HeadyAI | Yes — P0 |
 | headyapi-core route registration | HeadyAPI team | Yes — P0 |
 | headyio.com SDK CLI tool support | HeadyIO team | No — P1 |
 | Heady Audit Forge (Wave 5) | Audit Forge team | No — P2 |

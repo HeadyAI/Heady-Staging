@@ -60,7 +60,7 @@ Adults who want to build skills — technical, creative, or professional — aba
 
 ### P0 — Must Have
 - **Topic onboarding quiz:** 5–10 adaptive questions per topic to establish baseline placement. Stored in learner profile vector.
-- **Spiral path generator:** Given a topic and baseline score, generate a 4–8 week path with spaced-repetition scheduling, using headyai.com model routing for content generation.
+- **Spiral path generator:** Given a topic and baseline score, generate a 4–8 week path with spaced-repetition scheduling, using heady-ai.com model routing for content generation.
 - **Session delivery engine:** Each session is a structured block: concept intro → example → analogy → micro-quiz → reflection prompt. Delivered conversationally inside HeadyBuddy.
 - **Progress persistence:** All session completions, quiz scores, concept flags, and milestones stored in the learner's pgvector profile via latent-core-dev sync.
 - **Spiral re-entry:** On return, system fetches last known position from vector store and contextualizes the next session to elapsed time and drift.
@@ -108,7 +108,7 @@ HeadyBuddy Chat Engine (headybuddy-core)
     ▼
 Learning Spiral Service (new microservice, headyme-core domain)
     ├─ Topic Onboarding Module
-    ├─ Spiral Path Generator (calls headyai.com multi-model router)
+    ├─ Spiral Path Generator (calls heady-ai.com multi-model router)
     ├─ Session Block Renderer (prompt templates + model calls)
     ├─ Progress Store (pgvector via latent-core-dev)
     └─ MCP Tool Adapter (headymcp-core, 3 tools)
@@ -126,13 +126,13 @@ Learning Spiral Service (new microservice, headyme-core domain)
 User input (topic + quiz answers)
     → Learning Spiral Service
     → Baseline scorer
-    → Path DAG generator (headyai.com)
+    → Path DAG generator (heady-ai.com)
     → pgvector write (learner profile)
 
 Session start trigger (scheduled or on-demand)
     → pgvector read (last position, elapsed time)
     → Session Block Renderer
-    → headyai.com model call
+    → heady-ai.com model call
     → Rendered session → HeadyBuddy delivery
     → User response → quiz evaluator → score update → pgvector write
 
@@ -161,7 +161,7 @@ MCP call (external)
 | Dependency | Owner | Blocking |
 |------------|-------|---------|
 | latent-core-dev pgvector schema extension | HeadyMe engineering | Yes — P0 |
-| headyai.com multi-model router (stable API) | HeadyAI team | Yes — P0 |
+| heady-ai.com multi-model router (stable API) | HeadyAI team | Yes — P0 |
 | headymcp-core tool registration | HeadyMCP team | Yes (for MCP tools) |
 | headybuddy-core intent classification | HeadyBuddy team | Yes — P0 |
 | headyio.com SDK module submission flow | HeadyIO team | No — P1 |

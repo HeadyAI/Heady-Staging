@@ -1405,7 +1405,7 @@ const DOMAINS = [
   { domain: 'headybot.com', purpose: 'Bot marketplace', infra: 'CF Worker', auth: 'public', icon: 'BT', color: '#ef4444', types: ['page','agent_listing'], features: ['buddy','vector'] },
   { domain: 'headyapi.com', purpose: 'API documentation', infra: 'CF Worker', auth: 'pilot', icon: 'AP', color: '#06b6d4', types: ['page','documentation','api_ref'], features: ['buddy','vector','analytics'] },
   { domain: 'headyme.com', purpose: 'Visual AI / lens tools', infra: 'CF Worker', auth: 'public', icon: 'HL', color: '#a855f7', types: ['page','article'], features: ['buddy','sacred-geo'] },
-  { domain: 'headyai.com', purpose: 'AI platform portal', infra: 'CF Worker', auth: 'public', icon: 'AI', color: '#ec4899', types: ['page','research_paper','benchmark'], features: ['buddy','sacred-geo','vector','analytics'] },
+  { domain: 'heady-ai.com', purpose: 'AI platform portal', infra: 'CF Worker', auth: 'public', icon: 'AI', color: '#ec4899', types: ['page','research_paper','benchmark'], features: ['buddy','sacred-geo','vector','analytics'] },
   { domain: 'headysystems.com', purpose: 'Financial services', infra: 'CF Worker', auth: 'enterprise', icon: 'HF', color: '#eab308', types: ['page','article','tool'], features: ['buddy','analytics'] },
   { domain: 'headyconnection.org', purpose: 'Non-profit arm', infra: 'Cloudflare Zone', auth: 'public', icon: 'HC', color: '#14b8a6', types: ['page','program','event','impact_report'], features: ['buddy','sacred-geo'] },
   { domain: '1ime1.com', purpose: 'Admin control surface (this page)', infra: 'Cloudflare Pages', auth: 'internal', icon: '1L', color: '#f97316', types: ['admin'], features: ['buddy','sacred-geo','cross-device','analytics'] },
@@ -1466,7 +1466,7 @@ const PIPELINE_STAGES = [
 let TASKS = [
   { id: 't1', title: 'Deploy v5.0 homepage', type: 'deploy', site: 'headysystems.com', priority: 'high', status: 'backlog', node: 'CONDUCTOR' },
   { id: 't2', title: 'Write MCP SDK docs', type: 'content', site: 'headymcp.com', priority: 'high', status: 'in-progress', node: 'ATLAS' },
-  { id: 't3', title: 'Fix OAuth callback on headyai.com', type: 'bug', site: 'headyai.com', priority: 'high', status: 'in-progress', node: 'SENTINEL' },
+  { id: 't3', title: 'Fix OAuth callback on heady-ai.com', type: 'bug', site: 'heady-ai.com', priority: 'high', status: 'in-progress', node: 'SENTINEL' },
   { id: 't4', title: 'Sacred geometry bg on headylens', type: 'feature', site: 'headyme.com', priority: 'medium', status: 'backlog', node: 'FORGE' },
   { id: 't5', title: 'SEO audit for headyfinance', type: 'seo', site: 'headysystems.com', priority: 'medium', status: 'backlog', node: 'OBSERVER' },
   { id: 't6', title: 'Publish impact report Q1', type: 'content', site: 'headyconnection.org', priority: 'medium', status: 'review', node: 'ATLAS' },

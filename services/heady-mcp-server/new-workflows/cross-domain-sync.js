@@ -10,7 +10,7 @@ const CSL = { MIN: 0.500, MED: 0.809, HIGH: 0.882, DEDUP: 0.972 };
 
 const DOMAINS = [
   'headyme.com','headysystems.com','headyconnection.org','headybuddy.org',
-  'headymcp.com','headyio.com','headybot.com','headyapi.com','headyai.com'
+  'headymcp.com','headyio.com','headybot.com','headyapi.com','heady-ai.com'
 ];
 
 class CrossDomainSyncWorkflow {

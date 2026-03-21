@@ -22,7 +22,7 @@ const HEADY_DOMAINS = Object.freeze({
   HEADYIO:          { host: 'headyio.com',          role: 'developer_platform', pool: 'warm', csl: CSL_THRESHOLDS.LOW },
   HEADYBOT:         { host: 'headybot.com',         role: 'automation',         pool: 'warm', csl: CSL_THRESHOLDS.MEDIUM },
   HEADYAPI:         { host: 'headyapi.com',         role: 'api_gateway',        pool: 'hot',  csl: CSL_THRESHOLDS.CRITICAL },
-  HEADYAI:          { host: 'headyai.com',          role: 'intelligence_hub',   pool: 'hot',  csl: CSL_THRESHOLDS.HIGH },
+  HEADYAI:          { host: 'heady-ai.com',          role: 'intelligence_hub',   pool: 'hot',  csl: CSL_THRESHOLDS.HIGH },
 });
 
 // ─── Admin Subdomains ────────────────────────────────────────────────────────
@@ -72,7 +72,7 @@ function isAllowedOrigin(origin) {
 const NAVIGATION_MAP = Object.freeze({
   primary: [
     { label: 'Dashboard',    href: 'https://headyme.com',          domain: 'HEADYME' },
-    { label: 'AI Hub',       href: 'https://headyai.com',          domain: 'HEADYAI' },
+    { label: 'AI Hub',       href: 'https://heady-ai.com',          domain: 'HEADYAI' },
     { label: 'API',          href: 'https://headyapi.com',         domain: 'HEADYAPI' },
     { label: 'MCP',          href: 'https://headymcp.com',         domain: 'HEADYMCP' },
   ],

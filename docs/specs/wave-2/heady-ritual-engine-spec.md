@@ -86,7 +86,7 @@ Heady is currently entirely reactive — it only works when a user initiates it.
 | Ritual Definition Store | CRUD store for ritual configs (schedule, trigger, template, delivery, context sources) | headysystems.com |
 | Ritual Scheduler | Cron-based scheduler that fires ritual triggers on time | headybot.com |
 | Event Trigger Listener | Listens for system events (genome complete, file write, memory threshold) and fires event-triggered rituals | headybot.com |
-| Ritual Runner | Executes a ritual: assembles context, calls LLM, formats output | headyai.com |
+| Ritual Runner | Executes a ritual: assembles context, calls LLM, formats output | heady-ai.com |
 | Context Assembler | Fetches and combines context from Memory Sanctum, SWC, Genome results, Insight Graph | headysystems.com |
 | Delivery Service | Routes ritual output to configured channels (dashboard, email, push) | headysystems.com |
 | Run Log Store | Immutable log of all ritual runs with status and output metadata | headysystems.com |
@@ -172,7 +172,7 @@ Heady is currently entirely reactive — it only works when a user initiates it.
 | Dependency | Owner | Status |
 |---|---|---|
 | headybot.com scheduler/executor runtime | headybot.com | Required |
-| headyai.com LLM routing (for ritual LLM call) | headyai.com | Required |
+| heady-ai.com LLM routing (for ritual LLM call) | heady-ai.com | Required |
 | Heady Memory Sanctum (context source) | Second-wave | Complementary |
 | Heady Sovereign Workspace Cloud (context source) | Second-wave | Complementary |
 | Heady Task Genome (event trigger + context source) | Second-wave | Complementary |

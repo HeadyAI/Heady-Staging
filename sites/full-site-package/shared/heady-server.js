@@ -29,7 +29,7 @@ const PHI_TIMEOUT_SERVER = Math.round(phiPow(5) * 1000); // 11,090ms
 const ALLOWED_ORIGINS = [
   'https://headysystems.com', 'https://headyme.com', 'https://headybuddy.org',
   'https://headymcp.com', 'https://headyio.com', 'https://headybot.com',
-  'https://headyapi.com', 'https://headylens.com', 'https://headyai.com',
+  'https://headyapi.com', 'https://headylens.com', 'https://heady-ai.com',
   'https://headyfinance.com', 'https://headyconnection.org', 'https://1ime1.com',
   'https://admin.headysystems.com',
   ...(process.env.EXTRA_ORIGINS?.split(',') || []),

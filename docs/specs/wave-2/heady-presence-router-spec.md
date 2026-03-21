@@ -3,7 +3,7 @@
 **Version:** 1.0  
 **Date:** 2026-03-17  
 **Author:** Eric Haywood / Heady Ecosystem  
-**Domain:** headyme.com / headyai.com / headymcp.com  
+**Domain:** headyme.com / heady-ai.com / headymcp.com  
 **Status:** Draft
 
 ---
@@ -72,7 +72,7 @@ Users interact with the Heady ecosystem across multiple domains (headyme.com, he
 |---|---|---|
 | Presence Signal Collector | Receives session start/end/transition events from all Heady domains | headymcp.com |
 | Presence State Store | Per-user current presence record (active domain, device, capsule_id, persona_id, last_seen) | headysystems.com |
-| Routing Intelligence | Evaluates presence state and determines capsule-injection or persona-activation recommendation for new sessions | headyai.com |
+| Routing Intelligence | Evaluates presence state and determines capsule-injection or persona-activation recommendation for new sessions | heady-ai.com |
 | Capsule Pre-Stager | Pre-creates or caches context capsule for anticipated domain transitions | headymcp.com |
 | Presence API | Exposes presence read/write endpoints to all Heady domains | headyapi.com |
 | Presence Control UI | User-facing presence management panel in headyme.com settings | headyme.com |
@@ -180,7 +180,7 @@ Users interact with the Heady ecosystem across multiple domains (headyme.com, he
 - Success gate: ≥70% of returning sessions receive a correct resume recommendation
 
 ### Phase 3 — Cross-Domain + Presence Control UI (Weeks 9–12)
-- Multi-domain signal collection (headybuddy.org, headyai.com)
+- Multi-domain signal collection (headybuddy.org, heady-ai.com)
 - Capsule Pre-Stager for anticipated domain transitions
 - Presence Control Panel in headyme.com settings
 - Open launch

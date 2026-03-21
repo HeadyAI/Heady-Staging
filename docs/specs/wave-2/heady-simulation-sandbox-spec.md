@@ -3,7 +3,7 @@
 **Version:** 1.0  
 **Date:** 2026-03-17  
 **Author:** Eric Haywood / Heady Ecosystem  
-**Domain:** headyme.com / headysystems.com / headyai.com  
+**Domain:** headyme.com / headysystems.com / heady-ai.com  
 **Status:** Draft
 
 ---
@@ -80,13 +80,13 @@ AI recommendations in high-stakes domains (business strategy, code deployment, f
 
 | Component | Role | Domain |
 |---|---|---|
-| Simulation Planner | Converts natural-language or genome input into a structured simulation script | headyai.com |
+| Simulation Planner | Converts natural-language or genome input into a structured simulation script | heady-ai.com |
 | Sandbox Executor | Runs simulation scripts step by step; dispatches real or mocked calls | headysystems.com |
 | Mock Service Layer | Intercepts side-effect task types and returns simulated (not real) responses | headysystems.com |
 | Branch Manager | Creates, stores, and manages parallel simulation branches | headysystems.com |
 | Simulation Store | Persists completed simulation traces and branch trees | headysystems.com |
 | Simulation UI | Interactive step-by-step trace viewer with branching controls | headyme.com |
-| Confidence Scorer | LLM-based step-level confidence assessment | headyai.com |
+| Confidence Scorer | LLM-based step-level confidence assessment | heady-ai.com |
 
 ### Mock Service Map (v1)
 | Real Task Type | Mock Behavior |
@@ -153,7 +153,7 @@ AI recommendations in high-stakes domains (business strategy, code deployment, f
 
 | Dependency | Owner | Status |
 |---|---|---|
-| headyai.com LLM routing (for Simulation Planner and Confidence Scorer) | headyai.com | Required |
+| heady-ai.com LLM routing (for Simulation Planner and Confidence Scorer) | heady-ai.com | Required |
 | Heady Task Genome (for genome dry-run input) | Second-wave | Complementary |
 | headyme.com dashboard (Simulation UI) | headyme.com | Required |
 | Mock Service Layer (must mirror all Task Genome task types) | headysystems.com | Required |

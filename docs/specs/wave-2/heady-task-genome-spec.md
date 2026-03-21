@@ -72,12 +72,12 @@ Users frequently ask Heady agents to accomplish multi-step goals (research + wri
 
 | Component | Role | Domain |
 |---|---|---|
-| Genome Decomposer | LLM-powered goal → task graph decomposer | headyai.com |
+| Genome Decomposer | LLM-powered goal → task graph decomposer | heady-ai.com |
 | Genome Store | Versioned storage for genome definitions (graph JSON + metadata) | headysystems.com |
 | Genome Executor | Interprets and runs genome graphs; manages task sequencing and branching | headybot.com |
 | Task Type Registry | Catalog of available typed task primitives (web_search, llm_transform, etc.) | headysystems.com |
 | Run State Store | Real-time execution state per genome run | headysystems.com |
-| Genome Suggestion Engine | Semantic similarity matching of new goals vs. genome library | headyai.com |
+| Genome Suggestion Engine | Semantic similarity matching of new goals vs. genome library | heady-ai.com |
 | Genome Canvas UI | Visual graph editor in headyme.com | headyme.com |
 
 ### Task Type Primitives (v1)
@@ -167,7 +167,7 @@ Users frequently ask Heady agents to accomplish multi-step goals (research + wri
 | Dependency | Owner | Status |
 |---|---|---|
 | headybot.com execution runtime | headybot.com | Required |
-| headyai.com LLM routing (for Decomposer and llm_transform tasks) | headyai.com | Required |
+| heady-ai.com LLM routing (for Decomposer and llm_transform tasks) | heady-ai.com | Required |
 | Task Type Registry (must be defined before decomposer prompt) | headysystems.com | Required |
 | headyme.com dashboard (for Genome Canvas UI) | headyme.com | Required |
 | Heady Sovereign Workspace Cloud (for file_read/file_write tasks) | Second-wave | Complementary |

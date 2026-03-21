@@ -228,7 +228,7 @@ module.exports = (env = {}, argv = {}) => {
             const origin = req.headers.origin;
             const HEADY_ORIGINS = new Set([
               'https://headyme.com','https://www.headyme.com','https://headysystems.com','https://www.headysystems.com',
-              'https://headyai.com','https://www.headyai.com','https://headybuddy.org','https://headybuddy.org',
+              'https://heady-ai.com','https://www.heady-ai.com','https://headybuddy.org','https://headybuddy.org',
               'https://headybuddy.org','https://www.headybuddy.org','https://headymcp.com','https://www.headymcp.com',
               'https://headyio.com','https://www.headyio.com','https://headybot.com','https://www.headybot.com',
               'https://headyapi.com','https://www.headyapi.com','https://headylens.com','https://www.headylens.com',

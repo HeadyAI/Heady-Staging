@@ -26,7 +26,7 @@ const log = pino({ name: 'heady-gateway', level: process.env.LOG_LEVEL || 'info'
 const HEADY_DOMAINS = [
   'headyme.com', 'headysystems.com', 'headyconnection.org', 'headyconnection.com',
   'headybuddy.org', 'headymcp.com', 'headyio.com', 'headybot.com',
-  'headyapi.com', 'headyai.com', 'headyos.com', 'headyex.com', 'headyfinance.com',
+  'headyapi.com', 'heady-ai.com', 'headyos.com', 'headyex.com', 'headyfinance.com',
 ];
 
 function isHeadyOrigin(origin) {

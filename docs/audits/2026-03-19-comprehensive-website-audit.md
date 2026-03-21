@@ -21,7 +21,7 @@
 **Overall ORS (Operational Readiness Score): ~47/100** — Not production-ready across all 12 domains.
 
 **Top 3 issues to fix immediately:**
-1. `headyai.com` returning **HTTP 405** — homepage broken
+1. `heady-ai.com` returning **HTTP 405** — homepage broken
 2. `headybuddy.com` returning **HTTP 503** — service down
 3. Missing **security headers** across all 12 domains (CSP, HSTS, X-Frame-Options, etc.)
 
@@ -128,7 +128,7 @@
 
 ---
 
-### 5. headyai.com ❌ BROKEN (2 pass | 5 critical fail | 11 warn)
+### 5. heady-ai.com ❌ BROKEN (2 pass | 5 critical fail | 11 warn)
 
 | Check | Status | Detail |
 |-------|--------|--------|
@@ -145,7 +145,7 @@
 | sitemap.xml | ⚠️ | 405 |
 | Security headers | ⚠️ | All missing |
 
-**⚠️ ACTION REQUIRED:** `headyai.com` is returning HTTP 405 for all GET requests. The domain is not serving a website. Check routing configuration and deployment status.
+**⚠️ ACTION REQUIRED:** `heady-ai.com` is returning HTTP 405 for all GET requests. The domain is not serving a website. Check routing configuration and deployment status.
 
 ---
 
@@ -287,8 +287,8 @@
 
 ## Critical Failures — Fix Immediately (Priority 1)
 
-### P1-01: headyai.com — HTTP 405 (Domain Broken)
-- **Issue:** All GET requests to `headyai.com` return `405 Method Not Allowed`
+### P1-01: heady-ai.com — HTTP 405 (Domain Broken)
+- **Issue:** All GET requests to `heady-ai.com` return `405 Method Not Allowed`
 - **Impact:** Site is completely inaccessible. No content served.
 - **Fix:** Check Cloud Run routing configuration. Verify HTTP method routing allows GET. Check if a backend service is rejecting requests.
 
@@ -356,7 +356,7 @@ Affected: headysystems.com, headyconnection.org, headyconnection.com, headymcp.c
   "logo": "https://headysystems.com/logo.png",
   "sameAs": [
     "https://headyme.com",
-    "https://headyai.com"
+    "https://heady-ai.com"
   ]
 }
 </script>
@@ -425,7 +425,7 @@ Affected: headysystems.com, headyconnection.org, headyconnection.com, headymcp.c
 | headyme.com | 200 ✅ | 52KB ✅ | ✅ | ❌ | ✅ | **68/100** | Needs OG tags |
 | headyconnection.org | 200 ✅ | 24KB ✅ | ✅ | ✅ | ✅ | **72/100** | Ready with fixes |
 | headyconnection.com | 200 ✅ | 23KB ✅ | ✅ | ✅ | ✅ | **72/100** | Ready with fixes |
-| headyai.com | 405 ❌ | 114B ❌ | ❌ | ❌ | ❌ | **5/100** | **BROKEN — fix now** |
+| heady-ai.com | 405 ❌ | 114B ❌ | ❌ | ❌ | ❌ | **5/100** | **BROKEN — fix now** |
 | headybuddy.com | 503 ❌ | 344B ❌ | ❌ | ❌ | ❌ | **5/100** | **DOWN — fix now** |
 | headymcp.com | 200 ✅ | 8.7KB ✅ | ✅ | ❌ | ❌ | **45/100** | Needs content |
 | headyio.com | 200 ✅ | 23KB ✅ | ✅ | ✅ | ✅ | **72/100** | Ready with fixes |
@@ -439,7 +439,7 @@ Affected: headysystems.com, headyconnection.org, headyconnection.com, headymcp.c
 ## Recommended Remediation Plan
 
 ### This Week (P1)
-- [ ] Fix `headyai.com` — investigate and resolve HTTP 405
+- [ ] Fix `heady-ai.com` — investigate and resolve HTTP 405
 - [ ] Fix `headybuddy.com` — restore service from HTTP 503
 - [ ] Add viewport meta to `headymcp.com`
 - [ ] Add Open Graph tags to `headyme.com`
@@ -461,7 +461,7 @@ Affected: headysystems.com, headyconnection.org, headyconnection.com, headymcp.c
 - [ ] Schedule daily health checks (HTTP status for all 12 domains)
 - [ ] Schedule weekly full audit (this script)
 - [ ] Set up SSL expiry monitoring (alert at 30 days)
-- [ ] Add uptime monitoring for `headyai.com` and `headybuddy.com`
+- [ ] Add uptime monitoring for `heady-ai.com` and `headybuddy.com`
 
 ---
 

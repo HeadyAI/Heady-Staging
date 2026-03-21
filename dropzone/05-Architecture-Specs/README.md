@@ -18,15 +18,15 @@ This specification pack covers ten high-value new features for the Heady ecosyst
 | # | File | Feature | Primary Domain | Key Dependency |
 |---|---|---|---|---|
 | 001 | [01-permission-graph-delegation-vault.md](./01-permission-graph-delegation-vault.md) | Permission Graph and Delegation Vault | headysystems.com / headyme.com | MCP layer |
-| 002 | [02-memory-ledger.md](./02-memory-ledger.md) | Memory Ledger with Temporal and Privacy Controls | headyme.com / headyai.com / headybuddy.org | Cloudflare Vectorize |
+| 002 | [02-memory-ledger.md](./02-memory-ledger.md) | Memory Ledger with Temporal and Privacy Controls | headyme.com / heady-ai.com / headybuddy.org | Cloudflare Vectorize |
 | 003 | [03-work-area-orchestrator.md](./03-work-area-orchestrator.md) | Work-Area Orchestrator for Android/Desktop Isolation | headyme.com / headysystems.com | Memory Ledger + Permission Vault |
 | 004 | [04-liquid-module-registry.md](./04-liquid-module-registry.md) | Liquid Module Registry for Dynamic App/Connector Delivery | headyio.com / headysystems.com | Permission Vault + Work-Area Orchestrator |
-| 005 | [05-mission-control-manager-surface.md](./05-mission-control-manager-surface.md) | Mission Control Manager Surface | headyme.com / headyai.com | MCP task event emission + Permission Vault |
+| 005 | [05-mission-control-manager-surface.md](./05-mission-control-manager-surface.md) | Mission Control Manager Surface | headyme.com / heady-ai.com | MCP task event emission + Permission Vault |
 | 006 | [06-skill-foundry.md](./06-skill-foundry.md) | Skill Foundry for Installable Action Packs | headyio.com / headyme.com / headybuddy.org | Liquid Module Registry |
 | 007 | [07-trust-receipts-action-playback.md](./07-trust-receipts-action-playback.md) | Trust Receipts and Action Playback | headysystems.com / headyme.com | MCP layer + Permission Vault |
 | 008 | [08-cross-device-handoff-mesh.md](./08-cross-device-handoff-mesh.md) | Cross-Device Handoff Mesh | headyme.com / headysystems.com | Work-Area Orchestrator + Mission Control |
-| 009 | [09-heady-arena.md](./09-heady-arena.md) | Heady Arena — Multi-Model Comparison and Route Selection | headyai.com / headyme.com | headyai.com Model Router |
-| 010 | [10-projection-composer.md](./10-projection-composer.md) | Projection Composer for Context-Driven UI/App Delivery | headyme.com / headysystems.com / headyai.com | Liquid Module Registry + Work-Area Orchestrator + Mission Control |
+| 009 | [09-heady-arena.md](./09-heady-arena.md) | Heady Arena — Multi-Model Comparison and Route Selection | heady-ai.com / headyme.com | heady-ai.com Model Router |
+| 010 | [10-projection-composer.md](./10-projection-composer.md) | Projection Composer for Context-Driven UI/App Delivery | headyme.com / headysystems.com / heady-ai.com | Liquid Module Registry + Work-Area Orchestrator + Mission Control |
 
 ---
 
@@ -59,7 +59,7 @@ Layer 4 — Experience and Intelligence
   ├── 008 Cross-Device Handoff Mesh
   │   (depends on: 003, 005)
   ├── 009 Heady Arena
-  │   (depends on: headyai.com router)
+  │   (depends on: heady-ai.com router)
   └── 010 Projection Composer
       (depends on: 003, 004, 005)
 ```

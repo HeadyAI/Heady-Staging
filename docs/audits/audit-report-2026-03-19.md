@@ -21,7 +21,7 @@
 > **2 domains expose `.env` and `.git` files** (headyme.com, headyapi.com). This is a critical security vulnerability that must be fixed **immediately**.
 
 > [!WARNING]
-> **headyai.com** returns HTTP 405 (completely inaccessible) and **headybuddy.com** has an expired SSL certificate and is unreachable.
+> **heady-ai.com** returns HTTP 405 (completely inaccessible) and **headybuddy.com** has an expired SSL certificate and is unreachable.
 
 ---
 
@@ -33,7 +33,7 @@
 | 2 | `headyme.com` | `.git` directory publicly accessible | 🔴 CRITICAL |
 | 3 | `headyapi.com` | `.env` file publicly accessible | 🔴 CRITICAL |
 | 4 | `headyapi.com` | `.git` directory publicly accessible | 🔴 CRITICAL |
-| 5 | `headyai.com` | Entire site returns HTTP 405 — DOWN | 🔴 HIGH |
+| 5 | `heady-ai.com` | Entire site returns HTTP 405 — DOWN | 🔴 HIGH |
 | 6 | `headybuddy.com` | SSL certificate expired, site unreachable | 🔴 HIGH |
 
 ### Broken Internal Links (across all domains)
@@ -47,7 +47,7 @@
 | `headylens.com` | `/viz` | 404 |
 | `headyfinance.com` | `/dashboard` | 404 |
 
-### Missing Viewport Meta (all 12 except headyai.com/headybuddy.com which are down)
+### Missing Viewport Meta (all 12 except heady-ai.com/headybuddy.com which are down)
 
 Every reachable domain is missing `<meta name="viewport">`, which breaks mobile rendering.
 
@@ -87,7 +87,7 @@ No domain has any of these required headers:
 
 | Destination | Status | Affected From |
 |-------------|--------|---------------|
-| `headyai.com` | HTTP 405 | 7 domains link to it |
+| `heady-ai.com` | HTTP 405 | 7 domains link to it |
 | `headybuddy.com` | Unreachable (000) | 7 domains link to it |
 | `heady-ai.com` (wrong domain) | Unreachable | headysystems.com |
 | `headysense.com` | Unreachable | headyme.com |
@@ -154,7 +154,7 @@ No domain has any of these required headers:
 
 ---
 
-### 5. headyai.com — Intelligence Pillar
+### 5. heady-ai.com — Intelligence Pillar
 | Category | Status | Details |
 |----------|--------|---------|
 | DNS | ✅ | Resolves |
@@ -274,7 +274,7 @@ All domains have excellent TTFB (via Cloudflare):
    - Add Cloudflare WAF rules or server-side config to return 403/404 for `/.env`, `/.git/*`, `/package.json`
    - Rotate ALL credentials/secrets in those `.env` files immediately
 
-2. **Fix headyai.com** — Currently returning HTTP 405 (Method Not Allowed)
+2. **Fix heady-ai.com** — Currently returning HTTP 405 (Method Not Allowed)
    - Check Cloud Run service health, redeploy if needed
 
 3. **Renew headybuddy.com SSL** — Certificate has expired
@@ -284,8 +284,8 @@ All domains have excellent TTFB (via Cloudflare):
 
 4. **Add `<meta name="viewport">` to ALL domains** — Currently missing everywhere, breaking mobile
 5. **Fix 6 broken internal links** (`/programs`, `/docs`, `/catalog`, `/viz`, `/dashboard`)
-6. **Fix cross-domain links** — `headyai.com` and `headybuddy.com` links are broken on 7+ domains
-7. **Fix `heady-ai.com` typo** link on headysystems.com (should be `headyai.com`)
+6. **Fix cross-domain links** — `heady-ai.com` and `headybuddy.com` links are broken on 7+ domains
+7. **Fix `heady-ai.com` typo** link on headysystems.com (should be `heady-ai.com`)
 
 ### 🟡 Priority 3 — Fix This Month
 

@@ -110,7 +110,7 @@ Content-Type: application/json
 
 {
   "sourceDomain": "headyme.com",
-  "destinationURL": "https://headyai.com/dashboard"
+  "destinationURL": "https://heady-ai.com/dashboard"
 }
 ```
 
@@ -122,7 +122,7 @@ Content-Type: application/json
 {
   "userId": "user_123",
   "sourceDomain": "headyme.com",
-  "destinationURL": "https://headyai.com/dashboard"
+  "destinationURL": "https://heady-ai.com/dashboard"
 }
 ```
 

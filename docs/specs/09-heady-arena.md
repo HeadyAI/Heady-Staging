@@ -1,7 +1,7 @@
 # Feature Spec: Heady Arena — Multi-Model Comparison and Route Selection
 
 **Feature ID:** HEADY-FEAT-009  
-**Domain:** headyai.com / headyme.com  
+**Domain:** heady-ai.com / headyme.com  
 **Status:** Draft  
 **Author:** Eric Haywood  
 **Date:** 2026-03-17  
@@ -106,7 +106,7 @@ Current routing in the Heady ecosystem is either fixed (one model per surface) o
 
 1. From Buddy: "Compare in Arena" button on any AI response
 2. From HeadyWeb: "Open Arena" button in toolbar
-3. Direct: headyai.com/arena
+3. Direct: heady-ai.com/arena
 
 ### Arena Main View
 
@@ -190,7 +190,7 @@ Current routing in the Heady ecosystem is either fixed (one model per surface) o
 │  └────────────────────────────────────────────────────┘  │
 │         ↓                                               │
 │  ┌──────────────────────────────────────────────────┐    │
-│  │  Model Router (headyai.com)                      │    │
+│  │  Model Router (heady-ai.com)                      │    │
 │  │  Routes each fan-out request to correct provider │    │
 │  │  (OpenAI, Anthropic, Google, Mistral, etc.)      │    │
 │  └──────────────────────────────────────────────────┘    │
@@ -261,7 +261,7 @@ confidence = wins / total; if confidence < 0.6 and total < 5: show "not enough d
 
 | Dependency | Owner | Risk |
 |---|---|---|
-| headyai.com Model Router (multi-provider routing) | HeadyAI | High — must support fan-out pattern |
+| heady-ai.com Model Router (multi-provider routing) | HeadyAI | High — must support fan-out pattern |
 | OpenAI, Anthropic, Google, Mistral API keys in Cloudflare Secrets | Infrastructure | Medium — key management and cost controls |
 | headyme.com Arena UI route | HeadyMe | Medium |
 | Liquid Module Registry (for future Arena-as-skill) | Module Registry team | Low |
@@ -316,7 +316,7 @@ confidence = wins / total; if confidence < 0.6 and total < 5: show "not enough d
 
 | Question | Owner | Blocking? |
 |---|---|---|
-| Which models are in the initial Arena pool? | Product / headyai.com | Yes — must finalize before Phase 1 |
+| Which models are in the initial Arena pool? | Product / heady-ai.com | Yes — must finalize before Phase 1 |
 | What is the token budget cap per Arena session (affects cost)? | Product / Engineering | Yes — must set before launch to control costs |
 | Should Arena cost be included in user's Heady subscription or billed separately? | Product / Finance | Yes — pricing model decision |
 | How should Arena handle model rate limits or API errors mid-session? | Engineering | No — degrade gracefully; show available responses; log error |

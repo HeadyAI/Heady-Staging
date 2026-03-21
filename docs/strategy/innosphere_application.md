@@ -70,7 +70,7 @@ AI agents remember context across sessions without vendor lock-in.
 | GitHub repositories | 70+ across HeadyAI, HeadyMe, HeadySystems orgs |
 | Provisional patents | 60+ filed |
 | MCP tools deployed | 55 |
-| Domains operational | 9 (headyme.com, headysystems.com, headybuddy.org, headymcp.com, headyio.com, headybot.com, headyapi.com, headyai.com, headyconnection.org) |
+| Domains operational | 9 (headyme.com, headysystems.com, headybuddy.org, headymcp.com, headyio.com, headybot.com, headyapi.com, heady-ai.com, headyconnection.org) |
 | Monthly AI spend (managed) | $700/month |
 | CSL routing accuracy | 87.3% (vs 71.2% boolean baseline) |
 

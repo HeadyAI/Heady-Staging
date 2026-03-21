@@ -34,7 +34,7 @@ All components map into continuous 3D vector space with 384D embeddings.
 ## 9 DOMAINS
 
 headyme.com, headysystems.com, headyconnection.org, headybuddy.org,
-headymcp.com, headyio.com, headybot.com, headyapi.com, headyai.com
+headymcp.com, headyio.com, headybot.com, headyapi.com, heady-ai.com
 
 ## CRITICAL PATHS
 

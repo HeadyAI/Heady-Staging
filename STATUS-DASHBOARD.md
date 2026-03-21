@@ -53,7 +53,7 @@
 |--------|--------|---------|
 | headyme.com | 🟢 LIVE | Personal / Portfolio |
 | headysystems.com | 🟢 LIVE | Company Site |
-| headyai.com | 🟢 LIVE | AI Platform |
+| heady-ai.com | 🟢 LIVE | AI Platform |
 | headyapi.com | 🟢 LIVE | API Gateway |
 | headybuddy.org | 🟢 LIVE | HeadyBuddy App |
 | headymcp.com | 🟢 LIVE | MCP Services |

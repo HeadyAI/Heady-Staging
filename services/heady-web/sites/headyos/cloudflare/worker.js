@@ -17,7 +17,7 @@ const CLOUD_RUN_ORIGIN = 'https://heady-manager-609590223909.us-central1.run.app
 const HEADY_ALLOWED_ORIGINS = new Set([
   'https://headyme.com', 'https://www.headyme.com',
   'https://headysystems.com', 'https://www.headysystems.com',
-  'https://headyai.com', 'https://www.headyai.com',
+  'https://heady-ai.com', 'https://www.heady-ai.com',
   'https://headybuddy.org', 'https://headybuddy.org',
   'https://headybuddy.org', 'https://www.headybuddy.org',
   'https://headymcp.com', 'https://www.headymcp.com',

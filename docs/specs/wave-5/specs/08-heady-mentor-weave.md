@@ -108,9 +108,9 @@ Mentor Weave Service (new microservice, Cloud Run)
     ├─ Mentee Goal Store (pgvector, mentee_goals table)
     ├─ Match Engine (embedding similarity, pgvector ANN search)
     ├─ Session Lifecycle Manager
-    │   ├─ Pre-session prep generator (headyai.com LLM)
+    │   ├─ Pre-session prep generator (heady-ai.com LLM)
     │   ├─ Session log writer (pgvector, sessions table)
-    │   ├─ Commitment extractor (headyai.com LLM)
+    │   ├─ Commitment extractor (heady-ai.com LLM)
     │   └─ Follow-up nudge scheduler (Cloud Tasks)
     ├─ Progress Tracker (per-pair trend from session ratings)
     └─ MCP Tool Adapter (3 tools on headymcp-core)
@@ -138,12 +138,12 @@ Mentee match request
 
 Pre-session prep
     → Scheduled trigger (morning of session)
-    → headyai.com LLM: generate mentor brief + mentee session goal card
+    → heady-ai.com LLM: generate mentor brief + mentee session goal card
     → Push to both parties via HeadyBuddy / email
 
 Post-session
     → Session log submitted by both parties
-    → Commitment extractor: headyai.com LLM identifies action items
+    → Commitment extractor: heady-ai.com LLM identifies action items
     → commitments written to sessions table
     → Cloud Task created for 3-day follow-up nudge
 ```
@@ -168,7 +168,7 @@ Post-session
 |------------|-------|---------|
 | headyconnection-core database + profile infrastructure | HeadyConnection team | Yes — P0 |
 | pgvector mentor/mentee/session schema | HeadyMe engineering | Yes — P0 |
-| headyai.com LLM (prep + commitment extraction) | HeadyAI | Yes — P0 |
+| heady-ai.com LLM (prep + commitment extraction) | HeadyAI | Yes — P0 |
 | headybuddy-core nudge/notification system | HeadyBuddy team | Yes — P0 |
 | headymcp-core tool registration | HeadyMCP team | Yes (MCP tools) |
 | Calendly webhook integration | External (Calendly) | No — P1 |

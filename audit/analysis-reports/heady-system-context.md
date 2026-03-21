@@ -314,7 +314,7 @@ Client Request
 
 headyme.com, headyconnection.com, headyconnection.org,
 headyos.com, heady.exchange, heady.investments,
-headysystems.com, headyai.com, [admin portal]
+headysystems.com, heady-ai.com, [admin portal]
 
 ---
 

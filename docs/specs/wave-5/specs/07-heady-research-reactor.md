@@ -113,10 +113,10 @@ Research Reactor Service (new microservice, Cloud Run)
     │   ├─ arXiv API client
     │   ├─ Chunker + Embedder (text-embedding-3-large)
     │   └─ pgvector writer (research_chunks table, project-scoped)
-    ├─ Query Engine (RAG: pgvector semantic search + headyai.com LLM)
+    ├─ Query Engine (RAG: pgvector semantic search + heady-ai.com LLM)
     ├─ Contradiction Detector (claim extraction + NLI model)
-    ├─ Gap Mapper (headyai.com LLM + research question framing)
-    ├─ Synthesis Generator (headyai.com Claude Sonnet/GPT-5)
+    ├─ Gap Mapper (heady-ai.com LLM + research question framing)
+    ├─ Synthesis Generator (heady-ai.com Claude Sonnet/GPT-5)
     ├─ Source Quality Grader (Semantic Scholar API + recency scorer)
     └─ headyapi-core adapter (/v1/research/*)
 ```
@@ -134,17 +134,17 @@ Source ingestion
     → Chunking + embedding
     → pgvector write (research_chunks, indexed by project_id + embedding)
     → Contradiction Detector: pairwise NLI on top-K claim pairs
-    → Gap Mapper: headyai.com LLM call
+    → Gap Mapper: heady-ai.com LLM call
     → Project status updated: "ready for query"
 
 Query
     → User question → pgvector semantic search (top-K chunks, project-scoped)
-    → headyai.com LLM: grounded answer generation with chunk citations
+    → heady-ai.com LLM: grounded answer generation with chunk citations
     → Response + citations returned to UI
 
 Synthesis generation
     → Gap Mapper result + all top-K chunks per sub-finding
-    → headyai.com LLM: structured synthesis (sections: summary, findings, tensions, gaps)
+    → heady-ai.com LLM: structured synthesis (sections: summary, findings, tensions, gaps)
     → Markdown rendered; PDF export via Pandoc
 ```
 
@@ -167,8 +167,8 @@ Synthesis generation
 | Dependency | Owner | Blocking |
 |------------|-------|---------|
 | pgvector `research_chunks` table + project-scoped index | HeadyMe engineering | Yes — P0 |
-| headyai.com LLM router (query + synthesis) | HeadyAI | Yes — P0 |
-| text-embedding-3-large access | OpenAI / headyai.com | Yes — P0 |
+| heady-ai.com LLM router (query + synthesis) | HeadyAI | Yes — P0 |
+| text-embedding-3-large access | OpenAI / heady-ai.com | Yes — P0 |
 | headyapi-core route registration | HeadyAPI team | Yes — P0 |
 | heady-pythia UI scaffold | heady-pythia team | Yes — P0 |
 | Semantic Scholar API credentials | External | No — P1 |
@@ -216,6 +216,6 @@ Synthesis generation
 | # | Question | Owner | Blocking |
 |---|----------|-------|---------|
 | OQ1 | Should Research Reactor support real-time web search (not just pre-ingested sources) in a hybrid mode? | Product | No |
-| OQ2 | What NLI model is best for contradiction detection at this scale — use a Hugging Face hosted model or route through headyai.com? | Engineering | No |
+| OQ2 | What NLI model is best for contradiction detection at this scale — use a Hugging Face hosted model or route through heady-ai.com? | Engineering | No |
 | OQ3 | Should synthesis documents be versioned so users can compare how the synthesis evolved as they added sources? | Product | No |
 | OQ4 | Does storing scraped web content create copyright or ToS exposure? What is the retention policy for extracted URL text? | Legal | No |

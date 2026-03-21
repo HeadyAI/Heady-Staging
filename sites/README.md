@@ -15,7 +15,7 @@
 - **headybot.html** → headybot.com — Agent Marketplace
 - **headyapi.html** → headyapi.com — API Reference & Developer Docs
 - **headylens.html** → headylens.com — Visual AI & Spatial Intelligence
-- **headyai.html** → headyai.com — AI Research & Platform Portal
+- **headyai.html** → heady-ai.com — AI Research & Platform Portal
 - **headyfinance.html** → headyfinance.com — AI-Powered Financial Intelligence
 - **headyconnection.html** → headyconnection.org — Community · Education · Accessibility
 

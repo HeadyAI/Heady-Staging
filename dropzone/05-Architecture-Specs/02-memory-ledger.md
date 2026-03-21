@@ -1,7 +1,7 @@
 # Feature Spec: Memory Ledger with Temporal and Privacy Controls
 
 **Feature ID:** HEADY-FEAT-002  
-**Domain:** headyme.com / headyai.com / headybuddy.org  
+**Domain:** headyme.com / heady-ai.com / headybuddy.org  
 **Status:** Draft  
 **Author:** Eric Haywood  
 **Date:** 2026-03-17  

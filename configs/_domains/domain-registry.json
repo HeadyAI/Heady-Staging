@@ -135,7 +135,7 @@
   "heady-ai.com": {
     "roles": ["platform", "ai_capability"],
     "area": "labs_and_ai",
-    "note": "Registry uses heady-ai.com (with hyphen). headyai.com (no hyphen) resolves to third-party site and is NOT a Heady property.",
+    "note": "Registry uses heady-ai.com (with hyphen). heady-ai.com (no hyphen) resolves to third-party site and is NOT a Heady property.",
     "routes": {
       "/": "labs_home",
       "/experiments": "experiments_list",

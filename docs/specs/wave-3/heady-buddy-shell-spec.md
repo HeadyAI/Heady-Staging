@@ -3,7 +3,7 @@
 **Version:** 1.0  
 **Date:** 2026-03-17  
 **Owner:** headybuddy.org  
-**Domain:** headybuddy.org, headyme.com, headyai.com  
+**Domain:** headybuddy.org, headyme.com, heady-ai.com  
 **Skill Target:** heady-buddy-shell-productization
 
 ---

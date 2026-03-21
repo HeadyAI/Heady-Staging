@@ -326,7 +326,7 @@ Self-hosted at `qdrant.headysystems.com`. Collections: `buddy_memory`, `codebase
 | headymcp.com | MCP (Model Context Protocol) Bridge | CF Workers | — | — |
 | headyio.com | I/O & Integration Hub (webhooks, n8n) | CF Workers | — | — |
 | headybot.com | Discord/Chat Platform Bots | CF Workers → Cloud Run | — | — |
-| heady-ai.com / headyai.com | AI Research & Model Playground | CF Pages | Sri Yantra | #8b5cf6 |
+| heady-ai.com / heady-ai.com | AI Research & Model Playground | CF Pages | Sri Yantra | #8b5cf6 |
 | headyos.com | Latent OS Documentation Portal | CF Pages | Torus | #14b8a6 |
 
 ---
@@ -480,7 +480,7 @@ Subscription: `6760eeb0-ae64-410c-b076-abb640de2cba`. App: `Heady-AI-Service`. D
 App: `Heady-AI-Bot`. Client ID: `1482908131469164624`.
 
 **CORS Whitelist (10 domains):**
-`headyme.com`, `headyapi.com`, `headysystems.com`, `headyconnection.org`, `headymcp.com`, `headybuddy.org`, `headyio.com`, `headybot.com`, `heady-ai.com`, `headyai.com`.
+`headyme.com`, `headyapi.com`, `headysystems.com`, `headyconnection.org`, `headymcp.com`, `headybuddy.org`, `headyio.com`, `headybot.com`, `heady-ai.com`, `heady-ai.com`.
 
 ---
 

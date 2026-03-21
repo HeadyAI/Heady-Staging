@@ -104,7 +104,7 @@ Wellness Mirror Service (new microservice, Cloud Run)
     ├─ Pattern Analyzer (scheduled, runs nightly)
     │   ├─ Trend detector (sliding window z-score)
     │   └─ Correlation engine (Pearson on paired dimensions)
-    ├─ Mirror Summary Generator (headyai.com LLM call)
+    ├─ Mirror Summary Generator (heady-ai.com LLM call)
     ├─ Crisis Signal Classifier (lightweight local model + keyword layer)
     ├─ Wearable Adapter (HealthKit JSON parser, Oura API, Fitbit API)
     └─ MCP Tool Adapter (3 tools on headymcp-core)
@@ -130,7 +130,7 @@ Pattern Analyzer (nightly cron)
     → Read wellness_log for all active users, past 7 days
     → Trend detection per dimension per user
     → Correlation detection across dimension pairs
-    → Mirror Summary Generator: headyai.com LLM call
+    → Mirror Summary Generator: heady-ai.com LLM call
     → Write to wellness_summary table
     → Push notification trigger (in-app + optional push)
 
@@ -161,7 +161,7 @@ Wearable sync (on-demand or daily)
 |------------|-------|---------|
 | headybuddy-core intent classification ("wellness-checkin") | HeadyBuddy team | Yes — P0 |
 | pgvector `wellness_log` + `wellness_summary` schema | HeadyMe engineering | Yes — P0 |
-| headyai.com LLM router (summary generation) | HeadyAI | Yes — P0 |
+| heady-ai.com LLM router (summary generation) | HeadyAI | Yes — P0 |
 | Crisis resource content (988, Crisis Text Line URLs) | Content/Legal | Yes — P0 |
 | headymcp-core tool registration | HeadyMCP team | Yes (MCP tools) |
 | Oura Ring API credentials | External (Oura) | No — P1 |

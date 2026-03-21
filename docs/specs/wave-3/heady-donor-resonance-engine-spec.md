@@ -3,7 +3,7 @@
 **Version:** 1.0  
 **Date:** 2026-03-17  
 **Owner:** HeadyConnection.org  
-**Domain:** headyconnection.org / headyai.com  
+**Domain:** headyconnection.org / heady-ai.com  
 **Skill Target:** heady-donor-resonance-engine
 
 ---

@@ -49,7 +49,7 @@ const HEADY_DOMAINS = [
   'headyio.com',
   'headybot.com',
   'headyapi.com',
-  'headyai.com',
+  'heady-ai.com',
 ];
 
 function buildAllowedOrigins(domains, includeLocalDev = false) {

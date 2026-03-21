@@ -78,7 +78,7 @@ Heady agents currently produce outputs (drafts, reports, code, summaries) that d
 | SWC Vector Index | Semantic embeddings of file content for similarity search | headysystems.com |
 | SWC Access Control | Per-file, per-session, per-agent permission enforcement | headysystems.com |
 | SWC API | Read/write/search/delete endpoints for agents and UI | headyapi.com |
-| Auto-Save Service | Listens to session output events and triggers saves | headyai.com |
+| Auto-Save Service | Listens to session output events and triggers saves | heady-ai.com |
 | Workspace Browser UI | headyme.com/workspace frontend | headyme.com |
 | Export Service | Generates and delivers workspace export packages | headysystems.com |
 
@@ -152,7 +152,7 @@ Markdown, plain text, JSON, YAML, HTML, PDF (read-only), PNG/JPG/WEBP (read-only
 | PostgreSQL (metadata DB) | headysystems.com | Required |
 | Embedding pipeline (reuse from Memory Sanctum) | headysystems.com | Complementary — improves search quality |
 | headyapi.com API gateway | headyapi.com | Required |
-| headyai.com session orchestrator (for auto-save triggers) | headyai.com | Required |
+| heady-ai.com session orchestrator (for auto-save triggers) | heady-ai.com | Required |
 | headyme.com dashboard (Workspace Browser UI) | headyme.com | Required |
 | Heady Task Genome (file_read/file_write tasks point to SWC) | Second-wave | Complementary |
 
@@ -181,7 +181,7 @@ Markdown, plain text, JSON, YAML, HTML, PDF (read-only), PNG/JPG/WEBP (read-only
 - Agent file access with session-scoped permission grants
 - "Ask about this file" session integration
 - Open launch
-- Success gate: Search surfaces relevant files for ≥85% of test queries; agent access tested across headybot.com and headyai.com
+- Success gate: Search surfaces relevant files for ≥85% of test queries; agent access tested across headybot.com and heady-ai.com
 
 ### Phase 4 — Export + Versioning UI (Weeks 13–16)
 - Full workspace export (ZIP + manifest)

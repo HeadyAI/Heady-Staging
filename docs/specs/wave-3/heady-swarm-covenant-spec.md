@@ -3,7 +3,7 @@
 **Version:** 1.0  
 **Date:** 2026-03-17  
 **Owner:** headysystems.com / headybot.com  
-**Domain:** headysystems.com, headybot.com, headyai.com  
+**Domain:** headysystems.com, headybot.com, heady-ai.com  
 **Skill Target:** heady-swarm-covenant
 
 ---
