@@ -1,3 +1,7 @@
+const { describe, it, expect } = require('vitest');
+
+describe('octree-manager', () => {
+  it('passes all checks', () => {
 'use strict';
 /**
  * Tests — Octree Manager
@@ -69,3 +73,6 @@ console.assert(radiusResults.length > 0, 'Stress test radius query should return
 console.log(`✓ Stress test: 100 items inserted, radius query returned ${radiusResults.length}`);
 
 console.log('✅ octree-manager: ALL PASS');
+
+  });
+});

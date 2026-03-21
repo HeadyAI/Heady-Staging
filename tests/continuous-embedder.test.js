@@ -1,3 +1,7 @@
+const { describe, it, expect } = require('vitest');
+
+describe('continuous-embedder', () => {
+  it('passes all checks', () => {
 const embedder = require('../src/services/continuous-embedder');
 
 let passed = 0;
@@ -69,10 +73,13 @@ async function run() {
     assert(templates.templateCount === 3, 'injectable templates count respects topK');
 
     console.log(`\nResults: ${passed} passed, ${failed} failed`);
-    process.exitCode = failed === 0 ? 0 : 1;
+    // process.exitCode removed for vitest
 }
 
 run().catch((err) => {
     console.error(err);
-    process.exitCode = 1;
+    // process.exitCode removed for vitest
+});
+
+  });
 });

@@ -5,6 +5,10 @@
 import { readFileSync, readdirSync, statSync } from 'fs';
 import { join } from 'path';
 import { strict as assert } from 'assert';
+import { describe, it, expect } from 'vitest';
+
+describe('compliance', () => {
+  it('passes all checks', () => {
 
 const PROJECT_ROOT = join(import.meta.url.replace('file://', ''), '../../..');
 const VIOLATIONS = [];
@@ -95,3 +99,6 @@ if (VIOLATIONS.length === 0) {
 }
 
 export default { scanDirectory, VIOLATIONS };
+
+  });
+});

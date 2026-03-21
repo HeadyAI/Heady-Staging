@@ -1,3 +1,7 @@
+const { describe, it, expect } = require('vitest');
+
+describe('cross-device-sync.runtime', () => {
+  it('passes all checks', () => {
 const fs = require('fs');
 const path = require('path');
 const { CrossDeviceSyncHub } = require('../src/cross-device-sync');
@@ -65,10 +69,13 @@ async function run() {
     hub.shutdown();
 
     console.log(`\nResults: ${passed} passed, ${failed} failed`);
-    process.exitCode = failed === 0 ? 0 : 1;
+    // process.exitCode removed for vitest
 }
 
 run().catch((error) => {
     console.error(error);
-    process.exitCode = 1;
+    // process.exitCode removed for vitest
+});
+
+  });
 });

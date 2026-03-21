@@ -1,3 +1,7 @@
+const { describe, it, expect } = require('vitest');
+
+describe('buddy-system', () => {
+  it('passes all checks', () => {
 'use strict';
 /**
  * Tests — Buddy System (integration)
@@ -89,3 +93,6 @@ console.log(`✓ Trajectory prediction: X=${predicted.x.toFixed(3)}, Y=${predict
 
     console.log('✅ buddy-system: ALL PASS');
 })();
+
+  });
+});

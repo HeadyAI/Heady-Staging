@@ -1,3 +1,7 @@
+const { describe, it, expect } = require('vitest');
+
+describe('liquid-node-base', () => {
+  it('passes all checks', () => {
 'use strict';
 
 const assert = require('assert');
@@ -58,3 +62,6 @@ module.exports = {
     assert.ok(instance.domain === 'testing', 'Instance should store domain');
   }
 };
+
+  });
+});

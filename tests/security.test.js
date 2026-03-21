@@ -4,6 +4,10 @@
  */
 import { strict as assert } from 'assert';
 import { createHash } from 'crypto';
+import { describe, it, expect } from 'vitest';
+
+describe('security', () => {
+  it('passes all checks', () => {
 
 function sha256(input) { return createHash('sha256').update(String(input)).digest('hex'); }
 
@@ -66,3 +70,6 @@ testSessionExpiry();
 console.log('\n✅ All security tests passed.');
 
 export default { testHttpOnlyCookies, testCsrfTokenGeneration, testDeviceFingerprinting, testSha256Integrity };
+
+  });
+});

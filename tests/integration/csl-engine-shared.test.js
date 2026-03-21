@@ -1,3 +1,7 @@
+const { describe, it, expect } = require('vitest');
+
+describe('csl-engine-shared', () => {
+  it('passes all checks', () => {
 'use strict';
 
 const assert = require('assert');
@@ -91,3 +95,6 @@ module.exports = {
     assert.ok(Math.abs(levels[4] - 0.927) < 0.01, 'CRITICAL ~0.927');
   }
 };
+
+  });
+});

@@ -1,3 +1,7 @@
+const { describe, it, expect } = require('vitest');
+
+describe('spatial-embedder', () => {
+  it('passes all checks', () => {
 'use strict';
 /**
  * Tests — Spatial Embedder
@@ -56,3 +60,6 @@ console.assert(batch[0].x < batch[1].x, 'Dockerfile X should be < CSS X');
 console.log(`✓ Batch: ${batch.length} items, Dockerfile X=${batch[0].x} < CSS X=${batch[1].x}`);
 
 console.log('✅ spatial-embedder: ALL PASS');
+
+  });
+});

@@ -1,3 +1,7 @@
+const { describe, it, expect } = require('vitest');
+
+describe('infrastructure', () => {
+  it('passes all checks', () => {
 'use strict';
 
 const assert = require('assert');
@@ -64,3 +68,6 @@ module.exports = {
     }
   }
 };
+
+  });
+});

@@ -1,3 +1,7 @@
+const { describe, it, expect } = require('vitest');
+
+describe('phi-math-shared', () => {
+  it('passes all checks', () => {
 'use strict';
 
 const assert = require('assert');
@@ -80,3 +84,6 @@ module.exports = {
     }
   }
 };
+
+  });
+});
