@@ -4,7 +4,7 @@
       "id": "reliability::resource:RAM",
       "category": "reliability",
       "name": "resource:RAM",
-      "state": "active",
+      "state": "degrading",
       "createdAt": "2026-03-21T00:19:05.901Z",
       "lastUpdated": "2026-03-21T13:09:14.269Z",
       "observations": [
@@ -883,21 +883,21 @@
         }
       ],
       "stats": {
-        "mean": 83.30526315789474,
+        "mean": 83.27835051546391,
         "median": 82,
-        "stddev": 4.227911476966342,
+        "stddev": 4.22740755059036,
         "min": 78,
         "max": 96,
-        "n": 95
+        "n": 97
       },
-      "trend": "unstable",
-      "improvementAttempts": 255,
+      "trend": "degrading",
+      "improvementAttempts": 256,
       "lastImproved": "2026-03-21T12:47:03.640Z",
       "convergedAt": null,
       "reviewAfter": null,
       "metadata": {
         "errorBurst": true,
-        "burstCount": 12,
+        "burstCount": 14,
         "burstWindow": "5m",
         "needsInvestigation": true
       },
@@ -910,62 +910,5 @@
   "metadata": {
     "created": "2026-03-20T23:20:04Z",
     "version": "1.0.0"
-  },
-  "lastUpdated": "2026-03-21T13:10:02.027Z",
-  "version": 1,
-  "phi": 1.618033988749895,
-  "resourcePatterns": [
-    {
-      "type": "RESOURCE_STABLE",
-      "confidence": 0.85,
-      "severity": "LOW",
-      "firstSeen": "2026-03-21T13:10:02.027Z",
-      "lastSeen": "2026-03-21T13:10:02.027Z",
-      "occurrences": 1
-    }
-  ],
-  "gitVelocity": "HIGH",
-  "commitCount24h": 89,
-  "topTopics": [
-    {
-      "word": "chore(auto)",
-      "count": 67
-    },
-    {
-      "word": "[tier=significant]",
-      "count": 56
-    },
-    {
-      "word": "auto-commit.log",
-      "count": 53
-    },
-    {
-      "word": "pattern_store.json",
-      "count": 32
-    },
-    {
-      "word": "hcfp-auto",
-      "count": 19
-    },
-    {
-      "word": "file(s)",
-      "count": 19
-    },
-    {
-      "word": "changed",
-      "count": 19
-    },
-    {
-      "word": "index.html",
-      "count": 12
-    },
-    {
-      "word": "resource-events.jsonl",
-      "count": 9
-    },
-    {
-      "word": "[tier=trivial]",
-      "count": 8
-    }
-  ]
+  }
 }
