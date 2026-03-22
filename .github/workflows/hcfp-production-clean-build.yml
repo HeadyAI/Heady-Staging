@@ -20,7 +20,7 @@ jobs:
     outputs:
       should_proceed: ${{ steps.validate.outputs.proceed }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       
       - name: Validate no api.headysystems.com in production configs
         id: validate
@@ -50,7 +50,7 @@ jobs:
     if: needs.preflight.outputs.should_proceed == 'true'
     
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           clean: true
       
@@ -122,7 +122,7 @@ jobs:
     if: needs.preflight.outputs.should_proceed == 'true'
     
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           clean: true
       
@@ -156,7 +156,7 @@ jobs:
     needs: [build-node, build-python]
     
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       
       - name: Run npm audit
         run: |
@@ -201,7 +201,7 @@ jobs:
           - 6379:6379
     
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       
       - uses: actions/setup-node@v4
         with:
@@ -280,7 +280,7 @@ jobs:
     if: needs.preflight.outputs.should_proceed == 'true'
     
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -327,7 +327,7 @@ jobs:
     if: github.ref == 'refs/heads/main' && needs.build-complete.result == 'success'
     
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       
       - name: Setup Python for YAML validation
         uses: actions/setup-python@v5
@@ -501,7 +501,7 @@ jobs:
     if: needs.preflight.outputs.should_proceed == 'true'
     
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       
       - name: Setup Node.js
         uses: actions/setup-node@v4
