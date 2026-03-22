@@ -343,7 +343,7 @@ jobs:
           cache: 'npm'
 
       - name: Download build artifacts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: core-build
           path: .
@@ -470,7 +470,7 @@ jobs:
     timeout-minutes: 5
     steps:
       - name: Download all artifacts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           path: artifacts/
 
@@ -519,7 +519,7 @@ jobs:
     timeout-minutes: 5
     steps:
       - name: Download all artifacts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           path: artifacts/
 
@@ -594,7 +594,7 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
 
       - name: Download deployment bundle
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: deployment-bundle
           path: deploy-bundle/
@@ -625,7 +625,7 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
 
       - name: Download deployment bundle
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: deployment-bundle
           path: deploy-bundle/
