@@ -37,7 +37,7 @@ jobs:
     # ── Node 20 LTS ──────────────────────────────────────────────────────────
     steps:
       - name: "Checkout repository"
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: "Setup Node.js 20"
         uses: actions/setup-node@v4

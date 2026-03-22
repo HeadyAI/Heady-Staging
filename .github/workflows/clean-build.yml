@@ -35,7 +35,7 @@ jobs:
       changed_services: ${{ steps.changes.outputs.services }}
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           # Full clone for clean build verification
           fetch-depth: 0
@@ -93,7 +93,7 @@ jobs:
     timeout-minutes: 30
     steps:
       - name: Checkout code (fresh)
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           clean: true  # Remove any existing files
           
@@ -260,7 +260,7 @@ jobs:
         working-directory: frontend
     steps:
       - name: Checkout code (fresh)
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           clean: true
           
@@ -310,7 +310,7 @@ jobs:
         working-directory: backend/python_worker
     steps:
       - name: Checkout code (fresh)
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           clean: true
           
@@ -382,7 +382,7 @@ jobs:
           - 6379:6379
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         
       - name: Download manager artifacts
         uses: actions/download-artifact@v4
@@ -426,7 +426,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@master
