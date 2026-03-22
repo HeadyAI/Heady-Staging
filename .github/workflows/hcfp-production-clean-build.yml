@@ -411,7 +411,7 @@ jobs:
           echo "✅ Deployment configuration validation complete"
       
       - name: Download build artifacts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: node-build
           path: dist/
