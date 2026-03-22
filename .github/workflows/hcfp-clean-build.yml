@@ -191,7 +191,7 @@ jobs:
       
       - name: 📤 Upload Build Artifacts
         if: steps.build.outcome == 'success'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: build-${{ matrix.component }}
           path: |
@@ -244,7 +244,7 @@ jobs:
         continue-on-error: ${{ matrix.test_type == 'e2e' }}
       
       - name: 📊 Upload Test Results
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: test-results-${{ matrix.test_type }}
           path: |
@@ -337,7 +337,7 @@ jobs:
           echo "📌 Release version: $VERSION"
       
       - name: 📤 Upload Deploy Package
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: deploy-package-${{ env.VERSION }}
           path: deploy-artifacts/
