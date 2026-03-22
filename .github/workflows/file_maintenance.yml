@@ -189,7 +189,7 @@ jobs:
           fi
 
       - name: Upload scan artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         if: always()
         with:
           name: scan-results-${{ github.run_number }}

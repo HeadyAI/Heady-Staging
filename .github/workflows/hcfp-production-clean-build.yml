@@ -106,7 +106,7 @@ jobs:
           npm run build --if-present
       
       - name: Archive build artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: node-build
           path: |
@@ -487,7 +487,7 @@ jobs:
           echo "✅ Manifest JSON syntax valid"
           
       - name: Upload deployment manifest
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: deployment-manifest
           path: deploy/deployment-manifest.json
