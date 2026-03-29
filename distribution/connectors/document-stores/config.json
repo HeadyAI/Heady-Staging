@@ -1,6 +1,6 @@
 {
   "name": "heady-document-stores",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Heady AI document store adapters — Drive, Dropbox, Notion, Obsidian",
   "providers": {
     "google_drive": {
@@ -16,8 +16,17 @@
       "features": ["search", "read_page", "create_page", "query_database"]
     },
     "obsidian": {
-      "auth": { "type": "local_vault", "path": "~/obsidian-vault" },
-      "features": ["search", "read", "create", "link_graph"]
+      "auth": { "type": "local_vault", "path": "obsidian-vault" },
+      "sync": {
+        "method": "git",
+        "auto_commit_interval": 15,
+        "auto_pull": true,
+        "auto_push": true,
+        "workflow": ".github/workflows/obsidian-sync.yml"
+      },
+      "features": ["search", "read", "create", "link_graph", "vault_index"],
+      "index_file": "obsidian-vault/.vault-index.json",
+      "exports_dir": "obsidian-vault/.exports"
     }
   },
   "deployment": {
