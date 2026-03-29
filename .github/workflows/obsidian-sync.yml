@@ -1,0 +1,192 @@
+# © 2026 Heady™Systems Inc.
+# Obsidian Vault Sync — Auto-commit, index, and sync vault content
+#
+# Runs every 15 minutes to pick up vault changes pushed via Obsidian Git plugin.
+# Generates a vault index and link graph on each change.
+# Dispatches vault-updated events for downstream consumers.
+
+name: Obsidian Vault Sync
+
+on:
+  schedule:
+    - cron: '*/15 * * * *'
+  push:
+    paths:
+      - 'obsidian-vault/**'
+  workflow_dispatch:
+    inputs:
+      force_reindex:
+        description: 'Force full vault reindex'
+        required: false
+        default: 'false'
+        type: choice
+        options:
+          - 'false'
+          - 'true'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: obsidian-sync
+  cancel-in-progress: false
+
+env:
+  GIT_AUTHOR_NAME: HeadyBot
+  GIT_AUTHOR_EMAIL: bot@headysystems.com
+  GIT_COMMITTER_NAME: HeadyBot
+  GIT_COMMITTER_EMAIL: bot@headysystems.com
+  VAULT_DIR: obsidian-vault
+
+jobs:
+  sync-and-index:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Check for vault changes
+        id: check
+        run: |
+          git add -A
+          if git diff --cached --quiet; then
+            echo "has_changes=false" >> "$GITHUB_OUTPUT"
+            echo "No vault changes detected."
+          else
+            echo "has_changes=true" >> "$GITHUB_OUTPUT"
+            CHANGED=$(git diff --cached --name-only -- "$VAULT_DIR" | wc -l)
+            TOTAL=$(git diff --cached --name-only | wc -l)
+            echo "vault_changes=$CHANGED" >> "$GITHUB_OUTPUT"
+            echo "total_changes=$TOTAL" >> "$GITHUB_OUTPUT"
+            echo "Found $CHANGED vault file(s) changed ($TOTAL total)"
+          fi
+
+      - name: Commit vault changes
+        if: steps.check.outputs.has_changes == 'true'
+        run: |
+          TIMESTAMP=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+          COUNT="${{ steps.check.outputs.vault_changes }}"
+          git commit --no-verify -m "vault-sync: ${COUNT} file(s) updated" \
+            -m "Auto-synced by Obsidian Vault Sync @ $TIMESTAMP"
+          git push origin HEAD
+          echo "Vault changes committed and pushed"
+
+      - name: Setup Node.js
+        if: steps.check.outputs.has_changes == 'true' || github.event.inputs.force_reindex == 'true'
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Generate vault index
+        if: steps.check.outputs.has_changes == 'true' || github.event.inputs.force_reindex == 'true'
+        run: |
+          node << 'SCRIPT'
+          const fs = require("fs");
+          const path = require("path");
+
+          const vaultDir = "obsidian-vault";
+          const indexFile = path.join(vaultDir, ".vault-index.json");
+          const index = {
+            version: "1.0.0",
+            generated_at: new Date().toISOString(),
+            total_notes: 0,
+            total_links: 0,
+            notes: [],
+            tags: {},
+            link_graph: {}
+          };
+
+          function walkDir(dir, base) {
+            if (!fs.existsSync(dir)) return;
+            const entries = fs.readdirSync(dir, { withFileTypes: true });
+            for (const entry of entries) {
+              const fullPath = path.join(dir, entry.name);
+              const relPath = path.relative(base, fullPath);
+              if (entry.name.startsWith(".")) continue;
+              if (entry.isDirectory()) {
+                walkDir(fullPath, base);
+              } else if (entry.name.endsWith(".md")) {
+                const content = fs.readFileSync(fullPath, "utf8");
+                const title = entry.name.replace(".md", "");
+
+                // Extract tags (#tag-name)
+                const tagMatches = content.match(/#[a-zA-Z][\w\-\/]*/g) || [];
+                const tags = [...new Set(tagMatches)];
+                tags.forEach(t => { index.tags[t] = (index.tags[t] || 0) + 1; });
+
+                // Extract wiki-links [[Link]] or [[Link|Alias]]
+                const linkMatches = content.match(/\[\[([^\]|]+)(\|[^\]]*)?\]\]/g) || [];
+                const links = linkMatches.map(l => l.replace(/[\[\]]/g, "").split("|")[0]);
+                index.link_graph[title] = links;
+                index.total_links += links.length;
+
+                // Extract YAML frontmatter
+                let frontmatter = {};
+                const fmMatch = content.match(/^---\n([\s\S]*?)\n---/);
+                if (fmMatch) {
+                  fmMatch[1].split("\n").forEach(line => {
+                    const [key, ...val] = line.split(":");
+                    if (key && val.length) frontmatter[key.trim()] = val.join(":").trim();
+                  });
+                }
+
+                const stat = fs.statSync(fullPath);
+                index.notes.push({
+                  title,
+                  path: relPath,
+                  tags,
+                  links,
+                  frontmatter,
+                  size: stat.size,
+                  modified: stat.mtime.toISOString()
+                });
+                index.total_notes++;
+              }
+            }
+          }
+
+          walkDir(vaultDir, vaultDir);
+          index.notes.sort((a, b) => new Date(b.modified) - new Date(a.modified));
+          fs.writeFileSync(indexFile, JSON.stringify(index, null, 2));
+          console.log(`Indexed ${index.total_notes} notes, ${index.total_links} links, ${Object.keys(index.tags).length} unique tags`);
+          SCRIPT
+
+      - name: Commit index updates
+        if: steps.check.outputs.has_changes == 'true' || github.event.inputs.force_reindex == 'true'
+        run: |
+          git add -A
+          if ! git diff --cached --quiet; then
+            TIMESTAMP=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+            git commit --no-verify -m "vault-index: regenerated vault index" \
+              -m "Auto-indexed by Obsidian Vault Sync @ $TIMESTAMP"
+            git push origin HEAD
+            echo "Index committed"
+          else
+            echo "Index unchanged"
+          fi
+
+      - name: Dispatch vault-updated event
+        if: steps.check.outputs.has_changes == 'true'
+        uses: peter-evans/repository-dispatch@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          event-type: vault-updated
+          client-payload: '{"vault_changes": "${{ steps.check.outputs.vault_changes }}"}'
+
+      - name: Summary
+        run: |
+          echo "## Obsidian Vault Sync" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          if [ "${{ steps.check.outputs.has_changes }}" == "true" ]; then
+            echo "- **Synced** ${{ steps.check.outputs.vault_changes }} vault file(s)" >> $GITHUB_STEP_SUMMARY
+            echo "- **Vault index regenerated**" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "- No changes — vault is in sync" >> $GITHUB_STEP_SUMMARY
+          fi
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Run: $(date -u +'%Y-%m-%d %H:%M:%S UTC')" >> $GITHUB_STEP_SUMMARY

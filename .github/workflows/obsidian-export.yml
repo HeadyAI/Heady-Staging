@@ -1,0 +1,127 @@
+# © 2026 Heady™Systems Inc.
+# Obsidian Vault Export — Transform vault content for Heady ecosystem
+#
+# Triggered by vault-updated dispatch event or manually.
+# Exports: search index, tag cloud, link graph, recent notes.
+
+name: Obsidian Vault Export
+
+on:
+  repository_dispatch:
+    types: [vault-updated]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: obsidian-export
+  cancel-in-progress: true
+
+env:
+  GIT_AUTHOR_NAME: HeadyBot
+  GIT_AUTHOR_EMAIL: bot@headysystems.com
+  GIT_COMMITTER_NAME: HeadyBot
+  GIT_COMMITTER_EMAIL: bot@headysystems.com
+
+jobs:
+  export:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Export vault content
+        run: |
+          mkdir -p obsidian-vault/.exports
+
+          node << 'SCRIPT'
+          const fs = require("fs");
+          const path = require("path");
+
+          const vaultDir = "obsidian-vault";
+          const exportDir = path.join(vaultDir, ".exports");
+          const indexPath = path.join(vaultDir, ".vault-index.json");
+
+          let index = { notes: [], tags: {}, link_graph: {} };
+          if (fs.existsSync(indexPath)) {
+            index = JSON.parse(fs.readFileSync(indexPath, "utf8"));
+          }
+
+          // 1. Search index — excerpts for full-text search
+          const searchIndex = index.notes.map(n => {
+            const filePath = path.join(vaultDir, n.path);
+            let body = "";
+            if (fs.existsSync(filePath)) {
+              const content = fs.readFileSync(filePath, "utf8");
+              body = content.replace(/^---[\s\S]*?---\n?/, "").trim();
+            }
+            return {
+              title: n.title,
+              path: n.path,
+              tags: n.tags,
+              excerpt: body.slice(0, 300),
+              modified: n.modified
+            };
+          });
+          fs.writeFileSync(
+            path.join(exportDir, "search-index.json"),
+            JSON.stringify(searchIndex, null, 2)
+          );
+
+          // 2. Tag cloud
+          const tagCloud = Object.entries(index.tags)
+            .sort((a, b) => b[1] - a[1])
+            .map(([tag, count]) => ({ tag, count }));
+          fs.writeFileSync(
+            path.join(exportDir, "tag-cloud.json"),
+            JSON.stringify(tagCloud, null, 2)
+          );
+
+          // 3. Link graph
+          fs.writeFileSync(
+            path.join(exportDir, "link-graph.json"),
+            JSON.stringify(index.link_graph, null, 2)
+          );
+
+          // 4. Recent notes (last 7 days)
+          const weekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+          const recentNotes = index.notes
+            .filter(n => new Date(n.modified) > weekAgo)
+            .map(n => ({ title: n.title, path: n.path, modified: n.modified, tags: n.tags }));
+          fs.writeFileSync(
+            path.join(exportDir, "recent-notes.json"),
+            JSON.stringify({ period: "7d", notes: recentNotes }, null, 2)
+          );
+
+          console.log(`Exported: ${searchIndex.length} search entries, ${tagCloud.length} tags, ${recentNotes.length} recent notes`);
+          SCRIPT
+
+      - name: Commit exports
+        run: |
+          git add -A
+          if ! git diff --cached --quiet; then
+            TIMESTAMP=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+            git commit --no-verify -m "vault-export: updated exports" \
+              -m "Auto-exported by Obsidian Vault Export @ $TIMESTAMP"
+            git push origin HEAD
+            echo "Exports committed"
+          else
+            echo "Exports unchanged"
+          fi
+
+      - name: Summary
+        run: |
+          echo "## Obsidian Vault Export" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Vault content exported for Heady ecosystem" >> $GITHUB_STEP_SUMMARY
+          echo "Run: $(date -u +'%Y-%m-%d %H:%M:%S UTC')" >> $GITHUB_STEP_SUMMARY

@@ -1,0 +1,15 @@
+{
+  "commitMessage": "vault-sync: {{numFiles}} file(s) changed",
+  "autoCommitMessage": "vault-auto: {{numFiles}} file(s) @ {{date}}",
+  "autoPullOnOpen": true,
+  "autoPushOnCommit": true,
+  "autoSaveInterval": 15,
+  "autoPullInterval": 15,
+  "commitDateFormat": "YYYY-MM-DD HH:mm:ss",
+  "autoBackup": true,
+  "autoBackupInterval": 15,
+  "syncMethod": "merge",
+  "gitPath": "",
+  "customMessageOnAutoBackup": true,
+  "listChangedFilesInMessageBody": true
+}
