@@ -1077,15 +1077,15 @@ pipeline:
         tools:
           - hf-distiller-v1
           - qdrant
-          seamlessnessChecks:
-            - shared_identity_across_channels
-            - shared_project_context
-            - consistent_service_behavior
-            - no_redundant_re_entry
-          feedbackDestinations:
-            - mc_scheduler
-            - pattern_engine
-            - self_critique_engine
+        seamlessnessChecks:
+          - shared_identity_across_channels
+          - shared_project_context
+          - consistent_service_behavior
+          - no_redundant_re_entry
+        feedbackDestinations:
+          - mc_scheduler
+          - pattern_engine
+          - self_critique_engine
 
   # ─── PARALLEL SIDE LANES (not main pipeline stages) ──────────────────────
   #
