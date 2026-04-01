@@ -222,6 +222,14 @@ app.use("/api/analytics", express.json({ limit: "256kb" }));
 // Security: remove X-Powered-By
 app.disable('x-powered-by');
 
+// ─── Unbreakable Laws Governance Middleware ──────────────────────────
+try {
+  const { unbreakableLawsMiddleware } = require('./src/middleware/unbreakable-laws');
+  app.use(unbreakableLawsMiddleware);
+} catch (err) {
+  console.warn('Unbreakable Laws middleware not loaded:', err.message);
+}
+
 // Additional security headers and request ID generation
 app.use((req, res, next) => {
   res.setHeader('X-Content-Type-Options', 'nosniff');
@@ -485,6 +493,14 @@ try {
   log.info('HeadyMemory + AutoContext: ROUTES LOADED');
 } catch (err) {
   log.warn('HeadyMemory service not loaded', { errorMessage: err.message });
+}
+
+// ─── HeadyBuddy Omnichannel Service ─────────────────────────────────
+try {
+  const headyBuddy = require('./services/headybuddy');
+  headyBuddy.mount(app);
+} catch (err) {
+  console.warn('HeadyBuddy service not loaded:', err.message);
 }
 
 // ─── Static Assets ─────────────────────────────────────────────────

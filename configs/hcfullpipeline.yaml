@@ -22,6 +22,14 @@
 
 # ─── CHANGELOG ───────────────────────────────────────────────────────────────
 _changelog:
+  - version: "9.0.0"
+    date: "2026-04-01"
+    author: "HCFullPipeline Omnichannel Sync Integration"
+    breaking: false
+    changes:
+      - "ADDED: omnichannel_sync lane — bidirectional Slack/Obsidian/IDE sync with 5-min debounce"
+      - "ADDED: slack_workspace to receipt.monitorConfig.metricsTargets"
+      - "ADDED: sync_obsidian_vault task to system_operations cross-device-sync"
   - version: "4.0.0"
     date: "2026-03-08"
     author: "Eric Haywood / HeadySystems Inc."
@@ -57,7 +65,7 @@ _changelog:
       - "Added evolution stage with controlled mutation"
 
 # ─── VERSION ──────────────────────────────────────────────────────────────────
-version: "8.0.0"
+version: "9.0.0"
 pipeline:
   name: HCFullPipeline
   mode: event-driven              # NOT polling. NOT interval. NEVER interval.
@@ -1012,6 +1020,7 @@ pipeline:
             - ide_status_bar
             - heady_buddy_notification
             - api_metrics_endpoint
+            - slack_workspace
 
     # ── STAGE 21: Distiller (HeadyDistiller — Knowledge Distillation) ──────────
     # The final stage: reverse-engineers the entire pipeline execution trace into
@@ -1106,6 +1115,11 @@ pipeline:
         - cross_device_sync:
             run: scripts/sync-state.ps1
             args: -env production
+        - sync_obsidian_vault:
+            run: scripts/auto-sync-motor.js
+            args: --target obsidian
+            trigger: "file_change: C:/Obsidian/Vault/**"
+            description: "Aggressively watch Obsidian Vault for memory mapping sync"
         - verify_sync:
             run: scripts/verify-sync.ps1
         - sync_priority_changes:
@@ -1157,6 +1171,34 @@ pipeline:
         - invalidate_stale_caches
         - adjust_worker_pool_concurrency
         - update_channel_optimizations
+    omnichannel_sync:
+      description: >
+        Bidirectional omnichannel synchronization lane. Watches Slack workspace,
+        Obsidian Vault, and IDE channels for state changes and streams them into
+        the HCFullPipeline execution loop.
+      triggers:
+        - schedule: "*/5 * * * *"
+        - file_change: "C:/Obsidian/Vault/**"
+        - api_call: POST /api/pipeline/omnichannel
+      tasks:
+        - sync_slack_workspace:
+            run: scripts/auto-sync-motor.js
+            args: --target slack
+        - sync_obsidian_vault:
+            run: scripts/auto-sync-motor.js
+            args: --target obsidian
+        - verify_omnichannel_consistency:
+            run: scripts/auto-sync-motor.js
+            args: --verify
+      syncConfig:
+        debounceMs: 300000
+        cacheFile: .heady-memory/last-remote-sync.txt
+        channels:
+          - slack
+          - obsidian
+          - ide
+          - github
+        conflictResolution: latest-wins
     learning:
       description: Continuous learning from mistakes and evolution — runs daily
       triggers:
